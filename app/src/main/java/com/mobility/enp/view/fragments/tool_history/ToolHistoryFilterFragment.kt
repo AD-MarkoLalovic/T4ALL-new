@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -31,7 +32,8 @@ import kotlinx.coroutines.launch
 
 class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
-    private lateinit var binding: FragmentToolHistorySearchQueryBinding
+    private var _binding: FragmentToolHistorySearchQueryBinding? = null
+    private val binding: FragmentToolHistorySearchQueryBinding get() =_binding!!
     private val viewModel: PassageHistoryViewModel by activityViewModels()
     private var data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
     private lateinit var isInternetAvailable: MutableLiveData<Boolean>
@@ -43,7 +45,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(
+        _binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_tool_history_search_query, container, false
         )
         return binding.root
@@ -122,27 +124,22 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             }
         }
 
-        val listButtons =
-            listOf(binding.buttonAll, binding.buttonEUR, binding.buttonRSD, binding.buttonMKD)
+        setSelectedButton(binding.buttonAll)
 
         binding.buttonAll.setOnClickListener {
-            removeColors(listButtons)
-            setColors(it)
+            setSelectedButton(binding.buttonAll)
             viewModel.selectedCurrency = ""
         }
         binding.buttonRSD.setOnClickListener {
-            removeColors(listButtons)
-            setColors(it)
+            setSelectedButton(binding.buttonRSD)
             viewModel.selectedCurrency = getString(R.string.rsd)
         }
         binding.buttonEUR.setOnClickListener {
-            removeColors(listButtons)
-            setColors(it)
+            setSelectedButton(binding.buttonEUR)
             viewModel.selectedCurrency = getString(R.string.eur)
         }
         binding.buttonMKD.setOnClickListener {
-            removeColors(listButtons)
-            setColors(it)
+            setSelectedButton(binding.buttonMKD)
             viewModel.selectedCurrency = getString(R.string.mkd)
         }
         binding.exportBlock.setOnClickListener {
@@ -151,35 +148,14 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                 viewModel.getCsvData(requireContext())
             }
         }
-        setColors(binding.buttonAll)
     }
+    private fun setSelectedButton(selectedButton: View) = with(binding) {
+        buttonAll.isSelected = false
+        buttonEUR.isSelected = false
+        buttonRSD.isSelected = false
+        buttonMKD.isSelected = false
 
-
-    private fun setColors(view: View) {
-        val button = (view as Button)
-        button.setBackgroundResource(R.drawable.rounded_status_marked_border)
-        button.backgroundTintList =
-            ContextCompat.getColorStateList(requireContext(), R.color.primary_light_dark)
-        button.setTextColor(
-            ContextCompat.getColor(
-                requireContext(), R.color.white
-            )
-        )
-    }
-
-    private fun removeColors(view: List<View>) {
-        view.forEachIndexed { _, buttonView ->
-            val button = (buttonView as Button)
-            button.setBackgroundResource(R.drawable.button_outline)
-            button.backgroundTintList = ContextCompat.getColorStateList(
-                requireContext(), R.color.figmaIntroEclipseColorInactive
-            )
-            button.setTextColor(
-                ContextCompat.getColor(
-                    requireContext(), R.color.primary_light_darkest
-                )
-            )
-        }
+        selectedButton.isSelected = true
     }
 
     private fun triggerUpdate() {
@@ -284,6 +260,11 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     override fun onTagRemove(tag: Tag) {
         viewModel.selectedTags.remove(tag)
         Log.d(TAG, "onSendTag: ${viewModel.selectedTags}")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

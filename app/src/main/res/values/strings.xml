@@ -318,7 +318,7 @@
     <string name="eur" translatable="false">EUR</string>
     <string name="rsd" translatable="false">RSD</string>
     <string name="mkd" translatable="false">MKD</string>
-    <string name="value">вредност</string>
+    <string name="value">Валута</string>
     <string name="found_tag">Пронађен Таг</string>
     <string name="confirm_found_tag">Потврдите пронађену ознаку</string>
     <string name="report_found_tag">Да ли сте сигурни да желите да пријавите ову ознаку као пронађену?</string>
