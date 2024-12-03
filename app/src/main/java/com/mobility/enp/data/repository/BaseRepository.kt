@@ -36,7 +36,7 @@ abstract class BaseRepository(
 
         return when {
             languageCode.contains("sr") -> "lat"
-            languageCode.contains("ar") -> "me"
+            languageCode.contains("cnr") -> "me"
             languageCode.contains("el") -> "gr"
             languageCode.contains("bs") -> "ba"
             else -> languageCode

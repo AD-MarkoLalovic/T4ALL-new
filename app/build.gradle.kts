@@ -33,10 +33,10 @@ android {
         applicationId = "com.mobility.enp"
         minSdk = 29
         targetSdk = 34
-        versionCode = 103
-        versionName = "version 103"
+        versionCode = 105
+        versionName = "version 105"
 
-        resourceConfigurations += listOf("en", "sr", "de", "mk", "tr", "ar", "hr", "el", "bs")
+        resourceConfigurations += listOf("en", "sr", "de", "mk", "tr", "b+cnr", "hr", "el", "bs")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
