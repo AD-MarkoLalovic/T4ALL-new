@@ -978,7 +978,7 @@ object Repository {
         languageTable?.userLanguage?.let { languageCode ->
             if (languageCode.contains("sr")) {  // difference between country code for strings and parameter for query
                 lang = "lat"
-            } else if (languageCode.contains("ar")) { // macedonian send me for language key cnr is for local strings
+            } else if (languageCode.contains("cnr")) { // macedonian send me for language key cnr is for local strings
                 lang = "me"
             } else if (languageCode.contains("el")) { // greek send gr
                 lang = "gr"

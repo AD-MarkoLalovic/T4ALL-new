@@ -48,7 +48,7 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
                 R.id.languageEnglish -> "en"
                 R.id.languageSerbian -> "cyr"
                 R.id.languageSerbianLatin -> "sr"
-                R.id.languageMontenegro -> "ar"
+                R.id.languageMontenegro -> "cnr"
                 R.id.languageMacedonian -> "mk"
                 R.id.languageBosnia -> "bs"
                 R.id.languageCroatia -> "hr"
@@ -79,7 +79,11 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
                     delay(500L)
                     dismiss()
                     onLanguageSelected(languageCode, true)
-                    Toast.makeText(requireContext(), getString(R.string.language_changed), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.language_changed),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -91,7 +95,7 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
             "cyr" -> binding.languageSerbian.isChecked = true
             "sr" -> binding.languageSerbianLatin.isChecked = true
             "en" -> binding.languageEnglish.isChecked = true
-            "ar" -> binding.languageMontenegro.isChecked = true
+            "cnr" -> binding.languageMontenegro.isChecked = true
             "mk" -> binding.languageMacedonian.isChecked = true
             "hr" -> binding.languageCroatia.isChecked = true
             "bs" -> binding.languageBosnia.isChecked = true
