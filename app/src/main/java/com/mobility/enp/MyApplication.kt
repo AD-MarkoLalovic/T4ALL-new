@@ -1,0 +1,20 @@
+package com.mobility.enp
+
+import android.app.Application
+import com.mobility.enp.data.repository.AuthRepository
+import com.mobility.enp.data.repository.UserRepository
+import com.mobility.enp.data.room.database.DRoom
+
+class MyApplication : Application() {
+
+    private val database: DRoom by lazy { DRoom.getRoomInstance(this) }
+
+    val repositoryUser: UserRepository by lazy {
+        UserRepository(database, this)
+    }
+    val repositoryAuth: AuthRepository by lazy {
+        AuthRepository(database, this)
+    }
+
+}
+

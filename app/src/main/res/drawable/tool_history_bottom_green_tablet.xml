@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--    for paid top container-->
+    <stroke
+        android:width="@dimen/dimens_2dp"
+        android:color="@color/figmaToolHistoryPaidBackground" />
+    <solid android:color="@color/white" />
+    <corners
+        android:bottomLeftRadius="@dimen/dimens_29dp"
+        android:bottomRightRadius="@dimen/dimens_29dp" />
+</shape>

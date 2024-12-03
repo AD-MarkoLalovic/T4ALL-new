@@ -1,0 +1,154 @@
+package com.mobility.enp.view.fragments.card
+
+import android.graphics.Bitmap
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.webkit.WebChromeClient
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.mobility.enp.BuildConfig
+import com.mobility.enp.R
+import com.mobility.enp.databinding.FragmentTosBinding
+import com.mobility.enp.viewmodel.HomeViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+
+class CardFragment : Fragment() {
+
+    private var _binding: FragmentTosBinding? = null
+    private val binding: FragmentTosBinding get() = _binding!!
+    private var url: String = "https://admindev.toll4all.com/mweb/customers/add-card/rs"
+    private val homeViewModel: HomeViewModel by viewModels()
+
+    companion object {
+        const val TAG = "Headers"
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tos, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val args: CardFragmentArgs by navArgs()
+        val promotion = args.promotion
+
+        promotion?.let {
+
+            val baseUrl = when {
+                BuildConfig.FLAVOR.contains("stage") -> {
+                    "https://admintest.toll4all.com/mweb/customers/add-card/"
+                }
+                BuildConfig.FLAVOR.contains("prod") -> {
+                    "https://openbalkan-etc.com/mweb/customers/add-card/"
+                }
+                BuildConfig.FLAVOR.contains("debug") -> {
+                    "https://admindev.toll4all.com/mweb/customers/add-card/"
+                }
+                else -> {
+                    Log.w("BuildType", "Unrecognized BUILD_TYPE: ${BuildConfig.BUILD_TYPE}")
+                    "about:blank"
+                }
+            }
+
+            val countryUrls = mapOf(
+                "MK" to "mk",
+                "ME" to "me",
+                "RS" to "rs"
+            )
+
+            url = baseUrl + (countryUrls[it.countryCode] ?: "rs")
+
+        }
+
+        initializeWebViewSettings()
+        fetchAndLoadUrl()
+    }
+
+    private fun initializeWebViewSettings() {
+        binding.webView.settings.apply {
+            javaScriptEnabled = true
+            setGeolocationEnabled(false)
+            useWideViewPort = true
+            loadWithOverviewMode = false
+            builtInZoomControls = true
+            javaScriptCanOpenWindowsAutomatically = false
+            domStorageEnabled = true
+            mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+            cacheMode = WebSettings.LOAD_NO_CACHE
+            userAgentString =
+                "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Mobile Safari/537.36"
+        }
+        binding.webView.isFocusable = true
+        binding.webView.isFocusableInTouchMode = true
+        binding.webView.webChromeClient = WebChromeClient()
+        binding.webView.webViewClient = createWebViewClient()
+    }
+
+    private fun createWebViewClient() = object : WebViewClient() {
+        override fun onPageFinished(view: WebView?, url: String?) {
+            super.onPageFinished(view, url)
+            binding.progBar.visibility = View.GONE
+
+            url?.let { link ->
+                if (link.contains("/payment/success")) {
+                    Toast.makeText(
+                        context,
+                        R.string.credit_card_successful,
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(2000L)
+                        findNavController().popBackStack()
+                    }
+                }
+            }
+
+            Log.d(TAG, "url: $url")
+        }
+
+        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+            super.onPageStarted(view, url, favicon)
+            binding.progBar.visibility = View.VISIBLE
+        }
+
+    }
+
+    private fun fetchAndLoadUrl() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val token = fetchToken()
+            val headers = mapOf("Authorization" to token)
+            binding.webView.loadUrl(url, headers)
+        }
+    }
+
+    private suspend fun fetchToken(): String {
+        val tokenData = homeViewModel.getUserToken()
+        return tokenData?.let { "${it.tokenType} ${it.accessToken}" } ?: ""
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}

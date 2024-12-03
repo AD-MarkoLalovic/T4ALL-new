@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.mobility.enp.data.model.api_home_page.homedata.Invoice" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dimens_20dp"
+            android:background="@drawable/arrow_right"
+            android:elevation="@dimen/dimens_10dp" />
+
+        <TextView
+            android:id="@+id/txtMonth"
+            style="@style/SubtitlesMediumTablet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@{data.month.name}"
+            android:textSize="@dimen/dimens_25sp"
+            tools:text="September" />
+
+        <TextView
+            android:id="@+id/txtYear"
+            style="@style/SubtitlesMediumTablet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="@dimen/dimens_10dp"
+            android:layout_toEndOf="@+id/txtMonth"
+            android:text="@{data.year}"
+            android:textSize="@dimen/dimens_25sp"
+            tools:text="1990" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/cycler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtMonth"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:paddingVertical="@dimen/dimens_10dp"
+            tools:itemCount="3"
+            tools:listitem="@layout/card_home_page_currency" />
+
+
+    </RelativeLayout>
+
+</layout>

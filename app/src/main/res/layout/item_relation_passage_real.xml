@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="relation"
+            type="com.mobility.enp.data.model.api_tool_history.InvoiceRelation" />
+
+        <variable
+            name="tagSerial"
+            type="String" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/dimens_10dp"
+        android:background="@drawable/border_purchase_information">
+
+        <RelativeLayout
+            android:id="@+id/topContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimens_10dp">
+
+            <TextView
+                android:id="@+id/txtAccountNumber"
+                style="@style/SubtitlesMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:layout_toStartOf="@id/carTagNumber"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text="@string/account_number" />
+
+            <TextView
+                android:id="@+id/carInvoiceNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtAccountNumber"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:layout_toStartOf="@id/carTagNumber"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text="@{relation.invoiceNumber}"
+                android:textSize="@dimen/dimens_14sp"
+                tools:text="62458/2024-web" />
+
+
+            <ImageView
+                android:id="@+id/toolHistoryStatus"
+                android:layout_width="@dimen/dimens_10dp"
+                android:layout_height="@dimen/dimens_10dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:background="@drawable/status_icon_green" />
+
+
+            <TextView
+                android:id="@+id/carTagNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/txtAccountNumber"
+                android:layout_alignBottom="@+id/carInvoiceNumber"
+                android:layout_marginEnd="@dimen/dimens_5dp"
+                android:layout_toStartOf="@id/carTagCurrency"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text='@{relation.amount}'
+                android:textSize="@dimen/dimens_14sp"
+                android:textStyle="bold"
+                tools:text="1000,00" />
+
+            <TextView
+                android:id="@+id/carTagCurrency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/carInvoiceNumber"
+                android:layout_marginEnd="@dimen/dimens_15dp"
+                android:layout_marginBottom="@dimen/dimens_15dp"
+                android:layout_toStartOf="@id/toolHistoryStatus"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text='@{relation.currency}'
+                android:textSize="@dimen/dimens_8sp"
+                android:textStyle="bold"
+                tools:text="RSD" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/bottomContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/topContainer"
+            android:background="@color/white"
+            android:padding="@dimen/dimens_10dp">
+
+            <Button
+                android:id="@+id/btnComplaint"
+                style="@style/MyOutlinedButtonStyle"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/passageEntryTime"
+                android:layout_alignBottom="@+id/passageExitTime"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:text="@string/complaint"
+                android:textSize="@dimen/dimens_9sp"
+                tools:visibility="gone" />
+
+
+            <RelativeLayout
+                android:id="@+id/container"
+                android:layout_width="@dimen/dimens_120dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/passageEntryTime"
+                android:layout_alignBottom="@+id/passageExitTime"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <Button
+                    android:id="@+id/btnObjection"
+                    style="@style/MyOutlinedButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/objection"
+                    android:textSize="@dimen/dimens_9sp" />
+
+                <View
+                    android:id="@+id/viewShade"
+                    android:layout_width="@dimen/dimens_20dp"
+                    android:layout_height="@dimen/dimens_20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/dimens_10dp"
+                    android:background="@drawable/figma_objection_background"
+                    android:gravity="center_vertical">
+
+                </View>
+
+                <TextView
+                    android:id="@+id/objectionsNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/viewShade"
+                    android:layout_alignTop="@+id/btnObjection"
+                    android:layout_alignEnd="@+id/viewShade"
+                    android:layout_alignBottom="@+id/btnObjection"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textColor="@color/figmaColorObjection"
+                    android:textSize="9sp"
+                    android:textStyle="bold"
+                    tools:text="1" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/passageRelation"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:layout_toStartOf="@id/center"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:scrollHorizontally="true"
+                android:text="@{relation.entryToll + ' ' + relation.exitToll}"
+                tools:text="Beograd - Novi Sad" />
+
+            <TextView
+                android:id="@+id/complaintId"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/passageRelation"
+                android:layout_alignBottom="@+id/passageRelation"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:layout_toEndOf="@id/center"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="3"
+                android:scrollHorizontally="true"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/figmaIntroEclipseColorInactive"
+                android:visibility="visible"
+                tools:text="Br reklamacije #1234" />
+
+            <TextView
+                android:id="@+id/passageEntryTime"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/passageRelation"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:layout_toEndOf="@id/passageEntryDate"
+                android:text='@{relation.entryTime}'
+                android:textColor="@color/figmaIntroEclipseColorInactive"
+                tools:text="10:11" />
+
+            <TextView
+                android:id="@+id/passageEntryDate"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/passageRelation"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:text='@{relation.entryDate}'
+                android:textColor="@color/figmaIntroEclipseColorInactive"
+                tools:text="14.07.2023." />
+
+            <TextView
+                android:id="@+id/passageExitTime"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/passageEntryTime"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:layout_toEndOf="@id/passageExitDate"
+                android:text='@{relation.exitTime}'
+                android:textColor="@color/figmaIntroEclipseColorInactive"
+                tools:text="10:20" />
+
+            <TextView
+                android:id="@+id/passageExitDate"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/passageEntryTime"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:text='@{relation.exitDate}'
+                android:textColor="@color/figmaIntroEclipseColorInactive"
+                tools:text="15.07.2023." />
+
+            <View
+                android:id="@+id/center"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="@dimen/dimens_0dp"
+                android:layout_centerInParent="true" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

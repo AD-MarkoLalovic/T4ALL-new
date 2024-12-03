@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.mobility.enp.data.model.api_tool_history.TotalAmount" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/currencyTotal"
+            style="@style/ParagraphSmall"
+            android:layout_width="@dimen/dimens_80dp"
+            android:layout_height="wrap_content"
+            android:text="@{data.total}"
+            app:layout_constraintEnd_toStartOf="@id/currencyValue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1"
+            android:gravity="end"
+            tools:text="10000000" />
+
+
+        <TextView
+            android:id="@+id/currencyValue"
+            style="@style/ParagraphSmall"
+            android:layout_width="@dimen/dimens_25dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="@{data.currency}"
+            android:textSize="@dimen/dimens_8sp"
+            app:layout_constraintBottom_toBottomOf="@id/currencyTotal"
+            app:layout_constraintStart_toEndOf="@id/currencyTotal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.7"
+            tools:text="MKD" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
+

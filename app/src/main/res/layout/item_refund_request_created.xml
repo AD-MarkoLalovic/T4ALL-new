@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="refundRequest"
+            type="com.mobility.enp.view.ui_models.refund_request.RefundRequestUIModel" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/refundCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimens_8dp"
+        android:elevation="@dimen/dimens_8dp"
+        app:cardCornerRadius="@dimen/dimens_20dp"
+        app:strokeColor="@color/figmaToolHistoryPaidBackground"
+        app:strokeWidth="@dimen/dimens_2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/firstContainerRefund"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/figmaToolHistoryPaidBackground"
+                android:padding="@dimen/dimens_16dp">
+
+
+
+                <TextView
+                    android:id="@+id/txTableRefund"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{refundRequest.registrationPlate}"
+                    android:textColor="@color/primary_light_darkest"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="BG1234UL" />
+
+                <TextView
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimens_8dp"
+                    android:text="@{refundRequest.serialNumber}"
+                    app:layout_constraintBottom_toBottomOf="@+id/txTableRefund"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/txTableRefund"
+                    tools:text="22410930709" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/secondContainerRefund"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="@dimen/dimens_16dp">
+
+
+
+                <TextView
+                    android:id="@+id/txRefundStatus"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    style="@style/SubtitlesMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{refundRequest.statusText}"
+                    android:textColor="@color/primary_light_dark"
+                    app:layout_constraintBottom_toBottomOf="@+id/txRefundStatus"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="Completed" />
+
+                <TextView
+                    android:id="@+id/txRefundAmount"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_16dp"
+                    android:text="@string/amount"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txRefundStatus" />
+
+                <TextView
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{refundRequest.displayAmount}"
+
+                    app:layout_constraintBottom_toBottomOf="@+id/txRefundAmount"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="1.500 RSD" />
+
+                <TextView
+                    android:id="@+id/txRefundBankAccount"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_16dp"
+                    android:text="@string/bank_account"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txRefundAmount" />
+
+                <TextView
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{refundRequest.bankAccount}"
+                    app:layout_constraintBottom_toBottomOf="@+id/txRefundBankAccount"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="125-0000004545-68" />
+
+                <TextView
+                    android:id="@+id/txRefundBank"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bank"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/bankName" />
+
+                <TextView
+                    android:id="@+id/bankName"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{refundRequest.bank}"
+                    app:layout_constraintTop_toBottomOf="@+id/txRefundBankAccount"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/txRefundBank"
+                    android:layout_marginTop="@dimen/dimens_15dp"
+                    android:layout_marginStart="@dimen/dimens_22dp"
+                    android:gravity="end"
+                    tools:text="Banca Intesa" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

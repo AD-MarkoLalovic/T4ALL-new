@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/pdfDownload"
+        android:title="@string/pdf_invoices"
+        android:icon="@drawable/ic_download"
+        />
+
+    <item
+        android:id="@+id/listingOfPassagesDownload"
+        android:title="@string/listing_of_passages"
+        android:icon="@drawable/ic_download"
+        />
+</menu>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.Theme.OpenBalkanETC" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/figmaSplashScreenColor</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="MyButtonStyle" parent="Widget.Material3.Button">
+        <item name="android:background">@drawable/button_background_common</item>
+        <item name="backgroundTint">@color/figmaSplashScreenColor</item>
+        <item name="android:textSize">@dimen/dimens_12sp</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+    </style>
+
+    <style name="MyButtonStyleSmall" parent="Widget.Material3.Button">
+        <item name="android:background">@drawable/button_small</item>
+        <item name="backgroundTint">@color/figmaSplashScreenColor</item>
+        <item name="android:paddingHorizontal">@dimen/dimens_22dp</item>
+        <item name="android:paddingVertical">@dimen/dimens_9dp</item>
+        <item name="android:textSize">@dimen/dimens_12sp</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+    </style>
+
+    <style name="MyOutlinedButtonStyle" parent="Widget.Material3.Button">
+        <item name="android:background">@drawable/button_outline</item>
+        <item name="backgroundTint">@color/figmaIntroEclipseColorInactive</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:textSize">@dimen/dimens_12sp</item>
+        <item name="android:textColor">@color/primary_light_darkest</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:lineSpacingExtra">@dimen/dimens_4sp</item>
+        <item name="android:translateY">2</item>
+    </style>
+
+    <style name="MyOutlinedButtonSmall" parent="Widget.Material3.Button">
+        <item name="android:background">@drawable/button_small_outline</item>
+        <item name="backgroundTint">@color/figmaIntroEclipseColorInactive</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:textSize">@dimen/dimens_12sp</item>
+        <item name="android:paddingHorizontal">@dimen/dimens_22dp</item>
+        <item name="android:paddingVertical">@dimen/dimens_9dp</item>
+        <item name="android:textColor">@color/primary_light_darkest</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:lineSpacingExtra">@dimen/dimens_4sp</item>
+        <item name="android:translateY">6</item>
+    </style>
+
+    <style name="MyButtonStyleTablet" parent="Widget.Material3.Button">
+        <item name="android:background">@drawable/button_background_common</item>
+        <item name="backgroundTint">@color/figmaSplashScreenColor</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:textSize">@dimen/dimens_20sp</item>
+    </style>
+
+    <style name="MyOutlinedButtonSkip" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeWidth">@dimen/dimens_1dp</item>
+        <item name="strokeColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingHorizontal">@dimen/dimens_22dp</item>
+        <item name="android:paddingVertical">@dimen/dimens_9dp</item>
+        <item name="android:fontFamily">@font/noto_sans_regular</item>
+        <item name="android:textSize">@dimen/dimens_12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+    </style>
+
+    <style name="Paragraph">
+        <item name="android:textSize">@dimen/dimens_16sp</item>
+        <item name="fontFamily">@font/noto_sans_medium</item>
+        <item name="android:textColor">@color/primary_light_dark</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">1sp</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <style name="ParagraphTablet">
+        <item name="android:textSize">@dimen/dimens_20sp</item>
+        <item name="fontFamily">@font/noto_sans_medium</item>
+        <item name="android:textColor">@color/primary_light_dark</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">1sp</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <style name="ParagraphMedium">
+        <item name="android:textSize">@dimen/dimens_16sp</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:textColor">@color/primary_light_dark</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">1sp</item>
+        <item name="android:textFontWeight">700</item>
+    </style>
+
+    <style name="ParagraphSmall">
+        <item name="android:textSize">@dimen/dimens_14sp</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:textColor">@color/primary_light_dark</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textFontWeight">700</item>
+    </style>
+
+    <style name="ParagraphMediumTablet">
+        <item name="android:textSize">@dimen/dimens_20sp</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:textColor">@color/primary_light_dark</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="H1">
+        <item name="android:textSize">@dimen/dimens_34sp</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="H3">
+        <item name="android:textSize">@dimen/dimens_22sp</item>
+        <item name="android:lineHeight">@dimen/dimens_30sp</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <style name="H3Tablet">
+        <item name="android:textSize">@dimen/dimens_26sp</item>
+        <item name="android:lineHeight">@dimen/dimens_36sp</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <style name="H2">
+        <item name="android:textSize">@dimen/dimens_28sp</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:lineSpacingExtra">-6sp</item>
+        <item name="android:textColor">@color/primary_light_darkest</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <style name="SubtitlesRegular">
+        <item name="android:textSize">@dimen/dimens_14sp</item>
+        <item name="fontFamily">@font/noto_sans_medium</item>
+        <item name="android:textColor">@color/primary_light_dark</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="SubtitlesMedium">
+        <item name="android:textSize">@dimen/dimens_14sp</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:textColor">@color/primary_light_darkest</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="SubtitlesMediumTablet">
+        <item name="android:textSize">@dimen/dimens_20sp</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:textColor">@color/primary_light_darkest</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="CaptionRegular">
+        <item name="android:textSize">@dimen/dimens_12sp</item>
+        <item name="fontFamily">@font/noto_sans_medium</item>
+        <item name="android:textColor">@color/primary_light_dark</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+    </style>
+
+    <style name="CaptionRegularTablet">
+        <item name="android:textSize">@dimen/dimens_20sp</item>
+        <item name="fontFamily">@font/noto_sans_medium</item>
+        <item name="android:textColor">@color/primary_light_dark</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="CaptionMedium">
+        <item name="android:textSize">@dimen/dimens_12sp</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:textColor">@color/primary_light_darkest</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+    </style>
+
+    <style name="CustomAlertDialog" parent="Theme.Material3.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/border_dialog_password_change</item>
+    </style>
+
+    <style name="CustomPopupMenuStyle" parent="Widget.Material3.PopupMenu">
+        <item name="popupMenuBackground">@drawable/custom_popup_menu</item>
+        <item name="android:padding">@dimen/dimens_0dp</item>
+        <item name="android:fontFamily">@font/noto_sans_medium</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/dimens_12sp</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+</resources>

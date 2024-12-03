@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_dialog_borders"
+        android:backgroundTint="@color/primary_light_lightest"
+        tools:context=".view.dialogs.SupportDialog">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/dimens_16dp"
+            android:paddingBottom="@dimen/dimens_22dp">
+
+            <ProgressBar
+                android:id="@+id/progBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/dimens_10dp"
+                android:indeterminateTint="@color/figmaSplashScreenColor"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/deactivateAccountDialogClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_14dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_close"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txSupportDialogTitle"
+                style="@style/H3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_6dp"
+                android:text="@string/deactivation_request"
+                android:textColor="@color/primary_light_darkest"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/deactivateAccountDialogClose" />
+
+            <TextView
+                android:id="@+id/accountDeactivationNotice"
+                style="@style/Paragraph"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_10dp"
+                android:text="@string/account_deactivation_notice"
+                android:textColor="@color/primary_light_darkest"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txSupportDialogTitle" />
+
+            <TextView
+                android:id="@+id/txSupportDialogSubtitle"
+                style="@style/CaptionRegular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_22dp"
+                android:text="@string/enter_your_email_address"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/accountDeactivationNotice" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dialogEmail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_84dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_84dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_84dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_84dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="1dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txSupportDialogSubtitle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/enterEmailAccount"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="top"
+                    android:hint="@string/email"
+                    android:inputType="text|textMultiLine"
+                    android:textColor="@color/figmaSplashScreenColor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/txSupportMessage"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_10dp"
+                android:text="@string/reason_for_deactivation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dialogEmail" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/supportDialogInput"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimens_150dp"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_26dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="1dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txSupportMessage">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/enterSupportMessage"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="top"
+                    android:hint="@string/message"
+                    android:inputType="text|textMultiLine"
+                    android:textColor="@color/figmaSplashScreenColor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/bttSendSupportMessage"
+                style="@style/MyButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_48dp"
+                android:text="@string/send"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/supportDialogInput" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</layout>

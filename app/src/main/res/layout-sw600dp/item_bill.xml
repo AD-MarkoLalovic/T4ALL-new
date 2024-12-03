@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="monthly"
+            type="com.mobility.enp.data.model.api_my_invoices.Month" />
+
+        <variable
+            name="viewModel"
+            type="com.mobility.enp.viewmodel.MyInvoicesViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimens_8dp"
+        android:background="@color/primary_light_lightest">
+
+        <TextView
+            android:id="@+id/textMonthly"
+            style="@style/Paragraph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{monthly.month.name}"
+            android:textColor="@color/primary_light_darkest"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="September" />
+
+        <TextView
+            android:id="@+id/textYear"
+            style="@style/Paragraph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimens_8dp"
+            android:text="@{monthly.year}"
+            android:textColor="@color/primary_light_darkest"
+            app:layout_constraintStart_toEndOf="@+id/textMonthly"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1990" />
+
+        <ImageView
+            android:id="@+id/arrowDown"
+            android:layout_width="@dimen/dimens_35dp"
+            android:layout_height="@dimen/dimens_35dp"
+            android:background="@drawable/ic_arrow_down"
+            android:clickable="true"
+            android:contentDescription="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textMonthly" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTotalMonthlyInvoices"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_35dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textMonthly"
+            tools:itemCount="4"
+            tools:listitem="@layout/item_total_currency" />
+
+        <View
+            android:id="@+id/billViewLine"
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="@dimen/dimens_1dp"
+            android:layout_marginTop="@dimen/dimens_22dp"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rvTotalMonthlyInvoices" />
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/dimens_22dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/billViewLine">
+
+            <com.mobility.enp.view.adapters.my_invoices_adapters.CustomRecyclerView
+                android:id="@+id/recyclerViewMonthlyBills"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="1"
+                tools:listitem="@layout/item_invoices"
+                tools:visibility="visible" />
+        </ScrollView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

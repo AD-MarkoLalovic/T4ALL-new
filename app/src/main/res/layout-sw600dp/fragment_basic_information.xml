@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.mobility.enp.viewmodel.BasicInformationViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".view.fragments.my_profile.BasicInformationFragment">
+
+        <RelativeLayout
+            android:id="@+id/basicInformation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/border_login"
+            android:backgroundTint="@color/primary_light_lightest"
+            android:paddingHorizontal="@dimen/dimens_100dp"
+            android:paddingVertical="@dimen/dimens_34dp"
+            tools:visibility="visible">
+
+            <ProgressBar
+                android:id="@+id/loadingBasicInformation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="visible" />
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/txBasicInfo"
+                        style="@style/H2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/personal_data"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/firstLineBasicInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimens_2dp"
+                        android:layout_marginTop="@dimen/dimens_22dp"
+                        android:background="@color/primary_light_light"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txBasicInfo" />
+
+                    <LinearLayout
+                        android:id="@+id/basicInformationCon"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/firstLineBasicInfo"
+                        tools:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/txBasicInfoEmail"
+                            style="@style/CaptionRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimens_16dp"
+                            android:layout_marginTop="@dimen/dimens_22dp"
+                            android:text="@string/email"
+                            android:textColor="@color/charcoal_purple" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputBasicInfoEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimens_12dp"
+                            app:boxBackgroundColor="@color/white"
+                            app:boxCornerRadiusBottomEnd="84dp"
+                            app:boxCornerRadiusBottomStart="84dp"
+                            app:boxCornerRadiusTopEnd="84dp"
+                            app:boxCornerRadiusTopStart="84dp"
+                            app:boxStrokeColor="@color/figmaSplashScreenColor"
+                            app:boxStrokeWidth="@dimen/dimens_0dp"
+                            app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                            app:endIconMode="clear_text"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editEmail"
+                                style="@style/Paragraph"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:hint="@string/enter_your_email_address"
+                                android:inputType="textEmailAddress"
+                                android:text="@{String.valueOf(viewModel.userInfoData.email)}"
+                                android:textColor="@color/figmaSplashScreenColor" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:id="@+id/txBasicInfoName"
+                            style="@style/CaptionRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimens_16dp"
+                            android:layout_marginTop="@dimen/dimens_22dp"
+                            android:text="@string/ime"
+                            android:textColor="@color/charcoal_purple" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputBasicInfoName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimens_12dp"
+                            app:boxBackgroundColor="@color/white"
+                            app:boxCornerRadiusBottomEnd="84dp"
+                            app:boxCornerRadiusBottomStart="84dp"
+                            app:boxCornerRadiusTopEnd="84dp"
+                            app:boxCornerRadiusTopStart="84dp"
+                            app:boxStrokeColor="@color/figmaSplashScreenColor"
+                            app:boxStrokeWidth="@dimen/dimens_0dp"
+                            app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                            app:endIconMode="clear_text"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editName"
+                                style="@style/Paragraph"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_your_first_name"
+                                android:inputType="text"
+                                android:text="@{String.valueOf(viewModel.userInfoData.firstName)}"
+                                android:textColor="@color/figmaSplashScreenColor" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:id="@+id/txBasicInfoSurname"
+                            style="@style/CaptionRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimens_16dp"
+                            android:layout_marginTop="@dimen/dimens_22dp"
+                            android:text="@string/surname"
+                            android:textColor="@color/charcoal_purple" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputBasicInfoSurname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimens_12dp"
+                            app:boxBackgroundColor="@color/white"
+                            app:boxCornerRadiusBottomEnd="84dp"
+                            app:boxCornerRadiusBottomStart="84dp"
+                            app:boxCornerRadiusTopEnd="84dp"
+                            app:boxCornerRadiusTopStart="84dp"
+                            app:boxStrokeColor="@color/figmaSplashScreenColor"
+                            app:boxStrokeWidth="@dimen/dimens_0dp"
+                            app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                            app:endIconMode="clear_text"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editSurname"
+                                style="@style/Paragraph"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_your_last_name"
+                                android:inputType="text"
+                                android:text="@{String.valueOf(viewModel.userInfoData.lastName)}"
+                                android:textColor="@color/figmaSplashScreenColor" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:id="@+id/txBasicInfoCompanyName"
+                            style="@style/CaptionRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimens_16dp"
+                            android:layout_marginTop="@dimen/dimens_22dp"
+                            android:text="@string/company_name"
+                            android:textColor="@color/charcoal_purple" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputBasicCompanyName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimens_12dp"
+                            app:boxBackgroundColor="@color/white"
+                            app:boxCornerRadiusBottomEnd="84dp"
+                            app:boxCornerRadiusBottomStart="84dp"
+                            app:boxCornerRadiusTopEnd="84dp"
+                            app:boxCornerRadiusTopStart="84dp"
+                            app:boxStrokeColor="@color/figmaSplashScreenColor"
+                            app:boxStrokeWidth="@dimen/dimens_0dp"
+                            app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                            app:endIconMode="clear_text"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editCompanyName"
+                                style="@style/Paragraph"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_the_company_name"
+                                android:inputType="text"
+                                android:text="@{String.valueOf(viewModel.userInfoData.companyName)}"
+                                android:textColor="@color/figmaSplashScreenColor" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:id="@+id/txBasicInfoRegistrationNumber"
+                            style="@style/CaptionRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimens_16dp"
+                            android:layout_marginTop="@dimen/dimens_22dp"
+                            android:text="@string/registration_number"
+                            android:textColor="@color/charcoal_purple" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputBasicInfoRegistrationNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimens_12dp"
+                            app:boxBackgroundColor="@color/white"
+                            app:boxCornerRadiusBottomEnd="84dp"
+                            app:boxCornerRadiusBottomStart="84dp"
+                            app:boxCornerRadiusTopEnd="84dp"
+                            app:boxCornerRadiusTopStart="84dp"
+                            app:boxStrokeColor="@color/figmaSplashScreenColor"
+                            app:boxStrokeWidth="@dimen/dimens_0dp"
+                            app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                            app:endIconMode="clear_text"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editRegistrationNumber"
+                                style="@style/Paragraph"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_company_registration_number"
+                                android:inputType="text"
+                                android:text="@{String.valueOf(viewModel.userInfoData.mb)}"
+                                android:textColor="@color/figmaSplashScreenColor" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:id="@+id/txBasicInfoContactNumber"
+                            style="@style/CaptionRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimens_16dp"
+                            android:layout_marginTop="@dimen/dimens_22dp"
+                            android:text="@string/contact_number"
+                            android:textColor="@color/charcoal_purple" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputBasicInfoContactNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimens_12dp"
+                            app:boxBackgroundColor="@color/white"
+                            app:boxCornerRadiusBottomEnd="84dp"
+                            app:boxCornerRadiusBottomStart="84dp"
+                            app:boxCornerRadiusTopEnd="84dp"
+                            app:boxCornerRadiusTopStart="84dp"
+                            app:boxStrokeColor="@color/figmaSplashScreenColor"
+                            app:boxStrokeWidth="@dimen/dimens_0dp"
+                            app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                            app:endIconMode="clear_text"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editPhone"
+                                style="@style/Paragraph"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_your_phone_number"
+                                android:inputType="number"
+                                android:text="@{String.valueOf(viewModel.userInfoData.phone)}"
+                                android:textColor="@color/figmaSplashScreenColor" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:id="@+id/txBasicInfoAddress"
+                            style="@style/CaptionRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimens_16dp"
+                            android:layout_marginTop="@dimen/dimens_22dp"
+                            android:text="@string/address"
+                            android:textColor="@color/charcoal_purple" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputBasicInfoAddress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimens_12dp"
+                            app:boxBackgroundColor="@color/white"
+                            app:boxCornerRadiusBottomEnd="84dp"
+                            app:boxCornerRadiusBottomStart="84dp"
+                            app:boxCornerRadiusTopEnd="84dp"
+                            app:boxCornerRadiusTopStart="84dp"
+                            app:boxStrokeColor="@color/figmaSplashScreenColor"
+                            app:boxStrokeWidth="@dimen/dimens_0dp"
+                            app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                            app:endIconMode="clear_text"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editAddress"
+                                style="@style/Paragraph"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_your_address"
+                                android:inputType="text"
+                                android:text="@{String.valueOf(viewModel.userInfoData.address)}"
+                                android:textColor="@color/figmaSplashScreenColor" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:id="@+id/txBasicInfoCity"
+                            style="@style/CaptionRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimens_16dp"
+                            android:layout_marginTop="@dimen/dimens_22dp"
+                            android:text="@string/city"
+                            android:textColor="@color/charcoal_purple" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputBasicInfoCity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimens_12dp"
+                            app:boxBackgroundColor="@color/white"
+                            app:boxCornerRadiusBottomEnd="84dp"
+                            app:boxCornerRadiusBottomStart="84dp"
+                            app:boxCornerRadiusTopEnd="84dp"
+                            app:boxCornerRadiusTopStart="84dp"
+                            app:boxStrokeColor="@color/figmaSplashScreenColor"
+                            app:boxStrokeWidth="@dimen/dimens_0dp"
+                            app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                            app:endIconMode="clear_text"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editCity"
+                                style="@style/Paragraph"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_your_city"
+                                android:inputType="textEmailAddress"
+                                android:text="@{String.valueOf(viewModel.userInfoData.city)}"
+                                android:textColor="@color/figmaSplashScreenColor" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:id="@+id/txBasicInfoZipCode"
+                            style="@style/CaptionRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimens_16dp"
+                            android:layout_marginTop="@dimen/dimens_22dp"
+                            android:text="@string/Zip_Code"
+                            android:textColor="@color/charcoal_purple" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputBasicInfoZipCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimens_12dp"
+                            app:boxBackgroundColor="@color/white"
+                            app:boxCornerRadiusBottomEnd="84dp"
+                            app:boxCornerRadiusBottomStart="84dp"
+                            app:boxCornerRadiusTopEnd="84dp"
+                            app:boxCornerRadiusTopStart="84dp"
+                            app:boxStrokeColor="@color/figmaSplashScreenColor"
+                            app:boxStrokeWidth="@dimen/dimens_0dp"
+                            app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                            app:endIconMode="clear_text"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editZipCode"
+                                style="@style/Paragraph"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_your_postal_code"
+                                android:inputType="number"
+                                android:text='@{viewModel.userInfoData.postalCode != null ? String.valueOf(viewModel.userInfoData.postalCode) : ""}'
+                                android:textColor="@color/figmaSplashScreenColor" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:id="@+id/txBasicInfoCountry"
+                            style="@style/CaptionRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimens_16dp"
+                            android:layout_marginTop="@dimen/dimens_22dp"
+                            android:text="@string/country"
+                            android:textColor="@color/charcoal_purple" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/CaptionRegular"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimens_12dp"
+                            android:layout_marginBottom="@dimen/dimens_16dp"
+                            app:boxBackgroundColor="@color/white"
+                            app:boxCornerRadiusBottomEnd="84dp"
+                            app:boxCornerRadiusBottomStart="84dp"
+                            app:boxCornerRadiusTopEnd="84dp"
+                            app:boxCornerRadiusTopStart="84dp"
+                            app:boxStrokeColor="@color/figmaSplashScreenColor"
+                            app:boxStrokeWidth="@dimen/dimens_0dp"
+                            app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                            app:endIconMode="clear_text"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editCountry"
+                                style="@style/Paragraph"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:hint="@string/enter_your_country"
+                                android:inputType="text"
+                                android:text="@{String.valueOf(viewModel.userInfoData.country.name)}"
+                                android:textColor="@color/figmaSplashScreenColor" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+        </RelativeLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bottomContainerMyTags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <View
+                android:id="@+id/basicLine"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/primary_light_light"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/saveChangesButton"
+                style="@style/MyButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimens_100dp"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:layout_marginBottom="@dimen/dimens_16dp"
+                android:gravity="center"
+                android:text="@string/save_changes"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/basicLine" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </RelativeLayout>
+</layout>

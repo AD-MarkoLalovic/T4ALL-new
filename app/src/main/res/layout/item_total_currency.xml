@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="totalCurrency"
+            type="com.mobility.enp.data.model.api_my_invoices.TotalCurrency" />
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/containerTotalCurrency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dimens_8dp"
+        android:paddingHorizontal="@dimen/dimens_10dp"
+        android:paddingVertical="@dimen/dimens_6dp"
+        tools:background="@drawable/border_home_unpaid"
+        tools:backgroundTint="@color/figma_blue_login">
+
+        <TextView
+            style="@style/CaptionRegular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(totalCurrency.total + ' ' + totalCurrency.currency.label)}"
+            android:textColor="@color/primary_light_darkest"
+            tools:text="100 €" />
+    </RelativeLayout>
+</layout>

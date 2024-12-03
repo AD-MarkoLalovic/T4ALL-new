@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_dialog_borders"
+        android:backgroundTint="@color/primary_light_lightest">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/dimens_16dp"
+            android:paddingVertical="@dimen/dimens_22dp">
+
+            <TextView
+                android:id="@+id/txComplaintForm"
+                style="@style/H2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/objection"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txSubject"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_34dp"
+                android:text="@string/object_complaint_number"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txComplaintForm" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtSubjectNumber"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_84dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_84dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_84dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_84dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txSubject">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/subjectNumberVal"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/subject_number"
+                    android:inputType="number"
+                    android:textColor="@color/figmaSplashScreenColor"
+                    android:textColorHint="@color/figmaIntroEclipseColorInactive" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/subText"
+                style="@style/CaptionRegular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:text="@string/case_number_info"
+                android:textColor="@color/figmaIntroEclipseColorInactive"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtSubjectNumber" />
+
+            <TextView
+                android:id="@+id/txSubmit"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_22dp"
+                android:text="@string/subject_date"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/subText" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtComplaintId"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_84dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_84dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_84dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_84dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="1dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txSubmit">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/complaintId"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/calendar_today"
+                    android:hint="mm/dd/yyyy"
+                    android:textColor="@color/figmaSplashScreenColor"
+                    android:textColorHint="@color/figmaIntroEclipseColorInactive" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/txHintEnterRegistrationPlate"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_22dp"
+                android:text="@string/object_of_complaint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtComplaintId" />
+
+            <TextView
+                android:id="@+id/textView1"
+                style="@style/SubtitlesRegular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimens_16dp"
+                android:text="@string/response_to_toll_complaint"
+                app:layout_constraintBottom_toBottomOf="@+id/checkbox1"
+                app:layout_constraintEnd_toStartOf="@id/checkbox1"
+                android:textColor="@color/figmaSplashScreenColor"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/checkbox1" />
+
+            <CheckBox
+                android:id="@+id/checkbox1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txHintEnterRegistrationPlate" />
+
+            <View
+                android:id="@+id/objectionLineFirst"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_1dp"
+                android:layout_marginTop="19dp"
+                android:background="@color/primary_light_light"
+                app:layout_constraintEnd_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView1" />
+
+            <TextView
+                android:id="@+id/txPrigovor"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_29dp"
+                android:text="@string/objection_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/objectionLineFirst" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txEnterTheReasonForTheComplaint"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_84dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_84dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_84dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_84dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="1dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txPrigovor">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reasonForComplaintVal"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_objection_reason"
+                    android:inputType="text"
+                    android:textColor="@color/figmaSplashScreenColor"
+                    android:textColorHint="@color/figmaIntroEclipseColorInactive" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/buttonConfirmLostTag"
+                style="@style/MyButtonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="34dp"
+                android:text="@string/confirm"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txEnterTheReasonForTheComplaint" />
+
+            <Button
+                android:id="@+id/cancelComplaintForm"
+                style="@style/MyOutlinedButtonSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="34dp"
+                android:layout_marginEnd="@dimen/dimens_16dp"
+                android:text="@string/button_close"
+                app:layout_constraintEnd_toStartOf="@+id/buttonConfirmLostTag"
+                app:layout_constraintTop_toBottomOf="@+id/txEnterTheReasonForTheComplaint" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

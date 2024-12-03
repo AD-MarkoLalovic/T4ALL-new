@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.mobility.enp.data.model.api_tags.Tag" />
+
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimens_8dp"
+        android:backgroundTint="@color/primary_light_light"
+        android:elevation="@dimen/dimens_8dp"
+        app:cardCornerRadius="@dimen/dimens_20dp"
+        app:strokeColor="@color/primary_light_light"
+        app:strokeWidth="@dimen/dimens_2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dimens_16dp">
+
+                <TextView
+                    android:id="@+id/txTable"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{data.registrationPlate}"
+                    android:textColor="@color/primary_light_darkest"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="BG1234UL" />
+
+                <TextView
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{data.serialNumber}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="CE040130628219221" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="@dimen/dimens_16dp">
+
+
+                <TextView
+                    android:id="@+id/txCategory"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_16dp"
+                    android:text="@string/category"
+                    android:textColor="@color/primary_light_darkest"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="@string/category" />
+
+                <TextView
+                    android:id="@+id/txtCategoryVal"
+                    style="@style/SubtitlesMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_16dp"
+                    android:text='@{data.category.value + " "}'
+                    app:layout_constraintStart_toEndOf="@+id/txCategory"
+                    app:layout_constraintTop_toTopOf="@+id/txCategory"
+                    app:layout_constraintBottom_toBottomOf="@+id/txCategory"
+                    tools:text="1" />
+
+                <Button
+                    android:id="@+id/buttonLostTag"
+                    style="@style/MyOutlinedButtonSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lost_tag"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/buttonFoundTag"
+                    style="@style/MyOutlinedButtonSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/found_tag"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/txCountry"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_10dp"
+                    android:text="@string/status"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/cyclerTagStatuses"
+                    app:layout_constraintBottom_toBottomOf="@id/cyclerTagStatuses"
+                    android:layout_marginVertical="@dimen/dimens_10dp"
+                    tools:text="@string/status" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/cyclerTagStatuses"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_5dp"
+                    app:layout_constraintStart_toEndOf="@id/txCountry"
+                    app:layout_constraintTop_toBottomOf="@id/txCategory"
+                    android:layout_marginTop="@dimen/dimens_30dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                    app:spanCount="2"
+                    tools:itemCount="3"
+                    android:orientation="horizontal"
+                    tools:layout_height="@dimen/dimens_150dp"
+                    android:elevation="@dimen/dimens_10dp"
+                    tools:listitem="@layout/card_cycler_tag_statuses" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

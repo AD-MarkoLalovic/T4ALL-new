@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="relation"
+            type="com.mobility.enp.data.model.api_home_page.homedata.TollHistory" />
+
+        <variable
+            name="tagSerial"
+            type="String" />
+
+    </data>
+
+    <!--    adapter sets background drawable not this xml-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/dimens_10dp"
+        tools:background="@drawable/border_purchase_information">
+
+        <RelativeLayout
+            android:id="@+id/topContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimens_10dp">
+
+            <TextView
+                android:id="@+id/txtAccountNumber"
+                style="@style/SubtitlesMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:layout_toStartOf="@id/carTagNumber"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text="@string/account_number" />
+
+            <TextView
+                android:id="@+id/carInvoiceNumber"
+                style="@style/SubtitlesRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtAccountNumber"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:layout_toStartOf="@id/carTagNumber"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text="@{relation.invoiceNumber}"
+                tools:text="62458/2024-web" />
+
+
+            <ImageView
+                android:id="@+id/toolHistoryStatus"
+                android:layout_width="@dimen/dimens_10dp"
+                android:layout_height="@dimen/dimens_10dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:background="@drawable/status_icon_green" />
+
+
+            <TextView
+                android:id="@+id/carTagNumber"
+                style="@style/ParagraphMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/txtAccountNumber"
+                android:layout_alignBottom="@+id/carInvoiceNumber"
+                android:layout_marginEnd="@dimen/dimens_20dp"
+                android:layout_toStartOf="@id/toolHistoryStatus"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text='@{relation.paymentAmount.amount + " " +relation.paymentAmount.currency}'
+                android:textColor="@color/primary_light_darkest"
+                tools:text="1000,00 RSD" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/bottomContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/topContainer"
+            android:background="@color/white"
+            android:padding="@dimen/dimens_10dp">
+
+            <TextView
+                android:id="@+id/passageRelationEntry"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text='@{relation.entryToll}'
+                tools:text="Beograd" />
+
+            <TextView
+                android:id="@+id/passageRelationExit"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text='@{relation.exitToll}'
+                tools:text="Novi Sad" />
+
+            <TextView
+                android:id="@+id/passageEntryTime"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/passageRelationEntry"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:layout_toEndOf="@id/passageEntryDate"
+                android:text='@{relation.entryTime}'
+                tools:text="10:11" />
+
+            <TextView
+                android:id="@+id/passageEntryDate"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/passageRelationEntry"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:text='@{relation.entryDate}'
+                tools:text="14.07.2023." />
+
+            <TextView
+                android:id="@+id/passageExitTime"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/passageRelationEntry"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:text='@{relation.exitTime}'
+                tools:text="10:20" />
+
+            <TextView
+                android:id="@+id/passageExitDate"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/passageRelationEntry"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:layout_toStartOf="@id/passageExitTime"
+                android:text='@{relation.exitDate}'
+                tools:text="15.07.2023." />
+
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/splashScreenFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.mobility.enp.view.fragments.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_forgotPasswordFragment"
+            app:destination="@id/forgotPasswordFragment" />
+
+        <action
+            android:id="@+id/action_loginFragment_to_countryRegistrationFragment"
+            app:destination="@id/locationSelectFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_newRegFlow"
+            app:destination="@id/locationSelectFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_loginContactFormDialog"
+            app:destination="@id/loginContactFormDialog" />
+        <action
+            android:id="@+id/action_loginFragment_to_termsAndPrivacyFragment"
+            app:destination="@id/termsAndPrivacyFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.mobility.enp.view.fragments.ForgotPasswordFragment"
+        android:label="ForgotPasswordFragment"
+        tools:layout="@layout/fragment_forgot_password">
+        <action
+            android:id="@+id/action_forgotPasswordFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@+id/forgotPasswordFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.mobility.enp.view.fragments.SplashScreenFragment"
+        android:label="fragment_splash_screen"
+        tools:layout="@layout/fragment_splash_screen">
+        <action
+            android:id="@+id/action_splashScreenFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@+id/splashScreenFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashScreenFragment_to_introScreenFragment"
+            app:destination="@id/introScreenFragment"
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashScreenFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/introScreenAdvantages"
+        android:name="com.mobility.enp.view.fragments.intro.IntroScreenAdvantages"
+        android:label="IntroScreenAdvantages"
+        tools:layout="@layout/fragment_intro_screen_advantage">
+        <action
+            android:id="@+id/action_introScreenAdvantages_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/introScreenAdvantages"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+    <action
+        android:id="@+id/action_global_introScreenAdvantages"
+        app:destination="@id/introScreenAdvantages" />
+
+    <fragment
+        android:id="@+id/locationSelectFragment"
+        android:name="com.mobility.enp.view.fragments.LocationSelectFragment"
+        android:label="LocationSelectFragment"
+        tools:layout="@layout/fragment_location_select">
+        <action
+            android:id="@+id/action_locationSelectFragment_to_tosFragment"
+            app:destination="@id/tosFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tosFragment"
+        android:name="com.mobility.enp.view.fragments.registration_v2.RegistrationFragment"
+        android:label="TosFragment"
+        tools:layout="@layout/fragment_tos">
+        <argument
+            android:name="countryData"
+            app:argType="com.mobility.enp.data.model.registration.CountryModel"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/myTagsFragment2"
+        android:name="com.mobility.enp.view.fragments.my_profile.MyTagsFragment"
+        android:label="MyTagsFragment"
+        tools:layout="@layout/fragment_tags">
+        <action
+            android:id="@+id/action_myTagsFragment2_to_addTagFragment"
+            app:destination="@id/addTagFragment" />
+        <action
+            android:id="@+id/action_myTagsFragment2_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/refundRequestFragment2"
+        android:name="com.mobility.enp.view.fragments.my_profile.RefundRequestFragment"
+        android:label="RefundRequestFragment"
+        tools:layout="@layout/fragment_refund_request">
+        <action
+            android:id="@+id/action_refundRequestFragment2_to_tagPickerRequestFragment"
+            app:destination="@id/tagPickerRequestFragment" />
+        <action
+            android:id="@+id/action_refundRequestFragment2_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/basicInformationFragment"
+        android:name="com.mobility.enp.view.fragments.my_profile.BasicInformationFragment"
+        android:label="BasicInformationFragment"
+        tools:layout="@layout/fragment_basic_information">
+        <action
+            android:id="@+id/action_basicInformationFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.mobility.enp.view.fragments.my_profile.ChangePasswordFragment"
+        android:label="ChangePasswordFragment"
+        tools:layout="@layout/fragment_change_password">
+        <action
+            android:id="@+id/action_changePasswordFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tagPickerRequestFragment"
+        android:name="com.mobility.enp.view.fragments.my_profile.TagPickerRequestFragment"
+        android:label="TagPickerRequestFragment"
+        tools:layout="@layout/fragment_tag_picker_request">
+        <action
+            android:id="@+id/action_tagPickerRequestFragment_to_refundRequestFragment2"
+            app:destination="@id/refundRequestFragment2"
+            app:popUpTo="@id/refundRequestFragment2"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.mobility.enp.view.fragments.my_profile.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/toolHistoryFragment"
+        android:name="com.mobility.enp.view.fragments.tool_history.ToolHistoryMainFragment"
+        android:label="ToolHistoryFragment"
+        tools:layout="@layout/fragment_passage_history">
+        <action
+            android:id="@+id/action_toolHistoryFragment_to_toolHistorySearchFragment"
+            app:destination="@id/toolHistorySearchFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/toolHistorySearchFragment"
+        android:name="com.mobility.enp.view.fragments.tool_history.ToolHistoryFilterFragment"
+        android:label="fragment_tool_history_details"
+        tools:layout="@layout/fragment_tool_history_search_query">
+
+        <action
+            android:id="@+id/action_toolHistorySearchFragment_to_toolHistorySearchResultFragment"
+            app:destination="@id/toolHistorySearchResultFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/toolHistorySearchResultFragment"
+        android:name="com.mobility.enp.view.fragments.tool_history.ToolHistoryResultFragment"
+        android:label="fragment_tool_history_search_result"
+        tools:layout="@layout/fragment_tool_history_search_result">
+        <action
+            android:id="@+id/action_toolHistorySearchResultFragment_to_toolHistoryFragment"
+            app:destination="@id/toolHistoryFragment"
+            app:popUpTo="@id/toolHistoryFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addTagFragment"
+        android:name="com.mobility.enp.view.fragments.my_profile.AddTagFragment"
+        android:label="AddTagFragment"
+        tools:layout="@layout/fragment_add_tag">
+        <action
+            android:id="@+id/action_addTagFragment_to_myTagsFragment2"
+            app:destination="@id/myTagsFragment2" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_loginFragment"
+        app:destination="@id/loginFragment"
+        app:popUpTo="@id/loginFragment"
+        app:popUpToInclusive="true" />
+
+    <action
+        android:id="@+id/action_global_toolHistoryFragment"
+        app:destination="@id/toolHistoryFragment" />
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.mobility.enp.view.fragments.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home_welcome">
+        <action
+            android:id="@+id/action_homeFragment_to_cardFragment"
+            app:destination="@id/cardFragment" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_homeFragment"
+        app:destination="@id/homeFragment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.mobility.enp.view.fragments.my_profile.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_myTagsFragment2"
+            app:destination="@id/myTagsFragment2" />
+        <action
+            android:id="@+id/action_profileFragment_to_refundRequestFragment2"
+            app:destination="@id/refundRequestFragment2" />
+        <action
+            android:id="@+id/action_profileFragment_to_basicInformationFragment"
+            app:destination="@id/basicInformationFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_profileFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_termsAndPrivacyFragment"
+            app:destination="@id/termsAndPrivacyFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_supportDialog"
+            app:destination="@id/supportDialog" />
+        <action
+            android:id="@+id/action_profileFragment_to_deactivateAccountDialog"
+            app:destination="@id/deactivateAccountDialog" />
+
+
+    </fragment>
+    <fragment
+        android:id="@+id/introScreenFragment"
+        android:name="com.mobility.enp.view.fragments.intro.IntroScreenFragment"
+        android:label="IntroScreenFragment"
+        tools:layout="@layout/fragment_intro_screen">
+        <action
+            android:id="@+id/action_introScreenFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/introScreenFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/invoicesFragment"
+        android:name="com.mobility.enp.view.fragments.my_profile.MyInvoicesFragment"
+        android:label="InvoicesFragment"
+        tools:layout="@layout/fragment_bills">
+        <action
+            android:id="@+id/action_invoicesFragment_to_profileFragment2"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_invoicesFragment"
+        app:destination="@id/invoicesFragment" />
+    <fragment
+        android:id="@+id/paymentAndPassageFragment"
+        android:name="com.mobility.enp.view.fragments.PaymentAndPassageFragment"
+        android:label="PaymentAndPassageFragment"
+        tools:layout="@layout/fragment_payment_and_passage">
+        <action
+            android:id="@+id/action_paymentAndPassageFragment_to_cardFragment"
+            app:destination="@id/cardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cardFragment"
+        android:name="com.mobility.enp.view.fragments.card.CardFragment"
+        android:label="CardFragment"
+        tools:layout="@layout/fragment_tos">
+        <argument
+            android:name="promotion"
+            app:argType="com.mobility.enp.data.model.api_home_page.homedata.Promotion"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/termsAndPrivacyFragment"
+        android:name="com.mobility.enp.view.fragments.my_profile.TermsAndPrivacyFragment"
+        android:label="TermsAndPrivacyFragment">
+        <argument
+            android:name="userInfo"
+            app:argType="string" />
+    </fragment>
+    <dialog
+        android:id="@+id/loginContactFormDialog"
+        android:name="com.mobility.enp.view.dialogs.CustomerSupportDialog"
+        android:label="LoginContactFormDialog"
+        tools:layout="@layout/contact_form_dialog" />
+    <dialog
+        android:id="@+id/supportDialog"
+        android:name="com.mobility.enp.view.dialogs.SupportDialog"
+        android:label="SupportDialog"
+        tools:layout="@layout/dialog_support" />
+    <dialog
+        android:id="@+id/notificationDialog"
+        android:name="com.mobility.enp.view.dialogs.NotificationDialog"
+        android:label="NotificationDialog"
+        tools:layout="@layout/notification_dialog_layout" />
+    <action
+        android:id="@+id/action_global_notificationDialog"
+        app:destination="@id/notificationDialog" />
+    <dialog
+        android:id="@+id/noInternetConnectionDialog"
+        android:name="com.mobility.enp.view.dialogs.NoInternetConnectionDialog"
+        android:label="NoInternetConnectionDialog"
+        tools:layout="@layout/general_dialog">
+        <argument
+            android:name="title"
+            app:argType="string" />
+
+        <argument
+            android:name="subtitle"
+            app:argType="string" />
+    </dialog>
+    <action
+        android:id="@+id/action_global_noInternetConnectionDialog"
+        app:destination="@id/noInternetConnectionDialog" />
+    <dialog
+        android:id="@+id/loginNoInternetConnectionDialog"
+        android:name="com.mobility.enp.view.dialogs.LoginNoInternetConnectionDialog"
+        android:label="LoginNoInternetConnectionDialog"
+        tools:layout="@layout/general_dialog">
+        <argument
+            android:name="title"
+            app:argType="string" />
+
+        <argument
+            android:name="subtitle"
+            app:argType="string" />
+    </dialog>
+    <action
+        android:id="@+id/action_global_loginNoInternetConnectionDialog"
+        app:destination="@id/loginNoInternetConnectionDialog" />
+    <dialog
+        android:id="@+id/forgotPassDialog"
+        android:name="com.mobility.enp.view.dialogs.ForgotPassDialog"
+        android:label="ForgotPassDialog"
+        tools:layout="@layout/dialog_forgot_pass">
+        <argument
+            android:name="bool"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_forgotPassDialog_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@+id/forgotPassDialog"
+            app:popUpToInclusive="true" />
+    </dialog>
+    <action
+        android:id="@+id/action_global_forgotPassDialog"
+        app:destination="@id/forgotPassDialog" />
+    <dialog
+        android:id="@+id/deactivateAccountDialog"
+        android:name="com.mobility.enp.view.dialogs.DeactivateAccountDialog"
+        tools:layout="@layout/deactivate_dialog"
+        android:label="DeactivateAccountDialog" />
+
+
+</navigation>

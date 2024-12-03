@@ -1,0 +1,67 @@
+# Node artifact fajlovi
+node_modules/
+dist/
+
+# Kompajlirani Java klasni fajlovi
+*.class
+
+# Kompajlirani Python bytecode
+*.py[cod]
+
+# Log fajlovi
+*.log
+
+# Paket fajlovi
+*.jar
+
+# Maven
+target/
+
+# JetBrains IDE
+.idea/
+
+# Izveštaji o testiranju
+TEST*.xml
+
+# Generisano od strane MacOS
+.DS_Store
+
+# Generisano od strane Windows-a
+Thumbs.db
+
+# Aplikacije
+*.app
+*.exe
+*.war
+
+# Veliki medijski fajlovi
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv
+
+# Build fajlovi i direktorijumi
+build/
+out/
+.gradle/
+
+# CI ili konfiguracioni fajlovi alata za izgradnju
+.travis.yml
+.circleci/
+Jenkinsfile
+
+# Fajlovi sa osetljivim informacijama, kao što su API ključevi ili lozinke
+secrets.properties
+
+# Sadrži lokalna podešavanja razvojnog okruženja za svakog člana tima, kao što su putanje do Android SDK i drugih alata
+local.properties
+
+# Direktorijumi za prethodne verzije i privremene fajlove
+.history/
+.tmp/
+
+# Android build artefakti
+*.aab
+*.apk

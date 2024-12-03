@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialogBackground"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_dialog_borders"
+    android:minWidth="260dp"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/txChooseLanguage"
+        style="@style/H3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/dimens_16dp"
+        android:text="@string/choose_language" />
+
+    <RelativeLayout
+        android:id="@+id/firstBlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txChooseLanguage"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true">
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/languageSerbian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_srpski" />
+
+            <RadioButton
+                android:id="@+id/languageSerbianLatin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_srpski_latin" />
+
+            <RadioButton
+                android:id="@+id/languageEnglish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_english" />
+
+            <RadioButton
+                android:id="@+id/languageMontenegro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_crnogorski" />
+
+            <RadioButton
+                android:id="@+id/languageMacedonian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_makednoski" />
+
+            <RadioButton
+                android:id="@+id/languageBosnia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_bosnia" />
+
+            <RadioButton
+                android:id="@+id/languageCroatia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_hrvatski" />
+
+            <RadioButton
+                android:id="@+id/languageGerman"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_nemacki" />
+
+            <RadioButton
+                android:id="@+id/languageTurki"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_turski" />
+
+            <RadioButton
+                android:id="@+id/languageGreek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_grcki" />
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/buttonCloseDialog"
+            style="@style/MyButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/radioGroup"
+            android:layout_marginTop="16dp"
+            android:text="@string/button_close" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

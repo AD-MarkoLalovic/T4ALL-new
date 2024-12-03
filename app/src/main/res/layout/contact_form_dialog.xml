@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_dialog_borders"
+        android:backgroundTint="@color/primary_light_lightest"
+        android:paddingHorizontal="@dimen/dimens_16dp"
+        android:paddingTop="@dimen/dimens_14dp"
+        android:paddingBottom="@dimen/dimens_22dp"
+        tools:context=".view.dialogs.CustomerSupportDialog">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <ImageView
+                android:id="@+id/contactFormClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_close"
+                android:layout_gravity="end"
+                android:importantForAccessibility="no"/>
+
+            <TextView
+                style="@style/H3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/customer_support"
+                android:textColor="@color/primary_light_darkest"
+                android:layout_marginTop="@dimen/dimens_6dp"/>
+
+            <TextView
+                style="@style/Paragraph"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:text="@string/contact_support_fill_fields" />
+
+            <TextView
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/reason_for_contact" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/contactFormInputReason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="84dp"
+                app:boxCornerRadiusBottomStart="84dp"
+                app:boxCornerRadiusTopEnd="84dp"
+                app:boxCornerRadiusTopStart="84dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="@dimen/dimens_0dp"
+                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/contactFormInputEditReason"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:hint="@string/reason_for_contact_support"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:textColor="@color/figmaSplashScreenColor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:text="@string/email" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/contactFormInputEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="84dp"
+                app:boxCornerRadiusBottomStart="84dp"
+                app:boxCornerRadiusTopEnd="84dp"
+                app:boxCornerRadiusTopStart="84dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="@dimen/dimens_0dp"
+                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/contactFormInputEditEmail"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:hint="@string/hint_enter_email"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/figmaSplashScreenColor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:text="@string/message" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/contactFormInputMessages"
+                style="@style/CaptionRegular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="26dp"
+                app:boxCornerRadiusBottomStart="26dp"
+                app:boxCornerRadiusTopEnd="26dp"
+                app:boxCornerRadiusTopStart="26dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="@dimen/dimens_0dp"
+                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/contactFormInputEditMessages"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="146dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="top"
+                    android:hint="@string/provide_request_details"
+                    android:imeOptions="actionDone"
+                    android:inputType="textMultiLine"
+                    android:textColor="@color/figmaSplashScreenColor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/contactFormSendButton"
+                style="@style/MyButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_48dp"
+                android:text="@string/send" />
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/loadingCustomerSupport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:indeterminate="true"/>
+
+    </FrameLayout>
+</layout>

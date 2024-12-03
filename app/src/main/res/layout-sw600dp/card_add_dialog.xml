@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialogBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_dialog_borders"
+    android:paddingHorizontal="@dimen/dimens_100dp"
+    android:paddingTop="@dimen/dimens_32dp"
+    android:paddingBottom="@dimen/dimens_24dp">
+
+    <LinearLayout
+        android:id="@+id/firstBlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            style="@style/H2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_select_country_for_card" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_24dp"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/serbianPassage"
+                style="@style/Paragraph"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:text="@string/serbia"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <RadioButton
+                android:id="@+id/macedonianPassage"
+                style="@style/Paragraph"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/macedonia"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <RadioButton
+                android:id="@+id/montenegroPassage"
+                style="@style/Paragraph"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:text="@string/montenegro"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/buttonCloseDialog"
+            style="@style/MyButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="@string/button_close" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

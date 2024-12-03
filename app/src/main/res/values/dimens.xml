@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Dimensions in dp -->
+    <dimen name="indicator_size">5dp</dimen>
+    <dimen name="dimens_0dp">0dp</dimen>
+    <dimen name="dimens_1dp">1dp</dimen>
+    <dimen name="dimens_2dp">2dp</dimen>
+    <dimen name="dimens_3dp">3dp</dimen>
+    <dimen name="dimens_4dp">4dp</dimen>
+    <dimen name="dimens_5dp">5dp</dimen>
+    <dimen name="dimens_6dp">6dp</dimen>
+    <dimen name="dimens_8dp">8dp</dimen>
+    <dimen name="dimens_9dp">9dp</dimen>
+    <dimen name="dimens_10dp">10dp</dimen>
+    <dimen name="dimens_12dp">12dp</dimen>
+    <dimen name="dimens_13dp">13dp</dimen>
+    <dimen name="dimens_14dp">14dp</dimen>
+    <dimen name="dimens_15dp">15dp</dimen>
+    <dimen name="dimens_16dp">16dp</dimen>
+    <dimen name="dimens_20dp">20dp</dimen>
+    <dimen name="dimens_22dp">22dp</dimen>
+    <dimen name="dimens_23dp">23dp</dimen>
+    <dimen name="dimens_24dp">24dp</dimen>
+    <dimen name="dimens_25dp">25dp</dimen>
+    <dimen name="dimens_26dp">26dp</dimen>
+    <dimen name="dimens_29dp">29dp</dimen>
+    <dimen name="dimens_30dp">30dp</dimen>
+    <dimen name="dimens_31dp">31dp</dimen>
+    <dimen name="dimens_32dp">32dp</dimen>
+    <dimen name="dimens_34dp">34dp</dimen>
+    <dimen name="dimens_35dp">35dp</dimen>
+    <dimen name="dimens_40dp">40dp</dimen>
+    <dimen name="dimens_42dp">42dp</dimen>
+    <dimen name="dimens_45dp">45dp</dimen>
+    <dimen name="dimens_48dp">48dp</dimen>
+    <dimen name="dimens_50dp">50dp</dimen>
+    <dimen name="dimens_54dp">54dp</dimen>
+    <dimen name="dimens_67dp">67dp</dimen>
+    <dimen name="dimens_70dp">70dp</dimen>
+    <dimen name="dimens_80dp">80dp</dimen>
+    <dimen name="dimens_85dp">85dp</dimen>
+    <dimen name="dimens_120dp">120dp</dimen>
+    <dimen name="dimens_140dp">140dp</dimen>
+    <dimen name="dimens_150dp">150dp</dimen>
+    <dimen name="dimens_160dp">160dp</dimen>
+    <dimen name="dimens_170dp">170dp</dimen>
+    <dimen name="dimens_200dp">200dp</dimen>
+    <dimen name="dimens_300dp">300dp</dimen>
+    <dimen name="dimens_340dp">340dp</dimen>
+    <dimen name="dimens_400dp">400dp</dimen>
+    <dimen name="dimens_500dp">500dp</dimen>
+    <dimen name="dimens_700dp">700dp</dimen>
+
+    <!-- Dimension for recycler in MonthlyBillsAdapter -->
+    <dimen name="recycler_view_one_item">150dp</dimen>
+    <dimen name="recycler_view_two_items">300dp</dimen>
+    <dimen name="recycler_view_three_items">450dp</dimen>
+    <dimen name="recycler_view_more_items">500dp</dimen>
+
+
+    <!-- Dimensions in sp -->
+    <dimen name="dimens_4sp">4sp</dimen>
+    <dimen name="dimens_8sp">8sp</dimen>
+    <dimen name="dimens_9sp">9sp</dimen>
+    <dimen name="dimens_10sp">10sp</dimen>
+    <dimen name="dimens_12sp">12sp</dimen>
+    <dimen name="dimens_14sp">14sp</dimen>
+    <dimen name="dimens_16sp">16sp</dimen>
+    <dimen name="dimens_18sp">18sp</dimen>
+    <dimen name="dimens_20sp">20sp</dimen>
+    <dimen name="dimens_22sp">22sp</dimen>
+    <dimen name="dimens_23sp">23sp</dimen>
+    <dimen name="dimens_25sp">25sp</dimen>
+    <dimen name="dimens_26sp">26sp</dimen>
+    <dimen name="dimens_28sp">28sp</dimen>
+    <dimen name="dimens_30sp">30sp</dimen>
+    <dimen name="dimens_34sp">34sp</dimen>
+    <dimen name="dimens_36sp">36sp</dimen>
+    <dimen name="dimens_40sp">40sp</dimen>
+    <dimen name="dimens_100dp">100dp</dimen>
+    <dimen name="dimens_130dp">130dp</dimen>
+    <dimen name="dimens_257dp">257dp</dimen>
+    <dimen name="dimens_84dp">84dp</dimen>
+    <dimen name="dimens_60dp">60dp</dimen>
+    <dimen name="dimens_17dp">17dp</dimen>
+
+
+</resources>

@@ -1,0 +1,7 @@
+package com.mobility.enp.data.model.banks.response
+
+data class Link(
+    val active: Boolean,
+    val label: String,
+    val url: String
+)

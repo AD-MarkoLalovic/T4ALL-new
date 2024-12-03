@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".view.fragments.my_profile.AddTagFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="@dimen/dimens_0dp"
+            android:background="@drawable/border_login"
+            android:backgroundTint="@color/primary_light_lightest"
+            android:paddingHorizontal="@dimen/dimens_16dp"
+            android:paddingVertical="@dimen/dimens_22dp"
+            app:layout_constraintBottom_toTopOf="@+id/basicLine"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <ProgressBar
+                android:id="@+id/progBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txAddTag"
+                style="@style/H3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_tag"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="@dimen/dimens_2dp"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:background="@color/primary_light_light"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txAddTag" />
+
+            <TextView
+                android:id="@+id/registrationTitle"
+                style="@style/Paragraph"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_34dp"
+                android:text="@string/registration_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txAddTag" />
+
+            <TextView
+                android:id="@+id/enterLicensePlateTitle"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_12dp"
+                android:text="@string/tags_registration_hint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/registrationTitle" />
+
+            <TextView
+                android:id="@+id/txSerialNumberAddTag"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_20dp"
+                android:text="@string/serial_number"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/enterLicensePlateTitle" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputSerialNumber"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_6dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_84dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_84dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_84dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_84dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="@dimen/dimens_0dp"
+                app:boxStrokeWidthFocused="1dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txSerialNumberAddTag">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/serialNumber"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_enter_serial_number"
+                    android:inputType="number"
+                    android:textColor="@color/figmaSplashScreenColor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/txVerificationCodeAddTag"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:text="@string/verification_code"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/inputSerialNumber" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputVerificationCodeAddTag"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_6dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_84dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_84dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_84dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_84dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="@dimen/dimens_0dp"
+                app:boxStrokeWidthFocused="1dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txVerificationCodeAddTag"
+                app:layout_constraintWidth_max="488dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/verificationCode"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_enter_verification_code"
+                    android:textColor="@color/figmaSplashScreenColor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/basicLine"
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="@dimen/dimens_2dp"
+            android:layout_marginBottom="@dimen/dimens_8dp"
+            android:background="@color/primary_light_light"
+            app:layout_constraintBottom_toTopOf="@id/bttConfirmAddTag"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/bttConfirmAddTag"
+            style="@style/MyButtonStyle"
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="@dimen/dimens_8dp"
+            android:text="@string/confirm"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

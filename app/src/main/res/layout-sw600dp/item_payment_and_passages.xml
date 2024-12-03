@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="paymentAndPassage"
+            type="com.mobility.enp.data.model.api_my_profile.cards.Card" />
+
+        <variable
+            name="viewModel"
+            type="com.mobility.enp.viewmodel.PaymentAndPassageViewModel" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/itemCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimens_12dp"
+        android:backgroundTint="@color/primary_light_lightest"
+        app:cardCornerRadius="@dimen/dimens_22dp"
+        app:strokeColor="@color/primary_light_light"
+        app:strokeWidth="@dimen/dimens_2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/dimens_16dp"
+            android:paddingTop="@dimen/dimens_22dp"
+            android:paddingBottom="@dimen/dimens_10dp">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelinePayment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.6" />
+
+            <TextView
+                android:id="@+id/cardNumber"
+                style="@style/ParagraphMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{String.valueOf(paymentAndPassage.cardDetails)}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="xxxx-xxxx-xxxx-234" />
+
+            <ImageView
+                android:id="@+id/cardFlag"
+                android:layout_width="22dp"
+                android:layout_height="@dimen/dimens_16dp"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="@+id/cardNumber"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/cardNumber"
+                tools:background="@drawable/serbia_flag" />
+
+            <ImageView
+                android:id="@+id/cardType"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimens_0dp"
+                android:layout_marginEnd="@dimen/dimens_12dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_visa"
+                app:layout_constraintBottom_toBottomOf="@+id/cardNumber"
+                app:layout_constraintEnd_toStartOf="@+id/cardFlag"
+                app:layout_constraintTop_toTopOf="@+id/cardNumber" />
+
+            <View
+                android:id="@+id/horizontalLinePayment"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="@dimen/dimens_2dp"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:background="@color/primary_light_light"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardType" />
+
+            <TextView
+                android:id="@+id/primaryCard"
+                style="@style/CaptionMedium"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_gravity="start"
+                android:layout_marginTop="8dp"
+                android:breakStrategy="balanced"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:textColor="@color/primary_light_dark"
+                app:layout_constraintEnd_toStartOf="@+id/guidelinePayment"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/horizontalLinePayment"
+                tools:text="@string/choose_primary_card" />
+
+            <TextView
+                android:id="@+id/removeCard"
+                style="@style/CaptionMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="@string/remove_card"
+                android:textColor="@color/primary_light_darkest"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/horizontalLinePayment" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/inactiveCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/Paragraph"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                android:elevation="@dimen/dimens_10dp"
+                android:textSize="@dimen/dimens_12sp"
+                android:textColor="@color/figmaColorObjection"
+                android:padding="@dimen/dimens_5dp"
+                android:layout_marginEnd="@dimen/dimens_15dp"
+                android:text="@string/inactive_card" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

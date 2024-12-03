@@ -1,0 +1,210 @@
+package com.mobility.enp.view.adapters.tool_history.main_screen
+
+import android.content.Context
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.RecyclerView
+import com.mobility.enp.R
+import com.mobility.enp.data.model.api_tool_history.InvoiceRelation
+import com.mobility.enp.data.model.api_tool_history.ToolHistoryListing
+import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
+import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
+import com.mobility.enp.databinding.ItemRelationPassageRealBinding
+import com.mobility.enp.network.Repository
+import com.mobility.enp.view.dialogs.ComplaintFormDialog
+import com.mobility.enp.view.dialogs.ObjectionFormDialog
+
+class ToolHistoryListingPassageAdapter(
+    val data: ToolHistoryListing,
+    private val complaintInterface: SendToFragment,
+    val hideComplaintButton: Boolean,
+    val lifecycleOwner: LifecycleOwner,
+    val tagSerialNumber: String
+) :
+    RecyclerView.Adapter<ToolHistoryListingPassageAdapter.RelationViewHolder>() {
+
+    private lateinit var context: Context
+
+    private var currentPage = data.data.currentPage
+    private val lastPage = data.data.lastPage
+    private val totalItems = data.data.total
+
+    private var relation: ArrayList<InvoiceRelation> =
+        data.data.items[0].transitItems as ArrayList<InvoiceRelation>
+
+    companion object {
+        const val TAG = "PassageAdapter"
+    }
+
+    inner class RelationViewHolder(
+        private val context: Context,
+        private val binding: ItemRelationPassageRealBinding
+    ) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(relation: InvoiceRelation, complaintInterface: SendToFragment) {
+            if (!relation.entryToll.contains("-")) {
+                relation.entryToll += " -"
+            }
+            binding.relation = relation
+            binding.viewShade.background = null
+            binding.toolHistoryStatus.setOnClickListener {
+                Log.d(TAG, "relation status: $relation")
+            }
+
+            binding.btnComplaint.setOnClickListener {
+                val fragmentManager = (context as AppCompatActivity).supportFragmentManager
+
+                val apiInterface = object : ComplaintFormDialog.OnClick {
+                    override fun postComplaint(complaintBody: ComplaintBody) {
+                        complaintInterface.sendComplaintData(complaintBody)
+                    }
+                }
+
+                val complaintFormDialog = ComplaintFormDialog(apiInterface, relation.itemId)
+
+                complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
+            }
+
+            binding.btnObjection.setOnClickListener {
+                val fragmentManager = (context as AppCompatActivity).supportFragmentManager
+
+                if (relation.complaint != null) {
+                    val objectionDialog =
+                        ObjectionFormDialog({ objection ->
+                            complaintInterface.sendObjectionData(objection)
+                        }, relation.complaint.id)
+                    objectionDialog.show(fragmentManager, "ObjectionFormDialog")
+                }
+            }
+
+            if (relation.complaint != null) {  // ignore recommendation ide is wrong
+                binding.complaintId.visibility = View.VISIBLE
+                val text = context.getString(R.string.br_registration)
+                binding.complaintId.text = buildString {
+                    append(text)
+                    append(relation.complaint.id)
+                }
+
+                binding.btnComplaint.visibility = View.GONE
+                binding.container.visibility = View.VISIBLE
+
+                if (!relation.complaint.objections.isNullOrEmpty()) {
+                    val buttonText = context.getString(R.string.objection)
+                    binding.btnObjection.text = buttonText
+                    binding.objectionsNumber.text = relation.complaint.objections.size.toString()
+                    if (relation.complaint.objections.isEmpty()) {
+                        binding.viewShade.background = null
+                    } else {
+                        binding.viewShade.background = AppCompatResources.getDrawable(
+                            context,
+                            R.drawable.figma_objection_background
+                        )
+                    }
+                } else {
+                    val buttonText = context.getString(R.string.objection)
+                    binding.btnObjection.text = buttonText
+                }
+
+            } else {
+                binding.complaintId.visibility = View.GONE
+                binding.container.visibility = View.GONE
+
+                binding.btnComplaint.visibility = View.VISIBLE
+            }
+
+            when (relation.status.value) {
+                1 -> {
+                    binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_green)
+                    binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_green)
+                    binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_green)
+                }
+
+                3,  // unpaid
+                0 -> {
+                    binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_red)
+                    binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_red)
+                    binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_red)
+                }
+            }
+
+            if (hideComplaintButton) {
+                binding.btnComplaint.visibility = View.GONE
+                binding.complaintId.visibility = View.GONE
+                binding.container.visibility = View.GONE
+            }
+
+            binding.executePendingBindings()
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RelationViewHolder {
+        context = parent.context
+        return RelationViewHolder(
+            context,
+            ItemRelationPassageRealBinding.inflate(LayoutInflater.from(context), parent, false)
+        )
+    }
+
+    override fun getItemCount() = relation.size
+
+    override fun onBindViewHolder(holder: RelationViewHolder, position: Int) {
+        val currentItem = relation[holder.bindingAdapterPosition]
+        holder.bind(currentItem, complaintInterface)
+        if (Repository.isNetworkAvailable(context)) {
+            performDataFill(currentItem, holder.bindingAdapterPosition)
+        }
+    }
+
+    private fun performDataFill(currentItem: InvoiceRelation, bindingAdapterPosition: Int) {
+        Log.d(
+            TAG,
+            "onBindViewHolder: adapter pos $bindingAdapterPosition arrayTotal ${relation.size - 1} totalItems $totalItems"
+        )
+        if (relation[relation.size - 1] == currentItem && lastPage > currentPage) {
+            val dataFill = MutableLiveData<ToolHistoryListing>()
+
+            dataFill.observe(lifecycleOwner) { newPassages ->
+                complaintInterface.stopSpinner()
+
+                newPassages?.let {
+                    Log.d(TAG, "performDataFill: ${it.data.currentPage} ${it.data.lastPage}")
+                    currentPage = it.data.currentPage
+
+                    for (item: InvoiceRelation in it.data.items[0].transitItems) {
+                        relation.add(item)
+                        notifyItemChanged(relation.size - 1)
+                        Log.d(TAG, "dataInserted: $item")
+                    }
+                }
+
+                dataFill.removeObservers(lifecycleOwner)
+            }
+
+            complaintInterface.sendDataFill(currentPage + 1, dataFill, tagSerialNumber)
+        } else if (lastPage == currentPage && relation[relation.size - 1] == currentItem) {
+            Toast.makeText(context, context.getString(R.string.last_item), Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
+
+    interface SendToFragment {
+        fun sendComplaintData(complaintBody: ComplaintBody)
+        fun sendObjectionData(objectionBody: ObjectionBody)
+        fun sendDataFill(
+            nextPage: Int,
+            dataFill: MutableLiveData<ToolHistoryListing>,
+            tagSerialNumber: String
+        )
+
+        fun stopSpinner()
+    }
+
+}

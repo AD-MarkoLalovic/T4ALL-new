@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.mobility.enp.data.model.api_home_page.homedata.Promotion" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/dimens_5dp"
+        android:layout_marginEnd="@dimen/dimens_15dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="@dimen/dimens_300dp"
+            android:layout_height="200dp"
+            android:elevation="10dp"
+            app:cardCornerRadius="@dimen/dimens_25dp">
+
+            <ImageView
+                android:id="@+id/backgroundImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/flag_home_macedonian" />
+
+            <TextView
+                android:id="@+id/cardTitle"
+                style="@style/CaptionMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text="@{data.title}"
+                android:textColor="@color/white"
+                tools:text="North Macedonian passage" />
+
+            <TextView
+                android:id="@+id/cardSubtitle"
+                style="@style/CaptionRegular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_40dp"
+                android:ellipsize="end"
+                android:lineSpacingExtra="@dimen/dimens_4sp"
+                android:maxLines="5"
+                android:scrollHorizontally="true"
+                android:text="@{data.description}"
+                android:textColor="@color/white"
+                tools:text="@string/lorem" />
+
+            <Button
+                android:id="@+id/btnObjection"
+                style="@style/MyButtonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="@dimen/dimens_20dp"
+                android:layout_marginBottom="@dimen/dimens_10dp"
+                android:text="@string/add_card_home"
+                android:textSize="@dimen/dimens_10sp" />
+
+            <ImageView
+                android:id="@+id/closeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="@dimen/dimens_10dp"
+                android:elevation="@dimen/dimens_10dp"
+                android:src="@drawable/close_button" />
+
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+
+</layout>

@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ime" translatable="true">Име</string>
+    <string name="surname" translatable="true">Презиме</string>
+    <string name="address" translatable="true">Адреса</string>
+    <string name="city" translatable="true">Град</string>
+    <string name="Zip_Code" translatable="true">Поштенски код</string>
+    <string name="old_password" translatable="true">Стара лозинка</string>
+    <string name="new_password" translatable="true">Нова лозинка</string>
+    <string name="passage_history" translatable="true">Историја на премин</string>
+    <string name="search" translatable="true">Пребарај</string>
+    <string name="tag_serial_number" translatable="true">Сериски број на таг</string>
+    <string name="complaint" translatable="true">Рекламација</string>
+    <string name="refund_request" translatable="true">Побарај враќање на парите.</string>
+    <string name="forgot_your_password" translatable="true">Заборавена лозинка?</string>
+    <string name="enter_email_for_password_reset" translatable="true">Внесете ја вашата е-пошта и
+        упатства за ресетирање на лозинката ќе бидат испратени на вашиот е-мејл.</string>
+    <string name="hint_email" translatable="true">Електронска пошта</string>
+    <string name="hint_password" translatable="true">Лозинка</string>
+    <string name="button_confirm" translatable="true">Потврди</string>
+    <string name="button_sing_up" translatable="true">Најавете се</string>
+    <string name="button_skip_page" translatable="true">Прескокни</string>
+    <string name="back_to_login_page" translatable="true">Назад на страницата за најава</string>
+    <string name="all_rights_reserved" translatable="true">© 2023. Опен Балкан ЕНП. Сите права задржани</string>
+    <string name="my_tags" translatable="true">Моите ТАГ-ови</string>
+    <string name="status" translatable="true">Статус</string>
+    <string name="add_tag" translatable="true">Додади таг</string>
+    <string name="lost_tag" translatable="true">Изгубен таг</string>
+    <string name="button_close" translatable="true">Затвори</string>
+    <string name="dialog_lost_tag_message" translatable="true">Дали сте сигурни дека сакате да пријавите овој таг како изгубен?</string>
+    <string name="refund_request_explanation" translatable="true">Ако сте имале средства на вашиот уред
+        кога го пренесувате вашиот ТАГ уред од припејд мод на Toll4ALL, ве молиме пополнете го формуларот
+        така што овие средства ќе бидат заслужени на вашата банкарска сметка. По добивање на Вашето
+        барање, ќе направиме проверка во нашиот систем и ќе направиме враќање на посакуваната ЖР.</string>
+    <string name="amount" translatable="true">Износ</string>
+    <string name="bank_account" translatable="true">Џиро сметка</string>
+    <string name="bank" translatable="true">Банка</string>
+    <string name="send" translatable="true">Испрати</string>
+    <string name="registration_text" translatable="true">Регистрација на ЕТЦ/ТАГ уред - Србија</string>
+    <string name="tags_registration_hint" translatable="true">Внесете го регистарскиот број.\nВерификацискиот
+        код е регистарскиот број.\nСите полиња се задолжителни.</string>
+    <string name="serial_number" translatable="true">Сериски број</string>
+    <string name="verification_code" translatable="true">Верификациски код</string>
+    <string name="name_individual" translatable="true">Име</string>
+    <string name="serbia" translatable="true">Србија</string>
+    <string name="macedonia" translatable="true">С. Македонија</string>
+    <string name="croatia" translatable="true">Хрватска</string>
+    <string name="montenegro" translatable="true">Црна Гора</string>
+    <string name="welcome_back" translatable="true">Добредојдовте повторно</string>
+    <string name="my_invoices" translatable="true">Мои сметки</string>
+    <string name="fragment_verification" translatable="true">Верификација</string>
+    <string name="verification_code_not_received" translatable="true">Верификацискиот код не е примен</string>
+    <string name="confirm" translatable="true">Потврди</string>
+    <string name="email" translatable="true">Електронска пошта</string>
+    <string name="verification_code_sent_email" translatable="true">Верификацискиот код е испратен на вашиот е-мејл</string>
+    <string name="category" translatable="true">Категорија</string>
+    <string name="registration" translatable="true">Регистрација</string>
+    <string name="my_profile" translatable="true">Мој профил</string>
+    <string name="basic_information" translatable="true">Основни информации</string>
+    <string name="change_password" translatable="true">Промена на лозинка</string>
+    <string name="payment_methods" translatable="true">Начини на плаќање</string>
+    <string name="sign_out" translatable="true">Одјавување</string>
+    <string name="deactivate_account" translatable="true">Деактивирајте го профилот</string>
+    <string name="login_my_profile" translatable="true">Мој профил</string>
+    <string name="login_to_existing_account" translatable="true">Најави се на постоечки профил</string>
+    <string name="i_forgot_my_password" translatable="true"><u>Го заборавив мојот пасворд</u></string>
+    <string name="create_business_account" translatable="true">Направете деловен профил</string>
+    <string name="customer_support" translatable="true">Поддршка на корисници</string>
+    <string name="privacy_terms" translatable="true">Политика за приватност</string>
+    <string name="country" translatable="true">Земја</string>
+    <string name="save_changes" translatable="true">Зачувај промени</string>
+    <string name="repeat_password" translatable="true">Поново внесете ја новата лозинка.</string>
+    <string name="password_changed" translatable="true">Лозинката е променета!</string>
+    <string name="you_will_be_asked_to_login_again" translatable="true">Ќе бидете прашани да се најавите повторно.</string>
+    <string name="email_address_validation_successful" translatable="true">Успешна валидација на е-поштата!</string>
+    <string name="resend_it" translatable="true">Испрати повторно.</string>
+    <string name="address_and_number" translatable="true">Адреса и број</string>
+    <string name="business_account" translatable="true">Бизнис профил</string>
+    <string name="personal_account" translatable="true">Личен профил</string>
+    <string name="company_name" translatable="true">Име на компанија</string>
+    <string name="registration_number" translatable="true">Матичен број</string>
+    <string name="tax_identification_number" translatable="true">Даночен идентификационен број</string>
+    <string name="support_text" translatable="true">Поддршка</string>
+    <string name="terms_and_conditions" translatable="true">Услови и приватност</string>
+    <string name="all_requests" translatable="true">Сите барања</string>
+    <string name="button_request" translatable="true">Барај</string>
+    <string name="pay_securely" translatable="true">Платете безбедно со вашата кредитна картичка.</string>
+    <string name="mobile_provider_mts" translatable="true">Мобилен оператор (МТС)</string>
+    <string name="pay_with_mobile_bill" translatable="true">Платете удобно со вашата месечна мобилна сметка.</string>
+    <string name="enter_mobile" translatable="true">Внесете
+        го вашиот мобилен број за да добиете верификациски код преку СМС.</string>
+    <string name="contact_number" translatable="true">Телефон</string>
+    <string name="verification_code_sent" translatable="true">Верификацискиот
+        код е испратен на вашиот телефон преку СМС.</string>
+    <string name="add_credit_card" translatable="true">Додадете кредитна картичка</string>
+    <string name="position_card" translatable="true">Поставете ја
+        вашата дебитна или кредитна картичка во рамката за скенирање.</string>
+    <string name="scan_card" translatable="true">Скенирај картичка</string>
+    <string name="add_manually" translatable="true">Додади рачно</string>
+    <string name="fill_all_fields" translatable="true">Ве молиме пополнете
+        ги сите полиња пред да продолжите понатаму.</string>
+    <string name="invoice_details" translatable="true">Детали на фактура</string>
+    <string name="lorem_ipsum" translatable="true">Lorem Ipsum</string>
+    <string name="order_number" translatable="true">Број на нарачка</string>
+    <string name="credit_card_successful" translatable="true">Кредитната картичка е успешна</string>
+    <string name="tag_confirmed" translatable="true">Тагот е потврден</string>
+    <string name="name_and_surname" translatable="true">Име и презиме</string>
+    <string name="tag" translatable="true">Таг</string>
+    <string name="license_plate_number" translatable="true">Број на регистрацијска табличка</string>
+    <string name="country_of_passage" translatable="true">Земја на премин</string>
+    <string name="change_profile_picture" translatable="true">Промени профилна слика</string>
+    <string name="create_a_new_account" translatable="true">Креирај нов профил</string>
+    <string name="settings" translatable="true">Поставки</string>
+    <string name="allow_push_notifications" translatable="true">Дозволи известувања</string>
+    <string name="change_language" translatable="true">Промени јазик</string>
+    <string name="all" translatable="true">Сите</string>
+    <string name="confirm_lost_tag" translatable="true">Потврди изгубен таг</string>
+    <string name="cancel" translatable="true">Откажи</string>
+    <string name="show_all_tags" translatable="true">Прикажи ги сите тагови</string>
+    <string name="date" translatable="true">Датум</string>
+    <string name="from" translatable="true">Од</string>
+    <string name="to" translatable="true">До</string>
+    <string name="tool_history" translatable="true">Историја на поминувања</string>
+    <string name="reset" translatable="true"><u>Ресетирај</u></string>
+    <string name="tag_added_successfully" translatable="true">Успешно додадовте ТАГ.</string>
+    <string name="total" translatable="true">Вкупно</string>
+    <string name="to_submit_a_complaint" translatable="true">За поднесување на жалба, ве молиме пополнете ги сите полиња</string>
+    <string name="credit_card" translatable="true">Кредитна картичка</string>
+    <string name="account_number" translatable="true">Број на сметка</string>
+    <string name="pay_now" translatable="true">Плати сега</string>
+    <string name="choose_your_country" translatable="true">Изберете ја вашата земја</string>
+    <string name="loading_data" translatable="true">Вчитување на податоци…</string>
+    <string name="expiration_date" translatable="true">Датум на истекување</string>
+    <string name="notifications" translatable="true">Известувања</string>
+    <string name="permissions_title" translatable="true">Дозволи</string>
+    <string name="permission_subtitle" translatable="true">Дали сакате да ги отстраните можностите на апликацијата за примање на известувања?</string>
+    <string name="no" translatable="true">Не</string>
+    <string name="yes" translatable="true">Да</string>
+    <string name="remove_card" translatable="true"><u>Отстранете картичка</u></string>
+    <string name="contact_support" translatable="true">Контактирајте ја нашата корисничка поддршка.</string>
+    <string name="support_dialog_message" translatable="true">Порака</string>
+    <string name="support_successful_mail" translatable="true">Успешно испратено</string>
+    <string name="support_successful_massage" translatable="true">Успешно поднесовте порака. Некој ќе ви одговори.</string>
+    <string name="qr_code_scanning" translatable="true">Скенирање на Qr код</string>
+    <string name="scan_qr_code" translatable="true">Скенирајте го QR-кодот од договорот.</string>
+    <string name="speed_up_registration" translatable="true">На овој начин ќе го забрзате процесот на регистрација.</string>
+    <string name="api_call_error" translatable="true">Грешка во повикот на Api</string>
+    <string name="password_repeat_error_message" translatable="true">Повторно внесената лозинка не соодветсува со новата лозинка</string>
+    <string name="password_error_message" translatable="true">Полето за нова лозинка мора да содржи најмалку 8 карактери.</string>
+    <string name="enter_old_password_message" translatable="true">Полето за стара лозинка е задолжително.</string>
+    <string name="incorrect_old_password_message" translatable="true">Погрешно унета стара шифра.</string>
+    <string name="password_change_failed" translatable="true">Промената на лозинката не успеа.</string>
+    <string name="repeat_the_new_password" translatable="true">Повторно внесете ја новата лозинка</string>
+    <string name="enter_support_message" translatable="true">Внесете го текстот на пораката.</string>
+    <string name="create_account" translatable="true">Создадете сметка на T4A</string>
+    <string name="all_fields_are_mandatory" translatable="true">Сите полиња се задолжителни.</string>
+    <string name="change_successfully_saved" translatable="true">Промени успешно зачувани.</string>
+    <string name="please_connect_to_the_internet" translatable="true">Ве молиме поврзете се на интернет</string>
+    <string name="general_terms_and_conditions" translatable="true">Општи Услови и Услови</string>
+    <string name="privacy_policy" translatable="true">Политика за приватност</string>
+    <string name="choose_country_and_payment" translatable="true">Изберете земја и начин на плаќање</string>
+    <string name="primary_card" translatable="true">Главна картичка</string>
+    <string name="confirm_delete_card" translatable="true">Потврдете бришење на картичката</string>
+    <string name="are_you_sure_you_want_to_delete_the_card" translatable="true">Дали сте сигурни дека сакате да ја избришете картичката</string>
+    <string name="choose_primary_card" translatable="true"><u>Изберете стандардна</u></string>
+    <string name="card_successfully_deleted" translatable="true">Картата успешно избришана</string>
+    <string name="card_not_deleted" translatable="true">Картата не е избришана</string>
+    <string name="tags_with_serial_not_found" translatable="true">Ознаките со серии не се пронајдени</string>
+    <string name="reported_lost_tag_successfully" translatable="true">Успешно е пријавена изгубена ознака</string>
+    <string name="blocked_lost_tag" translatable="true">Блокирана - Изгубена ознака</string>
+    <string name="licence_plate" translatable="true">Унесете регистарску ознаку</string>
+    <string name="input" translatable="true">Влез</string>
+    <string name="enter_complaint_reason" translatable="true">Pазлог за рекламација.</string>
+    <string name="bank_account_number" translatable="true">Унесете број текуќег рачуна.</string>
+    <string name="bank_name" translatable="true">име на банка</string>
+    <string name="registered_complaint" translatable="true">Регистрирана рекламација</string>
+    <string name="br_registration" translatable="true">регистрација бр</string>
+    <string name="objection" translatable="true">Приговор</string>
+    <string name="object_of_complaint" translatable="true">Предмет на жалба:</string>
+    <string name="subject_date" translatable="true">Датум на тема:</string>
+    <string name="response_to_toll_complaint" translatable="true">Одговор на жалба за износот на патарина што се наплатува на уредите ENP</string>
+    <string name="subject_number" translatable="true">Број на предмет</string>
+    <string name="object_complaint_number" translatable="true">Број на предмет на кој се однесува приговорот:</string>
+    <string name="bill_downloaded_successfully" translatable="true">Сметката е успешно преземена.</string>
+    <string name="please_fill_all_required_data" translatable="true">Ве молиме пополнете ги сите потребни податоци</string>
+    <string name="select_date" translatable="true">Изберете датум</string>
+    <string name="please_enter_date_manually" translatable="true">Внесете датум рачно</string>
+    <string name="response_to_complaint" translatable="true">Одговор на жалба за исправноста на уредот за ENP</string>
+    <string name="response_to_report" translatable="true">Одговор на извештајот за изгубен / украден уред за ENP</string>
+    <string name="objection_content" translatable="true">Содржина на приговорот: (јасно наведете ги причините за приговорот)</string>
+    <string name="complaint_min_length" translatable="true">Поље Разлог мора садржати најмање 10 карактера.</string>
+    <string name="please_enter_all_required_data" translatable="true">Ве молиме внесете ги сите потребни податоци</string>
+    <string name="no_passage_data" translatable="true">Нема податоци за премин</string>
+    <string name="payment_successfully" translatable="true">Плаќањето е успешно извршено.</string>
+    <string name="please_select_tag" translatable="true">Ве молиме одберете таг.</string>
+    <string name="request_recorded" translatable="true">Вашиот барање е евидентирано и испратено на подоцнежно обработување.</string>
+    <string name="you_have_no_refund_requests" translatable="true">Немате барања за враќање на средствата.</string>
+    <string name="confirm_change_primary_card" translatable="true">Дали сте сигурни дека сакате да ја промените примарната картичка?</string>
+    <string name="confirm_primary_card" translatable="true">Потврдете ја примарната картичка</string>
+    <string name="primary_card_changed" translatable="true">Примарната картичка е успешно променета.</string>
+    <string name="all_country" translatable="true">Сè</string>
+    <string name="user_profile" translatable="true">User Profile</string>
+    <string name="personal_data" translatable="true">Personal Data</string>
+    <string name="password_change" translatable="true">Password Change</string>
+    <string name="hint_registration_plate" translatable="true">Регистарска ознака</string>
+    <string name="hint_enter_description" translatable="true">Унесете опис.</string>
+    <string name="hint_bank_account_number" translatable="true">Broj tekućeg računa</string>
+    <string name="hint_bank_name" translatable="true">Назив банке</string>
+    <string name="my_cards" translatable="true">Мои картички</string>
+    <string name="cards" translatable="true">Картички</string>
+    <string name="enter_objection_reason" translatable="true">Внесете ја причината за приговорот</string>
+    <string name="end_date_check" translatable="true">крајниот датум не може да биде пред датумот на започнување</string>
+    <string name="last_item" translatable="true">Нема повеќе податоци за премин за оваа ознака</string>
+    <string name="add_card_home" translatable="true">Додадете картичка</string>
+    <string name="text_add_card">Моментално немате додадени картици. Ве молиме додадете картица.</string>
+    <string name="no_notifications">Нема известувања</string>
+    <string name="no_notifications_received">Овој корисник не добил известувања</string>
+    <string name="payment_unsuccessful">Плаќањето не успеа.</string>
+    <string name="file_downloaded">Датотеката е преземена</string>
+    <string name="download_failed">Преземањето не успеа</string>
+    <string name="perm_required">Потребна е дозвола, ве молам одобрете.</string>
+    <string name="title_dialog_forgot_pass">Заборавена лозинка</string>
+    <string name="error_dialog_forgot_pass">Дошло е до грешка.</string>
+    <string name="subtitle_dialog_forgot_pass">Е-поштата не беше успешно испратена до корисникот.</string>
+    <string name="subtitle_forgot_pass">Е-поштата е испратена до корисникот.</string>
+    <string name="button_try_again">Обидете се повторно</string>
+    <string name="enter_your_email">Полето за е-пошта е задолжително.</string>
+    <string name="no_connection_title">Проблем со поврзување</string>
+    <string name="checking_for_connection">Проверка за поврзување</string>
+    <string name="connection_restored">Врската е обновена</string>
+    <string name="no_internet">Немате интернет.</string>
+    <string name="offline_using_stored_data">Моментално не сте поврзани на интернет. Се прикажуваат зачуваните податоци.</string>
+    <string name="multiple_payment_cards_for_country">Можете да користите повеќе различни платежни картички за една земја.</string>
+    <string name="tag_device_payment_method_north_macedonia">Ако сакате да го користите вашиот уред TAG на патиштата во Северној Македонији, ве молиме додадете валидна платежна картичка</string>
+    <string name="tag_device_payment_method_serbia">Ако сакате да го користите вашиот уред TAG на патиштата во Србији, ве молиме додадете валидна платежна картичка</string>
+    <string name="tag_device_payment_method_montenegro">Ако сакате да го користите вашиот уред TAG на патиштата во Црна Гора, ве молиме додадете валидна платежна картичка</string>
+    <string name="previous_invoices">Вашите претходни фактури ќе бидат прикажани тука.</string>
+    <string name="text_no_refund_tags">Немате тагови за рефундирање.</string>
+    <string name="text_no_my_tags">Моментално немате додадено тагови. Ве молиме додадете го вашиот таг.</string>
+    <string name="no_invoices">Вашите претходни фактури ќе бидат прикажани овде.</string>
+    <string name="no_tool_history">Ihre bisherigen Pässe werden hier angezeigt.</string>
+    <string name="enter_old_password">Внесете стара лозинка</string>
+    <string name="enter_new_password">Внесете нова лозинка</string>
+    <string name="retype_new_password">Повторно внесете нова лозинка</string>
+    <string name="greece">грција</string>
+    <string name="bosnia">Босна и Херцеговина</string>
+    <string name="enter_your_last_name">Внесете го вашето презиме</string>
+    <string name="enter_your_email_address">Внесете ја вашата емаил адреса</string>
+    <string name="enter_your_first_name">Внесете го вашето име</string>
+    <string name="enter_the_company_name">Внесете го името на фирмата</string>
+    <string name="enter_company_registration_number">Внесете го мајчиниот број на фирмата</string>
+    <string name="enter_your_phone_number">Внесете го вашиот телефонски број</string>
+    <string name="enter_your_address">Внесете ја вашата адреса</string>
+    <string name="enter_your_city">Внесете го вашиот град</string>
+    <string name="enter_your_postal_code">Внесете го вашиот поштенски број</string>
+    <string name="enter_your_country">Внесете ја вашата држава</string>
+    <string name="enter_your_password">Внесете ја вашата лозинка</string>
+    <string name="hint_enter_email">Внесете ја вашата е-пошта</string>
+    <string name="choose_language">Изберете јазик</string>
+    <string name="from_gallery">Од галерија</string>
+    <string name="select_your_profile_picture">Изберете ја вашата профилна слика.</string>
+    <string name="dialog_select_country_for_card">Изберете земја за која додавате картичка.</string>
+    <string name="action_cannot_be_undone">Оваа акција не може да се врати и трајно ќе ја избрише избраната картичка од вашата сметка.</string>
+    <string name="remove_card_button">Отстрани картичка</string>
+    <string name="hint_enter_serial_number">Внесете сериски број</string>
+    <string name="enter_amount">Внесете износ</string>
+    <string name="enter_bank_account">Внесете комплетен број на Жиро сметката.</string>
+    <string name="enter_name_bank">Полето Банка е задолжително.</string>
+    <string name="download_timeout">Ве молиме почекајте 5 секунди пред да преземете</string>
+    <string name="enter_content_of_complaint">"Внесете содржина на приговорот "</string>
+    <string name="hint_enter_verification_code">Внесете верификацискиот код</string>
+    <string name="serbian_passage">Србија</string>
+    <string name="montenegro_passage">Црна Гора</string>
+    <string name="north_macedonian_passage">Северна Македонија</string>
+    <string name="value">вредност</string>
+    <string name="message">Порака</string>
+    <string name="click_me">Кликнете на мене</string>
+    <string name="e_mail">Е-пошта</string>
+    <string name="reason_for_contact">Причина</string>
+    <string name="what_is_your_message">Која е вашата порака</string>
+    <string name="found_tag">Најдена ознака</string>
+    <string name="confirm_found_tag">Потврдете ја пронајдената ознака</string>
+    <string name="report_found_tag">Дали сте сигурни дека сакате да ја пријавите оваа ознака како пронајдена?</string>
+    <string name="add_card_for_serbia_message">Потребно е прво да додадете картичка за Србија.</string>
+    <string name="reason_for_deactivation">Причина за деактивација</string>
+    <string name="deactivation_request">Барање за деактивација</string>
+    <string name="email_not_valid">Е-пошта не е валидна</string>
+    <string name="first_name_mandatory">Полето за име е задолжително.</string>
+    <string name="last_name_mandatory">Полето за презиме е задолжително.</string>
+    <string name="phone_mandatory">Полето за телефон е задолжително.</string>
+    <string name="address_mandatory">Полето за адреса е задолжително.</string>
+    <string name="city_mandatory">Полето за град е задолжително.</string>
+    <string name="company_mandatory">Полето за име на фирмата е задолжително.</string>
+    <string name="registration_mandatory">Полето за матичен број е задолжително.</string>
+    <string name="contact_support_fill_fields">За да контактирате со корисничката поддршка, ве молиме пополнете ги сите полиња.</string>
+    <string name="reason_for_contact_support">Внесете причина за вашиот барање</string>
+    <string name="provide_request_details">Наведете детали за вашиот барање</string>
+    <string name="inactive_card">Истечена/Избришана Картичка</string>
+    <string name="fill_in_all_fields">Пополнете ги сите полиња.</string>
+    <string name="enter_valid_email_address">Внесете валидна е-пошта.</string>
+    <string name="message_was_not_send">Пораката не е испратена.</string>
+    <string name="account_deactivation_notice">Почитувани корисници, ве молиме користете ја оваа контакт форма исклучиво за целосна деактивација на вашиот кориснички профил. Сите други барања испратени преку оваа форма нема да бидат процесирани.</string>
+    <string name="pdf_invoices">PDF Сметки</string>
+    <string name="listing_of_passages">Листинг на поминувања</string>
+    <string name="export">Експорт</string>
+    <string name="csv_saved">CSV зачуван во документи</string>
+    <string name="bill_number">Број на сметка</string>
+    <string name="time_of_passage">Време на премин</string>
+    <string name="pay_ramp">Наплатна рампа</string>
+    <string name="price">Цена</string>
+    <string name="please_select_dates">Ве молиме изберете датуми</string>
+    <string name="formatting_error">Грешка во форматот</string>
+    <string name="please_select_one_tag">Извоз на историјата на премин е можен само за една ОЗНАКА или за сите ОЗНАКИ</string>
+    <string name="case_number_info">Бројот на предметот се однесува на бројот под кој е поднесена вашата рекламација и кој се наоѓа во одговорот што сте го добиле од нас. Приговорите со погрешен или непостоечки број нема да бидат прифатени.</string>
+    <string name="server_error_msg">Грешка на серверот</string>
+    <string name="hint_select_bank">Изберете банка</string>
+    <string name="refund_request_note">Напомена: Рефундирањето е можно само на тековните сметки на банките кои работат во Република Србија.</string>
+    <string name="language_changed">Јазикот е променет</string>
+    <string name="enter_message_support">Внесете порака за корисничка поддршка</string>
+
+
+</resources>

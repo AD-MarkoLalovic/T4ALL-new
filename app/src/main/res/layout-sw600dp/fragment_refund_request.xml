@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".view.fragments.my_profile.RefundRequestFragment">
+
+        <RelativeLayout
+            android:id="@+id/refundRequest"
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="@dimen/dimens_0dp"
+            android:background="@drawable/border_login"
+            android:backgroundTint="@color/primary_light_lightest"
+            android:paddingHorizontal="@dimen/dimens_100dp"
+            android:paddingTop="@dimen/dimens_34dp"
+            android:paddingBottom="@dimen/dimens_22dp"
+            app:layout_constraintBottom_toTopOf="@+id/viewLineRf"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/titleRefundRequest"
+                style="@style/H2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:text="@string/refund_request"
+                android:textColor="@color/primary_light_darkest" />
+
+            <View
+                android:id="@+id/lineRefundRequest"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="@dimen/dimens_2dp"
+                android:layout_below="@+id/titleRefundRequest"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/dimens_22dp"
+                android:background="@color/primary_light_light" />
+
+            <TextView
+                android:id="@+id/txExplanationRefundRequest"
+                style="@style/Paragraph"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lineRefundRequest"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/dimens_22dp"
+                android:text="@string/refund_request_explanation" />
+
+            <View
+                android:id="@+id/lineSecondRefundRequest"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="@dimen/dimens_2dp"
+                android:layout_below="@+id/txExplanationRefundRequest"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/dimens_22dp"
+                android:background="@color/primary_light_light" />
+
+            <TextView
+                android:id="@+id/txAllRequest"
+                style="@style/H3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lineSecondRefundRequest"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/dimens_22dp"
+                android:text="@string/all_requests"
+                android:textColor="@color/primary_light_darkest" />
+
+            <TextView
+                android:id="@+id/txNoRequirements"
+                style="@style/Paragraph"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txAllRequest"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:text="@string/you_have_no_refund_requests"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/refundLoadingView"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txAllRequest"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/dimens_30dp"
+                android:visibility="visible" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRefundRequest"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txAllRequest"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="@dimen/dimens_22dp"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_refund_request_created" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/viewLineRf"
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="2dp"
+            android:layout_marginBottom="@dimen/dimens_16dp"
+            android:background="@color/primary_light_light"
+            app:layout_constraintBottom_toTopOf="@+id/buttonRequest"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/buttonRequest"
+            style="@style/MyButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dimens_100dp"
+            android:layout_marginBottom="@dimen/dimens_16dp"
+            android:text="@string/button_request"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

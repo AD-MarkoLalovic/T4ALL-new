@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomButton">
+        <attr name="my_custom_text" format="string" />
+        <attr name="button_background" format="color" />
+        <!--<attr format="reference" name="button_background"/>-->
+        <attr name="corner_radius" format="dimension" />
+        <attr name="my_drawable" format="reference" />
+        <attr name="text_color" format="color" />
+        <attr name="stroke_color" format="color" />
+        <attr name="stroke_width" format="dimension" />
+        <attr name="text_style">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+        </attr>
+    </declare-styleable>
+</resources>

@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "944149781876",
+    "project_id": "toll4all-2fe16",
+    "storage_bucket": "toll4all-2fe16.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944149781876:android:1a597c7f48ef075005e021",
+        "android_client_info": {
+          "package_name": "com.mobility.enp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3rNoj9HazblooBvUb37EAlBZGasaUxG0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944149781876:android:1a597c7f48ef075005e021",
+        "android_client_info": {
+          "package_name": "com.mobility.enp.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3rNoj9HazblooBvUb37EAlBZGasaUxG0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944149781876:android:1a597c7f48ef075005e021",
+        "android_client_info": {
+          "package_name": "com.mobility.enp.stage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3rNoj9HazblooBvUb37EAlBZGasaUxG0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".view.fragments.my_profile.SettingsFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/settings"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/border_login"
+            android:backgroundTint="@color/primary_light_lightest"
+            android:padding="@dimen/dimens_16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/txSettings"
+                style="@style/H3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/lineSettings"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimens_2dp"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:background="@color/primary_light_light"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txSettings" />
+
+            <TextView
+                android:id="@+id/txAllowPush"
+                style="@style/SubtitlesRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_25dp"
+                android:text="@string/allow_push_notifications"
+                android:textColor="@color/primary_light_darkest"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lineSettings" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/notificationSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                app:layout_constraintBottom_toBottomOf="@id/txAllowPush"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/txAllowPush"
+                app:thumbTint="@color/white"
+                app:trackThickness="40dp"
+                app:trackTint="@color/switch_track_colors" />
+
+            <View
+                android:id="@+id/lineSecondSettings"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimens_2dp"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:background="@color/primary_light_light"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/notificationSwitch" />
+
+            <TextView
+                android:id="@+id/txChangeLanguage"
+                style="@style/SubtitlesRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/change_language"
+                android:textColor="@color/primary_light_darkest"
+                app:layout_constraintBottom_toBottomOf="@+id/languageIconInSettings"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/languageIconInSettings" />
+
+            <ImageView
+                android:id="@+id/languageIconInSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_language_home_screen"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/lineSecondSettings" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

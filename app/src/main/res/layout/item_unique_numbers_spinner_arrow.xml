@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Paragraph"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textColor="@color/figmaSplashScreenColor"
+    android:gravity="center"
+    android:paddingStart="@dimen/dimens_8dp"
+    app:drawableEndCompat="@drawable/ic_spiner_arrow_down"
+    tools:text="Srpska Banka">
+
+</TextView>

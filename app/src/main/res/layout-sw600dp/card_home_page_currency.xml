@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="totalCurrencyItem"
+            type="com.mobility.enp.data.model.api_home_page.homedata.TotalCurrency" />
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/rlContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/txtData"
+            style="@style/CaptionRegularTablet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_home_unpaid"
+            android:paddingHorizontal="@dimen/dimens_10dp"
+            android:paddingVertical="@dimen/dimens_6dp"
+            android:text="@{totalCurrencyItem.total + ' ' + totalCurrencyItem.currency.label}"
+            tools:text="100 €" />
+
+        <View
+            android:id="@+id/spacingView"
+            android:layout_width="@dimen/dimens_16dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/txtData"
+            android:layout_toEndOf="@id/txtData" />
+
+    </RelativeLayout>
+</layout>

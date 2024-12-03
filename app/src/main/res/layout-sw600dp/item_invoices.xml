@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="bill"
+            type="com.mobility.enp.data.model.api_my_invoices.Bill" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimens_22dp"
+        android:orientation="vertical">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/invoicesCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/figmaToolHistoryPaidBackground"
+            android:elevation="@dimen/dimens_8dp"
+            app:cardCornerRadius="@dimen/dimens_20dp"
+            app:strokeColor="@color/figmaToolHistoryPaidBackground"
+            app:strokeWidth="@dimen/dimens_2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/firstContainerInvoice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/dimens_16dp">
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideLineItemInvoices"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.4" />
+
+                    <TextView
+                        android:id="@+id/txAccountNumber"
+                        style="@style/SubtitlesMedium"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/account_number"
+                        app:layout_constraintEnd_toStartOf="@+id/guideLineItemInvoices"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/billFinal"
+                        style="@style/SubtitlesRegular"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimens_16dp"
+                        android:layout_marginEnd="@dimen/dimens_8dp"
+                        android:breakStrategy="simple"
+                        android:gravity="end"
+                        android:text="@{String.valueOf(bill.billFinal)}"
+                        app:layout_constraintEnd_toStartOf="@+id/invoicesStatus"
+                        app:layout_constraintStart_toStartOf="@+id/guideLineItemInvoices"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="104034/2023-web" />
+
+                    <ImageView
+                        android:id="@+id/invoicesStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@null"
+                        android:src="@drawable/status_icon_green"
+                        app:layout_constraintBottom_toBottomOf="@+id/billFinal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/billFinal" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/secondContainerInvoices"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="@dimen/dimens_16dp">
+
+                    <TextView
+                        android:id="@+id/priceRelation"
+                        style="@style/SubtitlesMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{String.valueOf(bill.total)}"
+                        android:textSize="@dimen/dimens_28sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/bttPayNow"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/bttPayNow"
+                        tools:text="15" />
+
+                    <TextView
+                        android:id="@+id/txInvoicesCurrency"
+                        style="@style/SubtitlesMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimens_2dp"
+                        android:layout_marginBottom="@dimen/dimens_5dp"
+                        android:text="@{String.valueOf(bill.currency.text)}"
+                        app:layout_constraintBottom_toBottomOf="@+id/priceRelation"
+                        app:layout_constraintStart_toEndOf="@+id/priceRelation"
+                        tools:text="€" />
+
+                    <Button
+                        android:id="@+id/bttPayNow"
+                        style="@style/MyOutlinedButtonSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dimens_16dp"
+                        android:backgroundTint="@color/transparent"
+                        android:text="@string/pay_now"
+                        app:layout_constraintEnd_toStartOf="@+id/downloadBillDetails"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/downloadBillDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_download"
+                        app:layout_constraintBottom_toBottomOf="@+id/bttPayNow"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/bttPayNow" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_1dp"
+            android:layout_marginTop="@dimen/dimens_22dp"
+            android:background="@color/white" />
+    </LinearLayout>
+</layout>

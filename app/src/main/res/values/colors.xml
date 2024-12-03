@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="logo_color">#FF1C3671</color>
+    <color name="light_gray">#FFCCCCCC</color>
+    <color name="very_light_gray">#80D3D3D3</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="clicked_background">#FF0000FF</color>
+    <color name="figmaSplashScreenColor">#236CC4</color>
+    <color name="figmaIntroScreensGreyColor">#DADCE0</color>
+    <color name="figmaIntroEclipseColorInactive">#7A92AF</color>
+    <color name="figmaIntroDarkColor">#222426</color>
+
+    <color name="primary_light_light">#DAE5F2</color>
+    <color name="primary_light_dark">#405063</color>
+    <color name="primary_light_lightest">#F5F7FA</color>
+    <color name="primary_light_darkest">#142233</color>
+    <color name="primary_light_orange">#FAF3ED</color>
+    <color name="figmaColorObjection">#D73732</color>
+
+    <color name="primary_dark_lightest">#C4C8CC</color>
+    <color name="primary_dark_dark">#35373B</color>
+    <color name="charcoal_purple">#49454F</color>
+
+    <color name="figmaToolHistoryUnpaidBackground">#FAEEED</color>
+    <color name="figmaToolHistoryPaidBackground">#EDFAF5</color>
+    <color name="white_smoke">#f5f5f5</color>
+
+    <color name="dark_orange">#E5852D</color>
+    <color name="soft_peach">#FAEDE1</color>
+    <color name="tag_active">#489D7D</color>
+
+    <color name="popup_menu">#F1F1F1</color>
+
+    <color name="soft_gray">#e9ecef</color>
+    <color name="hint_text_color">#a7a7a7</color>
+
+
+
+
+
+</resources>

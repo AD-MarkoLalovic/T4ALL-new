@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/dimens_16dp"
+            android:paddingBottom="@dimen/dimens_22dp"
+            android:background="@drawable/rounded_dialog_borders"
+            android:backgroundTint="@color/primary_light_lightest"
+            tools:context=".view.dialogs.SupportDialog">
+
+            <ImageView
+                android:id="@+id/supportDialogClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_14dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_close"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
+                android:id="@+id/txSupportDialogTitle"
+                style="@style/H2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/support_text"
+                android:textColor="@color/primary_light_darkest"
+                android:layout_marginTop="@dimen/dimens_6dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/supportDialogClose" />
+
+            <TextView
+                android:id="@+id/txSupportDialogSubtitle"
+                style="@style/Paragraph"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_34dp"
+                android:text="@string/contact_support"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txSupportDialogTitle" />
+
+            <TextView
+                android:id="@+id/txSupportMessage"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_22dp"
+                android:text="@string/support_dialog_message"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txSupportDialogSubtitle" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/supportDialogInput"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimens_150dp"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_26dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txSupportMessage">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/enterSupportMessage"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="top"
+                    android:hint="@string/enter_message_support"
+                    android:inputType="text|textMultiLine"
+                    android:textColor="@color/figmaSplashScreenColor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/bttSendSupportMessage"
+                style="@style/MyButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_34dp"
+                android:text="@string/send"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/supportDialogInput" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

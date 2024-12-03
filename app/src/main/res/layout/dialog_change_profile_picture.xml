@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_dialog_borders"
+        android:paddingHorizontal="@dimen/dimens_16dp"
+        android:paddingBottom="@dimen/dimens_22dp">
+
+        <ImageView
+            android:id="@+id/changeProfilePictureDialogClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_14dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_close"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"/>
+
+        <TextView
+            android:id="@+id/txChangeProfilePicture"
+            style="@style/H3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_6dp"
+            android:layout_below="@+id/changeProfilePictureDialogClose"
+            android:text="@string/change_profile_picture" />
+
+        <TextView
+            android:id="@+id/txContentDialogChangeProfilePicture"
+            style="@style/Paragraph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txChangeProfilePicture"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/dimens_16dp"
+            android:text="@string/select_your_profile_picture" />
+
+        <Button
+            android:id="@+id/bttFromGallery"
+            style="@style/MyButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txContentDialogChangeProfilePicture"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/dimens_48dp"
+            android:text="@string/from_gallery" />
+
+        <ImageButton
+            android:id="@+id/bttFromCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txContentDialogChangeProfilePicture"
+            android:layout_marginStart="@dimen/dimens_16dp"
+            android:layout_marginTop="@dimen/dimens_48dp"
+            android:layout_toEndOf="@id/bttFromGallery"
+            android:background="@color/transparent"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_camera" />
+
+
+    </RelativeLayout>
+</layout>

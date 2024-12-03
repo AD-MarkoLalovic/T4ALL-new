@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/dimens_30dp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            tools:context=".view.fragments.my_profile.ProfileFragment">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimens_100dp">
+
+                <TextView
+                    android:id="@+id/txMyProfile"
+                    style="@style/H2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_profile"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cardViewProfile"
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_16dp"
+                    app:layout_constraintBottom_toTopOf="@+id/containerMyProfile"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txMyProfile">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/rectangleProfilePicture"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="@dimen/dimens_0dp"
+                        android:layout_marginTop="@dimen/dimens_10dp"
+                        android:padding="0dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/rect_a2"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:riv_corner_radius="37dp" />
+
+                    <ImageView
+                        android:id="@+id/imageProfile"
+                        android:layout_width="@dimen/dimens_120dp"
+                        android:layout_height="@dimen/dimens_120dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_account_home_screen"
+                        android:translationZ="@dimen/dimens_6dp"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/userName"
+                        style="@style/H1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/dimens_22dp"
+                        android:layout_marginTop="@dimen/dimens_16dp"
+                        android:layout_marginBottom="@dimen/dimens_24dp"
+                        android:ellipsize="end"
+                        android:gravity="center_horizontal"
+                        android:maxLines="1"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="@+id/rectangleProfilePicture"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imageProfile"
+                        tools:text="@string/marko_lalovic" />
+
+                    <GridLayout
+                        android:id="@+id/gridLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.55"
+                        tools:ignore="MissingConstraints" />
+
+                    <ImageButton
+                        android:id="@+id/bttChangeProfilePicture"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:background="@color/transparent"
+                        android:contentDescription="@null"
+                        android:src="@drawable/plus_ic"
+                        android:translationZ="@dimen/dimens_6dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageProfile"
+                        app:layout_constraintStart_toEndOf="@+id/gridLine" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/containerMyProfile"
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_30dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cardViewProfile">
+
+                    <Button
+                        android:id="@+id/buttonBasicInformation"
+                        style="@style/MyOutlinedButtonStyle"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/basic_information"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:id="@+id/buttonChangePassword"
+                        style="@style/MyOutlinedButtonStyle"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_22dp"
+                        android:backgroundTint="@color/primary_light_lightest"
+                        android:text="@string/change_password"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/buttonBasicInformation" />
+
+                    <Button
+                        android:id="@+id/buttonMyInvoices"
+                        style="@style/MyOutlinedButtonStyle"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_22dp"
+                        android:backgroundTint="@color/primary_light_lightest"
+                        android:text="@string/my_invoices"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/buttonChangePassword" />
+
+                    <Button
+                        android:id="@+id/buttonMyTags"
+                        style="@style/MyOutlinedButtonStyle"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_22dp"
+                        android:backgroundTint="@color/primary_light_lightest"
+                        android:text="@string/my_tags"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/buttonMyInvoices" />
+
+                    <Button
+                        android:id="@+id/buttonRefundRequest"
+                        style="@style/MyOutlinedButtonStyle"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_22dp"
+                        android:backgroundTint="@color/primary_light_lightest"
+                        android:text="@string/refund_request"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/buttonMyTags" />
+
+
+                    <Button
+                        android:id="@+id/buttonSupport"
+                        style="@style/MyOutlinedButtonStyle"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_22dp"
+                        android:backgroundTint="@color/primary_light_lightest"
+                        android:text="@string/support_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/buttonRefundRequest" />
+
+                    <Button
+                        android:id="@+id/buttonSettings"
+                        style="@style/MyOutlinedButtonStyle"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_22dp"
+                        android:backgroundTint="@color/primary_light_lightest"
+                        android:text="@string/settings"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/buttonSupport" />
+
+
+                    <Button
+                        android:id="@+id/buttonTermsAndConditions"
+                        style="@style/MyOutlinedButtonStyle"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_22dp"
+                        android:backgroundTint="@color/primary_light_lightest"
+                        android:text="@string/terms_and_conditions"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/buttonSettings" />
+
+                    <Button
+                        android:id="@+id/buttonDeactivateAccount"
+                        style="@style/MyOutlinedButtonStyle"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_8dp"
+                        android:layout_marginBottom="@dimen/dimens_16dp"
+                        android:text="@string/deactivate_account"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/buttonTermsAndConditions" />
+
+                    <Button
+                        android:id="@+id/buttonSignOut"
+                        style="@style/MyOutlinedButtonStyle"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_8dp"
+                        android:layout_marginBottom="@dimen/dimens_16dp"
+                        android:text="@string/sign_out"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/buttonDeactivateAccount" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <View
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="2dp"
+            android:background="@color/primary_light_light"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
