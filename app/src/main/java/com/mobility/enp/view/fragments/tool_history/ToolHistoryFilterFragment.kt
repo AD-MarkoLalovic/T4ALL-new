@@ -1,12 +1,11 @@
 package com.mobility.enp.view.fragments.tool_history
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -103,7 +102,9 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         }
 
         binding.chkBox.setOnClickListener {
-            viewModel.allTagsSelected = binding.chkBox.isChecked
+            val isChecked  = binding.chkBox.isChecked
+            viewModel.allTagsSelected = isChecked
+            setCheckboxColors(isChecked )
         }
 
         viewModel.startDate.observe(viewLifecycleOwner) { data ->
@@ -260,6 +261,14 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     override fun onTagRemove(tag: Tag) {
         viewModel.selectedTags.remove(tag)
         Log.d(TAG, "onSendTag: ${viewModel.selectedTags}")
+    }
+
+    private fun setCheckboxColors(isChecked: Boolean) {
+        if (isChecked) {
+            binding.chkBox.buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.figmaSplashScreenColor))
+        } else {
+            binding.chkBox.buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.primary_light_dark))
+        }
     }
 
     override fun onDestroyView() {

@@ -132,7 +132,7 @@
     <string name="all" translatable="true">Сви</string>
     <string name="confirm_lost_tag" translatable="true">Потврдите изгубљену таг</string>
     <string name="cancel" translatable="true">Откажи</string>
-    <string name="show_all_tags" translatable="true">Прикажи све тагове</string>
+    <string name="show_all_tags" translatable="true">Прикажи све ТАГове</string>
     <string name="date" translatable="true">Датум</string>
     <string name="from" translatable="true">Од</string>
     <string name="to" translatable="true">До</string>

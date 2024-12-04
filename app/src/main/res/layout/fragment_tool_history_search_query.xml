@@ -27,7 +27,7 @@
             android:id="@+id/searchMark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dimens_14dp"
+            android:layout_marginEnd="@dimen/dimens_12dp"
             android:contentDescription="@null"
             android:src="@drawable/search_pick"
             app:layout_constraintBottom_toBottomOf="@+id/txtTitle"
@@ -48,13 +48,15 @@
             android:id="@+id/cycler"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginHorizontal="@dimen/dimens_16dp"
+            android:layout_marginStart="@dimen/dimens_16dp"
             android:layout_marginTop="@dimen/dimens_16dp"
             android:layout_marginBottom="22dp"
             app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lineTHistoryDetails" />
+            app:layout_constraintTop_toBottomOf="@+id/lineTHistoryDetails"
+            tools:listitem="@layout/tool_history_tags_adapter"
+            tools:itemCount="5"/>
 
         <TextView
             android:id="@+id/noData"

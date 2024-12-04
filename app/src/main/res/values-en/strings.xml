@@ -109,11 +109,11 @@
     <string name="all">All</string>
     <string name="confirm_lost_tag">Confirm lost tag</string>
     <string name="cancel">Cancel</string>
-    <string name="show_all_tags">Show All Tags</string>
+    <string name="show_all_tags">Show all TAGS</string>
     <string name="date">Date</string>
     <string name="from">From</string>
     <string name="to">To</string>
-    <string name="tool_history">Tool History</string>
+    <string name="tool_history">Toll History</string>
     <string name="reset"><u>Reset</u></string>
     <string name="tag_added_successfully">You have successfully added the TAG.</string>
     <string name="total">Total</string>

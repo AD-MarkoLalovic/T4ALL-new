@@ -14,35 +14,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidLineItemTags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.30"/>
+
         <TextView
+            style="@style/SubtitlesRegular"
             android:id="@+id/regPlate"
-            android:layout_width="@dimen/dimens_130dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
             android:text="@{data.registrationPlate}"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="BG1090YI" />
 
         <TextView
+            style="@style/SubtitlesRegular"
             android:id="@+id/serialNumber"
-            android:layout_width="@dimen/dimens_200dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
             android:text="@{data.serialNumber}"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/checkbox"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@id/regPlate"
+            app:layout_constraintStart_toEndOf="@id/guidLineItemTags"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="15330131424" />
 
@@ -50,7 +48,7 @@
             android:id="@+id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:buttonTint="@color/figmaSplashScreenColor"
+            app:buttonTint="@color/primary_light_dark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -59,7 +57,8 @@
             android:id="@+id/line"
             android:layout_width="0dp"
             android:layout_height="@dimen/dimens_1dp"
-            android:background="@drawable/linear_gradient_login"
+            android:layout_marginEnd="@dimen/dimens_16dp"
+            android:background="@color/primary_light_light"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/checkbox" />

@@ -116,7 +116,7 @@
     <string name="all" translatable="true">Сите</string>
     <string name="confirm_lost_tag" translatable="true">Потврди изгубен таг</string>
     <string name="cancel" translatable="true">Откажи</string>
-    <string name="show_all_tags" translatable="true">Прикажи ги сите тагови</string>
+    <string name="show_all_tags" translatable="true">Прикажи ги сите ТАГови</string>
     <string name="date" translatable="true">Датум</string>
     <string name="from" translatable="true">Од</string>
     <string name="to" translatable="true">До</string>
