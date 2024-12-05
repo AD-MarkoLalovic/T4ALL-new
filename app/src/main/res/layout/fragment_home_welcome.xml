@@ -148,10 +148,11 @@
                     android:scrollHorizontally="true"
                     android:text="@string/no_invoices"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/recyclerViewMonthlyBills"
+                    app:layout_constraintBottom_toTopOf="@+id/tvTollHistoryHomeScreen"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvTollMyInvoicesHomeScreen" />
+                    app:layout_constraintTop_toBottomOf="@id/tvTollMyInvoicesHomeScreen"
+                    app:layout_constraintVertical_bias="0.05" />
 
                 <TextView
                     android:id="@+id/tvTollHistoryHomeScreen"
@@ -189,7 +190,8 @@
                     app:layout_constraintBottom_toBottomOf="@+id/recyclerLastPassages"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvTollHistoryHomeScreen" />
+                    app:layout_constraintTop_toBottomOf="@id/tvTollHistoryHomeScreen"
+                    app:layout_constraintVertical_bias="0.05" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
