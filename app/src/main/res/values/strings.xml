@@ -129,7 +129,7 @@
     <string name="settings" translatable="true">Подешавања</string>
     <string name="allow_push_notifications" translatable="true">Дозволи примање обавештења</string>
     <string name="change_language" translatable="true">Промени језик</string>
-    <string name="all" translatable="true">Сви</string>
+    <string name="all" translatable="true">Свe</string>
     <string name="confirm_lost_tag" translatable="true">Потврдите изгубљену таг</string>
     <string name="cancel" translatable="true">Откажи</string>
     <string name="show_all_tags" translatable="true">Прикажи све ТАГове</string>
