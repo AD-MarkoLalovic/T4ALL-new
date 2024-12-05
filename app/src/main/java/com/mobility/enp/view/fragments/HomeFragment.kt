@@ -209,19 +209,17 @@ class HomeFragment : Fragment() {
         }
 
         errorBody.observe(viewLifecycleOwner) { errorBody ->
-            context?.let { context ->
-                if (errorBody.errorCode != 500) {
-                    Toast.makeText(
-                        context, errorBody.errorBody, Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    binding.progBar.visibility = View.GONE
-                    binding.noInvoices.visibility = View.VISIBLE
-                    binding.noToolHistory.visibility = View.VISIBLE
-                }
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
-                }
+            if (errorBody.errorCode != 500) {
+                Toast.makeText(
+                    context, errorBody.errorBody, Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                binding.progBar.visibility = View.GONE
+                binding.noInvoices.visibility = View.VISIBLE
+                binding.noToolHistory.visibility = View.VISIBLE
+            }
+            if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
+                MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
             }
         }
 
@@ -279,6 +277,11 @@ class HomeFragment : Fragment() {
 
             // Postavi adapter i podatke za listu prolaza
             homeData.data?.tollHistory?.let { list ->
+
+                if (list.isEmpty()){
+                    binding.noToolHistory.visibility = View.VISIBLE
+                }
+
                 val adapter = HomePassageAdapter(requireContext(), list.toCollection(ArrayList()))
                 binding.recyclerLastPassages.adapter = adapter
                 binding.recyclerLastPassages.layoutManager = LinearLayoutManager(requireContext())
@@ -286,6 +289,11 @@ class HomeFragment : Fragment() {
 
             // Postavi adapter i podatke za listu mesečnih računa
             homeData.data?.invoices?.let { invoices ->
+
+                if (invoices.isEmpty()){
+                    binding.noInvoices.visibility = View.VISIBLE
+                }
+
                 val adapter = HomeBillsAdapter(
                     invoices,
                     object : HomeBillsAdapter.AdapterSwitchToPage {
