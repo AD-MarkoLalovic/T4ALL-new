@@ -136,7 +136,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tvTollMyInvoicesHomeScreen"
                     tools:itemCount="5"
                     tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/card_home_page_currency" />
+                    tools:listitem="@layout/home_invoices_card" />
 
                 <TextView
                     android:id="@+id/noInvoices"
