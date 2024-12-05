@@ -230,8 +230,8 @@
     <string name="previous_invoices">Vaše prethodne fakture će biti prikazane ovdje.</string>
     <string name="text_no_refund_tags">Nemate oznaka za povrat novca.</string>
     <string name="text_no_my_tags">Trenutno nemate dodatih oznaka. Molimo dodajte vašu oznaku.</string>
-    <string name="no_invoices">Vaše prethodne fakture će biti prikazane ovdje.</string>
-    <string name="no_tool_history">Vaši prethodni prolazi će biti prikazani ovdje.</string>
+    <string name="no_invoices">Vaše fakture će biti prikazane ovdje.</string>
+    <string name="no_tool_history">Vaši prolazi će biti prikazani ovdje.</string>
     <string name="enter_old_password">Unesite staru šifru</string>
     <string name="enter_new_password">Unesite novu šifru</string>
     <string name="retype_new_password">Ponovo unesite novu šifru</string>

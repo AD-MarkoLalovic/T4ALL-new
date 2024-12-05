@@ -229,8 +229,8 @@
     <string name="previous_invoices">Οι προηγούμενοι λογαριασμοί σας θα εμφανίζονται εδώ.</string>
     <string name="text_no_refund_tags">Δεν έχετε ετικέτες επιστροφής χρημάτων.</string>
     <string name="text_no_my_tags">Δεν έχετε προσθέσει καμία ετικέτα. Παρακαλώ προσθέστε την ετικέτα σας.</string>
-    <string name="no_invoices">Οι προηγούμενοι λογαριασμοί σας θα εμφανίζονται εδώ.</string>
-    <string name="no_tool_history">Οι προηγούμενες διελεύσεις σας θα εμφανίζονται εδώ.</string>
+    <string name="no_invoices">Οι τιμολόγιά σας θα εμφανιστούν εδώ.</string>
+    <string name="no_tool_history">Οι διελεύσεις σας θα εμφανιστούν εδώ.</string>
     <string name="enter_old_password">Εισάγετε τον παλιό κωδικό πρόσβασης</string>
     <string name="enter_new_password">Εισάγετε τον νέο κωδικό πρόσβασης</string>
     <string name="retype_new_password">Πληκτρολογήστε ξανά τον νέο κωδικό πρόσβασης</string>

@@ -234,8 +234,8 @@
     <string name="previous_invoices">Vaše prethodne račune bit će prikazane ovdje.</string>
     <string name="text_no_refund_tags">Nemate tagove za povrat.</string>
     <string name="text_no_my_tags">Trenutno nemate dodanih tagova. Molimo dodajte svoj tag.</string>
-    <string name="no_invoices">Vaši prethodni računi bit će prikazani ovdje.</string>
-    <string name="no_tool_history">Vaši prethodni prolasci bit će prikazani ovdje.</string>
+    <string name="no_invoices">Vaše fakture će biti prikazane ovdje.</string>
+    <string name="no_tool_history">Vaši prolazi će biti prikazani ovdje.</string>
     <string name="enter_old_password">Unesite staru lozinku</string>
     <string name="enter_new_password">Unesite novu lozinku</string>
     <string name="retype_new_password">Ponovno unesite novu lozinku</string>

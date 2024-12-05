@@ -230,8 +230,8 @@
     <string name="previous_invoices">Your previous invoices will be displayed here.</string>
     <string name="text_no_refund_tags">You have no refund tags.</string>
     <string name="text_no_my_tags">You currently have no added tags. Please add your tag.</string>
-    <string name="no_invoices">Your previous invoices will be displayed here.</string>
-    <string name="no_tool_history">Your previous passes will be displayed here.</string>
+    <string name="no_invoices">Your invoices will be displayed here.</string>
+    <string name="no_tool_history">Your passes will be displayed here.</string>
     <string name="enter_old_password">Enter old password</string>
     <string name="enter_new_password">Enter new password</string>
     <string name="retype_new_password">Retype new password</string>

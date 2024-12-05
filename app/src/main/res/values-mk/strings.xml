@@ -237,8 +237,8 @@
     <string name="previous_invoices">Вашите претходни фактури ќе бидат прикажани тука.</string>
     <string name="text_no_refund_tags">Немате тагови за рефундирање.</string>
     <string name="text_no_my_tags">Моментално немате додадено тагови. Ве молиме додадете го вашиот таг.</string>
-    <string name="no_invoices">Вашите претходни фактури ќе бидат прикажани овде.</string>
-    <string name="no_tool_history">Ihre bisherigen Pässe werden hier angezeigt.</string>
+    <string name="no_invoices">Вашите фактури ќе бидат прикажани тука.</string>
+    <string name="no_tool_history">Вашите поминувања ќе бидат прикажани тука.</string>
     <string name="enter_old_password">Внесете стара лозинка</string>
     <string name="enter_new_password">Внесете нова лозинка</string>
     <string name="retype_new_password">Повторно внесете нова лозинка</string>

@@ -250,8 +250,8 @@
     <string name="previous_invoices">Ihre vorherigen Rechnungen werden hier angezeigt.</string>
     <string name="text_no_refund_tags">"Sie haben keine Erstattungstags.      "</string>
     <string name="text_no_my_tags">Sie haben derzeit keine hinzugefügten Tags. Bitte fügen Sie Ihren Tag hinzu</string>
-    <string name="no_invoices">Hier werden Ihre bisherigen Rechnungen angezeigt.</string>
-    <string name="no_tool_history">Ihre bisherigen Pässe werden hier angezeigt.</string>
+    <string name="no_invoices">Ihre Rechnungen werden hier angezeigt.</string>
+    <string name="no_tool_history">"Ihre Durchfahrten werden hier angezeigt. "</string>
     <string name="enter_old_password">Geben Sie das alte Passwort ein</string>
     <string name="enter_new_password">Geben Sie das neue Passwort ein</string>
     <string name="retype_new_password">Geben Sie das neue Passwort erneut ein</string>

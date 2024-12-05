@@ -241,8 +241,8 @@
     <string name="previous_invoices">Önceki faturalarınız burada görüntülenecek.</string>
     <string name="text_no_refund_tags">İade etiketleriniz yok.</string>
     <string name="text_no_my_tags">Şu anda eklenmiş etiketiniz yok. Lütfen etiketinizi ekleyin.</string>
-    <string name="no_invoices">Önceki faturalarınız burada görüntülenecektir.</string>
-    <string name="no_tool_history">You are currently not connected to the internet. Saved data is being displayed.</string>
+    <string name="no_invoices">Faturalarınız burada gösterilecek.</string>
+    <string name="no_tool_history">Geçişleriniz burada gösterilecek.</string>
     <string name="enter_old_password">Eski şifreyi girin</string>
     <string name="enter_new_password">Yeni şifreyi girin</string>
     <string name="retype_new_password">Yeni şifreyi tekrar girin</string>

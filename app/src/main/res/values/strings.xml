@@ -262,7 +262,7 @@
     <string name="previous_invoices">Твоји претходни рачуни ће бити приказани овде.</string>
     <string name="text_no_refund_tags">Немате тагова за рефундирање.</string>
     <string name="text_no_my_tags">Тренутно немате додатих тагова. Молимо ваc додајте таг.</string>
-    <string name="no_invoices">Ваше претходне фактуре ће бити приказане овде.</string>
+    <string name="no_invoices">Ваше фактуре ће бити приказане овде.</string>
     <string name="no_tool_history">Ваше претходне пропуснице ће бити приказане овде.</string>
     <string name="enter_old_password">Унесите стару шифру</string>
     <string name="enter_new_password">Унесите нову шифру</string>
