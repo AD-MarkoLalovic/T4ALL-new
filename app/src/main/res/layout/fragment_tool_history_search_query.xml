@@ -27,7 +27,7 @@
             android:id="@+id/searchMark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dimens_12dp"
+            android:layout_marginEnd="@dimen/dimens_16dp"
             android:contentDescription="@null"
             android:src="@drawable/search_pick"
             app:layout_constraintBottom_toBottomOf="@+id/txtTitle"
@@ -96,6 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:buttonTint="@color/primary_light_dark"
+                android:layout_marginEnd="@dimen/dimens_3dp"
                 app:layout_constraintBottom_toBottomOf="@+id/txtShowAllTags"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/txtShowAllTags" />
@@ -210,58 +211,80 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.5" />
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/rlLeft"
                 android:layout_width="0dp"
                 android:layout_height="38dp"
                 android:layout_marginStart="@dimen/dimens_16dp"
                 android:layout_marginTop="@dimen/dimens_10dp"
                 android:layout_marginEnd="@dimen/dimens_3dp"
-                android:background="@drawable/border_login_fields"
+                app:hintEnabled="false"
+                android:clickable="true"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusTopEnd="36dp"
+                app:boxCornerRadiusBottomEnd="36dp"
+                app:boxCornerRadiusTopStart="36dp"
+                app:boxCornerRadiusBottomStart="36dp"
+                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                app:boxStrokeWidth="@dimen/dimens_0dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
                 app:layout_constraintEnd_toStartOf="@+id/guideLineTollSearch"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txtDate">
 
-                <TextView
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtDateLeft"
                     style="@style/CaptionRegular"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimens_16dp"
-                    android:text="@string/from"
-                    android:textColor="@color/charcoal_purple"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/from"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:cursorVisible="false"
+                    android:textColor="@color/primary_light_dark"
+                    android:focusableInTouchMode="false"
+                    android:paddingVertical="@dimen/dimens_0dp"
+                    android:paddingStart="@dimen/dimens_16dp"/>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/rlRight"
                 android:layout_width="0dp"
                 android:layout_height="38dp"
                 android:layout_marginStart="@dimen/dimens_3dp"
                 android:layout_marginTop="@dimen/dimens_10dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/border_login_fields"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/dimens_16dp"
+                app:hintEnabled="false"
+                android:clickable="true"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusTopEnd="36dp"
+                app:boxCornerRadiusBottomEnd="36dp"
+                app:boxCornerRadiusTopStart="36dp"
+                app:boxCornerRadiusBottomStart="36dp"
+                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                app:boxStrokeWidth="@dimen/dimens_0dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
                 app:layout_constraintStart_toEndOf="@+id/guideLineTollSearch"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/txtDate">
 
-                <TextView
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtDateRight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimens_16dp"
-                    android:text="@string/to"
-                    android:textColor="@color/charcoal_purple"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    style="@style/CaptionRegular"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/to"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:cursorVisible="false"
+                    android:textColor="@color/primary_light_dark"
+                    android:focusableInTouchMode="false"
+                    android:paddingVertical="@dimen/dimens_0dp"
+                    android:paddingStart="@dimen/dimens_16dp"/>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btnSearch"

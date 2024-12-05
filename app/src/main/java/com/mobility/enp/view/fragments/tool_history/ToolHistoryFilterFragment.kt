@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -32,7 +33,7 @@ import kotlinx.coroutines.launch
 class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
     private var _binding: FragmentToolHistorySearchQueryBinding? = null
-    private val binding: FragmentToolHistorySearchQueryBinding get() =_binding!!
+    private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
     private val viewModel: PassageHistoryViewModel by activityViewModels()
     private var data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
     private lateinit var isInternetAvailable: MutableLiveData<Boolean>
@@ -102,27 +103,25 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         }
 
         binding.chkBox.setOnClickListener {
-            val isChecked  = binding.chkBox.isChecked
+            val isChecked = binding.chkBox.isChecked
             viewModel.allTagsSelected = isChecked
-            setCheckboxColors(isChecked )
+            setCheckboxColors(isChecked)
         }
 
         viewModel.startDate.observe(viewLifecycleOwner) { data ->
-            binding.txtDateLeft.text = data.formattedTime
+            val textView = binding.txtDateLeft as TextView
+            textView.text = data.formattedTime
         }
         viewModel.endDate.observe(viewLifecycleOwner) { data ->
-            binding.txtDateRight.text = data.formattedTime
+            val textEndDate = binding.txtDateRight as TextView
+            textEndDate.text = data.formattedTime
         }
 
-        binding.rlLeft.setOnClickListener {
-            context?.let { context ->
-                viewModel.showDatePicker(true, context)
-            }
+        binding.txtDateLeft.setOnClickListener {
+            viewModel.showDatePicker(true, requireContext())
         }
-        binding.rlRight.setOnClickListener {
-            context?.let { context ->
-                viewModel.showDatePicker(false, context)
-            }
+        binding.txtDateRight.setOnClickListener {
+            viewModel.showDatePicker(false, requireContext())
         }
 
         setSelectedButton(binding.buttonAll)
@@ -150,6 +149,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             }
         }
     }
+
     private fun setSelectedButton(selectedButton: View) = with(binding) {
         buttonAll.isSelected = false
         buttonEUR.isSelected = false
@@ -265,9 +265,19 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
     private fun setCheckboxColors(isChecked: Boolean) {
         if (isChecked) {
-            binding.chkBox.buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.figmaSplashScreenColor))
+            binding.chkBox.buttonTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.figmaSplashScreenColor
+                )
+            )
         } else {
-            binding.chkBox.buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.primary_light_dark))
+            binding.chkBox.buttonTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.primary_light_dark
+                )
+            )
         }
     }
 
