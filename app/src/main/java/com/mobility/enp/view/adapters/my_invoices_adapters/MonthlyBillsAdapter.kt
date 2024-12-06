@@ -45,6 +45,14 @@ class MonthlyBillsAdapter(
         val binding: ItemBillBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        fun reset(){
+            binding.recyclerViewMonthlyBills.visibility = View.GONE
+            binding.scrollView.visibility = View.GONE
+            binding.arrowDown.setImageDrawable(
+                ContextCompat.getDrawable(binding.root.context, R.drawable.ic_arrow_down)
+            )
+        }
+
         fun bind(
             month: Month,
             viewModel: MyInvoicesViewModel,
@@ -179,6 +187,8 @@ class MonthlyBillsAdapter(
 
     override fun onBindViewHolder(holder: MonthlyBillsViewHolder, position: Int) {
         val currentBill = monthlyBillsArray[holder.bindingAdapterPosition]
+
+        holder.reset()
 
         holder.binding.recyclerViewMonthlyBills.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_MOVE) {
