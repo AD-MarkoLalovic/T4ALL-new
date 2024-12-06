@@ -6,7 +6,6 @@ import androidx.annotation.Keep
 data class ComplaintBody(
     val itemId: Int,  // complaint id from user history
     val complaintText: String,   // user text
-    val complaintAccountNumber: String,  // ?? former bank account
     val complaintBankName: Int, // id bank from api
     val complaintRegistration: String,  // licence plate
     val accountZr: String,  // bank left

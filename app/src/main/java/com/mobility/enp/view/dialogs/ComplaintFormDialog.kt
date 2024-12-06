@@ -69,7 +69,7 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                 showError(getString(R.string.enter_name_bank))
             }
 
-            if (centerAccountNumber.length == 12 && rightAccountNumber.length == 2) {
+            if (centerAccountNumber.length == 13 && rightAccountNumber.length == 2) {
 
                 if (binding.licencePlateVal.text.toString().isNotEmpty()
                     && binding.reasonForComplaintVal.text.toString().isNotEmpty()
@@ -81,7 +81,6 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                         val complaintBody = ComplaintBody(
                             id,
                             binding.reasonForComplaintVal.text.toString(),
-                            binding.accountNumberVal.text.toString(),
                             selectedBankPosition,
                             binding.licencePlateVal.text.toString(),
                             uniqueNumber, centerAccountNumber, rightAccountNumber
