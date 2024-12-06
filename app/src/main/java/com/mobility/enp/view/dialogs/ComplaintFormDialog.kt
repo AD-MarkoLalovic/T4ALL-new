@@ -105,7 +105,7 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                 }
 
             } else {
-                showError("Invalid account number")
+                showError(getString(R.string.invalid_account_number))
             }
         }
 

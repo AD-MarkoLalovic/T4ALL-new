@@ -377,5 +377,6 @@
     <string name="refund_request_note">Напомена: Повраћај средстава је могућ искључиво на текуће рачуне банака које послују Републици Србији.</string>
     <string name="language_changed">Језик је промењен</string>
     <string name="enter_message_support">Унесите поруку за корисничку подршку</string>
+    <string name="invalid_account_number">Неважећи број рачуна</string>
 
 </resources>
