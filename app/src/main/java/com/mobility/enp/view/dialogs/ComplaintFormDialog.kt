@@ -136,10 +136,13 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                     setupBankSpinner(bank.data)
                 }
 
+                SubmitResult.FailureServerError -> {
+                    showError(getString(R.string.server_error_msg))
+                }
+
                 else -> {
                     binding.refundLoadingTagPicker.visibility = View.GONE
                     SubmitResult.Empty
-                    SubmitResult.FailureServerError
                 }
             }
 

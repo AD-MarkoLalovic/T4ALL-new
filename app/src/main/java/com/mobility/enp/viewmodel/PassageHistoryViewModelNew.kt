@@ -8,9 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
-import com.mobility.enp.data.model.banks.entity.BanksEntity
 import com.mobility.enp.data.repository.UserRepository
-import com.mobility.enp.network.Repository.isNetworkAvailable
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.ui_models.BankUIModel
@@ -26,8 +24,6 @@ class PassageHistoryViewModelNew(private val repository: UserRepository) : ViewM
     private val _tagPickerRequest = MutableStateFlow<SubmitResult<List<TagsRefundRequestUIModel>>>(
         SubmitResult.Loading
     )
-    val tagPickerRequest: StateFlow<SubmitResult<List<TagsRefundRequestUIModel>>> =
-        _tagPickerRequest
 
     init {
         fetchBanks()
