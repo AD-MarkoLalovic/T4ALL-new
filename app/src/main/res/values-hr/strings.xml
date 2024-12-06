@@ -107,7 +107,7 @@
     <string name="all">Sve</string>
     <string name="confirm_lost_tag">Potvrdi izgubljeni tag</string>
     <string name="cancel">Otkaži</string>
-    <string name="show_all_tags">Prikaži sve tagove</string>
+    <string name="show_all_tags">Prikaži sve TAG-ove</string>
     <string name="date">Datum</string>
     <string name="from">Od</string>
     <string name="to">Do</string>
@@ -234,8 +234,8 @@
     <string name="previous_invoices">Vaše prethodne račune bit će prikazane ovdje.</string>
     <string name="text_no_refund_tags">Nemate tagove za povrat.</string>
     <string name="text_no_my_tags">Trenutno nemate dodanih tagova. Molimo dodajte svoj tag.</string>
-    <string name="no_invoices">Vaši prethodni računi bit će prikazani ovdje.</string>
-    <string name="no_tool_history">Vaši prethodni prolasci bit će prikazani ovdje.</string>
+    <string name="no_invoices">Vaše fakture će biti prikazane ovdje.</string>
+    <string name="no_tool_history">Vaši prolazi će biti prikazani ovdje.</string>
     <string name="enter_old_password">Unesite staru lozinku</string>
     <string name="enter_new_password">Unesite novu lozinku</string>
     <string name="retype_new_password">Ponovno unesite novu lozinku</string>
@@ -269,7 +269,7 @@
     <string name="serbian_passage">Srbija</string>
     <string name="montenegro_passage">Crne Gore</string>
     <string name="north_macedonian_passage">Sjeverna Makedonija</string>
-    <string name="value">vrijednost</string>
+    <string name="value">Valuta</string>
     <string name="message">Poruka</string>
     <string name="click_me">Klikni me</string>
     <string name="e_mail">E-mail</string>

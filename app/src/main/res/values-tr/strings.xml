@@ -117,7 +117,7 @@
     <string name="all">Hepsi</string>
     <string name="confirm_lost_tag">Kayıp etiketi onayla</string>
     <string name="cancel">İptal</string>
-    <string name="show_all_tags">Tüm Etiketleri Göster</string>
+    <string name="show_all_tags">Tüm TAG\'leri göster</string>
     <string name="date">Tarih</string>
     <string name="from">Başlangıç</string>
     <string name="to">Bitiş</string>
@@ -241,8 +241,8 @@
     <string name="previous_invoices">Önceki faturalarınız burada görüntülenecek.</string>
     <string name="text_no_refund_tags">İade etiketleriniz yok.</string>
     <string name="text_no_my_tags">Şu anda eklenmiş etiketiniz yok. Lütfen etiketinizi ekleyin.</string>
-    <string name="no_invoices">Önceki faturalarınız burada görüntülenecektir.</string>
-    <string name="no_tool_history">You are currently not connected to the internet. Saved data is being displayed.</string>
+    <string name="no_invoices">Faturalarınız burada gösterilecek.</string>
+    <string name="no_tool_history">Geçişleriniz burada gösterilecek.</string>
     <string name="enter_old_password">Eski şifreyi girin</string>
     <string name="enter_new_password">Yeni şifreyi girin</string>
     <string name="retype_new_password">Yeni şifreyi tekrar girin</string>
@@ -276,7 +276,7 @@
     <string name="serbian_passage">Sırbistan</string>
     <string name="montenegro_passage">Karadağ</string>
     <string name="north_macedonian_passage">Kuzey Makedonya</string>
-    <string name="value">değer</string>
+    <string name="value">Para birimi</string>
     <string name="message">Bir mesaj</string>
     <string name="click_me">üzerime tıkla</string>
     <string name="e_mail">E-posta</string>

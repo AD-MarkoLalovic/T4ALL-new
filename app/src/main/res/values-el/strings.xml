@@ -107,7 +107,7 @@
     <string name="all">Όλα</string>
     <string name="confirm_lost_tag">Επιβεβαίωση χαμένης ετικέτας</string>
     <string name="cancel">Ακύρωση</string>
-    <string name="show_all_tags">Εμφάνιση όλων των ετικετών</string>
+    <string name="show_all_tags">Εμφάνιση όλων των TAGS</string>
     <string name="date">Ημερομηνία</string>
     <string name="from">Από</string>
     <string name="to">Προς</string>
@@ -229,8 +229,8 @@
     <string name="previous_invoices">Οι προηγούμενοι λογαριασμοί σας θα εμφανίζονται εδώ.</string>
     <string name="text_no_refund_tags">Δεν έχετε ετικέτες επιστροφής χρημάτων.</string>
     <string name="text_no_my_tags">Δεν έχετε προσθέσει καμία ετικέτα. Παρακαλώ προσθέστε την ετικέτα σας.</string>
-    <string name="no_invoices">Οι προηγούμενοι λογαριασμοί σας θα εμφανίζονται εδώ.</string>
-    <string name="no_tool_history">Οι προηγούμενες διελεύσεις σας θα εμφανίζονται εδώ.</string>
+    <string name="no_invoices">Οι τιμολόγιά σας θα εμφανιστούν εδώ.</string>
+    <string name="no_tool_history">Οι διελεύσεις σας θα εμφανιστούν εδώ.</string>
     <string name="enter_old_password">Εισάγετε τον παλιό κωδικό πρόσβασης</string>
     <string name="enter_new_password">Εισάγετε τον νέο κωδικό πρόσβασης</string>
     <string name="retype_new_password">Πληκτρολογήστε ξανά τον νέο κωδικό πρόσβασης</string>
@@ -264,7 +264,7 @@
     <string name="serbian_passage">Σερβία</string>
     <string name="montenegro_passage">Μαυροβούνιο</string>
     <string name="north_macedonian_passage">Βόρεια Μακεδονία</string>
-    <string name="value">αξία</string>
+    <string name="value">Νόμισμα</string>
     <string name="message">Μήνυμα</string>
     <string name="click_me">Κάντε κλικ εδώ</string>
     <string name="e_mail">E-mail</string>

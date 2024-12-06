@@ -241,8 +241,8 @@
     <string name="previous_invoices">Tvoji prethodni računi će biti prikazani ovde.</string>
     <string name="text_no_refund_tags">Nemate tagova za refundiranje.</string>
     <string name="text_no_my_tags">Trenutno nemate dodatih tagova. Molimo vas dodajte vaš tag.</string>
-    <string name="no_invoices">Vasi prethodni racuni ce biti prikazani ovde</string>
-    <string name="no_tool_history">Vasi prethodni prolasci ce biti prikazani ovde</string>
+    <string name="no_invoices">Vaše fakture će biti prikazane ovde.</string>
+    <string name="no_tool_history">Vaši prolazci će biti prikazani ovde.</string>
     <string name="enter_old_password">Unesite staru šifru</string>
     <string name="enter_new_password">Unesite novu šifru</string>
     <string name="retype_new_password">Ponovo unesite novu šifru</string>
@@ -276,7 +276,7 @@
     <string name="serbian_passage">Srbija</string>
     <string name="montenegro_passage">Crna Gora</string>
     <string name="north_macedonian_passage">Severna Makedonija</string>
-    <string name="value">vrednost</string>
+    <string name="value">Valuta</string>
     <string name="message">Poruka</string>
     <string name="click_me">Kliknite na mene</string>
     <string name="e_mail">E-mail</string>

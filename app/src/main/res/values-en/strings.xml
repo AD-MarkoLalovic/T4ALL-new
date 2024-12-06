@@ -109,11 +109,11 @@
     <string name="all">All</string>
     <string name="confirm_lost_tag">Confirm lost tag</string>
     <string name="cancel">Cancel</string>
-    <string name="show_all_tags">Show All Tags</string>
+    <string name="show_all_tags">Show all TAGS</string>
     <string name="date">Date</string>
     <string name="from">From</string>
     <string name="to">To</string>
-    <string name="tool_history">Tool History</string>
+    <string name="tool_history">Toll History</string>
     <string name="reset"><u>Reset</u></string>
     <string name="tag_added_successfully">You have successfully added the TAG.</string>
     <string name="total">Total</string>
@@ -230,8 +230,8 @@
     <string name="previous_invoices">Your previous invoices will be displayed here.</string>
     <string name="text_no_refund_tags">You have no refund tags.</string>
     <string name="text_no_my_tags">You currently have no added tags. Please add your tag.</string>
-    <string name="no_invoices">Your previous invoices will be displayed here.</string>
-    <string name="no_tool_history">Your previous passes will be displayed here.</string>
+    <string name="no_invoices">Your invoices will be displayed here.</string>
+    <string name="no_tool_history">Your passes will be displayed here.</string>
     <string name="enter_old_password">Enter old password</string>
     <string name="enter_new_password">Enter new password</string>
     <string name="retype_new_password">Retype new password</string>
@@ -265,7 +265,7 @@
     <string name="serbian_passage">Serbia</string>
     <string name="montenegro_passage">Montenegro</string>
     <string name="north_macedonian_passage">North Macedonia</string>
-    <string name="value">value</string>
+    <string name="value">Currency</string>
     <string name="message">Message</string>
     <string name="click_me">Click me</string>
     <string name="e_mail">E-mail</string>
