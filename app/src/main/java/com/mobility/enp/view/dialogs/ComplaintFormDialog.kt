@@ -52,42 +52,63 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
             dialog?.dismiss()
         }
 
-//        binding.buttonConfirmComplaint.setOnClickListener {
-//            if (binding.licencePlateVal.text.toString().isNotEmpty()
-//                && binding.reasonForComplaintVal.text.toString().isNotEmpty()
-//                && binding.accountNumberVal.text.toString().isNotEmpty()
-//                && binding.bankNameVal.text.toString().isNotEmpty()
-//            ) {
-//
-//                if (binding.reasonForComplaintVal.text.toString().length > 10) {
-//                    dialog?.dismiss()
-//                    val complaintBody = ComplaintBody(
-//                        id,
-//                        binding.reasonForComplaintVal.text.toString(),
-//                        binding.accountNumberVal.text.toString(),
-//                        binding.bankNameVal.text.toString(),
-//                        binding.licencePlateVal.text.toString()
-//                    )
-//
-//                    onConfirmButton(complaintBody)
-//
-//                } else {
-//                    Toast.makeText(
-//                        context,
-//                        getString(R.string.complaint_min_length),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//
-//
-//            } else {
-//                Toast.makeText(
-//                    context,
-//                    getString(R.string.please_enter_all_required_data), Toast.LENGTH_SHORT
-//                ).show()
-//            }
-//        }
-//
+        binding.buttonConfirmComplaint.setOnClickListener {
+
+            val uniqueNumber = binding.uniqueNumbersSpinner.selectedItem.toString().trim()
+            val centerAccountNumber = binding.etCenterAccountNumber.text.toString().trim()
+            val rightAccountNumber = binding.etRightAccountNumber.text.toString().trim()
+
+
+            if (uniqueNumber.isEmpty() || centerAccountNumber.isEmpty() || rightAccountNumber.isEmpty()) {
+                showError(getString(R.string.enter_bank_account))
+            }
+
+            val selectedBankPosition = binding.bankSpinner.selectedItemPosition
+
+            if (selectedBankPosition == 0) {
+                showError(getString(R.string.enter_name_bank))
+            }
+
+            if (centerAccountNumber.length == 12 && rightAccountNumber.length == 2) {
+
+                if (binding.licencePlateVal.text.toString().isNotEmpty()
+                    && binding.reasonForComplaintVal.text.toString().isNotEmpty()
+                ) {
+
+                    if (binding.reasonForComplaintVal.text.toString().length > 10) {
+                        dialog?.dismiss()
+
+                        val complaintBody = ComplaintBody(
+                            id,
+                            binding.reasonForComplaintVal.text.toString(),
+                            binding.accountNumberVal.text.toString(),
+                            selectedBankPosition,
+                            binding.licencePlateVal.text.toString(),
+                            uniqueNumber, centerAccountNumber, rightAccountNumber
+                        )
+
+                        onConfirmButton(complaintBody)
+
+                    } else {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.complaint_min_length),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+
+                } else {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.please_enter_all_required_data), Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            } else {
+                showError("Invalid account number")
+            }
+        }
 
         enableAccountInputs()
     }
