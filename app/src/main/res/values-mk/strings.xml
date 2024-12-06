@@ -317,6 +317,7 @@
     <string name="refund_request_note">Напомена: Рефундирањето е можно само на тековните сметки на банките кои работат во Република Србија.</string>
     <string name="language_changed">Јазикот е променет</string>
     <string name="enter_message_support">Внесете порака за корисничка поддршка</string>
+    <string name="invalid_account_number">Невалиден број на сметка</string>
 
 
 </resources>
