@@ -37,6 +37,8 @@ class MonthlyBillsAdapter(
     private var currentPage = data.currentPage
     private val lastPage = data.lastPage
 
+    private val itemStateMap: MutableMap<Int, Boolean> = mutableMapOf()
+
     companion object {
         const val TAG = "MonthlyBillsAdapter"
     }
@@ -45,14 +47,6 @@ class MonthlyBillsAdapter(
         val binding: ItemBillBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun reset(){
-            binding.recyclerViewMonthlyBills.visibility = View.GONE
-            binding.scrollView.visibility = View.GONE
-            binding.arrowDown.setImageDrawable(
-                ContextCompat.getDrawable(binding.root.context, R.drawable.ic_arrow_down)
-            )
-        }
-
         fun bind(
             month: Month,
             viewModel: MyInvoicesViewModel,
@@ -60,40 +54,47 @@ class MonthlyBillsAdapter(
             spinnerInt: TriggerSpinner,
             montYearListener: MontYearListener
         ) {
+            // Povezivanje meseca sa layout-om
             binding.monthly = month
 
+            // Kreiranje stringa sa dostupnim valutama
             val availableCurrency = StringBuilder()
-
             month.totalCurrency?.let {
                 for (currency in it) {
                     availableCurrency.append(currency.currency?.value)
                     availableCurrency.append(",")
                 }
-                availableCurrency.deleteCharAt(availableCurrency.toString().length - 1)
+                // Uklanjanje poslednjeg zareza
+                if (availableCurrency.isNotEmpty()) {
+                    availableCurrency.deleteCharAt(availableCurrency.length - 1)
+                }
             }
 
-            Log.d(TAG, "filtered currency:  $availableCurrency")
+            Log.d(TAG, "filtered currency: $availableCurrency")
 
+            // Postavljanje adaptera za prikaz valuta
             month.totalCurrency?.let {
                 val invoicesTotalCurrencyAdapter = InvoicesTotalCurrencyAdapter(it)
                 binding.rvTotalMonthlyInvoices.adapter = invoicesTotalCurrencyAdapter
             }
 
+            // Formatiranje godine i meseca
             val currentMonthly = binding.monthly
             val monthValue = currentMonthly?.month?.value ?: ""
             val year = currentMonthly?.year ?: ""
             val montYear = "$year-$monthValue"
 
+            // Provera stanja i ažuriranje UI-ja
+            val isExpanded = itemStateMap[bindingAdapterPosition] ?: false
+            updateUI(isExpanded)
+
+            // Klik na strelicu za otvaranje/zatvaranje
             binding.arrowDown.setOnClickListener {
+                val newState = !(itemStateMap[bindingAdapterPosition] ?: false)
+                itemStateMap[bindingAdapterPosition] = newState
+                updateUI(newState)
 
-                if (binding.recyclerViewMonthlyBills.visibility == View.VISIBLE) {
-                    binding.recyclerViewMonthlyBills.visibility = View.GONE
-                    binding.scrollView.visibility = View.GONE
-                    binding.arrowDown.setImageDrawable(
-                        ContextCompat.getDrawable(binding.root.context, R.drawable.ic_arrow_down)
-                    )
-
-                } else {
+                if (newState) { // Ako se otvara
                     spinnerInt.onStartSpinner()
                     if (viewModel.isNetworkAvailable()) {
                         montYearListener.onMontYearSelected(montYear)
@@ -104,48 +105,34 @@ class MonthlyBillsAdapter(
                                     val billsDetailsAdapter = BillsDetailsAdapter(
                                         it,
                                         viewModel,
-                                        errorBody,
+                                        error,
                                         lifecycleOwner,
                                         spinnerInt,
                                         availableCurrency.toString()
                                     )
-                                    // Postavi adapter
-                                    binding.recyclerViewMonthlyBills.adapter =
-                                        billsDetailsAdapter
+                                    binding.recyclerViewMonthlyBills.adapter = billsDetailsAdapter
                                     billsDetailsAdapter.submitList(it)
 
                                     if (it.bills.isNotEmpty()) {
                                         val heightInDp: Int = when (it.bills.size) {
-                                            1 -> {
-                                                binding.root.context.resources.getDimensionPixelSize(
-                                                    R.dimen.recycler_view_one_item
-                                                )
-                                            }
+                                            1 -> binding.root.context.resources.getDimensionPixelSize(
+                                                R.dimen.recycler_view_one_item
+                                            )
 
-                                            2 -> {
-                                                binding.root.context.resources.getDimensionPixelSize(
-                                                    R.dimen.recycler_view_two_items
-                                                )
-                                            }
+                                            2 -> binding.root.context.resources.getDimensionPixelSize(
+                                                R.dimen.recycler_view_two_items
+                                            )
 
-                                            3 -> {
-                                                binding.root.context.resources.getDimensionPixelSize(
-                                                    R.dimen.recycler_view_three_items
-                                                )
-                                            }
+                                            3 -> binding.root.context.resources.getDimensionPixelSize(
+                                                R.dimen.recycler_view_three_items
+                                            )
 
-                                            else -> {
-                                                binding.root.context.resources.getDimensionPixelSize(
-                                                    R.dimen.recycler_view_more_items
-                                                )
-                                            }
+                                            else -> binding.root.context.resources.getDimensionPixelSize(
+                                                R.dimen.recycler_view_more_items
+                                            )
                                         }
-
-                                        // Postavljanje visine scrollView-a za RecyclerView
-                                        binding.scrollView.layoutParams.height =
-                                            heightInDp
-                                        binding.scrollView.requestLayout() // Osveži layout
-
+                                        binding.scrollView.layoutParams.height = heightInDp
+                                        binding.scrollView.requestLayout()
 
                                         binding.recyclerViewMonthlyBills.visibility = View.VISIBLE
                                         binding.scrollView.visibility = View.VISIBLE
@@ -168,14 +155,43 @@ class MonthlyBillsAdapter(
                             binding.root.context.getText(R.string.no_internet),
                             Toast.LENGTH_LONG
                         ).show()
+                        spinnerInt.onStopSpinner()
                     }
-
+                } else { // Ako se zatvara
+                    binding.recyclerViewMonthlyBills.visibility = View.GONE
+                    binding.scrollView.visibility = View.GONE
+                    binding.arrowDown.setImageDrawable(
+                        ContextCompat.getDrawable(binding.root.context, R.drawable.ic_arrow_down)
+                    )
                 }
             }
 
+            // Izvršavanje svih vezanih promena
             binding.executePendingBindings()
         }
+
+        fun reset() {
+            updateUI(false)
+        }
+
+
+        private fun updateUI(isExpanded: Boolean) {
+            if (isExpanded) {
+                binding.recyclerViewMonthlyBills.visibility = View.VISIBLE
+                binding.scrollView.visibility = View.VISIBLE
+                binding.arrowDown.setImageDrawable(
+                    ContextCompat.getDrawable(binding.root.context, R.drawable.ic_arrow_up)
+                )
+            } else {
+                binding.recyclerViewMonthlyBills.visibility = View.GONE
+                binding.scrollView.visibility = View.GONE
+                binding.arrowDown.setImageDrawable(
+                    ContextCompat.getDrawable(binding.root.context, R.drawable.ic_arrow_down)
+                )
+            }
+        }
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthlyBillsViewHolder {
         return MonthlyBillsViewHolder(
