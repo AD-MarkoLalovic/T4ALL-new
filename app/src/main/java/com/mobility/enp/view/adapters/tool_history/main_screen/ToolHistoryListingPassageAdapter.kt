@@ -62,13 +62,9 @@ class ToolHistoryListingPassageAdapter(
             binding.btnComplaint.setOnClickListener {
                 val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
-                val apiInterface = object : ComplaintFormDialog.OnClick {
-                    override fun postComplaint(complaintBody: ComplaintBody) {
-                        complaintInterface.sendComplaintData(complaintBody)
-                    }
-                }
-
-                val complaintFormDialog = ComplaintFormDialog(apiInterface, relation.itemId)
+                val complaintFormDialog = ComplaintFormDialog({ complaintBody ->
+                    complaintInterface.sendComplaintData(complaintBody)
+                }, relation.itemId)
 
                 complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
             }

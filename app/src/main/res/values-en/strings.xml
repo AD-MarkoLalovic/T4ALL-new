@@ -310,4 +310,5 @@
     <string name="refund_request_note">Note: Refunds are only possible to current accounts of banks operating in the Republic of Serbia.</string>
     <string name="language_changed">The language has been changed</string>
     <string name="enter_message_support">Enter a message for customer support</string>
+    <string name="invalid_account_number">Invalid account number</string>
 </resources>

@@ -308,5 +308,6 @@
     <string name="refund_request_note">Σημείωση: Η επιστροφή χρημάτων είναι δυνατή μόνο σε τραπεζικούς λογαριασμούς τραπεζών που λειτουργούν στη Δημοκρατία της Σερβίας.</string>
     <string name="language_changed">Η γλώσσα έχει αλλάξει</string>
     <string name="enter_message_support">Εισαγάγετε ένα μήνυμα για την υποστήριξη πελατών</string>
+    <string name="invalid_account_number">Άκυρος αριθμός λογαριασμού</string>
 
 </resources>

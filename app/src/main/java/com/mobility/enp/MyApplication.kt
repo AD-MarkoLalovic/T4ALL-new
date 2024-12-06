@@ -16,5 +16,6 @@ class MyApplication : Application() {
         AuthRepository(database, this)
     }
 
+
 }
 

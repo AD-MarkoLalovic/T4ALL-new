@@ -330,5 +330,6 @@
     <string name="refund_request_note">Hinweis: Rückerstattungen sind nur auf Girokonten von Banken möglich, die in der Republik Serbien tätig sind.</string>
     <string name="language_changed">Die Sprache wurde geändert</string>
     <string name="enter_message_support">Geben Sie eine Nachricht für den Kundensupport ein</string>
+    <string name="invalid_account_number">Ungültige Kontonummer</string>
 
 </resources>

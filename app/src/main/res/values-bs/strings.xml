@@ -311,6 +311,7 @@
     <string name="refund_request_note">Napomena: Povraćaj sredstava je moguć isključivo na tekuće račune banaka koje posluju Republici Srbiji.</string>
     <string name="language_changed">Jezik je promijenjen</string>
     <string name="enter_message_support">Unesite poruku za korisničku podršku</string>
+    <string name="invalid_account_number">Nevažeći broj računa</string>
 
 
 </resources>

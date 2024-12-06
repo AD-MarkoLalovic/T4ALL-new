@@ -321,5 +321,6 @@
     <string name="refund_request_note">Not: İadeler yalnızca Sırbistan Cumhuriyeti\'nde faaliyet gösteren bankaların cari hesaplarına yapılabilir.</string>
     <string name="language_changed">Dil değiştirildi</string>
     <string name="enter_message_support">Müşteri desteği için bir mesaj girin</string>
+    <string name="invalid_account_number">Geçersiz hesap numarası</string>
 
 </resources>
