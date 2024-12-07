@@ -133,7 +133,7 @@
     <string name="expiration_date" translatable="true">Датум на истекување</string>
     <string name="notifications" translatable="true">Известувања</string>
     <string name="permissions_title" translatable="true">Дозволи</string>
-    <string name="permission_subtitle" translatable="true">Дали сакате да ги отстраните можностите на апликацијата за примање на известувања?</string>
+    <string name="permission_subtitle" translatable="true">Дали сакате да ја отстраните можноста на апликацијата да прима известувања?</string>
     <string name="no" translatable="true">Не</string>
     <string name="yes" translatable="true">Да</string>
     <string name="remove_card" translatable="true"><u>Отстранете картичка</u></string>
@@ -180,7 +180,7 @@
     <string name="subject_date" translatable="true">Датум на тема:</string>
     <string name="response_to_toll_complaint" translatable="true">Одговор на жалба за износот на патарина што се наплатува на уредите ENP</string>
     <string name="subject_number" translatable="true">Број на предмет</string>
-    <string name="object_complaint_number" translatable="true">Број на предмет на кој се однесува приговорот:</string>
+    <string name="object_complaint_number" translatable="true">Број на објектот на кој се однесува жалбата:</string>
     <string name="bill_downloaded_successfully" translatable="true">Сметката е успешно преземена.</string>
     <string name="please_fill_all_required_data" translatable="true">Ве молиме пополнете ги сите потребни податоци</string>
     <string name="select_date" translatable="true">Изберете датум</string>
@@ -318,6 +318,7 @@
     <string name="language_changed">Јазикот е променет</string>
     <string name="enter_message_support">Внесете порака за корисничка поддршка</string>
     <string name="invalid_account_number">Невалиден број на сметка</string>
+    <string name="enter_email_password">Ве молиме внесете емаил и лозинка.</string>
 
 
 </resources>

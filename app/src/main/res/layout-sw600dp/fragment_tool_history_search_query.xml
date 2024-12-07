@@ -293,33 +293,19 @@
                 app:layout_constraintTop_toBottomOf="@+id/rlRight"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <RelativeLayout
+            <TextView
                 android:id="@+id/exportBlock"
-                android:layout_width="@dimen/dimens_70dp"
+                style="@style/CaptionMedium"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dimens_6dp"
+                app:drawableEndCompat="@drawable/uil_export"
                 app:layout_constraintBottom_toBottomOf="@+id/btnSearch"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/btnSearch">
-
-                <ImageView
-                    android:id="@+id/exportButton"
-                    android:layout_width="@dimen/dimens_16dp"
-                    android:layout_height="@dimen/dimens_16dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/uil_export"
-                    android:contentDescription="@null" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/dimens_4dp"
-                    android:layout_toStartOf="@id/exportButton"
-                    android:gravity="end"
-                    android:text="@string/export"
-                    android:textColor="@color/figmaSplashScreenColor" />
-            </RelativeLayout>
+                app:layout_constraintTop_toTopOf="@+id/btnSearch"
+                android:text="@string/export"
+                android:drawablePadding="@dimen/dimens_4dp"
+                android:textColor="@color/figmaSplashScreenColor" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

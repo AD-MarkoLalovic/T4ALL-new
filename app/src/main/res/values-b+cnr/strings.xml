@@ -123,7 +123,7 @@
     <string name="expiration_date">Datum isteka</string>
     <string name="notifications">Obavještenja</string>
     <string name="permissions_title">Dozvole</string>
-    <string name="permission_subtitle">Želite li ukloniti mogućnost aplikaciji da prima obavještenja?</string>
+    <string name="permission_subtitle">Da li želite ukloniti mogućnost aplikacije da prima obavještenja?</string>
     <string name="no">Ne</string>
     <string name="yes">Da</string>
     <string name="remove_card"><u>Ukloni karticu</u></string>
@@ -172,7 +172,7 @@
     <string name="subject_date">Datum predmeta:</string>
     <string name="response_to_toll_complaint">Odgovor na žalbu o iznosu naplate cestarine na uređajima ENP</string>
     <string name="subject_number">Broj predmeta</string>
-    <string name="object_complaint_number">Broj predmeta na koji se odnosi žalba:</string>
+    <string name="object_complaint_number">Broj objekta na koji se žalba odnosi:</string>
     <string name="bill_downloaded_successfully">Račun je uspješno preuzet.</string>
     <string name="please_fill_all_required_data">Molimo vas da popunite sva obavezna polja</string>
     <string name="select_date">Odaberite datum</string>
@@ -311,4 +311,5 @@
     <string name="language_changed">Jezik je promijenjen</string>
     <string name="enter_message_support">Unesite poruku za korisničku podršku</string>
     <string name="invalid_account_number">Неважећи број рачуна</string>
+    <string name="enter_email_password">Molimo unesite email i lozinku.</string>
 </resources>
