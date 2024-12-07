@@ -125,7 +125,7 @@
     <string name="expiration_date">Expiration date</string>
     <string name="notifications">Notifications</string>
     <string name="permissions_title">Permissions</string>
-    <string name="permission_subtitle">Do you want to remove the applications ability to receive notifications?</string>
+    <string name="permission_subtitle">Do you wanDo you want to remove the application\'s ability to receive notifications?t to remove the applications ability to receive notifications?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="remove_card"><u>Remove card</u></string>
@@ -311,4 +311,5 @@
     <string name="language_changed">The language has been changed</string>
     <string name="enter_message_support">Enter a message for customer support</string>
     <string name="invalid_account_number">Invalid account number</string>
+    <string name="enter_email_password">Please enter email and password.</string>
 </resources>

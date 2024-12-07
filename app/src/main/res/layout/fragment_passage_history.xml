@@ -46,11 +46,11 @@
         android:id="@+id/line"
         android:layout_width="0dp"
         android:layout_height="@dimen/dimens_1dp"
-        android:layout_marginTop="@dimen/dimens_8dp"
+        android:layout_marginTop="@dimen/dimens_12dp"
         android:background="@color/primary_light_lightest"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loopIcon" />
+        app:layout_constraintTop_toBottomOf="@id/titleTollHistory" />
 
 
     <androidx.cardview.widget.CardView

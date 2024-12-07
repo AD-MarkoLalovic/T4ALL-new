@@ -131,7 +131,7 @@
     <string name="expiration_date">Datum isteka</string>
     <string name="notifications">Obaveštenja</string>
     <string name="permissions_title">Dozvole</string>
-    <string name="permission_subtitle">Želite li ukloniti mogućnost aplikacije da prima obaveštenja?</string>
+    <string name="permission_subtitle">Da li želite da uklonite mogućnost aplikacije da prima obaveštenja?</string>
     <string name="no">Ne</string>
     <string name="yes">Da</string>
     <string name="remove_card"><u>Uklonite karticu</u></string>
@@ -179,7 +179,7 @@
     <string name="objection">Prigovor</string>
     <string name="response_to_toll_complaint">Odgovor na reklamaciju iznosa naplaćene putarine uređajem ENP</string>
     <string name="subject_number">Broj Predmeta</string>
-    <string name="object_complaint_number">Broj predmeta na koji se odnosi prigovor:</string>
+    <string name="object_complaint_number">Broj objekta na koji se žalba odnosi:</string>
     <string name="bill_downloaded_successfully">Račun je uspešno preuzet.</string>
     <string name="please_fill_all_required_data">Popunite sve potrebne podatke</string>
     <string name="select_date">Izaberite datum</string>
@@ -322,5 +322,6 @@
     <string name="language_changed">Jezik je promenjen</string>
     <string name="enter_message_support">Unesite poruku za korisničku podršku</string>
     <string name="invalid_account_number">Nevažeći broj računa</string>
+    <string name="enter_email_password">Molimo unesite email i lozinku.</string>
 
 </resources>

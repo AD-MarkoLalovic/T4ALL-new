@@ -148,7 +148,7 @@
     <string name="expiration_date" translatable="true">Датум истека</string>
     <string name="notifications" translatable="true">Нотификације</string>
     <string name="permissions_title" translatable="true">Дозволе</string>
-    <string name="permission_subtitle" translatable="true">Да ли зелите да уклоните могуцност аппликације да прима поруке?</string>
+    <string name="permission_subtitle" translatable="true">Да ли желите да уклоните могућност апликације да прима обавештења?</string>
     <string name="no" translatable="true">Не</string>
     <string name="yes" translatable="true">Да</string>
     <string name="remove_card" translatable="true"><u>Уклоните картицу</u></string>
@@ -200,7 +200,7 @@
     <string name="subject_date" translatable="true">Датум предмета:</string>
     <string name="response_to_toll_complaint" translatable="true">Одговор на рекламацију износа наплаћене путарине уређајима ЕНП</string>
     <string name="subject_number" translatable="true">Број предмета</string>
-    <string name="object_complaint_number" translatable="true">Broj predmeta na koji se odnosi prigovor:</string>
+    <string name="object_complaint_number" translatable="true">Број објекта на који се жалба односи:</string>
     <string name="please_fill_all_required_data" translatable="true">Молимо попуните све потребне податке</string>
     <string name="select_date" translatable="true">Изаберите датум</string>
     <string name="please_enter_date_manually" translatable="true">Унесите датум ручно</string>
@@ -378,5 +378,6 @@
     <string name="language_changed">Језик је промењен</string>
     <string name="enter_message_support">Унесите поруку за корисничку подршку</string>
     <string name="invalid_account_number">Неважећи број рачуна</string>
+    <string name="enter_email_password">Молимо унесите имејл и лозинку.</string>
 
 </resources>
