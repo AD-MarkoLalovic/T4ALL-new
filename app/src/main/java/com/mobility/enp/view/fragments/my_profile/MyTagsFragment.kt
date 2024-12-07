@@ -77,27 +77,31 @@ class MyTagsFragment : Fragment(), AdapterTagFilterType.OnClick, MyTagsAdapter.O
                 Log.d(TAG, "after method : ${viewModel.tagApiData.value}")
 
                 data?.let { filteredBySerial ->
-                    (binding.cyclerTagTypes.adapter as AdapterTagFilterType).triggerClearByPosition(
-                        -1
-                    )
-
-                    if (filteredBySerial.data.tags.isEmpty()) {
-                        context?.let {
-                            Toast.makeText(
-                                it,
-                                getString(R.string.tags_with_serial_not_found),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-
-                    if (filteredBySerial.data.tags.size == (viewModel.tagApiData.value?.data?.tags?.size)) {  // this related to the background of the filter buttons
+                    try {
                         (binding.cyclerTagTypes.adapter as AdapterTagFilterType).triggerClearByPosition(
-                            0
+                            -1
                         )
-                    }
 
-                    (binding.cyclerContent.adapter as MyTagsAdapter).updateListTags(filteredBySerial)
+                        if (filteredBySerial.data.tags.isEmpty()) {
+                            context?.let {
+                                Toast.makeText(
+                                    it,
+                                    getString(R.string.tags_with_serial_not_found),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+
+                        if (filteredBySerial.data.tags.size == (viewModel.tagApiData.value?.data?.tags?.size)) {  // this related to the background of the filter buttons
+                            (binding.cyclerTagTypes.adapter as AdapterTagFilterType).triggerClearByPosition(
+                                0
+                            )
+                        }
+
+                        (binding.cyclerContent.adapter as MyTagsAdapter).updateListTags(filteredBySerial)
+                    } catch (e: Exception) {
+                        Log.d(TAG, "onTextChanged: ${e.message}")
+                    }
                 }
 
             }
