@@ -29,6 +29,7 @@
     <color name="white_smoke">#f5f5f5</color>
 
     <color name="dark_orange">#E5852D</color>
+    <color name="light_orange">#ffdbbb</color>
     <color name="soft_peach">#FAEDE1</color>
     <color name="tag_active">#489D7D</color>
 
@@ -36,7 +37,6 @@
 
     <color name="soft_gray">#e9ecef</color>
     <color name="hint_text_color">#a7a7a7</color>
-
 
 
 

@@ -97,6 +97,26 @@ class BillsDetailsAdapter(
                 binding.firstContainerInvoice.setBackgroundResource(R.color.figmaToolHistoryPaidBackground)
                 binding.secondContainerInvoices.setBackgroundResource(R.color.white)
 
+            } else if (bill.status?.value == 7) {
+                binding.bttPayNow.apply {
+                    visibility = View.INVISIBLE
+                    isClickable = false
+                }
+
+                binding.invoicesCardView.strokeColor = ContextCompat.getColor(
+                    binding.invoicesCardView.context,
+                    R.color.light_orange
+                )
+
+                binding.invoicesStatus.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        binding.invoicesStatus.context,
+                        R.drawable.status_icon_orange
+                    )
+                )
+
+                binding.firstContainerInvoice.setBackgroundResource(R.color.light_orange)
+                binding.secondContainerInvoices.setBackgroundResource(R.color.white)
             } else {
                 binding.invoicesCardView.strokeColor = ContextCompat.getColor(
                     binding.invoicesCardView.context,

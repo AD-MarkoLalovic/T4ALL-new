@@ -43,6 +43,17 @@ class HomePassageAdapter(
                     }
                 }
 
+                7 -> {
+                    binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_orange)
+                    if (isTabletXml(binding.root.context)) {
+                        binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_orange_tablet)
+                        binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_orange_tablet)
+                    } else {
+                        binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_orange)
+                        binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_orange)
+                    }
+                }
+
                 3 -> {
                     binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_red)
 
