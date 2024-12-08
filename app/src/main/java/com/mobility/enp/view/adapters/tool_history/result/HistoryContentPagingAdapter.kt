@@ -1,6 +1,7 @@
 package com.mobility.enp.view.adapters.tool_history.result
 
 import android.content.Context
+import android.content.res.Configuration
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -124,6 +125,17 @@ class HistoryContentPagingAdapter(
                     binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_red)
                     binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_red)
                 }
+
+                7 -> {
+                    binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_orange)
+                    if (isTabletXml(binding.root.context)) {
+                        binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_orange_tablet)
+                        binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_orange_tablet)
+                    } else {
+                        binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_orange)
+                        binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_orange)
+                    }
+                }
             }
             binding.executePendingBindings()
         }
@@ -187,6 +199,12 @@ class HistoryContentPagingAdapter(
         )
 
         fun stopSpinner()
+    }
+
+    private fun isTabletXml(context: Context): Boolean {
+        val config: Configuration = context.resources.configuration
+        val smallestScreenWidthDp: Int = config.smallestScreenWidthDp
+        return smallestScreenWidthDp >= 600 // min layout with for tablet
     }
 
 }
