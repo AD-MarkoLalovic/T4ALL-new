@@ -600,15 +600,18 @@ object Repository {
         })
     }
 
-    fun getBillsDetails(
+    suspend fun getBillsDetails(
         data: MonthlyBillsAdapter.FetchBillsDetails,
         token: String?,
         yearMonth: String,
         currency: String,
         perPage: Int,
-        errorBody: MutableLiveData<ErrorBody>
+        errorBody: MutableLiveData<ErrorBody>, application: Context
     ) {
-        apiService(token).getBillsByMonth(yearMonth, currency, perPage)
+
+        val lang = getUserLanguage(application)
+
+        apiService(token).getBillsByMonth(yearMonth, currency, perPage, lang)
             .enqueue(object : Callback<BillsDetailsResponse> {
 
                 override fun onResponse(
@@ -630,16 +633,19 @@ object Repository {
             })
     }
 
-    fun getBillsDetailsPaging(
+    suspend fun getBillsDetailsPaging(
         data: MutableLiveData<BillsDetailsResponse>,
         token: String?,
         yearMonth: String,
         currency: String,
         page: Int,
         perPage: Int,
-        errorBody: MutableLiveData<ErrorBody>
+        errorBody: MutableLiveData<ErrorBody>, application: Context
     ) {
-        apiService(token).getBillsByMonthPaging(yearMonth, currency, page, perPage)
+
+        val lang = getUserLanguage(application)
+
+        apiService(token).getBillsByMonthPaging(yearMonth, currency, page, perPage, lang)
             .enqueue(object : Callback<BillsDetailsResponse> {
 
                 override fun onResponse(

@@ -143,7 +143,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
                 val userToken = getUserToken()
                 userToken?.let { token ->
                     Repository.getBillsDetails(
-                        data, token, yearMonth, currency, perPage, error
+                        data, token, yearMonth, currency, perPage, error,getApplication()
                     )
                 }
             }
@@ -164,7 +164,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
                 val userToken = getUserToken()
                 userToken?.let { token ->
                     Repository.getBillsDetailsPaging(
-                        data, token, yearMonth, currency, page, perPage, error
+                        data, token, yearMonth, currency, page, perPage, error,getApplication()
                     )
                 }
             }
