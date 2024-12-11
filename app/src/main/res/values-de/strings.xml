@@ -331,5 +331,6 @@
     <string name="enter_message_support">Geben Sie eine Nachricht für den Kundensupport ein</string>
     <string name="invalid_account_number">Ungültige Kontonummer</string>
     <string name="enter_email_password">Bitte geben Sie E-Mail und Passwort ein.</string>
+    <string name="all_status_tags">Alle</string>
 
 </resources>

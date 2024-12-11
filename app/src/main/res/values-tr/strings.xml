@@ -324,5 +324,6 @@
     <string name="invalid_account_number">Geçersiz hesap numarası</string>
     <string name="enter_email_password">Lütfen e-posta ve şifre girin.</string>
     <string name="app_name">Möchten Sie die Fähigkeit der Anwendung, Benachrichtigungen zu empfangen, entfernen?</string>
+    <string name="all_status_tags">Hepsi</string>
 
 </resources>
