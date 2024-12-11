@@ -227,7 +227,7 @@
     <string name="user_profile" translatable="true">Кориснички профил</string>
     <string name="personal_data" translatable="true">Лични подаци</string>
     <string name="password_change" translatable="true">Промена лозинке</string>
-    <string name="hint_registration_plate" translatable="true">Registration plate</string>
+    <string name="hint_registration_plate" translatable="true">Регистарска ознака</string>
     <string name="hint_enter_description" translatable="true">Унесите опис</string>
     <string name="hint_bank_account_number" translatable="true">Број текућег рачуна</string>
     <string name="hint_bank_name" translatable="true">Назив банке</string>
@@ -379,5 +379,6 @@
     <string name="enter_message_support">Унесите поруку за корисничку подршку</string>
     <string name="invalid_account_number">Неважећи број рачуна</string>
     <string name="enter_email_password">Молимо унесите имејл и лозинку.</string>
+    <string name="all_status_tags">Сви</string>
 
 </resources>

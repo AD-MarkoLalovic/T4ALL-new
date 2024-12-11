@@ -312,4 +312,5 @@
     <string name="enter_message_support">Enter a message for customer support</string>
     <string name="invalid_account_number">Invalid account number</string>
     <string name="enter_email_password">Please enter email and password.</string>
+    <string name="all_status_tags">All</string>
 </resources>

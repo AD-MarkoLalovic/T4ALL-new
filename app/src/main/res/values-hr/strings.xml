@@ -318,6 +318,7 @@
     <string name="enter_message_support">Unesite poruku za korisničku podršku</string>
     <string name="invalid_account_number">Nevažeći broj računa</string>
     <string name="enter_email_password">Molimo unesite email i lozinku.</string>
+    <string name="all_status_tags">Svi</string>
 
 
 </resources>
