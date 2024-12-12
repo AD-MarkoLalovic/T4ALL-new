@@ -28,6 +28,9 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val _name = MutableLiveData<String>()
     val name: LiveData<String> get() = _name
 
+    private val _deletePic = MutableLiveData<Boolean>()
+    val deletePic :LiveData<Boolean> get() = _deletePic
+
     private suspend fun getUserToken(): String? {
         return withContext(Dispatchers.IO) {
             database.loginDao().fetchAllowedUsers().accessToken
@@ -61,6 +64,18 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     ) {
         val userToken = getUserToken()
         Repository.logoutUser(userToken, errorBody)
+    }
+
+    fun deleteProfilePicture(){
+        viewModelScope.launch (Dispatchers.IO) {
+            database.profileImageDao().deleteAll();
+            _deletePic.postValue(true)
+        }
+    }
+
+    suspend fun checkStoredImageData():Boolean{
+        val list = database.profileImageDao().selectAll()
+        return list.isNotEmpty()
     }
 
     fun fetchLocalData() {

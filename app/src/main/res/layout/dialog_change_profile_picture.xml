@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -59,6 +61,17 @@
             android:importantForAccessibility="no"
             android:src="@drawable/ic_camera" />
 
+
+        <Button
+            android:id="@+id/bttDelete"
+            style="@style/MyButtonStyleRed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txContentDialogChangeProfilePicture"
+            android:layout_toEndOf="@id/bttFromCamera"
+            android:layout_marginStart="@dimen/dimens_16dp"
+            android:layout_marginTop="@dimen/dimens_48dp"
+            android:text="@string/delete_picture" />
 
     </RelativeLayout>
 </layout>

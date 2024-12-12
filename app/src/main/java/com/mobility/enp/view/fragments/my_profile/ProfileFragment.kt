@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
@@ -24,7 +25,9 @@ import com.mobility.enp.util.ImageRepository
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.ProfileImagePickerDialog
 import com.mobility.enp.viewmodel.ProfileViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogListener {
 
@@ -66,6 +69,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 displayName.let {
                     imageRepository.getAndSetProfileImage(binding.imageProfile, it)
                 }
+
             } catch (e: Exception) {
                 Log.d(TAG, "error: null data in room")
             }
@@ -73,10 +77,16 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
 
         binding.bttChangeProfilePicture.setOnClickListener {
-            // Otvaranje dijaloga za izbor slike
-            val image = ProfileImagePickerDialog(this@ProfileFragment)
-            image.show(parentFragmentManager, "Profile Image")
+            // check for existing image in room
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                val imageExists = viewModelProfile.checkStoredImageData()
 
+                withContext(Dispatchers.Main) {
+                    val image = ProfileImagePickerDialog(this@ProfileFragment, imageExists)
+                    image.show(parentFragmentManager, "Profile Image")
+
+                }
+            }
         }
 
         binding.buttonMyTags.setOnClickListener {
@@ -170,6 +180,17 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 }
             }
         }
+
+        viewModelProfile.deletePic.observe(viewLifecycleOwner) { deleted ->
+            if (deleted) {
+                binding.imageProfile.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_account_home_screen
+                    )
+                )
+            }
+        }
     }
 
     override fun onImageSelected(imageBitmap: Bitmap?) {
@@ -193,6 +214,10 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 imageRepository.saveImageToStorage(bitmap, binding.userName.text.toString())
             }
         }
+    }
+
+    override fun onDeleteImage() {
+        viewModelProfile.deleteProfilePicture()
     }
 
     override fun onDestroyView() {

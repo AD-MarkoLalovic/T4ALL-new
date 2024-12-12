@@ -90,6 +90,14 @@
                         app:layout_constraintGuide_percent="0.55"
                         tools:ignore="MissingConstraints" />
 
+                    <GridLayout
+                        android:id="@+id/gridLine2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.39"
+                        tools:ignore="MissingConstraints" />
+
                     <ImageButton
                         android:id="@+id/bttChangeProfilePicture"
                         android:layout_width="wrap_content"
