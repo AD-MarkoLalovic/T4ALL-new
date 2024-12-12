@@ -69,6 +69,22 @@
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="104034/2023-web" />
 
+                    <TextView
+                        android:id="@+id/billStatus"
+                        style="@style/SubtitlesRegular"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimens_8dp"
+                        android:layout_marginEnd="@dimen/dimens_8dp"
+                        android:breakStrategy="simple"
+                        android:gravity="end"
+                        android:textSize="@dimen/dimens_10sp"
+                        android:text="@{String.valueOf(bill.status.text)}"
+                        app:layout_constraintEnd_toStartOf="@+id/invoicesStatus"
+                        app:layout_constraintStart_toStartOf="@+id/guideLineItemInvoices"
+                        app:layout_constraintTop_toBottomOf="@id/billFinal"
+                        tools:text="Storniran" />
+
                     <ImageView
                         android:id="@+id/invoicesStatus"
                         android:layout_width="wrap_content"

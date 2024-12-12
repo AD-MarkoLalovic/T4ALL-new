@@ -118,7 +118,7 @@
     <string name="all">Alle</string>
     <string name="confirm_lost_tag">Verlorenes Tag bestätigen</string>
     <string name="cancel">Abbrechen</string>
-    <string name="show_all_tags">Alle Tags anzeigen</string>
+    <string name="show_all_tags">Alle TAGS anzeigen</string>
     <string name="date">Datum</string>
     <string name="from">Von</string>
     <string name="to">Bis</string>
@@ -135,8 +135,7 @@
     <string name="expiration_date">Ablaufdatum</string>
     <string name="notifications">Benachrichtigungen</string>
     <string name="permissions_title">Berechtigungen</string>
-    <string name="permission_subtitle">Möchten Sie die Fähigkeit der Anwendung, Benachrichtigungen
-        zu empfangen, entfernen?</string>
+    <string name="permission_subtitle">Möchten Sie die Fähigkeit der Anwendung, Benachrichtigungen zu empfangen, entfernen?</string>
     <string name="no">Nein</string>
     <string name="yes">Ja</string>
     <string name="remove_card"><u>Karte entfernen</u></string>
@@ -250,8 +249,8 @@
     <string name="previous_invoices">Ihre vorherigen Rechnungen werden hier angezeigt.</string>
     <string name="text_no_refund_tags">"Sie haben keine Erstattungstags.      "</string>
     <string name="text_no_my_tags">Sie haben derzeit keine hinzugefügten Tags. Bitte fügen Sie Ihren Tag hinzu</string>
-    <string name="no_invoices">Hier werden Ihre bisherigen Rechnungen angezeigt.</string>
-    <string name="no_tool_history">Ihre bisherigen Pässe werden hier angezeigt.</string>
+    <string name="no_invoices">Ihre Rechnungen werden hier angezeigt.</string>
+    <string name="no_tool_history">"Ihre Durchfahrten werden hier angezeigt. "</string>
     <string name="enter_old_password">Geben Sie das alte Passwort ein</string>
     <string name="enter_new_password">Geben Sie das neue Passwort ein</string>
     <string name="retype_new_password">Geben Sie das neue Passwort erneut ein</string>
@@ -285,7 +284,7 @@
     <string name="serbian_passage">Serbien</string>
     <string name="montenegro_passage">Montenegro</string>
     <string name="north_macedonian_passage">Nordmazedonien</string>
-    <string name="value">Wert</string>
+    <string name="value">Währung</string>
     <string name="message">Nachricht</string>
     <string name="click_me">Klicken Sie auf mich</string>
     <string name="e_mail">E-Mail</string>
@@ -330,5 +329,8 @@
     <string name="refund_request_note">Hinweis: Rückerstattungen sind nur auf Girokonten von Banken möglich, die in der Republik Serbien tätig sind.</string>
     <string name="language_changed">Die Sprache wurde geändert</string>
     <string name="enter_message_support">Geben Sie eine Nachricht für den Kundensupport ein</string>
+    <string name="invalid_account_number">Ungültige Kontonummer</string>
+    <string name="enter_email_password">Bitte geben Sie E-Mail und Passwort ein.</string>
+    <string name="all_status_tags">Alle</string>
 
 </resources>

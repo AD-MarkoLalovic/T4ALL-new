@@ -125,7 +125,7 @@ class LoginFragment : Fragment() {
             } else {
                 Toast.makeText(
                     requireContext(),
-                    "Please enter username and password",
+                    getString(R.string.enter_email_password),
                     Toast.LENGTH_SHORT
                 ).show()
             }

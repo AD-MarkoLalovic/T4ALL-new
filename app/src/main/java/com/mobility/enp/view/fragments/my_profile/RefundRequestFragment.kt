@@ -105,7 +105,6 @@ class RefundRequestFragment : Fragment() {
             buttonRequest.visibility = View.VISIBLE
         }
         Toast.makeText(requireContext(), getString(R.string.server_error_msg), Toast.LENGTH_SHORT).show()
-        //Toast.makeText(requireContext(), getString(R.string.server_error_message), Toast.LENGTH_SHORT).show()
     }
 
     private fun showApiErrorState(message: String) {

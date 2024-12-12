@@ -107,7 +107,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_enter_serial_number"
+                    android:imeOptions="actionNext"
                     android:inputType="number"
+                    android:maxLines="1"
                     android:textColor="@color/figmaSplashScreenColor" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -140,7 +142,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txVerificationCodeAddTag"
-                app:layout_constraintWidth_max="488dp">
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/verificationCode"
@@ -148,6 +150,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_enter_verification_code"
+                    android:maxLines="1"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
                     android:textColor="@color/figmaSplashScreenColor" />
             </com.google.android.material.textfield.TextInputLayout>
 

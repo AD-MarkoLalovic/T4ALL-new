@@ -107,7 +107,7 @@
     <string name="all">Όλα</string>
     <string name="confirm_lost_tag">Επιβεβαίωση χαμένης ετικέτας</string>
     <string name="cancel">Ακύρωση</string>
-    <string name="show_all_tags">Εμφάνιση όλων των ετικετών</string>
+    <string name="show_all_tags">Εμφάνιση όλων των TAGS</string>
     <string name="date">Ημερομηνία</string>
     <string name="from">Από</string>
     <string name="to">Προς</string>
@@ -123,7 +123,7 @@
     <string name="expiration_date">Ημερομηνία λήξης</string>
     <string name="notifications">Ειδοποιήσεις</string>
     <string name="permissions_title">Άδειες</string>
-    <string name="permission_subtitle">Θέλετε να αφαιρέσετε την ικανότητα της εφαρμογής να λαμβάνει ειδοποιήσεις;</string>
+    <string name="permission_subtitle">Θέλετε να αφαιρέσετε τη δυνατότητα της εφαρμογής να λαμβάνει ειδοποιήσεις;</string>
     <string name="no">Όχι</string>
     <string name="yes">Ναι</string>
     <string name="remove_card"><u>Αφαίρεση κάρτας</u></string>
@@ -172,7 +172,7 @@
     <string name="subject_date">Ημερομηνία θέματος:</string>
     <string name="response_to_toll_complaint">Απάντηση στο παράπονο σχετικά με το ποσό των διοδίων που χρεώθηκαν σε συσκευές ENP</string>
     <string name="subject_number">Αριθμός θέματος</string>
-    <string name="object_complaint_number">Αριθμός του αντικειμένου στο οποίο αναφέρεται το παράπονο:</string>
+    <string name="object_complaint_number">Αριθμός του αντικειμένου στο οποίο αναφέρεται η καταγγελία:</string>
     <string name="case_number_info">Ο αριθμός θέματος αναφέρεται στον αριθμό με τον οποίο καταχωρήθηκε το παράπονό σας και βρίσκεται στην απάντηση που λάβατε από εμάς. Ομιλίες με λάθος ή ανύπαρκτο αριθμό δεν θα γίνονται δεκτές.</string>
     <string name="bill_downloaded_successfully">Ο λογαριασμός έχει ληφθεί επιτυχώς.</string>
     <string name="please_fill_all_required_data">Παρακαλώ συμπληρώστε όλα τα απαιτούμενα δεδομένα</string>
@@ -229,8 +229,8 @@
     <string name="previous_invoices">Οι προηγούμενοι λογαριασμοί σας θα εμφανίζονται εδώ.</string>
     <string name="text_no_refund_tags">Δεν έχετε ετικέτες επιστροφής χρημάτων.</string>
     <string name="text_no_my_tags">Δεν έχετε προσθέσει καμία ετικέτα. Παρακαλώ προσθέστε την ετικέτα σας.</string>
-    <string name="no_invoices">Οι προηγούμενοι λογαριασμοί σας θα εμφανίζονται εδώ.</string>
-    <string name="no_tool_history">Οι προηγούμενες διελεύσεις σας θα εμφανίζονται εδώ.</string>
+    <string name="no_invoices">Οι τιμολόγιά σας θα εμφανιστούν εδώ.</string>
+    <string name="no_tool_history">Οι διελεύσεις σας θα εμφανιστούν εδώ.</string>
     <string name="enter_old_password">Εισάγετε τον παλιό κωδικό πρόσβασης</string>
     <string name="enter_new_password">Εισάγετε τον νέο κωδικό πρόσβασης</string>
     <string name="retype_new_password">Πληκτρολογήστε ξανά τον νέο κωδικό πρόσβασης</string>
@@ -264,7 +264,7 @@
     <string name="serbian_passage">Σερβία</string>
     <string name="montenegro_passage">Μαυροβούνιο</string>
     <string name="north_macedonian_passage">Βόρεια Μακεδονία</string>
-    <string name="value">αξία</string>
+    <string name="value">Νόμισμα</string>
     <string name="message">Μήνυμα</string>
     <string name="click_me">Κάντε κλικ εδώ</string>
     <string name="e_mail">E-mail</string>
@@ -308,5 +308,8 @@
     <string name="refund_request_note">Σημείωση: Η επιστροφή χρημάτων είναι δυνατή μόνο σε τραπεζικούς λογαριασμούς τραπεζών που λειτουργούν στη Δημοκρατία της Σερβίας.</string>
     <string name="language_changed">Η γλώσσα έχει αλλάξει</string>
     <string name="enter_message_support">Εισαγάγετε ένα μήνυμα για την υποστήριξη πελατών</string>
+    <string name="invalid_account_number">Άκυρος αριθμός λογαριασμού</string>
+    <string name="enter_email_password">Παρακαλώ εισαγάγετε email και κωδικό πρόσβασης.</string>
+    <string name="all_status_tags">Όλοι</string>
 
 </resources>

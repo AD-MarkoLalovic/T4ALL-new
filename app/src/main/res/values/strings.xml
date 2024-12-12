@@ -129,10 +129,10 @@
     <string name="settings" translatable="true">Подешавања</string>
     <string name="allow_push_notifications" translatable="true">Дозволи примање обавештења</string>
     <string name="change_language" translatable="true">Промени језик</string>
-    <string name="all" translatable="true">Сви</string>
+    <string name="all" translatable="true">Свe</string>
     <string name="confirm_lost_tag" translatable="true">Потврдите изгубљену таг</string>
     <string name="cancel" translatable="true">Откажи</string>
-    <string name="show_all_tags" translatable="true">Прикажи све тагове</string>
+    <string name="show_all_tags" translatable="true">Прикажи све ТАГове</string>
     <string name="date" translatable="true">Датум</string>
     <string name="from" translatable="true">Од</string>
     <string name="to" translatable="true">До</string>
@@ -148,7 +148,7 @@
     <string name="expiration_date" translatable="true">Датум истека</string>
     <string name="notifications" translatable="true">Нотификације</string>
     <string name="permissions_title" translatable="true">Дозволе</string>
-    <string name="permission_subtitle" translatable="true">Да ли зелите да уклоните могуцност аппликације да прима поруке?</string>
+    <string name="permission_subtitle" translatable="true">Да ли желите да уклоните могућност апликације да прима обавештења?</string>
     <string name="no" translatable="true">Не</string>
     <string name="yes" translatable="true">Да</string>
     <string name="remove_card" translatable="true"><u>Уклоните картицу</u></string>
@@ -200,7 +200,7 @@
     <string name="subject_date" translatable="true">Датум предмета:</string>
     <string name="response_to_toll_complaint" translatable="true">Одговор на рекламацију износа наплаћене путарине уређајима ЕНП</string>
     <string name="subject_number" translatable="true">Број предмета</string>
-    <string name="object_complaint_number" translatable="true">Broj predmeta na koji se odnosi prigovor:</string>
+    <string name="object_complaint_number" translatable="true">Број објекта на који се жалба односи:</string>
     <string name="please_fill_all_required_data" translatable="true">Молимо попуните све потребне податке</string>
     <string name="select_date" translatable="true">Изаберите датум</string>
     <string name="please_enter_date_manually" translatable="true">Унесите датум ручно</string>
@@ -227,7 +227,7 @@
     <string name="user_profile" translatable="true">Кориснички профил</string>
     <string name="personal_data" translatable="true">Лични подаци</string>
     <string name="password_change" translatable="true">Промена лозинке</string>
-    <string name="hint_registration_plate" translatable="true">Registration plate</string>
+    <string name="hint_registration_plate" translatable="true">Регистарска ознака</string>
     <string name="hint_enter_description" translatable="true">Унесите опис</string>
     <string name="hint_bank_account_number" translatable="true">Број текућег рачуна</string>
     <string name="hint_bank_name" translatable="true">Назив банке</string>
@@ -262,8 +262,8 @@
     <string name="previous_invoices">Твоји претходни рачуни ће бити приказани овде.</string>
     <string name="text_no_refund_tags">Немате тагова за рефундирање.</string>
     <string name="text_no_my_tags">Тренутно немате додатих тагова. Молимо ваc додајте таг.</string>
-    <string name="no_invoices">Ваше претходне фактуре ће бити приказане овде.</string>
-    <string name="no_tool_history">Ваше претходне пропуснице ће бити приказане овде.</string>
+    <string name="no_invoices">Ваше фактуре ће бити приказане овде.</string>
+    <string name="no_tool_history">Ваши проласци ће бити приказани овде.</string>
     <string name="enter_old_password">Унесите стару шифру</string>
     <string name="enter_new_password">Унесите нову шифру</string>
     <string name="retype_new_password">Поново унесите нову шифру</string>
@@ -318,7 +318,7 @@
     <string name="eur" translatable="false">EUR</string>
     <string name="rsd" translatable="false">RSD</string>
     <string name="mkd" translatable="false">MKD</string>
-    <string name="value">вредност</string>
+    <string name="value">Валута</string>
     <string name="found_tag">Пронађен Таг</string>
     <string name="confirm_found_tag">Потврдите пронађену ознаку</string>
     <string name="report_found_tag">Да ли сте сигурни да желите да пријавите ову ознаку као пронађену?</string>
@@ -377,5 +377,8 @@
     <string name="refund_request_note">Напомена: Повраћај средстава је могућ искључиво на текуће рачуне банака које послују Републици Србији.</string>
     <string name="language_changed">Језик је промењен</string>
     <string name="enter_message_support">Унесите поруку за корисничку подршку</string>
+    <string name="invalid_account_number">Неважећи број рачуна</string>
+    <string name="enter_email_password">Молимо унесите имејл и лозинку.</string>
+    <string name="all_status_tags">Сви</string>
 
 </resources>

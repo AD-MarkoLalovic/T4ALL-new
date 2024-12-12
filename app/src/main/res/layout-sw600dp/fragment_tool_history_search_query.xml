@@ -1,311 +1,324 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".view.fragments.tool_history.ToolHistoryFilterFragment">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="@dimen/dimens_100dp"
         android:background="@color/white">
 
         <TextView
             android:id="@+id/txtTitle"
             style="@style/H3"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/searchButton"
-            android:layout_alignBottom="@+id/searchButton"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
-            android:gravity="center_vertical"
-            android:text="@string/tool_history" />
+            android:layout_marginStart="@dimen/dimens_100dp"
+            android:layout_marginTop="@dimen/dimens_30dp"
+            android:layout_marginEnd="@dimen/dimens_16dp"
+            android:text="@string/tool_history"
+            app:layout_constraintEnd_toStartOf="@+id/searchMark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/searchButton"
+            android:id="@+id/searchMark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/dimens_10dp"
-            android:background="@drawable/loop"
-            android:contentDescription="@string/loop_icon"
-            android:visibility="invisible" />
+            android:layout_marginEnd="@dimen/dimens_100dp"
+            android:contentDescription="@null"
+            android:src="@drawable/search_pick"
+            app:layout_constraintBottom_toBottomOf="@+id/txtTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txtTitle" />
 
         <View
             android:id="@+id/lineTHistoryDetails"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="@dimen/dimens_1dp"
-            android:layout_below="@+id/searchButton"
-            android:layout_marginTop="@dimen/dimens_8dp"
-            android:background="@color/primary_light_lightest" />
+            android:layout_marginTop="@dimen/dimens_12dp"
+            android:background="@color/primary_light_lightest"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtTitle" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cycler"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_200dp"
-            android:layout_above="@id/bottomContainer"
-            android:layout_below="@id/lineTHistoryDetails"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="@dimen/dimens_15dp"
-            android:layout_marginTop="@dimen/dimens_20dp"
-            android:layout_marginEnd="@dimen/dimens_10dp"
-            android:layout_marginBottom="@dimen/dimens_20dp" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/dimens_100dp"
+            android:layout_marginTop="@dimen/dimens_16dp"
+            android:layout_marginBottom="22dp"
+            app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lineTHistoryDetails"
+            tools:listitem="@layout/tool_history_tags_adapter"
+            tools:itemCount="5"/>
 
         <TextView
             android:id="@+id/noData"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/bottomContainer"
-            android:layout_below="@id/lineTHistoryDetails"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimens_100dp"
             android:text="@string/no_passage_data"
             android:textSize="@dimen/dimens_20sp"
             android:textStyle="bold"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lineTHistoryDetails" />
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bottomContainer"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:background="@color/primary_light_lightest">
+            android:paddingHorizontal="@dimen/dimens_100dp"
+            android:background="@color/primary_light_lightest"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:id="@+id/txtShowAllTags"
-                style="@style/ParagraphMediumTablet"
+                style="@style/Paragraph"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@id/chkBox"
-                android:layout_alignBottom="@id/chkBox"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="@dimen/dimens_20dp"
-                android:layout_marginTop="@dimen/dimens_20dp"
-                android:layout_marginEnd="@dimen/dimens_20dp"
-                android:gravity="center_vertical"
+                android:layout_marginTop="@dimen/dimens_30dp"
                 android:text="@string/show_all_tags"
-                android:textColor="@color/primary_light_darkest" />
+                android:textColor="@color/primary_light_darkest"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <CheckBox
                 android:id="@+id/chkBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="@dimen/dimens_20dp"
-                android:layout_marginTop="@dimen/dimens_20dp"
-                android:layout_marginEnd="@dimen/dimens_10dp"
-                android:layout_marginBottom="@dimen/dimens_20dp" />
+                app:buttonTint="@color/primary_light_dark"
+                app:layout_constraintBottom_toBottomOf="@+id/txtShowAllTags"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/txtShowAllTags" />
 
             <View
                 android:id="@+id/seperator"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="@dimen/dimens_1dp"
-                android:layout_below="@id/txtShowAllTags"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginHorizontal="@dimen/dimens_20dp"
-                android:layout_marginTop="@dimen/dimens_20dp"
-                android:background="@drawable/linear_gradient_login" />
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:background="@drawable/linear_gradient_login"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtShowAllTags" />
+
 
             <TextView
                 android:id="@+id/valueTitle"
                 style="@style/CaptionRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/seperator"
-                android:layout_marginStart="@dimen/dimens_20dp"
                 android:layout_marginTop="@dimen/dimens_16dp"
-                android:text="@string/value" />
+                android:text="@string/value"
+                android:textColor="@color/primary_dark_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seperator" />
 
             <HorizontalScrollView
                 android:id="@+id/horizontalScrollView"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/valueTitle"
-                android:layout_marginHorizontal="@dimen/dimens_20dp"
                 android:layout_marginTop="@dimen/dimens_16dp"
-                android:fillViewport="true"
-                android:scrollbars="none">
+                android:scrollbars="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/valueTitle">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <Button
+                    <TextView
                         android:id="@+id/buttonAll"
-                        style="@style/MyOutlinedButtonStyle"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/dimens_6dp"
-                        android:text="@string/all" />
+                        style="@style/CaptionMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="@dimen/dimens_12dp"
+                        android:background="@drawable/currency_selector"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/dimens_16dp"
+                        android:text="@string/all"
+                        android:textColor="@color/text_color_selector" />
 
-                    <Button
+                    <TextView
                         android:id="@+id/buttonEUR"
-                        style="@style/MyOutlinedButtonStyle"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/dimens_6dp"
-                        android:text="@string/eur" />
+                        style="@style/CaptionMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="@dimen/dimens_12dp"
+                        android:background="@drawable/currency_selector"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/dimens_16dp"
+                        android:text="@string/eur"
+                        android:textColor="@color/text_color_selector" />
 
-                    <Button
+                    <TextView
                         android:id="@+id/buttonRSD"
-                        style="@style/MyOutlinedButtonStyle"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/dimens_6dp"
-                        android:text="@string/rsd" />
+                        style="@style/CaptionMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="@dimen/dimens_12dp"
+                        android:background="@drawable/currency_selector"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/dimens_16dp"
+                        android:text="@string/rsd"
+                        android:textColor="@color/text_color_selector" />
 
-                    <Button
+                    <TextView
                         android:id="@+id/buttonMKD"
-                        style="@style/MyOutlinedButtonStyle"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
+                        style="@style/CaptionMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
                         android:layout_marginEnd="@dimen/dimens_6dp"
-                        android:text="@string/mkd" />
+                        android:background="@drawable/currency_selector"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/dimens_16dp"
+                        android:text="@string/mkd"
+                        android:textColor="@color/text_color_selector" />
 
                 </LinearLayout>
             </HorizontalScrollView>
 
+
             <TextView
                 android:id="@+id/txtDate"
-                style="@style/ParagraphMediumTablet"
+                style="@style/CaptionRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/horizontalScrollView"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="@dimen/dimens_20dp"
                 android:layout_marginTop="@dimen/dimens_20dp"
-                android:layout_marginEnd="@dimen/dimens_20dp"
-                android:gravity="center_vertical"
                 android:text="@string/date"
-                android:textColor="@color/primary_light_darkest" />
+                android:textColor="@color/primary_dark_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/horizontalScrollView" />
 
-            <View
-                android:id="@+id/center"
-                android:layout_width="@dimen/dimens_0dp"
-                android:layout_height="@dimen/dimens_0dp"
-                android:layout_centerHorizontal="true" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideLineTollSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
 
-            <RelativeLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/rlLeft"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/txtDate"
-                android:layout_marginTop="@dimen/dimens_20dp"
-                android:layout_marginEnd="@dimen/dimens_10dp"
-                android:layout_toStartOf="@id/center"
-                android:background="@drawable/border_login_fields">
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="@dimen/dimens_10dp"
+                android:layout_marginEnd="@dimen/dimens_3dp"
+                app:hintEnabled="false"
+                android:clickable="true"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusTopEnd="36dp"
+                app:boxCornerRadiusBottomEnd="36dp"
+                app:boxCornerRadiusTopStart="36dp"
+                app:boxCornerRadiusBottomStart="36dp"
+                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                app:boxStrokeWidth="@dimen/dimens_0dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:layout_constraintEnd_toStartOf="@+id/guideLineTollSearch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtDate">
 
-                <TextView
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtDateLeft"
-                    style="@style/CaptionRegularTablet"
+                    style="@style/CaptionRegular"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginStart="@dimen/dimens_20dp"
-                    android:paddingVertical="10dp"
-                    android:text="@string/from"
-                    android:textColor="@color/primary_light_darkest" />
+                    android:layout_height="match_parent"
+                    android:hint="@string/from"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:cursorVisible="false"
+                    android:textColor="@color/primary_light_dark"
+                    android:focusableInTouchMode="false"
+                    android:paddingVertical="@dimen/dimens_0dp"
+                    android:paddingStart="@dimen/dimens_16dp"/>
 
-            </RelativeLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <RelativeLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/rlRight"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/txtDate"
-                android:layout_marginStart="@dimen/dimens_10dp"
-                android:layout_marginTop="@dimen/dimens_20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_toEndOf="@id/center"
-                android:background="@drawable/border_login_fields">
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="@dimen/dimens_3dp"
+                android:layout_marginTop="@dimen/dimens_10dp"
+                app:hintEnabled="false"
+                android:clickable="true"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusTopEnd="36dp"
+                app:boxCornerRadiusBottomEnd="36dp"
+                app:boxCornerRadiusTopStart="36dp"
+                app:boxCornerRadiusBottomStart="36dp"
+                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                app:boxStrokeWidth="@dimen/dimens_0dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:layout_constraintStart_toEndOf="@+id/guideLineTollSearch"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtDate">
 
-                <TextView
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtDateRight"
-                    style="@style/CaptionRegularTablet"
+                    style="@style/CaptionRegular"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:paddingVertical="10dp"
-                    android:text="@string/to"
-                    android:textColor="@color/primary_light_darkest" />
+                    android:layout_height="match_parent"
+                    android:hint="@string/to"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:cursorVisible="false"
+                    android:textColor="@color/primary_light_dark"
+                    android:focusableInTouchMode="false"
+                    android:paddingVertical="@dimen/dimens_0dp"
+                    android:paddingStart="@dimen/dimens_16dp"/>
 
-            </RelativeLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btnSearch"
                 style="@style/MyButtonStyle"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/rlLeft"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@id/exportBlock"
-                android:layout_marginStart="@dimen/dimens_16dp"
-                android:layout_marginTop="@dimen/dimens_16dp"
+                android:layout_marginTop="21dp"
+                android:layout_marginBottom="@dimen/dimens_16dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
-                android:layout_marginBottom="@dimen/dimens_14dp"
-                android:maxWidth="488dp"
                 android:text="@string/search"
-                android:textSize="@dimen/dimens_18sp"
-                android:textStyle="bold" />
+                app:layout_constraintEnd_toStartOf="@+id/exportBlock"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rlRight"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-
-            <RelativeLayout
+            <TextView
                 android:id="@+id/exportBlock"
-                android:layout_alignTop="@id/btnSearch"
-                android:layout_alignBottom="@id/btnSearch"
-                android:layout_alignParentEnd="true"
-                android:layout_width="@dimen/dimens_70dp"
-                android:layout_marginEnd="@dimen/dimens_22dp"
-                android:layout_marginLeft="@dimen/dimens_17dp"
-                android:layout_height="wrap_content">
+                style="@style/CaptionMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dimens_6dp"
+                app:drawableEndCompat="@drawable/uil_export"
+                app:layout_constraintBottom_toBottomOf="@+id/btnSearch"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/btnSearch"
+                android:text="@string/export"
+                android:drawablePadding="@dimen/dimens_4dp"
+                android:textColor="@color/figmaSplashScreenColor" />
 
-                <ImageView
-                    android:id="@+id/exportButton"
-                    android:layout_width="@dimen/dimens_16dp"
-                    android:layout_height="@dimen/dimens_16dp"
-                    android:background="@drawable/uil_export"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:gravity="end"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/figmaSplashScreenColor"
-                    android:layout_toStartOf="@id/exportButton"
-                    android:layout_marginEnd="@dimen/dimens_4dp"
-                    android:text="@string/export" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dimens_2dp"
-                android:layout_below="@+id/btnSearch"
-                android:background="@color/primary_light_light" />
-
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ProgressBar
             android:id="@+id/progBar"
-            android:layout_width="@dimen/dimens_50dp"
-            android:layout_height="@dimen/dimens_50dp"
-            android:layout_centerInParent="true"
-            android:visibility="gone" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

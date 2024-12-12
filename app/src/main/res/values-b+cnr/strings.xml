@@ -107,7 +107,7 @@
     <string name="all">Sve</string>
     <string name="confirm_lost_tag">Potvrdi izgubljenu oznaku</string>
     <string name="cancel">Otkaži</string>
-    <string name="show_all_tags">Prikaži Sve Oznake</string>
+    <string name="show_all_tags">Prikaži sve TAG-ove</string>
     <string name="date">Datum</string>
     <string name="from">Od</string>
     <string name="to">Do</string>
@@ -123,7 +123,7 @@
     <string name="expiration_date">Datum isteka</string>
     <string name="notifications">Obavještenja</string>
     <string name="permissions_title">Dozvole</string>
-    <string name="permission_subtitle">Želite li ukloniti mogućnost aplikaciji da prima obavještenja?</string>
+    <string name="permission_subtitle">Da li želite ukloniti mogućnost aplikacije da prima obavještenja?</string>
     <string name="no">Ne</string>
     <string name="yes">Da</string>
     <string name="remove_card"><u>Ukloni karticu</u></string>
@@ -172,7 +172,7 @@
     <string name="subject_date">Datum predmeta:</string>
     <string name="response_to_toll_complaint">Odgovor na žalbu o iznosu naplate cestarine na uređajima ENP</string>
     <string name="subject_number">Broj predmeta</string>
-    <string name="object_complaint_number">Broj predmeta na koji se odnosi žalba:</string>
+    <string name="object_complaint_number">Broj objekta na koji se žalba odnosi:</string>
     <string name="bill_downloaded_successfully">Račun je uspješno preuzet.</string>
     <string name="please_fill_all_required_data">Molimo vas da popunite sva obavezna polja</string>
     <string name="select_date">Odaberite datum</string>
@@ -230,8 +230,8 @@
     <string name="previous_invoices">Vaše prethodne fakture će biti prikazane ovdje.</string>
     <string name="text_no_refund_tags">Nemate oznaka za povrat novca.</string>
     <string name="text_no_my_tags">Trenutno nemate dodatih oznaka. Molimo dodajte vašu oznaku.</string>
-    <string name="no_invoices">Vaše prethodne fakture će biti prikazane ovdje.</string>
-    <string name="no_tool_history">Vaši prethodni prolazi će biti prikazani ovdje.</string>
+    <string name="no_invoices">Vaše fakture će biti prikazane ovdje.</string>
+    <string name="no_tool_history">Vaši prolazi će biti prikazani ovdje.</string>
     <string name="enter_old_password">Unesite staru šifru</string>
     <string name="enter_new_password">Unesite novu šifru</string>
     <string name="retype_new_password">Ponovo unesite novu šifru</string>
@@ -265,7 +265,7 @@
     <string name="serbian_passage">Srbija</string>
     <string name="montenegro_passage">Crna Gora</string>
     <string name="north_macedonian_passage">Severna Makedonija</string>
-    <string name="value">"vrijednost "</string>
+    <string name="value">Valuta</string>
     <string name="message">Poruka</string>
     <string name="click_me">Klikni me</string>
     <string name="e_mail">E-mail</string>
@@ -310,4 +310,7 @@
     <string name="refund_request_note">Napomena: Povraćaj sredstava je moguć isključivo na tekuće račune banaka koje posluju Republici Srbiji.</string>
     <string name="language_changed">Jezik je promijenjen</string>
     <string name="enter_message_support">Unesite poruku za korisničku podršku</string>
+    <string name="invalid_account_number">Неважећи број рачуна</string>
+    <string name="enter_email_password">Molimo unesite email i lozinku.</string>
+    <string name="all_status_tags">Svi</string>
 </resources>

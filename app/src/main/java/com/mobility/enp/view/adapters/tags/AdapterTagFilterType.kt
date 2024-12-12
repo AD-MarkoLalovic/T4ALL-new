@@ -32,7 +32,7 @@ class AdapterTagFilterType(list: ArrayList<TagStatus>, private val context: Cont
     }
 
     init {
-        val initAllFilter = TagFilterData(-1, context.getString(R.string.all))
+        val initAllFilter = TagFilterData(-1, context.getString(R.string.all_status_tags))
         listOfFilterTypes.add(initAllFilter)
         for (tag: TagStatus in list) {
             tag.status?.status?.let {

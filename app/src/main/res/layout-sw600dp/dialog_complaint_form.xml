@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -66,6 +67,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/licencePlateVal"
                     style="@style/Paragraph"
+                    android:textColor="@color/figmaSplashScreenColor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/licence_plate"
@@ -107,85 +109,10 @@
                     style="@style/Paragraph"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
+                    android:textColor="@color/figmaSplashScreenColor"
                     android:gravity="top"
                     android:hint="@string/hint_enter_description"
                     android:inputType="text|textMultiLine" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/txHintEnterYourBankAccountNumber"
-                style="@style/CaptionRegular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimens_16dp"
-                android:layout_marginTop="@dimen/dimens_8dp"
-                android:text="@string/hint_bank_account_number"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txEnterTheReasonForTheComplaint" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/txEnterYourBankAccountNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimens_8dp"
-                app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusBottomEnd="@dimen/dimens_84dp"
-                app:boxCornerRadiusBottomStart="@dimen/dimens_84dp"
-                app:boxCornerRadiusTopEnd="@dimen/dimens_84dp"
-                app:boxCornerRadiusTopStart="@dimen/dimens_84dp"
-                app:boxStrokeColor="@color/figmaSplashScreenColor"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="1dp"
-                app:endIconMode="clear_text"
-                app:hintEnabled="false"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txHintEnterYourBankAccountNumber">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/accountNumberVal"
-                    style="@style/Paragraph"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/bank_account_number"
-                    android:inputType="number" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/txHintEnterBankName"
-                style="@style/CaptionRegular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimens_16dp"
-                android:layout_marginTop="@dimen/dimens_8dp"
-                android:text="@string/hint_bank_name"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txEnterYourBankAccountNumber" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/txEnterBankName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimens_8dp"
-                app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusBottomEnd="@dimen/dimens_84dp"
-                app:boxCornerRadiusBottomStart="@dimen/dimens_84dp"
-                app:boxCornerRadiusTopEnd="@dimen/dimens_84dp"
-                app:boxCornerRadiusTopStart="@dimen/dimens_84dp"
-                app:boxStrokeColor="@color/figmaSplashScreenColor"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
-                app:endIconMode="clear_text"
-                app:hintEnabled="false"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txHintEnterBankName">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/bankNameVal"
-                    style="@style/Paragraph"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/bank_name"
-                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
@@ -193,22 +120,149 @@
                 style="@style/MyButtonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="34dp"
+                android:layout_marginTop="48dp"
                 android:text="@string/confirm"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txEnterBankName" />
+                app:layout_constraintTop_toBottomOf="@+id/uniqueNumbersSpinner" />
 
             <Button
                 android:id="@+id/cancelComplaintForm"
                 style="@style/MyOutlinedButtonSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="34dp"
+                android:layout_marginTop="48dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
                 android:text="@string/button_close"
                 app:layout_constraintEnd_toStartOf="@+id/buttonConfirmComplaint"
-                app:layout_constraintTop_toBottomOf="@+id/txEnterBankName" />
+                app:layout_constraintTop_toBottomOf="@+id/uniqueNumbersSpinner" />
 
+
+            <TextView
+                android:id="@+id/txHintBank"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:text="@string/bank"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txEnterTheReasonForTheComplaint" />
+
+            <Spinner
+                android:id="@+id/bankSpinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:background="@drawable/rounded_spinner_background"
+                android:minHeight="@dimen/dimens_48dp"
+                android:popupBackground="@color/white"
+                android:spinnerMode="dropdown"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txHintBank" />
+
+
+            <TextView
+                android:id="@+id/txHintBankAccount"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:text="@string/bank_account"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bankSpinner" />
+
+            <Spinner
+                android:id="@+id/uniqueNumbersSpinner"
+                android:layout_width="@dimen/dimens_80dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:background="@drawable/rounded_left_spinner_background"
+                android:backgroundTint="@color/soft_gray"
+                android:popupBackground="@color/white"
+                android:spinnerMode="dropdown"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txHintBankAccount" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txCenterAccountNumber"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="48dp"
+                app:boxBackgroundColor="@color/soft_gray"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_0dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_0dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_0dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_0dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="@dimen/dimens_0dp"
+                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                app:hintEnabled="false"
+                app:layout_constraintBottom_toBottomOf="@+id/uniqueNumbersSpinner"
+                app:layout_constraintEnd_toStartOf="@+id/etSecondTagPicker"
+                app:layout_constraintStart_toEndOf="@+id/uniqueNumbersSpinner">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCenterAccountNumber"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:gravity="center"
+                    android:imeOptions="actionNext"
+                    android:importantForAccessibility="no"
+                    android:inputType="number"
+                    android:maxLength="13"
+                    android:padding="@dimen/dimens_0dp"
+                    android:textColor="@color/figmaSplashScreenColor"
+                    tools:text="1234567891" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etSecondTagPicker"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:background="@drawable/spinner_bank_account_selector"
+                android:backgroundTint="@color/soft_gray"
+                app:boxStrokeWidth="@dimen/dimens_0dp"
+                app:boxStrokeWidthFocused="@dimen/dimens_0dp"
+                app:hintEnabled="false"
+                app:layout_constraintBottom_toBottomOf="@+id/uniqueNumbersSpinner"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/uniqueNumbersSpinner">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etRightAccountNumber"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:gravity="center"
+                    android:imeOptions="actionNext"
+                    android:importantForAccessibility="no"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:padding="@dimen/dimens_0dp"
+                    android:textColor="@color/figmaSplashScreenColor"
+                    tools:text="12" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <ProgressBar
+                android:id="@+id/refundLoadingTagPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>

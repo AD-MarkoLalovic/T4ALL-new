@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
@@ -19,15 +18,16 @@ import com.mobility.enp.viewmodel.ForgotPasswordViewModel
 
 class ForgotPasswordFragment : Fragment() {
 
-    private lateinit var binding: FragmentForgotPasswordBinding
+    private var _binding: FragmentForgotPasswordBinding? = null
+    private val binding: FragmentForgotPasswordBinding get() = _binding!!
     private val viewModel: ForgotPasswordViewModel by viewModels()
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_forgot_password, container, false)
+        _binding =
+            FragmentForgotPasswordBinding.inflate(inflater,container, false)
         return binding.root
     }
 
@@ -92,8 +92,12 @@ class ForgotPasswordFragment : Fragment() {
                 val binding = (activity as MainActivity).binding
                 MainActivity.showSnackMessage(getString(R.string.checking_for_connection), binding)
             }
-
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

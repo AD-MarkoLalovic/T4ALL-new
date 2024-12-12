@@ -138,7 +138,9 @@ interface ApiService {
         @Query("filter[yearMonth]") yearMonth: String,
         @Query("filter[currency]") currency: String,
         //@Query("page") page: Int, // current page
-        @Query("perPage") perPage: Int // items per page
+        @Query("perPage") perPage: Int,
+        @Query(value = "lang") language: String
+
     ): Call<BillsDetailsResponse>
 
     @GET("/api/v1/bills/month")
@@ -146,7 +148,8 @@ interface ApiService {
         @Query("filter[yearMonth]") yearMonth: String,
         @Query("filter[currency]") currency: String,
         @Query("page") page: Int, // current page
-        @Query("perPage") perPage: Int // items per page
+        @Query("perPage") perPage: Int,
+        @Query(value = "lang") language: String
     ): Call<BillsDetailsResponse>
 
     @GET("/api/v1/tags")

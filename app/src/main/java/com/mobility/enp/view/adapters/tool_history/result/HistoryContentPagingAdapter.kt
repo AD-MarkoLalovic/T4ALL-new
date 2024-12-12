@@ -1,6 +1,7 @@
 package com.mobility.enp.view.adapters.tool_history.result
 
 import android.content.Context
+import android.content.res.Configuration
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -57,20 +58,16 @@ class HistoryContentPagingAdapter(
             binding.btnComplaint.setOnClickListener {
                 val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
-                val apiInterface = object : ComplaintFormDialog.OnClick {
-                    override fun postComplaint(complaintBody: ComplaintBody) {
-                        complaintInterface.sendComplaintData(complaintBody)
-                    }
-                }
-
-                val complaintFormDialog = ComplaintFormDialog(apiInterface, relation.itemId)
+                val complaintFormDialog = ComplaintFormDialog({ complaintBody ->
+                    complaintInterface.sendComplaintData(complaintBody)
+                }, relation.itemId)
 
                 complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
             }
 
             binding.btnObjection.setOnClickListener {
                 val fragmentManager = (context as AppCompatActivity).supportFragmentManager
-                
+
                 if (relation.complaint != null) {
                     val objectionDialog =
                         ObjectionFormDialog({ objection ->
@@ -127,6 +124,17 @@ class HistoryContentPagingAdapter(
                     binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_red)
                     binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_red)
                     binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_red)
+                }
+
+                7 -> {
+                    binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_orange)
+                    if (isTabletXml(binding.root.context)) {
+                        binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_orange_tablet)
+                        binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_orange_tablet)
+                    } else {
+                        binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_orange)
+                        binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_orange)
+                    }
                 }
             }
             binding.executePendingBindings()
@@ -191,6 +199,12 @@ class HistoryContentPagingAdapter(
         )
 
         fun stopSpinner()
+    }
+
+    private fun isTabletXml(context: Context): Boolean {
+        val config: Configuration = context.resources.configuration
+        val smallestScreenWidthDp: Int = config.smallestScreenWidthDp
+        return smallestScreenWidthDp >= 600 // min layout with for tablet
     }
 
 }
