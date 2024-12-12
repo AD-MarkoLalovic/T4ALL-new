@@ -110,20 +110,6 @@
                         app:layout_constraintBottom_toBottomOf="@+id/imageProfile"
                         app:layout_constraintStart_toEndOf="@+id/gridLine" />
 
-                    <ImageButton
-                        android:id="@+id/bttDeleteProfilePicIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="-10dp"
-                        android:layout_marginTop="@dimen/dimens_6dp"
-                        android:background="@color/transparent"
-                        android:contentDescription="@null"
-                        android:src="@drawable/plus_ic"
-                        android:translationZ="@dimen/dimens_6dp"
-                        android:visibility="visible"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageProfile"
-                        app:layout_constraintStart_toEndOf="@+id/gridLine2" />
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout

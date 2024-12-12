@@ -47,6 +47,17 @@
             android:background="@color/transparent"
             android:src="@drawable/ic_camera" />
 
+        <Button
+            android:id="@+id/bttDelete"
+            style="@style/MyButtonStyleRed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txContentDialogChangeProfilePicture"
+            android:layout_toEndOf="@id/bttFromCamera"
+            android:layout_marginStart="@dimen/dimens_16dp"
+            android:layout_marginTop="@dimen/dimens_48dp"
+            android:text="@string/delete_picture" />
+
 
     </RelativeLayout>
 </layout>

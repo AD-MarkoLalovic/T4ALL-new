@@ -21,7 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.mobility.enp.databinding.DialogChangeProfilePictureBinding
 
-class ProfileImagePickerDialog(imageSelectionListener: ImagePickDialogListener) : DialogFragment() {
+class ProfileImagePickerDialog(private val imageSelectionListener: ImagePickDialogListener,val imageExists:Boolean) : DialogFragment() {
 
     private lateinit var binding: DialogChangeProfilePictureBinding
 
@@ -85,12 +85,23 @@ class ProfileImagePickerDialog(imageSelectionListener: ImagePickDialogListener) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (imageExists){
+            binding.bttDelete.visibility = View.VISIBLE
+        }else{
+            binding.bttDelete.visibility = View.GONE
+        }
+
         binding.bttFromCamera.setOnClickListener {
             dispatchTakePictureIntent()
         }
 
         binding.bttFromGallery.setOnClickListener {
             openGallery()
+        }
+
+        binding.bttDelete.setOnClickListener {
+            imageSelectionListener.onDeleteImage()
+            dismiss()
         }
 
         binding.changeProfilePictureDialogClose?.setOnClickListener {
@@ -125,6 +136,7 @@ class ProfileImagePickerDialog(imageSelectionListener: ImagePickDialogListener) 
 
     interface ImagePickDialogListener {
         fun onImageSelected(imageBitmap: Bitmap?)
+        fun onDeleteImage()
     }
 
     override fun onStart() {

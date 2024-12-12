@@ -73,13 +73,9 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun checkStoredPicture(){
-        viewModelScope.launch (Dispatchers.IO) {
-            val list = database.profileImageDao().selectAll()
-            if (list.isNotEmpty()){
-                _deletePic.postValue(false)
-            }
-        }
+    suspend fun checkStoredImageData():Boolean{
+        val list = database.profileImageDao().selectAll()
+        return list.isNotEmpty()
     }
 
     fun fetchLocalData() {
