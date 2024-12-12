@@ -42,7 +42,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.35" />
+                        app:layout_constraintGuide_begin="133dp" />
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline2"
@@ -119,6 +119,20 @@
                         android:src="@drawable/plus_ic"
                         android:translationZ="@dimen/dimens_6dp"
                         app:layout_constraintStart_toStartOf="@id/guideline4"
+                        app:layout_constraintTop_toBottomOf="@id/guideline3" />
+
+                    <ImageButton
+                        android:id="@+id/bttDeleteProfilePicIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_6dp"
+                        android:background="@color/transparent"
+                        android:contentDescription="@null"
+                        android:src="@drawable/plus_ic"
+                        android:layout_marginStart="-10dp"
+                        android:translationZ="@dimen/dimens_6dp"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="@id/guideline"
                         app:layout_constraintTop_toBottomOf="@id/guideline3" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
@@ -66,6 +67,8 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 displayName.let {
                     imageRepository.getAndSetProfileImage(binding.imageProfile, it)
                 }
+
+                viewModelProfile.checkStoredPicture()
             } catch (e: Exception) {
                 Log.d(TAG, "error: null data in room")
             }
@@ -93,6 +96,10 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
         binding.buttonChangePassword.setOnClickListener {
             findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToChangePasswordFragment())
+        }
+
+        binding.bttDeleteProfilePicIcon.setOnClickListener {
+            viewModelProfile.deleteProfilePicture()
         }
 
         binding.buttonSignOut.setOnClickListener {
@@ -170,6 +177,20 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 }
             }
         }
+
+        viewModelProfile.deletePic.observe(viewLifecycleOwner) { deleted ->
+            if (deleted) {
+                binding.imageProfile.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_account_home_screen
+                    )
+                )
+                binding.bttDeleteProfilePicIcon.visibility = View.GONE
+            }else{
+                binding.bttDeleteProfilePicIcon.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onImageSelected(imageBitmap: Bitmap?) {
@@ -188,6 +209,8 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 .load(bitmap)
                 .apply(glideOption)
                 .into(binding.imageProfile)
+
+            binding.bttDeleteProfilePicIcon.visibility = View.VISIBLE
 
             viewLifecycleOwner.lifecycleScope.launch {
                 imageRepository.saveImageToStorage(bitmap, binding.userName.text.toString())
