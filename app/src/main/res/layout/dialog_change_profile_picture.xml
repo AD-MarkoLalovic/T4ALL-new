@@ -17,8 +17,8 @@
             android:layout_marginTop="@dimen/dimens_14dp"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_close"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/txChangeProfilePicture"
@@ -56,21 +56,19 @@
             android:layout_marginStart="@dimen/dimens_16dp"
             android:background="@color/transparent"
             android:contentDescription="@null"
-            android:importantForAccessibility="no"
             android:src="@drawable/ic_camera"
             app:layout_constraintBottom_toBottomOf="@+id/bttFromGallery"
             app:layout_constraintStart_toEndOf="@+id/bttFromGallery"
             app:layout_constraintTop_toTopOf="@+id/bttFromGallery" />
 
-        <ImageButton
+        <Button
             android:id="@+id/bttDelete"
+            style="@style/MyButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimens_16dp"
-            android:background="@color/transparent"
-            android:contentDescription="@null"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_delete_photo"
+            android:text="@string/delete_picture"
+            app:backgroundTint="@color/figmaColorObjection"
             app:layout_constraintBottom_toBottomOf="@+id/bttFromGallery"
             app:layout_constraintStart_toEndOf="@+id/bttFromCamera"
             app:layout_constraintTop_toTopOf="@+id/bttFromGallery" />
