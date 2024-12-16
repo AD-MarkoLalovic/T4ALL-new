@@ -13,12 +13,16 @@ data class Tag(
     val showButtonLostTag: Boolean,
     val statuses: List<Statuse>
 ) {
-    fun toEntityTagsRefundRequest(): TagsRefundRequestEntity {
+    fun toEntityTagsRefundRequest(): TagsRefundRequestEntity? {
 
-        return TagsRefundRequestEntity(
-            id = id,
-            serialNumber = serialNumber,
-            registrationPlate = registrationPlate
-        )
+        return if (!roming && country.value == "RS") {
+            TagsRefundRequestEntity(
+                id = id,
+                serialNumber = serialNumber,
+                registrationPlate = registrationPlate
+            )
+        } else {
+            null
+        }
     }
 }
