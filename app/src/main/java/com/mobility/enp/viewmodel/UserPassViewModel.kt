@@ -51,8 +51,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                         else -> {}
                     }
                 }
-            } ?: run {
-                _baseTagDataState.value = SubmitResult.FailureServerError
             }
         }
     }

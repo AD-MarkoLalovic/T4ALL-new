@@ -20,6 +20,8 @@ import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.FragmentPassageHistoryBinding
 import com.mobility.enp.network.Repository
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingPassageAdapter
@@ -58,16 +60,12 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.nullDates()
+        binding.progBar.visibility = View.VISIBLE
 
-        context?.let {
-            binding.progBar.visibility = View.VISIBLE
-            setObservers()
+        setObservers()
 
-            CoroutineScope(Dispatchers.IO).launch {
-                viewModel.getToolHistoryIndex(
-                    it, isInternetAvailable
-                )
-            }
+        CoroutineScope(Dispatchers.IO).launch {
+            vModel.getIndexData()
         }
 
         binding.loopIcon.setOnClickListener {
@@ -97,6 +95,37 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     }
 
     private fun setObservers() {
+
+        collectLatestLifecycleFlow(vModel.baseTagDataState) { tagIndex ->
+            when (tagIndex) {
+                is SubmitResult.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    setIndexData(tagIndex.data)
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.api_call_error))
+                }
+
+                else -> {
+                    SubmitResult.Empty
+                }
+            }
+        }
+
         isInternetAvailable = MutableLiveData()
         isInternetAvailable.observe(viewLifecycleOwner) { hasInternet ->
             if (hasInternet != null && !hasInternet) {
@@ -172,28 +201,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             }
         }
 
-        viewModel.data.observe(viewLifecycleOwner) {
-            binding.progBar.visibility = View.GONE
-            if (it != null) {
-
-                CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.insertRoomToolHistoryIndexData(it)
-                }
-
-                viewModel.tagSerials = it.data?.tags as ArrayList<Tag>
-
-                val toolHistoryListingAdapter =
-                    ToolHistoryListingAdapter(it, viewModel, this, this, this)
-
-                binding.cycler.adapter = toolHistoryListingAdapter
-                binding.cycler.layoutManager = LinearLayoutManager(requireContext())
-
-                // set first adapter here // reason we can have multiple tags which further split to sub adapters with their own combination of tag serial and tool history transit calls and pagination on top
-            } else {
-                Toast.makeText(context, "Api Error", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         viewModel.complaintResponse.observe(viewLifecycleOwner) {
             binding.progBar.visibility = View.GONE
             it?.let {
@@ -207,6 +214,23 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 }
             }
         }
+    }
+
+    private fun setIndexData(indexData: IndexData) {
+        binding.progBar.visibility = View.GONE
+
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.insertRoomToolHistoryIndexData(indexData)
+        }
+
+        viewModel.tagSerials = indexData.data?.tags as ArrayList<Tag>
+
+        val toolHistoryListingAdapter =
+            ToolHistoryListingAdapter(indexData, viewModel, this, this, this)
+
+        binding.cycler.adapter = toolHistoryListingAdapter
+        binding.cycler.layoutManager = LinearLayoutManager(requireContext())
+
     }
 
     override fun sendComplaintData(complaintBody: ComplaintBody) {
@@ -242,6 +266,20 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 viewModel.insertPassageData(toolHistoryListing)
             }
         }
+    }
+
+    private fun showNoConnectionState() {
+        binding.progBar.visibility = View.GONE
+        noInternetMessage()
+    }
+
+    private fun noInternetMessage() {
+        val mainBinding = (activity as MainActivity).binding
+        MainActivity.showSnackMessage(getString(R.string.no_internet), mainBinding)
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
