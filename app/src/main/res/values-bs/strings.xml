@@ -227,7 +227,7 @@
     <string name="tag_device_payment_method_north_macedonia">Ukoliko želite da Vaš TAG uređaj koristite na cestama u Sjevernoj Makedoniji, molimo vas da dodate važeću platnu karticu</string>
     <string name="tag_device_payment_method_serbia">Ukoliko želite da Vaš TAG uređaj koristite na cestama u Srbiji, molimo vas da dodate važeću platnu karticu.</string>
     <string name="tag_device_payment_method_montenegro">Ukoliko želite da Vaš TAG uređaj koristite na cestama u Crnoj Gori, molimo dodajte važeću platnu karticu</string>
-    <string name="previous_invoices">Vaši prethodni računi će biti prikazani ovdje.</string>
+    <string name="previous_invoices">Vaše fakture će biti prikazane ovdje.</string>
     <string name="text_no_refund_tags">Nemate oznake za povrat novca.</string>
     <string name="text_no_my_tags">Trenutno nemate dodanih oznaka. Molimo dodajte svoju oznaku.</string>
     <string name="no_invoices">Vaše fakture će biti prikazane ovdje.</string>
