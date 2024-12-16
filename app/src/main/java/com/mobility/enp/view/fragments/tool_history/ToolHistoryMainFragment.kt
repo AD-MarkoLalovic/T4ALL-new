@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,6 +24,7 @@ import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingPassageAdapter
 import com.mobility.enp.viewmodel.PassageHistoryViewModel
+import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -37,6 +39,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     private var _binding: FragmentPassageHistoryBinding? = null
     private val binding: FragmentPassageHistoryBinding get() = _binding!!
     private val viewModel: PassageHistoryViewModel by activityViewModels()
+    private val vModel: UserPassViewModel by viewModels { UserPassViewModel.Factory }
 
     private lateinit var isInternetAvailable: MutableLiveData<Boolean>
 
@@ -199,7 +202,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 ).show()
                 CoroutineScope(Dispatchers.IO).launch {
                     viewModel.getToolHistoryIndex(
-                         requireContext(), isInternetAvailable
+                        requireContext(), isInternetAvailable
                     )
                 }
             }
