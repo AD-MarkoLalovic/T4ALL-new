@@ -96,6 +96,9 @@ interface ApiService {
     @GET("/api/v1/history/tags")
     fun getToolHistoryIndex(): Call<IndexData>
 
+    @GET("/api/v1/history/tags")
+    fun getToolHistoryIndexN(): Response<IndexData>
+
     @DELETE("/api/v1/cards/{card_id}")
     fun deleteCard(
         @Path("card_id") cardId: String

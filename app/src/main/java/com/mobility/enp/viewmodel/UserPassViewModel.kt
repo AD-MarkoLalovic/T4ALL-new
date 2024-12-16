@@ -10,6 +10,9 @@ import com.mobility.enp.data.repository.PassageHistoryRepository
 
 class UserPassViewModel(private val repository: PassageHistoryRepository) : ViewModel() {
 
+
+
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
