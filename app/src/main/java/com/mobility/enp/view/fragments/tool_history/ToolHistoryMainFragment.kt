@@ -64,9 +64,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
         setObservers()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            vModel.getIndexData()
-        }
+        vModel.getIndexData()
 
         binding.loopIcon.setOnClickListener {
             if (Repository.isNetworkAvailable(requireContext())) {
