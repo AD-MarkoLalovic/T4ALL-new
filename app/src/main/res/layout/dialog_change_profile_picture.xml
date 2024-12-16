@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_dialog_borders"
+        android:backgroundTint="@color/primary_light_lightest"
         android:paddingHorizontal="@dimen/dimens_16dp"
         android:paddingBottom="@dimen/dimens_22dp">
 
@@ -17,61 +17,64 @@
             android:layout_marginTop="@dimen/dimens_14dp"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_close"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txChangeProfilePicture"
             style="@style/H3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimens_6dp"
-            android:layout_below="@+id/changeProfilePictureDialogClose"
-            android:text="@string/change_profile_picture" />
+            android:text="@string/change_profile_picture"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/changeProfilePictureDialogClose" />
 
         <TextView
             android:id="@+id/txContentDialogChangeProfilePicture"
             style="@style/Paragraph"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txChangeProfilePicture"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="@dimen/dimens_16dp"
-            android:text="@string/select_your_profile_picture" />
+            android:layout_marginTop="18dp"
+            android:text="@string/select_your_profile_picture"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txChangeProfilePicture" />
 
         <Button
             android:id="@+id/bttFromGallery"
             style="@style/MyButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txContentDialogChangeProfilePicture"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="@dimen/dimens_48dp"
-            android:text="@string/from_gallery" />
+            android:layout_marginTop="18dp"
+            android:text="@string/from_gallery"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txContentDialogChangeProfilePicture" />
 
         <ImageButton
             android:id="@+id/bttFromCamera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txContentDialogChangeProfilePicture"
             android:layout_marginStart="@dimen/dimens_16dp"
-            android:layout_marginTop="@dimen/dimens_48dp"
-            android:layout_toEndOf="@id/bttFromGallery"
             android:background="@color/transparent"
+            android:contentDescription="@null"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_camera" />
+            android:src="@drawable/ic_camera"
+            app:layout_constraintBottom_toBottomOf="@+id/bttFromGallery"
+            app:layout_constraintStart_toEndOf="@+id/bttFromGallery"
+            app:layout_constraintTop_toTopOf="@+id/bttFromGallery" />
 
-
-        <Button
+        <ImageButton
             android:id="@+id/bttDelete"
-            style="@style/MyButtonStyleRed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txContentDialogChangeProfilePicture"
-            android:layout_toEndOf="@id/bttFromCamera"
             android:layout_marginStart="@dimen/dimens_16dp"
-            android:layout_marginTop="@dimen/dimens_48dp"
-            android:text="@string/delete_picture" />
+            android:background="@color/transparent"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_delete_photo"
+            app:layout_constraintBottom_toBottomOf="@+id/bttFromGallery"
+            app:layout_constraintStart_toEndOf="@+id/bttFromCamera"
+            app:layout_constraintTop_toTopOf="@+id/bttFromGallery" />
 
-    </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

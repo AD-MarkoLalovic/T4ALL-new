@@ -227,7 +227,7 @@
     <string name="tag_device_payment_method_north_macedonia">If you want to use your TAG device on the roads in North Macedonia, please add a valid payment card.</string>
     <string name="tag_device_payment_method_serbia">If you want to use your TAG device on the roads in Serbia, please add a valid payment card.</string>
     <string name="tag_device_payment_method_montenegro">If you want to use your TAG device on the roads in Montenegro, please add a valid payment card</string>
-    <string name="previous_invoices">Your previous invoices will be displayed here.</string>
+    <string name="previous_invoices">Your invoices will be displayed here.</string>
     <string name="text_no_refund_tags">You have no refund tags.</string>
     <string name="text_no_my_tags">You currently have no added tags. Please add your tag.</string>
     <string name="no_invoices">Your invoices will be displayed here.</string>

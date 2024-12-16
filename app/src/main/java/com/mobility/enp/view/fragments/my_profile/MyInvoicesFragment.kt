@@ -28,7 +28,8 @@ import kotlinx.coroutines.withContext
 class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     MonthlyBillsAdapter.MontYearListener {
 
-    private lateinit var binding: FragmentBillsBinding
+    private var _binding: FragmentBillsBinding? = null
+    private val binding: FragmentBillsBinding get() = _binding!!
     private val viewModel: MyInvoicesViewModel by viewModels()
 
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
@@ -37,7 +38,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = FragmentBillsBinding.inflate(inflater, container, false)
+        _binding = FragmentBillsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -205,6 +206,11 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
     override fun onMontYearSelected(montYear: String) {
         month = montYear
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }
