@@ -35,7 +35,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     private var _binding: FragmentToolHistorySearchQueryBinding? = null
     private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
     private val viewModel: PassageHistoryViewModel by activityViewModels()
-    private var data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
     private lateinit var isInternetAvailable: MutableLiveData<Boolean>
 
     companion object {
@@ -62,7 +61,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
             CoroutineScope(Dispatchers.IO).launch {
                 viewModel.getToolHistoryIndex(
-                    data, it, isInternetAvailable
+                     it, isInternetAvailable
                 )
             }
         }
@@ -167,7 +166,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
             CoroutineScope(Dispatchers.IO).launch {
                 viewModel.getToolHistoryIndex(
-                    data, requireContext(), isInternetAvailable
+                     requireContext(), isInternetAvailable
                 )
             }
         }
@@ -220,8 +219,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             }
         }
 
-        data = MutableLiveData<IndexData>()
-        data.observe(viewLifecycleOwner) {
+        viewModel.data.observe(viewLifecycleOwner) {
             binding.progBar.visibility = View.GONE
             if (it.data != null) {
                 if (!it.data?.tags.isNullOrEmpty()) {

@@ -77,6 +77,9 @@ class PassageHistoryViewModel(private var application: Application) :
     private val _errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     val errorBody: LiveData<ErrorBody> get() = _errorBody
 
+    private var _data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
+    val data :LiveData<IndexData> get() = _data
+
     private val _csvData: MutableLiveData<CsvModel> = MutableLiveData()
     val csvData: LiveData<CsvModel> get() = _csvData
 
@@ -99,6 +102,10 @@ class PassageHistoryViewModel(private var application: Application) :
         endDate.value = TimeSave(application.getString(R.string.to), null)
         userSelectedCalendarStart = null
         userSelectedCalendarEnd = null
+    }
+
+    fun setIndexData(indexData: IndexData){
+        _data.postValue(indexData)
     }
 
     companion object {
@@ -126,14 +133,13 @@ class PassageHistoryViewModel(private var application: Application) :
     }
 
     suspend fun getToolHistoryIndex(
-        data: MutableLiveData<IndexData>,
         context: Context,
         isInternetAvailable: MutableLiveData<Boolean>
     ) {
 
         if (Repository.isNetworkAvailable(context)) {
             database.loginDao()?.fetchAllowedUsers()?.accessToken?.let {
-                Repository.getToolHistoryIndex(data, it, _errorBody)
+                Repository.getToolHistoryIndex(_data, it, _errorBody)
             } ?: run {
                 Log.d(TAG, "database initialization issue: ")
             }

@@ -38,7 +38,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     private val binding: FragmentPassageHistoryBinding get() = _binding!!
     private val viewModel: PassageHistoryViewModel by activityViewModels()
 
-    private var data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
     private lateinit var isInternetAvailable: MutableLiveData<Boolean>
 
     companion object {
@@ -63,7 +62,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
             CoroutineScope(Dispatchers.IO).launch {
                 viewModel.getToolHistoryIndex(
-                    data, it, isInternetAvailable
+                    it, isInternetAvailable
                 )
             }
         }
@@ -88,7 +87,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
             CoroutineScope(Dispatchers.IO).launch {
                 viewModel.getToolHistoryIndex(
-                    data, requireContext(), isInternetAvailable
+                    requireContext(), isInternetAvailable
                 )
             }
         }
@@ -117,7 +116,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                     )
 
                     indexData?.let { iData ->
-                        data.postValue(iData)
+                        viewModel.setIndexData(iData)
                     }
                 } else {
                     val bundle = Bundle().apply {
@@ -170,8 +169,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             }
         }
 
-        data = MutableLiveData<IndexData>()
-        data.observe(viewLifecycleOwner) {
+        viewModel.data.observe(viewLifecycleOwner) {
             binding.progBar.visibility = View.GONE
             if (it != null) {
 
@@ -201,7 +199,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 ).show()
                 CoroutineScope(Dispatchers.IO).launch {
                     viewModel.getToolHistoryIndex(
-                        data, requireContext(), isInternetAvailable
+                         requireContext(), isInternetAvailable
                     )
                 }
             }
