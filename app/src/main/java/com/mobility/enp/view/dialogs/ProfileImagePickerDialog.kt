@@ -104,7 +104,7 @@ class ProfileImagePickerDialog(private val imageSelectionListener: ImagePickDial
             dismiss()
         }
 
-        binding.changeProfilePictureDialogClose?.setOnClickListener {
+        binding.changeProfilePictureDialogClose.setOnClickListener {
             dismiss()
         }
     }

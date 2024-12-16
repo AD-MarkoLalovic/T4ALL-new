@@ -234,7 +234,7 @@
     <string name="tag_device_payment_method_north_macedonia">Ако сакате да го користите вашиот уред TAG на патиштата во Северној Македонији, ве молиме додадете валидна платежна картичка</string>
     <string name="tag_device_payment_method_serbia">Ако сакате да го користите вашиот уред TAG на патиштата во Србији, ве молиме додадете валидна платежна картичка</string>
     <string name="tag_device_payment_method_montenegro">Ако сакате да го користите вашиот уред TAG на патиштата во Црна Гора, ве молиме додадете валидна платежна картичка</string>
-    <string name="previous_invoices">Вашите претходни фактури ќе бидат прикажани тука.</string>
+    <string name="previous_invoices">Вашите фактури ќе бидат прикажани тука.</string>
     <string name="text_no_refund_tags">Немате тагови за рефундирање.</string>
     <string name="text_no_my_tags">Моментално немате додадено тагови. Ве молиме додадете го вашиот таг.</string>
     <string name="no_invoices">Вашите фактури ќе бидат прикажани тука.</string>
