@@ -104,10 +104,6 @@ class PassageHistoryViewModel(private var application: Application) :
         userSelectedCalendarEnd = null
     }
 
-    fun setIndexData(indexData: IndexData){
-        _data.postValue(indexData)
-    }
-
     companion object {
         const val TAG = "VmPassage"
         const val CHANNEL_ID = "search_passage"

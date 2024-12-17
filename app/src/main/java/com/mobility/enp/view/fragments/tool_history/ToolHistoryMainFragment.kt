@@ -120,6 +120,37 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             }
         }
 
+        collectLatestLifecycleFlow(vModel.complaintObjectionState) { serverResponse ->
+            when (serverResponse) {
+                is SubmitResult.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.progBar.visibility = View.GONE
+                    vModel.getIndexData()
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.api_call_error))
+                }
+
+                else -> {
+                    SubmitResult.Empty
+                }
+            }
+        }
+
         isInternetAvailable = MutableLiveData()
         isInternetAvailable.observe(viewLifecycleOwner) { hasInternet ->
             if (hasInternet != null && !hasInternet) {
@@ -183,7 +214,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             }
         }
 
-        viewModel.errorBody.observe(viewLifecycleOwner) { errorBody ->
+        viewModel.errorBody.observe(viewLifecycleOwner) { errorBody ->   // need to check this
             binding.progBar.visibility = View.GONE
             context?.let { context ->
                 Toast.makeText(
@@ -191,20 +222,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 ).show()
                 if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
                     MainActivity.logoutOnInvalidToken(context, findNavController())
-                }
-            }
-        }
-
-        viewModel.complaintResponse.observe(viewLifecycleOwner) {
-            binding.progBar.visibility = View.GONE
-            it?.let {
-                Toast.makeText(
-                    context, getString(R.string.registered_complaint), Toast.LENGTH_SHORT
-                ).show()
-                CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.getToolHistoryIndex(
-                        requireContext(), isInternetAvailable
-                    )
                 }
             }
         }
@@ -228,17 +245,11 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     }
 
     override fun sendComplaintData(complaintBody: ComplaintBody) {
-        binding.progBar.visibility = View.VISIBLE
-        CoroutineScope(Dispatchers.IO).launch {
-            viewModel.postComplaint(complaintBody)
-        }
+        vModel.postComplaint(complaintBody)
     }
 
     override fun sendObjectionData(objectionBody: ObjectionBody) {
-        binding.progBar.visibility = View.VISIBLE
-        CoroutineScope(Dispatchers.IO).launch {
-            viewModel.postObjection(objectionBody)
-        }
+        vModel.postObjection(objectionBody)
     }
 
     override fun sendDataFill(

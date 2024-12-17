@@ -193,6 +193,16 @@ interface ApiService {
         @Body objectionBody: ObjectionBody
     ): Call<LostTagResponse>
 
+    @POST("/api/v1/history/complaint")
+    suspend fun postComplaintN(
+        @Body complaintBody: ComplaintBody
+    ): Response<LostTagResponse>
+
+    @POST("/api/v1/history/objection")
+    suspend fun postObjectionN(
+        @Body objectionBody: ObjectionBody
+    ): Response<LostTagResponse>
+
     @GET("/api/v1/bills/invoice/{bill_id}/bill/pdf")
     fun getPdfBill(
         @Path(value = "bill_id") billId: String
