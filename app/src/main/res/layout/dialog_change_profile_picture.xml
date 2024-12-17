@@ -17,8 +17,8 @@
             android:layout_marginTop="@dimen/dimens_14dp"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_close"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txChangeProfilePicture"
@@ -45,7 +45,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
+            android:paddingHorizontal="@dimen/dimens_15dp"
             android:text="@string/from_gallery"
+            android:textSize="@dimen/dimens_10sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txContentDialogChangeProfilePicture" />
 
@@ -67,8 +69,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimens_16dp"
+            android:paddingHorizontal="@dimen/dimens_15dp"
             android:text="@string/delete_picture"
             app:backgroundTint="@color/figmaColorObjection"
+            android:textSize="@dimen/dimens_10sp"
             app:layout_constraintBottom_toBottomOf="@+id/bttFromGallery"
             app:layout_constraintStart_toEndOf="@+id/bttFromCamera"
             app:layout_constraintTop_toTopOf="@+id/bttFromGallery" />

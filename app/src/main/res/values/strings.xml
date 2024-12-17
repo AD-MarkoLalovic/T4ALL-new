@@ -380,6 +380,6 @@
     <string name="invalid_account_number">Неважећи број рачуна</string>
     <string name="enter_email_password">Молимо унесите имејл и лозинку.</string>
     <string name="all_status_tags">Сви</string>
-    <string name="delete_picture">Delete Picture</string>
+    <string name="delete_picture">Обриши слику</string>
 
 </resources>
