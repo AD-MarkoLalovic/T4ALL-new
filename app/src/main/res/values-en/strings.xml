@@ -313,4 +313,5 @@
     <string name="invalid_account_number">Invalid account number</string>
     <string name="enter_email_password">Please enter email and password.</string>
     <string name="all_status_tags">All</string>
+    <string name="delete_picture">Delete Picture</string>
 </resources>

@@ -332,5 +332,6 @@
     <string name="invalid_account_number">Ungültige Kontonummer</string>
     <string name="enter_email_password">Bitte geben Sie E-Mail und Passwort ein.</string>
     <string name="all_status_tags">Alle</string>
+    <string name="delete_picture">Bild löschen</string>
 
 </resources>

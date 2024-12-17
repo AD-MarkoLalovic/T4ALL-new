@@ -311,5 +311,6 @@
     <string name="invalid_account_number">Άκυρος αριθμός λογαριασμού</string>
     <string name="enter_email_password">Παρακαλώ εισαγάγετε email και κωδικό πρόσβασης.</string>
     <string name="all_status_tags">Όλοι</string>
+    <string name="delete_picture">Διαγραφή εικόνας</string>
 
 </resources>
