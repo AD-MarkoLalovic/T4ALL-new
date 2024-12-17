@@ -320,6 +320,7 @@
     <string name="invalid_account_number">Невалиден број на сметка</string>
     <string name="enter_email_password">Ве молиме внесете емаил и лозинка.</string>
     <string name="all_status_tags">Сите</string>
+    <string name="delete_picture">Избриши слика</string>
 
 
 </resources>

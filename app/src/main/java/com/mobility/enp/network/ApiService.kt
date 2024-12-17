@@ -96,6 +96,9 @@ interface ApiService {
     @GET("/api/v1/history/tags")
     fun getToolHistoryIndex(): Call<IndexData>
 
+    @GET("/api/v1/history/tags")
+    suspend fun getToolHistoryIndexN(): Response<IndexData>
+
     @DELETE("/api/v1/cards/{card_id}")
     fun deleteCard(
         @Path("card_id") cardId: String
@@ -189,6 +192,16 @@ interface ApiService {
     fun postObjection(
         @Body objectionBody: ObjectionBody
     ): Call<LostTagResponse>
+
+    @POST("/api/v1/history/complaint")
+    suspend fun postComplaintN(
+        @Body complaintBody: ComplaintBody
+    ): Response<LostTagResponse>
+
+    @POST("/api/v1/history/objection")
+    suspend fun postObjectionN(
+        @Body objectionBody: ObjectionBody
+    ): Response<LostTagResponse>
 
     @GET("/api/v1/bills/invoice/{bill_id}/bill/pdf")
     fun getPdfBill(

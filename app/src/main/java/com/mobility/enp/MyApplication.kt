@@ -2,6 +2,7 @@ package com.mobility.enp
 
 import android.app.Application
 import com.mobility.enp.data.repository.AuthRepository
+import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.repository.UserRepository
 import com.mobility.enp.data.room.database.DRoom
 
@@ -16,6 +17,9 @@ class MyApplication : Application() {
         AuthRepository(database, this)
     }
 
+    val passageHistoryRepository: PassageHistoryRepository by lazy {
+        PassageHistoryRepository(database, this)
+    }
 
 }
 
