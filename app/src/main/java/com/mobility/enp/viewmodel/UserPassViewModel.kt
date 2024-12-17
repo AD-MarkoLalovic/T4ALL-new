@@ -16,11 +16,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class UserPassViewModel(private val repository: PassageHistoryRepository) : ViewModel() {
 
     private val _baseTagDataState = MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)
     val baseTagDataState: StateFlow<SubmitResult<IndexData>> get() = _baseTagDataState
+
+    fun setStateIndex(indexData: IndexData) { // from room
+        _baseTagDataState.value = SubmitResult.Success(indexData)
+    }
 
     fun getIndexData() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -52,6 +57,13 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                     }
                 }
             }
+        }
+    }
+
+
+    suspend fun fetchIndexData() : IndexData {
+        return withContext(Dispatchers.IO){
+            repository.getIndexDataRoom()
         }
     }
 

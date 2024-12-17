@@ -84,11 +84,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             binding.progBar.visibility = View.GONE
             binding.loopIcon.isEnabled = true
 
-            CoroutineScope(Dispatchers.IO).launch {
-                viewModel.getToolHistoryIndex(
-                    requireContext(), isInternetAvailable
-                )
-            }
+            vModel.getIndexData()
         }
     }
 
@@ -133,7 +129,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
                 runBlocking {
                     val diff = CoroutineScope(Dispatchers.IO).async {
-                        indexData = viewModel.fetchIndexData()
+                        indexData = vModel.fetchIndexData()   // room
                     }
 
                     diff.await()
@@ -146,7 +142,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                     )
 
                     indexData?.let { iData ->
-                        viewModel.setIndexData(iData)
+                        vModel.setStateIndex(iData)
                     }
                 } else {
                     val bundle = Bundle().apply {

@@ -5,6 +5,8 @@ import android.util.Log
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, context) {
@@ -39,6 +41,13 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         }
 
         return Result.failure(NetworkError.ServerError)
+    }
+
+
+    suspend fun getIndexDataRoom():IndexData{
+        return withContext(Dispatchers.IO){
+            database.toolHistoryDao().fetchData()
+        }
     }
 
 }
