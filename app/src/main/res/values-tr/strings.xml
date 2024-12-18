@@ -239,7 +239,7 @@
     <string name="tag_device_payment_method_serbia">TAG cihazınızı Sırbistan\'daki yollarda kullanmak istiyorsanız, lütfen geçerli bir ödeme kartı ekleyin.</string>
     <string name="tag_device_payment_method_montenegro">TAG cihazınızı Karadağ\'daki yollarda kullanmak istiyorsanız, lütfen geçerli bir ödeme kartı ekleyin.</string>
     <string name="previous_invoices">Faturalarınız burada gösterilecek.</string>
-    <string name="text_no_refund_tags">İade etiketleriniz yok.</string>
+    <string name="text_no_refund_tags">İade talebinde bulunabileceğiniz etiketiniz yok.</string>
     <string name="text_no_my_tags">Şu anda eklenmiş etiketiniz yok. Lütfen etiketinizi ekleyin.</string>
     <string name="no_invoices">Faturalarınız burada gösterilecek.</string>
     <string name="no_tool_history">Geçişleriniz burada gösterilecek.</string>

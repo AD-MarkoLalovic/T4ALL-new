@@ -6,9 +6,20 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".view.fragments.my_profile.ProfileFragment">
 
+        <ProgressBar
+            android:id="@+id/profileProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
         <ScrollView
+            android:id="@+id/profileContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white">
@@ -19,6 +30,8 @@
                 android:layout_marginStart="@dimen/dimens_16dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
                 android:paddingTop="@dimen/dimens_16dp">
+
+
 
                 <TextView
                     android:id="@+id/txMyProfile"

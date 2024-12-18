@@ -59,6 +59,8 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
         setObserver()
 
+        viewModelProfile.setRefundRequestVisibility()
+
         val displayName = viewModelProfile.getDisplayName(requireContext())
         Log.d("MARKO", "onViewCreated: $displayName")
         binding.userName.text = displayName
@@ -189,6 +191,25 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                         R.drawable.ic_account_home_screen
                     )
                 )
+            }
+        }
+
+        viewModelProfile.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                binding.profileProgressBar.visibility = View.VISIBLE
+                binding.profileContainer.visibility = View.GONE
+            } else {
+                binding.profileProgressBar.visibility = View.GONE
+                binding.profileContainer.visibility = View.VISIBLE
+            }
+        }
+
+        viewModelProfile.showRefundCard.observe(viewLifecycleOwner) { shouldShow ->
+            if (shouldShow) {
+                binding.buttonRefundRequest.visibility = View.VISIBLE
+
+            } else {
+                binding.buttonRefundRequest.visibility = View.GONE
             }
         }
     }
