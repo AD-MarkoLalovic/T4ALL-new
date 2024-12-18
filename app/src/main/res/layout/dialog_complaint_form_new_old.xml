@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_dialog_borders"
+            android:backgroundTint="@color/primary_light_lightest"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/dimens_16dp"
+            android:paddingVertical="@dimen/dimens_22dp">
+
+            <TextView
+                android:id="@+id/txComplaintForm"
+                style="@style/H3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/complaint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txSubmit"
+                style="@style/Paragraph"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:text="@string/to_submit_a_complaint"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txComplaintForm" />
+
+            <TextView
+                android:id="@+id/txHintEnterRegistrationPlate"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_22dp"
+                android:text="@string/hint_registration_plate"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txSubmit" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txRegistrationPlate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_84dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_84dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_84dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_84dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="1dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txHintEnterRegistrationPlate">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/licencePlateVal"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/licence_plate"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:textColor="@color/figmaSplashScreenColor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/txHintEnterTheReasonForTheComplaint"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:text="@string/enter_complaint_reason"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txRegistrationPlate" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txEnterTheReasonForTheComplaint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_26dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="1dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txHintEnterTheReasonForTheComplaint">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reasonForComplaintVal"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:gravity="top"
+                    android:hint="@string/hint_enter_description"
+                    android:imeOptions="normal"
+                    android:inputType="text|textMultiLine"
+                    android:textColor="@color/figmaSplashScreenColor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/buttonConfirmComplaint"
+                style="@style/MyButtonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:text="@string/confirm"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txEnterTheReasonForTheComplaint" />
+
+            <Button
+                android:id="@+id/cancelComplaintForm"
+                style="@style/MyOutlinedButtonSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:layout_marginEnd="@dimen/dimens_16dp"
+                android:text="@string/button_close"
+                app:layout_constraintEnd_toStartOf="@+id/buttonConfirmComplaint"
+                app:layout_constraintTop_toBottomOf="@+id/txEnterTheReasonForTheComplaint" />
+
+
+            <ProgressBar
+                android:id="@+id/refundLoadingTagPicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+</layout>
