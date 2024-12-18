@@ -41,7 +41,7 @@ class ToolHistoryListingAdapter(
         fun bind(
             toolHistoryIndex: TagUtilCycler,
             position: Int,
-            holder: TagsViewHolder,
+            holder: TagsViewHolder, countryCode: String
         ) {
             // perform initial data fill // for sub adapter
             binding.data = toolHistoryIndex
@@ -72,7 +72,7 @@ class ToolHistoryListingAdapter(
                             complaintInterface,
                             false,
                             lifecycleOwner,
-                            itemSerialNumber
+                            itemSerialNumber, countryCode
                         )
                         binding.cycler.layoutManager = LinearLayoutManager(context)
 
@@ -138,7 +138,10 @@ class ToolHistoryListingAdapter(
         }
 
         holder.bind(
-            tagUtilCycler, holder.bindingAdapterPosition, holder
+            tagUtilCycler,
+            holder.bindingAdapterPosition,
+            holder,
+            toolHistoryIndex.data?.customer?.country ?: ""
         )
     }
 

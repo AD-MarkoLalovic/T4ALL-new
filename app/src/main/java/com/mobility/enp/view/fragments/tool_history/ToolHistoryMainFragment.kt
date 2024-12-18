@@ -1,6 +1,7 @@
 package com.mobility.enp.view.fragments.tool_history
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -228,6 +229,8 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     }
 
     private fun setIndexData(indexData: IndexData) {
+        Log.d(TAG, "setIndexData: $indexData")
+        
         binding.progBar.visibility = View.GONE
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -256,7 +259,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         nextPage: Int, dataFill: MutableLiveData<ToolHistoryListing>, tagSerialNumber: String
     ) {
         binding.progBar.visibility = View.VISIBLE
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch (Dispatchers.IO) {
             viewModel.getToolHistoryListingMutable(dataFill, tagSerialNumber, nextPage)
         }
     }
