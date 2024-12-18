@@ -25,7 +25,7 @@ class HistoryResultAdapter(
     val tags: List<Tag>,
     val viewModel: PassageHistoryViewModel,
     private val complaintInterface: HistoryContentPagingAdapter.SendToFragment,
-    val lifecycleOwner: LifecycleOwner
+    val lifecycleOwner: LifecycleOwner, val countryCode: String
 ) :
     RecyclerView.Adapter<HistoryResultAdapter.TagsViewHolder>() {
 
@@ -72,7 +72,10 @@ class HistoryResultAdapter(
 
                         binding.cycler.adapter = HistoryContentPagingAdapter(
                             toolHistoryListing,
-                            complaintInterface, lifecycleOwner, toolHistoryIndex.serialNumber
+                            complaintInterface,
+                            lifecycleOwner,
+                            toolHistoryIndex.serialNumber,
+                            countryCode
                         )
                         binding.cycler.layoutManager = LinearLayoutManager(context)
 

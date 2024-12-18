@@ -62,6 +62,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
         viewModel.nullDates()
         binding.progBar.visibility = View.VISIBLE
+        binding.loopIcon.isEnabled = false
 
         setObservers()
 
@@ -230,7 +231,10 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
     private fun setIndexData(indexData: IndexData) {
         Log.d(TAG, "setIndexData: $indexData")
-        
+        viewModel.setCountryCode(indexData.data?.customer?.country ?: "")
+
+        binding.loopIcon.isEnabled = true
+
         binding.progBar.visibility = View.GONE
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -259,7 +263,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         nextPage: Int, dataFill: MutableLiveData<ToolHistoryListing>, tagSerialNumber: String
     ) {
         binding.progBar.visibility = View.VISIBLE
-        viewLifecycleOwner.lifecycleScope.launch (Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             viewModel.getToolHistoryListingMutable(dataFill, tagSerialNumber, nextPage)
         }
     }

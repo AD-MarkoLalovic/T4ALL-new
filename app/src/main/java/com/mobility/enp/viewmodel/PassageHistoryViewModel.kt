@@ -76,9 +76,10 @@ class PassageHistoryViewModel(private var application: Application) :
     val complaintResponseFiltered: LiveData<LostTagResponse> get() = _complaintResponseFiltered
     private val _errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     val errorBody: LiveData<ErrorBody> get() = _errorBody
+    private var countryCode: String? = null
 
     private var _data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
-    val data :LiveData<IndexData> get() = _data
+    val data: LiveData<IndexData> get() = _data
 
     private val _csvData: MutableLiveData<CsvModel> = MutableLiveData()
     val csvData: LiveData<CsvModel> get() = _csvData
@@ -92,6 +93,14 @@ class PassageHistoryViewModel(private var application: Application) :
     var endDate = MutableLiveData<TimeSave>()
     private var userSelectedCalendarStart: Long? = null
     private var userSelectedCalendarEnd: Long? = null
+
+    fun setCountryCode(countryCode: String) {
+        this.countryCode = countryCode
+    }
+
+    fun getCountryCode(): String {
+        return countryCode ?: ""
+    }
 
     var allTagsSelected = false
 
