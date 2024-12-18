@@ -98,8 +98,8 @@ class PassageHistoryViewModel(private var application: Application) :
     var selectedCurrency = ""
 
     fun nullDates() {
-        startDate.value = TimeSave(application.getString(R.string.from), null)
-        endDate.value = TimeSave(application.getString(R.string.to), null)
+        startDate.value = TimeSave(null, null)
+        endDate.value = TimeSave(null, null)
         userSelectedCalendarStart = null
         userSelectedCalendarEnd = null
     }
