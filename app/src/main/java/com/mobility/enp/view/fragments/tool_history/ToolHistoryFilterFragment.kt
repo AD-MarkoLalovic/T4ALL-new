@@ -17,7 +17,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.FragmentToolHistorySearchQueryBinding
 import com.mobility.enp.network.Repository
@@ -61,7 +60,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
             CoroutineScope(Dispatchers.IO).launch {
                 viewModel.getToolHistoryIndex(
-                     it, isInternetAvailable
+                    it, isInternetAvailable
                 )
             }
         }
@@ -108,12 +107,16 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         }
 
         viewModel.startDate.observe(viewLifecycleOwner) { data ->
-            val textView = binding.txtDateLeft as TextView
-            textView.text = data.formattedTime
+            if (data != null) {
+                val textView = binding.txtDateLeft as TextView
+                textView.text = data.formattedTime
+            }
         }
         viewModel.endDate.observe(viewLifecycleOwner) { data ->
-            val textEndDate = binding.txtDateRight as TextView
-            textEndDate.text = data.formattedTime
+            if (data != null) {
+                val textEndDate = binding.txtDateRight as TextView
+                textEndDate.text = data.formattedTime
+            }
         }
 
         binding.txtDateLeft.setOnClickListener {
@@ -166,7 +169,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
             CoroutineScope(Dispatchers.IO).launch {
                 viewModel.getToolHistoryIndex(
-                     requireContext(), isInternetAvailable
+                    requireContext(), isInternetAvailable
                 )
             }
         }
