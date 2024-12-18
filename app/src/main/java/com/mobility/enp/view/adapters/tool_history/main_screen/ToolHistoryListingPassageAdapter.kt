@@ -215,8 +215,8 @@ class ToolHistoryListingPassageAdapter(
 
             complaintInterface.sendDataFill(currentPage + 1, dataFill, tagSerialNumber)
         } else if (lastPage == currentPage && relation[relation.size - 1] == currentItem) {
-            Toast.makeText(context, context.getString(R.string.last_item), Toast.LENGTH_SHORT)
-                .show()
+//            Toast.makeText(context, context.getString(R.string.last_item), Toast.LENGTH_SHORT)
+//                .show()
         }
     }
 
