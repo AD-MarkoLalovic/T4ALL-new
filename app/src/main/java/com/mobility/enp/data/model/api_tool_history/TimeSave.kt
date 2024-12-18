@@ -5,6 +5,6 @@ import java.util.Date
 
 @Keep
 data class TimeSave(
-    val formattedTime: String,
+    val formattedTime: String?,
     val inDateForm: Date?
 )
