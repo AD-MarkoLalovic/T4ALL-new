@@ -13,7 +13,7 @@ import com.mobility.enp.data.model.api_home_page.homedata.Data
 import com.mobility.enp.data.model.api_my_invoices.DataMonthly
 import com.mobility.enp.data.model.api_my_profile.basic_information.Country
 import com.mobility.enp.data.model.api_my_profile.basic_information.CustomerType
-import com.mobility.enp.data.model.api_tool_history.InvoiceData
+import com.mobility.enp.data.model.api_tool_history.listing.InvoiceData
 import java.io.ByteArrayOutputStream
 
 @TypeConverters

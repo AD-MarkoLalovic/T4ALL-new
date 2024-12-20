@@ -6,7 +6,7 @@
 
         <variable
             name="relation"
-            type="com.mobility.enp.data.model.api_tool_history.InvoiceRelation" />
+            type="com.mobility.enp.data.model.api_tool_history.listing.InvoiceRelation" />
 
         <variable
             name="tagSerial"

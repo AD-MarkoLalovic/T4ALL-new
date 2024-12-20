@@ -3,7 +3,7 @@ package com.mobility.enp.view.adapters.tool_history.main_screen
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mobility.enp.data.model.api_tool_history.TotalAmount
+import com.mobility.enp.data.model.api_tool_history.listing.TotalAmount
 import com.mobility.enp.databinding.PassageHistoryTotalPriceBinding
 
 class TotalCostPassageAdapter(private val countries: ArrayList<TotalAmount>) :
