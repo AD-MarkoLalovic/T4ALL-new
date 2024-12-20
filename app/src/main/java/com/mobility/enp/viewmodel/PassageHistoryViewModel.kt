@@ -293,7 +293,8 @@ class PassageHistoryViewModel(private var application: Application) :
 
             Log.d(TAG, "showDatePicker: ${convertLongToDateString(selectedDate)}")
 
-            val langContext = getLocale()  // dont delete this it gives context to date picker even if the variable is not used.
+            val langContext =
+                getLocale()  // dont delete this it gives context to date picker even if the variable is not used.
 
             val datePicker = MaterialDatePicker.Builder.datePicker()
 
@@ -337,7 +338,7 @@ class PassageHistoryViewModel(private var application: Application) :
                 val locale: Locale
                 if (key == "cyr" || key.isEmpty()) {
                     locale = Locale("SR")
-                } else if (key == "sr") {
+                } else if (key == "sr" || key == "cnr") {
                     locale =
                         Locale.Builder().setLanguage("sr").setRegion("RS").setScript("Latn").build()
                 } else {
