@@ -276,54 +276,80 @@ class PassageHistoryViewModel(private var application: Application) :
     }
 
     fun showDatePicker(fromDate: Boolean, context: Context) {
-
-        val selectedDate: Long = if (fromDate) {
-            if (userSelectedCalendarStart != null) {
-                userSelectedCalendarStart!!
-            } else {
-                System.currentTimeMillis()
-            }
-        } else {
-            if (userSelectedCalendarEnd != null) {
-                userSelectedCalendarEnd!!
-            } else {
-                System.currentTimeMillis()
-            }
-        }
-
-        Log.d(TAG, "showDatePicker: ${convertLongToDateString(selectedDate)}")
-
-        val datePicker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText(context.getString(R.string.select_date)).setSelection(selectedDate)
-            .setNegativeButtonText(context.getString(R.string.cancel))
-            .setPositiveButtonText(context.getString(R.string.confirm)).build()
-
-
-        datePicker.addOnPositiveButtonClickListener {// time in long
-            try {
-                val date: TimeSave = convertLongToDateString(it)
-
-                if (fromDate) {
-                    userSelectedCalendarStart = it
-                    startDate.postValue(date)
+        viewModelScope.launch {
+            val selectedDate: Long = if (fromDate) {
+                if (userSelectedCalendarStart != null) {
+                    userSelectedCalendarStart!!
                 } else {
-                    userSelectedCalendarEnd = it
-                    endDate.postValue(date)
+                    System.currentTimeMillis()
                 }
-
-            } catch (e: Exception) {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.please_enter_date_manually),
-                    Toast.LENGTH_SHORT
-                ).show()
+            } else {
+                if (userSelectedCalendarEnd != null) {
+                    userSelectedCalendarEnd!!
+                } else {
+                    System.currentTimeMillis()
+                }
             }
-        }
 
-        val fm = (context as AppCompatActivity).supportFragmentManager
-        datePicker.show(fm, "dateSelect")
+            Log.d(TAG, "showDatePicker: ${convertLongToDateString(selectedDate)}")
+
+            val langContext = getLocale()  // dont delete this it gives context to date picker even if the variable is not used.
+
+            val datePicker = MaterialDatePicker.Builder.datePicker()
+
+                .setTitleText(context.getString(R.string.select_date))
+                .setSelection(selectedDate)
+                .setNegativeButtonText(context.getString(R.string.cancel))
+                .setPositiveButtonText(context.getString(R.string.confirm))
+                .build()
+
+
+            datePicker.addOnPositiveButtonClickListener {// time in long
+                try {
+                    val date: TimeSave = convertLongToDateString(it)
+
+                    if (fromDate) {
+                        userSelectedCalendarStart = it
+                        startDate.postValue(date)
+                    } else {
+                        userSelectedCalendarEnd = it
+                        endDate.postValue(date)
+                    }
+
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.please_enter_date_manually),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            val fm = (context as AppCompatActivity).supportFragmentManager
+            datePicker.show(fm, "dateSelect")
+        }
     }
 
+    private suspend fun getLocale(): Context? {
+        return withContext(Dispatchers.IO) {
+            val languageKey = database.languageDao().fetchAllowedUsers()?.userLanguage
+            languageKey?.let { key ->
+                val locale: Locale
+                if (key == "cyr" || key.isEmpty()) {
+                    locale = Locale("SR")
+                } else if (key == "sr") {
+                    locale =
+                        Locale.Builder().setLanguage("sr").setRegion("RS").setScript("Latn").build()
+                } else {
+                    locale = Locale(key)
+                }
+                Locale.setDefault(locale)
+                val config = application.resources.configuration
+                config.setLocale(locale)
+                application.createConfigurationContext(config)
+            }
+        }
+    }
 
     private fun convertLongToDateString(time: Long): TimeSave {
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
