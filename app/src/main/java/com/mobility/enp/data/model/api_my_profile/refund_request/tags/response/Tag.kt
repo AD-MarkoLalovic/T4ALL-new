@@ -1,5 +1,6 @@
 package com.mobility.enp.data.model.api_my_profile.refund_request.tags.response
 
+import com.google.gson.annotations.SerializedName
 import com.mobility.enp.data.model.api_my_profile.refund_request.tags.entity.TagsRefundRequestEntity
 
 data class Tag(
@@ -7,7 +8,8 @@ data class Tag(
     val category: Category,
     val country: Country,
     val registrationPlate: String,
-    val roming: Boolean,
+    @SerializedName("roming")
+    val roaming: Boolean,
     val serialNumber: String,
     val showButtonFoundTag: Boolean,
     val showButtonLostTag: Boolean,
@@ -15,14 +17,12 @@ data class Tag(
 ) {
     fun toEntityTagsRefundRequest(): TagsRefundRequestEntity? {
 
-        return if (!roming && country.value == "RS") {
-            TagsRefundRequestEntity(
-                id = id,
-                serialNumber = serialNumber,
-                registrationPlate = registrationPlate
-            )
-        } else {
-            null
-        }
+        if (roaming) return null
+
+        return TagsRefundRequestEntity(
+            id = id,
+            serialNumber = serialNumber,
+            registrationPlate = registrationPlate
+        )
     }
 }
