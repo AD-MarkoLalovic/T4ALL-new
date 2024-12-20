@@ -7,5 +7,6 @@ import com.google.gson.annotations.SerializedName
 @Keep
 data class Data(
     @SerializedName("tags")
-    var tags: List<Tag?>?
+    var tags: List<Tag?>?,
+    val customer : CustomerHistory?
 )

@@ -20,6 +20,7 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.databinding.ItemRelationPassageRealBinding
 import com.mobility.enp.network.Repository
 import com.mobility.enp.view.dialogs.ComplaintFormDialog
+import com.mobility.enp.view.dialogs.ComplaintFormDialogNewOld
 import com.mobility.enp.view.dialogs.ObjectionFormDialog
 
 class ToolHistoryListingPassageAdapter(
@@ -27,7 +28,8 @@ class ToolHistoryListingPassageAdapter(
     private val complaintInterface: SendToFragment,
     val hideComplaintButton: Boolean,
     val lifecycleOwner: LifecycleOwner,
-    val tagSerialNumber: String
+    val tagSerialNumber: String,
+    val countryCode: String
 ) :
     RecyclerView.Adapter<ToolHistoryListingPassageAdapter.RelationViewHolder>() {
 
@@ -61,13 +63,28 @@ class ToolHistoryListingPassageAdapter(
             }
 
             binding.btnComplaint.setOnClickListener {
-                val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
-                val complaintFormDialog = ComplaintFormDialog({ complaintBody ->
-                    complaintInterface.sendComplaintData(complaintBody)
-                }, relation.itemId)
+                if (countryCode.isNotEmpty() && countryCode == "RS") {
 
-                complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
+                    val fragmentManager = (context as AppCompatActivity).supportFragmentManager
+
+                    val complaintFormDialog = ComplaintFormDialog({ complaintBody ->
+                        complaintInterface.sendComplaintData(complaintBody)
+                    }, relation.itemId)
+
+                    complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
+                } else if (countryCode.isNotEmpty() && countryCode != "RS") {
+                    val fragmentManager = (context as AppCompatActivity).supportFragmentManager
+
+                    val complaintFormDialog = ComplaintFormDialogNewOld({ complaintBody ->
+                        complaintInterface.sendComplaintData(complaintBody)
+                    }, relation.itemId)
+
+                    complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
+                } else {
+                    Toast.makeText(binding.root.context, "Country Code Issue", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
 
             binding.btnObjection.setOnClickListener {
@@ -198,8 +215,8 @@ class ToolHistoryListingPassageAdapter(
 
             complaintInterface.sendDataFill(currentPage + 1, dataFill, tagSerialNumber)
         } else if (lastPage == currentPage && relation[relation.size - 1] == currentItem) {
-            Toast.makeText(context, context.getString(R.string.last_item), Toast.LENGTH_SHORT)
-                .show()
+//            Toast.makeText(context, context.getString(R.string.last_item), Toast.LENGTH_SHORT)
+//                .show()
         }
     }
 
@@ -214,6 +231,7 @@ class ToolHistoryListingPassageAdapter(
 
         fun stopSpinner()
     }
+
     private fun isTabletXml(context: Context): Boolean {
         val config: Configuration = context.resources.configuration
         val smallestScreenWidthDp: Int = config.smallestScreenWidthDp

@@ -72,7 +72,8 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
             viewModel.selectedTags
         }
 
-        val adapter = HistoryResultAdapter(listOfTags, viewModel, this, this)
+        val adapter =
+            HistoryResultAdapter(listOfTags, viewModel, this, this, viewModel.getCountryCode())
         binding.cycler.adapter = adapter
         binding.cycler.layoutManager = LinearLayoutManager(context)
     }
