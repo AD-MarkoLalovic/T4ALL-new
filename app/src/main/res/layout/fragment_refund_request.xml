@@ -24,8 +24,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/border_login"
                 android:backgroundTint="@color/primary_light_lightest"
-                android:padding="@dimen/dimens_16dp"
-                >
+                android:padding="@dimen/dimens_16dp">
 
                 <TextView
                     android:id="@+id/titleRefundRequest"
@@ -34,6 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
+                    android:layout_marginTop="6dp"
                     android:text="@string/refund_request"
                     android:textColor="@color/primary_light_darkest" />
 
@@ -101,10 +101,9 @@
                     android:orientation="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:itemCount="2"
-                    tools:listitem="@layout/item_refund_request_created"/>
+                    tools:listitem="@layout/item_refund_request_created" />
             </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
-
 
 
         <View

@@ -38,6 +38,10 @@ class TagPickerRequestViewModel(private val repository: UserRepository) : ViewMo
         fetchBanks()
     }
 
+    suspend fun existLocalData(): Boolean {
+        val data = repository.getLocalTagsRefundRequest()
+        return data.isNotEmpty()
+    }
 
     private fun fetchTagsRefundRequest() {
         viewModelScope.launch {

@@ -19,6 +19,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintContainerRefund"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/border_login"
@@ -53,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_16dp"
                     android:text="@string/text_no_refund_tags"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/viewTagPicker" />
@@ -66,6 +67,7 @@
                     android:layout_marginBottom="@dimen/dimens_16dp"
                     android:maxHeight="@dimen/dimens_400dp"
                     android:orientation="vertical"
+                    android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -82,7 +84,7 @@
                     android:layout_marginBottom="@dimen/dimens_8dp"
                     android:text="@string/amount"
                     android:layout_marginTop="@dimen/dimens_22dp"
-                    app:layout_constraintTop_toBottomOf="@+id/recyclerViewTagPicker"
+                    app:layout_constraintTop_toBottomOf="@+id/textNoTags"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <com.google.android.material.textfield.TextInputLayout
