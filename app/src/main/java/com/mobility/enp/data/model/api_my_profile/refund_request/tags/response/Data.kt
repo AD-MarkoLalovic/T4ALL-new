@@ -9,7 +9,7 @@ data class Data(
     val tags: List<Tag>,
     val total: Int
 ) {
-    fun toTagsEntityList(): List<TagsRefundRequestEntity> {
+    fun toTagsEntityList(): List<TagsRefundRequestEntity?> {
         return tags.map { it.toEntityTagsRefundRequest() }
     }
 }

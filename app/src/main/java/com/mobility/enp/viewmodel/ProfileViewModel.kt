@@ -31,6 +31,12 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val _deletePic = MutableLiveData<Boolean>()
     val deletePic :LiveData<Boolean> get() = _deletePic
 
+    private val _showRefundCard = MutableLiveData<Boolean>()
+    val showRefundCard: LiveData<Boolean> get() = _showRefundCard
+
+    private var _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     private suspend fun getUserToken(): String? {
         return withContext(Dispatchers.IO) {
             database.loginDao().fetchAllowedUsers().accessToken
@@ -42,6 +48,34 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             withContext(Dispatchers.IO) {
                 database.clearAllData()
             }
+        }
+    }
+
+    fun setRefundRequestVisibility() {
+        if (isNetworkAvailable()) {
+            _isLoading.value = true
+            viewModelScope.launch {
+                try {
+                    val token = getUserToken()
+                    token?.let {
+                        val userInfo = Repository.getUserPersonalInfo(it)
+                        val userCountry = userInfo.data?.country?.code
+                        val userType = userInfo.data?.customerType?.type
+                        val isFranchiser = userInfo.data?.isFranchiser
+
+                        // Postavljanje vrednosti za _showRefundCard
+                        _showRefundCard.value = ((userCountry == "RS" || userType == 3) && isFranchiser == false)
+                    }
+                } catch (e: Exception) {
+                    Log.e("ProfileViewModel", "Error fetching user data", e)
+                    _showRefundCard.value = false
+                } finally {
+                    _isLoading.value = false
+                }
+            }
+        } else {
+            _checkNet.value = false
+            _showRefundCard.value = false
         }
     }
 

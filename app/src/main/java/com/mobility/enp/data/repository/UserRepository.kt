@@ -103,7 +103,7 @@ class UserRepository(
     }
 
     private suspend fun saveTagsRefundRequest(tagsResponse: TagsResponseRefundRequest) {
-        val tagsEntity = tagsResponse.data.toTagsEntityList()
+        val tagsEntity = tagsResponse.data.toTagsEntityList().filterNotNull()
         database.tagsRefundRequest().insertTagsRefundRequest(tagsEntity)
     }
 

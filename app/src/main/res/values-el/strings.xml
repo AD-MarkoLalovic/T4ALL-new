@@ -227,7 +227,7 @@
     <string name="tag_device_payment_method_serbia">Εάν θέλετε να χρησιμοποιήσετε τη συσκευή TAG στους δρόμους της Σερβίας, παρακαλούμε να προσθέσετε μια έγκυρη κάρτα πληρωμής.</string>
     <string name="tag_device_payment_method_montenegro">Εάν θέλετε να χρησιμοποιήσετε τη συσκευή TAG στους δρόμους του Μαυροβουνίου, παρακαλούμε να προσθέσετε μια έγκυρη κάρτα πληρωμής.</string>
     <string name="previous_invoices">Οι τιμολόγιά σας θα εμφανιστούν εδώ.</string>
-    <string name="text_no_refund_tags">Δεν έχετε ετικέτες επιστροφής χρημάτων.</string>
+    <string name="text_no_refund_tags">Δεν έχετε ετικέτες για τις οποίες μπορείτε να ζητήσετε επιστροφή χρημάτων.</string>
     <string name="text_no_my_tags">Δεν έχετε προσθέσει καμία ετικέτα. Παρακαλώ προσθέστε την ετικέτα σας.</string>
     <string name="no_invoices">Οι τιμολόγιά σας θα εμφανιστούν εδώ.</string>
     <string name="no_tool_history">Οι διελεύσεις σας θα εμφανιστούν εδώ.</string>

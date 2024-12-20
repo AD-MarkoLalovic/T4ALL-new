@@ -22,5 +22,6 @@ data class UserInfoData(
     val lastName: String?,
     val mb: String?,
     val phone: String?,
-    val postalCode: String?
+    val postalCode: String?,
+    val isFranchiser: Boolean
 )
