@@ -9,9 +9,11 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_my_profile.refund_request.SendRefundRequest
@@ -23,6 +25,7 @@ import com.mobility.enp.view.adapters.refund_request_adapters.RefundRequestTagPi
 import com.mobility.enp.view.ui_models.BankUIModel
 import com.mobility.enp.view.ui_models.refund_request.TagsRefundRequestUIModel
 import com.mobility.enp.viewmodel.TagPickerRequestViewModel
+import kotlinx.coroutines.launch
 
 class TagPickerRequestFragment : Fragment() {
 
@@ -152,6 +155,23 @@ class TagPickerRequestFragment : Fragment() {
         binding.refundLoadingTagPicker.visibility = View.GONE
         binding.textNoTags.visibility = View.VISIBLE
         disableEditingFields()
+
+        val constraintLayout = binding.constraintContainerRefund
+        val txHintAmountTagPicker = binding.txHintAmountTagPicker
+        val textNoTags = binding.textNoTags
+
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintLayout)
+
+        constraintSet.connect(
+            txHintAmountTagPicker.id,
+            ConstraintSet.TOP,
+            textNoTags.id,
+            ConstraintSet.BOTTOM,
+            resources.getDimensionPixelSize(R.dimen.dimens_22dp)
+        )
+
+        constraintSet.applyTo(constraintLayout)
     }
 
     /**
@@ -169,6 +189,24 @@ class TagPickerRequestFragment : Fragment() {
             binding.recyclerViewTagPicker.adapter = adapter
         }
         adapter.submitList(tag)
+
+        val constraintLayout = binding.constraintContainerRefund
+        val txHintAmountTagPicker = binding.txHintAmountTagPicker
+        val recyclerView = binding.recyclerViewTagPicker
+
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintLayout)
+
+        constraintSet.connect(
+            txHintAmountTagPicker.id,
+            ConstraintSet.TOP,
+            recyclerView.id,
+            ConstraintSet.BOTTOM,
+            resources.getDimensionPixelSize(R.dimen.dimens_22dp)
+        )
+
+        constraintSet.applyTo(constraintLayout)
+
     }
 
     /**
@@ -176,6 +214,12 @@ class TagPickerRequestFragment : Fragment() {
      */
     private fun showNoConnectionState() {
         binding.refundLoadingTagPicker.visibility = View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            val hasData = viewModel.existLocalData()
+            if (!hasData) {
+                binding.textNoTags.visibility = View.VISIBLE
+            }
+        }
         noInternetMessage()
     }
 
