@@ -8,7 +8,7 @@
 
         <variable
             name="data"
-            type="com.mobility.enp.data.model.api_tool_history.TotalAmount" />
+            type="com.mobility.enp.data.model.api_tool_history.listing.TotalAmount" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

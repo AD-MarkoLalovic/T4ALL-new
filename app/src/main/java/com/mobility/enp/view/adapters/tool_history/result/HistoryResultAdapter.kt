@@ -11,8 +11,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.data.model.api_tool_history.TagUtilCycler
-import com.mobility.enp.data.model.api_tool_history.ToolHistoryListing
-import com.mobility.enp.data.model.api_tool_history.TotalAmount
+import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
+import com.mobility.enp.data.model.api_tool_history.listing.TotalAmount
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.view.adapters.tool_history.main_screen.TotalCostPassageAdapter

@@ -18,7 +18,7 @@ import com.mobility.enp.data.model.api_my_profile.refund_request.tags.entity.Tag
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_room_models.UserLanguage
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
-import com.mobility.enp.data.model.api_tool_history.ToolHistoryListing
+import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.banks.entity.BanksEntity
 import com.mobility.enp.data.model.notification.NotificationModel
