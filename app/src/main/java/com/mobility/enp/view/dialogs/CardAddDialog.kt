@@ -15,8 +15,10 @@ import com.mobility.enp.data.model.api_home_page.homedata.Promotion
 import com.mobility.enp.databinding.CardAddDialogBinding
 import com.mobility.enp.interf.PromotionInterface
 import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CardAddDialog(private val promotionInterface: PromotionInterface) : DialogFragment() {
 
@@ -44,6 +46,9 @@ class CardAddDialog(private val promotionInterface: PromotionInterface) : Dialog
     private fun setupCountryVisibility() {
         viewModel.paymentAndPassageList.observe(viewLifecycleOwner) { paymentAndPassage ->
             viewLifecycleOwner.lifecycleScope.launch {
+                val availableCountries = withContext(Dispatchers.IO) {
+                    viewModel.cardLimitByUserType()
+                }
                 val addedCards = paymentAndPassage.data?.map { it.country?.code } ?: emptyList()
                 val isSerbiaAdded = addedCards.contains("RS")
 
@@ -51,9 +56,9 @@ class CardAddDialog(private val promotionInterface: PromotionInterface) : Dialog
                 binding.serbianPassage.visibility = View.VISIBLE // Srbija je uvek vidljiva
 
                 binding.macedonianPassage.visibility =
-                    if (isSerbiaAdded) View.VISIBLE else View.GONE
+                    if (isSerbiaAdded && availableCountries.contains("MK")) View.VISIBLE else View.GONE
                 binding.montenegroPassage.visibility =
-                    if (isSerbiaAdded) View.VISIBLE else View.GONE
+                    if (isSerbiaAdded && availableCountries.contains("ME")) View.VISIBLE else View.GONE
 
             }
         }

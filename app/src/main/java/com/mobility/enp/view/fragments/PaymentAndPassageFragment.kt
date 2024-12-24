@@ -83,8 +83,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 // Preuzimanje dodatih kartica
                 val addedCards = paymentAndPassage.data?.map { it.country?.code } ?: emptyList()
-                Log.d("MARKO", "Available countries: $availableCountries")
-                Log.d("MARKO", "Added cards: $addedCards")
+                Log.d("PaymentAndPassageFragment", "Available countries: $availableCountries")
+                Log.d("PaymentAndPassageFragment", "Added cards: $addedCards")
 
                 val isSerbiaAdded = addedCards.contains("RS")
 
@@ -96,10 +96,15 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     "ME" to R.string.montenegro
                 )
 
+                // Filtrirajte zemlje koje postoje u availableCountries ili "All"
+                val filteredCountryMapping = countryMapping.filter { (code, _) ->
+                    code == "All" || availableCountries.contains(code)
+                }
+
                 // Priprema liste zemalja sa statusom klikabilnosti
                 val countryNameAndAdditionalField = mutableListOf<Country>()
 
-                countryMapping.forEach { (code, resId) ->
+                filteredCountryMapping.forEach { (code, resId) ->
                     val isClickable = when (code) {
                         "All" -> true
                         "RS" -> true // Srbija je uvek klikabilna
@@ -173,7 +178,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 activity?.supportFragmentManager?.let { manager ->
                     dialogAddCard.show(manager, "CardAddDialog")
                 }
-
         }
     }
 
@@ -186,7 +190,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             binding.rvCreditCard.visibility = View.VISIBLE
         }
     }
-
 
     private fun filterCardsByCountry(country: String) {
         val filteredCards = allCards.filter { it.country?.code == country }

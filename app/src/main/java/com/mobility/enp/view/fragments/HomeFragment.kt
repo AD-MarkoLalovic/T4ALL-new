@@ -103,9 +103,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-
-
-
         val adapter = HomePromotionsAdapter(filteredList, { promotion ->
             if (isSerbiaAdded() && promotion.countryCode != "RS") {
                 showSerbiaRequiredDialog()
