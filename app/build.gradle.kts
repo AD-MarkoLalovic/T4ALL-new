@@ -33,8 +33,8 @@ android {
         applicationId = "com.mobility.enp"
         minSdk = 29
         targetSdk = 34
-        versionCode = 111
-        versionName = "v-111"
+        versionCode = 112
+        versionName = "112"
 
         resourceConfigurations += listOf("en", "sr", "de", "mk", "tr", "b+cnr", "hr", "el", "bs")
 
@@ -75,16 +75,16 @@ android {
             versionNameSuffix = "-stage"
             multiDexEnabled = true
             buildConfigField("String", "API_URL", "\"https://mobileapitest.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+51216@gmail.com\"")
-            buildConfigField("String", "TEST_PASSWORD", "\"demodemo\"")
+            buildConfigField("String", "TEST_USERNAME", "\"testiranjet4a1+test1d1@gmail.com\"")
+            buildConfigField("String", "TEST_PASSWORD", "\"WYeBy8L7\"")
         }
         create("prod") {
             // Prod flavor configuration
             dimension = "mode"
             signingConfig = signingConfigs.getByName("release")
             buildConfigField("String", "API_URL", "\"https://mobileapi.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"daniel.ristic993@gmail.com\"")
-            buildConfigField("String", "TEST_PASSWORD", "\"Dr1stic1++!\"")
+            buildConfigField("String", "TEST_USERNAME", "\"cok.brb.11@gmail.com\"")
+            buildConfigField("String", "TEST_PASSWORD", "\"testiranje1!\"")
         }
     }
 

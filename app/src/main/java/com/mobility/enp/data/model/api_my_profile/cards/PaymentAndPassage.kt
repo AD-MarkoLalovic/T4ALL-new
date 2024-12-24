@@ -21,5 +21,6 @@ data class Card(
 @Keep
 data class Country(
     val code: String?,
-    val name: String?
+    val name: String?,
+    val isClickable: Boolean = true
 )

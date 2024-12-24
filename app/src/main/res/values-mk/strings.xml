@@ -131,7 +131,7 @@
     <string name="choose_your_country" translatable="true">Изберете ја вашата земја</string>
     <string name="loading_data" translatable="true">Вчитување на податоци…</string>
     <string name="expiration_date" translatable="true">Датум на истекување</string>
-    <string name="notifications" translatable="true">Известувања</string>
+    <string name="notification" translatable="true">Известување</string>
     <string name="permissions_title" translatable="true">Дозволи</string>
     <string name="permission_subtitle" translatable="true">Дали сакате да ја отстраните можноста на апликацијата да прима известувања?</string>
     <string name="no" translatable="true">Не</string>
@@ -321,6 +321,7 @@
     <string name="enter_email_password">Ве молиме внесете емаил и лозинка.</string>
     <string name="all_status_tags">Сите</string>
     <string name="delete_picture">Избриши слика</string>
+    <string name="first_add_card_serbia">Прво, треба да додадете картичка за Србија.</string>
 
 
 </resources>

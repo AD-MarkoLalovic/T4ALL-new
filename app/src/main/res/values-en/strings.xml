@@ -123,7 +123,7 @@
     <string name="pay_now">Pay now</string>
     <string name="choose_your_country">Choose your country</string>
     <string name="expiration_date">Expiration date</string>
-    <string name="notifications">Notifications</string>
+    <string name="notification">Notification</string>
     <string name="permissions_title">Permissions</string>
     <string name="permission_subtitle">Do you wanDo you want to remove the application\'s ability to receive notifications?t to remove the applications ability to receive notifications?</string>
     <string name="no">No</string>
@@ -314,4 +314,5 @@
     <string name="enter_email_password">Please enter email and password.</string>
     <string name="all_status_tags">All</string>
     <string name="delete_picture">Delete Picture</string>
+    <string name="first_add_card_serbia">First, you need to add a card for Serbia.</string>
 </resources>

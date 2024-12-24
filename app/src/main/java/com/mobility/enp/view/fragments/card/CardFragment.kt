@@ -21,8 +21,6 @@ import com.mobility.enp.BuildConfig
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentTosBinding
 import com.mobility.enp.viewmodel.HomeViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -101,13 +99,15 @@ class CardFragment : Fragment() {
         binding.webView.isFocusable = true
         binding.webView.isFocusableInTouchMode = true
         binding.webView.webChromeClient = WebChromeClient()
+
         binding.webView.webViewClient = createWebViewClient()
     }
 
     private fun createWebViewClient() = object : WebViewClient() {
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
-            binding.progBar.visibility = View.GONE
+
+            _binding?.progBar?.visibility = View.GONE
 
             url?.let { link ->
                 if (link.contains("/payment/success")) {
@@ -117,9 +117,13 @@ class CardFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
 
-                    CoroutineScope(Dispatchers.Main).launch {
+                    viewLifecycleOwner.lifecycleScope.launch {
                         delay(2000L)
-                        findNavController().popBackStack()
+
+                        // Pre navigacije proveravamo da li je fragment još uvek aktivan
+                        if (isAdded && isResumed) {
+                            findNavController().popBackStack()
+                        }
                     }
                 }
             }
@@ -129,11 +133,11 @@ class CardFragment : Fragment() {
 
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
             super.onPageStarted(view, url, favicon)
-            binding.progBar.visibility = View.VISIBLE
+            _binding?.progBar?.visibility = View.VISIBLE
         }
-
     }
 
+    // Ova metoda učitava URL u WebView sa dodanim Authorization header-om
     private fun fetchAndLoadUrl() {
         viewLifecycleOwner.lifecycleScope.launch {
             val token = fetchToken()
@@ -142,6 +146,7 @@ class CardFragment : Fragment() {
         }
     }
 
+    // Ova funkcija vraća token koji je potreban za autentifikaciju
     private suspend fun fetchToken(): String {
         val tokenData = homeViewModel.getUserToken()
         return tokenData?.let { "${it.tokenType} ${it.accessToken}" } ?: ""
@@ -149,6 +154,8 @@ class CardFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // Zaustavljamo učitavanje u WebView pre nego što postavimo _binding na null
+        binding.webView.stopLoading()
         _binding = null
     }
 }

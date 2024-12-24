@@ -146,7 +146,7 @@
     <string name="pay_now" translatable="true">Платити сада</string>
     <string name="choose_your_country" translatable="true">Изабери своју земљу</string>
     <string name="expiration_date" translatable="true">Датум истека</string>
-    <string name="notifications" translatable="true">Нотификације</string>
+    <string name="notification" translatable="true">Обавештење</string>
     <string name="permissions_title" translatable="true">Дозволе</string>
     <string name="permission_subtitle" translatable="true">Да ли желите да уклоните могућност апликације да прима обавештења?</string>
     <string name="no" translatable="true">Не</string>
@@ -381,5 +381,6 @@
     <string name="enter_email_password">Молимо унесите имејл и лозинку.</string>
     <string name="all_status_tags">Сви</string>
     <string name="delete_picture">Обриши слику</string>
+    <string name="first_add_card_serbia">Најпре морате додати картицу за Србију.</string>
 
 </resources>

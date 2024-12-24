@@ -21,16 +21,16 @@ class ToolHistoryTagsAdapter(private val listOfTags: ArrayList<Tag>, tagInterfac
 
         fun bind(tag: Tag) {
             if (tag.registrationPlate.isNullOrEmpty()) { // ignore recommendation android studio is wrong here
-                tag.registrationPlate = "No Api Data"
+                tag.registrationPlate = ""
             }
             binding.data = tag
 
             binding.checkbox.setOnClickListener {
                 if (binding.checkbox.isChecked) {
-                    setCheckboxColors(tag)
+                    setCheckboxColors()
                     tagSendInt.onSendTag(tag)
                 } else {
-                    setCheckboxColors(tag)
+                    setCheckboxColors()
                     tagSendInt.onTagRemove(tag)
                 }
             }
@@ -38,7 +38,7 @@ class ToolHistoryTagsAdapter(private val listOfTags: ArrayList<Tag>, tagInterfac
             binding.executePendingBindings()
         }
 
-        private fun setCheckboxColors(tag: Tag) {
+        private fun setCheckboxColors() {
             if (binding.checkbox.isChecked) {
                 binding.checkbox.buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(binding.root.context, R.color.figmaSplashScreenColor))
                 binding.regPlate.setTextColor(ContextCompat.getColor(binding.root.context, R.color.figmaSplashScreenColor))

@@ -70,20 +70,11 @@ class SupportDialog : DialogFragment() {
     }
 
     private fun openSuccessfulMailDialog() {
-        context?.let {
-            val fragmentManager = parentFragmentManager
-            val generalDialog = GeneralMessageDialog(
-                it.getString(R.string.support_successful_mail),
-                it.getString(R.string.support_successful_massage),
-                object : GeneralMessageDialog.OnButtonClick {
-                    override fun onClickConfirmed() {
-                        dismiss()
-                    }
-                })
-            generalDialog.isCancelable = false
-            generalDialog.show(fragmentManager, "GeneralDialogSupport")
-
-        }
+        val generalDialog = GeneralMessageDialog(
+            requireContext().getString(R.string.support_successful_mail),
+            requireContext().getString(R.string.support_successful_massage)
+        )
+        generalDialog.show(childFragmentManager, "SupportDialog")
     }
 
     private fun setObserversError() {
