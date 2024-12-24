@@ -117,7 +117,7 @@ class HomeFragment : Fragment() {
         }, { promotion ->
             binding.progBar.visibility = View.VISIBLE
             viewModelHome.userDeletedPromotion(promotion)
-        }, isSerbiaAdded)
+        })
         val adapterProgress = HomeProgressAdapter(filteredList.size)
 
         binding.cyclerPromotions.visibility = View.VISIBLE
