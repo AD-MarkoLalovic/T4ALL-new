@@ -1,39 +1,29 @@
 package com.mobility.enp.view.dialogs
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_home_page.homedata.Promotion
 import com.mobility.enp.databinding.CardAddDialogBinding
 import com.mobility.enp.interf.PromotionInterface
 import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class CardAddDialog(context: Context, private val promotionInterface: PromotionInterface) :
-    DialogFragment() {
+class CardAddDialog(private val promotionInterface: PromotionInterface) : DialogFragment() {
 
     private lateinit var binding: CardAddDialogBinding
-    private val context: Context
     private val timeDelay = 500L
     private val promotion = Promotion("", "", 0, "", "", false)
-    private val viewModel: PaymentAndPassageViewModel by viewModels()
-
-    init {
-        isCancelable = false
-        this.context = context
-    }
+    private val viewModel: PaymentAndPassageViewModel by activityViewModels() // ili ako želite isti ViewModel iz Fragmenta
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,77 +33,57 @@ class CardAddDialog(context: Context, private val promotionInterface: PromotionI
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         binding = CardAddDialogBinding.inflate(inflater, container, false)
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            val list = withContext(Dispatchers.IO) {
-                viewModel.cardLimitByUserType()
-            }
+        return binding.root
+    }
 
-            list.forEach { countryCode ->
-                when (countryCode) {
-                    "RS" -> {
-                        binding.serbianPassage.visibility = View.VISIBLE
-                    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupCountryVisibility()
+    }
 
-                    "MK" -> {
-                        binding.macedonianPassage.visibility = View.VISIBLE
-                    }
+    private fun setupCountryVisibility() {
+        viewModel.paymentAndPassageList.observe(viewLifecycleOwner) { paymentAndPassage ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                val addedCards = paymentAndPassage.data?.map { it.country?.code } ?: emptyList()
+                val isSerbiaAdded = addedCards.contains("RS")
 
-                    "ME" -> {
-                        binding.montenegroPassage.visibility = View.VISIBLE
-                    }
-                }
+                // Vidljivost zemalja bazirana na dodatoj Srbiji
+                binding.serbianPassage.visibility = View.VISIBLE // Srbija je uvek vidljiva
+
+                binding.macedonianPassage.visibility =
+                    if (isSerbiaAdded) View.VISIBLE else View.GONE
+                binding.montenegroPassage.visibility =
+                    if (isSerbiaAdded) View.VISIBLE else View.GONE
+
             }
         }
-
-        return binding.root
     }
 
     override fun onStart() {
         super.onStart()
+        isCancelable = false
 
         binding.buttonCloseDialog.setOnClickListener {
-            dialog!!.dismiss()
+            dialog?.dismiss()
         }
 
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
-
-
-                R.id.serbianPassage -> {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        binding.serbianPassage.isChecked = true
-                        promotion.countryCode = "RS"
-
-                        delay(timeDelay)
-                        dialog!!.dismiss()
-                        promotionInterface.onCountrySelected(promotion)
-                    }
-                }
-
-                R.id.macedonianPassage -> {
-                    binding.macedonianPassage.isChecked = true
-                    promotion.countryCode = "MK"
-
-                    CoroutineScope(Dispatchers.Main).launch {
-                        delay(timeDelay)
-                        dialog!!.dismiss()
-                        promotionInterface.onCountrySelected(promotion)
-                    }
-                }
-
-                R.id.montenegroPassage -> {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        binding.montenegroPassage.isChecked = true
-                        promotion.countryCode = "ME"
-
-                        delay(timeDelay)
-                        dialog!!.dismiss()
-                        promotionInterface.onCountrySelected(promotion)
-                    }
-                }
-
+                R.id.serbianPassage -> handleCountrySelection("RS", binding.serbianPassage)
+                R.id.macedonianPassage -> handleCountrySelection("MK", binding.macedonianPassage)
+                R.id.montenegroPassage -> handleCountrySelection("ME", binding.montenegroPassage)
             }
         }
     }
 
+    private fun handleCountrySelection(countryCode: String, radioButton: RadioButton) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            radioButton.isChecked = true
+            promotion.countryCode = countryCode
+
+            delay(timeDelay)
+            dialog?.dismiss()
+            promotionInterface.onCountrySelected(promotion)
+        }
+    }
 }

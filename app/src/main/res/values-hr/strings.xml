@@ -121,7 +121,7 @@
     <string name="pay_now">Plati sada</string>
     <string name="choose_your_country">Odaberite svoju zemlju</string>
     <string name="expiration_date">Datum isteka</string>
-    <string name="notifications">Obavijesti</string>
+    <string name="notification">Obavijest</string>
     <string name="permissions_title">Dozvole</string>
     <string name="permission_subtitle">Želite li ukloniti mogućnost aplikacije da prima obavijesti?</string>
     <string name="no">Ne</string>
@@ -320,6 +320,7 @@
     <string name="enter_email_password">Molimo unesite email i lozinku.</string>
     <string name="all_status_tags">Svi</string>
     <string name="delete_picture">Obriši sliku</string>
+    <string name="first_add_card_serbia">Najprije morate dodati karticu za Srbiju.</string>
 
 
 </resources>

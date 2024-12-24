@@ -11,23 +11,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.mobility.enp.databinding.GeneralDialogBinding
 
-class GeneralMessageDialog : DialogFragment {
-
-    private lateinit var title: String
-    private lateinit var subtitle: String
+class GeneralMessageDialog(
+    private val title: String,
+    private val subtitle: String
+) : DialogFragment() {
 
     private var _binding: GeneralDialogBinding? = null
     private val binding: GeneralDialogBinding get() = _binding!!
 
-    private lateinit var onButtonClick: OnButtonClick
-
-    constructor() : super()
-
-    constructor(title: String, subtitle: String, onButtonClick: OnButtonClick) : super() {
-        this.title = title
-        this.subtitle = subtitle
-        this.onButtonClick = onButtonClick
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +36,6 @@ class GeneralMessageDialog : DialogFragment {
         binding.subTitle.text = subtitle
         binding.confirmButton.setOnClickListener {
             dismiss()
-            onButtonClick.onClickConfirmed()
         }
     }
 

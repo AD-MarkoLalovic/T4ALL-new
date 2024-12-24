@@ -2,6 +2,7 @@ package com.mobility.enp.view.adapters.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mobility.enp.R
@@ -11,7 +12,8 @@ import com.mobility.enp.databinding.CardFlagsPromotionHomeBinding
 class HomePromotionsAdapter(
     val list: List<Promotion>,
     private val onItemClicked: (Promotion) -> Unit,
-    private val upsertPromotion: (Promotion) -> Unit
+    private val upsertPromotion: (Promotion) -> Unit,
+    private val isSerbiaAdded: () -> Boolean
 ) :
     RecyclerView.Adapter<HomePromotionsAdapter.HomeInvoicesAdapterViewHolder>() {
 

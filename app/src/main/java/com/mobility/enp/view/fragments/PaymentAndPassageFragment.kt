@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -37,7 +37,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private var _binding: FragmentPaymentAndPassageBinding? = null
     private val binding: FragmentPaymentAndPassageBinding get() = _binding!!
 
-    private val viewModel: PaymentAndPassageViewModel by viewModels()
+    private val viewModel: PaymentAndPassageViewModel by activityViewModels()
     private lateinit var adapter: PaymentAndPassageAdapter
     private lateinit var cardsCountryAdapter: CardsCountryAdapter
     private var allCards: List<Card> = emptyList()
@@ -56,11 +56,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         binding.lifecycleOwner = viewLifecycleOwner
 
+        fetchCardData()
         setupAdapters()
         setObserversError()
         setListener()
         setupCountryList()
-        fetchCardData()
         handlePrimaryCardChange()
         setupAddCardButton()
 
@@ -75,36 +75,56 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun setupCountryList() {
-
-        viewLifecycleOwner.lifecycleScope.launch {
-
-            val list = withContext(Dispatchers.IO) {
-                viewModel.cardLimitByUserType()
-            }
-
-            Log.d("Test", "setupCountryList: $list")
-
-            val countryMapping = mapOf(
-                "RS" to R.string.serbia,
-                "MK" to R.string.macedonia,
-                "ME" to R.string.montenegro,
-                "All" to R.string.all_country
-            )
-
-            val countryNameAndAdditionalField = list.mapNotNull { code ->
-                countryMapping[code]?.let { resId ->
-                    Country(code, getString(resId))
+        viewModel.paymentAndPassageList.observe(viewLifecycleOwner) { paymentAndPassage ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                val availableCountries = withContext(Dispatchers.IO) {
+                    viewModel.cardLimitByUserType()
                 }
-            }.toMutableList()
-            
-            countryNameAndAdditionalField.add(0, Country("All", getString(R.string.all_country)))
 
-            withContext(Dispatchers.Main) {
-                cardsCountryAdapter.updateCountries(countryNameAndAdditionalField)
-                cardsCountryAdapter.setSelectedCountry(selectedCountry)
+                // Preuzimanje dodatih kartica
+                val addedCards = paymentAndPassage.data?.map { it.country?.code } ?: emptyList()
+                Log.d("MARKO", "Available countries: $availableCountries")
+                Log.d("MARKO", "Added cards: $addedCards")
+
+                val isSerbiaAdded = addedCards.contains("RS")
+
+                // Mapiranje kodova zemalja u string resurse
+                val countryMapping = mapOf(
+                    "All" to R.string.all_country,
+                    "RS" to R.string.serbia,
+                    "MK" to R.string.macedonia,
+                    "ME" to R.string.montenegro
+                )
+
+                // Priprema liste zemalja sa statusom klikabilnosti
+                val countryNameAndAdditionalField = mutableListOf<Country>()
+
+                countryMapping.forEach { (code, resId) ->
+                    val isClickable = when (code) {
+                        "All" -> true
+                        "RS" -> true // Srbija je uvek klikabilna
+                        else -> isSerbiaAdded // Ostale zemlje su klikabilne samo ako je Srbija dodata
+                    }
+
+                    countryNameAndAdditionalField.add(
+                        Country(
+                            code,
+                            getString(resId),
+                            isClickable = isClickable
+                        )
+                    )
+                }
+
+                // Ažurirajte adapter sa novom listom zemalja
+                withContext(Dispatchers.Main) {
+                    cardsCountryAdapter.updateCountries(countryNameAndAdditionalField)
+                    cardsCountryAdapter.setSelectedCountry(selectedCountry)
+                }
             }
         }
     }
+
+
 
     private fun fetchCardData() {
         viewModel.paymentAndPassageList.observe(viewLifecycleOwner) { paymentAndPassage ->
@@ -140,8 +160,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
     private fun setupAddCardButton() {
         binding.bttAddCard.setOnClickListener {
-            context?.let { context ->
-                val dialogAddCard = CardAddDialog(context, object : PromotionInterface {
+                val dialogAddCard = CardAddDialog(object : PromotionInterface {
                     override fun onCountrySelected(promotion: Promotion) {
                         val action =
                             PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
@@ -151,11 +170,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     }
                 })
 
-                dialogAddCard.isCancelable = false
                 activity?.supportFragmentManager?.let { manager ->
                     dialogAddCard.show(manager, "CardAddDialog")
                 }
-            }
+
         }
     }
 

@@ -163,11 +163,8 @@ class ChangePasswordFragment : Fragment(), GeneralMessageDialog.OnButtonClick {
     private fun showDialogChangePassword() {
         val dialog = GeneralMessageDialog(
             getString(R.string.password_changed),
-            getString(R.string.you_will_be_asked_to_login_again),
-            this
-        )
-        dialog.isCancelable = false
-        dialog.show(childFragmentManager, "GeneralMessageDialog")
+            getString(R.string.you_will_be_asked_to_login_again))
+        dialog.show(childFragmentManager, "ChangePasswordFragment")
     }
 
     override fun onClickConfirmed() {

@@ -121,7 +121,7 @@
     <string name="pay_now">Πληρώστε τώρα</string>
     <string name="choose_your_country">Επιλέξτε τη χώρα σας</string>
     <string name="expiration_date">Ημερομηνία λήξης</string>
-    <string name="notifications">Ειδοποιήσεις</string>
+    <string name="notification">Ειδοποίηση</string>
     <string name="permissions_title">Άδειες</string>
     <string name="permission_subtitle">Θέλετε να αφαιρέσετε τη δυνατότητα της εφαρμογής να λαμβάνει ειδοποιήσεις;</string>
     <string name="no">Όχι</string>
@@ -312,5 +312,6 @@
     <string name="enter_email_password">Παρακαλώ εισαγάγετε email και κωδικό πρόσβασης.</string>
     <string name="all_status_tags">Όλοι</string>
     <string name="delete_picture">Διαγραφή εικόνας</string>
+    <string name="first_add_card_serbia">Πρώτα, πρέπει να προσθέσετε μια κάρτα για τη Σερβία.</string>
 
 </resources>

@@ -10,12 +10,14 @@
     </data>
 
     <RelativeLayout
+        android:id="@+id/cardCountry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dimens_6dp">
+        android:layout_marginEnd="@dimen/dimens_6dp"
+        tools:background="@drawable/rounded_status_unmarked_border_">
 
         <TextView
-            android:id="@+id/cardCountry"
+            android:id="@+id/txCountryFilter"
             style="@style/CaptionMedium"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dimens_48dp"
@@ -25,7 +27,6 @@
             android:paddingEnd="24dp"
             android:text="@{String.valueOf(country.name)}"
             android:textColor="@color/primary_light_dark"
-            tools:background="@drawable/rounded_status_unmarked_border_"
             tools:text="@string/serbia" />
 
     </RelativeLayout>

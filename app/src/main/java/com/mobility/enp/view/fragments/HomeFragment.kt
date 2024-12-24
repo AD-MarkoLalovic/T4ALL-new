@@ -27,6 +27,7 @@ import com.mobility.enp.view.adapters.home.HomeBillsAdapter
 import com.mobility.enp.view.adapters.home.HomePassageAdapter
 import com.mobility.enp.view.adapters.home.HomeProgressAdapter
 import com.mobility.enp.view.adapters.home.HomePromotionsAdapter
+import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.HomeViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -82,6 +83,8 @@ class HomeFragment : Fragment() {
         val filteredList: ArrayList<Promotion> = arrayListOf()
         var hasModification = false
 
+        val isSerbiaAdded = { promotionsList.any { it.countryCode == "RS" } }
+
         for (promotion in promotionsList) {  // removes user deleted promotions
             promotion.deletedByUser?.let { deletedByUser ->
                 if (!deletedByUser) {
@@ -101,14 +104,20 @@ class HomeFragment : Fragment() {
         }
 
 
+
+
         val adapter = HomePromotionsAdapter(filteredList, { promotion ->
-            val action = HomeFragmentDirections.actionHomeFragmentToCardFragment(promotion)
-            findNavController().navigate(action)
+            if (isSerbiaAdded() && promotion.countryCode != "RS") {
+                showSerbiaRequiredDialog()
+            } else {
+                val action = HomeFragmentDirections.actionHomeFragmentToCardFragment(promotion)
+                findNavController().navigate(action)
+            }
 
         }, { promotion ->
             binding.progBar.visibility = View.VISIBLE
             viewModelHome.userDeletedPromotion(promotion)
-        })
+        }, isSerbiaAdded)
         val adapterProgress = HomeProgressAdapter(filteredList.size)
 
         binding.cyclerPromotions.visibility = View.VISIBLE
@@ -278,7 +287,7 @@ class HomeFragment : Fragment() {
             // Postavi adapter i podatke za listu prolaza
             homeData.data?.tollHistory?.let { list ->
 
-                if (list.isEmpty()){
+                if (list.isEmpty()) {
                     binding.noToolHistory.visibility = View.VISIBLE
                 }
 
@@ -290,7 +299,7 @@ class HomeFragment : Fragment() {
             // Postavi adapter i podatke za listu mesečnih računa
             homeData.data?.invoices?.let { invoices ->
 
-                if (invoices.isEmpty()){
+                if (invoices.isEmpty()) {
                     binding.noInvoices.visibility = View.VISIBLE
                 }
 
@@ -331,6 +340,14 @@ class HomeFragment : Fragment() {
                 viewModelHome.savePromotion(promotionsList)
             }
         }
+    }
+
+    private fun showSerbiaRequiredDialog() {
+        val dialog = GeneralMessageDialog(
+            getString(R.string.notification),
+            getString(R.string.first_add_card_serbia)
+        )
+        dialog.show(parentFragmentManager, "HomeNoAddCardDialog")
     }
 
 

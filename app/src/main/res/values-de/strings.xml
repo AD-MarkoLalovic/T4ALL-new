@@ -133,7 +133,7 @@
     <string name="choose_your_country">Wählen Sie Ihr Land</string>
     <string name="loading_data">Daten werden geladen…</string>
     <string name="expiration_date">Ablaufdatum</string>
-    <string name="notifications">Benachrichtigungen</string>
+    <string name="notification">Benachrichtigung</string>
     <string name="permissions_title">Berechtigungen</string>
     <string name="permission_subtitle">Möchten Sie die Fähigkeit der Anwendung, Benachrichtigungen zu empfangen, entfernen?</string>
     <string name="no">Nein</string>
@@ -333,5 +333,6 @@
     <string name="enter_email_password">Bitte geben Sie E-Mail und Passwort ein.</string>
     <string name="all_status_tags">Alle</string>
     <string name="delete_picture">Bild löschen</string>
+    <string name="first_add_card_serbia">Zuerst müssen Sie eine Karte für Serbien hinzufügen.</string>
 
 </resources>

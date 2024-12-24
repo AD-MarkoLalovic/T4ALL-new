@@ -1,5 +1,6 @@
 package com.mobility.enp.view.adapters
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -21,12 +22,14 @@ class CardsCountryAdapter(
         fun bind(country: Country) {
             binding.country = country
 
+            binding.cardCountry.isEnabled = country.isClickable
+
             if (bindingAdapterPosition == selectedItemPos) {
                 binding.cardCountry.background = ContextCompat.getDrawable(
                     binding.root.context,
                     R.drawable.rounded_status_marked_border
                 )
-                binding.cardCountry.setTextColor(
+                binding.txCountryFilter.setTextColor(
                     ContextCompat.getColor(
                         binding.root.context,
                         R.color.white
@@ -37,7 +40,7 @@ class CardsCountryAdapter(
                     binding.root.context,
                     R.drawable.rounded_status_unmarked_border_
                 )
-                binding.cardCountry.setTextColor(
+                binding.txCountryFilter.setTextColor(
                     ContextCompat.getColor(
                         binding.root.context,
                         R.color.primary_light_dark
@@ -45,9 +48,28 @@ class CardsCountryAdapter(
                 )
             }
 
+            // Onemogućavanje klika i stil za neklikabilne drzave
+            if (!country.isClickable) {
+                binding.txCountryFilter.setTextColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.country_filter
+                    )
+                )
+                binding.cardCountry.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.country_filter
+                    )
+                )
+            } else {
+                binding.cardCountry.backgroundTintList = null
+            }
             binding.cardCountry.setOnClickListener {
-                setSingleSelected(bindingAdapterPosition)
-                listenerCountry.setCountryListener(country.code.toString())
+                if (country.isClickable) { // Ovaj kod se izvršava samo ako je zemlja klikabilna
+                    setSingleSelected(bindingAdapterPosition)
+                    listenerCountry.setCountryListener(country.code!!)
+                }
             }
 
             binding.executePendingBindings()
