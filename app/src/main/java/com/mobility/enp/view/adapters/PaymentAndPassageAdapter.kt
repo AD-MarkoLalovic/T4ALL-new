@@ -11,7 +11,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_my_profile.cards.Card
+import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.databinding.ItemPaymentAndPassagesBinding
 import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
 

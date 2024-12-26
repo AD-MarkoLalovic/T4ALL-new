@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_my_profile.cards.Country
+import com.mobility.enp.data.model.cards.response.Country
 import com.mobility.enp.databinding.ItemCardsCountryBinding
 
 class CardsCountryAdapter(

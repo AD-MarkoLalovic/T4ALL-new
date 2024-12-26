@@ -9,7 +9,6 @@ import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.UpdateUserInfoRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.BasicInformationResponse
-import com.mobility.enp.data.model.api_my_profile.cards.PaymentAndPassage
 import com.mobility.enp.data.model.api_my_profile.refund_request.SendRefundRequest
 import com.mobility.enp.data.model.api_my_profile.refund_request.response.RefundRequestsResponse
 import com.mobility.enp.data.model.api_my_profile.refund_request.tags.response.TagsResponseRefundRequest
@@ -21,6 +20,7 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.banks.response.BanksResponse
+import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.countries.CountriesModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
@@ -250,7 +250,7 @@ interface ApiService {
     ): Response<LostTagResponse>
 
     @GET("/api/v1/cards")
-    suspend fun getCreditCards(@Query("lang") language: String): Response<PaymentAndPassage>
+    suspend fun getCreditCards(@Query("lang") language: String): Response<CardsResponse>
 
     @FormUrlEncoded
     @POST("/api/v1/delete-account-request")

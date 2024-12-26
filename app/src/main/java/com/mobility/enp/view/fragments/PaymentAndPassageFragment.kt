@@ -14,8 +14,8 @@ import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_home_page.homedata.Promotion
-import com.mobility.enp.data.model.api_my_profile.cards.Card
-import com.mobility.enp.data.model.api_my_profile.cards.Country
+import com.mobility.enp.data.model.cards.response.Card
+import com.mobility.enp.data.model.cards.response.Country
 import com.mobility.enp.databinding.FragmentPaymentAndPassageBinding
 import com.mobility.enp.interf.PromotionInterface
 import com.mobility.enp.network.Repository
