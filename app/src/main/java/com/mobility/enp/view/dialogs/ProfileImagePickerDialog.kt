@@ -23,7 +23,8 @@ import com.mobility.enp.databinding.DialogChangeProfilePictureBinding
 
 class ProfileImagePickerDialog(private val imageSelectionListener: ImagePickDialogListener,val imageExists:Boolean) : DialogFragment() {
 
-    private lateinit var binding: DialogChangeProfilePictureBinding
+    private var _binding: DialogChangeProfilePictureBinding? = null
+    private val binding: DialogChangeProfilePictureBinding get() = _binding!!
 
     // Contract za pokretanje kamere i dobivanje rezultata
     private val takePictureContract =
@@ -78,7 +79,7 @@ class ProfileImagePickerDialog(private val imageSelectionListener: ImagePickDial
         savedInstanceState: Bundle?
     ): View {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        binding = DialogChangeProfilePictureBinding.inflate(inflater, container, false)
+        _binding = DialogChangeProfilePictureBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -151,6 +152,11 @@ class ProfileImagePickerDialog(private val imageSelectionListener: ImagePickDial
         val rect = dm.run { Rect(0, 0, widthPixels, heightPixels) }
         val percentWidth = rect.width() * percent
         dialog?.window?.setLayout(percentWidth.toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 
