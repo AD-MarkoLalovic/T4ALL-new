@@ -9,9 +9,6 @@
             name="paymentAndPassage"
             type="com.mobility.enp.data.model.cards.response.Card" />
 
-        <variable
-            name="viewModel"
-            type="com.mobility.enp.viewmodel.PaymentAndPassageViewModel" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

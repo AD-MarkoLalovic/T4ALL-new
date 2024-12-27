@@ -67,7 +67,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun setupAdapters() {
-        adapter = PaymentAndPassageAdapter(arrayListOf(), viewModel, this)
+        adapter = PaymentAndPassageAdapter(arrayListOf(), this)
         binding.rvCreditCard.adapter = adapter
 
         cardsCountryAdapter = CardsCountryAdapter(arrayListOf(), this)
