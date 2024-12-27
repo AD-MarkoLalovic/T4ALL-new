@@ -10,7 +10,7 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_home_page.homedata.HomeScreenData
 import com.mobility.enp.data.model.api_home_page.homedata.Promotion
-import com.mobility.enp.data.model.api_my_profile.cards.PaymentAndPassage
+import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.countries.CountriesModel
 import com.mobility.enp.data.room.database.DRoom
@@ -28,8 +28,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val _promotionsList: MutableLiveData<List<Promotion>> = MutableLiveData()
     val promotionList: LiveData<List<Promotion>> get() = _promotionsList
 
-    private val _userCreditCards: MutableLiveData<PaymentAndPassage> = MutableLiveData()
-    val userCreditCards: LiveData<PaymentAndPassage> get() = _userCreditCards
+    private val _userCreditCards: MutableLiveData<CardsResponse> = MutableLiveData()
+    val userCreditCards: LiveData<CardsResponse> get() = _userCreditCards
 
     fun checkStoredPromotions() {
         viewModelScope.launch(Dispatchers.IO) {

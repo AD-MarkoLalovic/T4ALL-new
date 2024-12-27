@@ -19,7 +19,7 @@ import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.UpdateUserInfoRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.BasicInformationResponse
-import com.mobility.enp.data.model.api_my_profile.cards.PaymentAndPassage
+import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_tags.LostTagResponse
 import com.mobility.enp.data.model.api_tags.PostLostTag
@@ -906,7 +906,7 @@ object Repository {
     }
 
     suspend fun getCreditCards(
-        data: MutableLiveData<PaymentAndPassage>,
+        data: MutableLiveData<CardsResponse>,
         token: String?,
         errorBody: MutableLiveData<ErrorBody>,
         application: Application

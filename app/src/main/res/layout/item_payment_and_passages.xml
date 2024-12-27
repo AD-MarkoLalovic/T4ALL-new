@@ -7,11 +7,7 @@
 
         <variable
             name="paymentAndPassage"
-            type="com.mobility.enp.data.model.api_my_profile.cards.Card" />
-
-        <variable
-            name="viewModel"
-            type="com.mobility.enp.viewmodel.PaymentAndPassageViewModel" />
+            type="com.mobility.enp.data.model.cards.response.Card" />
     </data>
 
 

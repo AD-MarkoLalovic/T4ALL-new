@@ -11,13 +11,11 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_my_profile.cards.Card
+import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.databinding.ItemPaymentAndPassagesBinding
-import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
 
 class PaymentAndPassageAdapter(
     private val cards: ArrayList<Card> = arrayListOf(),
-    private val viewModel: PaymentAndPassageViewModel,
     private val listener: PrimaryCardListener
 ) :
     RecyclerView.Adapter<PaymentAndPassageAdapter.PaymentAndPassageViewHolder>() {
@@ -25,9 +23,8 @@ class PaymentAndPassageAdapter(
     inner class PaymentAndPassageViewHolder(val binding: ItemPaymentAndPassagesBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(card: Card, viewModel: PaymentAndPassageViewModel) {
+        fun bind(card: Card) {
             binding.paymentAndPassage = card
-            binding.viewModel = viewModel
 
             // Postavljanje za neaktivne i aktivne kartice
             if (card.active == 0) {
@@ -84,7 +81,14 @@ class PaymentAndPassageAdapter(
             val text = context.getString(R.string.choose_primary_card)
             val spannableString = SpannableString(text).apply {
                 setSpan(UnderlineSpan(), 0, text.length, 0)
-                setSpan(ForegroundColorSpan(ContextCompat.getColor(context, R.color.figmaSplashScreenColor)), 0, text.length, 0)
+                setSpan(
+                    ForegroundColorSpan(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.figmaSplashScreenColor
+                        )
+                    ), 0, text.length, 0
+                )
             }
 
             binding.primaryCard.text = spannableString
@@ -149,7 +153,7 @@ class PaymentAndPassageAdapter(
             "ME" -> holder.binding.cardFlag.setImageResource(R.drawable.montenegro_flag)
             else -> holder.binding.cardFlag.setImageDrawable(null) //
         }
-        holder.bind(current, viewModel)
+        holder.bind(current)
     }
 
     fun updateListCards(newCard: List<Card>) {

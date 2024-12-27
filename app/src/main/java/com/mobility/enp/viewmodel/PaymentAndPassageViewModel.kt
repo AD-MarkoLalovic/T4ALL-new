@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mobility.enp.data.model.ErrorBody
-import com.mobility.enp.data.model.api_my_profile.cards.PaymentAndPassage
+import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.network.Repository
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +18,8 @@ class PaymentAndPassageViewModel(application: Application) : AndroidViewModel(ap
 
     private val database: DRoom = DRoom.getRoomInstance(application)
 
-    private val _paymentAndPassageList = MutableLiveData<PaymentAndPassage>()
-    val paymentAndPassageList: MutableLiveData<PaymentAndPassage> get() = _paymentAndPassageList
+    private val _paymentAndPassageList = MutableLiveData<CardsResponse>()
+    val paymentAndPassageList: MutableLiveData<CardsResponse> get() = _paymentAndPassageList
 
     private val _successfullyChangedPrimaryCard = MutableLiveData<Boolean>()
     val successfullyChangedPrimaryCard: LiveData<Boolean> get() = _successfullyChangedPrimaryCard
@@ -71,7 +71,7 @@ class PaymentAndPassageViewModel(application: Application) : AndroidViewModel(ap
                         Repository.deleteCard(cardId, token, getApplication(), errorBody)
                         val updatedPaymentAndPassage =
                             _paymentAndPassageList.value?.data?.filter { it.id.toString() != cardId }
-                        _paymentAndPassageList.postValue(PaymentAndPassage(updatedPaymentAndPassage))
+                        _paymentAndPassageList.postValue(CardsResponse(updatedPaymentAndPassage))
                     } catch (e: Exception) {
                         Log.e(
                             "PaymentAndPassageViewModel",
