@@ -278,4 +278,7 @@ interface ApiService {
 
     @GET("/api/v1/banks")
     suspend fun getBanks(): Response<BanksResponse>
+
+    @PUT("api/v1/personal-data/change-language")
+    suspend fun changeLanguage(@Query("language") languageCode: String)
 }

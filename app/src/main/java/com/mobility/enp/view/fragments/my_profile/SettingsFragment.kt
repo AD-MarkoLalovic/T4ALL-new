@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -25,16 +26,19 @@ import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.GeneralMessageDialogNotifications
 import com.mobility.enp.view.dialogs.LanguageDialog
 import com.mobility.enp.view.fragments.LoginFragment.Companion.TAG
+import com.mobility.enp.viewmodel.SettingsViewModel
 
 class SettingsFragment : Fragment() {
 
-    private lateinit var binding: FragmentSettingsBinding
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding: FragmentSettingsBinding get() = _binding!!
+    private val viewModel: SettingsViewModel by viewModels { SettingsViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -93,6 +97,8 @@ class SettingsFragment : Fragment() {
                     activity?.let { act ->
                         act.recreate()
                     }
+
+                    viewModel.sendingLangToServer(languageSelected)
                 } else {
                     Log.d(
                         TAG,
@@ -129,6 +135,11 @@ class SettingsFragment : Fragment() {
         context?.let {
             binding.notificationSwitch.isChecked = isPermissionGranted(it)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

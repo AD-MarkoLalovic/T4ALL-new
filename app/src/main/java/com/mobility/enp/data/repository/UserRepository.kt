@@ -11,10 +11,11 @@ import com.mobility.enp.data.model.banks.entity.BanksEntity
 import com.mobility.enp.data.model.banks.response.BanksResponse
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
+import retrofit2.Response
 
 /**
- * Odgovornost: Upravljanje podacima korisnika, uključujući profilne informacije,
- * pristup računima, kao i funkcionalnosti poput slanja pomoći i refundacija.
+ * Odgovornost: Upravljanje podacima korisnika, uključujući profilne informacije, podesavanje
+ * apikacije, pristup računima, kao i funkcionalnosti poput slanja pomoći i refundacija.
  * Dobavljanje informacija o korisničkim tagovima.Odjava korisnika
  */
 
@@ -142,8 +143,6 @@ class UserRepository(
     }
 
 
-
-
     /**
      * Banks
      */
@@ -185,6 +184,18 @@ class UserRepository(
 
     suspend fun getLocalBanks(): List<BanksEntity> {
         return database.bankDao().getAllBanks()
+    }
+
+    /**
+     * Send language
+     */
+
+    suspend fun sendLangKey(lang: String) {
+        val userToken = getUserToken()
+
+        userToken?.let { token ->
+            apiService(token).changeLanguage(lang)
+        }
     }
 
 }

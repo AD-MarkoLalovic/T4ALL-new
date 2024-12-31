@@ -2,6 +2,7 @@ package com.mobility.enp.viewmodel
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -82,5 +83,20 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         return "RS/$lang"
     }
 
+    fun sendLanguage() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val token = getUserToken()
+                token?.let {
+                    Repository.sendLanguageKey(it.accessToken, getApplication())
+                    Log.d("LoginViewModel", "Language send successfully")
+                } ?: run {
+                    Log.e("LoginViewModel", "Token is null")
+                }
+            } catch (e: Exception) {
+                Log.e("LoginViewModel", "Error sending language: ${e.message}", e)
+            }
+        }
+    }
 
 }
