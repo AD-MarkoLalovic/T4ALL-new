@@ -11,7 +11,6 @@ import com.mobility.enp.data.model.banks.entity.BanksEntity
 import com.mobility.enp.data.model.banks.response.BanksResponse
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
-import retrofit2.Response
 
 /**
  * Odgovornost: Upravljanje podacima korisnika, uključujući profilne informacije, podesavanje
