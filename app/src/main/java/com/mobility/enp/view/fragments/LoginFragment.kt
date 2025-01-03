@@ -284,6 +284,8 @@ class LoginFragment : Fragment() {
 
                 loginViewModel.storeLastUserEmail(userName)
 
+                loginViewModel.sendLanguage()
+
                 withContext(Dispatchers.Main) {
                     findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment())
                 }

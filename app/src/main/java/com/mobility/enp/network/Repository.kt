@@ -973,6 +973,11 @@ object Repository {
         }
     }
 
+    suspend fun sendLanguageKey(token: String?, context: Context) {
+        val language = getUserLanguage(context)
+        apiService(token).changeLanguage(language)
+    }
+
     suspend fun getUserLanguage(context: Context): String {  // cyr lat en de tr mk el
         val database: DRoom = DRoom.getRoomInstance(context)
         var lang = ""
