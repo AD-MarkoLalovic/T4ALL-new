@@ -123,7 +123,7 @@
     <string name="expiration_date">Datum isteka</string>
     <string name="notification">Obavijest</string>
     <string name="permissions_title">Dozvole</string>
-    <string name="permission_subtitle">Želite li ukloniti mogućnost aplikacije da prima obavijesti?</string>
+    <string name="permission_subtitle">Jeste li sigurni da želite ukloniti mogućnost aplikaciji da prima obavijesti?</string>
     <string name="no">Ne</string>
     <string name="yes">Da</string>
     <string name="remove_card"><u>Ukloni karticu</u></string>

@@ -135,7 +135,7 @@
     <string name="expiration_date">Ablaufdatum</string>
     <string name="notification">Benachrichtigung</string>
     <string name="permissions_title">Berechtigungen</string>
-    <string name="permission_subtitle">Möchten Sie die Fähigkeit der Anwendung, Benachrichtigungen zu empfangen, entfernen?</string>
+    <string name="permission_subtitle">Sind Sie sicher, dass Sie der Anwendung die Möglichkeit nehmen möchten, Benachrichtigungen zu empfangen?</string>
     <string name="no">Nein</string>
     <string name="yes">Ja</string>
     <string name="remove_card"><u>Karte entfernen</u></string>

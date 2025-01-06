@@ -131,7 +131,7 @@
     <string name="expiration_date">Datum isteka</string>
     <string name="notification">Obaveštenje</string>
     <string name="permissions_title">Dozvole</string>
-    <string name="permission_subtitle">Da li želite da uklonite mogućnost aplikacije da prima obaveštenja?</string>
+    <string name="permission_subtitle">Da li ste sigurni da želite da uklonite mogućnost aplikaciji da prima obaveštenja?</string>
     <string name="no">Ne</string>
     <string name="yes">Da</string>
     <string name="remove_card"><u>Uklonite karticu</u></string>

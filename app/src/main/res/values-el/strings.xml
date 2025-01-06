@@ -123,7 +123,7 @@
     <string name="expiration_date">Ημερομηνία λήξης</string>
     <string name="notification">Ειδοποίηση</string>
     <string name="permissions_title">Άδειες</string>
-    <string name="permission_subtitle">Θέλετε να αφαιρέσετε τη δυνατότητα της εφαρμογής να λαμβάνει ειδοποιήσεις;</string>
+    <string name="permission_subtitle">Είστε σίγουροι ότι θέλετε να αφαιρέσετε τη δυνατότητα της εφαρμογής να λαμβάνει ειδοποιήσεις;</string>
     <string name="no">Όχι</string>
     <string name="yes">Ναι</string>
     <string name="remove_card"><u>Αφαίρεση κάρτας</u></string>
