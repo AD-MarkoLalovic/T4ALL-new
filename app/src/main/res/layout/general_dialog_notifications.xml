@@ -13,12 +13,8 @@
         <TextView
             android:id="@+id/title"
             style="@style/H3"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Title" />
@@ -41,19 +37,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="42dp"
             android:backgroundTint="@color/figmaSplashScreenColor"
-            android:text="@string/yes"
+            android:text="@string/confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/subTitle" />
 
         <Button
             android:id="@+id/rejectButton"
-            style="@style/MyButtonStyleSmall"
+            style="@style/MyOutlinedButtonSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="42dp"
             android:layout_marginEnd="@dimen/dimens_10dp"
             android:backgroundTint="@color/figmaSplashScreenColor"
-            android:text="@string/no"
+            android:text="@string/cancel"
             app:layout_constraintEnd_toStartOf="@id/confirmButton"
             app:layout_constraintTop_toBottomOf="@id/subTitle" />
 

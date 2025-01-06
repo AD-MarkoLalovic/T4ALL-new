@@ -133,7 +133,7 @@
     <string name="expiration_date">Son kullanma tarihi</string>
     <string name="notification">Bildirim</string>
     <string name="permissions_title">İzinler</string>
-    <string name="permission_subtitle">Uygulamanın bildirim alabilme yeteneğini kaldırmak istiyor musunuz?</string>
+    <string name="permission_subtitle">Uygulamanın bildirim almasını engellemek istediğinizden emin misiniz?</string>
     <string name="no">Hayır</string>
     <string name="yes">Evet</string>
     <string name="remove_card"><u>Kartı kaldır</u></string>

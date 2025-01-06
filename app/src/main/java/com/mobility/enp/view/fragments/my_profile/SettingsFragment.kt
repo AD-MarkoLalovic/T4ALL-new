@@ -62,7 +62,7 @@ class SettingsFragment : Fragment() {
                                 openAppSettings()
                             }
                         })
-                    generalMessageDialog.show(fragmentManager, "NotificationDiag")
+                    generalMessageDialog.show(fragmentManager, "NotificationDialog")
                 } else {
                     Dexter.withContext(it)
                         .withPermission(android.Manifest.permission.POST_NOTIFICATIONS)

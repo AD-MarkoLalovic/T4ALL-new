@@ -148,7 +148,7 @@
     <string name="expiration_date" translatable="true">Датум истека</string>
     <string name="notification" translatable="true">Обавештење</string>
     <string name="permissions_title" translatable="true">Дозволе</string>
-    <string name="permission_subtitle" translatable="true">Да ли желите да уклоните могућност апликације да прима обавештења?</string>
+    <string name="permission_subtitle" translatable="true">Да ли сте сигурни да желите да уклоните могућност апликацији да прима обавештења?</string>
     <string name="no" translatable="true">Не</string>
     <string name="yes" translatable="true">Да</string>
     <string name="remove_card" translatable="true"><u>Уклоните картицу</u></string>
