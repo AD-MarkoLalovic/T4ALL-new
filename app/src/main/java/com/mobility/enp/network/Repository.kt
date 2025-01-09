@@ -791,11 +791,6 @@ object Repository {
                 override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                     if (response.isSuccessful) {
                         billPaid.postValue(true)
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.payment_successfully),
-                            Toast.LENGTH_LONG
-                        ).show()
                     } else {
                         billPaid.postValue(false)
                         errorBody.postValue(getMessageFromErrorBody(response))

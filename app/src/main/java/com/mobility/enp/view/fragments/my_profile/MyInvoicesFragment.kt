@@ -61,6 +61,9 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         viewModel.billPad.observe(viewLifecycleOwner) { bool ->
             if (bool != null) {
                 if (bool) {
+                    Toast.makeText(
+                        requireContext(), getText(R.string.payment_successfully), Toast.LENGTH_SHORT
+                    ).show()
                     viewModel.fetchMonthlyInvoices(errorBody)
                 } else {
                     Toast.makeText(

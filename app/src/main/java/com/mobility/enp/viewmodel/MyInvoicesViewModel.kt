@@ -55,7 +55,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
     val checkNetDownload: LiveData<Boolean> = _checkNetDownload
 
     private val _billPad = MutableLiveData<Boolean>()
-    val billPad: LiveData<Boolean> = _billPad
+    val billPad: LiveData<Boolean> get() = _billPad
 
     private val _savedPdfData = MutableLiveData<ByteArray>()
     val pdfData: LiveData<ByteArray> get() = _savedPdfData
