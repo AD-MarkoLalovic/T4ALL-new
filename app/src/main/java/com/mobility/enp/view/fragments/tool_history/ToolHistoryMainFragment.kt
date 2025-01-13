@@ -14,11 +14,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
+import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.databinding.FragmentPassageHistoryBinding
 import com.mobility.enp.network.Repository
 import com.mobility.enp.util.SubmitResult
@@ -216,7 +216,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             }
         }
 
-        viewModel.errorBody.observe(viewLifecycleOwner) { errorBody ->   // need to check this
+        vModel.errorBody.observe(viewLifecycleOwner) { errorBody ->   // need to check this // removed in future task
             binding.progBar.visibility = View.GONE
             context?.let { context ->
                 Toast.makeText(
@@ -244,7 +244,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         viewModel.tagSerials = indexData.data?.tags as ArrayList<Tag>
 
         val toolHistoryListingAdapter =
-            ToolHistoryListingAdapter(indexData, viewModel, this, this, this)
+            ToolHistoryListingAdapter(indexData, vModel, this, this, this)
 
         binding.cycler.adapter = toolHistoryListingAdapter
         binding.cycler.layoutManager = LinearLayoutManager(requireContext())
@@ -264,7 +264,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     ) {
         binding.progBar.visibility = View.VISIBLE
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.getToolHistoryListingMutable(dataFill, tagSerialNumber, nextPage)
+            vModel.getToolHistoryListingMutable(dataFill, tagSerialNumber, nextPage)
         }
     }
 
