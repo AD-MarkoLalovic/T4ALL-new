@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,6 +24,7 @@ import com.mobility.enp.network.Repository
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.select.ToolHistoryTagsAdapter
 import com.mobility.enp.viewmodel.PassageHistoryViewModel
+import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -35,6 +37,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
     private val viewModel: PassageHistoryViewModel by activityViewModels()
     private lateinit var isInternetAvailable: MutableLiveData<Boolean>
+    private val vModel: UserPassViewModel by viewModels { UserPassViewModel.Factory }
 
     companion object {
         const val TAG = "ToolDetails"
@@ -249,7 +252,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         viewModel.csvData.observe(viewLifecycleOwner) { csvData ->
             binding.progBar.visibility = View.GONE
             csvData?.let {
-                viewModel.processCsvData(it)
+                vModel.processCsvData(it)
             }
         }
     }

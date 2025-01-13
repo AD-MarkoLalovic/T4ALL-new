@@ -7,6 +7,8 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
+import com.mobility.enp.data.model.pdf_table.CsvTable
+import com.mobility.enp.data.model.pdf_table.PdfTable
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import kotlinx.coroutines.Dispatchers
@@ -112,6 +114,14 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
     fun fetchContext():Context{
         return context
+    }
+
+    suspend fun deleteCsvTable(){
+        database.csvTableDao().deleteData()
+    }
+
+    suspend fun upsertCsvTable(csvTable: CsvTable){
+        database.csvTableDao().upsertData(csvTable)
     }
 
     suspend fun getIndexDataRoom(): IndexData {

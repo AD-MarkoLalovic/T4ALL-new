@@ -73,7 +73,6 @@ class PassageHistoryViewModel(private var application: Application) :
     val complaintResponseFiltered: LiveData<LostTagResponse> get() = _complaintResponseFiltered
     private val _errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     val errorBody: LiveData<ErrorBody> get() = _errorBody
-    private var countryCode: String? = null
 
     private var _data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
     val data: LiveData<IndexData> get() = _data
@@ -91,13 +90,6 @@ class PassageHistoryViewModel(private var application: Application) :
     private var userSelectedCalendarStart: Long? = null
     private var userSelectedCalendarEnd: Long? = null
 
-    fun setCountryCode(countryCode: String) {
-        this.countryCode = countryCode
-    }
-
-    fun getCountryCode(): String {
-        return countryCode ?: ""
-    }
 
     var allTagsSelected = false
 
@@ -122,12 +114,6 @@ class PassageHistoryViewModel(private var application: Application) :
     suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
         database.toolHistoryDao()?.deleteData()
         database.toolHistoryDao()?.insertData(indexData)
-    }
-
-    suspend fun fetchIndexData(): IndexData? {
-        return withContext(Dispatchers.IO) {
-            database.toolHistoryDao()?.fetchData()
-        }
     }
 
     suspend fun insertPassageData(toolHistoryListing: ToolHistoryListing) {
@@ -365,163 +351,6 @@ class PassageHistoryViewModel(private var application: Application) :
 
         } else {
             _errorBody.postValue(ErrorBody(200, context.getString(R.string.please_select_dates)))
-        }
-    }
-
-    fun processCsvData(csvModel: CsvModel) {
-        Log.d(TAG, "csv data: $csvModel")
-
-        if (!csvModel.data?.csvContent.isNullOrEmpty()) {
-            csvModel.data?.csvContent?.let { data ->
-                val nameExtra = UUID.randomUUID().toString().substring(0, 8)
-
-                viewModelScope.launch(Dispatchers.IO) {
-                    saveCsvLocally(data, nameExtra) // <- csv excel export
-                    saveBase64ToCSV(
-                        data, nameExtra
-                    ) // <- converts csv to pdf saves locally and in room byte array
-                }
-
-            }
-        } else {
-            _errorBody.postValue(ErrorBody(200, "No export data received"))
-        }
-    }
-
-    private suspend fun saveCsvLocally(encoded: String, nameExtra: String) = coroutineScope {
-        try {
-            // Decode the Base64 string
-            val decodedBytes = Base64.decode(encoded, Base64.DEFAULT)
-            val decodedString = String(decodedBytes)
-
-            // Parse the data and format it as CSV
-            val rows = decodedString.split("\n")
-            val csvBuilder = StringBuilder()
-
-            // Add a header if your data format is known
-            csvBuilder.append("Bill number,Time of passage,Pay ramp,Price\n")
-
-            // Add each row to the CSV content
-            for (row in rows) {
-                csvBuilder.append(row).append("\n")
-            }
-
-            // Save CSV to shared storage using MediaStore
-            val fileName = "export-$nameExtra.csv"
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
-                put(
-                    MediaStore.MediaColumns.RELATIVE_PATH, "Documents/"
-                ) // Save in the Documents folder
-            }
-
-            // Get the URI for the file in shared storage
-            val uri = application.contentResolver.insert(
-                MediaStore.Files.getContentUri("external"), contentValues
-            )
-
-            uri?.let { fileUri ->
-                application.contentResolver.openOutputStream(fileUri)?.use { outputStream ->
-                    // Write the CSV content to the file
-                    outputStream.write(csvBuilder.toString().toByteArray())
-                    outputStream.flush()
-                    Log.d(
-                        ToolHistoryFilterFragment.TAG,
-                        "CSV file saved successfully in Documents folder."
-                    )
-                } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to open OutputStream.")
-            } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to create file URI in MediaStore.")
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private suspend fun saveBase64ToCSV(base64Data: String, nameExtra: String) = coroutineScope {
-        try {
-
-            // Regular expression to match CSV fields with commas, allowing quoted fields to contain commas
-            val regex = """"([^"]*)"|([^",]+)""".toRegex()
-
-            // Decode the Base64 string
-            val decodedBytes = Base64.decode(base64Data, Base64.DEFAULT)
-            val decodedString = String(decodedBytes)
-
-            val rows = decodedString.split("\n")
-            val headers = listOf(
-                application.getString(R.string.bill_number),
-                application.getString(R.string.time_of_passage),
-                application.getString(R.string.pay_ramp),
-                application.getString(R.string.price)
-            )
-
-
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            val pdfWriter = PdfWriter(byteArrayOutputStream)
-            val pdfDocument = PdfDocument(pdfWriter)
-            val document = Document(pdfDocument)
-
-            val table = Table(headers.size)
-
-            headers.forEach { header ->
-                table.addCell(Cell().add(Paragraph(header).setBold()))
-            }
-
-
-            rows.forEach { row ->
-                val columns = mutableListOf<String>()
-                val matches = regex.findAll(row)
-                matches.forEach { match ->
-                    // Get either quoted field or unquoted field
-                    columns.add(match.groupValues[1].ifEmpty { match.groupValues[2] })
-                }
-
-                columns.forEach { column ->
-                    table.addCell(Cell().add(Paragraph(column)))
-                }
-            }
-
-            document.add(table)
-            document.close()
-
-            val pdfData = byteArrayOutputStream.toByteArray()
-            database.csvTableDao().deleteData()
-            database.csvTableDao().upsertData(CsvTable(0, pdfData))
-
-            // Save CSV to shared storage using MediaStore
-            val fileName = "export-$nameExtra.csv"
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
-                put(
-                    MediaStore.MediaColumns.RELATIVE_PATH, "Documents/"
-                ) // Save in the Documents folder
-            }
-
-            val uri = application.contentResolver.insert(
-                MediaStore.Files.getContentUri("external"), contentValues
-            )
-
-            uri?.let { fileUri ->
-                application.contentResolver.openOutputStream(fileUri)?.use { outputStream ->
-                    outputStream.write(pdfData)
-                    outputStream.flush()
-
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-                        postNotification()
-                    } else {
-                        runPermissionCheck()
-                    }
-
-                    Log.d(
-                        ToolHistoryFilterFragment.TAG,
-                        "PDF file saved successfully in Documents folder."
-                    )
-                } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to open OutputStream.")
-            } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to create file URI in MediaStore.")
-
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 

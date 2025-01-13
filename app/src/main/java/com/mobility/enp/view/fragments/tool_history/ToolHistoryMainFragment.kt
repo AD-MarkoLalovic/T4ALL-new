@@ -231,7 +231,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
     private fun setIndexData(indexData: IndexData) {
         Log.d(TAG, "setIndexData: $indexData")
-        viewModel.setCountryCode(indexData.data?.customer?.country ?: "")
+        vModel.setCountryCode(indexData.data?.customer?.country ?: "")
 
         binding.loopIcon.isEnabled = true
 

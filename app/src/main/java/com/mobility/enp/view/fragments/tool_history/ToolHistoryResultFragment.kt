@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +24,7 @@ import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.result.HistoryContentPagingAdapter
 import com.mobility.enp.view.adapters.tool_history.result.HistoryResultAdapter
 import com.mobility.enp.viewmodel.PassageHistoryViewModel
+import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,6 +35,7 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
     private lateinit var binding: FragmentToolHistorySearchResultBinding
     private val viewModel: PassageHistoryViewModel by activityViewModels()
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
+    private val vModel: UserPassViewModel by viewModels { UserPassViewModel.Factory }
 
     companion object {
         const val TAG = "HistoryResult"
@@ -73,7 +76,7 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
         }
 
         val adapter =
-            HistoryResultAdapter(listOfTags, viewModel, this, this, viewModel.getCountryCode())
+            HistoryResultAdapter(listOfTags, viewModel, this, this, vModel.getCountryCode())
         binding.cycler.adapter = adapter
         binding.cycler.layoutManager = LinearLayoutManager(context)
     }
