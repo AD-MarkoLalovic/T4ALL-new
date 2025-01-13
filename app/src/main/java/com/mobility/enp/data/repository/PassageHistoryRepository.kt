@@ -6,6 +6,7 @@ import com.mobility.enp.data.model.api_tags.LostTagResponse
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
+import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import kotlinx.coroutines.Dispatchers
@@ -103,10 +104,25 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         return Result.failure(NetworkError.ServerError)
     }
 
+    suspend fun getToken(): String? {
+        return withContext(Dispatchers.IO) {
+            getUserToken()
+        }
+    }
+
+    fun fetchContext():Context{
+        return context
+    }
 
     suspend fun getIndexDataRoom(): IndexData {
         return withContext(Dispatchers.IO) {
             database.toolHistoryDao().fetchData()
+        }
+    }
+
+    suspend fun fetchPassageDataBySerial(serial: String): ToolHistoryListing? {
+        return withContext(Dispatchers.IO) {
+            database.toolListingDao().fetchPassageBySerial(serial)
         }
     }
 

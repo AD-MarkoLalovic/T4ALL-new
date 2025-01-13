@@ -69,9 +69,6 @@ import java.util.UUID
 class PassageHistoryViewModel(private var application: Application) :
     AndroidViewModel(application) {
 
-    private var _complaintResponse: MutableLiveData<LostTagResponse> = MutableLiveData()
-    val complaintResponse: LiveData<LostTagResponse> get() = _complaintResponse
-
     private var _complaintResponseFiltered: MutableLiveData<LostTagResponse> = MutableLiveData()
     val complaintResponseFiltered: LiveData<LostTagResponse> get() = _complaintResponseFiltered
     private val _errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
@@ -154,29 +151,6 @@ class PassageHistoryViewModel(private var application: Application) :
 
     }
 
-    suspend fun fetchPassageDataBySerial(serial: String): ToolHistoryListing? {
-        return withContext(Dispatchers.IO) {
-            database.toolListingDao()?.fetchPassageBySerial(serial)
-        }
-    }
-
-    suspend fun postComplaint(
-        complaintBody: ComplaintBody,
-    ) {
-        database.loginDao()?.fetchAllowedUsers()?.accessToken.let {
-            Repository.postComplaint(it, _errorBody, complaintBody, _complaintResponse)
-        }
-    }
-
-    suspend fun postObjection(
-        objectionBody: ObjectionBody,
-    ) {
-        database.loginDao()?.fetchAllowedUsers()?.accessToken.let {
-            Repository.postObjection(it, _errorBody, objectionBody, _complaintResponse)
-        }
-    }
-
-
     suspend fun postComplaintFiltered(
         complaintBody: ComplaintBody,
         errorBody: MutableLiveData<ErrorBody>,
@@ -195,38 +169,8 @@ class PassageHistoryViewModel(private var application: Application) :
         }
     }
 
-    suspend fun getToolHistoryTransit(
-        dataInterface: ToolHistoryListingAdapter.PassageDataInterface,
-        context: Context,
-        tagSerialNumber: String,
-        currentPage: Int
-    ) {
-        if (Repository.isNetworkAvailable(context)) {
-            database.loginDao()?.fetchAllowedUsers()?.accessToken?.let {
-                Repository.getToolHistoryListing(
-                    dataInterface, it, tagSerialNumber, currentPage, itemsPerPage, getApplication()
-                )
-            }
-        } else {
-            viewModelScope.launch {// fetch stored data send back to adapter with interface
-                fetchPassageDataBySerial(tagSerialNumber)?.let {
-                    dataInterface.onOk(it)
-                }
-            }
-        }
-    }
 
     //getToolHistoryListingMutable
-
-    suspend fun getToolHistoryListingMutable(
-        data: MutableLiveData<ToolHistoryListing>, tagSerialNumber: String, requestedPage: Int
-    ) {
-        database.loginDao()?.fetchAllowedUsers()?.accessToken?.let {
-            Repository.getToolHistoryListingMutable(
-                data, _errorBody, it, tagSerialNumber, requestedPage, itemsPerPage, getApplication()
-            )
-        }
-    }
 
     suspend fun getToolHistoryListingMutableTimeFiltered(
         data: MutableLiveData<ToolHistoryListing>,
@@ -357,21 +301,6 @@ class PassageHistoryViewModel(private var application: Application) :
         val date = Date(time)
         val formDate = sdf.format(date)
         return TimeSave(formDate, date)
-    }
-
-    fun fetchExportFromApiTest() {
-        val encoded =
-            "MTI5NzAzNi8yMDI0LXdlYiwiMjAyNC0wOC0wOSAxNzoxMDoxMiIsIkJlb2dyYWQgLSBNYWxpIFBvxb5hcmV2YWMiLCI5NCwwMCIKMTI5NzAzNi8yMDI0LXdlYiwiMjAyNC0wOC0wOSAyMjozNDoxNCIsIk1hbGkgUG/FvmFyZXZhYyAtIEJlb2dyYWQiLCI5NCwwMCIKMTQ0MzI3Ny8yMDI0LXdlYiwiMjAyNC0wOC0yOCAxOTozMDozNCIsIk9icmVub3ZhYyAtIFByZWxqaW5hIiwiNTI2LDQwIgoxNDQ1OTQ4LzIwMjQtd2ViLCIyMDI0LTA4LTI4IDIzOjI3OjI2IiwiUHJlbGppbmEgLSBPYnJlbm92YWMiLCI1MjYsNDAiCjE1MDYzMjUvMjAyNC13ZWIsIjIwMjQtMDktMDcgMTE6NTI6MjIiLCJTdGFyYSBQYXpvdmEgLSBTdWJvdGljYSIsIjc1MiwwMCIKMTUxNTg0OS8yMDI0LXdlYiwiMjAyNC0wOS0wOCAxNTowOToxNiIsIlN1Ym90aWNhIC0gSW5kamlqYSIsIjY2Nyw0MCIKMTUxNTg0OS8yMDI0LXdlYiwiMjAyNC0wOS0wOCAxNjoxMDowMCIsIkluZGppamEgLSBCZcWha2EiLCIxLjE4NCw0MCIKMTUxNTg0OS8yMDI0LXdlYiwiMjAyNC0wOS0wOCAxOTo0MzowNCIsIkJlxaFrYSAtIFN0YXJhIFBhem92YSIsIjEzMSw2MCIKMTU4OTQ3OC8yMDI0LXdlYiwiMjAyNC0wOS0yMSAxMTowNDo0NCIsIkJlb2dyYWQgLSBWZWxpa2EgUGxhbmEiLCIzNTcsMjAiCjE2MDEyMDIvMjAyNC13ZWIsIjIwMjQtMDktMjIgMTc6MTM6MTYiLCJWZWxpa2EgUGxhbmEgLSBCZW9ncmFkIiwiMzU3LDIwIgo="
-        val nameExtra = UUID.randomUUID().toString()
-            .substring(0, 8)  // solves potential same name issues for saving files
-
-        viewModelScope.launch(Dispatchers.IO) {
-            saveCsvLocally(encoded, nameExtra) // <- csv excel export
-            saveBase64ToCSV(
-                encoded, nameExtra
-            ) // <- converts csv to pdf saves locally and in room byte array
-        }
-
     }
 
     suspend fun getCsvData(context: Context) = coroutineScope {
@@ -655,7 +584,6 @@ class PassageHistoryViewModel(private var application: Application) :
             database.csvTableDao().fetchData().data
         }
     }
-
 
 }
 
