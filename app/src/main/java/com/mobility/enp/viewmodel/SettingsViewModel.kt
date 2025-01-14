@@ -13,10 +13,10 @@ import kotlinx.coroutines.launch
 
 class SettingsViewModel(private val repository: UserRepository) : ViewModel() {
 
-    fun sendingLangToServer(lang: String) {
+    fun sendingLangToServer() {
         viewModelScope.launch {
             try {
-                repository.sendLangKey(lang)
+                repository.sendLangKey()
             } catch (e: Exception) {
                 Log.e("SettingsViewModel", "Error sending language: ${e.message}", e)
             }

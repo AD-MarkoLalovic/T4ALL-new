@@ -98,7 +98,10 @@ class SettingsFragment : Fragment() {
                         act.recreate()
                     }
 
-                    viewModel.sendingLangToServer(languageSelected)
+                    // removed passed string here becase it is saved in room
+                    // and it is not the same as the language key that server expects used getLangKey from baseRepository for that
+                    // because that filters local Strings key to Language Key Changes
+                    viewModel.sendingLangToServer()
                 } else {
                     Log.d(
                         TAG,
