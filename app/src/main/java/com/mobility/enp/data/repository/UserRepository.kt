@@ -189,11 +189,11 @@ class UserRepository(
      * Send language
      */
 
-    suspend fun sendLangKey(lang: String) {
+    suspend fun sendLangKey() {
         val userToken = getUserToken()
 
         userToken?.let { token ->
-            apiService(token).changeLanguage(lang)
+            apiService(token).changeLanguage(getLangKey())
         }
     }
 
