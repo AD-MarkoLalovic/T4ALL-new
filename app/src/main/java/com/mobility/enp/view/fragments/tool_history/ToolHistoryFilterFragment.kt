@@ -72,33 +72,23 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             if (viewModel.selectedTags.isEmpty() && !viewModel.allTagsSelected) {
                 Toast.makeText(context, R.string.please_select_tag, Toast.LENGTH_SHORT).show()
             } else {
-                if (viewModel.startDate.value?.inDateForm != null && viewModel.endDate.value?.inDateForm != null) {
-                    if (viewModel.startDate.value!!.inDateForm!!.before(viewModel.endDate.value!!.inDateForm)) {
-                        if (Repository.isNetworkAvailable(requireContext())) {
-                            findNavController().navigate(ToolHistoryFilterFragmentDirections.actionToolHistorySearchFragmentToToolHistorySearchResultFragment())
-                        } else {
-                            val bundle = Bundle().apply {
-                                putString(
-                                    getString(R.string.title),
-                                    getString(R.string.no_connection_title)
-                                )
-                                putString(
-                                    getString(R.string.subtitle),
-                                    getString(R.string.please_connect_to_the_internet)
-                                )
-                            }
-
-                            findNavController().navigate(
-                                R.id.action_global_noInternetConnectionDialog, bundle
-                            )
-                        }
-                    } else {
-                        Toast.makeText(
-                            context, getString(R.string.end_date_check), Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                if (Repository.isNetworkAvailable(requireContext())) {
+                    findNavController().navigate(ToolHistoryFilterFragmentDirections.actionToolHistorySearchFragmentToToolHistorySearchResultFragment())
                 } else {
-                    Toast.makeText(context, R.string.select_date, Toast.LENGTH_SHORT).show()
+                    val bundle = Bundle().apply {
+                        putString(
+                            getString(R.string.title),
+                            getString(R.string.no_connection_title)
+                        )
+                        putString(
+                            getString(R.string.subtitle),
+                            getString(R.string.please_connect_to_the_internet)
+                        )
+                    }
+
+                    findNavController().navigate(
+                        R.id.action_global_noInternetConnectionDialog, bundle
+                    )
                 }
             }
         }
