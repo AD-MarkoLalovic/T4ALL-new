@@ -95,18 +95,16 @@ class HistoryResultAdapter(
                 }
             }
 
-            val dateFrom = viewModel.startDate.value?.formattedTime?.replace("/", ".")
-            val dateTo = viewModel.endDate.value?.formattedTime?.replace("/", ".")
+            val dateFrom = viewModel.startDate.value?.formattedTime?.replace("/", ".") ?: ""
+            val dateTo = viewModel.endDate.value?.formattedTime?.replace("/", ".") ?: ""
 
-            if (dateFrom != null && dateTo != null) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.getToolHistoryTransitResult(
-                        initDataTransfer,
-                        toolHistoryIndex.serialNumber,
-                        1, dateFrom, dateTo
-                    )   // fetch initial data here
+            CoroutineScope(Dispatchers.IO).launch {
+                viewModel.getToolHistoryTransitResult(
+                    initDataTransfer,
+                    toolHistoryIndex.serialNumber,
+                    1, dateFrom, dateTo
+                )   // fetch initial data here
 
-                }
             }
         }
 
