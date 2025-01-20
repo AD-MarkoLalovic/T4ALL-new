@@ -8,9 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -23,12 +21,12 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.ui_models.BankUIModel
-import com.mobility.enp.viewmodel.PassageHistoryViewModelNew
+import com.mobility.enp.viewmodel.PassageHistoryBanksVm
 
 class ComplaintFormDialogNewOld(val onConfirmButton: (ComplaintBody) -> Unit, complaintId: Int) :
     DialogFragment() {
 
-    private val viewModel: PassageHistoryViewModelNew by viewModels { PassageHistoryViewModelNew.Factory }
+    private val viewModel: PassageHistoryBanksVm by viewModels { PassageHistoryBanksVm.Factory }
     private lateinit var binding: DialogComplaintFormNewOldBinding
     private val id: Int = complaintId
     private lateinit var bankNames: MutableList<String>

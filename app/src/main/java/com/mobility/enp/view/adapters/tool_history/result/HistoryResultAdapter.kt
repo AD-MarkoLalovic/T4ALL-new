@@ -16,14 +16,14 @@ import com.mobility.enp.data.model.api_tool_history.listing.TotalAmount
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.view.adapters.tool_history.main_screen.TotalCostPassageAdapter
-import com.mobility.enp.viewmodel.PassageHistoryViewModel
+import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HistoryResultAdapter(
     val tags: List<Tag>,
-    val viewModel: PassageHistoryViewModel,
+    val viewModel: UserPassViewModel,
     private val complaintInterface: HistoryContentPagingAdapter.SendToFragment,
     val lifecycleOwner: LifecycleOwner, val countryCode: String
 ) :
@@ -43,7 +43,7 @@ class HistoryResultAdapter(
         fun bind(
             toolHistoryIndex: TagUtilCycler,
             position: Int,
-            viewModel: PassageHistoryViewModel,
+            viewModel: UserPassViewModel,
             context: Context,
             holder: TagsViewHolder,
             complaintInterface: HistoryContentPagingAdapter.SendToFragment

@@ -113,6 +113,14 @@ interface ApiService {
     ): Call<ToolHistoryListing>
 
     @GET("/api/v1/history/transit")
+    suspend fun getToolHistoryTransitNew(
+        @Query("filter[serial_numbers]") serialNumbers: String,  // can be multiple but then send them as 18150144618,18150144612 string
+        @Query("page") page: String, // current page
+        @Query("perPage") perPage: String, // items per page
+        @Query("lang") language: String
+    ): Response<ToolHistoryListing>
+
+    @GET("/api/v1/history/transit")
     fun getToolHistoryTransitResultFragment(
         @Query("filter[serial_numbers]") serialNumbers: String,  // can be multiple but then send them as 18150144618,18150144612 string
         @Query("page") page: String, // current page

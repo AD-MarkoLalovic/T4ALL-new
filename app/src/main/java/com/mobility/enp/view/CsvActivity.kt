@@ -5,13 +5,14 @@ import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.mobility.enp.databinding.ActivityCsvBinding
-import com.mobility.enp.viewmodel.PassageHistoryViewModel
+import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.launch
 
 class CsvActivity : AppCompatActivity() {
-    private val viewModel: PassageHistoryViewModel by viewModels()
+    private val vModel: UserPassViewModel by viewModels { UserPassViewModel.Factory }
     private lateinit var binding: ActivityCsvBinding
 
     companion object {
@@ -30,7 +31,7 @@ class CsvActivity : AppCompatActivity() {
 
     private fun loadCSV() {
         lifecycleScope.launch {
-            val byteArray = viewModel.fetchCsvData()
+            val byteArray = vModel.fetchCsvData()
             byteArray?.let {
                 binding.tableView.fromBytes(it).load()
             } ?: run {
