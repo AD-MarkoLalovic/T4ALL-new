@@ -541,23 +541,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         database.toolListingDao()?.insertData(toolHistoryListing)
     }
 
-    suspend fun getToolHistoryIndex(
-        context: Context,
-        isInternetAvailable: MutableLiveData<Boolean>
-    ) {
-
-        if (Repository.isNetworkAvailable(context)) {
-            database.loginDao()?.fetchAllowedUsers()?.accessToken?.let {
-                Repository.getToolHistoryIndex(_data, it, _errorBody)
-            } ?: run {
-                Log.d(TAG, "database initialization issue: ")
-            }
-        } else {
-            isInternetAvailable.postValue(false)
-        }
-
-    }
-
     suspend fun postComplaintFiltered(
         complaintBody: ComplaintBody,
         errorBody: MutableLiveData<ErrorBody>,

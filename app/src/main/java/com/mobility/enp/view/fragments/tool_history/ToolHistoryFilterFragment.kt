@@ -12,15 +12,17 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
+import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.FragmentToolHistorySearchQueryBinding
 import com.mobility.enp.network.Repository
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.select.ToolHistoryTagsAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
@@ -56,15 +58,8 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         setObservers()
         vModel.selectedTags.clear()
 
-        context?.let {
-            binding.progBar.visibility = View.VISIBLE
-
-            CoroutineScope(Dispatchers.IO).launch {
-                vModel.getToolHistoryIndex(
-                    it, isInternetAvailable
-                )
-            }
-        }
+        binding.progBar.visibility = View.VISIBLE
+        vModel.getIndexData()
 
         binding.btnSearch.setOnClickListener {
             if (vModel.selectedTags.isEmpty() && !vModel.allTagsSelected) {
@@ -158,11 +153,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
             binding.progBar.visibility = View.GONE
 
-            CoroutineScope(Dispatchers.IO).launch {
-                vModel.getToolHistoryIndex(
-                    requireContext(), isInternetAvailable
-                )
-            }
+            vModel.getIndexData()
         }
     }
 
@@ -213,37 +204,80 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             }
         }
 
-        vModel.data.observe(viewLifecycleOwner) {
-            binding.progBar.visibility = View.GONE
-            if (it.data != null) {
-                if (!it.data?.tags.isNullOrEmpty()) {
-                    binding.noData.visibility = View.GONE
-
-                    vModel.tagSerials = it.data?.tags as ArrayList<Tag>
-                    Log.d(TAG, "setObservers: ${vModel.tagSerials}")
-
-                    val adapter = ToolHistoryTagsAdapter(vModel.tagSerials, this)
-
-                    binding.cycler.adapter = adapter
-                    binding.cycler.layoutManager = LinearLayoutManager(context)
-                } else {
-                    binding.btnSearch.isEnabled = false
-                    binding.noData.visibility = View.VISIBLE
-                    Toast.makeText(context, R.string.no_passage_data, Toast.LENGTH_SHORT).show()
-                }
-
-            } else {
-                Toast.makeText(context, "Api Error", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         vModel.csvData.observe(viewLifecycleOwner) { csvData ->
             binding.progBar.visibility = View.GONE
             csvData?.let {
                 vModel.processCsvData(it)
             }
         }
+
+
+        collectLatestLifecycleFlow(vModel.baseTagDataState) { tagIndex ->
+            when (tagIndex) {
+                is SubmitResult.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.progBar.visibility = View.GONE
+                    setIndexData(tagIndex.data)
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.api_call_error))
+                }
+
+                else -> {
+                    SubmitResult.Empty
+                }
+            }
+        }
     }
+
+    private fun setIndexData(indexData: IndexData) {
+        indexData.data?.let { index ->
+            if (!index.tags.isNullOrEmpty()) {
+                binding.noData.visibility = View.GONE
+
+                vModel.tagSerials = index.tags as ArrayList<Tag>
+                Log.d(TAG, "setObservers: ${vModel.tagSerials}")
+
+                val adapter = ToolHistoryTagsAdapter(vModel.tagSerials, this)
+
+                binding.cycler.adapter = adapter
+                binding.cycler.layoutManager = LinearLayoutManager(context)
+            } else {
+                binding.btnSearch.isEnabled = false
+                binding.noData.visibility = View.VISIBLE
+                Toast.makeText(context, R.string.no_passage_data, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun showNoConnectionState() {
+        binding.progBar.visibility = View.GONE
+        noInternetMessage()
+    }
+
+    private fun noInternetMessage() {
+        val mainBinding = (activity as MainActivity).binding
+        MainActivity.showSnackMessage(getString(R.string.no_internet), mainBinding)
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
 
     override fun onSendTag(tag: Tag) {
         vModel.selectedTags.add(tag)
