@@ -23,7 +23,6 @@ import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.result.HistoryContentPagingAdapter
 import com.mobility.enp.view.adapters.tool_history.result.HistoryResultAdapter
-import com.mobility.enp.viewmodel.PassageHistoryViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,9 +32,8 @@ import kotlinx.coroutines.launch
 class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendToFragment {
 
     private lateinit var binding: FragmentToolHistorySearchResultBinding
-    private val viewModel: PassageHistoryViewModel by activityViewModels()
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
-    private val vModel: UserPassViewModel by viewModels { UserPassViewModel.Factory }
+    private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
 
     companion object {
         const val TAG = "HistoryResult"
@@ -57,7 +55,7 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated: ${viewModel.startDate.value} ${viewModel.endDate.value} ")
+        Log.d(TAG, "onViewCreated: ${vModel.startDate.value} ${vModel.endDate.value} ")
 
         setObservers()
         setAdapter()
@@ -69,14 +67,14 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
 
     private fun setAdapter() {
 
-        val listOfTags: List<Tag> = if (viewModel.allTagsSelected) {
-            viewModel.tagSerials
+        val listOfTags: List<Tag> = if (vModel.allTagsSelected) {
+            vModel.tagSerials
         } else {
-            viewModel.selectedTags
+            vModel.selectedTags
         }
 
         val adapter =
-            HistoryResultAdapter(listOfTags, viewModel, this, this, vModel.getCountryCode())
+            HistoryResultAdapter(listOfTags, vModel, this, this, vModel.getCountryCode())
         binding.cycler.adapter = adapter
         binding.cycler.layoutManager = LinearLayoutManager(context)
     }
@@ -96,7 +94,7 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
                 }
             }
         }
-        viewModel.complaintResponseFiltered.observe(viewLifecycleOwner) {
+        vModel.complaintResponseFiltered.observe(viewLifecycleOwner) {
             it?.let {
                 setAdapter()
                 binding.progBar.visibility = View.GONE
@@ -108,14 +106,14 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
     override fun sendComplaintData(complaintBody: ComplaintBody) {
         binding.progBar.visibility = View.VISIBLE
         CoroutineScope(Dispatchers.IO).launch {
-            viewModel.postComplaintFiltered(complaintBody, errorBody)
+            vModel.postComplaintFiltered(complaintBody, errorBody)
         }
     }
 
     override fun sendObjectionData(objectionBody: ObjectionBody) {
         binding.progBar.visibility = View.VISIBLE
         CoroutineScope(Dispatchers.IO).launch {
-            viewModel.postObjectionFiltered(objectionBody, errorBody)
+            vModel.postObjectionFiltered(objectionBody, errorBody)
         }
     }
 
@@ -126,7 +124,7 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
     ) {
         binding.progBar.visibility = View.VISIBLE
         CoroutineScope(Dispatchers.IO).launch {
-            viewModel.getToolHistoryListingMutableTimeFiltered(
+            vModel.getToolHistoryListingMutableTimeFiltered(
                 dataFill,
                 errorBody,
                 tagSerialNumber,

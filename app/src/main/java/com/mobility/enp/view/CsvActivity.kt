@@ -7,11 +7,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.mobility.enp.databinding.ActivityCsvBinding
-import com.mobility.enp.viewmodel.PassageHistoryViewModel
+import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.launch
 
 class CsvActivity : AppCompatActivity() {
-    private val viewModel: PassageHistoryViewModel by viewModels()
+    private val viewModel: UserPassViewModel by viewModels()
     private lateinit var binding: ActivityCsvBinding
 
     companion object {

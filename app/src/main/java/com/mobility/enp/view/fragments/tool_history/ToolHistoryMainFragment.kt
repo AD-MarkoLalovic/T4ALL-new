@@ -26,7 +26,6 @@ import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingPassageAdapter
-import com.mobility.enp.viewmodel.PassageHistoryViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,8 +40,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
     private var _binding: FragmentPassageHistoryBinding? = null
     private val binding: FragmentPassageHistoryBinding get() = _binding!!
-    private val viewModel: PassageHistoryViewModel by activityViewModels()
-    private val vModel: UserPassViewModel by viewModels { UserPassViewModel.Factory }
+    private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
 
     private lateinit var isInternetAvailable: MutableLiveData<Boolean>
 
@@ -60,7 +58,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.nullDates()
+        vModel.nullDates()
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
 
@@ -238,10 +236,10 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         binding.progBar.visibility = View.GONE
 
         CoroutineScope(Dispatchers.IO).launch {
-            viewModel.insertRoomToolHistoryIndexData(indexData)
+            vModel.insertRoomToolHistoryIndexData(indexData)
         }
 
-        viewModel.tagSerials = indexData.data?.tags as ArrayList<Tag>
+        vModel.tagSerials = indexData.data?.tags as ArrayList<Tag>
 
         val toolHistoryListingAdapter =
             ToolHistoryListingAdapter(indexData, vModel, this, this, this)
@@ -275,7 +273,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     override fun psgData(toolHistoryListing: ToolHistoryListing) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                viewModel.insertPassageData(toolHistoryListing)
+                vModel.insertPassageData(toolHistoryListing)
             }
         }
     }

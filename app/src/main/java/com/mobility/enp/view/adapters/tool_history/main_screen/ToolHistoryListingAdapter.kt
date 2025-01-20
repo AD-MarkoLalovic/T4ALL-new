@@ -15,7 +15,6 @@ import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.listing.TotalAmount
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
-import com.mobility.enp.viewmodel.PassageHistoryViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

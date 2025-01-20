@@ -21,8 +21,9 @@ class ToolHistoryTagsAdapter(private val listOfTags: ArrayList<Tag>, tagInterfac
 
         fun bind(tag: Tag) {
             if (tag.registrationPlate.isNullOrEmpty()) { // ignore recommendation android studio is wrong here
-                tag.registrationPlate = ""
+                tag.registrationPlate = "null"
             }
+
             binding.data = tag
 
             binding.checkbox.setOnClickListener {

@@ -23,7 +23,6 @@ import com.mobility.enp.databinding.FragmentToolHistorySearchQueryBinding
 import com.mobility.enp.network.Repository
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.select.ToolHistoryTagsAdapter
-import com.mobility.enp.viewmodel.PassageHistoryViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,9 +34,8 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
     private var _binding: FragmentToolHistorySearchQueryBinding? = null
     private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
-    private val viewModel: PassageHistoryViewModel by activityViewModels()
     private lateinit var isInternetAvailable: MutableLiveData<Boolean>
-    private val vModel: UserPassViewModel by viewModels { UserPassViewModel.Factory }
+    private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
 
     companion object {
         const val TAG = "ToolDetails"
@@ -56,20 +54,20 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         super.onViewCreated(view, savedInstanceState)
 
         setObservers()
-        viewModel.selectedTags.clear()
+        vModel.selectedTags.clear()
 
         context?.let {
             binding.progBar.visibility = View.VISIBLE
 
             CoroutineScope(Dispatchers.IO).launch {
-                viewModel.getToolHistoryIndex(
+                vModel.getToolHistoryIndex(
                     it, isInternetAvailable
                 )
             }
         }
 
         binding.btnSearch.setOnClickListener {
-            if (viewModel.selectedTags.isEmpty() && !viewModel.allTagsSelected) {
+            if (vModel.selectedTags.isEmpty() && !vModel.allTagsSelected) {
                 Toast.makeText(context, R.string.please_select_tag, Toast.LENGTH_SHORT).show()
             } else {
                 if (Repository.isNetworkAvailable(requireContext())) {
@@ -95,17 +93,17 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
         binding.chkBox.setOnClickListener {
             val isChecked = binding.chkBox.isChecked
-            viewModel.allTagsSelected = isChecked
+            vModel.allTagsSelected = isChecked
             setCheckboxColors(isChecked)
         }
 
-        viewModel.startDate.observe(viewLifecycleOwner) { data ->
+        vModel.startDate.observe(viewLifecycleOwner) { data ->
             if (data != null) {
                 val textView = binding.txtDateLeft as TextView
                 textView.text = data.formattedTime
             }
         }
-        viewModel.endDate.observe(viewLifecycleOwner) { data ->
+        vModel.endDate.observe(viewLifecycleOwner) { data ->
             if (data != null) {
                 val textEndDate = binding.txtDateRight as TextView
                 textEndDate.text = data.formattedTime
@@ -113,34 +111,34 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         }
 
         binding.txtDateLeft.setOnClickListener {
-            viewModel.showDatePicker(true, requireContext())
+            vModel.showDatePicker(true, requireContext())
         }
         binding.txtDateRight.setOnClickListener {
-            viewModel.showDatePicker(false, requireContext())
+            vModel.showDatePicker(false, requireContext())
         }
 
         setSelectedButton(binding.buttonAll)
 
         binding.buttonAll.setOnClickListener {
             setSelectedButton(binding.buttonAll)
-            viewModel.selectedCurrency = ""
+            vModel.selectedCurrency = ""
         }
         binding.buttonRSD.setOnClickListener {
             setSelectedButton(binding.buttonRSD)
-            viewModel.selectedCurrency = getString(R.string.rsd)
+            vModel.selectedCurrency = getString(R.string.rsd)
         }
         binding.buttonEUR.setOnClickListener {
             setSelectedButton(binding.buttonEUR)
-            viewModel.selectedCurrency = getString(R.string.eur)
+            vModel.selectedCurrency = getString(R.string.eur)
         }
         binding.buttonMKD.setOnClickListener {
             setSelectedButton(binding.buttonMKD)
-            viewModel.selectedCurrency = getString(R.string.mkd)
+            vModel.selectedCurrency = getString(R.string.mkd)
         }
         binding.exportBlock.setOnClickListener {
             binding.progBar.visibility = View.VISIBLE
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                viewModel.getCsvData(requireContext())
+                vModel.getCsvData(requireContext())
             }
         }
     }
@@ -161,7 +159,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             binding.progBar.visibility = View.GONE
 
             CoroutineScope(Dispatchers.IO).launch {
-                viewModel.getToolHistoryIndex(
+                vModel.getToolHistoryIndex(
                     requireContext(), isInternetAvailable
                 )
             }
@@ -203,7 +201,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             }
         }
 
-        viewModel.errorBody.observe(viewLifecycleOwner) { errorBody ->
+        vModel.errorBody.observe(viewLifecycleOwner) { errorBody ->
             binding.progBar.visibility = View.GONE
             context?.let { context ->
                 Toast.makeText(
@@ -215,16 +213,16 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             }
         }
 
-        viewModel.data.observe(viewLifecycleOwner) {
+        vModel.data.observe(viewLifecycleOwner) {
             binding.progBar.visibility = View.GONE
             if (it.data != null) {
                 if (!it.data?.tags.isNullOrEmpty()) {
                     binding.noData.visibility = View.GONE
 
-                    viewModel.tagSerials = it.data?.tags as ArrayList<Tag>
-                    Log.d(TAG, "setObservers: ${viewModel.tagSerials}")
+                    vModel.tagSerials = it.data?.tags as ArrayList<Tag>
+                    Log.d(TAG, "setObservers: ${vModel.tagSerials}")
 
-                    val adapter = ToolHistoryTagsAdapter(viewModel.tagSerials, this)
+                    val adapter = ToolHistoryTagsAdapter(vModel.tagSerials, this)
 
                     binding.cycler.adapter = adapter
                     binding.cycler.layoutManager = LinearLayoutManager(context)
@@ -239,7 +237,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             }
         }
 
-        viewModel.csvData.observe(viewLifecycleOwner) { csvData ->
+        vModel.csvData.observe(viewLifecycleOwner) { csvData ->
             binding.progBar.visibility = View.GONE
             csvData?.let {
                 vModel.processCsvData(it)
@@ -248,13 +246,13 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     }
 
     override fun onSendTag(tag: Tag) {
-        viewModel.selectedTags.add(tag)
-        Log.d(TAG, "onSendTag: ${viewModel.selectedTags}")
+        vModel.selectedTags.add(tag)
+        Log.d(TAG, "onSendTag: ${vModel.selectedTags}")
     }
 
     override fun onTagRemove(tag: Tag) {
-        viewModel.selectedTags.remove(tag)
-        Log.d(TAG, "onSendTag: ${viewModel.selectedTags}")
+        vModel.selectedTags.remove(tag)
+        Log.d(TAG, "onSendTag: ${vModel.selectedTags}")
     }
 
     private fun setCheckboxColors(isChecked: Boolean) {
