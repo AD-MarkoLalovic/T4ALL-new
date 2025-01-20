@@ -10,14 +10,18 @@ import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.TagUtilCycler
+import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.listing.TotalAmount
-import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class ToolHistoryListingAdapter(
@@ -38,6 +42,7 @@ class ToolHistoryListingAdapter(
         val binding: ToolHistoryIndexCardBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
+
         fun bind(
             toolHistoryIndex: TagUtilCycler,
             position: Int,
@@ -51,7 +56,8 @@ class ToolHistoryListingAdapter(
 
             val itemSerialNumber = toolHistoryIndex.serialNumber
 
-            val initDataTransfer = object : PassageDataInterface {
+            val contentInterface = object : PassageDataInterface {
+
                 override fun onOk(toolHistoryListing: ToolHistoryListing) {
                     toolHistoryListing.serial = itemSerialNumber
                     passageData.psgData(toolHistoryListing)
@@ -90,17 +96,39 @@ class ToolHistoryListingAdapter(
                 }
             }
 
-            CoroutineScope(Dispatchers.IO).launch {
-                viewModel.getToolHistoryTransit(
-                    initDataTransfer, context, toolHistoryIndex.serialNumber, 1
-                )   // fetch initial data here
 
+            val indexListing =
+                MutableStateFlow<SubmitResult<ToolHistoryListing>>(SubmitResult.Loading)
+
+            collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
+                when (serverResponse) {
+                    is SubmitResult.Success -> {
+                        contentInterface.onOk(serverResponse.data)
+                    }
+
+                    is SubmitResult.FailureServerError -> {
+                        logError(context.resources.getString(R.string.server_error_msg))
+                    }
+
+                    is SubmitResult.FailureApiError -> {
+                        logError(context.resources.getString(R.string.api_call_error))
+                    }
+
+                    else -> {
+                        SubmitResult.Empty
+                    }
+                }
+            }
+
+
+            if (viewModel.internetAvailable()) {
+                viewModel.getToolHistoryTransit(indexListing,toolHistoryIndex.serialNumber,1)
+            } else {
+                viewModel.fetchStoredData(contentInterface, toolHistoryIndex.serialNumber)
             }
 
             binding.executePendingBindings()
         }
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsViewHolder {
@@ -110,6 +138,10 @@ class ToolHistoryListingAdapter(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
+    }
+
+    private fun logError(string: String) {
+        Log.d(TAG, "showError: $string")
     }
 
     override fun getItemCount(): Int = toolHistoryIndex.data?.tags?.size ?: 0
@@ -153,4 +185,5 @@ class ToolHistoryListingAdapter(
     interface SavePassageData {
         fun psgData(toolHistoryListing: ToolHistoryListing)
     }
+
 }

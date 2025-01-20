@@ -220,29 +220,53 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
-
-    suspend fun getToolHistoryTransit(
-        dataInterface: ToolHistoryListingAdapter.PassageDataInterface,
-        context: Context,
+    fun getToolHistoryTransit(
+        flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
         tagSerialNumber: String,
         currentPage: Int
     ) {
-        if (Repository.isNetworkAvailable(context)) {
-            repository.getToken()?.let { token ->
-                Repository.getToolHistoryListing(
-                    dataInterface,
-                    token,
-                    tagSerialNumber,
-                    currentPage,
-                    itemsPerPage,
-                    repository.fetchContext()
-                )
-            }
-        } else {
-            viewModelScope.launch {// fetch stored data send back to adapter with interface
-                repository.fetchPassageDataBySerial(tagSerialNumber)?.let {
-                    dataInterface.onOk(it)
+        flow.value = SubmitResult.Loading
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.getTagFill(tagSerialNumber, currentPage, itemsPerPage)
+            val body = result.getOrNull()
+            body?.let { data ->
+
+                if (result.isSuccess) {
+                    flow.value = SubmitResult.Success(body)
+                } else {
+                    when (val error = result.exceptionOrNull()) {
+                        is NetworkError.ServerError -> {
+                            Log.d(TAG, "Error while fetching tag serial data")
+                            _baseTagDataState.value = SubmitResult.FailureServerError
+                        }
+
+                        is NetworkError.NoConnection -> {
+                            _baseTagDataState.value = SubmitResult.FailureNoConnection
+                        }
+
+                        is NetworkError.ApiError -> {
+                            _baseTagDataState.value =
+                                SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                            Log.d(TAG, "api error ${error.errorResponse.message}")
+                        }
+
+                        else -> {}
+                    }
                 }
+            }
+        }
+
+    }
+
+
+    fun fetchStoredData(
+        dataInterface: ToolHistoryListingAdapter.PassageDataInterface,
+        tagSerialNumber: String
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.fetchPassageDataBySerial(tagSerialNumber)?.let {
+                dataInterface.onOk(it)
             }
         }
     }
@@ -764,5 +788,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
-
+    fun internetAvailable(): Boolean {
+        return repository.isInternetAvailable()
+    }
 }

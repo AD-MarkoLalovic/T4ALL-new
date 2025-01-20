@@ -98,6 +98,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                 textView.text = data.formattedTime
             }
         }
+
         vModel.endDate.observe(viewLifecycleOwner) { data ->
             if (data != null) {
                 val textEndDate = binding.txtDateRight as TextView
@@ -108,6 +109,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         binding.txtDateLeft.setOnClickListener {
             vModel.showDatePicker(true, requireContext())
         }
+
         binding.txtDateRight.setOnClickListener {
             vModel.showDatePicker(false, requireContext())
         }
@@ -118,18 +120,22 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             setSelectedButton(binding.buttonAll)
             vModel.selectedCurrency = ""
         }
+
         binding.buttonRSD.setOnClickListener {
             setSelectedButton(binding.buttonRSD)
             vModel.selectedCurrency = getString(R.string.rsd)
         }
+
         binding.buttonEUR.setOnClickListener {
             setSelectedButton(binding.buttonEUR)
             vModel.selectedCurrency = getString(R.string.eur)
         }
+
         binding.buttonMKD.setOnClickListener {
             setSelectedButton(binding.buttonMKD)
             vModel.selectedCurrency = getString(R.string.mkd)
         }
+
         binding.exportBlock.setOnClickListener {
             binding.progBar.visibility = View.VISIBLE
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
