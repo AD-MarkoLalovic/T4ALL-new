@@ -78,6 +78,20 @@ import java.util.UUID
 
 class UserPassViewModel(private val repository: PassageHistoryRepository) : ViewModel() {
 
+
+    companion object {
+        const val TAG = "PassViewModel"
+
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val myRepository = (this[APPLICATION_KEY] as MyApplication).passageHistoryRepository
+                UserPassViewModel(
+                    repository = myRepository
+                )
+            }
+        }
+    }
+
     private val _baseTagDataState = MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)
     val baseTagDataState: StateFlow<SubmitResult<IndexData>> get() = _baseTagDataState
 
@@ -187,6 +201,54 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
+    fun getToolHistoryTransitResult(
+        flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
+        tagSerialNumber: String,
+        currentPage: Int,
+        dateFrom: String,
+        dateTo: String
+    ) {
+        flow.value = SubmitResult.Loading
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.getToolHistoryTransitResult(
+                tagSerialNumber,
+                currentPage.toString(),
+                itemsPerPage,
+                dateFrom,
+                dateTo,
+                selectedCurrency
+            )
+            val body = result.getOrNull()
+            body?.let { data ->
+
+                if (result.isSuccess) {
+                    flow.value = SubmitResult.Success(body)
+                } else {
+                    when (val error = result.exceptionOrNull()) {
+                        is NetworkError.ServerError -> {
+                            Log.d(TAG, "Error while fetching tag serial data")
+                            _baseTagDataState.value = SubmitResult.FailureServerError
+                        }
+
+                        is NetworkError.NoConnection -> {
+                            _baseTagDataState.value = SubmitResult.FailureNoConnection
+                        }
+
+                        is NetworkError.ApiError -> {
+                            _baseTagDataState.value =
+                                SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                            Log.d(TAG, "api error ${error.errorResponse.message}")
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+
+    }
+
     fun postObjection(objectionBody: ObjectionBody) {
         _complaintObjectionState.value = SubmitResult.Loading
 
@@ -262,6 +324,18 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     fun fetchStoredData(
         dataInterface: ToolHistoryListingAdapter.PassageDataInterface,
+        tagSerialNumber: String
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.fetchPassageDataBySerial(tagSerialNumber)?.let {
+                dataInterface.onOk(it)
+            }
+        }
+    }
+
+
+    fun fetchStoredData(
+        dataInterface: HistoryResultAdapter.PassageDataInterface,
         tagSerialNumber: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -527,19 +601,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
-    companion object {
-        const val TAG = "PassViewModel"
-
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val myRepository = (this[APPLICATION_KEY] as MyApplication).passageHistoryRepository
-                UserPassViewModel(
-                    repository = myRepository
-                )
-            }
-        }
-    }
-
 
     private var _complaintResponseFiltered: MutableLiveData<LostTagResponse> = MutableLiveData()
     val complaintResponseFiltered: LiveData<LostTagResponse> get() = _complaintResponseFiltered
@@ -603,35 +664,13 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 requestedPage,
                 itemsPerPage,
                 repository.fetchContext(),
-                dateFrom!!,
-                dateTo!!,
+                dateFrom?: "",
+                dateTo?:"",
                 selectedCurrency
             )
         }
     }
 
-
-    suspend fun getToolHistoryTransitResult(
-        dataInterface: HistoryResultAdapter.PassageDataInterface,
-        tagSerialNumber: String,
-        currentPage: Int,
-        dateFrom: String,
-        dateTo: String
-    ) {
-        database.loginDao()?.fetchAllowedUsers()?.accessToken?.let {
-            Repository.getToolHistoryListingResult(
-                dataInterface,
-                it,
-                tagSerialNumber,
-                currentPage,
-                itemsPerPage,
-                dateFrom,
-                dateTo,
-                repository.fetchContext(),
-                selectedCurrency
-            )
-        }
-    }
 
     fun showDatePicker(fromDate: Boolean, context: Context) {
         viewModelScope.launch {

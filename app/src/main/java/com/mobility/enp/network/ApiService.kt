@@ -131,6 +131,17 @@ interface ApiService {
         @Query("filter[currency]") currency: String
     ): Call<ToolHistoryListing>
 
+    @GET("/api/v1/history/transit")
+    suspend fun getToolHistoryTransitResultFragmentNew(
+        @Query("filter[serial_numbers]") serialNumbers: String,  // can be multiple but then send them as 18150144618,18150144612 string
+        @Query("page") page: String, // current page
+        @Query("perPage") perPage: String, // items per page
+        @Query("filter[date_from]") dateFrom: String,  // format to send dd.MM.yyyy
+        @Query("filter[date_to]") dateTo: String,
+        @Query("lang") language: String,
+        @Query("filter[currency]") currency: String
+    ): Response<ToolHistoryListing>
+
     @GET("/api/v1/bills")
     fun getInvoicesIndex(
         @Query(value = "lang") language: String,

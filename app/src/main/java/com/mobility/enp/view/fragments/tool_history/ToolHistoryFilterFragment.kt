@@ -68,7 +68,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             if (vModel.selectedTags.isEmpty() && !vModel.allTagsSelected) {
                 Toast.makeText(context, R.string.please_select_tag, Toast.LENGTH_SHORT).show()
             } else {
-                if (!vModel.internetAvailable()) {
+                if (vModel.internetAvailable()) {
                     findNavController().navigate(ToolHistoryFilterFragmentDirections.actionToolHistorySearchFragmentToToolHistorySearchResultFragment())
                 } else {
                     val bundle = Bundle().apply {

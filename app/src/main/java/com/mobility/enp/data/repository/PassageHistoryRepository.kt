@@ -8,7 +8,6 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.pdf_table.CsvTable
-import com.mobility.enp.data.model.pdf_table.PdfTable
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import kotlinx.coroutines.Dispatchers
@@ -50,9 +49,11 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         return Result.failure(NetworkError.ServerError)
     }
 
-    suspend fun getTagFill(tagSerialNumber: String,
-                            page: Int,
-                            perPage: Int,):Result<ToolHistoryListing>{
+    suspend fun getTagFill(
+        tagSerialNumber: String,
+        page: Int,
+        perPage: Int,
+    ): Result<ToolHistoryListing> {
         if (!isNetworkAvailable()) {
             return Result.failure(NetworkError.NoConnection)
         }
@@ -61,8 +62,52 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
         userToken?.let { token ->
             return try {
-                val response = apiService(token).getToolHistoryTransitNew(tagSerialNumber,
-                    page.toString(), perPage.toString(),getLangKey())
+                val response = apiService(token).getToolHistoryTransitNew(
+                    tagSerialNumber,
+                    page.toString(), perPage.toString(), getLangKey()
+                )
+                if (response.isSuccessful) {
+                    response.body()?.let { indexData ->
+                        Result.success(indexData)
+                    } ?: Result.failure(NetworkError.ServerError)
+                } else {
+                    response.errorBody()?.let { errorBody ->
+                        val errorResponse = parseErrorResponse(errorBody)
+                        Result.failure(NetworkError.ApiError(errorResponse))
+                    } ?: Result.failure(NetworkError.ServerError)
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "getIndexData: ${e.message} ${e.cause}")
+                Result.failure(NetworkError.ServerError)
+            }
+        }
+
+        return Result.failure(NetworkError.ServerError)
+    }
+
+    suspend fun getToolHistoryTransitResult(
+        tagSerialNumber: String, currentPage: String,
+        itemPerPage: Int, dateFrom: String, dateTo: String, selectedCurrency: String
+    ): Result<ToolHistoryListing> {
+
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken()
+
+        userToken?.let {
+            return try {
+                val response = apiService(it).getToolHistoryTransitResultFragmentNew(
+                    tagSerialNumber,
+                    currentPage,
+                    itemPerPage.toString(),
+                    dateFrom,
+                    dateTo,
+                    getLangKey(),
+                    selectedCurrency
+                )
+
                 if (response.isSuccessful) {
                     response.body()?.let { indexData ->
                         Result.success(indexData)
@@ -145,15 +190,15 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         }
     }
 
-    fun fetchContext():Context{
+    fun fetchContext(): Context {
         return context
     }
 
-    suspend fun deleteCsvTable(){
+    suspend fun deleteCsvTable() {
         database.csvTableDao().deleteData()
     }
 
-    suspend fun upsertCsvTable(csvTable: CsvTable){
+    suspend fun upsertCsvTable(csvTable: CsvTable) {
         database.csvTableDao().upsertData(csvTable)
     }
 
@@ -163,7 +208,9 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         }
     }
 
-    fun isInternetAvailable():Boolean{return isNetworkAvailable()}
+    fun isInternetAvailable(): Boolean {
+        return isNetworkAvailable()
+    }
 
     suspend fun fetchPassageDataBySerial(serial: String): ToolHistoryListing? {
         return withContext(Dispatchers.IO) {
