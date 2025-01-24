@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.databinding.DialogSupportBinding
+import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.viewmodel.SupportViewModel
 
@@ -74,7 +75,7 @@ class SupportDialog : DialogFragment() {
             requireContext().getString(R.string.support_successful_mail),
             requireContext().getString(R.string.support_successful_massage)
         )
-        generalDialog.show(childFragmentManager, "SupportDialog")
+        generalDialog.show(parentFragmentManager, "SupportDialog")
     }
 
     private fun setObserversError() {
@@ -114,16 +115,8 @@ class SupportDialog : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setWidthPercent(95)
+        setDimensionsPercent(95)
         isCancelable = false
-    }
-
-    private fun DialogFragment.setWidthPercent(percentage: Int) {
-        val percent = percentage.toFloat() / 100
-        val dm = Resources.getSystem().displayMetrics
-        val rect = dm.run { Rect(0, 0, widthPixels, heightPixels) }
-        val percentWidth = rect.width() * percent
-        dialog?.window?.setLayout(percentWidth.toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     override fun onDestroyView() {

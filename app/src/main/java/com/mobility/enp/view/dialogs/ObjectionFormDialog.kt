@@ -1,9 +1,7 @@
 package com.mobility.enp.view.dialogs
 
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.graphics.Color
-import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +15,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.databinding.DialogObjectionFormBinding
+import com.mobility.enp.util.setDimensionsPercent
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -24,7 +23,8 @@ import java.util.Locale
 class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objection: Int) :
     DialogFragment() {
 
-    private lateinit var binding: DialogObjectionFormBinding
+    private var _binding: DialogObjectionFormBinding? = null
+    private val binding: DialogObjectionFormBinding get() = _binding!!
     private val id: Int = objection
 
     private val stringBuild = StringBuilder()
@@ -37,15 +37,14 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
         savedInstanceState: Bundle?
     ): View {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        binding = DialogObjectionFormBinding.inflate(inflater, container, false)
+        _binding = DialogObjectionFormBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.subjectNumberVal.setText(id.toString())
-        binding.subjectNumberVal.isEnabled = false
+        binding.subjectNumberVal.setText(String.format(Locale.getDefault(), "%d", id))
 
         binding.cancelComplaintForm.setOnClickListener {
             dialog?.dismiss()
@@ -64,7 +63,6 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
                         .setPositiveButtonText(getString(R.string.confirm))
                         .build()
 
-
                 datePicker.addOnPositiveButtonClickListener {// time in long
                     try {
                         val x: String = convertLongToDateString(it)
@@ -77,13 +75,12 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
                     }
                 }
 
-
                 datePicker.show(fragmentManager, "datePicker")
 
             }
         }
 
-        binding.buttonConfirmLostTag.setOnClickListener {
+        binding.bttSendObjection.setOnClickListener {
             if (checkbox1) {
                 if (binding.subjectNumberVal.text.toString().trim().isNotEmpty()
                     && binding.complaintId.text.toString().trim().isNotEmpty()
@@ -146,15 +143,12 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
 
     override fun onStart() {
         super.onStart()
-        setWidthPercent(95)
+        setDimensionsPercent(95, 80)
     }
 
-    private fun DialogFragment.setWidthPercent(percentage: Int) {
-        val percent = percentage.toFloat() / 100
-        val dm = Resources.getSystem().displayMetrics
-        val rect = dm.run { Rect(0, 0, widthPixels, heightPixels) }
-        val percentWidth = rect.width() * percent
-        dialog?.window?.setLayout(percentWidth.toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

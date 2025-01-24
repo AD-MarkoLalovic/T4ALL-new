@@ -166,21 +166,20 @@
     <string name="bank_account_number">Broj bankovnog računa</string>
     <string name="bank_name">Naziv banke</string>
     <string name="registered_complaint">Žalba je registrovana</string>
-    <string name="br_registration">"Br. registracije "</string>
+    <string name="br_registration">Br. reklamacije</string>
     <string name="objection">Prigovor</string>
     <string name="object_of_complaint">Predmet prigovora:</string>
     <string name="subject_date">Datum predmeta:</string>
-    <string name="response_to_toll_complaint">Odgovor na žalbu o iznosu naplate cestarine na uređajima ENP</string>
+    <string name="response_to_toll_complaint">Odgovor na reklamaciju iznosa naplaćenje putarine uređajem ENP</string>
     <string name="subject_number">Broj predmeta</string>
-    <string name="object_complaint_number">Broj objekta na koji se žalba odnosi:</string>
+    <string name="object_complaint_number">Broj predmeta na koji se odnosi prigovor:</string>
     <string name="bill_downloaded_successfully">Račun je uspješno preuzet.</string>
     <string name="please_fill_all_required_data">Molimo vas da popunite sva obavezna polja</string>
     <string name="select_date">Odaberite datum</string>
     <string name="please_enter_date_manually">Molimo unesite datum ručno</string>
     <string name="response_to_complaint">Odgovor na reklamaciju o ispravnosti uređaja za ENP</string>
     <string name="response_to_report">Odgovor na prijavu izgubljenog / ukradenog uređaja za ENP</string>
-    <string name="objection_content">Sadržaj prigovora:
-    (navesti jasno razloge prigovora)</string>
+    <string name="objection_content">Sadržaj prigovora: (navesti jasno razloge prigovora)</string>
     <string name="complaint_min_length">Polje za žalbu mora sadržati
     najmanje 10 karaktera</string>
     <string name="please_enter_all_required_data">Molimo unesite sva obavezna polja</string>
@@ -304,7 +303,8 @@
     <string name="please_select_dates">Molimo odaberite datume</string>
     <string name="formatting_error">Greška u formatu</string>
     <string name="please_select_one_tag">Izvoz istorije prolaza moguć je samo za jednu OZNAKU ili za sve OZNAKE</string>
-    <string name="case_number_info">Broj predmeta odnosi se na broj pod kojim je zavedena Vaša reklamacija i koji se nalazi u odgovoru koji ste dobili od nas. Prigovori sa pogrešnim ili nepostojećim brojem neće biti uvaženi.</string>
+    <string name="case_number_info">Broj predmeta odnosi se na broj pod kojim je zavedena Vaša reklamacija
+        i koji se nalazi u odgovoru koji ste dobili od nas. Prigovori sa pogrešnim ili nepostojećim brojem neće biti uvaženi.</string>
     <string name="server_error_msg">Greška na serveru</string>
     <string name="hint_select_bank">Izaberite banku</string>
     <string name="refund_request_note">Napomena: Povraćaj sredstava je moguć isključivo na tekuće račune banaka koje posluju Republici Srbiji.</string>

@@ -174,20 +174,20 @@
     <string name="bank_account_number" translatable="true">Унесете број текуќег рачуна.</string>
     <string name="bank_name" translatable="true">име на банка</string>
     <string name="registered_complaint" translatable="true">Регистрирана рекламација</string>
-    <string name="br_registration" translatable="true">регистрација бр</string>
+    <string name="br_registration" translatable="true">Бр. рекламација</string>
     <string name="objection" translatable="true">Приговор</string>
-    <string name="object_of_complaint" translatable="true">Предмет на жалба:</string>
-    <string name="subject_date" translatable="true">Датум на тема:</string>
-    <string name="response_to_toll_complaint" translatable="true">Одговор на жалба за износот на патарина што се наплатува на уредите ENP</string>
+    <string name="object_of_complaint" translatable="true">Предмет на приговорот:</string>
+    <string name="subject_date" translatable="true">Датум на предметот:</string>
+    <string name="response_to_toll_complaint" translatable="true">Одговор на рекламација за наплатена патарина со ЕНП уред</string>
     <string name="subject_number" translatable="true">Број на предмет</string>
-    <string name="object_complaint_number" translatable="true">Број на објектот на кој се однесува жалбата:</string>
+    <string name="object_complaint_number" translatable="true">Број на предметот за кој се однесува приговорот:</string>
     <string name="bill_downloaded_successfully" translatable="true">Сметката е успешно преземена.</string>
     <string name="please_fill_all_required_data" translatable="true">Ве молиме пополнете ги сите потребни податоци</string>
     <string name="select_date" translatable="true">Изберете датум</string>
     <string name="please_enter_date_manually" translatable="true">Внесете датум рачно</string>
     <string name="response_to_complaint" translatable="true">Одговор на жалба за исправноста на уредот за ENP</string>
     <string name="response_to_report" translatable="true">Одговор на извештајот за изгубен / украден уред за ENP</string>
-    <string name="objection_content" translatable="true">Содржина на приговорот: (јасно наведете ги причините за приговорот)</string>
+    <string name="objection_content" translatable="true">Содржина на приговорот: (наведете јасни причини за приговорот)</string>
     <string name="complaint_min_length" translatable="true">Поље Разлог мора садржати најмање 10 карактера.</string>
     <string name="please_enter_all_required_data" translatable="true">Ве молиме внесете ги сите потребни податоци</string>
     <string name="no_passage_data" translatable="true">Нема податоци за премин</string>
@@ -311,7 +311,8 @@
     <string name="please_select_dates">Ве молиме изберете датуми</string>
     <string name="formatting_error">Грешка во форматот</string>
     <string name="please_select_one_tag">Извоз на историјата на премин е можен само за една ОЗНАКА или за сите ОЗНАКИ</string>
-    <string name="case_number_info">Бројот на предметот се однесува на бројот под кој е поднесена вашата рекламација и кој се наоѓа во одговорот што сте го добиле од нас. Приговорите со погрешен или непостоечки број нема да бидат прифатени.</string>
+    <string name="case_number_info">Бројот на предметот се однесува на бројот под кој е поднесена вашата рекламација
+        и кој се наоѓа во одговорот што сте го добиле од нас. Приговорите со погрешен или непостоечки број нема да бидат прифатени.</string>
     <string name="server_error_msg">Грешка на серверот</string>
     <string name="hint_select_bank">Изберете банка</string>
     <string name="refund_request_note">Напомена: Рефундирањето е можно само на тековните сметки на банките кои работат во Република Србија.</string>

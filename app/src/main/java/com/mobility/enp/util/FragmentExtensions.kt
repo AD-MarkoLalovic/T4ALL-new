@@ -1,5 +1,8 @@
 package com.mobility.enp.util
 
+import android.content.res.Resources
+import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -15,4 +18,13 @@ fun <T> Fragment.collectLatestLifecycleFlow(flow: Flow<T>, collect: suspend (T) 
             flow.collectLatest(collect)
         }
     }
+}
+
+fun DialogFragment.setDimensionsPercent(widthPercent: Int, heightPercent: Int? = null) {
+    val width = (Resources.getSystem().displayMetrics.widthPixels * (widthPercent / 100f)).toInt()
+    val height = heightPercent?.let {
+        (Resources.getSystem().displayMetrics.heightPixels * (it / 100f)).toInt()
+    } ?: ViewGroup.LayoutParams.WRAP_CONTENT
+
+    dialog?.window?.setLayout(width, height)
 }

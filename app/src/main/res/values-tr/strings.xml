@@ -176,22 +176,21 @@
     <string name="bank_account_number">Cari hesap numaranızı girin</string>
     <string name="bank_name">Banka adını girin</string>
     <string name="registered_complaint">Kayıtlı şikayet</string>
-    <string name="br_registration">br. kayıt</string>
+    <string name="br_registration">Şikayet No.</string>
     <string name="objection">İtiraz</string>
-    <string name="response_to_toll_complaint">ENP cihazlarından alınan geçiş ücreti miktarına ilişkin şikayete yanıt</string>
+    <string name="response_to_toll_complaint">OGS cihazıyla ödenen yol ücretinin tutarına şikayetin cevabı</string>
     <string name="please_fill_all_required_data">Lütfen gerekli tüm verileri doldurun</string>
     <string name="select_date">Tarih seç</string>
     <string name="please_enter_date_manually">Lütfen tarihi manuel olarak girin</string>
-    <string name="object_of_complaint">Şikayetin konusu:</string>
-    <string name="subject_date">Konu Tarihi:</string>
+    <string name="object_of_complaint">İtirazın sebebi:</string>
+    <string name="subject_date">Evrak numarası:</string>
     <string name="subject_number">Konu Numarası</string>
-    <string name="object_complaint_number">Şikayetin atıfta bulunduğu nesnenin numarası:</string>
+    <string name="object_complaint_number">İtiraz ile ilgili evrak numarası:</string>
     <string name="response_to_complaint">Cihazın ENP için doğruluğuna
         ilişkin şikayete yanıt</string>
     <string name="response_to_report">ENP için kayıp/çalıntı
         cihazı raporuna yanıt</string>
-    <string name="objection_content">İtirazın içeriği: (İtirazın
-        nedenlerini açıkça belirtin)</string>
+    <string name="objection_content">Şikayetin içeriği: (şikayetin sebeplerini net şekilde yazın)</string>
     <string name="complaint_min_length">Neden alanı en az 10 karakter içermelidir.</string>
     <string name="please_enter_all_required_data">Lütfen gerekli tüm verileri girin</string>
     <string name="no_passage_data">Geçiş verisi yok</string>

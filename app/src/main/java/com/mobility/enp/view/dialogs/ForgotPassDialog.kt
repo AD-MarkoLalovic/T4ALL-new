@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
 import com.mobility.enp.databinding.DialogForgotPassBinding
+import com.mobility.enp.util.setDimensionsPercent
 
 class ForgotPassDialog : DialogFragment() {
 
@@ -56,20 +57,8 @@ class ForgotPassDialog : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        if (isTablet(requireContext())) {
-            setWidthPercent(80)
-        } else {
-            setWidthPercent(95)
-        }
+        setDimensionsPercent(95)
         isCancelable = false
-    }
-
-    private fun DialogFragment.setWidthPercent(percentage: Int) {
-        val percent = percentage.toFloat() / 100
-        val dm = Resources.getSystem().displayMetrics
-        val rect = dm.run { Rect(0, 0, widthPixels, heightPixels) }
-        val percentWidth = rect.width() * percent
-        dialog?.window?.setLayout(percentWidth.toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     private fun isTablet(context: Context): Boolean {
