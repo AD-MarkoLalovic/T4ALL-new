@@ -179,13 +179,13 @@
     <string name="bank_account_number">Geben Sie Ihre aktuelle Kontonummer ein</string>
     <string name="bank_name">Name der Bank eingeben</string>
     <string name="registered_complaint">Registrierte Beschwerde</string>
-    <string name="br_registration">Br. Anmeldung</string>
+    <string name="br_registration">Reklamations-Nr.</string>
     <string name="objection">Einspruch</string>
-    <string name="object_of_complaint">Gegenstand der Reklamation:</string>
-    <string name="subject_date">Betreff Datum:</string>
-    <string name="response_to_toll_complaint">Antwort auf die Beschwerde über die Höhe der Maut für ENP-Geräte</string>
+    <string name="object_of_complaint">Einspruchsobjekt:</string>
+    <string name="subject_date">Artikeldatum:</string>
+    <string name="response_to_toll_complaint">Antwort auf die Beschwerde über die Höhe der Mauteinhebung durch das ENP-Gerät</string>
     <string name="subject_number">Betreffnummer</string>
-    <string name="object_complaint_number">Nummer des Objekts, auf das sich die Beschwerde bezieht:</string>
+    <string name="object_complaint_number">Artikelnummer, auf die sich der Einspruch bezieht:</string>
     <string name="bill_downloaded_successfully">Die Rechnung wurde erfolgreich heruntergeladen.</string>
     <string name="please_fill_all_required_data">Bitte füllen Sie alle erforderlichen Daten aus</string>
     <string name="select_date">Datum auswählen</string>
@@ -194,8 +194,7 @@
         über die Korrektheit des Geräts für ENP</string>
     <string name="response_to_report">Antwort auf die Meldung
         eines verlorenen/gestohlenen Geräts für ENP</string>
-    <string name="objection_content">Inhalt des Einspruchs:
-        (Begründen Sie den Einspruch deutlich)</string>
+    <string name="objection_content">Inhalt der Beschwerde: (geben Sie klar die Gründe für die Beschwerde an)</string>
     <string name="complaint_min_length">Das Feld „Grund“ muss mindestens 10
         Zeichen enthalten.</string>
     <string name="please_enter_all_required_data">Bitte geben Sie alle erforderlichen Daten ein</string>
@@ -323,7 +322,9 @@
     <string name="please_select_dates">Bitte wählen Sie Daten</string>
     <string name="formatting_error">Formatierungsfehler</string>
     <string name="please_select_one_tag">Der Export des Verlaufseintrags ist nur für ein TAG oder für alle TAGs möglich</string>
-    <string name="case_number_info">Die Artikelnummer bezieht sich auf die Nummer, unter der Ihre Beschwerde eingereicht wurde und die Sie in der Antwort finden, die Sie von uns erhalten haben. Einsprüche mit einer falschen oder nicht vorhandenen Nummer werden nicht akzeptiert.</string>
+    <string name="case_number_info">Die Artikelnummer bezieht sich auf die Nummer, unter der Ihre Beschwerde eingereicht wurde
+        und die Sie in der Antwort finden, die Sie von uns erhalten haben. Einsprüche mit einer falschen oder nicht vorhandenen
+        Nummer werden nicht akzeptiert.</string>
     <string name="server_error_msg">Serverfehler</string>
     <string name="hint_select_bank">Wählen Sie eine Bank</string>
     <string name="refund_request_note">Hinweis: Rückerstattungen sind nur auf Girokonten von Banken möglich, die in der Republik Serbien tätig sind.</string>

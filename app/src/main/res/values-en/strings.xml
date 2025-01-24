@@ -168,20 +168,20 @@
     <string name="bank_account_number">Account Number</string>
     <string name="bank_name">Bank name</string>
     <string name="registered_complaint">Complaint has been registered</string>
-    <string name="br_registration">"Registration No. "</string>
+    <string name="br_registration">Complaint No.</string>
     <string name="objection">Objection</string>
-    <string name="object_of_complaint">Object of complaint:</string>
-    <string name="subject_date">Subject Date:</string>
-    <string name="response_to_toll_complaint">Response to the complaint of the amount of toll charged to ENP devices</string>
+    <string name="object_of_complaint">Subject of the objection:</string>
+    <string name="subject_date">File date:</string>
+    <string name="response_to_toll_complaint">Response to the complaint regarding the amount of toll collection by the ETC device</string>
     <string name="subject_number">Subject Number</string>
-    <string name="object_complaint_number">Number of the object to which the complaint refers:</string>
+    <string name="object_complaint_number">File number to which the objection relates:</string>
     <string name="bill_downloaded_successfully">The bill has been downloaded successfully.</string>
     <string name="please_fill_all_required_data">Please fill all required data</string>
     <string name="select_date">Select date</string>
     <string name="please_enter_date_manually">Please enter date manually</string>
     <string name="response_to_complaint">Response to the complaint about the correctness of the device for ENP</string>
     <string name="response_to_report">Response to the report of a lost / stolen device for ENP</string>
-    <string name="objection_content">Objection content: (state clearly the reasons for the objection)</string>
+    <string name="objection_content">Content of the objection: (clearly state the reasons for the objection)</string>
     <string name="complaint_min_length">Complaint field must contain at         least 10 characters</string>
     <string name="please_enter_all_required_data">Please enter all required data</string>
     <string name="no_passage_data">No passage data</string>
@@ -304,7 +304,8 @@
     <string name="please_select_dates">Please Select Dates</string>
     <string name="formatting_error">Formatting Error</string>
     <string name="please_select_one_tag">History passage export is possible only for one TAG or for all TAGs</string>
-    <string name="case_number_info">The file number refers to the number under which your complaint has been filed and is included in the response you received from us. Objections with incorrect or nonexistent file numbers will not be considered.</string>
+    <string name="case_number_info">The file number refers to the number under which your complaint has been
+        filed and is included in the response you received from us. Objections with incorrect or nonexistent file numbers will not be considered.</string>
     <string name="server_error_msg">Server error</string>
     <string name="hint_select_bank">Select a bank</string>
     <string name="refund_request_note">Note: Refunds are only possible to current accounts of banks operating in the Republic of Serbia.</string>

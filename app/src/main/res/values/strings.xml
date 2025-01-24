@@ -194,21 +194,20 @@
     <string name="bank_account_number" translatable="true">Унесите број текућег рачуна</string>
     <string name="bank_name">Име банке</string>
     <string name="registered_complaint" translatable="true">Регистрована рекламација</string>
-    <string name="br_registration" translatable="true">Бр. Регистрација</string>
+    <string name="br_registration" translatable="true">Бр. рекламације</string>
     <string name="objection" translatable="true">Приговор</string>
     <string name="object_of_complaint" translatable="true">Предмет приговора:</string>
     <string name="subject_date" translatable="true">Датум предмета:</string>
-    <string name="response_to_toll_complaint" translatable="true">Одговор на рекламацију износа наплаћене путарине уређајима ЕНП</string>
+    <string name="response_to_toll_complaint" translatable="true">Одговор на рекламацију износа наплаћење путарине уређајем ЕНП</string>
     <string name="subject_number" translatable="true">Број предмета</string>
-    <string name="object_complaint_number" translatable="true">Број објекта на који се жалба односи:</string>
+    <string name="object_complaint_number" translatable="true">Број предмета на који се односи приговор:</string>
     <string name="please_fill_all_required_data" translatable="true">Молимо попуните све потребне податке</string>
     <string name="select_date" translatable="true">Изаберите датум</string>
     <string name="please_enter_date_manually" translatable="true">Унесите датум ручно</string>
     <string name="response_to_complaint" translatable="true">Одговор на
         приговор на исправност уређаја за ЕНП</string>
     <string name="response_to_report" translatable="true">Одговор         на пријаву изгубљеног/украденог уређаја за ЕНП</string>
-    <string name="objection_content" translatable="true">Садржај
-        приговора: (јасно навести разлоге за приговор)</string>
+    <string name="objection_content" translatable="true">Садржај приговора: (навести јасно разлоге приговора)</string>
     <string name="complaint_min_length" translatable="true">Унесите разлог
         за приговор, дужина мора бити најмање 10 карактера.</string>
     <string name="please_enter_all_required_data" translatable="true">Унесите све потребне податке</string>
@@ -371,7 +370,8 @@
     <string name="formatting_error">Грешка у формату</string>
     <string name="please_select_one_tag">Извоз историје пролаза могућ је само за једну ОЗНАКУ или за све ОЗНАКЕ</string>
     <string name="mm_dd_yyyy" translatable="false">mm/dd/yyyy</string>
-    <string name="case_number_info">Број предмета односи се на број под којим је заведена Ваша рекламација и који се налази у одговору који сте добили од нас. Приговори са погрешним или непостојећим бројем неће бити уважени.</string>
+    <string name="case_number_info">Број предмета односи се на број под којим је заведена Ваша рекламација и који се налази у одговору који сте добили од нас. Приговори са погрешним или непостојећим бројем неће бити уважени.
+</string>
     <string name="server_error_msg">Грешка на серверу</string>
     <string name="hint_select_bank">Изаберите банку</string>
     <string name="refund_request_note">Напомена: Повраћај средстава је могућ искључиво на текуће рачуне банака које послују Републици Србији.</string>
