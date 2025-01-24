@@ -13,10 +13,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_tool_history.listing.InvoiceRelation
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
+import com.mobility.enp.data.model.api_tool_history.listing.InvoiceRelation
+import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.databinding.ItemRelationPassageRealBinding
 import com.mobility.enp.view.dialogs.ComplaintFormDialog
 import com.mobility.enp.view.dialogs.ComplaintFormDialogNewOld
@@ -26,7 +26,7 @@ class HistoryContentPagingAdapter(
     val data: ToolHistoryListing,
     private val complaintInterface: SendToFragment,
     val lifecycleOwner: LifecycleOwner,
-    val tagSerialNumber: String, val countryCode:String
+    val tagSerialNumber: String, val countryCode: String
 ) :
     RecyclerView.Adapter<HistoryContentPagingAdapter.RelationViewHolder>() {
 
@@ -199,8 +199,6 @@ class HistoryContentPagingAdapter(
 
             complaintInterface.sendDataFill(currentPage + 1, dataFill, tagSerialNumber)
         } else if (lastPage == currentPage && relation[relation.size - 1] == currentItem) {
-//            Toast.makeText(context, context.getString(R.string.last_item), Toast.LENGTH_SHORT)
-//                .show()
         }
     }
 

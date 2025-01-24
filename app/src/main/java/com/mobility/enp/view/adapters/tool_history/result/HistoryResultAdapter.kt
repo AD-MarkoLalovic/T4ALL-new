@@ -10,16 +10,18 @@ import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.TagUtilCycler
+import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.listing.TotalAmount
-import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestFlow
+import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.adapters.tool_history.main_screen.TotalCostPassageAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class HistoryResultAdapter(
     val tags: List<Tag>,
@@ -49,7 +51,6 @@ class HistoryResultAdapter(
             complaintInterface: HistoryContentPagingAdapter.SendToFragment
         ) {
             // perform initial data fill // for sub adapter
-
             holder.binding.progbar.visibility = View.VISIBLE
             binding.noPassage.visibility = View.GONE
 
@@ -58,7 +59,6 @@ class HistoryResultAdapter(
                     Log.d(TAG, "OnOk : $toolHistoryListing")
 
                     holder.binding.progbar.visibility = View.GONE
-
 
                     if (!toolHistoryListing.data.sum.isNullOrEmpty()) {
                         val total = toolHistoryListing.data.sum[0].total
@@ -98,17 +98,41 @@ class HistoryResultAdapter(
             val dateFrom = viewModel.startDate.value?.formattedTime?.replace("/", ".") ?: ""
             val dateTo = viewModel.endDate.value?.formattedTime?.replace("/", ".") ?: ""
 
-            CoroutineScope(Dispatchers.IO).launch {
-                viewModel.getToolHistoryTransitResult(
-                    initDataTransfer,
-                    toolHistoryIndex.serialNumber,
-                    1, dateFrom, dateTo
-                )   // fetch initial data here
+            val indexListing =
+                MutableStateFlow<SubmitResult<ToolHistoryListing>>(SubmitResult.Loading)
 
+            collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
+                when (serverResponse) {
+                    is SubmitResult.Success -> {
+                        initDataTransfer.onOk(serverResponse.data)
+                    }
+
+                    is SubmitResult.FailureServerError -> {
+                        logError(context.resources.getString(R.string.server_error_msg))
+                    }
+
+                    is SubmitResult.FailureApiError -> {
+                        logError(context.resources.getString(R.string.api_call_error))
+                    }
+
+                    else -> {
+                        SubmitResult.Empty
+                    }
+                }
             }
+
+
+            if (viewModel.internetAvailable()) {
+                viewModel.getToolHistoryTransitResult(
+                    indexListing,
+                    toolHistoryIndex.serialNumber, 1, dateFrom, dateTo
+                )
+            } else {
+                viewModel.fetchStoredData(initDataTransfer, toolHistoryIndex.serialNumber)
+            }
+
+            binding.executePendingBindings()
         }
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsViewHolder {
@@ -153,6 +177,10 @@ class HistoryResultAdapter(
             holder,
             complaintInterface
         )
+    }
+
+    private fun logError(string: String) {
+        Log.d(ToolHistoryListingAdapter.TAG, "showError: $string")
     }
 
     interface PassageDataInterface {

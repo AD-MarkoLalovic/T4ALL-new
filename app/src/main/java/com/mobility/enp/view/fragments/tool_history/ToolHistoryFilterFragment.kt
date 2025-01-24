@@ -20,13 +20,11 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.FragmentToolHistorySearchQueryBinding
-import com.mobility.enp.network.Repository
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.select.ToolHistoryTagsAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -36,7 +34,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
     private var _binding: FragmentToolHistorySearchQueryBinding? = null
     private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
-    private lateinit var isInternetAvailable: MutableLiveData<Boolean>
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
 
     companion object {
@@ -56,16 +53,22 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         super.onViewCreated(view, savedInstanceState)
 
         setObservers()
+
         vModel.selectedTags.clear()
 
         binding.progBar.visibility = View.VISIBLE
-        vModel.getIndexData()
+
+        if (vModel.internetAvailable()) {
+            vModel.getIndexData()
+        } else {
+            checkInternet()
+        }
 
         binding.btnSearch.setOnClickListener {
             if (vModel.selectedTags.isEmpty() && !vModel.allTagsSelected) {
                 Toast.makeText(context, R.string.please_select_tag, Toast.LENGTH_SHORT).show()
             } else {
-                if (Repository.isNetworkAvailable(requireContext())) {
+                if (vModel.internetAvailable()) {
                     findNavController().navigate(ToolHistoryFilterFragmentDirections.actionToolHistorySearchFragmentToToolHistorySearchResultFragment())
                 } else {
                     val bundle = Bundle().apply {
@@ -154,7 +157,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     }
 
     private fun triggerUpdate() {
-        CoroutineScope(Dispatchers.Main).launch {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             val bindingMain = (activity as MainActivity).binding
             MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
             binding.progBar.visibility = View.GONE
@@ -164,39 +167,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     }
 
     private fun setObservers() {
-        isInternetAvailable = MutableLiveData()
-        isInternetAvailable.observe(viewLifecycleOwner) { hasInternet ->
-            if (hasInternet != null && !hasInternet) {
-
-                val bundle = Bundle().apply {
-                    putString(getString(R.string.title), getString(R.string.no_connection_title))
-                    putString(
-                        getString(R.string.subtitle),
-                        getString(R.string.please_connect_to_the_internet)
-                    )
-                }
-
-                findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
-
-                val binding = (activity as MainActivity).binding
-                MainActivity.showSnackMessage(getString(R.string.checking_for_connection), binding)
-
-                lifecycleScope.let {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        context?.let {
-                            while (true) {
-                                if (Repository.isNetworkAvailable(it)) {
-                                    triggerUpdate()
-                                    break
-                                } else {
-                                    delay(1000L)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         vModel.errorBody.observe(viewLifecycleOwner) { errorBody ->
             binding.progBar.visibility = View.GONE
@@ -245,6 +215,34 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
                 else -> {
                     SubmitResult.Empty
+                }
+            }
+        }
+    }
+
+    private fun checkInternet() {
+        if (!vModel.internetAvailable()) {
+            val bundle = Bundle().apply {
+                putString(getString(R.string.title), getString(R.string.no_connection_title))
+                putString(
+                    getString(R.string.subtitle),
+                    getString(R.string.please_connect_to_the_internet)
+                )
+            }
+
+            findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
+
+            val binding = (activity as MainActivity).binding
+            MainActivity.showSnackMessage(getString(R.string.checking_for_connection), binding)
+
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                while (true) {
+                    if (vModel.internetAvailable()) {
+                        triggerUpdate()
+                        break
+                    } else {
+                        delay(1000L)
+                    }
                 }
             }
         }
