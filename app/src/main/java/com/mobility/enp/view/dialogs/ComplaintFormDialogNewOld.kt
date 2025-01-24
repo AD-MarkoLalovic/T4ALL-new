@@ -19,6 +19,7 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.databinding.DialogComplaintFormNewOldBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
+import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.ui_models.BankUIModel
 import com.mobility.enp.viewmodel.PassageHistoryBanksVm
@@ -90,7 +91,7 @@ class ComplaintFormDialogNewOld(val onConfirmButton: (ComplaintBody) -> Unit, co
 
     override fun onStart() {
         super.onStart()
-        setWidthPercent(95)
+        setDimensionsPercent(95)
     }
 
     private fun observerBanks() {
@@ -157,14 +158,6 @@ class ComplaintFormDialogNewOld(val onConfirmButton: (ComplaintBody) -> Unit, co
 
         }
 
-    }
-
-    private fun DialogFragment.setWidthPercent(percentage: Int) {
-        val percent = percentage.toFloat() / 100
-        val dm = Resources.getSystem().displayMetrics
-        val rect = dm.run { Rect(0, 0, widthPixels, heightPixels) }
-        val percentWidth = rect.width() * percent
-        dialog?.window?.setLayout(percentWidth.toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     private fun showError(message: String) {

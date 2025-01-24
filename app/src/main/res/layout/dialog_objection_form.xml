@@ -2,72 +2,72 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="700dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/rounded_dialog_borders"
         android:backgroundTint="@color/primary_light_lightest"
-        android:padding="@dimen/dimens_10dp">
+        android:paddingHorizontal="@dimen/dimens_16dp"
+        android:paddingVertical="@dimen/dimens_22dp">
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="700dp">
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="700dp">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/txComplaintForm"
                     style="@style/H3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_margin="@dimen/dimens_10dp"
-                    android:text="@string/objection" />
+                    android:text="@string/objection"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/txSubject"
                     style="@style/CaptionRegular"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txComplaintForm"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="@dimen/dimens_26dp"
-                    android:layout_marginTop="@dimen/dimens_10dp"
-                    android:layout_marginEnd="@dimen/dimens_10dp"
-                    android:gravity="top|start"
-                    android:maxLines="3"
+                    android:layout_marginStart="@dimen/dimens_16dp"
+                    android:layout_marginTop="@dimen/dimens_16dp"
                     android:text="@string/object_complaint_number"
-                    android:textStyle="bold" />
-
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txComplaintForm" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/txtSubjectNumber"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/txSubject"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="@dimen/dimens_5dp"
                     app:boxBackgroundColor="@color/white"
-                    app:boxCornerRadiusBottomEnd="@dimen/dimens_25dp"
-                    app:boxCornerRadiusBottomStart="25dp"
-                    app:boxCornerRadiusTopEnd="@dimen/dimens_25dp"
-                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxCornerRadiusBottomEnd="@dimen/dimens_26dp"
+                    app:boxCornerRadiusBottomStart="@dimen/dimens_26dp"
+                    app:boxCornerRadiusTopEnd="@dimen/dimens_26dp"
+                    app:boxCornerRadiusTopStart="@dimen/dimens_26dp"
                     app:boxStrokeColor="@color/figmaSplashScreenColor"
                     app:boxStrokeWidth="0dp"
                     app:boxStrokeWidthFocused="@dimen/dimens_1dp"
-                    app:hintEnabled="false">
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txSubject">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/subjectNumberVal"
+                        style="@style/Paragraph"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:autofillHints="@string/subject_number"
+                        android:enabled="false"
                         android:hint="@string/subject_number"
                         android:imeOptions="actionNext"
                         android:inputType="number"
@@ -79,55 +79,50 @@
                 <TextView
                     android:id="@+id/subText"
                     style="@style/CaptionRegular"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txtSubjectNumber"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginHorizontal="@dimen/dimens_10dp"
-                    android:layout_marginTop="@dimen/dimens_10dp"
-                    android:gravity="top|start"
+                    android:layout_marginTop="@dimen/dimens_8dp"
                     android:text="@string/case_number_info"
-                    android:textColor="@color/figmaIntroEclipseColorInactive" />
+                    android:textColor="@color/figmaIntroEclipseColorInactive"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtSubjectNumber" />
 
                 <TextView
                     android:id="@+id/txSubmit"
                     style="@style/CaptionRegular"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/subText"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="@dimen/dimens_26dp"
-                    android:layout_marginTop="@dimen/dimens_10dp"
-                    android:layout_marginEnd="@dimen/dimens_10dp"
-                    android:gravity="top|start"
-                    android:maxLines="3"
+                    android:layout_marginStart="@dimen/dimens_16dp"
+                    android:layout_marginTop="@dimen/dimens_20dp"
                     android:text="@string/subject_date"
-                    android:textStyle="bold" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/subText" />
 
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/txtComplaintId"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/txSubmit"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="@dimen/dimens_5dp"
                     app:boxBackgroundColor="@color/white"
-                    app:boxCornerRadiusBottomEnd="@dimen/dimens_25dp"
-                    app:boxCornerRadiusBottomStart="25dp"
-                    app:boxCornerRadiusTopEnd="@dimen/dimens_25dp"
-                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxCornerRadiusBottomEnd="@dimen/dimens_26dp"
+                    app:boxCornerRadiusBottomStart="@dimen/dimens_26dp"
+                    app:boxCornerRadiusTopEnd="@dimen/dimens_26dp"
+                    app:boxCornerRadiusTopStart="@dimen/dimens_26dp"
                     app:boxStrokeColor="@color/figmaSplashScreenColor"
                     app:boxStrokeWidth="0dp"
                     app:boxStrokeWidthFocused="@dimen/dimens_1dp"
-                    app:hintEnabled="false">
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txSubmit">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/complaintId"
+                        style="@style/Paragraph"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableEnd="@drawable/calendar_today"
@@ -142,25 +137,23 @@
                 <TextView
                     android:id="@+id/txHintEnterRegistrationPlate"
                     style="@style/CaptionRegular"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txtComplaintId"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="@dimen/dimens_10dp"
                     android:layout_marginTop="@dimen/dimens_22dp"
                     android:text="@string/object_of_complaint"
-                    android:textStyle="bold" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtComplaintId" />
 
 
                 <RelativeLayout
                     android:id="@+id/txRegistrationPlate"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/txHintEnterRegistrationPlate"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_margin="@dimen/dimens_16dp">
+                    android:layout_marginTop="@dimen/dimens_14dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txHintEnterRegistrationPlate">
 
                     <TextView
                         android:id="@+id/textView1"
@@ -177,50 +170,47 @@
                         android:id="@+id/checkbox1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
+                        android:layout_alignTop="@id/textView1"
                         android:layout_alignBottom="@id/textView1"
-                        android:layout_alignTop="@id/textView1" />
+                        android:layout_alignParentEnd="true" />
 
                 </RelativeLayout>
 
                 <TextView
                     android:id="@+id/txPrigovor"
                     style="@style/CaptionRegular"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txRegistrationPlate"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="@dimen/dimens_26dp"
-                    android:layout_marginTop="@dimen/dimens_10dp"
-                    android:layout_marginEnd="@dimen/dimens_10dp"
+                    android:layout_marginStart="@dimen/dimens_16dp"
+                    android:layout_marginTop="18dp"
                     android:text="@string/objection_content"
-                    android:textStyle="bold" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txRegistrationPlate" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/txEnterTheReasonForTheComplaint"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txPrigovor"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="@dimen/dimens_5dp"
                     app:boxBackgroundColor="@color/white"
-                    app:boxCornerRadiusBottomEnd="@dimen/dimens_25dp"
-                    app:boxCornerRadiusBottomStart="25dp"
-                    app:boxCornerRadiusTopEnd="@dimen/dimens_25dp"
-                    app:boxCornerRadiusTopStart="25dp"
+                    app:boxCornerRadiusBottomEnd="@dimen/dimens_26dp"
+                    app:boxCornerRadiusBottomStart="@dimen/dimens_26dp"
+                    app:boxCornerRadiusTopEnd="@dimen/dimens_26dp"
+                    app:boxCornerRadiusTopStart="@dimen/dimens_26dp"
                     app:boxStrokeColor="@color/figmaSplashScreenColor"
                     app:boxStrokeWidth="0dp"
                     app:boxStrokeWidthFocused="@dimen/dimens_1dp"
-                    app:hintEnabled="false">
+                    app:hintEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txPrigovor">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/reasonForComplaintVal"
+                        style="@style/Paragraph"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="top|start"
                         android:hint="@string/enter_objection_reason"
                         android:imeOptions="normal"
                         android:textColor="@color/figmaSplashScreenColor"
@@ -228,28 +218,29 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
-                    android:id="@+id/buttonConfirmLostTag"
+                    android:id="@+id/bttSendObjection"
                     style="@style/MyButtonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txEnterTheReasonForTheComplaint"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="42dp"
-                    android:text="@string/confirm" />
+                    android:layout_marginTop="48dp"
+                    android:text="@string/confirm"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txEnterTheReasonForTheComplaint" />
 
                 <Button
                     android:id="@+id/cancelComplaintForm"
                     style="@style/MyOutlinedButtonSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txEnterTheReasonForTheComplaint"
-                    android:layout_marginTop="42dp"
+                    android:layout_marginTop="@dimen/dimens_48dp"
                     android:layout_marginEnd="@dimen/dimens_16dp"
-                    android:layout_toStartOf="@id/buttonConfirmLostTag"
-                    android:text="@string/button_close" />
+                    android:text="@string/button_close"
+                    app:layout_constraintEnd_toStartOf="@+id/bttSendObjection"
+                    app:layout_constraintTop_toBottomOf="@+id/txEnterTheReasonForTheComplaint" />
 
-            </RelativeLayout>
-        </androidx.core.widget.NestedScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </RelativeLayout>
+
 </layout>

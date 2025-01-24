@@ -104,6 +104,7 @@ class ToolHistoryListingPassageAdapter(
                 val text = context.getString(R.string.br_registration)
                 binding.complaintId.text = buildString {
                     append(text)
+                    append(" ")
                     append(relation.complaint.id)
                 }
 

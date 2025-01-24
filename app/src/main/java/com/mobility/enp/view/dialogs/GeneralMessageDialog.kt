@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.mobility.enp.databinding.GeneralDialogBinding
+import com.mobility.enp.util.setDimensionsPercent
 
 class GeneralMessageDialog(
     private val title: String,
@@ -45,16 +46,8 @@ class GeneralMessageDialog(
 
     override fun onStart() {
         super.onStart()
-        setWidthPercent(95)
+        setDimensionsPercent(95)
         isCancelable = false
-    }
-
-    private fun DialogFragment.setWidthPercent(percentage: Int) {
-        val percent = percentage.toFloat() / 100
-        val dm = Resources.getSystem().displayMetrics
-        val rect = dm.run { Rect(0, 0, widthPixels, heightPixels) }
-        val percentWidth = rect.width() * percent
-        dialog?.window?.setLayout(percentWidth.toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     override fun onDestroyView() {

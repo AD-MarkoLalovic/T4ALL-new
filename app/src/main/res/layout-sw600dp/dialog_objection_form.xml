@@ -41,10 +41,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimens_8dp"
                 app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusBottomEnd="@dimen/dimens_84dp"
-                app:boxCornerRadiusBottomStart="@dimen/dimens_84dp"
-                app:boxCornerRadiusTopEnd="@dimen/dimens_84dp"
-                app:boxCornerRadiusTopStart="@dimen/dimens_84dp"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_26dp"
                 app:boxStrokeColor="@color/figmaSplashScreenColor"
                 app:boxStrokeWidth="0dp"
                 app:boxStrokeWidthFocused="@dimen/dimens_1dp"
@@ -95,10 +95,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusBottomEnd="@dimen/dimens_84dp"
-                app:boxCornerRadiusBottomStart="@dimen/dimens_84dp"
-                app:boxCornerRadiusTopEnd="@dimen/dimens_84dp"
-                app:boxCornerRadiusTopStart="@dimen/dimens_84dp"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_26dp"
                 app:boxStrokeColor="@color/figmaSplashScreenColor"
                 app:boxStrokeWidth="0dp"
                 app:boxStrokeWidthFocused="1dp"
@@ -148,26 +148,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txHintEnterRegistrationPlate" />
 
-            <View
-                android:id="@+id/objectionLineFirst"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dimens_1dp"
-                android:layout_marginTop="19dp"
-                android:background="@color/primary_light_light"
-                app:layout_constraintEnd_toStartOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView1" />
-
             <TextView
                 android:id="@+id/txPrigovor"
                 style="@style/CaptionRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimens_16dp"
-                android:layout_marginTop="@dimen/dimens_29dp"
+                android:layout_marginTop="@dimen/dimens_15dp"
                 android:text="@string/objection_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/objectionLineFirst" />
+                app:layout_constraintTop_toBottomOf="@+id/checkbox1" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txEnterTheReasonForTheComplaint"
@@ -176,10 +166,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimens_8dp"
                 app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusBottomEnd="@dimen/dimens_84dp"
-                app:boxCornerRadiusBottomStart="@dimen/dimens_84dp"
-                app:boxCornerRadiusTopEnd="@dimen/dimens_84dp"
-                app:boxCornerRadiusTopStart="@dimen/dimens_84dp"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_26dp"
                 app:boxStrokeColor="@color/figmaSplashScreenColor"
                 app:boxStrokeWidth="0dp"
                 app:boxStrokeWidthFocused="1dp"
@@ -200,7 +190,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                android:id="@+id/buttonConfirmLostTag"
+                android:id="@+id/bttSendObjection"
                 style="@style/MyButtonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -217,7 +207,7 @@
                 android:layout_marginTop="34dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
                 android:text="@string/button_close"
-                app:layout_constraintEnd_toStartOf="@+id/buttonConfirmLostTag"
+                app:layout_constraintEnd_toStartOf="@+id/bttSendObjection"
                 app:layout_constraintTop_toBottomOf="@+id/txEnterTheReasonForTheComplaint" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

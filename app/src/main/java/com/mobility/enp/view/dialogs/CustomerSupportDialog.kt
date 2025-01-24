@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import com.mobility.enp.R
 import com.mobility.enp.databinding.ContactFormDialogBinding
 import com.mobility.enp.util.SubmitResultCustomerSupport
+import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.CustomerSupportViewModel
 
 class CustomerSupportDialog : DialogFragment() {
@@ -34,7 +35,7 @@ class CustomerSupportDialog : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setWidthPercent(95)
+        setDimensionsPercent(95)
         isCancelable = false
     }
 
@@ -106,14 +107,6 @@ class CustomerSupportDialog : DialogFragment() {
             dismiss()
         }
 
-    }
-
-    private fun DialogFragment.setWidthPercent(percentage: Int) {
-        val percent = percentage.toFloat() / 100
-        val dm = Resources.getSystem().displayMetrics
-        val rect = dm.run { Rect(0, 0, widthPixels, heightPixels) }
-        val percentWidth = rect.width() * percent
-        dialog?.window?.setLayout(percentWidth.toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     private fun isValidEmail(email: String): Boolean {
