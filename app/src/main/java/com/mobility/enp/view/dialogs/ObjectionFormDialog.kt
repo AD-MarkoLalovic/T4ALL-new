@@ -44,6 +44,9 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.subjectNumberVal.setText(id.toString())
+        binding.subjectNumberVal.isEnabled = false
+
         binding.cancelComplaintForm.setOnClickListener {
             dialog?.dismiss()
         }
