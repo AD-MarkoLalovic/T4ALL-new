@@ -188,8 +188,7 @@
         ispravnost uredjaja za ENP</string>
     <string name="response_to_report">Odgovor na prijavu izgubljenog
         / ukradenog uredjaja za ENP</string>
-    <string name="objection_content">Sadrzaj Prigovora: (navesti
-        jasno razloge prigovora)</string>
+    <string name="objection_content">Sadržaj prigovora: (navesti jasno razloge prigovora)</string>
     <string name="complaint_min_length">Polje Razlog mora sadržati najmanje
         10 karaktera.</string>
     <string name="please_enter_all_required_data">Unesite sve potrebne podatke</string>

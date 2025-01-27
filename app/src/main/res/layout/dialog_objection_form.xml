@@ -181,7 +181,7 @@
                     style="@style/CaptionRegular"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimens_16dp"
+                    android:layout_marginHorizontal="@dimen/dimens_16dp"
                     android:layout_marginTop="18dp"
                     android:text="@string/objection_content"
                     app:layout_constraintEnd_toEndOf="parent"
