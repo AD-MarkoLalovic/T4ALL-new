@@ -82,6 +82,8 @@ class HistoryResultAdapter(
                         binding.executePendingBindings()
                     } else {
                         binding.noPassage.visibility = View.VISIBLE
+                        binding.tagSerialNumber.visibility = View.VISIBLE
+                        binding.tagSerialNumber.text = toolHistoryIndex.serialNumber
                     }
                 }
 
