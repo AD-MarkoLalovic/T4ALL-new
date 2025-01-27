@@ -130,6 +130,7 @@
             android:scrollHorizontally="true"
             android:text="@string/no_passage_data"
             android:textStyle="bold"
+            android:layout_marginTop="@dimen/dimens_20dp"
             android:visibility="gone" />
 
     </RelativeLayout>
