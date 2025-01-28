@@ -27,7 +27,7 @@
     <string name="add_tag">Dodaj tag</string>
     <string name="lost_tag">Izgubljen TAG</string>
     <string name="button_close">Zatvori</string>
-    <string name="dialog_lost_tag_message">Da li ste sigurni da želite prijaviti ovaj TAG kao izgubljen?</string>
+    <string name="dialog_lost_tag_message">Nakon slanja prijave tag će biti blokiran. Ukoliko pronađete tag, možete podneti zahtev za aktivacijom taga.</string>
     <string name="refund_request_explanation">Ukoliko ste prilikom prebacivanja Vašeg Tag uređaja sa
         prepaid režima na Toll4ALL imali sredstva na vašem uređaju molimo vas da popunite formu kako
         bi ta sredstva bila uplaćena na Vaš žiro račun. Po prijemu Vašeg zahteva uradićemo proveru u
@@ -113,7 +113,7 @@
     <string name="allow_push_notifications">Omogući push obaveštenja</string>
     <string name="change_language">Promeni jezik</string>
     <string name="all">Svi</string>
-    <string name="confirm_lost_tag">Potvrdi izgubljeni TAG</string>
+    <string name="confirm_lost_tag">Potvrdite izgubljen tag</string>
     <string name="cancel">Otkaži</string>
     <string name="show_all_tags">Prikaži sve TAG-ove</string>
     <string name="date">Datum</string>
@@ -165,7 +165,7 @@
     <string name="card_successfully_deleted">Kartica uspešno obrisana</string>
     <string name="card_not_deleted">Kartica nije obrisana</string>
     <string name="tags_with_serial_not_found">Tag sa ovim serijskim brojom nisu nadjena</string>
-    <string name="reported_lost_tag_successfully">Uspesno ste prijavili izgubljen tag</string>
+    <string name="reported_lost_tag_successfully">Успешно сте пријавили изгубљен таг.</string>
     <string name="blocked_lost_tag">Blokiran - Izgubljen tag</string>
     <string name="object_of_complaint">Predmet prigovora:</string>
     <string name="subject_date">Datum predmeta:</string>
@@ -281,9 +281,9 @@
     <string name="e_mail">E-mail</string>
     <string name="reason_for_contact">Razlog</string>
     <string name="what_is_your_message">Koja je tvoja poruka</string>
-    <string name="found_tag">Pronadjen Tag</string>
-    <string name="confirm_found_tag">Potvrdite pronadjen Tag</string>
-    <string name="report_found_tag">Da li ste sigurni da hocete da prijavite ovaj Tag kao pronadjen?</string>
+    <string name="found_tag">Pronađen tag</string>
+    <string name="confirm_found_tag">Potvrdite pronađen tag</string>
+    <string name="report_found_tag">Izjavljujem da je tag pronađen i želeo bih da se omogući ponovno korišćenje istog.</string>
     <string name="add_card_for_serbia_message">Potrebno je prvo da dodate karticu za Srbiju.</string>
     <string name="reason_for_deactivation">Razlog za deaktivaciju</string>
     <string name="deactivation_request">Zahtev za deaktivaciju</string>
@@ -325,5 +325,6 @@
     <string name="all_status_tags">Svi</string>
     <string name="delete_picture">" Obriši sliku"</string>
     <string name="first_add_card_serbia">Najpre morate dodati karticu za Srbiju.</string>
+    <string name="reported_found_tag_successfully">Uspešno ste prijavili pronađen tag.</string>
 
 </resources>

@@ -40,7 +40,7 @@
     <string name="status" translatable="true">Статус</string>
     <string name="add_tag" translatable="true">Додај таг</string>
     <string name="lost_tag" translatable="true">Изгубљен таг</string>
-    <string name="dialog_lost_tag_message" translatable="true">Да ли сте сигурни да желите да пријавите овај таг као изгубљен?</string>
+    <string name="dialog_lost_tag_message" translatable="true">Након слања пријаве таг ће бити блокиран. Уколико пронађете таг, можете поднети захтев за активацијом тага.</string>
     <string name="refund_request_explanation" translatable="true">Уколико сте приликом пребацивања Вашег Таг уређаја са препаид режима на Toll4ALL имали средства на вашем уређају молимо вас да попуните форму како би та средства била уплаћена на Ваш жиро рачун. По пријему Вашег захтева урадићемо проверу у нашем систему и извршити поврат на жељени ЖР.</string>
     <string name="amount" translatable="true">Износ</string>
     <string name="bank_account" translatable="true">Жиро рачун</string>
@@ -130,7 +130,7 @@
     <string name="allow_push_notifications" translatable="true">Дозволи примање обавештења</string>
     <string name="change_language" translatable="true">Промени језик</string>
     <string name="all" translatable="true">Свe</string>
-    <string name="confirm_lost_tag" translatable="true">Потврдите изгубљену таг</string>
+    <string name="confirm_lost_tag" translatable="true">Потврдите изгубљен таг</string>
     <string name="cancel" translatable="true">Откажи</string>
     <string name="show_all_tags" translatable="true">Прикажи све ТАГове</string>
     <string name="date" translatable="true">Датум</string>
@@ -185,7 +185,7 @@
     <string name="card_successfully_deleted" translatable="true">Картица успешно обрисана</string>
     <string name="card_not_deleted" translatable="true">Картица није обрисана</string>
     <string name="tags_with_serial_not_found" translatable="true">Ознаке са серијом нису пронађене</string>
-    <string name="reported_lost_tag_successfully" translatable="true">Пријављено је да је изгубљена ознака успешно</string>
+    <string name="reported_lost_tag_successfully" translatable="true">Успешно сте пријавили изгубљен таг.</string>
     <string name="blocked_lost_tag" translatable="true">Блокиран - Изгубљен таг</string>
     <string name="bill_downloaded_successfully" translatable="true">Рачун је успешно преузет.</string>
     <string name="licence_plate" translatable="true">Унесите регистарску ознаку</string>
@@ -319,8 +319,8 @@
     <string name="mkd" translatable="false">MKD</string>
     <string name="value">Валута</string>
     <string name="found_tag">Пронађен Таг</string>
-    <string name="confirm_found_tag">Потврдите пронађену ознаку</string>
-    <string name="report_found_tag">Да ли сте сигурни да желите да пријавите ову ознаку као пронађену?</string>
+    <string name="confirm_found_tag">Потврдите пронађен таг</string>
+    <string name="report_found_tag">Изјављујем да је таг пронађен и желео бих да се омогући поновно коришћење истог.</string>
     <string name="message">Порука</string>
     <string name="click_me">Кликните на мене</string>
     <string name="e_mail">Е-маил</string>
@@ -382,5 +382,6 @@
     <string name="all_status_tags">Сви</string>
     <string name="delete_picture">Обриши слику</string>
     <string name="first_add_card_serbia">Најпре морате додати картицу за Србију.</string>
+    <string name="reported_found_tag_successfully">Успешно сте пријавили пронађен таг.</string>
 
 </resources>
