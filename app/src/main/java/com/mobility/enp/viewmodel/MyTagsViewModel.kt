@@ -22,10 +22,16 @@ class MyTagsViewModel(application: Application) : AndroidViewModel(application) 
 
     private val _tagApiData: MutableLiveData<TagsResponse> = MutableLiveData()
     val tagApiData: LiveData<TagsResponse> get() = _tagApiData
+
     private val _lostTag: MutableLiveData<LostTagResponse> = MutableLiveData()
     val lostTag: LiveData<LostTagResponse> get() = _lostTag
+
+    private val _foundTag: MutableLiveData<LostTagResponse> = MutableLiveData()
+    val foundTag: LiveData<LostTagResponse> get() = _foundTag
+
     private val _errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     val errorBody: LiveData<ErrorBody> get() = _errorBody
+
     private var _isInternetAvailable: MutableLiveData<Boolean> = MutableLiveData()
     val isInternetAvailable: LiveData<Boolean> get() = _isInternetAvailable
 
@@ -112,7 +118,8 @@ class MyTagsViewModel(application: Application) : AndroidViewModel(application) 
         body: PostLostTag
     ) {
         database.loginDao().fetchAllowedUsers().accessToken?.let { token ->
-            Repository.postFoundLostTag(token, body.serialNumber, _errorBody, _lostTag)
+            Repository.postFoundLostTag(token, body.serialNumber, _errorBody, _foundTag)
+
         }
     }
 

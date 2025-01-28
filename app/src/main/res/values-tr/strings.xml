@@ -27,7 +27,7 @@
     <string name="add_tag">OGS ekle</string>
     <string name="lost_tag">OGS ekleme</string>
     <string name="button_close">Kapat</string>
-    <string name="dialog_lost_tag_message">Bu etiketi kayıp olarak bildirmek istediğinizden emin misiniz?</string>
+    <string name="dialog_lost_tag_message">Bildiri gönderildikten sonra tag cihazı bloke edilecek. Tagı bulmuş olduğunz takdirde, tagı aktive etme talebini yazabilirsiniz.</string>
     <string name="refund_request_explanation">OGS cihazınızda ön ödemeli moddan Toll4ALL ‘a geçtiğiniz
         zaman cihazınızda para olduysa, lütfen hesabınıza para aktarılsın diye talep formunu doldurun.
         Talep formunu doldururken satış yerde aldığınız OGS cihazının geçirme belgesini de eklemeniz gerekiyor.
@@ -115,7 +115,7 @@
     <string name="allow_push_notifications">Push bildirimlerine izin ver</string>
     <string name="change_language">Dili Değiştir</string>
     <string name="all">Hepsi</string>
-    <string name="confirm_lost_tag">Kayıp etiketi onayla</string>
+    <string name="confirm_lost_tag">Kaybolan etiketi onaylayın</string>
     <string name="cancel">İptal</string>
     <string name="show_all_tags">Tüm TAG\'leri göster</string>
     <string name="date">Tarih</string>
@@ -167,7 +167,7 @@
     <string name="card_successfully_deleted">Kart başarıyla silindi</string>
     <string name="card_not_deleted">Kart silinmedi</string>
     <string name="tags_with_serial_not_found">Seri içeren etiketler bulunamadı</string>
-    <string name="reported_lost_tag_successfully">Kayıp etiket başarıyla bildirildi</string>
+    <string name="reported_lost_tag_successfully">Kaybolan etiketi başarıyla bildirdiniz.</string>
     <string name="blocked_lost_tag">Engellendi - Etiket Kayboldu</string>
     <string name="bill_downloaded_successfully">Fatura başarıyla indirildi.</string>
     <string name="licence_plate">Tescil plakanızı yazın</string>
@@ -281,9 +281,9 @@
     <string name="e_mail">E-posta</string>
     <string name="reason_for_contact">Sebep</string>
     <string name="what_is_your_message">mesajın nedir</string>
-    <string name="found_tag">Etiket bulundu</string>
+    <string name="found_tag">Булунмус ОГС цихазı</string>
     <string name="confirm_found_tag">Bulunan etiketi onaylayın</string>
-    <string name="report_found_tag">Bu etiketi bulundu olarak bildirmek istediğinizden emin misiniz?</string>
+    <string name="report_found_tag">Etiketin bulunduğunu beyan ederim ve yeniden kullanımının mümkün olmasını isterim.</string>
     <string name="add_card_for_serbia_message">Öncelikle Sırbistan için bir kart eklemeniz gerekiyor.</string>
     <string name="reason_for_deactivation">Devre dışı bırakma nedeni</string>
     <string name="deactivation_request">Devre dışı bırakma talebi</string>
@@ -325,5 +325,6 @@
     <string name="all_status_tags">Hepsi</string>
     <string name="delete_picture">Resmi sil</string>
     <string name="first_add_card_serbia">Öncelikle Sırbistan için bir kart eklemeniz gerekir.</string>
+    <string name="reported_found_tag_successfully">Bulunan etiketi başarıyla bildirdiniz.</string>
 
 </resources>

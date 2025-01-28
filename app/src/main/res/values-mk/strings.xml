@@ -27,7 +27,7 @@
     <string name="add_tag" translatable="true">Додади таг</string>
     <string name="lost_tag" translatable="true">Изгубен таг</string>
     <string name="button_close" translatable="true">Затвори</string>
-    <string name="dialog_lost_tag_message" translatable="true">Дали сте сигурни дека сакате да пријавите овој таг како изгубен?</string>
+    <string name="dialog_lost_tag_message" translatable="true">По поднесувањето на формуларот, ТАГ-от ќе биде блокиран. Ако го најдете ТАГ уредот, ќе можете да аплицирате за активирање на ТАГ-от.</string>
     <string name="refund_request_explanation" translatable="true">Ако сте имале средства на вашиот уред
         кога го пренесувате вашиот ТАГ уред од припејд мод на Toll4ALL, ве молиме пополнете го формуларот
         така што овие средства ќе бидат заслужени на вашата банкарска сметка. По добивање на Вашето
@@ -166,7 +166,7 @@
     <string name="card_successfully_deleted" translatable="true">Картата успешно избришана</string>
     <string name="card_not_deleted" translatable="true">Картата не е избришана</string>
     <string name="tags_with_serial_not_found" translatable="true">Ознаките со серии не се пронајдени</string>
-    <string name="reported_lost_tag_successfully" translatable="true">Успешно е пријавена изгубена ознака</string>
+    <string name="reported_lost_tag_successfully" translatable="true">Успешно пријавивте изгубен таг.</string>
     <string name="blocked_lost_tag" translatable="true">Блокирана - Изгубена ознака</string>
     <string name="licence_plate" translatable="true">Унесете регистарску ознаку</string>
     <string name="input" translatable="true">Влез</string>
@@ -278,9 +278,9 @@
     <string name="e_mail">Е-пошта</string>
     <string name="reason_for_contact">Причина</string>
     <string name="what_is_your_message">Која е вашата порака</string>
-    <string name="found_tag">Најдена ознака</string>
-    <string name="confirm_found_tag">Потврдете ја пронајдената ознака</string>
-    <string name="report_found_tag">Дали сте сигурни дека сакате да ја пријавите оваа ознака како пронајдена?</string>
+    <string name="found_tag">ТАГ-от е пронађен</string>
+    <string name="confirm_found_tag">Потврдете го пронајдениот таг</string>
+    <string name="report_found_tag">Изјавувам дека тагот е пронајден и би сакал да се овозможи негово повторно користење.</string>
     <string name="add_card_for_serbia_message">Потребно е прво да додадете картичка за Србија.</string>
     <string name="reason_for_deactivation">Причина за деактивација</string>
     <string name="deactivation_request">Барање за деактивација</string>
@@ -323,6 +323,7 @@
     <string name="all_status_tags">Сите</string>
     <string name="delete_picture">Избриши слика</string>
     <string name="first_add_card_serbia">Прво, треба да додадете картичка за Србија.</string>
+    <string name="reported_found_tag_successfully">Успешно пријавивте пронајден таг.</string>
 
 
 </resources>

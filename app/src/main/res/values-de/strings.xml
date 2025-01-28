@@ -27,7 +27,7 @@
     <string name="add_tag">Tag hinzufügen</string>
     <string name="lost_tag">Verlorener Tag</string>
     <string name="button_close">Schließen</string>
-    <string name="dialog_lost_tag_message">Sind Sie sicher, dass Sie dieses Tag als verloren melden möchten?</string>
+    <string name="dialog_lost_tag_message">Nach dem Absenden des Antrags wird der Tag gesperrt. Wenn Sie ein Tag finden, können Sie eine Anfrage zur Tag-Aktivierung stellen.</string>
     <string name="refund_request_explanation">Wenn Sie beim Wechsel Ihres Tag-Geräts vom Prepaid-Modus zum Toll4ALL
         Guthaben auf Ihrem Gerät hatten, füllen Sie bitte das Formular aus, damit dieses Guthaben auf Ihr Girokonto
         überwiesen werden kann. Beim Ausfüllen des Formulars ist es notwendig, das Dokument beizufügen, das Sie bei
@@ -116,7 +116,7 @@
     <string name="allow_push_notifications">Push-Benachrichtigungen zulassen</string>
     <string name="change_language">Sprache ändern</string>
     <string name="all">Alle</string>
-    <string name="confirm_lost_tag">Verlorenes Tag bestätigen</string>
+    <string name="confirm_lost_tag">Bestätigen Sie den verlorenen Tag</string>
     <string name="cancel">Abbrechen</string>
     <string name="show_all_tags">Alle TAGS anzeigen</string>
     <string name="date">Datum</string>
@@ -171,7 +171,7 @@
     <string name="card_successfully_deleted">Karte erfolgreich gelöscht</string>
     <string name="card_not_deleted">Karte wurde nicht gelöscht</string>
     <string name="tags_with_serial_not_found">Tags mit Seriennummer nicht gefunden</string>
-    <string name="reported_lost_tag_successfully">Tag erfolgreich als verloren gemeldet</string>
+    <string name="reported_lost_tag_successfully">Sie haben den verlorenen Tag erfolgreich gemeldet.</string>
     <string name="blocked_lost_tag">Blockiert – Tag verloren</string>
     <string name="licence_plate">Registrierungslabel eingeben</string>
     <string name="input">Eingang</string>
@@ -290,8 +290,8 @@
     <string name="reason_for_contact">Grund</string>
     <string name="what_is_your_message">Was ist Ihre Botschaft?</string>
     <string name="found_tag">Tag gefunden</string>
-    <string name="confirm_found_tag">Bestätigen Sie das gefundene Tag</string>
-    <string name="report_found_tag">Sind Sie sicher, dass Sie dieses Tag als gefunden melden möchten?</string>
+    <string name="confirm_found_tag">Bestätigen Sie den gefundenen Tag</string>
+    <string name="report_found_tag">Ich erkläre, dass der Tag gefunden wurde und ich möchte, dass seine erneute Nutzung ermöglicht wird.</string>
     <string name="add_card_for_serbia_message">Sie müssen zuerst eine Karte für Serbien hinzufügen.</string>
     <string name="reason_for_deactivation">Grund für die Deaktivierung</string>
     <string name="deactivation_request">Deaktivierungsanfrage</string>
@@ -335,5 +335,6 @@
     <string name="all_status_tags">Alle</string>
     <string name="delete_picture">Bild löschen</string>
     <string name="first_add_card_serbia">Zuerst müssen Sie eine Karte für Serbien hinzufügen.</string>
+    <string name="reported_found_tag_successfully">Sie haben den gefundenen Tag erfolgreich gemeldet.</string>
 
 </resources>

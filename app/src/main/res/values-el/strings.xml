@@ -26,7 +26,7 @@
     <string name="add_tag">Προσθήκη ετικέτας</string>
     <string name="lost_tag">Χαμένη ετικέτα</string>
     <string name="button_close">Κλείσιμο</string>
-    <string name="dialog_lost_tag_message">Είστε σίγουροι ότι θέλετε να αναφέρετε αυτή την ετικέτα ως χαμένη;</string>
+    <string name="dialog_lost_tag_message">Μετά την υποβολή της αίτησης, η ετικέτα θα αποκλειστεί. Εάν βρείτε την ετικέτα, μπορείτε να υποβάλετε αίτημα για την ενεργοποίησή της.</string>
     <string name="refund_request_explanation">Εάν κατά τη μεταφορά της Tag συσκευής σας από την προπληρωμένη λειτουργία στην Toll4ALL είχατε υπόλοιπο στη συσκευή σας, παρακαλούμε συμπληρώστε τη φόρμα ώστε να μεταφερθούν τα χρήματα στον τραπεζικό σας λογαριασμό. Μετά την παραλαβή του αιτήματός σας, θα ελέγξουμε το σύστημά μας και θα επιστρέψουμε το ποσό στον επιθυμητό τραπεζικό λογαριασμό σας.</string>
     <string name="amount">Ποσό</string>
     <string name="bank_account">Τραπεζικός λογαριασμός</string>
@@ -105,7 +105,7 @@
     <string name="allow_push_notifications">Επιτρέψτε ειδοποιήσεις push</string>
     <string name="change_language">Αλλαγή γλώσσας</string>
     <string name="all">Όλα</string>
-    <string name="confirm_lost_tag">Επιβεβαίωση χαμένης ετικέτας</string>
+    <string name="confirm_lost_tag">Επιβεβαιώστε την χαμένη ετικέτα</string>
     <string name="cancel">Ακύρωση</string>
     <string name="show_all_tags">Εμφάνιση όλων των TAGS</string>
     <string name="date">Ημερομηνία</string>
@@ -157,7 +157,7 @@
     <string name="card_successfully_deleted">Η κάρτα διαγράφηκε επιτυχώς</string>
     <string name="card_not_deleted">Η κάρτα δεν διαγράφηκε</string>
     <string name="tags_with_serial_not_found">Δεν βρέθηκαν ετικέτες με τον αριθμό σειράς</string>
-    <string name="reported_lost_tag_successfully">Η χαμένη ετικέτα αναφέρθηκε επιτυχώς</string>
+    <string name="reported_lost_tag_successfully">Έχετε αναφέρει επιτυχώς την χαμένη ετικέτα.</string>
     <string name="blocked_lost_tag">Αποκλεισμένο - Χαμένη Ετικέτα</string>
     <string name="licence_plate">Εισάγετε τον αριθμό πινακίδας</string>
     <string name="input">Είσοδος</string>
@@ -272,8 +272,8 @@
     <string name="reason_for_contact">Λόγος</string>
     <string name="what_is_your_message">Ποιο είναι το μήνυμά σας</string>
     <string name="found_tag">Βρέθηκε ετικέτα</string>
-    <string name="confirm_found_tag">Επιβεβαίωση εύρεσης ετικέτας</string>
-    <string name="report_found_tag">Είστε σίγουροι ότι θέλετε να δηλώσετε αυτή την ετικέτα ως βρέθηκε;</string>
+    <string name="confirm_found_tag">Επιβεβαιώστε την βρεθείσα ετικέτα</string>
+    <string name="report_found_tag">Δηλώνω ότι η ετικέτα βρέθηκε και θα ήθελα να επιτραπεί η επαναχρησιμοποίησή της.</string>
     <string name="add_card_for_serbia_message">Πρέπει να προσθέσετε πρώτα μια κάρτα για τη Σερβία.</string>
     <string name="reason_for_deactivation">Λόγος απενεργοποίησης</string>
     <string name="deactivation_request">Αίτημα απενεργοποίησης</string>
@@ -314,5 +314,6 @@
     <string name="all_status_tags">Όλοι</string>
     <string name="delete_picture">Διαγραφή εικόνας</string>
     <string name="first_add_card_serbia">Πρώτα, πρέπει να προσθέσετε μια κάρτα για τη Σερβία.</string>
+    <string name="reported_found_tag_successfully">Έχετε αναφέρει επιτυχώς την βρεθείσα ετικέτα.</string>
 
 </resources>

@@ -27,7 +27,7 @@
     <string name="add_tag">Add Tag</string>
     <string name="lost_tag">Lost Tag</string>
     <string name="button_close">Close</string>
-    <string name="dialog_lost_tag_message">Are you sure you want to report this tag as lost?</string>
+    <string name="dialog_lost_tag_message">After submitting the report, the tag will be blocked. If you find the tag, you can submit an activation request for the tag.</string>
     <string name="refund_request_explanation">If you had funds on your Tag device when switching from prepaid mode to Toll4ALL, please fill out the form below to have those funds transferred to your bank account. When filling out the form, please attach the document you received when switching the TAG at the sales point. Upon receiving your request, we will verify it in our system and proceed with the refund to your desired bank account.</string>
     <string name="amount">Amount</string>
     <string name="bank_account">Bank Account</string>
@@ -107,7 +107,7 @@
     <string name="allow_push_notifications">Allow push notifications</string>
     <string name="change_language">Change language</string>
     <string name="all">All</string>
-    <string name="confirm_lost_tag">Confirm lost tag</string>
+    <string name="confirm_lost_tag">Confirm the lost tag</string>
     <string name="cancel">Cancel</string>
     <string name="show_all_tags">Show all TAGS</string>
     <string name="date">Date</string>
@@ -159,7 +159,7 @@
     <string name="card_successfully_deleted">Card successfully deleted</string>
     <string name="card_not_deleted">Card not deleted</string>
     <string name="tags_with_serial_not_found">Tags with serial not found</string>
-    <string name="reported_lost_tag_successfully">Reported lost tag successfully</string>
+    <string name="reported_lost_tag_successfully">You have successfully reported the lost tag.</string>
     <string name="blocked_lost_tag">Blocked - Lost Tag</string>
     <string name="licence_plate">Enter registration plate</string>
     <string name="input">Input</string>
@@ -272,8 +272,8 @@
     <string name="reason_for_contact">Reason</string>
     <string name="what_is_your_message">What is your message</string>
     <string name="found_tag">Found Tag</string>
-    <string name="confirm_found_tag">Confirm Found Tag</string>
-    <string name="report_found_tag">Are you sure you want to report this tag as found?</string>
+    <string name="confirm_found_tag">Confirm the found tag</string>
+    <string name="report_found_tag">I declare that the tag has been found, and I would like to enable its reuse.</string>
     <string name="add_card_for_serbia_message">You need to add a card for Serbia first.</string>
     <string name="reason_for_deactivation">Reason for deactivation</string>
     <string name="deactivation_request">Deactivation Request</string>
@@ -316,4 +316,5 @@
     <string name="all_status_tags">All</string>
     <string name="delete_picture">Delete Picture</string>
     <string name="first_add_card_serbia">First, you need to add a card for Serbia.</string>
+    <string name="reported_found_tag_successfully">You have successfully reported the found tag.</string>
 </resources>

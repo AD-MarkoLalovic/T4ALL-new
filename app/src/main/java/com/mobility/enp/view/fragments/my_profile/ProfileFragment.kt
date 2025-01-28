@@ -62,7 +62,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         viewModelProfile.setRefundRequestVisibility()
 
         val displayName = viewModelProfile.getDisplayName(requireContext())
-        Log.d("MARKO", "onViewCreated: $displayName")
         binding.userName.text = displayName
 
         lifecycleScope.launch {
