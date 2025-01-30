@@ -322,6 +322,46 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     }
 
 
+    fun getToolHistoryTransitPaginationUpdate(
+        flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
+        tagSerialNumber: String,
+        currentPage: Int
+    ) {
+        flow.value = SubmitResult.Loading
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.getTagFill(tagSerialNumber, currentPage, itemsPerPage)
+            val body = result.getOrNull()
+            body?.let { data ->
+
+                if (result.isSuccess) {
+                    flow.value = SubmitResult.Success(body)
+                } else {
+                    when (val error = result.exceptionOrNull()) {
+                        is NetworkError.ServerError -> {
+                            Log.d(TAG, "Error while fetching tag serial data")
+                            _baseTagDataState.value = SubmitResult.FailureServerError
+                        }
+
+                        is NetworkError.NoConnection -> {
+                            _baseTagDataState.value = SubmitResult.FailureNoConnection
+                        }
+
+                        is NetworkError.ApiError -> {
+                            _baseTagDataState.value =
+                                SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                            Log.d(TAG, "api error ${error.errorResponse.message}")
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+
+    }
+
+
     fun fetchStoredData(
         dataInterface: ToolHistoryListingAdapter.PassageDataInterface,
         tagSerialNumber: String

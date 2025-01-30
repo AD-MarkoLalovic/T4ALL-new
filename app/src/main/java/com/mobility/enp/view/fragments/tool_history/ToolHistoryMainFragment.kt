@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -31,6 +30,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -258,11 +258,13 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     }
 
     override fun sendDataFill(
-        nextPage: Int, dataFill: MutableLiveData<ToolHistoryListing>, tagSerialNumber: String
+        nextPage: Int,
+        flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
+        tagSerialNumber: String
     ) {
         binding.progBar.visibility = View.VISIBLE
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            vModel.getToolHistoryListingMutable(dataFill, tagSerialNumber, nextPage)
+            vModel.getToolHistoryTransitPaginationUpdate(flow, tagSerialNumber, nextPage)
         }
     }
 

@@ -66,38 +66,6 @@ object Repository {
         return RestClient.create(ApiService::class.java, "").apiService
     }
 
-
-    //endregion
-
-    //region test
-    fun fetchUserList(data: MutableLiveData<UserList>, context: Context, page: Int) {
-        val call = apiServiceTest().getUserList(page)
-        call.enqueue(object : Callback<UserList> {
-            override fun onResponse(call: Call<UserList>, response: Response<UserList>) {
-                if (response.isSuccessful) { // call is ok data is received ok
-                    response.body()?.let {
-                        data.postValue(it)
-                    }
-
-                } else { // call is 200 but parameters were incorrect for example it goes here
-                    Toast.makeText(
-                        context, "" + response.errorBody().toString(), Toast.LENGTH_SHORT
-                    ).show()   // change this to dialog latter same for other error messages
-                }
-            }
-
-            override fun onFailure(
-                call: Call<UserList>, t: Throwable
-            ) {   // <- api call fails codes 400 500 throwable gets the message
-                Toast.makeText(context, t.message + "  " + t.cause, Toast.LENGTH_SHORT).show()
-            }
-
-        })
-
-    }
-
-    //endregion
-
     suspend fun loginUser(
         data: MutableLiveData<UserResponse>,
         context: Context,
@@ -292,61 +260,6 @@ object Repository {
         })
     }
 
-    //updated
-    fun getToolHistoryIndex(
-        data: MutableLiveData<IndexData>, token: String, errorBody: MutableLiveData<ErrorBody>
-    ) {
-        val call = apiService(token).getToolHistoryIndex()
-        call.enqueue(object : Callback<IndexData> {
-            override fun onResponse(
-                call: Call<IndexData>, response: Response<IndexData>
-            ) {
-                if (response.isSuccessful) {
-                    data.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<IndexData>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-        })
-    }
-
-    //skipped its checked on history index same fragment
-    suspend fun getToolHistoryListing(
-        dataInterface: ToolHistoryListingAdapter.PassageDataInterface,
-        token: String,
-        tagSerialNumber: String,
-        page: Int,
-        perPage: Int,
-        application: Context
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        val call = apiService(token).getToolHistoryTransit(
-            tagSerialNumber, page.toString(), perPage.toString(), lang
-        )
-        call.enqueue(object : Callback<ToolHistoryListing> {
-            override fun onResponse(
-                call: Call<ToolHistoryListing>, response: Response<ToolHistoryListing>
-            ) {
-                if (response.isSuccessful) {
-                    response.body()?.let { dataInterface.onOk(it) }
-                } else {
-                    dataInterface.onFailed(true, response.errorBody().toString())
-                }
-            }
-
-            override fun onFailure(call: Call<ToolHistoryListing>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
-    }
-
     suspend fun getToolHistoryListingMutable(    // fills inner adapter data and sends errors to fragment if any
         data: MutableLiveData<ToolHistoryListing>,
         errorBody: MutableLiveData<ErrorBody>,
@@ -419,41 +332,6 @@ object Repository {
                 Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
             }
 
-        })
-    }
-
-    suspend fun getToolHistoryListingResult(
-        dataInterface: HistoryResultAdapter.PassageDataInterface,
-        token: String,
-        tagSerialNumber: String,
-        page: Int,
-        perPage: Int,
-        dateFrom: String,
-        dateTo: String,
-        application: Context,
-        currency: String
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        val call = apiService(token).getToolHistoryTransitResultFragment(
-            tagSerialNumber, page.toString(), perPage.toString(), dateFrom, dateTo, lang, currency
-        )
-
-        call.enqueue(object : Callback<ToolHistoryListing> {
-            override fun onResponse(
-                call: Call<ToolHistoryListing>, response: Response<ToolHistoryListing>
-            ) {
-                if (response.isSuccessful) {
-                    response.body()?.let { dataInterface.onOk(it) }
-                } else {
-                    dataInterface.onFailed(true, response.errorBody().toString())
-                }
-            }
-
-            override fun onFailure(call: Call<ToolHistoryListing>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
         })
     }
 
