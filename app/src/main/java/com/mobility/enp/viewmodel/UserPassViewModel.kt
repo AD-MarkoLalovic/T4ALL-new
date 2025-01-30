@@ -78,7 +78,6 @@ import java.util.UUID
 
 class UserPassViewModel(private val repository: PassageHistoryRepository) : ViewModel() {
 
-
     companion object {
         const val TAG = "PassViewModel"
 
@@ -249,6 +248,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     }
 
+
     fun postObjection(objectionBody: ObjectionBody) {
         _complaintObjectionState.value = SubmitResult.Loading
 
@@ -384,23 +384,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
             }
         }
     }
-
-    suspend fun getToolHistoryListingMutable(
-        data: MutableLiveData<ToolHistoryListing>, tagSerialNumber: String, requestedPage: Int
-    ) {
-        repository.getToken()?.let {
-            Repository.getToolHistoryListingMutable(
-                data,
-                _errorBody,
-                it,
-                tagSerialNumber,
-                requestedPage,
-                itemsPerPage,
-                repository.fetchContext()
-            )
-        }
-    }
-
 
     private fun postNotification() {
         val channel = NotificationChannel(
@@ -704,11 +687,60 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 requestedPage,
                 itemsPerPage,
                 repository.fetchContext(),
-                dateFrom?: "",
-                dateTo?:"",
+                dateFrom ?: "",
+                dateTo ?: "",
                 selectedCurrency
             )
         }
+    }
+
+    fun getToolHistoryTransitResultPagination(
+        flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
+        tagSerialNumber: String,
+        requestedPage: Int,
+    ) {
+        flow.value = SubmitResult.Loading
+
+        val dateFrom = startDate.value?.formattedTime?.replace("/", ".")
+        val dateTo = endDate.value?.formattedTime?.replace("/", ".")
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.getToolHistoryTransitResultPagination(
+                tagSerialNumber,
+                requestedPage.toString(),
+                itemsPerPage,
+                dateFrom ?: "",
+                dateTo ?: "",
+                selectedCurrency
+            )
+            val body = result.getOrNull()
+            body?.let { data ->
+
+                if (result.isSuccess) {
+                    flow.value = SubmitResult.Success(body)
+                } else {
+                    when (val error = result.exceptionOrNull()) {
+                        is NetworkError.ServerError -> {
+                            Log.d(TAG, "Error while fetching tag serial data")
+                            _baseTagDataState.value = SubmitResult.FailureServerError
+                        }
+
+                        is NetworkError.NoConnection -> {
+                            _baseTagDataState.value = SubmitResult.FailureNoConnection
+                        }
+
+                        is NetworkError.ApiError -> {
+                            _baseTagDataState.value =
+                                SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                            Log.d(TAG, "api error ${error.errorResponse.message}")
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+
     }
 
 

@@ -260,39 +260,6 @@ object Repository {
         })
     }
 
-    suspend fun getToolHistoryListingMutable(    // fills inner adapter data and sends errors to fragment if any
-        data: MutableLiveData<ToolHistoryListing>,
-        errorBody: MutableLiveData<ErrorBody>,
-        token: String,
-        tagSerialNumber: String,
-        page: Int,
-        perPage: Int,
-        application: Context
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        val call = apiService(token).getToolHistoryTransit(
-            tagSerialNumber, page.toString(), perPage.toString(), lang
-        )
-        call.enqueue(object : Callback<ToolHistoryListing> {
-            override fun onResponse(
-                call: Call<ToolHistoryListing>, response: Response<ToolHistoryListing>
-            ) {
-                if (response.isSuccessful) {
-                    data.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<ToolHistoryListing>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
-    }
-
     suspend fun getToolHistoryListingMutableTimeFiltered(    // fills inner adapter data and sends errors to fragment if any
         data: MutableLiveData<ToolHistoryListing>,
         errorBody: MutableLiveData<ErrorBody>,

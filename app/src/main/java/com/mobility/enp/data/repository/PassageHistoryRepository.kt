@@ -127,6 +127,49 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         return Result.failure(NetworkError.ServerError)
     }
 
+
+    suspend fun getToolHistoryTransitResultPagination(
+        tagSerialNumber: String, currentPage: String,
+        itemPerPage: Int, dateFrom: String, dateTo: String, selectedCurrency: String
+    ): Result<ToolHistoryListing> {
+
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken()
+
+        userToken?.let {
+            return try {
+                val response = apiService(it).getToolHistoryTransitResultFragmentNew(
+                    tagSerialNumber,
+                    currentPage,
+                    itemPerPage.toString(),
+                    dateFrom,
+                    dateTo,
+                    getLangKey(),
+                    selectedCurrency
+                )
+
+                if (response.isSuccessful) {
+                    response.body()?.let { indexData ->
+                        Result.success(indexData)
+                    } ?: Result.failure(NetworkError.ServerError)
+                } else {
+                    response.errorBody()?.let { errorBody ->
+                        val errorResponse = parseErrorResponse(errorBody)
+                        Result.failure(NetworkError.ApiError(errorResponse))
+                    } ?: Result.failure(NetworkError.ServerError)
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "getIndexData: ${e.message} ${e.cause}")
+                Result.failure(NetworkError.ServerError)
+            }
+        }
+
+        return Result.failure(NetworkError.ServerError)
+    }
+
     suspend fun postComplaint(complaintBody: ComplaintBody): Result<LostTagResponse> {
         if (!isNetworkAvailable()) {
             return Result.failure(NetworkError.NoConnection)

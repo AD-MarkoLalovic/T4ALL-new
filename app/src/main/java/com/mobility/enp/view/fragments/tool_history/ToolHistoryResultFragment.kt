@@ -21,12 +21,14 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
+import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.result.HistoryContentPagingAdapter
 import com.mobility.enp.view.adapters.tool_history.result.HistoryResultAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 
@@ -73,10 +75,7 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
             vModel.selectedTags
         }
 
-        val adapter =
-            HistoryResultAdapter(listOfTags, vModel, this, this, vModel.getCountryCode())
-
-        binding.cycler.adapter = adapter
+        binding.cycler.adapter = HistoryResultAdapter(listOfTags, vModel, this, this, vModel.getCountryCode())
         binding.cycler.layoutManager = LinearLayoutManager(context)
     }
 
@@ -118,14 +117,13 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
 
     override fun sendDataFill(
         nextPage: Int,
-        dataFill: MutableLiveData<ToolHistoryListing>,
+        flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
         tagSerialNumber: String
     ) {
         binding.progBar.visibility = View.VISIBLE
         viewLifecycleOwner.lifecycleScope.launch (Dispatchers.IO) {
-            vModel.getToolHistoryListingMutableTimeFiltered(
-                dataFill,
-                errorBody,
+            vModel.getToolHistoryTransitResultPagination(
+                flow,
                 tagSerialNumber,
                 nextPage
             )
