@@ -9,6 +9,7 @@ import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.UpdateUserInfoRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.BasicInformationResponse
+import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.api_my_profile.refund_request.SendRefundRequest
 import com.mobility.enp.data.model.api_my_profile.refund_request.response.RefundRequestsResponse
 import com.mobility.enp.data.model.api_my_profile.refund_request.tags.response.TagsResponseRefundRequest
@@ -80,6 +81,9 @@ interface ApiService {
 
     @GET("/api/v1/personal-data")
     suspend fun getUserPersonalData(): BasicInformationResponse
+
+    @GET("/api/v1/personal-data")
+    suspend fun getUserData(): Response<BasicInfoResponse>
 
     @GET("/api/v1/personal-data")
     suspend fun getUserCountryCode(): BasicInformationResponse
