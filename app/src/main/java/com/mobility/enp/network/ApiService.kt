@@ -43,16 +43,6 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    //region test calls
-    @GET("/api/users")
-    fun getUserList(
-        @Query("page") param: Int
-    ): Call<UserList>
-
-    //endregion
-
-    //region new api call
-
     @POST("/api/v1/login")
     fun getUserLogin(
         @Query("lang") language: String,
@@ -94,23 +84,12 @@ interface ApiService {
     fun sendContactMessage(@Body request: SupportRequest): Call<Unit>
 
     @GET("/api/v1/history/tags")
-    fun getToolHistoryIndex(): Call<IndexData>
-
-    @GET("/api/v1/history/tags")
     suspend fun getToolHistoryIndexN(): Response<IndexData>
 
     @DELETE("/api/v1/cards/{card_id}")
     fun deleteCard(
         @Path("card_id") cardId: String
     ): Call<Unit>
-
-    @GET("/api/v1/history/transit")
-    fun getToolHistoryTransit(
-        @Query("filter[serial_numbers]") serialNumbers: String,  // can be multiple but then send them as 18150144618,18150144612 string
-        @Query("page") page: String, // current page
-        @Query("perPage") perPage: String, // items per page
-        @Query("lang") language: String
-    ): Call<ToolHistoryListing>
 
     @GET("/api/v1/history/transit")
     suspend fun getToolHistoryTransitNew(

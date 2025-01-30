@@ -667,33 +667,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
-
-    //getToolHistoryListingMutable
-
-    suspend fun getToolHistoryListingMutableTimeFiltered(
-        data: MutableLiveData<ToolHistoryListing>,
-        errorBody: MutableLiveData<ErrorBody>,
-        tagSerialNumber: String,
-        requestedPage: Int
-    ) {
-        database.loginDao()?.fetchAllowedUsers()?.accessToken?.let {
-            val dateFrom = startDate.value?.formattedTime?.replace("/", ".")
-            val dateTo = endDate.value?.formattedTime?.replace("/", ".")
-            Repository.getToolHistoryListingMutableTimeFiltered(
-                data,
-                errorBody,
-                it,
-                tagSerialNumber,
-                requestedPage,
-                itemsPerPage,
-                repository.fetchContext(),
-                dateFrom ?: "",
-                dateTo ?: "",
-                selectedCurrency
-            )
-        }
-    }
-
     fun getToolHistoryTransitResultPagination(
         flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
         tagSerialNumber: String,
