@@ -2,6 +2,8 @@ package com.mobility.enp.data.repository
 
 import android.content.Context
 import android.util.Log
+import com.mobility.enp.data.model.api_my_profile.basic_information.entity.BasicInfoEntity
+import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.api_my_profile.refund_request.SendRefundRequest
 import com.mobility.enp.data.model.api_my_profile.refund_request.entity.DataRefundRequestEntity
 import com.mobility.enp.data.model.api_my_profile.refund_request.response.RefundRequestsResponse
@@ -23,6 +25,52 @@ class UserRepository(
     context: Context,
 ) : BaseRepository(database, context) {
 
+    /**
+     * Basic information GET
+     */
+
+    private suspend fun saveBasicInfo(userInfo: BasicInfoResponse) {
+        val tagsEntity = userInfo.data.toEntity()
+        database.basicInfoDao().insertBasicInfo(tagsEntity)
+    }
+
+    suspend fun getLocalBasicInfo(): BasicInfoEntity? {
+        return database.basicInfoDao().getBasicInfo()
+    }
+
+    suspend fun getBasicInfoFromServer(): Result<BasicInfoEntity> {
+        if (!isNetworkAvailable())
+            return Result.failure(NetworkError.NoConnection)
+
+        val userToken = getUserToken()
+        userToken?.let { token ->
+
+            return try {
+                val remoteData = apiService(token).getUserData()
+                if (remoteData.isSuccessful) {
+                    remoteData.body()?.let { responseBody ->
+                        saveBasicInfo(responseBody)
+
+                        val localData = getLocalBasicInfo()
+                        if (localData != null) {
+                            Result.success(localData)
+                        } else {
+                            Result.failure(NetworkError.ServerError)
+                        }
+                    } ?: Result.failure(NetworkError.ServerError)
+                } else {
+                    remoteData.errorBody()?.let { errorBody ->
+                        val apiErrorResponse = parseErrorResponse(errorBody)
+                        Result.failure(NetworkError.ApiError(apiErrorResponse))
+                    } ?: Result.failure(NetworkError.ServerError)
+                }
+            } catch (e: Exception) {
+                Log.e("BasicInfo", "Neočekivana greška: ${e.message}", e)
+                Result.failure(NetworkError.ServerError)
+            }
+        }
+        return Result.failure(NetworkError.ServerError)
+    }
 
     /**
      * Refund Request GET
@@ -80,7 +128,7 @@ class UserRepository(
         val userToken = getUserToken()
         userToken?.let { token ->
             return try {
-                val response = apiService(token).getTagsRefundRequest( 100)
+                val response = apiService(token).getTagsRefundRequest(100)
 
                 if (response.isSuccessful) {
                     response.body()?.let { tagsData ->
