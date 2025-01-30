@@ -18,9 +18,12 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.listing.InvoiceRelation
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.databinding.ItemRelationPassageRealBinding
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.dialogs.ComplaintFormDialog
 import com.mobility.enp.view.dialogs.ComplaintFormDialogNewOld
 import com.mobility.enp.view.dialogs.ObjectionFormDialog
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class HistoryContentPagingAdapter(
     val data: ToolHistoryListing,
@@ -178,27 +181,34 @@ class HistoryContentPagingAdapter(
             "onBindViewHolder: adapter pos $bindingAdapterPosition arrayTotal ${relation.size - 1} totalItems $totalItems"
         )
         if (relation[relation.size - 1] == currentItem && lastPage > currentPage) {
-            val dataFill = MutableLiveData<ToolHistoryListing>()
+            val indexListing =
+                MutableStateFlow<SubmitResult<ToolHistoryListing>>(SubmitResult.Loading)
 
-            dataFill.observe(lifecycleOwner) { newPassages ->
+            collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
                 complaintInterface.stopSpinner()
+                when (serverResponse) {
+                    is SubmitResult.Success -> {
+                        serverResponse.data.let {
+                            Log.d(TAG, "performDataFill: ${it.data.currentPage} ${it.data.lastPage}")
+                            currentPage = it.data.currentPage
 
-                newPassages?.let {
-                    Log.d(TAG, "performDataFill: ${it.data.currentPage} ${it.data.lastPage}")
-                    currentPage = it.data.currentPage
+                            for (item: InvoiceRelation in it.data.items[0].transitItems) {
+                                relation.add(item)
+                                notifyItemChanged(relation.size - 1)
+                                Log.d(TAG, "dataInserted: $item")
+                            }
+                        }
+                    }
 
-                    for (item: InvoiceRelation in it.data.items[0].transitItems) {
-                        relation.add(item)
-                        notifyItemChanged(relation.size - 1)
-                        Log.d(TAG, "dataInserted: $item")
+                    else -> {
+                        SubmitResult.Empty
                     }
                 }
-
-                dataFill.removeObservers(lifecycleOwner)
             }
 
-            complaintInterface.sendDataFill(currentPage + 1, dataFill, tagSerialNumber)
+            complaintInterface.sendDataFill(currentPage + 1, indexListing, tagSerialNumber)
         } else if (lastPage == currentPage && relation[relation.size - 1] == currentItem) {
+            //last item - toast msg removed
         }
     }
 
@@ -207,7 +217,7 @@ class HistoryContentPagingAdapter(
         fun sendObjectionData(objectionBody: ObjectionBody)
         fun sendDataFill(
             nextPage: Int,
-            dataFill: MutableLiveData<ToolHistoryListing>,
+            flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
             tagSerialNumber: String
         )
 

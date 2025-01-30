@@ -19,10 +19,7 @@ import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.viewmodel.UserPassViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 
 class ToolHistoryListingAdapter(
     private val toolHistoryIndex: IndexData,
@@ -122,7 +119,7 @@ class ToolHistoryListingAdapter(
 
 
             if (viewModel.internetAvailable()) {
-                viewModel.getToolHistoryTransit(indexListing,toolHistoryIndex.serialNumber,1)
+                viewModel.getToolHistoryTransit(indexListing, toolHistoryIndex.serialNumber, 1)
             } else {
                 viewModel.fetchStoredData(contentInterface, toolHistoryIndex.serialNumber)
             }
