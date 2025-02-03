@@ -3,6 +3,7 @@ package com.mobility.enp.view
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
@@ -42,8 +43,9 @@ class MainActivity : AppCompatActivity() {
 
         // Listener za promene destinacija
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            Log.d(TAG, "destination: $destination")
             when (destination.id) {
-                R.id.homeFragment, R.id.paymentAndPassageFragment, R.id.toolHistoryFragment, R.id.profileFragment, R.id.supportDialog, R.id.notificationDialog, R.id.noInternetConnectionDialog, R.id.deactivateAccountDialog -> {
+                R.id.homeFragment, R.id.paymentAndPassageFragment, R.id.toolHistoryFragment, R.id.profileFragment, R.id.supportDialog, R.id.notificationDialog, R.id.deactivateAccountDialog -> {
                     // Ako je destinacija neki od ovih fragmenata, prikaži BottomNavigationView
                     binding.bottomNavigation.visibility = View.VISIBLE
                     binding.toolbarShared.root.visibility = View.VISIBLE
@@ -54,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.basicInformationFragment, R.id.changePasswordFragment, R.id.invoicesFragment,
                 R.id.myTagsFragment2, R.id.addTagFragment, R.id.refundRequestFragment2, R.id.tagPickerRequestFragment,
                 R.id.settingsFragment, R.id.toolHistorySearchFragment, R.id.toolHistorySearchResultFragment,
-                R.id.termsAndPrivacyFragment, R.id.cardFragment -> {
+                R.id.termsAndPrivacyFragment, R.id.cardFragment , R.id.noInternetConnectionDialog , R.id.loginNoInternetConnectionDialog-> {
                     // Ako je destinacija neki od ovih fragmenata, prikaži Toolbar i sakrij BottomNavigationView
                     binding.bottomNavigation.visibility = View.GONE
                     binding.toolbarShared.root.visibility = View.VISIBLE
