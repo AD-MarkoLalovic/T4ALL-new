@@ -3,6 +3,7 @@ package com.mobility.enp.data.repository
 import android.content.Context
 import android.util.Log
 import com.mobility.enp.data.model.api_my_profile.basic_information.entity.BasicInfoEntity
+import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.api_my_profile.refund_request.SendRefundRequest
 import com.mobility.enp.data.model.api_my_profile.refund_request.entity.DataRefundRequestEntity
@@ -45,7 +46,7 @@ class UserRepository(
         val userToken = getUserToken()
         userToken?.let { token ->
 
-            return try {
+             try {
                 val remoteData = apiService(token).getUserData()
                 if (remoteData.isSuccessful) {
                     remoteData.body()?.let { responseBody ->
@@ -53,24 +54,69 @@ class UserRepository(
 
                         val localData = getLocalBasicInfo()
                         if (localData != null) {
-                            Result.success(localData)
+                            return Result.success(localData)
                         } else {
-                            Result.failure(NetworkError.ServerError)
+                           return Result.failure(NetworkError.ServerError)
                         }
-                    } ?: Result.failure(NetworkError.ServerError)
+                    } ?: return Result.failure(NetworkError.ServerError)
                 } else {
                     remoteData.errorBody()?.let { errorBody ->
+                        Log.e("MARKO", "Greška: ${errorBody.string()}")
                         val apiErrorResponse = parseErrorResponse(errorBody)
-                        Result.failure(NetworkError.ApiError(apiErrorResponse))
-                    } ?: Result.failure(NetworkError.ServerError)
+                        return Result.failure(NetworkError.ApiError(apiErrorResponse))
+                    } ?: return Result.failure(NetworkError.ServerError)
                 }
             } catch (e: Exception) {
                 Log.e("BasicInfo", "Neočekivana greška: ${e.message}", e)
-                Result.failure(NetworkError.ServerError)
+                 return Result.failure(NetworkError.ServerError)
             }
         }
         return Result.failure(NetworkError.ServerError)
     }
+
+    fun isNetAvailable(): Boolean {
+        return isNetworkAvailable()
+    }
+
+    /**
+     * Basic information PUT
+     */
+
+    suspend fun putUpdateUserData(data: UpdateUserDataRequest): Result<BasicInfoEntity> {
+        if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
+
+        val userToken = getUserToken()
+        userToken?.let { token ->
+            val lang = getLangKey()
+
+            try {
+                val response = apiService(token).updateUserInfo(data, lang)
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    body?.let {
+                        saveBasicInfo(it)
+                        val localData = getLocalBasicInfo()
+                        if (localData != null) {
+                            return Result.success(localData)
+                        } else {
+                            return Result.failure(NetworkError.ServerError)
+                        }
+                    } ?: return Result.failure(NetworkError.ServerError)
+
+                } else {
+                    response.errorBody()?.let { errorBody ->
+                        val apiErrorResponse = parseErrorResponse(errorBody)
+                        return Result.failure(NetworkError.ApiError(apiErrorResponse))
+                    } ?: return Result.failure(NetworkError.ServerError)
+                }
+            } catch (e: Exception) {
+                Log.e("BasicInfoUpdate", "Neočekivana greška: ${e.message}", e)
+                return Result.failure(NetworkError.ServerError)
+            }
+        }
+        return Result.failure(NetworkError.ServerError)
+    }
+
 
     /**
      * Refund Request GET

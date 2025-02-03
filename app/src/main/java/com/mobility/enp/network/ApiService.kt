@@ -9,6 +9,8 @@ import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.UpdateUserInfoRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.BasicInformationResponse
+import com.mobility.enp.data.model.api_my_profile.basic_information.entity.BasicInfoEntity
+import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.api_my_profile.refund_request.SendRefundRequest
 import com.mobility.enp.data.model.api_my_profile.refund_request.response.RefundRequestsResponse
@@ -30,6 +32,7 @@ import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
 import com.mobility.enp.data.model.testmodels.UserList
+import com.mobility.enp.view.ui_models.BasicInfoUIModel
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -89,7 +92,13 @@ interface ApiService {
     suspend fun getUserCountryCode(): BasicInformationResponse
 
     @PUT("/api/v1/personal-data")
-    suspend fun updateUserInfo(@Body request: UpdateUserInfoRequest): Response<BasicInformationResponse>
+    suspend fun updateUserInformation(@Body request: UpdateUserInfoRequest): Response<BasicInformationResponse>
+
+    @PUT("/api/v1/personal-data")
+    suspend fun updateUserInfo(
+        @Body request: UpdateUserDataRequest,
+        @Query("lang") language: String
+    ): Response<BasicInfoResponse>
 
     @PUT("/api/v1/personal-data/change-password")
     fun changePassword(@Body request: ChangePasswordRequest): Call<Unit>

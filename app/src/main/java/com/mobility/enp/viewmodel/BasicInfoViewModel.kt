@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
+import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
 import com.mobility.enp.data.repository.UserRepository
 import com.mobility.enp.network.Repository
 import com.mobility.enp.util.NetworkError
@@ -25,6 +26,11 @@ class BasicInfoViewModel(val repository: UserRepository) : ViewModel() {
     }
     val basicInfo: LiveData<SubmitResult<BasicInfoUIModel>> = _basicInfoUI
 
+    private val _updateBasicInfoUI = MutableLiveData<SubmitResult<BasicInfoUIModel>>().apply {
+        value = SubmitResult.Loading
+    }
+    val updateBasicInfoUI: LiveData<SubmitResult<BasicInfoUIModel>> = _updateBasicInfoUI
+
     private val _saveChangesSuccess = MutableLiveData<Boolean>().apply {
         value = false
     }
@@ -34,13 +40,13 @@ class BasicInfoViewModel(val repository: UserRepository) : ViewModel() {
         fetchBasicInfo()
     }
 
-    private fun fetchBasicInfo() {
+    fun fetchBasicInfo() {
         viewModelScope.launch {
-            _basicInfoUI.postValue(SubmitResult.Loading)
+            _basicInfoUI.value = SubmitResult.Loading
 
             val localData = repository.getLocalBasicInfo()
             localData?.let {
-                _basicInfoUI.postValue(SubmitResult.Success(localData.toUIModel()))
+                _basicInfoUI.value = SubmitResult.Success(localData.toUIModel())
             }
 
             val result = repository.getBasicInfoFromServer()
@@ -48,31 +54,72 @@ class BasicInfoViewModel(val repository: UserRepository) : ViewModel() {
                 val basicInfoEntity = result.getOrNull()
 
                 if (basicInfoEntity == null) {
-                    _basicInfoUI.postValue(SubmitResult.Empty)
+                    _basicInfoUI.value = SubmitResult.Empty
                 } else {
                     val uiModel = basicInfoEntity.toUIModel()
-                    _basicInfoUI.postValue(SubmitResult.Success(uiModel))
+                    _basicInfoUI.value = SubmitResult.Success(uiModel)
                 }
             } else {
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.e(
                             "BasicInfoViewModel",
-                            "Greška tokom preuzimanja refund zahteva",
+                            "Greška tokom preuzimanja osnovnih podataka korisnika",
                             error
                         )
-                        _basicInfoUI.postValue(SubmitResult.FailureServerError)
+                        _basicInfoUI.value = SubmitResult.FailureServerError
                     }
 
                     is NetworkError.NoConnection -> {
-                        _basicInfoUI.postValue(SubmitResult.FailureNoConnection)
+                        _basicInfoUI.value = SubmitResult.FailureNoConnection
                     }
                     is NetworkError.ApiError -> {
-                        _basicInfoUI.postValue(SubmitResult.FailureApiError(error.errorResponse.message!!))
+                        _basicInfoUI.value = SubmitResult.FailureApiError(error.errorResponse.message!!)
                     }
                 }
             }
         }
+    }
+
+    fun updateUserData(data: UpdateUserDataRequest) {
+        viewModelScope.launch {
+            _updateBasicInfoUI.value = SubmitResult.Loading
+
+            val result = repository.putUpdateUserData(data)
+            if (result.isSuccess) {
+                val basicInfoEntity = result.getOrNull()
+
+                if (basicInfoEntity == null) {
+                    _updateBasicInfoUI.value = SubmitResult.Empty
+                } else {
+                    val uiModel = basicInfoEntity.toUIModel()
+                    _updateBasicInfoUI.value = SubmitResult.Success(uiModel)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.e(
+                            "BasicInfoViewModel",
+                            "Greška tokom azuriranja podataka korisnika",
+                            error
+                        )
+                        _updateBasicInfoUI.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _updateBasicInfoUI.value = SubmitResult.FailureNoConnection
+                    }
+                    is NetworkError.ApiError -> {
+                        _updateBasicInfoUI.value = SubmitResult.FailureApiError(error.errorResponse.message!!)
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun existLocalData(): Boolean {
+        val data = repository.getLocalBasicInfo()
+        return data != null
     }
 
     private suspend fun setDisplayName(
@@ -82,6 +129,10 @@ class BasicInfoViewModel(val repository: UserRepository) : ViewModel() {
         val response = Repository.getUserPersonalInfo(userToken)
         val displayName = response.data?.displayName.toString()
         Repository.saveDisplayName(context, displayName)
+    }
+
+    fun isInternetAvailable(): Boolean {
+        return repository.isNetAvailable()
     }
 
 

@@ -209,7 +209,7 @@ object Repository {
         basicInformationDao: BasicInformationDao, dataToSend: UpdateUserInfoRequest, token: String?
     ) {
 
-        val response = apiService(token).updateUserInfo(dataToSend)
+        val response = apiService(token).updateUserInformation(dataToSend)
 
         if (response.isSuccessful) {
             val userInfo = response.body()?.data
