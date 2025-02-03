@@ -44,30 +44,16 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
-        setFcmToken()
+
         return binding.root
     }
 
-    private fun setFcmToken() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w(MainActivity.TAG, "Fetching FCM registration token failed", task.exception)
-                return@addOnCompleteListener
-            }
 
-            // Get new FCM registration token
-            val token = task.result
-
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                loginViewModel.writeFcmToken(token)
-            }
-
-            Log.w(TAG, token)
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setFcmToken()
 
         context?.let {
             lifecycleScope.launch(Dispatchers.IO) {
@@ -203,6 +189,24 @@ class LoginFragment : Fragment() {
         }
 
 
+    }
+
+    private fun setFcmToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(MainActivity.TAG, "Fetching FCM registration token failed", task.exception)
+                return@addOnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                loginViewModel.writeFcmToken(token)
+            }
+
+            Log.w(TAG, token)
+        }
     }
 
     private fun passwordVisibility() {
