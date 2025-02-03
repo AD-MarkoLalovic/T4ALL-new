@@ -63,7 +63,6 @@ class BasicInformationFragment : Fragment() {
                     when (result.data.customerType) {
                         1 -> customer()
                         2 -> business()
-                        3 -> businessForeign()
                     }
                 }
 
@@ -84,7 +83,6 @@ class BasicInformationFragment : Fragment() {
                     when (result.data.customerType) {
                         1 -> customer()
                         2 -> business()
-                        3 -> businessForeign()
                     }
 
                     Toast.makeText(
@@ -198,22 +196,6 @@ class BasicInformationFragment : Fragment() {
         binding.inputBasicCompanyName.visibility = View.VISIBLE
         binding.txBasicInfoRegistrationNumber.visibility = View.VISIBLE
         binding.inputBasicInfoRegistrationNumber.visibility = View.VISIBLE
-
-        binding.txBasicInfoName.visibility = View.GONE
-        binding.inputBasicInfoName.visibility = View.GONE
-        binding.txBasicInfoSurname.visibility = View.GONE
-        binding.inputBasicInfoSurname.visibility = View.GONE
-
-        binding.basicInformationCon.visibility = View.VISIBLE
-        binding.bottomContainerBasicInfo.visibility = View.VISIBLE
-        binding.loadingBasicInformation.visibility = View.GONE
-    }
-
-    private fun businessForeign() {
-        binding.txBasicInfoCompanyName.visibility = View.VISIBLE
-        binding.inputBasicCompanyName.visibility = View.VISIBLE
-        binding.txBasicInfoRegistrationNumber.visibility = View.GONE
-        binding.inputBasicInfoRegistrationNumber.visibility = View.GONE
 
         binding.txBasicInfoName.visibility = View.GONE
         binding.inputBasicInfoName.visibility = View.GONE
