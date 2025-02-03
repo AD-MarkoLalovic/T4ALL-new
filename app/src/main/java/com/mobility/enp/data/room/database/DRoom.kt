@@ -13,13 +13,14 @@ import com.mobility.enp.data.model.api_home_page.homedata.HomeScreenData
 import com.mobility.enp.data.model.api_home_page.homedata.Promotion
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.basic_information.UserInfoData
+import com.mobility.enp.data.model.api_my_profile.basic_information.entity.BasicInfoEntity
 import com.mobility.enp.data.model.api_my_profile.refund_request.entity.DataRefundRequestEntity
 import com.mobility.enp.data.model.api_my_profile.refund_request.tags.entity.TagsRefundRequestEntity
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_room_models.UserLanguage
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
+import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.banks.entity.BanksEntity
 import com.mobility.enp.data.model.notification.NotificationModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
@@ -31,6 +32,7 @@ import com.mobility.enp.data.room.LoginDao
 import com.mobility.enp.data.room.PdfDao
 import com.mobility.enp.data.room.UserLanguageDao
 import com.mobility.enp.data.room.api_related_daos.BankDao
+import com.mobility.enp.data.room.api_related_daos.BasicInfoDao
 import com.mobility.enp.data.room.api_related_daos.BasicInformationDao
 import com.mobility.enp.data.room.api_related_daos.FcmTokenDao
 import com.mobility.enp.data.room.api_related_daos.HistoryIndexDao
@@ -49,8 +51,9 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [UserLoginResponseRoomTable::class, FcmToken::class, UserLanguage::class, NotificationModel::class, HomeScreenData::class, UserInfoData::class, IndexData::class, ToolHistoryListing::class,
-        IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, Promotion::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class],
-    version = 154,
+        IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, Promotion::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
+        BasicInfoEntity::class],
+    version = 155,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -74,6 +77,7 @@ abstract class DRoom : RoomDatabase() {
     abstract fun csvTableDao(): CsvDao
     abstract fun bankDao(): BankDao
     abstract fun tagsRefundRequest(): TagsRefundRequestDao
+    abstract fun basicInfoDao(): BasicInfoDao
 
     companion object {
         private var instance: DRoom? = null
@@ -116,7 +120,6 @@ abstract class DRoom : RoomDatabase() {
     }
 
     suspend fun clearAllData() {
-        basicInformationDao().deleteBasicInfoData()
         homeDao().deleteData()
         loginDao().deleteAll()
         notificationDao().deleteAll()
@@ -128,6 +131,7 @@ abstract class DRoom : RoomDatabase() {
         promotionsDao().deleteAllPromotions()
         refundRequestDao().deleteRefundRequests()
         tagsRefundRequest().deleteTagsRefundRequest()
+        basicInfoDao().deleteBasicInfo()
     }
 
 }
