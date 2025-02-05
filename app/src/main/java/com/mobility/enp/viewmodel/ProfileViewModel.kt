@@ -37,6 +37,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private var _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
+    private val _displayName = MutableLiveData<String>()
+    val displayName: LiveData<String> get() = _displayName
+
+
     private suspend fun getUserToken(): String? {
         return withContext(Dispatchers.IO) {
             database.loginDao().fetchAllowedUsers().accessToken
@@ -155,8 +159,17 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         return Repository.isNetworkAvailable(getApplication())
     }
 
-    fun getDisplayName(context: Context): String {
-        return Repository.getDisplayName(context).toString()
+    fun getDisplayName() {
+        viewModelScope.launch {
+            val userData = database.basicInfoDao().getBasicInfo()
+            Log.d("MARKO1", "getDisplayName: ${userData?.displayName}")
+            userData?.let {
+                Log.d("MARKO2", "getDisplayName: ${it.displayName}")
+                _displayName.value = it.displayName
+                Log.d("MARKO3", "getDisplayName: ${_displayName.value}")
+            }
+
+        }
     }
 
 }
