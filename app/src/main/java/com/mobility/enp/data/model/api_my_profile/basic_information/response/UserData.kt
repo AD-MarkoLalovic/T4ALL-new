@@ -8,7 +8,7 @@ data class UserData(
     val companyName: String?,
     val country: Country,
     val customerType: CustomerType,
-    val displayName: String?,
+    val displayName: String,
     val email: String,
     val firstName: String?,
     val id: Int,

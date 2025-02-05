@@ -53,7 +53,7 @@ import kotlinx.coroutines.launch
     entities = [UserLoginResponseRoomTable::class, FcmToken::class, UserLanguage::class, NotificationModel::class, HomeScreenData::class, UserInfoData::class, IndexData::class, ToolHistoryListing::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, Promotion::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class],
-    version = 155,
+    version = 156,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)

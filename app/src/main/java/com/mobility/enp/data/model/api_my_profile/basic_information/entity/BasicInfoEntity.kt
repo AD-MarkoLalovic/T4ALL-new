@@ -15,7 +15,7 @@ data class BasicInfoEntity(
     val countryCode: String,
     val countryName: String,
     val customerType: Int,
-    val displayName: String?,
+    val displayName: String,
     val email: String,
     val firstName: String?,
     val isFranchiser: Boolean,
