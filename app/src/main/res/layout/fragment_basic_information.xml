@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -13,20 +13,9 @@
             android:id="@+id/basicInformation"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
             android:background="@drawable/border_login"
             android:backgroundTint="@color/primary_light_lightest"
             tools:visibility="visible">
-
-            <ProgressBar
-                android:id="@+id/loadingBasicInformation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="visible" />
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
@@ -470,5 +459,12 @@
                     android:text="@string/save_changes" />
             </RelativeLayout>
         </RelativeLayout>
-    </RelativeLayout>
+
+        <ProgressBar
+            android:id="@+id/loadingBasicInformation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible" />
+    </FrameLayout>
 </layout>
