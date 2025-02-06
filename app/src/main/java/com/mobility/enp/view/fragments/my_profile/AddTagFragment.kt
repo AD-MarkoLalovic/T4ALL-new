@@ -18,9 +18,6 @@ import com.mobility.enp.network.Repository
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.GeneralMessageAddTag
 import com.mobility.enp.viewmodel.AddTagViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class AddTagFragment : Fragment() {
 
@@ -37,9 +34,6 @@ class AddTagFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAddTagBinding.inflate(inflater, container, false)
-        CoroutineScope(Dispatchers.IO).launch {
-            viewModel.initDatabase()
-        }
         return binding.root
     }
 
