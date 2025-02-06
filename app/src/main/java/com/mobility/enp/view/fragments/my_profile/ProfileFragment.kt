@@ -59,7 +59,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
         setObserver()
 
-        viewModelProfile.getDisplayName()
         viewModelProfile.setRefundRequestVisibility()
 
         lifecycleScope.launch {
