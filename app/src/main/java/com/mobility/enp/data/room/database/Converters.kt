@@ -11,8 +11,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mobility.enp.data.model.api_home_page.homedata.Data
 import com.mobility.enp.data.model.api_my_invoices.DataMonthly
-import com.mobility.enp.data.model.api_my_profile.basic_information.Country
-import com.mobility.enp.data.model.api_my_profile.basic_information.CustomerType
 import com.mobility.enp.data.model.api_tool_history.listing.InvoiceData
 import java.io.ByteArrayOutputStream
 
@@ -79,26 +77,6 @@ class Converters {
     @TypeConverter
     fun toDataMonthlyBills(jsonString: String?): DataMonthly? {
         return gson.fromJson(jsonString, DataMonthly::class.java)
-    }
-
-    @TypeConverter
-    fun fromCountry(country: Country): String? {
-        return gson.toJson(country)
-    }
-
-    @TypeConverter
-    fun toCountry(jsonString: String?): Country {
-        return gson.fromJson(jsonString, Country::class.java)
-    }
-
-    @TypeConverter
-    fun fromCustomerType(customerType: CustomerType): String? {
-        return gson.toJson(customerType)
-    }
-
-    @TypeConverter
-    fun toCustomerType(jsonString: String?): CustomerType {
-        return gson.fromJson(jsonString, CustomerType::class.java)
     }
 
     @TypeConverter
