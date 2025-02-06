@@ -17,7 +17,6 @@ import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
-import com.mobility.enp.data.model.api_my_profile.UpdateUserInfoRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_tags.LostTagResponse
@@ -55,10 +54,6 @@ object Repository {
 
     private fun apiService(token: String?): ApiService {
         return RestClient.create(ApiService::class.java, token).apiService
-    }
-
-    private fun apiServiceTest(): ApiService {
-        return RestClient.create(ApiService::class.java, "").apiService
     }
 
     suspend fun loginUser(
@@ -601,7 +596,6 @@ object Repository {
     fun postPayBill(
         token: String?,
         billId: String?,
-        context: Context,
         billPaid: MutableLiveData<Boolean>,
         errorBody: MutableLiveData<ErrorBody>
     ) {
