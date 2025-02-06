@@ -12,5 +12,6 @@ data class BasicInfoUIModel(
     val lastName: String?,
     val mb: String?,
     val phone: String,
-    val postalCode: String?
+    val postalCode: String?,
+    val pib: String?
 )

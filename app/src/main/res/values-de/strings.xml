@@ -336,5 +336,10 @@
     <string name="delete_picture">Bild löschen</string>
     <string name="first_add_card_serbia">Zuerst müssen Sie eine Karte für Serbien hinzufügen.</string>
     <string name="reported_found_tag_successfully">Sie haben den gefundenen Tag erfolgreich gemeldet.</string>
+    <string name="pib">USt-IdNr. (Umsatzsteuer-Identifikationsnummer)</string>
+    <string name="enter_pib">Geben Sie die USt-IdNr. ein</string>
+    <string name="pib_mandatory">Das USt-IdNr. Feld ist erforderlich</string>
+    <string name="pib_invalid_length">Das USt-IdNr. Feld muss zwischen 9 und 13 Zeichen enthalten.</string>
+    <string name="pib_not_cantains_nine_digits">Das USt-IdNr.-Feld muss 9 Ziffern enthalten.</string>
 
 </resources>

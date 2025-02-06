@@ -17,7 +17,8 @@ data class UserData(
     val lastName: String?,
     val mb: String?,
     val phone: String,
-    val postalCode: String?
+    val postalCode: String?,
+    val pib: String?
 ) {
     fun toEntity(): BasicInfoEntity {
         return BasicInfoEntity (
@@ -36,7 +37,9 @@ data class UserData(
             lastName = lastName,
             mb = mb,
             phone = phone,
-            postalCode = postalCode
+            postalCode = postalCode,
+            pib = pib
+
         )
     }
 }

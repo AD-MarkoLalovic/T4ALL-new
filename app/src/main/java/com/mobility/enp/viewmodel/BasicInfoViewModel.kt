@@ -31,10 +31,7 @@ class BasicInfoViewModel(val repository: UserRepository) : ViewModel() {
     }
     val updateBasicInfoUI: LiveData<SubmitResult<BasicInfoUIModel>> = _updateBasicInfoUI
 
-    private val _saveChangesSuccess = MutableLiveData<Boolean>().apply {
-        value = false
-    }
-    val saveChangesSuccess: LiveData<Boolean> = _saveChangesSuccess
+
 
     init {
         fetchBasicInfo()

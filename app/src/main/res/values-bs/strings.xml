@@ -317,6 +317,11 @@
     <string name="delete_picture">Obriši sliku</string>
     <string name="first_add_card_serbia">Najprije morate dodati karticu za Srbiju.</string>
     <string name="reported_found_tag_successfully">Uspješno ste prijavili pronađen tag.</string>
+    <string name="pib">"PIB (Poreski identifikacioni broj)"</string>
+    <string name="enter_pib">Unesite PIB</string>
+    <string name="pib_mandatory">Polje PIB je obavezno</string>
+    <string name="pib_invalid_length">Polje PIB mora sadržati od 9 do 13 karaktera.</string>
+    <string name="pib_not_cantains_nine_digits">Polje PIB mora sadržati 9 cifara.</string>
 
 
 </resources>

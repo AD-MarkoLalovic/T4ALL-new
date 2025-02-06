@@ -326,5 +326,10 @@
     <string name="delete_picture">Resmi sil</string>
     <string name="first_add_card_serbia">Öncelikle Sırbistan için bir kart eklemeniz gerekir.</string>
     <string name="reported_found_tag_successfully">Bulunan etiketi başarıyla bildirdiniz.</string>
+    <string name="pib">KDV Numarası (Katma Değer Vergisi Numarası)</string>
+    <string name="enter_pib">KDV Numarasını girin</string>
+    <string name="pib_mandatory">KDV Numarası alanı zorunludur</string>
+    <string name="pib_invalid_length">KDV Numarası alanı 9 ile 13 karakter arasında olmalıdır.</string>
+    <string name="pib_not_cantains_nine_digits">KDV Numarası alanı 9 rakam içermelidir.</string>
 
 </resources>

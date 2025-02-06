@@ -2,10 +2,10 @@ package com.mobility.enp.util
 
 sealed class SubmitResult<out T> {
     data class Success<T>(val data: T) : SubmitResult<T>()
-    object Empty : SubmitResult<Nothing>() // Za praznu listu
-    object FailureServerError : SubmitResult<Nothing>() // Greška povezana sa API-jem
-    object FailureNoConnection : SubmitResult<Nothing>() // Greška bez veze
-    object Loading : SubmitResult<Nothing>() // Loading sada podržava sve tipove
+    object Empty : SubmitResult<Nothing>()
+    object FailureServerError : SubmitResult<Nothing>()
+    object FailureNoConnection : SubmitResult<Nothing>()
+    object Loading : SubmitResult<Nothing>()
     data class FailureApiError(val errorMessage: String) : SubmitResult<Nothing>()
 }
 

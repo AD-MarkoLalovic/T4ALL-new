@@ -243,6 +243,43 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <TextView
+                            android:id="@+id/txBasicInfoPib"
+                            style="@style/CaptionRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimens_16dp"
+                            android:layout_marginTop="@dimen/dimens_22dp"
+                            android:text="@string/pib"
+                            android:textColor="@color/charcoal_purple" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/inputBasicInfoPib"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimens_8dp"
+                            app:boxBackgroundColor="@color/white"
+                            app:boxCornerRadiusBottomEnd="84dp"
+                            app:boxCornerRadiusBottomStart="84dp"
+                            app:boxCornerRadiusTopEnd="84dp"
+                            app:boxCornerRadiusTopStart="84dp"
+                            app:boxStrokeColor="@color/figmaSplashScreenColor"
+                            app:boxStrokeWidth="@dimen/dimens_0dp"
+                            app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                            app:endIconMode="clear_text"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editPib"
+                                style="@style/Paragraph"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_pib"
+                                android:imeOptions="actionNext"
+                                android:inputType="text"
+                                android:textColor="@color/figmaSplashScreenColor" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
                             android:id="@+id/txBasicInfoContactNumber"
                             style="@style/CaptionRegular"
                             android:layout_width="wrap_content"
