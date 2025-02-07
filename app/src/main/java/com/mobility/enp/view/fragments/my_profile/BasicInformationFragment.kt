@@ -192,8 +192,7 @@ class BasicInformationFragment : Fragment() {
         val mb = binding.editRegistrationNumber.text.toString().trim()
         val pib = binding.editPib.text.toString().trim()
 
-        // Provera svakog polja pojedinačno
-        Log.d("MARKO", "customerType: $customerType, PIB: $pib, Length: ${pib.length}, IsDigit: ${pib.all { it.isDigit() }}")
+
         when {
             customerType == 1 && firstName.isEmpty() -> {
                 showFieldError(R.string.first_name_mandatory)
@@ -273,12 +272,13 @@ class BasicInformationFragment : Fragment() {
                             companyName = companyName,
                             phone = phone,
                             postalCode = postalCode,
-                            pib = pib
+                            pib = ""
                         )
                         else -> throw IllegalArgumentException("Invalid customer type in BasicInformationFragment: $customerType")
 
                     }
                     // Sačuvaj promene
+                    Log.d("MARKO", "address: $address, city: $city, companyName: $companyName, phone: $phone, postalCode: $postalCode, pib: $pib")
                     viewModel.updateUserData(userUpdate)
                 } catch (e: IllegalArgumentException) {
                     Log.e("Error", "Caught exception: ${e.message}")

@@ -67,9 +67,9 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                     val token = getUserToken()
                     token?.let {
                         val userInfo = Repository.getUserPersonalInfo(it)
-                        val userCountry = userInfo.data?.country?.code
-                        val userType = userInfo.data?.customerType?.type
-                        val isFranchiser = userInfo.data?.isFranchiser
+                        val userCountry = userInfo.data.country.code
+                        val userType = userInfo.data.customerType.type
+                        val isFranchiser = userInfo.data.isFranchiser
 
                         // Postavljanje vrednosti za _showRefundCard
                         _showRefundCard.value =
@@ -129,8 +129,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
                     token?.let {
                         val countryCode = async {
-                            val response = Repository.getCountryCode(it)
-                            response.data?.country?.code
+                            val response = Repository.getUserPersonalInfo(it)
+                            response.data.country.code
                         }
 
                         val userLanguage = async {
