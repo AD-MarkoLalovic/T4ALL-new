@@ -62,7 +62,7 @@ class UserRepository(
                 } else {
                     remoteData.errorBody()?.let { errorBody ->
                         Log.e("MARKO", "Greška: ${errorBody.string()}")
-                        val apiErrorResponse = parseErrorResponse(errorBody)
+                        val apiErrorResponse = parseErrorResponse(remoteData.code(),errorBody)
                         return Result.failure(NetworkError.ApiError(apiErrorResponse))
                     } ?: return Result.failure(NetworkError.ServerError)
                 }
@@ -105,7 +105,7 @@ class UserRepository(
 
                 } else {
                     response.errorBody()?.let { errorBody ->
-                        val apiErrorResponse = parseErrorResponse(errorBody)
+                        val apiErrorResponse = parseErrorResponse(response.code(),errorBody)
                         return Result.failure(NetworkError.ApiError(apiErrorResponse))
                     } ?: return Result.failure(NetworkError.ServerError)
                 }

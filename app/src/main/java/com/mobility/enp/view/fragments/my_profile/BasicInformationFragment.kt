@@ -70,6 +70,7 @@ class BasicInformationFragment : Fragment() {
                 is SubmitResult.FailureNoConnection -> showNoConnectionState()
                 is SubmitResult.FailureServerError -> {}
                 is SubmitResult.FailureApiError -> {}
+                is SubmitResult.InvalidApiToken -> {}
             }
         }
     }
@@ -98,6 +99,7 @@ class BasicInformationFragment : Fragment() {
                 is SubmitResult.FailureNoConnection -> showNoConnectionState()
                 is SubmitResult.FailureServerError -> {}
                 is SubmitResult.FailureApiError -> {}
+                is SubmitResult.InvalidApiToken -> {}
             }
         }
     }
