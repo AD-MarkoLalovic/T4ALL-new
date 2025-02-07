@@ -3,13 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="viewModel"
-            type="com.mobility.enp.viewmodel.BasicInformationViewModel" />
-    </data>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,7 +31,7 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/bottomContainerMyTags"
+                android:layout_above="@+id/bottomContainerBasicInfo"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true">
@@ -109,7 +102,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:enabled="false"
-                                android:text="@{String.valueOf(viewModel.userInfoData.email)}"
                                 android:textColor="@color/figmaSplashScreenColor" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -147,7 +139,6 @@
                                 android:hint="@string/enter_your_first_name"
                                 android:imeOptions="actionNext"
                                 android:inputType="text"
-                                android:text="@{String.valueOf(viewModel.userInfoData.firstName)}"
                                 android:textColor="@color/figmaSplashScreenColor" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -185,7 +176,6 @@
                                 android:hint="@string/enter_your_last_name"
                                 android:imeOptions="actionNext"
                                 android:inputType="text"
-                                android:text="@{String.valueOf(viewModel.userInfoData.lastName)}"
                                 android:textColor="@color/figmaSplashScreenColor" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -223,7 +213,6 @@
                                 android:hint="@string/enter_the_company_name"
                                 android:imeOptions="actionNext"
                                 android:inputType="text"
-                                android:text="@{String.valueOf(viewModel.userInfoData.companyName)}"
                                 android:textColor="@color/figmaSplashScreenColor" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -261,7 +250,6 @@
                                 android:hint="@string/enter_company_registration_number"
                                 android:imeOptions="actionNext"
                                 android:inputType="text"
-                                android:text="@{String.valueOf(viewModel.userInfoData.mb)}"
                                 android:textColor="@color/figmaSplashScreenColor" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -299,7 +287,6 @@
                                 android:hint="@string/enter_your_phone_number"
                                 android:imeOptions="actionNext"
                                 android:inputType="number"
-                                android:text="@{String.valueOf(viewModel.userInfoData.phone)}"
                                 android:textColor="@color/figmaSplashScreenColor" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -337,7 +324,6 @@
                                 android:hint="@string/enter_your_address"
                                 android:imeOptions="actionNext"
                                 android:inputType="text"
-                                android:text="@{String.valueOf(viewModel.userInfoData.address)}"
                                 android:textColor="@color/figmaSplashScreenColor" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -375,7 +361,6 @@
                                 android:hint="@string/enter_your_city"
                                 android:imeOptions="actionNext"
                                 android:inputType="textEmailAddress"
-                                android:text="@{String.valueOf(viewModel.userInfoData.city)}"
                                 android:textColor="@color/figmaSplashScreenColor" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -413,7 +398,6 @@
                                 android:hint="@string/enter_your_postal_code"
                                 android:imeOptions="actionDone"
                                 android:inputType="number"
-                                android:text='@{viewModel.userInfoData.postalCode != null ? String.valueOf(viewModel.userInfoData.postalCode) : ""}'
                                 android:textColor="@color/figmaSplashScreenColor" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -450,7 +434,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:enabled="false"
-                                android:text="@{String.valueOf(viewModel.userInfoData.country.name)}"
                                 android:textColor="@color/figmaSplashScreenColor" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -461,7 +444,7 @@
             </androidx.core.widget.NestedScrollView>
 
             <RelativeLayout
-                android:id="@+id/bottomContainerMyTags"
+                android:id="@+id/bottomContainerBasicInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"

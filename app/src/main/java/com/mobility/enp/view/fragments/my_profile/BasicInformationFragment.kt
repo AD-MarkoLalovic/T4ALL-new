@@ -8,22 +8,25 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_my_profile.UpdateUserInfoRequest
+import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
 import com.mobility.enp.databinding.FragmentBasicInformationBinding
-import com.mobility.enp.util.collectLatestLifecycleFlow
+import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.viewmodel.BasicInformationViewModel
+import com.mobility.enp.view.ui_models.BasicInfoUIModel
+import com.mobility.enp.viewmodel.BasicInfoViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 
 class BasicInformationFragment : Fragment() {
 
     private var _binding: FragmentBasicInformationBinding? = null
     private val binding: FragmentBasicInformationBinding get() = _binding!!
-    private val viewModel: BasicInformationViewModel by viewModels()
+    private val viewModel: BasicInfoViewModel by viewModels { BasicInfoViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,62 +42,62 @@ class BasicInformationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = viewModel
 
-        setObserver()
-        viewModel.fetchPersonalInfo()
-
-        setListener()
+        setObserverGetBasicInfo()
+        setObserverUpdateBasicInfo()
 
         binding.saveChangesButton.setOnClickListener {
             handleSaveChangesButtonClick()
         }
 
-        saveChangesObserve()
+        //saveChangesObserve()
+
     }
 
-    private fun setObserver() {
-
-        // Posmatranje dostupnosti podataka
-        collectLatestLifecycleFlow(viewModel.noData) { noData ->
-            if (noData) {
-                val bind = (activity as MainActivity).binding
-                MainActivity.showSnackMessage(
-                    getString(R.string.no_internet),
-                    bind
-                )
-
-                showNoInternetDialog()
-
-                withContext(Dispatchers.IO) {
-                    while (true) {
-                        if (viewModel.isNetworkAvailable()) {
-                            withContext(Dispatchers.Main) {
-                                val bindingMain = (activity as MainActivity).binding
-                                MainActivity.showSnackMessage(
-                                    getString(R.string.connection_restored),
-                                    bindingMain
-                                )
-
-                                binding.loadingBasicInformation.visibility = View.GONE
-                            }
-                            viewModel.fetchPersonalInfo()
-                            break
-                        } else {
-                            delay(1000L)
-                        }
+    private fun setObserverGetBasicInfo() {
+        viewModel.basicInfo.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is SubmitResult.Loading -> binding.loadingBasicInformation.visibility = View.VISIBLE
+                is SubmitResult.Success -> {
+                    setTextField(result.data)
+                    when (result.data.customerType) {
+                        1 -> customer()
+                        2 -> business()
                     }
                 }
+
+                is SubmitResult.Empty -> {}
+                is SubmitResult.FailureNoConnection -> showNoConnectionState()
+                is SubmitResult.FailureServerError -> {}
+                is SubmitResult.FailureApiError -> {}
             }
         }
+    }
 
-        collectLatestLifecycleFlow(viewModel.checkingInternet) { hasInternet ->
-            if (!hasInternet) {
-                val binding = (activity as MainActivity).binding
-                MainActivity.showSnackMessage(
-                    getString(R.string.offline_using_stored_data),
-                    binding
-                )
+    private fun setObserverUpdateBasicInfo() {
+        viewModel.updateBasicInfoUI.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is SubmitResult.Loading -> binding.loadingBasicInformation.visibility = View.VISIBLE
+                is SubmitResult.Success -> {
+                    setTextField(result.data)
+                    when (result.data.customerType) {
+                        1 -> customer()
+                        2 -> business()
+                    }
+
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.change_successfully_saved),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    //Ponistavam se fokus sa poslednjeg izmenjenog tekstualnog polja
+                    view?.clearFocus()
+                }
+
+                is SubmitResult.Empty -> {}
+                is SubmitResult.FailureNoConnection -> showNoConnectionState()
+                is SubmitResult.FailureServerError -> {}
+                is SubmitResult.FailureApiError -> {}
             }
         }
     }
@@ -107,43 +110,103 @@ class BasicInformationFragment : Fragment() {
                 getString(R.string.please_connect_to_the_internet)
             )
         }
-
         findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
     }
 
-    private fun setListener() {
-        collectLatestLifecycleFlow(viewModel.userInfoData) { userInfo ->
-            userInfo?.let { // Provjeravamo je li userInfo null
-                if (userInfo.companyName == null || userInfo.companyName == "null") {
-                    binding.txBasicInfoCompanyName.visibility = View.GONE
-                    binding.inputBasicCompanyName.visibility = View.GONE
-                    binding.txBasicInfoRegistrationNumber.visibility = View.GONE
-                    binding.inputBasicInfoRegistrationNumber.visibility = View.GONE
+    private fun showNoConnectionState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val hasData = viewModel.existLocalData()
+            if (!hasData) {
+                showNoInternetDialog()
+                waitForInternetAndRetry()
+            } else noInternetMessage()
+        }
+    }
 
-                    binding.txBasicInfoName.visibility = View.VISIBLE
-                    binding.inputBasicInfoName.visibility = View.VISIBLE
-                    binding.txBasicInfoSurname.visibility = View.VISIBLE
-                    binding.inputBasicInfoSurname.visibility = View.VISIBLE
-
-                } else {
-                    binding.txBasicInfoCompanyName.visibility = View.VISIBLE
-                    binding.inputBasicCompanyName.visibility = View.VISIBLE
-                    binding.txBasicInfoRegistrationNumber.visibility = View.VISIBLE
-                    binding.inputBasicInfoRegistrationNumber.visibility = View.VISIBLE
-
-                    binding.txBasicInfoName.visibility = View.GONE
-                    binding.inputBasicInfoName.visibility = View.GONE
-                    binding.txBasicInfoSurname.visibility = View.GONE
-                    binding.inputBasicInfoSurname.visibility = View.GONE
-
-                }
-                binding.basicInformationCon.visibility = View.VISIBLE
-                binding.bottomContainerMyTags.visibility = View.VISIBLE
-                binding.loadingBasicInformation.visibility = View.GONE
+    private suspend fun waitForInternetAndRetry() {
+        while (!isAdded || viewLifecycleOwner.lifecycle.currentState != Lifecycle.State.DESTROYED) {
+            delay(3000)
+            if (viewModel.isInternetAvailable()) {
+                triggerUpdate()
+                return
             }
         }
+    }
+
+    private fun triggerUpdate() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val bindingMain = (activity as MainActivity).binding
+            MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
+            binding.loadingBasicInformation.visibility = View.GONE
+
+            viewModel.fetchBasicInfo()
+        }
+    }
+
+
+    /*private fun setListener() {
+        // Provjeravamo je li userInfo null
+        if (userInfo.companyName == null || userInfo.companyName == "null") {
+            binding.txBasicInfoCompanyName.visibility = View.GONE
+            binding.inputBasicCompanyName.visibility = View.GONE
+            binding.txBasicInfoRegistrationNumber.visibility = View.GONE
+            binding.inputBasicInfoRegistrationNumber.visibility = View.GONE
+
+            binding.txBasicInfoName.visibility = View.VISIBLE
+            binding.inputBasicInfoName.visibility = View.VISIBLE
+            binding.txBasicInfoSurname.visibility = View.VISIBLE
+            binding.inputBasicInfoSurname.visibility = View.VISIBLE
+
+        } else {
+            binding.txBasicInfoCompanyName.visibility = View.VISIBLE
+            binding.inputBasicCompanyName.visibility = View.VISIBLE
+            binding.txBasicInfoRegistrationNumber.visibility = View.VISIBLE
+            binding.inputBasicInfoRegistrationNumber.visibility = View.VISIBLE
+
+            binding.txBasicInfoName.visibility = View.GONE
+            binding.inputBasicInfoName.visibility = View.GONE
+            binding.txBasicInfoSurname.visibility = View.GONE
+            binding.inputBasicInfoSurname.visibility = View.GONE
+
+        }
+        binding.basicInformationCon.visibility = View.VISIBLE
+        binding.bottomContainerMyTags.visibility = View.VISIBLE
+        binding.loadingBasicInformation.visibility = View.GONE
+    }*/
+
+    private fun customer() {
+        binding.txBasicInfoCompanyName.visibility = View.GONE
+        binding.inputBasicCompanyName.visibility = View.GONE
+        binding.txBasicInfoRegistrationNumber.visibility = View.GONE
+        binding.inputBasicInfoRegistrationNumber.visibility = View.GONE
+
+        binding.txBasicInfoName.visibility = View.VISIBLE
+        binding.inputBasicInfoName.visibility = View.VISIBLE
+        binding.txBasicInfoSurname.visibility = View.VISIBLE
+        binding.inputBasicInfoSurname.visibility = View.VISIBLE
+
+        binding.basicInformationCon.visibility = View.VISIBLE
+        binding.bottomContainerBasicInfo.visibility = View.VISIBLE
+        binding.loadingBasicInformation.visibility = View.GONE
 
     }
+
+    private fun business() {
+        binding.txBasicInfoCompanyName.visibility = View.VISIBLE
+        binding.inputBasicCompanyName.visibility = View.VISIBLE
+        binding.txBasicInfoRegistrationNumber.visibility = View.VISIBLE
+        binding.inputBasicInfoRegistrationNumber.visibility = View.VISIBLE
+
+        binding.txBasicInfoName.visibility = View.GONE
+        binding.inputBasicInfoName.visibility = View.GONE
+        binding.txBasicInfoSurname.visibility = View.GONE
+        binding.inputBasicInfoSurname.visibility = View.GONE
+
+        binding.basicInformationCon.visibility = View.VISIBLE
+        binding.bottomContainerBasicInfo.visibility = View.VISIBLE
+        binding.loadingBasicInformation.visibility = View.GONE
+    }
+
 
     private fun handleSaveChangesButtonClick() {
         val firstName = binding.editName.text.toString()
@@ -194,31 +257,27 @@ class BasicInformationFragment : Fragment() {
 
             else -> {
                 // Ako su sva polja popunjena, kreiramo zahtev za ažuriranje
-                val userUpdate = if (companyName.equals("null") || companyName.isBlank()) {
-                    UpdateUserInfoRequest(
-                        firstName,
-                        lastName,
-                        phone,
-                        address,
-                        city,
-                        postalCode,
-                        "null",
-                        "null"
+                val userUpdate = if (companyName.isBlank()) {
+                    UpdateUserDataRequest(
+                        address = address,
+                        city = address,
+                        firstName = firstName,
+                        lastName = lastName,
+                        phone = phone,
+                        postalCode = postalCode
                     )
                 } else {
-                    UpdateUserInfoRequest(
-                        "null",
-                        "null",
-                        phone,
-                        address,
-                        city,
-                        postalCode,
-                        companyName,
-                        mb
+                    UpdateUserDataRequest(
+                        address = address,
+                        city = address,
+                        companyName = companyName,
+                        mb = mb,
+                        phone = phone,
+                        postalCode = postalCode
                     )
                 }
                 // Sačuvaj promene
-                viewModel.saveChanges(userUpdate, requireContext())
+                viewModel.updateUserData(userUpdate)
             }
         }
     }
@@ -228,9 +287,22 @@ class BasicInformationFragment : Fragment() {
         Toast.makeText(requireContext(), getString(errorResId), Toast.LENGTH_LONG).show()
     }
 
+    private fun setTextField(data: BasicInfoUIModel) {
+        binding.editEmail.setText(data.email)
+        binding.editName.setText(data.firstName)
+        binding.editSurname.setText(data.lastName)
+        binding.editCompanyName.setText(data.companyName)
+        binding.editRegistrationNumber.setText(data.mb)
+        binding.editPhone.setText(data.phone)
+        binding.editAddress.setText(data.address)
+        binding.editCity.setText(data.city)
+        binding.editZipCode.setText(data.postalCode)
+        binding.editCountry.setText(data.countryName)
+    }
 
-    private fun saveChangesObserve() {
-        collectLatestLifecycleFlow(viewModel.saveChangesSuccess) { success ->
+
+    /*private fun saveChangesObserve() {
+        viewModel.saveChangesSuccess.observe(viewLifecycleOwner) { success ->
             if (success) {
                 Toast.makeText(
                     requireContext(),
@@ -241,6 +313,14 @@ class BasicInformationFragment : Fragment() {
                 view?.clearFocus()
             }
         }
+    }*/
+
+    /**
+     * Displays a no-internet message using a SnackBar.
+     */
+    private fun noInternetMessage() {
+        val mainBinding = (activity as MainActivity).binding
+        MainActivity.showSnackMessage(getString(R.string.no_internet), mainBinding)
     }
 
     override fun onDestroyView() {
