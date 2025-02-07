@@ -1,16 +1,19 @@
 package com.mobility.enp.view.fragments.my_profile
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.databinding.FragmentChangePasswordBinding
@@ -46,6 +49,110 @@ class ChangePasswordFragment : Fragment() {
             val repeatPassword = binding.enterRepeatPassword.text.toString()
 
             validatePassword(oldPassword, newPassword, repeatPassword)
+        }
+
+        with(binding){
+            enterOldPassword.setOnClickListener {
+                if (enterOldPassword.inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                    enterOldPassword.inputType =
+                        InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    enterOldPasswordLayout.endIconDrawable = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_eye_invisible
+                    )
+                    enterOldPassword.setTextAppearance(R.style.Paragraph)
+                    enterOldPassword.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.figmaSplashScreenColor
+                        )
+                    )
+
+                } else {
+                    enterOldPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    enterOldPasswordLayout.endIconDrawable = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_eye_visible
+                    )
+                    enterOldPassword.setTextAppearance(R.style.Paragraph)
+                    enterOldPassword.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.figmaSplashScreenColor
+                        )
+                    )
+                }
+
+                enterOldPassword.setSelection(enterOldPassword.text?.length ?: 0)
+            }
+
+            enterNewPassword.setOnClickListener {
+                if (enterNewPassword.inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                    enterNewPassword.inputType =
+                        InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    enterNewPasswordLayout.endIconDrawable = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_eye_invisible
+                    )
+                    enterNewPassword.setTextAppearance(R.style.Paragraph)
+                    enterNewPassword.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.figmaSplashScreenColor
+                        )
+                    )
+
+                } else {
+                    enterNewPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    enterNewPasswordLayout.endIconDrawable = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_eye_visible
+                    )
+                    enterNewPassword.setTextAppearance(R.style.Paragraph)
+                    enterNewPassword.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.figmaSplashScreenColor
+                        )
+                    )
+                }
+
+                enterNewPassword.setSelection(enterNewPassword.text?.length ?: 0)
+            }
+
+            enterRepeatPassword.setOnClickListener {
+                if (enterRepeatPassword.inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                    enterRepeatPassword.inputType =
+                        InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    enterRepeatPasswordLayout.endIconDrawable = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_eye_invisible
+                    )
+                    enterRepeatPassword.setTextAppearance(R.style.Paragraph)
+                    enterRepeatPassword.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.figmaSplashScreenColor
+                        )
+                    )
+
+                } else {
+                    enterRepeatPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    enterRepeatPasswordLayout.endIconDrawable = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_eye_visible
+                    )
+                    enterRepeatPassword.setTextAppearance(R.style.Paragraph)
+                    enterRepeatPassword.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.figmaSplashScreenColor
+                        )
+                    )
+                }
+
+                enterRepeatPassword.setSelection(enterRepeatPassword.text?.length ?: 0)
+            }
         }
 
         observeChangePasswordStatus()
@@ -170,5 +277,6 @@ class ChangePasswordFragment : Fragment() {
         dialog.isCancelable = false
         dialog.show(childFragmentManager, "ChangePasswordFragment")
     }
+
 
 }
