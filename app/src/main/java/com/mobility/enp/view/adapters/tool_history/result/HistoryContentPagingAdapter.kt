@@ -220,6 +220,7 @@ class HistoryContentPagingAdapter(
             flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
             tagSerialNumber: String
         )
+        fun invalidToken(errorMessage :String, errorCode:Int)
 
         fun stopSpinner()
     }

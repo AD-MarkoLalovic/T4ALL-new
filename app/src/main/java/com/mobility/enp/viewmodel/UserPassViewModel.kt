@@ -141,41 +141,46 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         _baseTagDataState.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getIndexData()
-            val body = result.getOrNull()
-            body?.let { data ->
-                if (result.isSuccess) {
-                    _baseTagDataState.value = SubmitResult.Success(data)
+            if (result.isSuccess) {
+                val body = result.getOrNull()
+                if (body == null) {
+                    _baseTagDataState.value = SubmitResult.Empty
                 } else {
-                    when (val error = result.exceptionOrNull()) {
-                        is NetworkError.ServerError -> {
-                            Log.d(TAG, "Error while fetching tag serial data")
-                            _baseTagDataState.value = SubmitResult.FailureServerError
-                        }
+                    _baseTagDataState.value = SubmitResult.Success(body)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _baseTagDataState.value = SubmitResult.FailureServerError
+                    }
 
-                        is NetworkError.NoConnection -> {
-                            _baseTagDataState.value = SubmitResult.FailureNoConnection
-                        }
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+                    }
 
-                        is NetworkError.ApiError -> {
-                            when (error.errorResponse.code) {
-                                401, 405 -> {
-                                    Log.d(TOKEN, "invalid token detected login out user")
-                                    _baseTagDataState.value =
-                                        SubmitResult.InvalidApiToken(error.errorResponse.code ?: 0)
-                                }
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(TOKEN, "invalid token detected login out user")
+                                _baseTagDataState.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code ?: 0,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
 
-                                else -> {
-                                    _baseTagDataState.value =
-                                        SubmitResult.FailureApiError(
-                                            error.errorResponse.message ?: ""
-                                        )
-                                    Log.d(TAG, "api error ${error.errorResponse.message}")
-                                }
+                            else -> {
+                                _baseTagDataState.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(TAG, "api error ${error.errorResponse.message}")
                             }
                         }
-
-                        else -> {}
                     }
+
+                    else -> {}
                 }
             }
         }
@@ -185,29 +190,31 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         _complaintObjectionState.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.postComplaint(complaintBody)
-            val body = result.getOrNull()
-            body?.let { data ->
-                if (result.isSuccess) {
-                    _complaintObjectionState.value = SubmitResult.Success(data)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _complaintObjectionState.value = SubmitResult.Empty
                 } else {
-                    when (val error = result.exceptionOrNull()) {
-                        is NetworkError.ServerError -> {
-                            Log.d(TAG, "Error while fetching tag serial data")
-                            _baseTagDataState.value = SubmitResult.FailureServerError
-                        }
-
-                        is NetworkError.NoConnection -> {
-                            _baseTagDataState.value = SubmitResult.FailureNoConnection
-                        }
-
-                        is NetworkError.ApiError -> {
-                            _baseTagDataState.value =
-                                SubmitResult.FailureApiError(error.errorResponse.message ?: "")
-                            Log.d(TAG, "api error ${error.errorResponse.message}")
-                        }
-
-                        else -> {}
+                    _complaintObjectionState.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _baseTagDataState.value = SubmitResult.FailureServerError
                     }
+
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        _baseTagDataState.value =
+                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                        Log.d(TAG, "api error ${error.errorResponse.message}")
+                    }
+
+                    else -> {}
                 }
             }
         }
@@ -231,30 +238,47 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 dateTo,
                 selectedCurrency
             )
-            val body = result.getOrNull()
-            body?.let { data ->
 
-                if (result.isSuccess) {
-                    flow.value = SubmitResult.Success(body)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    flow.value = SubmitResult.Empty
                 } else {
-                    when (val error = result.exceptionOrNull()) {
-                        is NetworkError.ServerError -> {
-                            Log.d(TAG, "Error while fetching tag serial data")
-                            _baseTagDataState.value = SubmitResult.FailureServerError
-                        }
-
-                        is NetworkError.NoConnection -> {
-                            _baseTagDataState.value = SubmitResult.FailureNoConnection
-                        }
-
-                        is NetworkError.ApiError -> {
-                            _baseTagDataState.value =
-                                SubmitResult.FailureApiError(error.errorResponse.message ?: "")
-                            Log.d(TAG, "api error ${error.errorResponse.message}")
-                        }
-
-                        else -> {}
+                    flow.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _baseTagDataState.value = SubmitResult.FailureServerError
                     }
+
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(TOKEN, "invalid token detected login out user")
+                                _baseTagDataState.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code ?: 0,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _baseTagDataState.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(TAG, "api error ${error.errorResponse.message}")
+                            }
+                        }
+                    }
+
+                    else -> {}
                 }
             }
         }
@@ -267,29 +291,31 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.postObjection(objectionBody)
-            val body = result.getOrNull()
-            body?.let { data ->
-                if (result.isSuccess) {
-                    _complaintObjectionState.value = SubmitResult.Success(data)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _complaintObjectionState.value = SubmitResult.Empty
                 } else {
-                    when (val error = result.exceptionOrNull()) {
-                        is NetworkError.ServerError -> {
-                            Log.d(TAG, "Error while fetching tag serial data")
-                            _baseTagDataState.value = SubmitResult.FailureServerError
-                        }
-
-                        is NetworkError.NoConnection -> {
-                            _baseTagDataState.value = SubmitResult.FailureNoConnection
-                        }
-
-                        is NetworkError.ApiError -> {
-                            _baseTagDataState.value =
-                                SubmitResult.FailureApiError(error.errorResponse.message ?: "")
-                            Log.d(TAG, "api error ${error.errorResponse.message}")
-                        }
-
-                        else -> {}
+                    _complaintObjectionState.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _baseTagDataState.value = SubmitResult.FailureServerError
                     }
+
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        _baseTagDataState.value =
+                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                        Log.d(TAG, "api error ${error.errorResponse.message}")
+                    }
+
+                    else -> {}
                 }
             }
         }
@@ -304,30 +330,31 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getTagFill(tagSerialNumber, currentPage, itemsPerPage)
-            val body = result.getOrNull()
-            body?.let { data ->
-
-                if (result.isSuccess) {
-                    flow.value = SubmitResult.Success(body)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    flow.value = SubmitResult.Empty
                 } else {
-                    when (val error = result.exceptionOrNull()) {
-                        is NetworkError.ServerError -> {
-                            Log.d(TAG, "Error while fetching tag serial data")
-                            _baseTagDataState.value = SubmitResult.FailureServerError
-                        }
-
-                        is NetworkError.NoConnection -> {
-                            _baseTagDataState.value = SubmitResult.FailureNoConnection
-                        }
-
-                        is NetworkError.ApiError -> {
-                            _baseTagDataState.value =
-                                SubmitResult.FailureApiError(error.errorResponse.message ?: "")
-                            Log.d(TAG, "api error ${error.errorResponse.message}")
-                        }
-
-                        else -> {}
+                    flow.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _baseTagDataState.value = SubmitResult.FailureServerError
                     }
+
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        _baseTagDataState.value =
+                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                        Log.d(TAG, "api error ${error.errorResponse.message}")
+                    }
+
+                    else -> {}
                 }
             }
         }
@@ -344,30 +371,31 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getTagFill(tagSerialNumber, currentPage, itemsPerPage)
-            val body = result.getOrNull()
-            body?.let { data ->
-
-                if (result.isSuccess) {
-                    flow.value = SubmitResult.Success(body)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    flow.value = SubmitResult.Empty
                 } else {
-                    when (val error = result.exceptionOrNull()) {
-                        is NetworkError.ServerError -> {
-                            Log.d(TAG, "Error while fetching tag serial data")
-                            _baseTagDataState.value = SubmitResult.FailureServerError
-                        }
-
-                        is NetworkError.NoConnection -> {
-                            _baseTagDataState.value = SubmitResult.FailureNoConnection
-                        }
-
-                        is NetworkError.ApiError -> {
-                            _baseTagDataState.value =
-                                SubmitResult.FailureApiError(error.errorResponse.message ?: "")
-                            Log.d(TAG, "api error ${error.errorResponse.message}")
-                        }
-
-                        else -> {}
+                    flow.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _baseTagDataState.value = SubmitResult.FailureServerError
                     }
+
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        _baseTagDataState.value =
+                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                        Log.d(TAG, "api error ${error.errorResponse.message}")
+                    }
+
+                    else -> {}
                 }
             }
         }
