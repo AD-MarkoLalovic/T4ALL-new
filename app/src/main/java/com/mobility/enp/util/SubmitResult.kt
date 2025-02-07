@@ -7,5 +7,7 @@ sealed class SubmitResult<out T> {
     object FailureNoConnection : SubmitResult<Nothing>()
     object Loading : SubmitResult<Nothing>()
     data class FailureApiError(val errorMessage: String) : SubmitResult<Nothing>()
+    data class InvalidApiToken(val errorCode: Int, val errorMessage: String) : SubmitResult<Nothing>()
+
 }
 

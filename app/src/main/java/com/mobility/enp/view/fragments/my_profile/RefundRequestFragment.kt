@@ -59,6 +59,7 @@ class RefundRequestFragment : Fragment() {
                 is SubmitResult.FailureNoConnection -> showNoConnectionState()
                 is SubmitResult.FailureServerError -> showServerErrorState()
                 is SubmitResult.FailureApiError -> showApiErrorState(result.errorMessage)
+                else -> {} // todo add case for invalid server token
             }
         }
     }

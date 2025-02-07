@@ -9,24 +9,22 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.Tag
+import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.result.HistoryContentPagingAdapter
 import com.mobility.enp.view.adapters.tool_history.result.HistoryResultAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -75,7 +73,8 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
             vModel.selectedTags
         }
 
-        binding.cycler.adapter = HistoryResultAdapter(listOfTags, vModel, this, this, vModel.getCountryCode())
+        binding.cycler.adapter =
+            HistoryResultAdapter(listOfTags, vModel, this, this, vModel.getCountryCode())
         binding.cycler.layoutManager = LinearLayoutManager(context)
     }
 
@@ -103,14 +102,14 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
 
     override fun sendComplaintData(complaintBody: ComplaintBody) {
         binding.progBar.visibility = View.VISIBLE
-        viewLifecycleOwner.lifecycleScope.launch (Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             vModel.postComplaintFiltered(complaintBody, errorBody)
         }
     }
 
     override fun sendObjectionData(objectionBody: ObjectionBody) {
         binding.progBar.visibility = View.VISIBLE
-        viewLifecycleOwner.lifecycleScope.launch (Dispatchers.IO){
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             vModel.postObjectionFiltered(objectionBody, errorBody)
         }
     }
@@ -121,13 +120,22 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
         tagSerialNumber: String
     ) {
         binding.progBar.visibility = View.VISIBLE
-        viewLifecycleOwner.lifecycleScope.launch (Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             vModel.getToolHistoryTransitResultPagination(
                 flow,
                 tagSerialNumber,
                 nextPage
             )
         }
+    }
+
+    override fun invalidToken(errorMessage: String, errorCode: Int) {
+        showMessage(errorMessage ?: "")
+        MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+    }
+
+    private fun showMessage(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun stopSpinner() {

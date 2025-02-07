@@ -68,6 +68,7 @@ class TagPickerRequestFragment : Fragment() {
                 is SubmitResult.FailureNoConnection -> showNoConnectionState()
                 is SubmitResult.FailureServerError -> showServerErrorState()
                 is SubmitResult.FailureApiError -> showApiErrorState(tag.errorMessage)
+                else -> {} // todo add case for invalid server token
             }
         }
     }

@@ -36,7 +36,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
                     } ?: Result.failure(NetworkError.ServerError)
                 } else {
                     response.errorBody()?.let { errorBody ->
-                        val errorResponse = parseErrorResponse(errorBody)
+                        val errorResponse = parseErrorResponse(response.code(),errorBody)
                         Result.failure(NetworkError.ApiError(errorResponse))
                     } ?: Result.failure(NetworkError.ServerError)
                 }
@@ -72,7 +72,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
                     } ?: Result.failure(NetworkError.ServerError)
                 } else {
                     response.errorBody()?.let { errorBody ->
-                        val errorResponse = parseErrorResponse(errorBody)
+                        val errorResponse = parseErrorResponse(response.code(),errorBody)
                         Result.failure(NetworkError.ApiError(errorResponse))
                     } ?: Result.failure(NetworkError.ServerError)
                 }
@@ -114,7 +114,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
                     } ?: Result.failure(NetworkError.ServerError)
                 } else {
                     response.errorBody()?.let { errorBody ->
-                        val errorResponse = parseErrorResponse(errorBody)
+                        val errorResponse = parseErrorResponse(response.code(),errorBody)
                         Result.failure(NetworkError.ApiError(errorResponse))
                     } ?: Result.failure(NetworkError.ServerError)
                 }
@@ -157,7 +157,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
                     } ?: Result.failure(NetworkError.ServerError)
                 } else {
                     response.errorBody()?.let { errorBody ->
-                        val errorResponse = parseErrorResponse(errorBody)
+                        val errorResponse = parseErrorResponse(response.code(),errorBody)
                         Result.failure(NetworkError.ApiError(errorResponse))
                     } ?: Result.failure(NetworkError.ServerError)
                 }
@@ -185,7 +185,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
                     } ?: Result.failure(NetworkError.ServerError)
                 } else {
                     response.errorBody()?.let { errorBody ->
-                        val errorResponse = parseErrorResponse(errorBody)
+                        val errorResponse = parseErrorResponse(response.code(),errorBody)
                         Result.failure(NetworkError.ApiError(errorResponse))
                     } ?: Result.failure(NetworkError.ServerError)
                 }
@@ -214,7 +214,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
                     } ?: Result.failure(NetworkError.ServerError)
                 } else {
                     response.errorBody()?.let { errorBody ->
-                        val errorResponse = parseErrorResponse(errorBody)
+                        val errorResponse = parseErrorResponse(response.code(),errorBody)
                         Result.failure(NetworkError.ApiError(errorResponse))
                     } ?: Result.failure(NetworkError.ServerError)
                 }

@@ -75,6 +75,7 @@ class BasicInformationFragment : Fragment() {
                     binding.loadingBasicInformation.visibility = View.GONE
                     showMessage(result.errorMessage)
                 }
+                is SubmitResult.InvalidApiToken -> {}
             }
         }
     }
@@ -107,6 +108,7 @@ class BasicInformationFragment : Fragment() {
                     binding.loadingBasicInformation.visibility = View.GONE
                     showMessage(result.errorMessage)
                 }
+                is SubmitResult.InvalidApiToken -> {}
             }
         }
     }
@@ -192,7 +194,7 @@ class BasicInformationFragment : Fragment() {
         val mb = binding.editRegistrationNumber.text.toString().trim()
         val pib = binding.editPib.text.toString().trim()
 
-
+        // Provera svakog polja pojedinačno
         when {
             customerType == 1 && firstName.isEmpty() -> {
                 showFieldError(R.string.first_name_mandatory)
