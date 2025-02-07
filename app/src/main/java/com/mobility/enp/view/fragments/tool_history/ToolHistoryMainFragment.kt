@@ -114,6 +114,11 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                     showError(getString(R.string.api_call_error))
                 }
 
+                is SubmitResult.InvalidApiToken -> {
+                    binding.progBar.visibility = View.GONE
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
                 else -> {
                     SubmitResult.Empty
                 }

@@ -80,6 +80,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     companion object {
         const val TAG = "PassViewModel"
+        const val TOKEN = "API_TOKEN"
 
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -136,7 +137,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     private val itemsPerPage = 10
 
-    fun getIndexData() {
+    fun getIndexData() {  // added token check here
         _baseTagDataState.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getIndexData()
@@ -156,9 +157,21 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                         }
 
                         is NetworkError.ApiError -> {
-                            _baseTagDataState.value =
-                                SubmitResult.FailureApiError(error.errorResponse.message ?: "")
-                            Log.d(TAG, "api error ${error.errorResponse.message}")
+                            when (error.errorResponse.code) {
+                                401, 405 -> {
+                                    Log.d(TOKEN, "invalid token detected login out user")
+                                    _baseTagDataState.value =
+                                        SubmitResult.InvalidApiToken(error.errorResponse.code ?: 0)
+                                }
+
+                                else -> {
+                                    _baseTagDataState.value =
+                                        SubmitResult.FailureApiError(
+                                            error.errorResponse.message ?: ""
+                                        )
+                                    Log.d(TAG, "api error ${error.errorResponse.message}")
+                                }
+                            }
                         }
 
                         else -> {}
