@@ -52,18 +52,23 @@ abstract class BaseRepository(
         return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
-    protected fun parseErrorResponse(errorBody: ResponseBody): ApiErrorResponse {
+    protected fun parseErrorResponse(errorCode: Int, errorBody: ResponseBody): ApiErrorResponse {
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
-            .build()  // Kreiranje Moshi objekta (JSON parser)
-        val jsonAdapter =
-            moshi.adapter(ApiErrorResponse::class.java)  // Adapter za parsiranje JSON-a u ApiErrorResponse
-        // Sačuvaj telo u stringu, kako bi se izbeglo dvostruko čitanje
+            .build()  // Create Moshi instance for JSON parsing
+
+        val jsonAdapter = moshi.adapter(ApiErrorResponse::class.java)
+
+        // Read the error body string (avoid multiple reads)
         val errorBodyString = errorBody.string()
-        return jsonAdapter.fromJson(errorBodyString) ?: ApiErrorResponse(
-            context.getString(R.string.server_error_msg),
-            null
-        )  // Ako dođe do greške u parsiranju, vrati podrazumevanu grešku
+
+        // Try to parse the JSON and then set the error code; if parsing fails, return a default error object with the code.
+        return jsonAdapter.fromJson(errorBodyString)?.copy(code = errorCode)
+            ?: ApiErrorResponse(
+                code = errorCode,
+                message = context.getString(R.string.server_error_msg),
+                errors = null
+            )
     }
 }
 

@@ -141,7 +141,7 @@ class UserRepository(
                     } ?: Result.failure(NetworkError.ServerError)
                 } else {
                     remoteData.errorBody()?.let { errorBody ->
-                        val apiErrorResponse = parseErrorResponse(errorBody)
+                        val apiErrorResponse = parseErrorResponse(remoteData.code(),errorBody)
                         Result.failure(NetworkError.ApiError(apiErrorResponse))
                     } ?: Result.failure(NetworkError.ServerError)
                 }
@@ -183,7 +183,7 @@ class UserRepository(
                     } ?: Result.failure(NetworkError.ServerError) // Ako telo odgovora nije validno
                 } else {
                     response.errorBody()?.let { errorBody ->
-                        val apiErrorResponse = parseErrorResponse(errorBody)
+                        val apiErrorResponse = parseErrorResponse(response.code(),errorBody)
                         Result.failure(NetworkError.ApiError(apiErrorResponse))
                     } ?: Result.failure(NetworkError.ServerError)
                 }
@@ -223,7 +223,7 @@ class UserRepository(
                     Result.success(Unit)
                 } else {
                     response.errorBody()?.let { errorBody ->
-                        val apiErrorResponse = parseErrorResponse(errorBody)
+                        val apiErrorResponse = parseErrorResponse(response.code(),errorBody)
                         Result.failure(NetworkError.ApiError(apiErrorResponse))
                     } ?: Result.failure(NetworkError.ServerError)
                 }
@@ -257,7 +257,7 @@ class UserRepository(
                     } ?: Result.failure(NetworkError.ServerError)
                 } else {
                     remoteBanks.errorBody()?.let { errorBody ->
-                        val apiErrorResponse = parseErrorResponse(errorBody)
+                        val apiErrorResponse = parseErrorResponse(remoteBanks.code(),errorBody)
                         Result.failure(NetworkError.ApiError(apiErrorResponse))
                     } ?: Result.failure(NetworkError.ServerError)
                 }

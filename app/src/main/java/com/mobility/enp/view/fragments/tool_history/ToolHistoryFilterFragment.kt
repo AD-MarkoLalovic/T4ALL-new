@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -210,7 +209,12 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
                 is SubmitResult.FailureApiError -> {
                     binding.progBar.visibility = View.GONE
-                    showError(getString(R.string.api_call_error))
+                    showError(tagIndex.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(tagIndex.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
 
                 else -> {

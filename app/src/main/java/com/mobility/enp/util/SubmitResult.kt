@@ -7,5 +7,7 @@ sealed class SubmitResult<out T> {
     object FailureNoConnection : SubmitResult<Nothing>() // Greška bez veze
     object Loading : SubmitResult<Nothing>() // Loading sada podržava sve tipove
     data class FailureApiError(val errorMessage: String) : SubmitResult<Nothing>()
+    data class InvalidApiToken(val errorCode: Int, val errorMessage: String) : SubmitResult<Nothing>()
+
 }
 
