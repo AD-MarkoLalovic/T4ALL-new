@@ -1,8 +1,6 @@
 package com.mobility.enp.view.dialogs
 
-import android.content.res.Resources
 import android.graphics.Color
-import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,9 +10,10 @@ import androidx.fragment.app.DialogFragment
 import com.mobility.enp.databinding.GeneralDialogBinding
 import com.mobility.enp.util.setDimensionsPercent
 
-class GeneralMessageDialog(
+class ChangePasswordDialog(
     private val title: String,
-    private val subtitle: String
+    private val subtitle: String,
+    val onConfirmButton: (Any) -> Unit
 ) : DialogFragment() {
 
     private var _binding: GeneralDialogBinding? = null
@@ -37,6 +36,7 @@ class GeneralMessageDialog(
         binding.subTitle.text = subtitle
         binding.confirmButton.setOnClickListener {
             dismiss()
+            onConfirmButton(Any())
         }
     }
 

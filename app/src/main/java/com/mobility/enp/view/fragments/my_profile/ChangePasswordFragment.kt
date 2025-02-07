@@ -15,12 +15,12 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.databinding.FragmentChangePasswordBinding
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.dialogs.GeneralMessageDialog
+import com.mobility.enp.view.dialogs.ChangePasswordDialog
 import com.mobility.enp.viewmodel.ChangePasswordViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class ChangePasswordFragment : Fragment(), GeneralMessageDialog.OnButtonClick {
+class ChangePasswordFragment : Fragment() {
 
     private lateinit var binding: FragmentChangePasswordBinding
     private val viewModel: ChangePasswordViewModel by viewModels()
@@ -161,14 +161,14 @@ class ChangePasswordFragment : Fragment(), GeneralMessageDialog.OnButtonClick {
     }
 
     private fun showDialogChangePassword() {
-        val dialog = GeneralMessageDialog(
+        val dialog = ChangePasswordDialog(
             getString(R.string.password_changed),
-            getString(R.string.you_will_be_asked_to_login_again))
+            getString(R.string.you_will_be_asked_to_login_again)
+        ) {
+            MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+        }
+        dialog.isCancelable = false
         dialog.show(childFragmentManager, "ChangePasswordFragment")
     }
 
-    override fun onClickConfirmed() {
-        findNavController().navigate(R.id.action_changePasswordFragment_to_loginFragment)
-
-    }
 }
