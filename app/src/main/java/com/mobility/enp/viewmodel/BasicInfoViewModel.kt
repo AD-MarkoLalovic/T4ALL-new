@@ -1,6 +1,5 @@
 package com.mobility.enp.viewmodel
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +12,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
 import com.mobility.enp.data.repository.UserRepository
-import com.mobility.enp.network.Repository
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.ui_models.BasicInfoUIModel
@@ -30,11 +28,6 @@ class BasicInfoViewModel(val repository: UserRepository) : ViewModel() {
         value = SubmitResult.Loading
     }
     val updateBasicInfoUI: LiveData<SubmitResult<BasicInfoUIModel>> = _updateBasicInfoUI
-
-    private val _saveChangesSuccess = MutableLiveData<Boolean>().apply {
-        value = false
-    }
-    val saveChangesSuccess: LiveData<Boolean> = _saveChangesSuccess
 
     init {
         fetchBasicInfo()
@@ -122,21 +115,9 @@ class BasicInfoViewModel(val repository: UserRepository) : ViewModel() {
         return data != null
     }
 
-    private suspend fun setDisplayName(
-        userToken: String,
-        context: Context,
-    ) {
-        val response = Repository.getUserPersonalInfo(userToken)
-        val displayName = response.data?.displayName.toString()
-        Repository.saveDisplayName(context, displayName)
-    }
-
     fun isInternetAvailable(): Boolean {
         return repository.isNetAvailable()
     }
-
-
-
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
@@ -149,37 +130,6 @@ class BasicInfoViewModel(val repository: UserRepository) : ViewModel() {
         }
     }
 }
-
-   /* fun saveChanges(
-        updatedInfo: UpdateUserInfoRequest,
-        context: Context
-    ) {
-        _saveChangesSuccess.value = false
-
-            viewModelScope.launch {
-                try {
-                    val userToken = getUserToken()
-                    userToken?.let { token ->
-                        Repository.updateUserInfo(
-                            database.basicInformationDao(),
-                            updatedInfo,
-                            token
-                        )
-                        _saveChangesSuccess.value = true
-                        setDisplayName(token, context)
-                    }
-
-                } catch (e: HttpException) {
-                    Log.d("BasicInformationViewModel", "saveChanges: HttpException ${e.message}")
-                } catch (e: IOException) {
-                    Log.d("BasicInformationViewModel", "saveChanges: Network error ${e.message}")
-                } catch (e: Exception) {
-                    Log.d("BasicInformationViewModel", "saveChanges: Unknown error ${e.message}")
-                }
-            }
-
-    }*/
-
 
 
 

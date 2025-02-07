@@ -1,10 +1,12 @@
 package com.mobility.enp.view.fragments.my_profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -34,14 +36,11 @@ class BasicInformationFragment : Fragment() {
     ): View {
         _binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_basic_information, container, false)
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.lifecycleOwner = viewLifecycleOwner
 
         setObserverGetBasicInfo()
         setObserverUpdateBasicInfo()
@@ -50,8 +49,6 @@ class BasicInformationFragment : Fragment() {
             handleSaveChangesButtonClick()
         }
 
-        //saveChangesObserve()
-
     }
 
     private fun setObserverGetBasicInfo() {
@@ -59,17 +56,25 @@ class BasicInformationFragment : Fragment() {
             when (result) {
                 is SubmitResult.Loading -> binding.loadingBasicInformation.visibility = View.VISIBLE
                 is SubmitResult.Success -> {
+                    binding.loadingBasicInformation.visibility = View.GONE
                     setTextField(result.data)
-                    when (result.data.customerType) {
-                        1 -> customer()
-                        2 -> business()
-                    }
+                    updateBasicInfoUI(result.data.customerType)
                 }
 
-                is SubmitResult.Empty -> {}
+                is SubmitResult.Empty -> {
+                    // Trenutno ne preduzimamo nikakve akcije za praznu vrednost
+                }
+
                 is SubmitResult.FailureNoConnection -> showNoConnectionState()
-                is SubmitResult.FailureServerError -> {}
-                is SubmitResult.FailureApiError -> {}
+                is SubmitResult.FailureServerError -> {
+                    binding.loadingBasicInformation.visibility = View.GONE
+                    showMessage(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.loadingBasicInformation.visibility = View.GONE
+                    showMessage(result.errorMessage)
+                }
                 is SubmitResult.InvalidApiToken -> {}
             }
         }
@@ -80,25 +85,29 @@ class BasicInformationFragment : Fragment() {
             when (result) {
                 is SubmitResult.Loading -> binding.loadingBasicInformation.visibility = View.VISIBLE
                 is SubmitResult.Success -> {
+                    binding.loadingBasicInformation.visibility = View.GONE
                     setTextField(result.data)
-                    when (result.data.customerType) {
-                        1 -> customer()
-                        2 -> business()
-                    }
+                    updateBasicInfoUI(result.data.customerType)
+                    showMessage(getString(R.string.change_successfully_saved))
 
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.change_successfully_saved),
-                        Toast.LENGTH_SHORT
-                    ).show()
                     //Ponistavam se fokus sa poslednjeg izmenjenog tekstualnog polja
                     view?.clearFocus()
                 }
 
-                is SubmitResult.Empty -> {}
+                is SubmitResult.Empty -> {
+                    // Trenutno ne preduzimamo nikakve akcije za praznu vrednost
+                }
+
                 is SubmitResult.FailureNoConnection -> showNoConnectionState()
-                is SubmitResult.FailureServerError -> {}
-                is SubmitResult.FailureApiError -> {}
+                is SubmitResult.FailureServerError -> {
+                    binding.loadingBasicInformation.visibility = View.GONE
+                    showMessage(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.loadingBasicInformation.visibility = View.GONE
+                    showMessage(result.errorMessage)
+                }
                 is SubmitResult.InvalidApiToken -> {}
             }
         }
@@ -145,100 +154,81 @@ class BasicInformationFragment : Fragment() {
         }
     }
 
+    private fun updateBasicInfoUI(customerType: Int) {
+        with(binding) {
+            val isCustomer = customerType == 1
+            val isBusiness = customerType == 2
+            val isBusinessForeign = customerType == 3
 
-    /*private fun setListener() {
-        // Provjeravamo je li userInfo null
-        if (userInfo.companyName == null || userInfo.companyName == "null") {
-            binding.txBasicInfoCompanyName.visibility = View.GONE
-            binding.inputBasicCompanyName.visibility = View.GONE
-            binding.txBasicInfoRegistrationNumber.visibility = View.GONE
-            binding.inputBasicInfoRegistrationNumber.visibility = View.GONE
+            txBasicInfoCompanyName.isVisible = isBusiness || isBusinessForeign
+            inputBasicCompanyName.isVisible = isBusiness || isBusinessForeign
+            txBasicInfoPib.isVisible = isBusiness || isBusinessForeign
+            inputBasicInfoPib.isVisible = isBusiness || isBusinessForeign
 
-            binding.txBasicInfoName.visibility = View.VISIBLE
-            binding.inputBasicInfoName.visibility = View.VISIBLE
-            binding.txBasicInfoSurname.visibility = View.VISIBLE
-            binding.inputBasicInfoSurname.visibility = View.VISIBLE
+            txBasicInfoRegistrationNumber.isVisible = isBusiness
+            inputBasicInfoRegistrationNumber.isVisible = isBusiness
 
-        } else {
-            binding.txBasicInfoCompanyName.visibility = View.VISIBLE
-            binding.inputBasicCompanyName.visibility = View.VISIBLE
-            binding.txBasicInfoRegistrationNumber.visibility = View.VISIBLE
-            binding.inputBasicInfoRegistrationNumber.visibility = View.VISIBLE
+            txBasicInfoName.isVisible = isCustomer
+            inputBasicInfoName.isVisible = isCustomer
+            txBasicInfoSurname.isVisible = isCustomer
+            inputBasicInfoSurname.isVisible = isCustomer
 
-            binding.txBasicInfoName.visibility = View.GONE
-            binding.inputBasicInfoName.visibility = View.GONE
-            binding.txBasicInfoSurname.visibility = View.GONE
-            binding.inputBasicInfoSurname.visibility = View.GONE
-
+            basicInformationCon.isVisible = true
+            bottomContainerBasicInfo.isVisible = true
+            loadingBasicInformation.visibility = View.GONE
         }
-        binding.basicInformationCon.visibility = View.VISIBLE
-        binding.bottomContainerMyTags.visibility = View.VISIBLE
-        binding.loadingBasicInformation.visibility = View.GONE
-    }*/
-
-    private fun customer() {
-        binding.txBasicInfoCompanyName.visibility = View.GONE
-        binding.inputBasicCompanyName.visibility = View.GONE
-        binding.txBasicInfoRegistrationNumber.visibility = View.GONE
-        binding.inputBasicInfoRegistrationNumber.visibility = View.GONE
-
-        binding.txBasicInfoName.visibility = View.VISIBLE
-        binding.inputBasicInfoName.visibility = View.VISIBLE
-        binding.txBasicInfoSurname.visibility = View.VISIBLE
-        binding.inputBasicInfoSurname.visibility = View.VISIBLE
-
-        binding.basicInformationCon.visibility = View.VISIBLE
-        binding.bottomContainerBasicInfo.visibility = View.VISIBLE
-        binding.loadingBasicInformation.visibility = View.GONE
-
-    }
-
-    private fun business() {
-        binding.txBasicInfoCompanyName.visibility = View.VISIBLE
-        binding.inputBasicCompanyName.visibility = View.VISIBLE
-        binding.txBasicInfoRegistrationNumber.visibility = View.VISIBLE
-        binding.inputBasicInfoRegistrationNumber.visibility = View.VISIBLE
-
-        binding.txBasicInfoName.visibility = View.GONE
-        binding.inputBasicInfoName.visibility = View.GONE
-        binding.txBasicInfoSurname.visibility = View.GONE
-        binding.inputBasicInfoSurname.visibility = View.GONE
-
-        binding.basicInformationCon.visibility = View.VISIBLE
-        binding.bottomContainerBasicInfo.visibility = View.VISIBLE
-        binding.loadingBasicInformation.visibility = View.GONE
     }
 
 
     private fun handleSaveChangesButtonClick() {
-        val firstName = binding.editName.text.toString()
-        val lastName = binding.editSurname.text.toString()
-        val phone = binding.editPhone.text.toString()
-        val address = binding.editAddress.text.toString()
-        val city = binding.editCity.text.toString()
-        val postalCode = binding.editZipCode.text.toString()
-        val companyName = binding.editCompanyName.text.toString()
-        val mb = binding.editRegistrationNumber.text.toString()
+        val basicInfo = (viewModel.basicInfo.value as? SubmitResult.Success)?.data
+        val customerType = basicInfo?.customerType ?: return
+
+        val firstName = binding.editName.text.toString().trim()
+        val lastName = binding.editSurname.text.toString().trim()
+        val phone = binding.editPhone.text.toString().trim()
+        val address = binding.editAddress.text.toString().trim()
+        val city = binding.editCity.text.toString().trim()
+        val postalCode = binding.editZipCode.text.toString().trim()
+        val companyName = binding.editCompanyName.text.toString().trim()
+        val mb = binding.editRegistrationNumber.text.toString().trim()
+        val pib = binding.editPib.text.toString().trim()
 
         // Provera svakog polja pojedinačno
         when {
-            firstName.isEmpty() -> {
+            customerType == 1 && firstName.isEmpty() -> {
                 showFieldError(R.string.first_name_mandatory)
                 return
             }
 
-            lastName.isEmpty() -> {
+            customerType == 1 && lastName.isEmpty() -> {
                 showFieldError(R.string.last_name_mandatory)
                 return
             }
 
-            companyName.isEmpty() -> {
+            (customerType == 2 || customerType == 3) && companyName.isEmpty() -> {
                 showFieldError(R.string.company_mandatory)
                 return
             }
 
-            mb.isEmpty() -> {
+            (customerType == 2) && mb.isEmpty() -> {
                 showFieldError(R.string.registration_mandatory)
+                return
+            }
+
+            (customerType == 2) && pib.isEmpty() -> {
+                showFieldError(R.string.pib_mandatory)
+                return
+            }
+
+
+            (customerType == 2) && (pib.length != 9 || !pib.all { it.isDigit() }) -> {
+                showFieldError(R.string.pib_not_cantains_nine_digits)
+                return
+            }
+
+            (customerType == 3) && ((pib.isNotEmpty()) && (pib.length !in 9..13)) -> {
+               showFieldError(R.string.pib_invalid_length)
                 return
             }
 
@@ -259,27 +249,41 @@ class BasicInformationFragment : Fragment() {
 
             else -> {
                 // Ako su sva polja popunjena, kreiramo zahtev za ažuriranje
-                val userUpdate = if (companyName.isBlank()) {
-                    UpdateUserDataRequest(
-                        address = address,
-                        city = address,
-                        firstName = firstName,
-                        lastName = lastName,
-                        phone = phone,
-                        postalCode = postalCode
-                    )
-                } else {
-                    UpdateUserDataRequest(
-                        address = address,
-                        city = address,
-                        companyName = companyName,
-                        mb = mb,
-                        phone = phone,
-                        postalCode = postalCode
-                    )
+                try {
+                    val userUpdate = when (customerType) {
+                        1 -> UpdateUserDataRequest(
+                            address = address,
+                            city = city,
+                            firstName = firstName,
+                            lastName = lastName,
+                            phone = phone,
+                            postalCode = postalCode
+                        )
+                        2 -> UpdateUserDataRequest(
+                            address = address,
+                            city = city,
+                            companyName = companyName,
+                            mb = mb,
+                            phone = phone,
+                            postalCode = postalCode,
+                            pib = pib
+                        )
+                        3 -> UpdateUserDataRequest(
+                            address = address,
+                            city = city,
+                            companyName = companyName,
+                            phone = phone,
+                            postalCode = postalCode,
+                            pib = pib
+                        )
+                        else -> throw IllegalArgumentException("Invalid customer type in BasicInformationFragment: $customerType")
+
+                    }
+                    // Sačuvaj promene
+                    viewModel.updateUserData(userUpdate)
+                } catch (e: IllegalArgumentException) {
+                    Log.e("Error", "Caught exception: ${e.message}")
                 }
-                // Sačuvaj promene
-                viewModel.updateUserData(userUpdate)
             }
         }
     }
@@ -287,6 +291,10 @@ class BasicInformationFragment : Fragment() {
     // Funkcija za prikazivanje greške
     private fun showFieldError(errorResId: Int) {
         Toast.makeText(requireContext(), getString(errorResId), Toast.LENGTH_LONG).show()
+    }
+
+    private fun showMessage(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     private fun setTextField(data: BasicInfoUIModel) {
@@ -300,22 +308,8 @@ class BasicInformationFragment : Fragment() {
         binding.editCity.setText(data.city)
         binding.editZipCode.setText(data.postalCode)
         binding.editCountry.setText(data.countryName)
+        binding.editPib.setText(data.pib)
     }
-
-
-    /*private fun saveChangesObserve() {
-        viewModel.saveChangesSuccess.observe(viewLifecycleOwner) { success ->
-            if (success) {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.change_successfully_saved),
-                    Toast.LENGTH_SHORT
-                ).show()
-                //Ponistavam se fokus sa poslednjeg izmenjenog tekstualnog polja
-                view?.clearFocus()
-            }
-        }
-    }*/
 
     /**
      * Displays a no-internet message using a SnackBar.

@@ -12,7 +12,6 @@ import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.api_home_page.homedata.HomeScreenData
 import com.mobility.enp.data.model.api_home_page.homedata.Promotion
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
-import com.mobility.enp.data.model.api_my_profile.basic_information.UserInfoData
 import com.mobility.enp.data.model.api_my_profile.basic_information.entity.BasicInfoEntity
 import com.mobility.enp.data.model.api_my_profile.refund_request.entity.DataRefundRequestEntity
 import com.mobility.enp.data.model.api_my_profile.refund_request.tags.entity.TagsRefundRequestEntity
@@ -33,7 +32,6 @@ import com.mobility.enp.data.room.PdfDao
 import com.mobility.enp.data.room.UserLanguageDao
 import com.mobility.enp.data.room.api_related_daos.BankDao
 import com.mobility.enp.data.room.api_related_daos.BasicInfoDao
-import com.mobility.enp.data.room.api_related_daos.BasicInformationDao
 import com.mobility.enp.data.room.api_related_daos.FcmTokenDao
 import com.mobility.enp.data.room.api_related_daos.HistoryIndexDao
 import com.mobility.enp.data.room.api_related_daos.HistoryListingDao
@@ -50,10 +48,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Database(
-    entities = [UserLoginResponseRoomTable::class, FcmToken::class, UserLanguage::class, NotificationModel::class, HomeScreenData::class, UserInfoData::class, IndexData::class, ToolHistoryListing::class,
+    entities = [UserLoginResponseRoomTable::class, FcmToken::class, UserLanguage::class, NotificationModel::class, HomeScreenData::class, IndexData::class, ToolHistoryListing::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, Promotion::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class],
-    version = 155,
+    version = 159,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -64,7 +62,6 @@ abstract class DRoom : RoomDatabase() {
     abstract fun pdfDao(): PdfDao
     abstract fun languageDao(): UserLanguageDao
     abstract fun fcmToken(): FcmTokenDao
-    abstract fun basicInformationDao(): BasicInformationDao
     abstract fun toolHistoryDao(): HistoryIndexDao
     abstract fun toolListingDao(): HistoryListingDao
     abstract fun introStateDao(): IntroPageStatusDao

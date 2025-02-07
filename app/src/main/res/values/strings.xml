@@ -383,5 +383,10 @@
     <string name="delete_picture">Обриши слику</string>
     <string name="first_add_card_serbia">Најпре морате додати картицу за Србију.</string>
     <string name="reported_found_tag_successfully">Успешно сте пријавили пронађен таг.</string>
+    <string name="pib">ПИБ (Порески идентификациони број)</string>
+    <string name="enter_pib">Унесите ПИБ</string>
+    <string name="pib_mandatory">Polje PIB je obavezno</string>
+    <string name="pib_invalid_length">Поље ПИБ мора садржати мање од 13 карактера.</string>
+    <string name="pib_not_cantains_nine_digits">Поље PIB мора садржати 9 цифара.</string>
 
 </resources>

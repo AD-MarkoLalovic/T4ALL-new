@@ -324,6 +324,11 @@
     <string name="delete_picture">Избриши слика</string>
     <string name="first_add_card_serbia">Прво, треба да додадете картичка за Србија.</string>
     <string name="reported_found_tag_successfully">Успешно пријавивте пронајден таг.</string>
+    <string name="pib">ДДВ број (Danok na dodadena vrednost broj)</string>
+    <string name="enter_pib">Внесете ДДВ број</string>
+    <string name="pib_mandatory">Полето ДДВ број е задолжително</string>
+    <string name="pib_invalid_length">Полето ДДВ број мора да содржи од 9 до 13 знаци.</string>
+    <string name="pib_not_cantains_nine_digits">Полето ДДВ број мора да содржи 9 цифри.</string>
 
 
 </resources>

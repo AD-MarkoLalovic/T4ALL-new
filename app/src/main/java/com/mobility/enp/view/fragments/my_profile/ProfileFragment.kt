@@ -61,13 +61,11 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
         viewModelProfile.setRefundRequestVisibility()
 
-        val displayName = viewModelProfile.getDisplayName(requireContext())
-        binding.userName.text = displayName
-
         lifecycleScope.launch {
             try {
 
-                displayName.let {
+                val displayName = viewModelProfile.displayName.value
+                displayName?.let {
                     imageRepository.getAndSetProfileImage(binding.imageProfile, it)
                 }
 
@@ -143,6 +141,10 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
     }
 
     private fun setObserver() {
+        viewModelProfile.displayName.observe(viewLifecycleOwner) { displayName ->
+            binding.userName.text = displayName
+        }
+
         errorBody.observe(viewLifecycleOwner) { errorBody ->
             context?.let { context ->
                 Toast.makeText(

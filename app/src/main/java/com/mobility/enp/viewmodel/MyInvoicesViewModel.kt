@@ -179,7 +179,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
                 val userToken = getUserToken()
                 userToken?.let { token ->
                     Repository.postPayBill(
-                        token, billId, getApplication(), _billPad, errorBody
+                        token, billId, _billPad, errorBody
                     )
                 }
             }

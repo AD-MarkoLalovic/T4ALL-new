@@ -17,8 +17,7 @@ import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
-import com.mobility.enp.data.model.api_my_profile.UpdateUserInfoRequest
-import com.mobility.enp.data.model.api_my_profile.basic_information.BasicInformationResponse
+import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_tags.LostTagResponse
 import com.mobility.enp.data.model.api_tags.PostLostTag
@@ -34,7 +33,6 @@ import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
-import com.mobility.enp.data.room.api_related_daos.BasicInformationDao
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
@@ -56,10 +54,6 @@ object Repository {
 
     private fun apiService(token: String?): ApiService {
         return RestClient.create(ApiService::class.java, token).apiService
-    }
-
-    private fun apiServiceTest(): ApiService {
-        return RestClient.create(ApiService::class.java, "").apiService
     }
 
     suspend fun loginUser(
@@ -164,29 +158,9 @@ object Repository {
 
     // updated
     suspend fun getUserPersonalInfo(
-        token: String?,
-    ): BasicInformationResponse {
+        token: String?
+    ): BasicInfoResponse {
         return apiService(token).getUserPersonalData()
-    }
-
-    suspend fun updateUserInfo(
-        basicInformationDao: BasicInformationDao, dataToSend: UpdateUserInfoRequest, token: String?
-    ) {
-
-        val response = apiService(token).updateUserInformation(dataToSend)
-
-        if (response.isSuccessful) {
-            val userInfo = response.body()?.data
-            if (userInfo != null) {
-                withContext(Dispatchers.IO) {
-                    basicInformationDao.deleteBasicInfoData()
-                    basicInformationDao.insertBasicInfoData(userInfo)
-                }
-            }
-        } else {
-            Log.d(TAG, "updateUserInfo: Error in response $response")
-        }
-
     }
 
     fun logoutUser(
@@ -622,7 +596,6 @@ object Repository {
     fun postPayBill(
         token: String?,
         billId: String?,
-        context: Context,
         billPaid: MutableLiveData<Boolean>,
         errorBody: MutableLiveData<ErrorBody>
     ) {
@@ -693,11 +666,6 @@ object Repository {
             }
 
         })
-    }
-
-    suspend fun getCountryCode(token: String?): BasicInformationResponse {
-
-        return apiService(token).getUserCountryCode()
     }
 
     suspend fun getUserCountries(

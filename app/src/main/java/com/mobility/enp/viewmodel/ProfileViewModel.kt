@@ -1,17 +1,18 @@
 package com.mobility.enp.viewmodel
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.network.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -29,13 +30,20 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     val name: LiveData<String> get() = _name
 
     private val _deletePic = MutableLiveData<Boolean>()
-    val deletePic :LiveData<Boolean> get() = _deletePic
+    val deletePic: LiveData<Boolean> get() = _deletePic
 
     private val _showRefundCard = MutableLiveData<Boolean>()
     val showRefundCard: LiveData<Boolean> get() = _showRefundCard
 
     private var _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
+
+    private val homeDisplayName: String = Repository.getDisplayName(getApplication()).toString()
+    val displayName: LiveData<String> =
+        database.basicInfoDao().fetchDisplayName()
+            .map { it.orEmpty().ifEmpty { homeDisplayName } }
+            .asLiveData()
+
 
     private suspend fun getUserToken(): String? {
         return withContext(Dispatchers.IO) {
@@ -59,12 +67,13 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                     val token = getUserToken()
                     token?.let {
                         val userInfo = Repository.getUserPersonalInfo(it)
-                        val userCountry = userInfo.data?.country?.code
-                        val userType = userInfo.data?.customerType?.type
-                        val isFranchiser = userInfo.data?.isFranchiser
+                        val userCountry = userInfo.data.country.code
+                        val userType = userInfo.data.customerType.type
+                        val isFranchiser = userInfo.data.isFranchiser
 
                         // Postavljanje vrednosti za _showRefundCard
-                        _showRefundCard.value = ((userCountry == "RS" || userType == 3) && isFranchiser == false)
+                        _showRefundCard.value =
+                            ((userCountry == "RS" || userType == 3) && isFranchiser == false)
                     }
                 } catch (e: Exception) {
                     Log.e("ProfileViewModel", "Error fetching user data", e)
@@ -100,14 +109,14 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         Repository.logoutUser(userToken, errorBody)
     }
 
-    fun deleteProfilePicture(){
-        viewModelScope.launch (Dispatchers.IO) {
+    fun deleteProfilePicture() {
+        viewModelScope.launch(Dispatchers.IO) {
             database.profileImageDao().deleteAll();
             _deletePic.postValue(true)
         }
     }
 
-    suspend fun checkStoredImageData():Boolean{
+    suspend fun checkStoredImageData(): Boolean {
         val list = database.profileImageDao().selectAll()
         return list.isNotEmpty()
     }
@@ -120,8 +129,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
                     token?.let {
                         val countryCode = async {
-                            val response = Repository.getCountryCode(it)
-                            response.data?.country?.code
+                            val response = Repository.getUserPersonalInfo(it)
+                            response.data.country.code
                         }
 
                         val userLanguage = async {
@@ -155,8 +164,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         return Repository.isNetworkAvailable(getApplication())
     }
 
-    fun getDisplayName(context: Context): String {
-        return Repository.getDisplayName(context).toString()
+    fun fetchDisplayName(): String {
+        return Repository.getDisplayName(getApplication()).toString()
     }
 
 }

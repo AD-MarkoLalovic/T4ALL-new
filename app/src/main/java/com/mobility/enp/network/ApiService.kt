@@ -7,9 +7,6 @@ import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
-import com.mobility.enp.data.model.api_my_profile.UpdateUserInfoRequest
-import com.mobility.enp.data.model.api_my_profile.basic_information.BasicInformationResponse
-import com.mobility.enp.data.model.api_my_profile.basic_information.entity.BasicInfoEntity
 import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.api_my_profile.refund_request.SendRefundRequest
@@ -31,8 +28,6 @@ import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
-import com.mobility.enp.data.model.testmodels.UserList
-import com.mobility.enp.view.ui_models.BasicInfoUIModel
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -73,16 +68,10 @@ interface ApiService {
     ): Call<HomePageFcmTokenResponse>
 
     @GET("/api/v1/personal-data")
-    suspend fun getUserPersonalData(): BasicInformationResponse
+    suspend fun getUserPersonalData(): BasicInfoResponse
 
     @GET("/api/v1/personal-data")
     suspend fun getUserData(): Response<BasicInfoResponse>
-
-    @GET("/api/v1/personal-data")
-    suspend fun getUserCountryCode(): BasicInformationResponse
-
-    @PUT("/api/v1/personal-data")
-    suspend fun updateUserInformation(@Body request: UpdateUserInfoRequest): Response<BasicInformationResponse>
 
     @PUT("/api/v1/personal-data")
     suspend fun updateUserInfo(

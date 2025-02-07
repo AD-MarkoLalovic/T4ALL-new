@@ -317,4 +317,9 @@
     <string name="delete_picture">Delete Picture</string>
     <string name="first_add_card_serbia">First, you need to add a card for Serbia.</string>
     <string name="reported_found_tag_successfully">You have successfully reported the found tag.</string>
+    <string name="pib">VAT Number (Value Added Tax Number)</string>
+    <string name="enter_pib">Enter the VAT Number</string>
+    <string name="pib_mandatory">The VAT Number field is required</string>
+    <string name="pib_invalid_length">The VAT Number field must contain between 9 and 13 characters.</string>
+    <string name="pib_not_cantains_nine_digits">The VAT Number field must contain 9 digits.</string>
 </resources>
