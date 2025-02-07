@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
@@ -18,6 +19,7 @@ import com.mobility.enp.data.model.api_tool_history.listing.TotalAmount
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
+import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.adapters.tool_history.main_screen.TotalCostPassageAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
@@ -115,6 +117,10 @@ class HistoryResultAdapter(
 
                     is SubmitResult.FailureApiError -> {
                         logError(context.resources.getString(R.string.api_call_error))
+                    }
+
+                    is SubmitResult.InvalidApiToken -> {
+                        complaintInterface.invalidToken(serverResponse.errorMessage,serverResponse.errorCode)
                     }
 
                     else -> {
