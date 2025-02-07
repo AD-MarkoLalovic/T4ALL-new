@@ -274,13 +274,12 @@ class BasicInformationFragment : Fragment() {
                             companyName = companyName,
                             phone = phone,
                             postalCode = postalCode,
-                            pib = ""
+                            pib = pib
                         )
                         else -> throw IllegalArgumentException("Invalid customer type in BasicInformationFragment: $customerType")
 
                     }
                     // Sačuvaj promene
-                    Log.d("MARKO", "address: $address, city: $city, companyName: $companyName, phone: $phone, postalCode: $postalCode, pib: $pib")
                     viewModel.updateUserData(userUpdate)
                 } catch (e: IllegalArgumentException) {
                     Log.e("Error", "Caught exception: ${e.message}")

@@ -61,7 +61,6 @@ class UserRepository(
                     } ?: return Result.failure(NetworkError.ServerError)
                 } else {
                     remoteData.errorBody()?.let { errorBody ->
-                        Log.e("MARKO", "Greška: ${errorBody.string()}")
                         val apiErrorResponse = parseErrorResponse(remoteData.code(),errorBody)
                         return Result.failure(NetworkError.ApiError(apiErrorResponse))
                     } ?: return Result.failure(NetworkError.ServerError)
