@@ -13,14 +13,14 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mobility.enp.BuildConfig
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentTosBinding
-import com.mobility.enp.viewmodel.HomeViewModel
+import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -30,7 +30,7 @@ class CardFragment : Fragment() {
     private var _binding: FragmentTosBinding? = null
     private val binding: FragmentTosBinding get() = _binding!!
     private var url: String = "https://admindev.toll4all.com/mweb/customers/add-card/rs"
-    private val homeViewModel: HomeViewModel by viewModels()
+    private val viewModel: PaymentAndPassageViewModel by activityViewModels()
 
     companion object {
         const val TAG = "Headers"
@@ -148,7 +148,7 @@ class CardFragment : Fragment() {
 
     // Ova funkcija vraća token koji je potreban za autentifikaciju
     private suspend fun fetchToken(): String {
-        val tokenData = homeViewModel.getUserToken()
+        val tokenData = viewModel.getUserTokenCardWeb()
         return tokenData?.let { "${it.tokenType} ${it.accessToken}" } ?: ""
     }
 

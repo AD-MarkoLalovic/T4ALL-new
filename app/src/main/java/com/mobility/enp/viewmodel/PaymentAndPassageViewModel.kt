@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mobility.enp.data.model.ErrorBody
+import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.network.Repository
@@ -109,6 +110,13 @@ class PaymentAndPassageViewModel(application: Application) : AndroidViewModel(ap
         val list = database.promotionsDao().getPromotionsList()
         val countriesAvailable = list.mapNotNull { promotion -> promotion.countryCode }
         return countriesAvailable
+    }
+
+    //za Card Fragment
+    suspend fun getUserTokenCardWeb(): UserLoginResponseRoomTable {
+        return withContext(Dispatchers.IO) {
+            database.loginDao().fetchAllowedUsers()
+        }
     }
 
 }
