@@ -69,7 +69,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         setupCountryList()
         handlePrimaryCardChange()
         setupAddCardButton()
-        setClickableText()  // terms and conditions
     }
 
     private fun setupAdapters() {
@@ -131,6 +130,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     cardsCountryAdapter.updateCountries(countryNameAndAdditionalField)
                     cardsCountryAdapter.setSelectedCountry(selectedCountry)
                 }
+
+                setClickableText()  // terms and conditions
             }
         }
     }
@@ -322,24 +323,29 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             "RS" -> {
                 selectedCountry = "RS"
                 filterCardsByCountry("RS")
+                setBlockVisibility(false)
             }
 
             "MK" -> {
                 selectedCountry = "MK"
                 filterCardsByCountry("MK")
+                setBlockVisibility(true)
             }
 
             "ME" -> {
                 selectedCountry = "ME"
                 filterCardsByCountry("ME")
+                setBlockVisibility(true)
             }
 
             "HR" -> {
                 selectedCountry = "HR"
                 filterCardsByCountry("HR")
+                setBlockVisibility(true)
             }
 
             else -> {
+                setBlockVisibility(false)
                 selectedCountry = "All"
                 adapter.updateListCards(allCards)
                 binding.txNoCards.visibility = if (allCards.isEmpty()) View.VISIBLE else View.GONE
@@ -390,17 +396,24 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             clickableSpanTerms,
             termsStart,
             termsEnd,
-            Spanned.SPAN_EXCLUSIVE_INCLUSIVE
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         spannableString.setSpan(
             clickablePrivacyTerms,
             privacyStart,
             privacyEnd,
-            Spanned.SPAN_EXCLUSIVE_INCLUSIVE
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
         binding.tvTerms.text = spannableString
         binding.tvTerms.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    private fun setBlockVisibility(enable: Boolean){
+        when (enable) {
+            true -> {binding.termsBlock.visibility = View.VISIBLE}
+            false -> {binding.termsBlock.visibility = View.GONE}
+        }
     }
 
     override fun onDestroyView() {
