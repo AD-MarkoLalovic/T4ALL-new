@@ -3,6 +3,7 @@ package com.mobility.enp.view.dialogs
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
 import com.mobility.enp.databinding.GeneralDialogBinding
 import com.mobility.enp.databinding.PdfDialogBinding
+import com.mobility.enp.util.AssetHelper
 import com.mobility.enp.util.setDimensionsPercent
 
 class PdfViewDialog() : DialogFragment() {
@@ -33,7 +35,10 @@ class PdfViewDialog() : DialogFragment() {
         val args: PdfViewDialogArgs by navArgs()
         val receivedPair = Pair(args.countryCode, args.folderPath)
 
-//        Toast.makeText(requireContext(), "${receivedPair.first}", Toast.LENGTH_SHORT).show()
+        val list = AssetHelper.getFileNames(requireContext(),args.folderPath ?: "")
+        Log.d("PDF_DIA", "list: ${list.toString()}")
+
+        binding.pdfView.fromAsset(list[0]).load()
 
         binding.confirmButton.setOnClickListener {
             dismiss()

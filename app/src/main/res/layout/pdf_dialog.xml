@@ -7,13 +7,13 @@
         android:layout_height="wrap_content"
         android:background="@drawable/border_dialog_password_change"
         android:orientation="vertical"
-        android:paddingHorizontal="@dimen/dimens_16dp"
+        android:paddingHorizontal="@dimen/dimens_5dp"
         android:paddingVertical="@dimen/dimens_22dp">
 
         <com.github.barteksc.pdfviewer.PDFView
             android:id="@+id/pdfView"
             android:layout_width="0dp"
-            android:layout_height="400dp"
+            android:layout_height="500dp"
             android:layout_centerInParent="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimens_48dp"
             android:text="@string/confirm"
+            android:layout_marginHorizontal="@dimen/dimens_10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pdfView" />

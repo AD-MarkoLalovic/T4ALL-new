@@ -6,7 +6,7 @@ import java.io.IOException
 
 object AssetHelper {
 
-    fun getImageFileNames(context: Context, folderPath: String): List<String> {
+    fun getFileNames(context: Context, folderPath: String): List<String> {
         val fileNames = mutableListOf<String>()
         val assetManager: AssetManager = context.assets
 
