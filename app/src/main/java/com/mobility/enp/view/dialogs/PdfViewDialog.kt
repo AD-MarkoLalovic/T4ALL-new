@@ -8,15 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.mobility.enp.databinding.GeneralDialogBinding
+import com.mobility.enp.databinding.PdfDialogBinding
 import com.mobility.enp.util.setDimensionsPercent
 
-class GeneralMessageDialog(
+class PdfViewDialog(
     private val title: String,
     private val subtitle: String
 ) : DialogFragment() {
 
-    private var _binding: GeneralDialogBinding? = null
-    private val binding: GeneralDialogBinding get() = _binding!!
+    private var _binding: PdfDialogBinding? = null
+    private val binding: PdfDialogBinding get() = _binding!!
 
 
     override fun onCreateView(
@@ -25,7 +26,7 @@ class GeneralMessageDialog(
         savedInstanceState: Bundle?
     ): View {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        _binding = GeneralDialogBinding.inflate(inflater, container, false)
+        _binding = PdfDialogBinding.inflate(inflater, container, false)
         return binding.root
     }
 
