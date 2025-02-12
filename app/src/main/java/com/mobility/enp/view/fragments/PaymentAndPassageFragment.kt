@@ -1,7 +1,6 @@
 package com.mobility.enp.view.fragments
 
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -50,6 +49,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private var allCards: List<Card> = emptyList()
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     private var selectedCountry = "All"
+    private var isButtonEnabled = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -233,6 +233,20 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 binding.loadingCards.visibility = View.GONE
             }
         }
+
+        binding.termsConditionsCheckmark.setOnCheckedChangeListener { _, isChecked ->
+            when (isChecked) {
+                true -> {
+                    isButtonEnabled = true
+                    makeCardClickable(true)
+                }
+
+                false -> {
+                    isButtonEnabled = false
+                    makeCardClickable(false)
+                }
+            }
+        }
     }
 
     private fun setObserversError() {
@@ -340,6 +354,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(false)
                 setCardVisibility(true)
                 makeCardClickable(true)
+                isButtonEnabled = true
             }
 
             "MK" -> {
@@ -348,6 +363,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
+                isButtonEnabled = false
             }
 
             "ME" -> {
@@ -356,6 +372,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
+                isButtonEnabled = false
             }
 
             "HR" -> {
@@ -364,12 +381,14 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
+                isButtonEnabled = false
             }
 
             else -> {
                 setBlockVisibility(false)
                 setCardVisibility(false)
                 makeCardClickable(false)
+                isButtonEnabled = false
                 selectedCountry = "All"
                 adapter.updateListCards(allCards)
                 binding.txNoCards.visibility = if (allCards.isEmpty()) View.VISIBLE else View.GONE
@@ -464,13 +483,15 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             true -> {
                 binding.bttAddCard.isClickable = true
                 binding.bttAddCard.isEnabled = true
-                binding.bttAddCard.backgroundTintList = ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
+                binding.bttAddCard.backgroundTintList =
+                    ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
             }
 
             false -> {
                 binding.bttAddCard.isClickable = false
                 binding.bttAddCard.isEnabled = false
-                binding.bttAddCard.backgroundTintList = ColorStateList.valueOf(requireContext().getColor(R.color.button_not_enabled_web))
+                binding.bttAddCard.backgroundTintList =
+                    ColorStateList.valueOf(requireContext().getColor(R.color.button_not_enabled_web))
             }
         }
     }
@@ -481,4 +502,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         _binding = null
     }
 
+    override fun onResume() {
+        super.onResume()
+        isButtonEnabled = false
+    }
 }
