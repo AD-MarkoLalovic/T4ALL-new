@@ -88,11 +88,44 @@
                     tools:listitem="@layout/item_payment_and_passages" />
 
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/termsBlock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/dimens_5dp"
+                    >
+
+                    <CheckBox
+                        android:id="@+id/termsConditionsCheckmark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_marginStart="@dimen/dimens_10dp"
+                        android:id="@+id/tvTerms"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textAlignment="textStart"
+                        app:layout_constraintBottom_toBottomOf="@id/termsConditionsCheckmark"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/termsConditionsCheckmark"
+                        app:layout_constraintTop_toTopOf="@id/termsConditionsCheckmark"
+                        tools:text="I agree with General Terms and Conditions and Privacy Policy" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <Button
                     android:id="@+id/bttAddCard"
                     style="@style/MyButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_10dp"
                     android:text="@string/add_card_home"
                     android:visibility="gone"
                     tools:visibility="visible" />

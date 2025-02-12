@@ -1,6 +1,12 @@
 package com.mobility.enp.view.fragments
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -63,7 +69,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         setupCountryList()
         handlePrimaryCardChange()
         setupAddCardButton()
-
+        setClickableText()  // terms and conditions
     }
 
     private fun setupAdapters() {
@@ -130,7 +136,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
 
-
     private fun fetchCardData() {
         viewModel.paymentAndPassageList.observe(viewLifecycleOwner) { paymentAndPassage ->
             paymentAndPassage?.let {
@@ -165,19 +170,19 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
     private fun setupAddCardButton() {
         binding.bttAddCard.setOnClickListener {
-                val dialogAddCard = CardAddDialog(object : PromotionInterface {
-                    override fun onCountrySelected(promotion: Promotion) {
-                        val action =
-                            PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
-                                promotion
-                            )
-                        findNavController().navigate(action)
-                    }
-                })
-
-                activity?.supportFragmentManager?.let { manager ->
-                    dialogAddCard.show(manager, "CardAddDialog")
+            val dialogAddCard = CardAddDialog(object : PromotionInterface {
+                override fun onCountrySelected(promotion: Promotion) {
+                    val action =
+                        PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
+                            promotion
+                        )
+                    findNavController().navigate(action)
                 }
+            })
+
+            activity?.supportFragmentManager?.let { manager ->
+                dialogAddCard.show(manager, "CardAddDialog")
+            }
         }
     }
 
@@ -343,6 +348,59 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             }
         }
         cardsCountryAdapter.setSelectedCountry(selectedCountry)  // Dodato za ažuriranje selektovane zemlje u adapteru
+    }
+
+    private fun setClickableText() {
+        val fullText = "I agree with General Terms and Conditions and Privacy Policy"
+        val spannableString = SpannableString(fullText)
+
+        val termsStart =
+            fullText.indexOf("General Terms and Conditions")  // sets part that is clickable
+        val termsEnd = termsStart + "General Terms and Conditions".length
+
+        val privacyStart = fullText.indexOf("Privacy Policy") // same here
+        val privacyEnd = privacyStart + "Privacy Policy".length
+
+
+        val clickableSpanTerms = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                Toast.makeText(requireContext(), "i have been dun clicked", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = true
+                ds.color = Color.BLUE
+            }
+        }
+
+        val clickablePrivacyTerms = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                Toast.makeText(requireContext(), "i have been dun clicked 2", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = true
+                ds.color = Color.BLUE
+            }
+        }
+
+        spannableString.setSpan(
+            clickableSpanTerms,
+            termsStart,
+            termsEnd,
+            Spanned.SPAN_EXCLUSIVE_INCLUSIVE
+        )
+        spannableString.setSpan(
+            clickablePrivacyTerms,
+            privacyStart,
+            privacyEnd,
+            Spanned.SPAN_EXCLUSIVE_INCLUSIVE
+        )
+
+        binding.tvTerms.text = spannableString
+        binding.tvTerms.movementMethod = LinkMovementMethod.getInstance()
     }
 
     override fun onDestroyView() {
