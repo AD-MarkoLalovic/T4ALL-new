@@ -21,6 +21,7 @@ import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.banks.entity.BanksEntity
+import com.mobility.enp.data.model.home.entity.HomeEntity
 import com.mobility.enp.data.model.notification.NotificationModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.model.pdf_table.PdfTable
@@ -36,6 +37,7 @@ import com.mobility.enp.data.room.api_related_daos.FcmTokenDao
 import com.mobility.enp.data.room.api_related_daos.HistoryIndexDao
 import com.mobility.enp.data.room.api_related_daos.HistoryListingDao
 import com.mobility.enp.data.room.api_related_daos.HomeDao
+import com.mobility.enp.data.room.api_related_daos.HomeScreenDao
 import com.mobility.enp.data.room.api_related_daos.IntroPageStatusDao
 import com.mobility.enp.data.room.api_related_daos.MyInvoicesDao
 import com.mobility.enp.data.room.api_related_daos.ProfileImageDao
@@ -50,8 +52,8 @@ import kotlinx.coroutines.launch
 @Database(
     entities = [UserLoginResponseRoomTable::class, FcmToken::class, UserLanguage::class, NotificationModel::class, HomeScreenData::class, IndexData::class, ToolHistoryListing::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, Promotion::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
-        BasicInfoEntity::class],
-    version = 159,
+        BasicInfoEntity::class, HomeEntity::class],
+    version = 161,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -75,6 +77,8 @@ abstract class DRoom : RoomDatabase() {
     abstract fun bankDao(): BankDao
     abstract fun tagsRefundRequest(): TagsRefundRequestDao
     abstract fun basicInfoDao(): BasicInfoDao
+    abstract fun homeScreenDao(): HomeScreenDao
+
 
     companion object {
         private var instance: DRoom? = null
@@ -129,6 +133,7 @@ abstract class DRoom : RoomDatabase() {
         refundRequestDao().deleteRefundRequests()
         tagsRefundRequest().deleteTagsRefundRequest()
         basicInfoDao().deleteBasicInfo()
+        homeScreenDao().deleteHomeScreenData()
     }
 
 }
