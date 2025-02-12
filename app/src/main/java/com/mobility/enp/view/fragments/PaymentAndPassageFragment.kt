@@ -509,5 +509,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     override fun onResume() {
         super.onResume()
         isButtonEnabled = false
+        binding.termsConditionsCheckmark.isChecked = false
+        setCountryListener(selectedCountry)
     }
 }
