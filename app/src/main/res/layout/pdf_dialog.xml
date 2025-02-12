@@ -4,14 +4,14 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@drawable/border_dialog_password_change"
         android:orientation="vertical"
         android:paddingHorizontal="@dimen/dimens_5dp"
         android:paddingVertical="@dimen/dimens_22dp">
 
-        <com.github.barteksc.pdfviewer.PDFView
-            android:id="@+id/pdfView"
+        <WebView
+            android:id="@+id/webView"
             android:layout_width="0dp"
             android:layout_height="500dp"
             android:layout_marginHorizontal="@dimen/dimens_10dp"
@@ -30,7 +30,7 @@
             android:layout_marginHorizontal="@dimen/dimens_10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pdfView" />
+            app:layout_constraintTop_toBottomOf="@+id/webView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

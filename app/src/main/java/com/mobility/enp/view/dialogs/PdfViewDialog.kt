@@ -38,12 +38,8 @@ class PdfViewDialog() : DialogFragment() {
         val list = AssetHelper.getFileNames(requireContext(),args.folderPath ?: "")
         Log.d("PDF_DIA", "list: ${list.toString()}")
 
-        binding.pdfView.fromAsset(list[0])
-            .defaultPage(0)
-            .onLoad { binding.pdfView.zoomTo(2.0f) }
-            .enableSwipe(true)
-            .enableDoubletap(true)
-            .load()
+        binding.webView.settings.javaScriptEnabled = true
+        binding.webView.loadUrl("file:///android_asset/"+list[0])
 
         binding.confirmButton.setOnClickListener {
             dismiss()
