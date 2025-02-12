@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
@@ -338,6 +339,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 filterCardsByCountry("RS")
                 setBlockVisibility(false)
                 setCardVisibility(true)
+                makeCardClickable(true)
             }
 
             "MK" -> {
@@ -345,6 +347,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 filterCardsByCountry("MK")
                 setBlockVisibility(true)
                 setCardVisibility(true)
+                makeCardClickable(false)
             }
 
             "ME" -> {
@@ -352,6 +355,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 filterCardsByCountry("ME")
                 setBlockVisibility(true)
                 setCardVisibility(true)
+                makeCardClickable(false)
             }
 
             "HR" -> {
@@ -359,11 +363,13 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 filterCardsByCountry("HR")
                 setBlockVisibility(true)
                 setCardVisibility(true)
+                makeCardClickable(false)
             }
 
             else -> {
                 setBlockVisibility(false)
                 setCardVisibility(false)
+                makeCardClickable(false)
                 selectedCountry = "All"
                 adapter.updateListCards(allCards)
                 binding.txNoCards.visibility = if (allCards.isEmpty()) View.VISIBLE else View.GONE
@@ -395,7 +401,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true
-                ds.color = Color.BLUE
+                ds.color = requireContext().getColor(R.color.figmaSplashScreenColor)
             }
         }
 
@@ -408,7 +414,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true
-                ds.color = Color.BLUE
+                ds.color = requireContext().getColor(R.color.figmaSplashScreenColor)
             }
         }
 
@@ -452,6 +458,23 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             }
         }
     }
+
+    private fun makeCardClickable(enable: Boolean) {
+        when (enable) {
+            true -> {
+                binding.bttAddCard.isClickable = true
+                binding.bttAddCard.isEnabled = true
+                binding.bttAddCard.backgroundTintList = ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
+            }
+
+            false -> {
+                binding.bttAddCard.isClickable = false
+                binding.bttAddCard.isEnabled = false
+                binding.bttAddCard.backgroundTintList = ColorStateList.valueOf(requireContext().getColor(R.color.button_not_enabled_web))
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
