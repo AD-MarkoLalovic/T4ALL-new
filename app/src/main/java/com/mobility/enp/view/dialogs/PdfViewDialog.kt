@@ -6,19 +6,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.navArgs
 import com.mobility.enp.databinding.GeneralDialogBinding
 import com.mobility.enp.databinding.PdfDialogBinding
 import com.mobility.enp.util.setDimensionsPercent
 
-class PdfViewDialog(
-    private val title: String,
-    private val subtitle: String
-) : DialogFragment() {
+class PdfViewDialog() : DialogFragment() {
 
     private var _binding: PdfDialogBinding? = null
     private val binding: PdfDialogBinding get() = _binding!!
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,8 +30,11 @@ class PdfViewDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.title.text = title
-        binding.subTitle.text = subtitle
+        val args: PdfViewDialogArgs by navArgs()
+        val receivedPair = Pair(args.countryCode, args.folderPath)
+
+//        Toast.makeText(requireContext(), "${receivedPair.first}", Toast.LENGTH_SHORT).show()
+
         binding.confirmButton.setOnClickListener {
             dismiss()
         }

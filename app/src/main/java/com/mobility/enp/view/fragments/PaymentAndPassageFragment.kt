@@ -413,8 +413,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         val clickableSpanTerms = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                Toast.makeText(requireContext(), "i have been dun clicked", Toast.LENGTH_SHORT)
-                    .show()
+                val action = PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewDialog(
+                    "example","example"
+                )
+                findNavController().navigate(action)
             }
 
             override fun updateDrawState(ds: TextPaint) {
@@ -426,8 +428,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         val clickablePrivacyTerms = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                Toast.makeText(requireContext(), "i have been dun clicked 2", Toast.LENGTH_SHORT)
-                    .show()
+                val action = PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewDialog(
+                    "example","example"
+                )
+                findNavController().navigate(action)
             }
 
             override fun updateDrawState(ds: TextPaint) {

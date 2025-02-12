@@ -11,35 +11,26 @@
         android:paddingHorizontal="@dimen/dimens_16dp"
         android:paddingVertical="@dimen/dimens_22dp">
 
-        <TextView
-            android:id="@+id/title"
-            style="@style/H2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+        <com.github.barteksc.pdfviewer.PDFView
+            android:id="@+id/pdfView"
+            android:layout_width="0dp"
+            android:layout_height="800dp"
+            android:layout_centerInParent="true"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="Title" />
-
-        <TextView
-            android:id="@+id/subTitle"
-            style="@style/Paragraph"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/title"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="28dp"
-            tools:text="subTitle" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/confirmButton"
             style="@style/MyButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/subTitle"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/dimens_48dp"
+            android:text="@string/confirm"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="@dimen/dimens_30dp"
-            android:text="@string/confirm" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pdfView" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
