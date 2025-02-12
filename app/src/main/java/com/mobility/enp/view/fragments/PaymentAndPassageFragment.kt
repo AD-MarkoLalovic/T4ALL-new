@@ -68,7 +68,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         setListener()
         setupCountryList()
         handlePrimaryCardChange()
-        setupAddCardButton()
+        setAddCardButton()
     }
 
     private fun setupAdapters() {
@@ -169,6 +169,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
     }
 
+    @Deprecated("old method no longer has a point since dialog is not shown")
     private fun setupAddCardButton() {
         binding.bttAddCard.setOnClickListener {
             val dialogAddCard = CardAddDialog(object : PromotionInterface {
@@ -183,6 +184,19 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
             activity?.supportFragmentManager?.let { manager ->
                 dialogAddCard.show(manager, "CardAddDialog")
+            }
+        }
+    }
+
+    private fun setAddCardButton() {
+        binding.bttAddCard.setOnClickListener {
+            val promotion = Promotion("", "", 0, "", selectedCountry, false)
+            if (selectedCountry != "All" && selectedCountry.isNotEmpty()) {
+                val action =
+                    PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
+                        promotion
+                    )
+                findNavController().navigate(action)
             }
         }
     }
@@ -215,7 +229,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             paymentAndPassage?.let {
                 binding.rvCreditCard.visibility = View.VISIBLE
                 binding.recyclerCardsCountry.visibility = View.VISIBLE
-                binding.bttAddCard.visibility = View.VISIBLE
                 binding.loadingCards.visibility = View.GONE
             }
         }
@@ -324,28 +337,33 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 selectedCountry = "RS"
                 filterCardsByCountry("RS")
                 setBlockVisibility(false)
+                setCardVisibility(true)
             }
 
             "MK" -> {
                 selectedCountry = "MK"
                 filterCardsByCountry("MK")
                 setBlockVisibility(true)
+                setCardVisibility(true)
             }
 
             "ME" -> {
                 selectedCountry = "ME"
                 filterCardsByCountry("ME")
                 setBlockVisibility(true)
+                setCardVisibility(true)
             }
 
             "HR" -> {
                 selectedCountry = "HR"
                 filterCardsByCountry("HR")
                 setBlockVisibility(true)
+                setCardVisibility(true)
             }
 
             else -> {
                 setBlockVisibility(false)
+                setCardVisibility(false)
                 selectedCountry = "All"
                 adapter.updateListCards(allCards)
                 binding.txNoCards.visibility = if (allCards.isEmpty()) View.VISIBLE else View.GONE
@@ -370,7 +388,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         val clickableSpanTerms = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                Toast.makeText(requireContext(), "i have been dun clicked", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "i have been dun clicked", Toast.LENGTH_SHORT)
+                    .show()
             }
 
             override fun updateDrawState(ds: TextPaint) {
@@ -382,7 +401,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         val clickablePrivacyTerms = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                Toast.makeText(requireContext(), "i have been dun clicked 2", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "i have been dun clicked 2", Toast.LENGTH_SHORT)
+                    .show()
             }
 
             override fun updateDrawState(ds: TextPaint) {
@@ -409,10 +429,27 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         binding.tvTerms.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    private fun setBlockVisibility(enable: Boolean){
+    private fun setBlockVisibility(enable: Boolean) {
         when (enable) {
-            true -> {binding.termsBlock.visibility = View.VISIBLE}
-            false -> {binding.termsBlock.visibility = View.GONE}
+            true -> {
+                binding.termsBlock.visibility = View.VISIBLE
+            }
+
+            false -> {
+                binding.termsBlock.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun setCardVisibility(enable: Boolean) {
+        when (enable) {
+            true -> {
+                binding.bttAddCard.visibility = View.VISIBLE
+            }
+
+            false -> {
+                binding.bttAddCard.visibility = View.GONE
+            }
         }
     }
 
