@@ -320,5 +320,8 @@
     <string name="pib_mandatory">Το πεδίο ΑΦΜ είναι υποχρεωτικό</string>
     <string name="pib_invalid_length">Το πεδίο ΑΦΜ πρέπει να περιέχει από 9 έως 13 χαρακτήρες.</string>
     <string name="pib_not_cantains_nine_digits">Το πεδίο ΑΦΜ πρέπει να περιέχει 9 ψηφία.</string>
+    <string name="cards_terms_text_full">Συμφωνώ με τους Γενικούς Όρους και Προϋποθέσεις και την Πολιτική Απορρήτου</string>
+    <string name="card_terms_left_clickable">Γενικούς Όρους και Προϋποθέσεις</string>
+    <string name="card_term_right_clickable">Πολιτική Απορρήτου</string>
 
 </resources>

@@ -43,6 +43,12 @@ abstract class BaseRepository(
         }
     }
 
+    protected suspend fun getRoomLanguage():String?{
+        return withContext(Dispatchers.IO) {
+            database.languageDao().fetchAllowedUsers()?.userLanguage
+        }
+    }
+
     protected fun isNetworkAvailable(): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

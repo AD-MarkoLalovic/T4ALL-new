@@ -39,6 +39,7 @@
     <color name="hint_text_color">#a7a7a7</color>
 
     <color name="country_filter">#7E91AC</color>
+    <color name="button_not_enabled_web">#A60D6EFD</color>
 
 
 

@@ -322,4 +322,7 @@
     <string name="pib_mandatory">The VAT Number field is required</string>
     <string name="pib_invalid_length">The VAT Number field must contain between 9 and 13 characters.</string>
     <string name="pib_not_cantains_nine_digits">The VAT Number field must contain 9 digits.</string>
+    <string name="cards_terms_text_full">I agree with General Terms and Conditions and Privacy Policy</string>
+    <string name="card_terms_left_clickable">General Terms and Conditions</string>
+    <string name="card_term_right_clickable">Privacy Policy</string>
 </resources>
