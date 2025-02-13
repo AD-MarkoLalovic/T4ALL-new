@@ -9,15 +9,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.mobility.enp.databinding.PdfDialogBinding
 import com.mobility.enp.util.AssetHelper
 import com.mobility.enp.util.setDimensionsPercent
+import com.mobility.enp.viewmodel.HtmlDialogViewModel
 
 class HtmlViewDialog() : DialogFragment() {
 
     private var _binding: PdfDialogBinding? = null
     private val binding: PdfDialogBinding get() = _binding!!
+    private val viewModel: HtmlDialogViewModel by viewModels { HtmlDialogViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,11 +38,21 @@ class HtmlViewDialog() : DialogFragment() {
         val args: HtmlViewDialogArgs by navArgs()
         val receivedPair = Pair(args.countryCode, args.documentType)
 
-        val list = AssetHelper.getFileNames(requireContext(),args.documentType ?: "")
-        Log.d("PDF_DIA", "list: ${list.toString()}")
+        when (receivedPair.first) {
+            "ME", "MK" -> {
+                viewModel.processContent(receivedPair.first ?: "", receivedPair.second ?: "",requireContext())
+            }
 
-        binding.webView.settings.javaScriptEnabled = true
-        binding.webView.loadUrl("file:///android_asset/"+list[0])
+            else -> {
+                throw IllegalArgumentException("Invalid country code: ${receivedPair.first}")
+            }
+        }
+
+
+//        binding.webView.settings.javaScriptEnabled = true
+//        binding.webView.loadUrl("file:///android_asset/" + list[0])
+//
+//
 
         binding.confirmButton.setOnClickListener {
             dismiss()

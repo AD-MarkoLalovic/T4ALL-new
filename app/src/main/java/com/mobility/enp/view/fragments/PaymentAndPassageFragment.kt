@@ -423,7 +423,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             override fun onClick(widget: View) {
                 val action =
                     PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewDialog(
-                        selectedCountry, "termsAndConditions"
+                        selectedCountry, "termsAndConditions"  // dont change this string
                     )
                 findNavController().navigate(action)
             }
@@ -439,7 +439,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             override fun onClick(widget: View) {
                 val action =
                     PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewDialog(
-                        selectedCountry, "privacyPolicy"
+                        selectedCountry, "privacyPolicy"  // dont change this string
                     )
                 findNavController().navigate(action)
             }
