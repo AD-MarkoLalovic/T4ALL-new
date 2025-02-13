@@ -413,11 +413,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             privacyStart + resources.getString(R.string.card_term_right_clickable).length
 
 
-        val clickableSpanTerms = object : ClickableSpan() {
+        val clickableSpanTerms = object : ClickableSpan() { // terms and conditions
             override fun onClick(widget: View) {
                 val action =
                     PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewDialog(
-                        "example", "example"
+                        selectedCountry, "termsAndConditions"
                     )
                 findNavController().navigate(action)
             }
@@ -429,11 +429,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             }
         }
 
-        val clickablePrivacyTerms = object : ClickableSpan() {
+        val clickablePrivacyTerms = object : ClickableSpan() {  // privacy policy
             override fun onClick(widget: View) {
                 val action =
                     PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewDialog(
-                        "example", "example"
+                        selectedCountry, "privacyPolicy"
                     )
                 findNavController().navigate(action)
             }

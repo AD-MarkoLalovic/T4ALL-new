@@ -33,9 +33,9 @@ class HtmlViewDialog() : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args: HtmlViewDialogArgs by navArgs()
-        val receivedPair = Pair(args.countryCode, args.folderPath)
+        val receivedPair = Pair(args.countryCode, args.documentType)
 
-        val list = AssetHelper.getFileNames(requireContext(),args.folderPath ?: "")
+        val list = AssetHelper.getFileNames(requireContext(),args.documentType ?: "")
         Log.d("PDF_DIA", "list: ${list.toString()}")
 
         binding.webView.settings.javaScriptEnabled = true
