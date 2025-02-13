@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.mobility.enp.databinding.PdfDialogBinding
-import com.mobility.enp.util.AssetHelper
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.HtmlDialogViewModel
 
@@ -38,9 +36,15 @@ class HtmlViewDialog() : DialogFragment() {
         val args: HtmlViewDialogArgs by navArgs()
         val receivedPair = Pair(args.countryCode, args.documentType)
 
+        setObserver()
+
         when (receivedPair.first) {
             "ME", "MK" -> {
-                viewModel.processContent(receivedPair.first ?: "", receivedPair.second ?: "",requireContext())
+                viewModel.processContent(
+                    receivedPair.first ?: "",
+                    receivedPair.second ?: "",
+                    requireContext()
+                )
             }
 
             else -> {
@@ -48,14 +52,15 @@ class HtmlViewDialog() : DialogFragment() {
             }
         }
 
-
-//        binding.webView.settings.javaScriptEnabled = true
-//        binding.webView.loadUrl("file:///android_asset/" + list[0])
-//
-//
-
         binding.confirmButton.setOnClickListener {
             dismiss()
+        }
+    }
+
+    private fun setObserver() {
+        viewModel.filepath.observe(viewLifecycleOwner) { finalPath ->
+            binding.webView.settings.javaScriptEnabled = true
+            binding.webView.loadUrl("file:///android_asset/" + finalPath)
         }
     }
 

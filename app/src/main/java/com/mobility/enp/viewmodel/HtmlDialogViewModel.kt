@@ -2,6 +2,8 @@ package com.mobility.enp.viewmodel
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -16,6 +18,8 @@ import kotlinx.coroutines.launch
 
 class HtmlDialogViewModel(private val repository: UserRepository) : ViewModel() {
 
+    private val _filePath:MutableLiveData<String> = MutableLiveData()
+    val filepath :LiveData<String> get() = _filePath
 
     fun processContent(countryCode: String, documentType: String, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -41,6 +45,7 @@ class HtmlDialogViewModel(private val repository: UserRepository) : ViewModel() 
                 val file = list.filter { s -> s.contains("$it.html",true) }
                 if (file.isNotEmpty()){
                     Log.d(TAG, "final list: ${file.toString()}")
+                    _filePath.postValue(file[0])
                 }else{
                     Log.d(TAG, "final document key: $key list $list")
                 }
