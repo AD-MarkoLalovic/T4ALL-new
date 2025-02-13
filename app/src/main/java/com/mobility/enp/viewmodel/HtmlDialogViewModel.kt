@@ -38,8 +38,12 @@ class HtmlDialogViewModel(private val repository: UserRepository) : ViewModel() 
 
             val key = repository.getRoomLanguage()
             key?.let {
-                val file = list.filter { s -> s.contains(it) }
-                Log.d(TAG, "final document : ${file[0]}")
+                val file = list.filter { s -> s.contains("$it.html",true) }
+                if (file.isNotEmpty()){
+                    Log.d(TAG, "final list: ${file.toString()}")
+                }else{
+                    Log.d(TAG, "final document key: $key list $list")
+                }
             } ?: run {
                 throw IllegalStateException("Language key is null")
             }
