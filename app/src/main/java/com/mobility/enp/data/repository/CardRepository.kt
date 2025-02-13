@@ -1,6 +1,14 @@
 package com.mobility.enp.data.repository
 
-//Odgovornost: Upravljanje informacijama o karticama koje su povezane sa korisničkim nalogom,
-// kao što je dodavanje ili uklanjanje kartica.
+import android.content.Context
+import com.mobility.enp.data.room.database.DRoom
 
-class CardRepository
+
+class CardRepository(database: DRoom, context: Context) : BaseRepository(database, context) {
+
+
+    suspend fun getLangForCard(): String? {
+        return getRoomLanguage()
+    }
+
+}

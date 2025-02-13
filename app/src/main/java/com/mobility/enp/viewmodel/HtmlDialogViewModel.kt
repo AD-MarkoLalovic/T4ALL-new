@@ -11,15 +11,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
-import com.mobility.enp.data.repository.UserRepository
+import com.mobility.enp.data.repository.CardRepository
 import com.mobility.enp.util.AssetHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HtmlDialogViewModel(private val repository: UserRepository) : ViewModel() {
+class HtmlDialogViewModel(private val repository: CardRepository) : ViewModel() {
 
-    private val _filePath:MutableLiveData<String> = MutableLiveData()
-    val filepath :LiveData<String> get() = _filePath
+    private val _filePath: MutableLiveData<String> = MutableLiveData()
+    val filepath: LiveData<String> get() = _filePath
 
     fun processContent(countryCode: String, documentType: String, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -40,13 +40,14 @@ class HtmlDialogViewModel(private val repository: UserRepository) : ViewModel() 
             val list = AssetHelper.getFileNames(context, combined)
             Log.d(TAG, "processContent: $list")
 
-            val key = repository.getRoomLanguage()
+            val key = repository.getLangForCard()
+
             key?.let {
-                val file = list.filter { s -> s.contains("$it.html",true) }
-                if (file.isNotEmpty()){
+                val file = list.filter { s -> s.contains("$it.html", true) }
+                if (file.isNotEmpty()) {
                     Log.d(TAG, "final list: ${file.toString()}")
                     _filePath.postValue(file[0])
-                }else{
+                } else {
                     Log.d(TAG, "final document key: $key list $list")
                 }
             } ?: run {
@@ -71,7 +72,7 @@ class HtmlDialogViewModel(private val repository: UserRepository) : ViewModel() 
         const val TAG = "HTML_DIALOG"
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val myRepository = (this[APPLICATION_KEY] as MyApplication).repositoryUser
+                val myRepository = (this[APPLICATION_KEY] as MyApplication).repositoryCard
                 HtmlDialogViewModel(
                     repository = myRepository
                 )

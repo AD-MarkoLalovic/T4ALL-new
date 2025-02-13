@@ -43,7 +43,7 @@ abstract class BaseRepository(
         }
     }
 
-    suspend fun getRoomLanguage():String?{
+    protected suspend fun getRoomLanguage():String?{
         return withContext(Dispatchers.IO) {
             database.languageDao().fetchAllowedUsers()?.userLanguage
         }
