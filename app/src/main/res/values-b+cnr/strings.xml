@@ -321,4 +321,7 @@
     <string name="pib_mandatory">Polje PIB je obavezno</string>
     <string name="pib_invalid_length">Polje PIB mora sadržati od 9 do 13 karaktera.</string>
     <string name="pib_not_cantains_nine_digits">Polje PIB mora sadržati 9 cifara.</string>
+    <string name="cards_terms_text_full">Saglasan sam sa Opštim uslovima i Politikom privatnosti</string>
+    <string name="card_terms_left_clickable">Opštim uslovima</string>
+    <string name="card_term_right_clickable">Politikom privatnosti</string>
 </resources>

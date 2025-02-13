@@ -400,22 +400,25 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun setClickableText() {
-        val fullText = "I agree with General Terms and Conditions and Privacy Policy"
+        val fullText = resources.getString(R.string.cards_terms_text_full)
         val spannableString = SpannableString(fullText)
 
         val termsStart =
-            fullText.indexOf("General Terms and Conditions")  // sets part that is clickable
-        val termsEnd = termsStart + "General Terms and Conditions".length
+            fullText.indexOf(resources.getString(R.string.card_terms_left_clickable))  // sets part that is clickable
+        val termsEnd = termsStart + resources.getString(R.string.card_terms_left_clickable).length
 
-        val privacyStart = fullText.indexOf("Privacy Policy") // same here
-        val privacyEnd = privacyStart + "Privacy Policy".length
+        val privacyStart =
+            fullText.indexOf(resources.getString(R.string.card_term_right_clickable)) // same here
+        val privacyEnd =
+            privacyStart + resources.getString(R.string.card_term_right_clickable).length
 
 
         val clickableSpanTerms = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                val action = PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewDialog(
-                    "example","example"
-                )
+                val action =
+                    PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewDialog(
+                        "example", "example"
+                    )
                 findNavController().navigate(action)
             }
 
@@ -428,9 +431,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         val clickablePrivacyTerms = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                val action = PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewDialog(
-                    "example","example"
-                )
+                val action =
+                    PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewDialog(
+                        "example", "example"
+                    )
                 findNavController().navigate(action)
             }
 
