@@ -1,5 +1,6 @@
 package com.mobility.enp.view.dialogs
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -30,6 +31,7 @@ class PdfViewDialog() : DialogFragment() {
         return binding.root
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args: PdfViewDialogArgs by navArgs()
