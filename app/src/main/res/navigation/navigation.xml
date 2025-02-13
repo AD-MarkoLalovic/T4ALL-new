@@ -398,7 +398,7 @@
         tools:layout="@layout/deactivate_dialog" />
     <dialog
         android:id="@+id/pdfViewDialog"
-        android:name="com.mobility.enp.view.dialogs.PdfViewDialog"
+        android:name="com.mobility.enp.view.dialogs.HtmlViewDialog"
         android:label="PdfViewDialog"
         tools:layout="@layout/pdf_dialog">
         <argument

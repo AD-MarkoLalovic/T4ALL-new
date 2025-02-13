@@ -8,15 +8,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
-import com.mobility.enp.databinding.GeneralDialogBinding
 import com.mobility.enp.databinding.PdfDialogBinding
 import com.mobility.enp.util.AssetHelper
 import com.mobility.enp.util.setDimensionsPercent
 
-class PdfViewDialog() : DialogFragment() {
+class HtmlViewDialog() : DialogFragment() {
 
     private var _binding: PdfDialogBinding? = null
     private val binding: PdfDialogBinding get() = _binding!!
@@ -34,7 +32,7 @@ class PdfViewDialog() : DialogFragment() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val args: PdfViewDialogArgs by navArgs()
+        val args: HtmlViewDialogArgs by navArgs()
         val receivedPair = Pair(args.countryCode, args.folderPath)
 
         val list = AssetHelper.getFileNames(requireContext(),args.folderPath ?: "")
