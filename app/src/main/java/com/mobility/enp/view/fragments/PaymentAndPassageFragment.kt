@@ -355,6 +355,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setCardVisibility(true)
                 makeCardClickable(true)
                 isButtonEnabled = true
+                binding.termsConditionsCheckmark.isChecked = false
             }
 
             "MK" -> {
@@ -364,6 +365,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setCardVisibility(true)
                 makeCardClickable(false)
                 isButtonEnabled = false
+                binding.termsConditionsCheckmark.isChecked = false
             }
 
             "ME" -> {
@@ -373,6 +375,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setCardVisibility(true)
                 makeCardClickable(false)
                 isButtonEnabled = false
+                binding.termsConditionsCheckmark.isChecked = false
             }
 
             "HR" -> {
@@ -382,6 +385,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setCardVisibility(true)
                 makeCardClickable(false)
                 isButtonEnabled = false
+                binding.termsConditionsCheckmark.isChecked = false
             }
 
             else -> {
@@ -394,6 +398,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 binding.txNoCards.visibility = if (allCards.isEmpty()) View.VISIBLE else View.GONE
                 binding.rvCreditCard.visibility =
                     if (allCards.isEmpty()) View.GONE else View.VISIBLE
+                binding.termsConditionsCheckmark.isChecked = false
+
             }
         }
         cardsCountryAdapter.setSelectedCountry(selectedCountry)  // Dodato za ažuriranje selektovane zemlje u adapteru
