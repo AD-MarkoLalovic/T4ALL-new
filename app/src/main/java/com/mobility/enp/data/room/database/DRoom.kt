@@ -22,6 +22,9 @@ import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.banks.entity.BanksEntity
 import com.mobility.enp.data.model.home.entity.HomeEntity
+import com.mobility.enp.data.model.home.entity.InvoiceHomeEntity
+import com.mobility.enp.data.model.home.entity.InvoiceHomeTotalCurrencyEntity
+import com.mobility.enp.data.model.home.entity.TollHistoryHomeEntity
 import com.mobility.enp.data.model.notification.NotificationModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.model.pdf_table.PdfTable
@@ -52,8 +55,8 @@ import kotlinx.coroutines.launch
 @Database(
     entities = [UserLoginResponseRoomTable::class, FcmToken::class, UserLanguage::class, NotificationModel::class, HomeScreenData::class, IndexData::class, ToolHistoryListing::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, Promotion::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
-        BasicInfoEntity::class, HomeEntity::class],
-    version = 161,
+        BasicInfoEntity::class, HomeEntity::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class],
+    version = 174,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -134,6 +137,9 @@ abstract class DRoom : RoomDatabase() {
         tagsRefundRequest().deleteTagsRefundRequest()
         basicInfoDao().deleteBasicInfo()
         homeScreenDao().deleteHomeScreenData()
+        homeScreenDao().deleteTollHistoryData()
+        homeScreenDao().deleteInvoiceData()
+        homeScreenDao().deleteInvoiceCurrencyData()
     }
 
 }

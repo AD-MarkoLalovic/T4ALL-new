@@ -1,7 +1,8 @@
 package com.mobility.enp.data.model.home.response
 
-import com.mobility.enp.data.model.home.entity.CustomerHomeEntity
+import com.mobility.enp.data.model.home.entity.HomeEntity
 import com.mobility.enp.data.model.home.entity.InvoiceHomeEntity
+import com.mobility.enp.data.model.home.entity.InvoiceHomeTotalCurrencyEntity
 import com.mobility.enp.data.model.home.entity.TollHistoryHomeEntity
 
 data class Data(
@@ -11,21 +12,21 @@ data class Data(
     val promotions: List<Any?>?
 
 ) {
-    fun toCustomerEntity(): CustomerHomeEntity? {
-        return customer?.let {
-            CustomerHomeEntity(
-                firstName = it.firstName,
-                lastName = it.lastName,
-                displayName = it.displayName,
-                customerType = it.customerType.type
-            )
-        }
+    fun toHomeEntity(): HomeEntity {
+        return HomeEntity(
+            firstName = customer?.firstName,
+            lastName = customer?.lastName,
+            displayName = customer?.displayName,
+            customerType = customer?.customerType?.type
+        )
     }
 
-    fun toTollHistoryEntities(): List<TollHistoryHomeEntity> {
-        return tollHistory?.mapNotNull { toll ->
-            toll?.let {
+    // Mapiranje na listu TollHistoryHomeEntity
+    fun toHomeTollHistory(homeId: Int): List<TollHistoryHomeEntity> {
+        return tollHistory?.mapNotNull { it ->
+            it?.let {
                 TollHistoryHomeEntity(
+                    homeId = homeId,
                     invoiceNumber = it.invoiceNumber,
                     status = it.status?.value,
                     entryToll = it.entryToll,
@@ -41,17 +42,29 @@ data class Data(
         } ?: emptyList()
     }
 
-    fun toInvoiceEntities(): List<InvoiceHomeEntity> {
-        return invoices?.mapNotNull { invoice ->
-            invoice?.let {
-                InvoiceHomeEntity(
-                    month = it.month.name,
-                    year = it.year,
-                    total = it.totalCurrency.firstOrNull()?.total ?: "0,00",
-                    isPaid = it.totalCurrency.firstOrNull()?.isPaid ?: false,
-                    currency = it.totalCurrency.firstOrNull()?.currency?.label ?: "RSD"
+
+    // Mapiranje na listu InvoiceHomeEntity
+    fun toHomeInvoices(homeId: Int): List<InvoiceHomeEntity> {
+        return invoices?.map {
+            InvoiceHomeEntity(
+                homeId = homeId,
+                monthName = it?.month?.name ?: "",
+                year = it?.year ?: ""
+            )
+        } ?: emptyList()
+    }
+
+    // Mapiranje na listu InvoiceHomeTotalCurrencyEntity
+    fun toHomeInvoiceCurrencies(invoiceId: Int): List<InvoiceHomeTotalCurrencyEntity> {
+        return invoices?.flatMap {
+            it?.totalCurrency?.map { totalCurrency ->
+                InvoiceHomeTotalCurrencyEntity(
+                    invoiceId = invoiceId,
+                    total = totalCurrency.total,
+                    isPaid = totalCurrency.isPaid,
+                    currencyValue = totalCurrency.currency.value
                 )
-            }
+            } ?: emptyList()
         } ?: emptyList()
     }
 }

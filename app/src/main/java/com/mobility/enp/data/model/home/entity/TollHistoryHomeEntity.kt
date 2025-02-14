@@ -1,12 +1,22 @@
 package com.mobility.enp.data.model.home.entity
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.mobility.enp.view.ui_models.home.HomeTollHistoryUI
 
-@Entity(tableName = "toll_history_home")
+@Entity(
+    tableName = "toll_history_home",
+    foreignKeys = [ForeignKey(
+        entity = HomeEntity::class, // Ova tabela je povezana sa HomeEntity
+        parentColumns = ["id"], // Kolona "id" u HomeEntity je primarni ključ
+        childColumns = ["homeId"],  // Kolona "homeId" u TollHistoryEntity referencira taj "id"
+        onDelete = ForeignKey.CASCADE // Kada se obriše HomeEntity, brišu se i svi povezani zapisi
+    )]
+)
 data class TollHistoryHomeEntity(
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val homeId: Int,
     val invoiceNumber: String,
     val status: Int?,
     val entryToll: String?,
@@ -17,15 +27,4 @@ data class TollHistoryHomeEntity(
     val exitTime: String?,
     val paymentAmount: String?,
     val paymentCurrency: String?
-) {
-    fun toHomeTollHistoryUI(): HomeTollHistoryUI {
-        return HomeTollHistoryUI(
-            invoiceNumber = invoiceNumber,
-            entryToll = entryToll,
-            exitToll = exitToll,
-            entryDataAndTime = "$entryDate  $entryTime",
-            exitDateAndTime = "$exitDate  $exitTime",
-            payment = "$paymentAmount $paymentCurrency"
-        )
-    }
-}
+)

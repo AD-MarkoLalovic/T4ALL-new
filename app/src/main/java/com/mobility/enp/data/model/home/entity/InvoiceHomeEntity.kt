@@ -1,24 +1,23 @@
 package com.mobility.enp.data.model.home.entity
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
-import com.mobility.enp.view.ui_models.home.HomeInvoicesUI
+import androidx.room.ForeignKey
+import androidx.room.Index
 
-@Entity(tableName = "invoices_home")
+@Entity(
+    tableName = "invoices_home",
+    foreignKeys = [ForeignKey(
+        entity = HomeEntity::class,
+        parentColumns = ["id"],
+        childColumns = ["homeId"],
+        onDelete = ForeignKey.CASCADE
+    )],
+    primaryKeys = ["monthName", "year"], // Kombinovani primarni ključ
+    indices = [Index(value = ["homeId"], unique = true)] // Dodavanje jedinstvenog indeksa na homeId
+    //jer homeId mora biti jedisntven zbog ForeignKey
+)
 data class InvoiceHomeEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    val month: String,
+    val homeId: Int,
+    val monthName: String,
     val year: String,
-    val total: String,
-    val isPaid: Boolean,
-    val currency: String
-) {
-    fun toHomeInvoicesUI(): HomeInvoicesUI {
-        return HomeInvoicesUI(
-            month = month,
-            total = "$total $currency"
-        )
-    }
-
-}
+)
