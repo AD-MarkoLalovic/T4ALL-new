@@ -56,7 +56,7 @@ import kotlinx.coroutines.launch
     entities = [UserLoginResponseRoomTable::class, FcmToken::class, UserLanguage::class, NotificationModel::class, HomeScreenData::class, IndexData::class, ToolHistoryListing::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, Promotion::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class, HomeEntity::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class],
-    version = 174,
+    version = 175,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -137,9 +137,6 @@ abstract class DRoom : RoomDatabase() {
         tagsRefundRequest().deleteTagsRefundRequest()
         basicInfoDao().deleteBasicInfo()
         homeScreenDao().deleteHomeScreenData()
-        homeScreenDao().deleteTollHistoryData()
-        homeScreenDao().deleteInvoiceData()
-        homeScreenDao().deleteInvoiceCurrencyData()
     }
 
 }

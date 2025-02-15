@@ -1,6 +1,5 @@
 package com.mobility.enp.data.room.api_related_daos
 
-import android.util.Log
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -20,31 +19,19 @@ interface HomeScreenDao {
     @Query("DELETE FROM home_entity")
     suspend fun deleteHomeScreenData()
 
-    // Brisanje svih podataka iz tabele toll_history_home_entity
-    @Query("DELETE FROM toll_history_home")
-    suspend fun deleteTollHistoryData()
-
-    // Brisanje svih podataka iz tabele invoice_home_entity
-    @Query("DELETE FROM invoices_home")
-    suspend fun deleteInvoiceData()
-
-    // Brisanje svih podataka iz tabele invoice_home_total_currency_entity
-    @Query("DELETE FROM invoices_home_total_currency")
-    suspend fun deleteInvoiceCurrencyData()
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertHome(home: HomeEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertHomeManual(home: HomeEntity): Long
+    suspend fun insertTollHistory(history: List<TollHistoryHomeEntity>)
 
-    @Upsert
-    suspend fun insertTollHistory(tollHistory: List<TollHistoryHomeEntity>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertInvoices(invoices: List<InvoiceHomeEntity>)
 
-    @Upsert
-    suspend fun insertInvoice(invoice: List<InvoiceHomeEntity>): List<Long>
-
-    @Upsert
-    suspend fun insertInvoiceCurrency(currency: List<InvoiceHomeTotalCurrencyEntity>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertInvoiceCurrencies(currencies: List<InvoiceHomeTotalCurrencyEntity>)
 
     @Transaction
-    @Query("SELECT * FROM home_entity WHERE id = 1")
+    @Query("SELECT * FROM home_entity WHERE id = 1") // Uvek je ID = 1 jer je samo jedan zapis
     suspend fun getHomeWithDetails(): HomeWithDetails?
 }
