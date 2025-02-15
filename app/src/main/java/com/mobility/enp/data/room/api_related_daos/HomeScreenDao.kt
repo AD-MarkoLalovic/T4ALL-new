@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Upsert
 import com.mobility.enp.data.model.home.entity.HomeEntity
 import com.mobility.enp.data.model.home.entity.InvoiceHomeEntity
 import com.mobility.enp.data.model.home.entity.InvoiceHomeTotalCurrencyEntity
@@ -15,7 +14,6 @@ import com.mobility.enp.data.model.home.relation.HomeWithDetails
 @Dao
 interface HomeScreenDao {
 
-    // Brisanje svih podataka iz tabele home_entity
     @Query("DELETE FROM home_entity")
     suspend fun deleteHomeScreenData()
 

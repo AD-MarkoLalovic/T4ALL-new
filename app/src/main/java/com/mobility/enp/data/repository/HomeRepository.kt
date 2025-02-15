@@ -62,37 +62,21 @@ class HomeRepository(
 
     private suspend fun saveAllHomeData(data: Data) {
         val homeDao = database.homeScreenDao()
-        val homeEntity = data.toHomeEntity()
-        val tollHistory = data.toHomeTollHistory(homeId = 1)
-        val invoices = data.toHomeInvoices(homeId = 1)
-        val invoiceCurrencies = data.toHomeInvoiceCurrencies(invoiceId = 1)
 
-        Log.d("HomeScreen Database", "Početak čuvanja podataka")
-
-        withContext(Dispatchers.IO) {
-            try {
-                Log.d("HomeScreen Database", "Čuvam HomeEntity: $homeEntity")
-                homeDao.insertHome(homeEntity)
-
-                Log.d("HomeScreen Database", "Čuvam TollHistory, broj unosa: ${tollHistory.size}")
-                homeDao.insertTollHistory(tollHistory)
-
-                Log.d("HomeScreen Database", "Čuvam Invoices, broj unosa: ${invoices.size}")
-                homeDao.insertInvoices(invoices)
-
-                Log.d("HomeScreen Database", "Čuvam InvoiceCurrencies, broj unosa: ${invoiceCurrencies.size}")
-                homeDao.insertInvoiceCurrencies(invoiceCurrencies)
-
-                Log.d("HomeScreen Database", "Svi podaci uspešno sačuvani")
-            } catch (e: Exception) {
-                Log.e("HomeScreen Database", "Greška pri čuvanju podataka: ${e.message}", e)
-            }
+        try {
+            homeDao.insertHome(data.toHomeEntity())
+            homeDao.insertTollHistory(data.toHomeTollHistory(homeId = 1))
+            homeDao.insertInvoices(data.toHomeInvoices(homeId = 1))
+            homeDao.insertInvoiceCurrencies(data.toHomeInvoiceCurrencies(invoiceId = 1))
+            Log.d("HomeScreen Database", "Svi podaci uspešno sačuvani")
+        } catch (e: Exception) {
+            Log.e("HomeScreen Database", "Greška pri čuvanju podataka: ${e.message}", e)
         }
     }
 
+
     suspend fun getLocalAllHomeData(): HomeWithDetails? {
-        return withContext(Dispatchers.IO) {
-            try {
+        return try {
                 Log.d("HomeScreen Database", "Dohvatam podatke iz baze...")
                 val data = database.homeScreenDao().getHomeWithDetails()
                 Log.d("HomeScreen Database", "Podaci preuzeti: $data")
@@ -101,7 +85,6 @@ class HomeRepository(
                 Log.e("HomeScreen Database", "Greška pri dohvaćanju podataka: ${e.message}", e)
                 null
             }
-        }
     }
 
 }
