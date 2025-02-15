@@ -12,5 +12,4 @@ data class HomeEntity(
     val lastName: String?,
     val displayName: String?,
     val customerType: Int?
-
 )

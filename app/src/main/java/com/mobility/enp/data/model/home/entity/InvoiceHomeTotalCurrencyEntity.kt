@@ -18,4 +18,7 @@ data class InvoiceHomeTotalCurrencyEntity(
     val total: String,
     val isPaid: Boolean,
     val currencyValue: String
-)
+) {
+    val totalAndCurrency: String
+        get() = "$total $currencyValue"
+}

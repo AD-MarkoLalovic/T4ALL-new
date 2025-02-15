@@ -13,4 +13,7 @@ data class InvoiceWithCurrency(
         entityColumn = "invoiceId"
     )
     val invoiceDetails: List<InvoiceHomeTotalCurrencyEntity>
-)
+) {
+    val montAndYearUI: String
+        get() = "${invoice.monthName} ${invoice.year}"
+}

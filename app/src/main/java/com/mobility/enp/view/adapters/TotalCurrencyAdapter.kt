@@ -4,24 +4,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_home_page.homedata.TotalCurrency
+import com.mobility.enp.data.model.home.entity.InvoiceHomeTotalCurrencyEntity
 import com.mobility.enp.databinding.CardHomePageCurrencyBinding
 
-class TotalCurrencyAdapter(list: List<TotalCurrency>) :
+class TotalCurrencyAdapter(private var list: List<InvoiceHomeTotalCurrencyEntity>) :
     RecyclerView.Adapter<TotalCurrencyAdapter.TotalCurrencyViewHolder>() {
-
-    private val totalCurrencyList: List<TotalCurrency>
-
-    init {
-        this.totalCurrencyList = list
-    }
 
     class TotalCurrencyViewHolder(val binding: CardHomePageCurrencyBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: TotalCurrency) {
-            binding.totalCurrencyItem = data
 
-            data.isPaid?.let {
+        fun bind(data: InvoiceHomeTotalCurrencyEntity) {
+            binding.txtData.text = data.totalAndCurrency
+
+            data.isPaid.let {
                 if (it) {
                     binding.txtData.setBackgroundResource(R.drawable.border_home_paid)
                 } else {
@@ -44,12 +39,17 @@ class TotalCurrencyAdapter(list: List<TotalCurrency>) :
     }
 
     override fun getItemCount(): Int {
-        return totalCurrencyList.size
+        return list.size
     }
 
     override fun onBindViewHolder(holder: TotalCurrencyViewHolder, position: Int) {
-        val currentItem = totalCurrencyList[holder.bindingAdapterPosition]
+        val currentItem = list[holder.bindingAdapterPosition]
         holder.bind(currentItem)
+    }
+
+    fun submitList(newList: List<InvoiceHomeTotalCurrencyEntity>) {
+        list = newList
+        notifyDataSetChanged()
     }
 
 }
