@@ -38,12 +38,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private var _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    private val homeDisplayName: String = Repository.getDisplayName(getApplication()).toString()
-    val displayName: LiveData<String> =
-        database.basicInfoDao().fetchDisplayName()
-            .map { it.orEmpty().ifEmpty { homeDisplayName } }
-            .asLiveData()
-
+    private val _displayName = MutableLiveData<String>()
+    val displayName: LiveData<String> = _displayName
 
     private suspend fun getUserToken(): String? {
         return withContext(Dispatchers.IO) {
@@ -67,6 +63,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                     val token = getUserToken()
                     token?.let {
                         val userInfo = Repository.getUserPersonalInfo(it)
+                        _displayName.value = userInfo.data.displayName
                         val userCountry = userInfo.data.country.code
                         val userType = userInfo.data.customerType.type
                         val isFranchiser = userInfo.data.isFranchiser
