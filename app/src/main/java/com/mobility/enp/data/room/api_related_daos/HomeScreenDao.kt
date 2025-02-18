@@ -30,6 +30,6 @@ interface HomeScreenDao {
     suspend fun insertInvoiceCurrencies(currencies: List<InvoiceHomeTotalCurrencyEntity>)
 
     @Transaction
-    @Query("SELECT * FROM home_entity WHERE id = 1") // Uvek je ID = 1 jer je samo jedan zapis
+    @Query("SELECT * FROM home_entity WHERE id = 1")
     suspend fun getHomeWithDetails(): HomeWithDetails?
 }
