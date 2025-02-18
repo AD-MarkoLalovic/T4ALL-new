@@ -48,8 +48,6 @@ import java.net.SocketTimeoutException
 object Repository {
 
     const val TAG = "REPOSITORY"
-    private const val PREFS_NAME = "user_prefs"
-    private const val KEY_DISPLAY_NAME = "display_name"
 
     private fun apiService(token: String?): ApiService {
         return RestClient.create(ApiService::class.java, token).apiService
