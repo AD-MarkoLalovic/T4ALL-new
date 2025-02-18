@@ -5,14 +5,12 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.network.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -108,7 +106,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun deleteProfilePicture() {
         viewModelScope.launch(Dispatchers.IO) {
-            database.profileImageDao().deleteAll();
+            database.profileImageDao().deleteAll()
             _deletePic.postValue(true)
         }
     }
@@ -159,10 +157,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun isNetworkAvailable(): Boolean {
         return Repository.isNetworkAvailable(getApplication())
-    }
-
-    fun fetchDisplayName(): String {
-        return Repository.getDisplayName(getApplication()).toString()
     }
 
 }
