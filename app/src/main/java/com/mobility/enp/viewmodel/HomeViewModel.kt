@@ -1,20 +1,12 @@
 package com.mobility.enp.viewmodel
 
 import android.util.Log
-import android.widget.ImageView
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DecodeFormat
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.bumptech.glide.request.RequestOptions
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.home.relation.HomeWithDetails
@@ -27,7 +19,6 @@ import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TOKEN
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.io.File
 
 class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
 
@@ -87,7 +78,7 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
                                 Log.d(TOKEN, "invalid token detected login out user")
                                 _homeData.value =
                                     SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code ?: 0,
+                                        error.errorResponse.code,
                                         error.errorResponse.message ?: ""
                                     )
                             }
