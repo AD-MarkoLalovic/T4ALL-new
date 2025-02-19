@@ -2,13 +2,11 @@ package com.mobility.enp.data.repository
 
 import android.content.Context
 import android.util.Log
+import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.data.model.home.response.Data
-import com.mobility.enp.data.model.home.response.HomeResponse
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  * Odgovornost: Upravljanje podacima i funkcijama za početni ekran aplikacije.
@@ -59,7 +57,6 @@ class HomeRepository(
     }
 
 
-
     private suspend fun saveAllHomeData(data: Data) {
         val homeDao = database.homeScreenDao()
 
@@ -70,22 +67,29 @@ class HomeRepository(
             homeDao.insertInvoiceCurrencies(data.toHomeInvoiceCurrencies(invoiceId = 1))
             Log.d("HomeScreen Database", "Svi podaci uspešno sačuvani")
         } catch (e: Exception) {
-            Log.e("HomeScreen Database", "Greška pri čuvanju podataka: ${e.message}", e)
+            Log.e("HomeRepository getLocalAllHomeData", "Greška pri čuvanju podataka: ${e.message}", e)
         }
     }
 
-
     suspend fun getLocalAllHomeData(): HomeWithDetails? {
         return try {
-                Log.d("HomeScreen Database", "Dohvatam podatke iz baze...")
-                val data = database.homeScreenDao().getHomeWithDetails()
-                Log.d("HomeScreen Database", "Podaci preuzeti: $data")
-                data
-            } catch (e: Exception) {
-                Log.e("HomeScreen Database", "Greška pri dohvaćanju podataka: ${e.message}", e)
-                null
-            }
+            val data = database.homeScreenDao().getHomeWithDetails()
+            data
+        } catch (e: Exception) {
+            Log.e("HomeRepository getLocalAllHomeData", "Greška pri dohvaćanju podataka: ${e.message}", e)
+            null
+        }
     }
+
+    /**
+     * Home Profile Picture
+     */
+    suspend fun getProfileImage(displayName: String): ProfileImage? {
+        return database.profileImageDao().getProfileImage(displayName)
+    }
+
+
+
 
 }
 

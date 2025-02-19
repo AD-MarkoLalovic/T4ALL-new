@@ -15,6 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/border_home_unpaid"
+            android:textColor="@color/primary_light_darkest"
             android:paddingHorizontal="@dimen/dimens_10dp"
             android:paddingVertical="@dimen/dimens_6dp"
             app:layout_constraintTop_toTopOf="parent"
