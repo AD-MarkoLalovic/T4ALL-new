@@ -4,87 +4,156 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.mobility.enp.R
+import com.mobility.enp.data.model.ProfileImage
+import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.databinding.FragmentHomeWelcomeBinding
-import com.mobility.enp.util.ImageRepository
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.adapters.TotalCurrencyAdapter
+import com.mobility.enp.view.adapters.home.HomePassageAdapter
 import com.mobility.enp.viewmodel.HomeViewModel
+import java.io.File
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeWelcomeBinding? = null
     private val binding: FragmentHomeWelcomeBinding get() = _binding!!
     private lateinit var totalCurrencyAdapter: TotalCurrencyAdapter
+    private lateinit var homePassageAdapter: HomePassageAdapter
 
     private val viewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
-
-    private val imageRepository: ImageRepository by lazy {
-        ImageRepository(requireContext())
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_home_welcome, container, false)
+            FragmentHomeWelcomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
+
+        setupBinding()
+        setupAdapters()
+        setupObservers()
+        setupClickListeners()
 
         viewModel.fetchHomeData()
+    }
 
-        binding.rvTotalCurrency?.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+    private fun setupBinding() {
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+    }
 
-        totalCurrencyAdapter = TotalCurrencyAdapter(emptyList())
-        binding.rvTotalCurrency?.adapter = totalCurrencyAdapter
-
-
-        // Posmatramo LiveData i reagujemo na promene
-        viewModel.homeData.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is SubmitResult.Loading -> binding.progBar.visibility = View.VISIBLE
-                is SubmitResult.Success -> {
-                    binding.progBar.visibility = View.GONE
-                    val invoiceDetails = result.data.invoice.flatMap { it.invoiceDetails }
-                    totalCurrencyAdapter.submitList(invoiceDetails)
-
-
-                }
-
-                is SubmitResult.Empty -> {
-                    // Trenutno ne preduzimamo nikakve akcije za praznu vrednost
-                }
-
-                is SubmitResult.FailureNoConnection -> {}
-                is SubmitResult.FailureServerError -> {
-                    binding.progBar.visibility = View.GONE
-                }
-
-                is SubmitResult.FailureApiError -> {
-                    binding.progBar.visibility = View.GONE
-                    //showMessage(result.errorMessage)
-                }
-
-                is SubmitResult.InvalidApiToken -> {}
-            }
+    private fun setupAdapters() {
+        binding.rvTotalCurrency?.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            totalCurrencyAdapter = TotalCurrencyAdapter(emptyList())
+            adapter = totalCurrencyAdapter
         }
 
+        homePassageAdapter = HomePassageAdapter()
+        binding.recyclerLastPassages.adapter = homePassageAdapter
+    }
+
+    private fun setupObservers() {
+        collectLatestLifecycleFlow(viewModel.homeData) { result ->
+            handleHomeDataResult(result)
+        }
+
+        collectLatestLifecycleFlow(viewModel.profileImage) { profileImage ->
+            profileImage?.let {
+                displayProfileImage(binding.imageAccountHomeScreen, it) }
+        }
+
+        collectLatestLifecycleFlow(viewModel.homeTollHistory) { tollHistory ->
+            homePassageAdapter.submitList(tollHistory)
+        }
+    }
+
+    private fun setupClickListeners() {
         binding.switchToPageBill?.setOnClickListener {
             findNavController().navigate(R.id.action_global_invoicesFragment)
         }
     }
 
+    private fun handleHomeDataResult(result: SubmitResult<HomeWithDetails>) {
+        when (result) {
+            is SubmitResult.Loading -> binding.progBar.visibility = View.VISIBLE
+            is SubmitResult.Success -> handleSuccess(result)
+            is SubmitResult.Empty -> handleEmptyState()
+            is SubmitResult.FailureNoConnection -> showNoInternetDialog()
+            is SubmitResult.FailureServerError -> showErrorMessage(getString(R.string.server_error_msg))
+            is SubmitResult.FailureApiError -> showErrorMessage(result.errorMessage)
+            is SubmitResult.InvalidApiToken -> Unit
+        }
+    }
+
+    private fun handleSuccess(result: SubmitResult.Success<HomeWithDetails>) {
+        binding.apply {
+            noInvoices.visibility = View.GONE
+            noToolHistory.visibility = View.GONE
+            progBar.visibility = View.GONE
+        }
+
+        result.data.home.displayName?.let { viewModel.loadProfileImage(it) }
+
+        val invoiceDetails = result.data.invoice.flatMap { it.invoiceDetails }
+        totalCurrencyAdapter.submitList(invoiceDetails)
+    }
+
+    private fun handleEmptyState() {
+        binding.apply {
+            noInvoices.visibility = View.VISIBLE
+            noToolHistory.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showErrorMessage(message: String) {
+        binding.progBar.visibility = View.GONE
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showNoInternetDialog() {
+        val bundle = Bundle().apply {
+            putString(getString(R.string.title), getString(R.string.no_connection_title))
+            putString(
+                getString(R.string.subtitle),
+                getString(R.string.please_connect_to_the_internet)
+            )
+        }
+        findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
+    }
+
+    private fun displayProfileImage(imageView: ImageView, profileImage: ProfileImage) {
+        Glide.with(imageView.context)
+            .load(File(profileImage.imagePath))
+            .apply(
+                RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL) // Omogućava keširanje učitanih slika
+                    .override(imageView.width, imageView.height) // Velicina slike
+                    .centerCrop() //Nacin skaliranja
+                    .transform(CircleCrop())
+                    .format(DecodeFormat.PREFER_ARGB_8888) // Kvalitetnije, ali troši više RAM-a
+                    // Preferirani format slike
+                    .error(R.drawable.ic_account_home_screen) // Ako slika ne postoji, postavi default
+            )
+            .into(imageView)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
