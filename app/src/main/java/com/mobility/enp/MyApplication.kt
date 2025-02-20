@@ -2,6 +2,7 @@ package com.mobility.enp
 
 import android.app.Application
 import com.mobility.enp.data.repository.AuthRepository
+import com.mobility.enp.data.repository.CardRepository
 import com.mobility.enp.data.repository.HomeRepository
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.repository.UserRepository
@@ -16,6 +17,10 @@ class MyApplication : Application() {
     }
     val repositoryAuth: AuthRepository by lazy {
         AuthRepository(database, this)
+    }
+
+    val repositoryCard: CardRepository by lazy {
+        CardRepository(database, this)
     }
 
     val repositoryHome: HomeRepository by lazy {

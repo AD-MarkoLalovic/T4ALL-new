@@ -302,6 +302,9 @@
         <action
             android:id="@+id/action_paymentAndPassageFragment_to_cardFragment"
             app:destination="@id/cardFragment" />
+        <action
+            android:id="@+id/action_paymentAndPassageFragment_to_pdfViewDialog"
+            app:destination="@id/pdfViewDialog" />
     </fragment>
     <fragment
         android:id="@+id/cardFragment"
@@ -391,8 +394,24 @@
     <dialog
         android:id="@+id/deactivateAccountDialog"
         android:name="com.mobility.enp.view.dialogs.DeactivateAccountDialog"
-        tools:layout="@layout/deactivate_dialog"
-        android:label="DeactivateAccountDialog" />
+        android:label="DeactivateAccountDialog"
+        tools:layout="@layout/deactivate_dialog" />
+    <dialog
+        android:id="@+id/pdfViewDialog"
+        android:name="com.mobility.enp.view.dialogs.HtmlViewDialog"
+        android:label="PdfViewDialog"
+        tools:layout="@layout/pdf_dialog">
+        <argument
+            android:name="countryCode"
+            android:defaultValue="null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="documentType"
+            android:defaultValue="null"
+            app:argType="string"
+            app:nullable="true" />
+    </dialog>
 
 
 </navigation>

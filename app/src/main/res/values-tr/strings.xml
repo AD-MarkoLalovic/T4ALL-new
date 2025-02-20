@@ -331,5 +331,8 @@
     <string name="pib_mandatory">KDV Numarası alanı zorunludur</string>
     <string name="pib_invalid_length">KDV Numarası alanı 9 ile 13 karakter arasında olmalıdır.</string>
     <string name="pib_not_cantains_nine_digits">KDV Numarası alanı 9 rakam içermelidir.</string>
+    <string name="cards_terms_text_full">Genel Şartlar ve Koşullar ile Gizlilik Politikası\'nı kabul ediyorum</string>
+    <string name="card_terms_left_clickable">Genel Şartlar ve Koşullar</string>
+    <string name="card_term_right_clickable">Gizlilik Politikası</string>
 
 </resources>

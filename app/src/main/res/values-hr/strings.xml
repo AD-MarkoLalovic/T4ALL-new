@@ -326,6 +326,9 @@
     <string name="pib_mandatory">Polje OIB je obavezno</string>
     <string name="pib_invalid_length">Polje OIB mora sadržavati od 9 do 13 znakova.</string>
     <string name="pib_not_cantains_nine_digits">Polje OIB mora sadržavati 9 znamenki.</string>
+    <string name="cards_terms_text_full">Slažem se s Općim uvjetima i Politikom privatnosti</string>
+    <string name="card_terms_left_clickable">Općim uvjetima</string>
+    <string name="card_term_right_clickable">Politikom privatnosti</string>
 
 
 </resources>

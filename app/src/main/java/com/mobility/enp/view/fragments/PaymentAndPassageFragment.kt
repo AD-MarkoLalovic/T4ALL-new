@@ -1,6 +1,12 @@
 package com.mobility.enp.view.fragments
 
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -43,6 +49,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private var allCards: List<Card> = emptyList()
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     private var selectedCountry = "All"
+    private var isButtonEnabled = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -62,8 +69,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         setListener()
         setupCountryList()
         handlePrimaryCardChange()
-        setupAddCardButton()
-
+        setAddCardButton()
     }
 
     private fun setupAdapters() {
@@ -125,10 +131,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     cardsCountryAdapter.updateCountries(countryNameAndAdditionalField)
                     cardsCountryAdapter.setSelectedCountry(selectedCountry)
                 }
+
+                setClickableText()  // terms and conditions
             }
         }
     }
-
 
 
     private fun fetchCardData() {
@@ -163,21 +170,35 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
     }
 
+    @Deprecated("old method no longer has a point since dialog is not shown")
     private fun setupAddCardButton() {
         binding.bttAddCard.setOnClickListener {
-                val dialogAddCard = CardAddDialog(object : PromotionInterface {
-                    override fun onCountrySelected(promotion: Promotion) {
-                        val action =
-                            PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
-                                promotion
-                            )
-                        findNavController().navigate(action)
-                    }
-                })
-
-                activity?.supportFragmentManager?.let { manager ->
-                    dialogAddCard.show(manager, "CardAddDialog")
+            val dialogAddCard = CardAddDialog(object : PromotionInterface {
+                override fun onCountrySelected(promotion: Promotion) {
+                    val action =
+                        PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
+                            promotion
+                        )
+                    findNavController().navigate(action)
                 }
+            })
+
+            activity?.supportFragmentManager?.let { manager ->
+                dialogAddCard.show(manager, "CardAddDialog")
+            }
+        }
+    }
+
+    private fun setAddCardButton() {
+        binding.bttAddCard.setOnClickListener {
+            val promotion = Promotion("", "", 0, "", selectedCountry, false)
+            if (selectedCountry != "All" && selectedCountry.isNotEmpty()) {
+                val action =
+                    PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
+                        promotion
+                    )
+                findNavController().navigate(action)
+            }
         }
     }
 
@@ -209,8 +230,21 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             paymentAndPassage?.let {
                 binding.rvCreditCard.visibility = View.VISIBLE
                 binding.recyclerCardsCountry.visibility = View.VISIBLE
-                binding.bttAddCard.visibility = View.VISIBLE
                 binding.loadingCards.visibility = View.GONE
+            }
+        }
+
+        binding.termsConditionsCheckmark.setOnCheckedChangeListener { _, isChecked ->
+            when (isChecked) {
+                true -> {
+                    isButtonEnabled = true
+                    makeCardClickable(true)
+                }
+
+                false -> {
+                    isButtonEnabled = false
+                    makeCardClickable(false)
+                }
             }
         }
     }
@@ -317,37 +351,175 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             "RS" -> {
                 selectedCountry = "RS"
                 filterCardsByCountry("RS")
+                setBlockVisibility(false)
+                setCardVisibility(true)
+                makeCardClickable(true)
+                isButtonEnabled = true
+                binding.termsConditionsCheckmark.isChecked = false
             }
 
             "MK" -> {
                 selectedCountry = "MK"
                 filterCardsByCountry("MK")
+                setBlockVisibility(true)
+                setCardVisibility(true)
+                makeCardClickable(false)
+                isButtonEnabled = false
+                binding.termsConditionsCheckmark.isChecked = false
             }
 
             "ME" -> {
                 selectedCountry = "ME"
                 filterCardsByCountry("ME")
+                setBlockVisibility(true)
+                setCardVisibility(true)
+                makeCardClickable(false)
+                isButtonEnabled = false
+                binding.termsConditionsCheckmark.isChecked = false
             }
 
             "HR" -> {
                 selectedCountry = "HR"
                 filterCardsByCountry("HR")
+                setBlockVisibility(true)
+                setCardVisibility(true)
+                makeCardClickable(false)
+                isButtonEnabled = false
+                binding.termsConditionsCheckmark.isChecked = false
             }
 
             else -> {
+                setBlockVisibility(false)
+                setCardVisibility(false)
+                makeCardClickable(false)
+                isButtonEnabled = false
                 selectedCountry = "All"
                 adapter.updateListCards(allCards)
                 binding.txNoCards.visibility = if (allCards.isEmpty()) View.VISIBLE else View.GONE
                 binding.rvCreditCard.visibility =
                     if (allCards.isEmpty()) View.GONE else View.VISIBLE
+                binding.termsConditionsCheckmark.isChecked = false
+
             }
         }
         cardsCountryAdapter.setSelectedCountry(selectedCountry)  // Dodato za ažuriranje selektovane zemlje u adapteru
     }
+
+    private fun setClickableText() {
+        val fullText = resources.getString(R.string.cards_terms_text_full)
+        val spannableString = SpannableString(fullText)
+
+        val termsStart =
+            fullText.indexOf(resources.getString(R.string.card_terms_left_clickable))  // sets part that is clickable
+        val termsEnd = termsStart + resources.getString(R.string.card_terms_left_clickable).length
+
+        val privacyStart =
+            fullText.indexOf(resources.getString(R.string.card_term_right_clickable)) // same here
+        val privacyEnd =
+            privacyStart + resources.getString(R.string.card_term_right_clickable).length
+
+
+        val clickableSpanTerms = object : ClickableSpan() { // terms and conditions
+            override fun onClick(widget: View) {
+                val action =
+                    PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewDialog(
+                        selectedCountry, "termsAndConditions"  // dont change this string
+                    )
+                findNavController().navigate(action)
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = true
+                ds.color = requireContext().getColor(R.color.figmaSplashScreenColor)
+            }
+        }
+
+        val clickablePrivacyTerms = object : ClickableSpan() {  // privacy policy
+            override fun onClick(widget: View) {
+                val action =
+                    PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewDialog(
+                        selectedCountry, "privacyPolicy"  // dont change this string
+                    )
+                findNavController().navigate(action)
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = true
+                ds.color = requireContext().getColor(R.color.figmaSplashScreenColor)
+            }
+        }
+
+        spannableString.setSpan(
+            clickableSpanTerms,
+            termsStart,
+            termsEnd,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        spannableString.setSpan(
+            clickablePrivacyTerms,
+            privacyStart,
+            privacyEnd,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        binding.tvTerms.text = spannableString
+        binding.tvTerms.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    private fun setBlockVisibility(enable: Boolean) {
+        when (enable) {
+            true -> {
+                binding.termsBlock.visibility = View.VISIBLE
+            }
+
+            false -> {
+                binding.termsBlock.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun setCardVisibility(enable: Boolean) {
+        when (enable) {
+            true -> {
+                binding.bttAddCard.visibility = View.VISIBLE
+            }
+
+            false -> {
+                binding.bttAddCard.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun makeCardClickable(enable: Boolean) {
+        when (enable) {
+            true -> {
+                binding.bttAddCard.isClickable = true
+                binding.bttAddCard.isEnabled = true
+                binding.bttAddCard.backgroundTintList =
+                    ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
+            }
+
+            false -> {
+                binding.bttAddCard.isClickable = false
+                binding.bttAddCard.isEnabled = false
+                binding.bttAddCard.backgroundTintList =
+                    ColorStateList.valueOf(requireContext().getColor(R.color.button_not_enabled_web))
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
+    override fun onResume() {
+        super.onResume()
+        isButtonEnabled = false
+        binding.termsConditionsCheckmark.isChecked = false
+        setCountryListener(selectedCountry)
+    }
 }

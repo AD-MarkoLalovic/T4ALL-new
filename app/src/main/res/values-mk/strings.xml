@@ -329,6 +329,9 @@
     <string name="pib_mandatory">Полето ДДВ број е задолжително</string>
     <string name="pib_invalid_length">Полето ДДВ број мора да содржи од 9 до 13 знаци.</string>
     <string name="pib_not_cantains_nine_digits">Полето ДДВ број мора да содржи 9 цифри.</string>
+    <string name="cards_terms_text_full">Се согласувам со Општите услови и Политиката за приватност</string>
+    <string name="card_terms_left_clickable">Општите услови</string>
+    <string name="card_term_right_clickable">Политиката за приватност</string>
 
 
 </resources>
