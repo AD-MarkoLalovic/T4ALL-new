@@ -26,8 +26,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp">
+                android:layout_marginHorizontal="@dimen/dimens_16dp">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewAccountHomeScreen"
@@ -58,9 +57,9 @@
                             android:ellipsize="end"
                             android:gravity="center_horizontal"
                             android:maxLines="1"
+                            android:text="@{viewModel.homeDetails.home.displayName}"
                             android:textColor="@color/white"
                             android:textSize="@dimen/dimens_25sp"
-                            android:text="@{viewModel.homeDetails.home.displayName}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -112,6 +111,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_10dp"
+                    android:importantForAccessibility="no"
                     android:orientation="horizontal"
                     android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -138,8 +138,8 @@
                     style="@style/Paragraph"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.homeDetails.invoice[0].montAndYearUI}"
                     android:layout_marginTop="@dimen/dimens_10dp"
+                    android:text="@{viewModel.homeDetails.invoice[0].montAndYearUI}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvTollMyInvoicesHomeScreen"
                     tools:text="Januar 1990" />
@@ -160,13 +160,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_13dp"
+                    android:layout_marginEnd="@dimen/dimens_16dp"
                     app:layout_constraintEnd_toStartOf="@+id/switchToPageBill"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/txtInvoiceMonth"
-                    android:layout_marginEnd="@dimen/dimens_16dp"
                     tools:itemCount="3"
-                    tools:listitem="@layout/card_home_page_currency"
                     tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/card_home_page_currency"
                     tools:orientation="horizontal"
                     tools:visibility="visible" />
 
@@ -201,7 +201,7 @@
                     android:id="@+id/recyclerLastPassages"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_6dp"
+                    android:layout_marginTop="@dimen/dimens_10dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

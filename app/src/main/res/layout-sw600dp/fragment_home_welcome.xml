@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.mobility.enp.viewmodel.HomeViewModel" />
+    </data>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,50 +20,54 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/lineHome"
             android:layout_alignParentTop="true"
-            android:layout_marginHorizontal="@dimen/dimens_100dp"
             android:focusable="true"
             tools:context=".view.fragments.HomeFragment">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimens_100dp">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewAccountHomeScreen"
                     android:layout_width="match_parent"
-                    android:layout_height="215dp"
+                    android:layout_height="@dimen/dimens_160dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/dimens_8dp"
                     android:backgroundTint="@color/figmaSplashScreenColor"
-                    app:cardCornerRadius="37dp"
+                    app:cardCornerRadius="@dimen/dimens_26dp"
                     app:cardElevation="@dimen/dimens_4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayoutInCard"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/rect_a2">
 
                         <TextView
                             android:id="@+id/homeUserName"
-                            style="@style/H1"
-                            android:layout_width="0dp"
+                            style="@style/H2"
+                            android:layout_width="@dimen/dimens_0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/dimens_22dp"
+                            android:layout_marginHorizontal="@dimen/dimens_16dp"
                             android:layout_marginBottom="16dp"
                             android:ellipsize="end"
                             android:gravity="center_horizontal"
                             android:maxLines="1"
+                            android:text="@{viewModel.homeDetails.home.displayName}"
                             android:textColor="@color/white"
+                            android:textSize="@dimen/dimens_25sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             tools:text="@string/marko_lalovic" />
 
                         <TextView
-                            style="@style/Paragraph"
+                            android:id="@+id/tvWelcomeBack"
+                            style="@style/CaptionRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/dimens_2dp"
@@ -71,8 +82,8 @@
 
                 <ImageView
                     android:id="@+id/imageAccountHomeScreen"
-                    android:layout_width="@dimen/dimens_120dp"
-                    android:layout_height="@dimen/dimens_120dp"
+                    android:layout_width="@dimen/dimens_85dp"
+                    android:layout_height="@dimen/dimens_85dp"
                     android:layout_gravity="center_horizontal"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_account_home_screen"
@@ -88,9 +99,11 @@
                     android:layout_marginTop="@dimen/dimens_16dp"
                     android:orientation="horizontal"
                     android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cardViewAccountHomeScreen"
+                    tools:listitem="@layout/card_flags_promotion_home"
                     tools:visibility="visible" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -98,6 +111,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_10dp"
+                    android:importantForAccessibility="no"
                     android:orientation="horizontal"
                     android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -119,21 +133,47 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cyclerProgress" />
 
+                <TextView
+                    android:id="@+id/txtInvoiceMonth"
+                    style="@style/Paragraph"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_10dp"
+                    android:text="@{viewModel.homeDetails.invoice[0].montAndYearUI}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvTollMyInvoicesHomeScreen"
+                    tools:text="Januar 1990" />
+
+                <ImageButton
+                    android:id="@+id/switchToPageBill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/arrow_right"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
+                    app:layout_constraintBottom_toBottomOf="@+id/rvTotalCurrency"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/txtInvoiceMonth" />
+
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewMonthlyBills"
-                    android:layout_width="match_parent"
+                    android:id="@+id/rvTotalCurrency"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_13dp"
-                    tools:listitem="@layout/home_invoices_card"
-                    tools:itemCount="1"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="@dimen/dimens_16dp"
+                    app:layout_constraintEnd_toStartOf="@+id/switchToPageBill"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvTollMyInvoicesHomeScreen" />
+                    app:layout_constraintTop_toBottomOf="@id/txtInvoiceMonth"
+                    tools:itemCount="3"
+                    tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/card_home_page_currency"
+                    tools:orientation="horizontal"
+                    tools:visibility="visible" />
 
                 <TextView
                     android:id="@+id/noInvoices"
                     style="@style/Paragraph"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="3"
@@ -141,9 +181,10 @@
                     android:text="@string/no_invoices"
                     android:visibility="gone"
                     app:layout_constraintBottom_toTopOf="@+id/tvTollHistoryHomeScreen"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvTollMyInvoicesHomeScreen"
-                    app:layout_constraintVertical_bias="0.1" />
+                    app:layout_constraintVertical_bias="0.05" />
 
                 <TextView
                     android:id="@+id/tvTollHistoryHomeScreen"
@@ -154,13 +195,13 @@
                     android:text="@string/tool_history"
                     android:textColor="@color/primary_light_darkest"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/recyclerViewMonthlyBills" />
+                    app:layout_constraintTop_toBottomOf="@id/rvTotalCurrency" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerLastPassages"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_6dp"
+                    android:layout_marginTop="@dimen/dimens_10dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -171,13 +212,15 @@
                 <TextView
                     android:id="@+id/noToolHistory"
                     style="@style/Paragraph"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="3"
+                    android:scrollHorizontally="true"
                     android:text="@string/no_tool_history"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/recyclerLastPassages"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvTollHistoryHomeScreen"
                     app:layout_constraintVertical_bias="0.05" />
@@ -196,8 +239,8 @@
 
         <ProgressBar
             android:id="@+id/progBar"
-            android:layout_width="@dimen/dimens_50dp"
-            android:layout_height="@dimen/dimens_50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:elevation="@dimen/dimens_10dp"
             android:visibility="gone" />
