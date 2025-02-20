@@ -21,6 +21,7 @@ import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.databinding.FragmentHomeWelcomeBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
+import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.TotalCurrencyAdapter
 import com.mobility.enp.view.adapters.home.HomePassageAdapter
 import com.mobility.enp.viewmodel.HomeViewModel
@@ -99,7 +100,10 @@ class HomeFragment : Fragment() {
             is SubmitResult.FailureNoConnection -> showNoInternetDialog()
             is SubmitResult.FailureServerError -> showErrorMessage(getString(R.string.server_error_msg))
             is SubmitResult.FailureApiError -> showErrorMessage(result.errorMessage)
-            is SubmitResult.InvalidApiToken -> Unit
+            is SubmitResult.InvalidApiToken -> {
+                showErrorMessage(result.errorMessage)
+                MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+            }
         }
     }
 
