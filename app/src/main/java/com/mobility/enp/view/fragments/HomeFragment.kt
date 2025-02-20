@@ -60,7 +60,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupAdapters() {
-        binding.rvTotalCurrency?.apply {
+        binding.rvTotalCurrency.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             totalCurrencyAdapter = TotalCurrencyAdapter(emptyList())
             adapter = totalCurrencyAdapter
@@ -86,7 +86,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        binding.switchToPageBill?.setOnClickListener {
+        binding.switchToPageBill.setOnClickListener {
             findNavController().navigate(R.id.action_global_invoicesFragment)
         }
     }
