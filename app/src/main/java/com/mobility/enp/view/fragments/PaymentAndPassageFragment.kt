@@ -23,12 +23,10 @@ import com.mobility.enp.data.model.api_home_page.homedata.Promotion
 import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.data.model.cards.response.Country
 import com.mobility.enp.databinding.FragmentPaymentAndPassageBinding
-import com.mobility.enp.interf.PromotionInterface
 import com.mobility.enp.network.Repository
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.CardsCountryAdapter
 import com.mobility.enp.view.adapters.PaymentAndPassageAdapter
-import com.mobility.enp.view.dialogs.CardAddDialog
 import com.mobility.enp.view.dialogs.ConfirmRemovalCardDialog
 import com.mobility.enp.view.dialogs.LostTagDialog
 import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
@@ -166,25 +164,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     requireContext(), getString(R.string.primary_card_changed), Toast.LENGTH_LONG
                 ).show()
                 viewModel.fetchCard(errorBody)
-            }
-        }
-    }
-
-    @Deprecated("old method no longer has a point since dialog is not shown")
-    private fun setupAddCardButton() {
-        binding.bttAddCard.setOnClickListener {
-            val dialogAddCard = CardAddDialog(object : PromotionInterface {
-                override fun onCountrySelected(promotion: Promotion) {
-                    val action =
-                        PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
-                            promotion
-                        )
-                    findNavController().navigate(action)
-                }
-            })
-
-            activity?.supportFragmentManager?.let { manager ->
-                dialogAddCard.show(manager, "CardAddDialog")
             }
         }
     }
