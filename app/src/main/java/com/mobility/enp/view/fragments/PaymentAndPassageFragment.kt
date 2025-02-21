@@ -145,12 +145,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 allCards = sortedCards ?: emptyList()
 
                 if (selectedCountry == "All") {
+                    toggleNoCardsMessage(allCards.isEmpty())
                     adapter.updateListCards(allCards)
                 } else {
                     filterCardsByCountry(selectedCountry)
                 }
-
-                toggleNoCardsMessage(allCards.isEmpty())
             }
         }
 
