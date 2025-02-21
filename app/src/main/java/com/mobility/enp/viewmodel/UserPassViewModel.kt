@@ -349,9 +349,24 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                     }
 
                     is NetworkError.ApiError -> {
-                        _baseTagDataState.value =
-                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
-                        Log.d(TAG, "api error ${error.errorResponse.message}")
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(TOKEN, "invalid token detected login out user")
+                                _baseTagDataState.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code ?: 0,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _baseTagDataState.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(TAG, "api error ${error.errorResponse.message}")
+                            }
+                        }
                     }
 
                     else -> {}
@@ -390,9 +405,24 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                     }
 
                     is NetworkError.ApiError -> {
-                        _baseTagDataState.value =
-                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
-                        Log.d(TAG, "api error ${error.errorResponse.message}")
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(TOKEN, "invalid token detected login out user")
+                                _baseTagDataState.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code ?: 0,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _baseTagDataState.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(TAG, "api error ${error.errorResponse.message}")
+                            }
+                        }
                     }
 
                     else -> {}
@@ -744,9 +774,24 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                         }
 
                         is NetworkError.ApiError -> {
-                            _baseTagDataState.value =
-                                SubmitResult.FailureApiError(error.errorResponse.message ?: "")
-                            Log.d(TAG, "api error ${error.errorResponse.message}")
+                            when (error.errorResponse.code) {
+                                401, 405 -> {
+                                    Log.d(TOKEN, "invalid token detected login out user")
+                                    _baseTagDataState.value =
+                                        SubmitResult.InvalidApiToken(
+                                            error.errorResponse.code ?: 0,
+                                            error.errorResponse.message ?: ""
+                                        )
+                                }
+
+                                else -> {
+                                    _baseTagDataState.value =
+                                        SubmitResult.FailureApiError(
+                                            error.errorResponse.message ?: ""
+                                        )
+                                    Log.d(TAG, "api error ${error.errorResponse.message}")
+                                }
+                            }
                         }
 
                         else -> {}
