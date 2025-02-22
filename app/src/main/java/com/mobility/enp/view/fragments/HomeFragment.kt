@@ -1,6 +1,7 @@
 package com.mobility.enp.view.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -17,13 +19,18 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ProfileImage
+import com.mobility.enp.data.model.api_home_page.homedata.Promotion
+import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.databinding.FragmentHomeWelcomeBinding
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.TotalCurrencyAdapter
 import com.mobility.enp.view.adapters.home.HomePassageAdapter
+import com.mobility.enp.view.adapters.home.HomeProgressAdapter
+import com.mobility.enp.view.adapters.home.HomePromotionsAdapter
 import com.mobility.enp.viewmodel.HomeViewModel
 import java.io.File
 
@@ -83,6 +90,12 @@ class HomeFragment : Fragment() {
 
         collectLatestLifecycleFlow(viewModel.homeTollHistory) { tollHistory ->
             homePassageAdapter.submitList(tollHistory)
+        }
+
+        collectLatestLifecycleFlow(viewModel.homeCards) { cards ->
+            cards?.let {
+                setHomeCardsAdapter(it)
+            }
         }
     }
 
@@ -157,6 +170,69 @@ class HomeFragment : Fragment() {
                     .error(R.drawable.ic_account_home_screen) // Ako slika ne postoji, postavi default
             )
             .into(imageView)
+    }
+
+    private fun setHomeCardsAdapter(cardsList: List<HomeCardsEntity>) {
+        val filteredList: ArrayList<HomeCardsEntity> = arrayListOf()
+        var hasModification = false
+
+        val isSerbiaAdded = { cardsList.any { it.code == "RS" } }
+
+        for (card in cardsList) {  // removes user deleted promotions
+            card.deletedByUser.let { deletedByUser ->
+                if (!deletedByUser) {
+                    filteredList.add(card)
+                } else {
+                    if (Util.hasTimePassed(card.time)) {
+                        card.deletedByUser = false
+                        card.time = System.currentTimeMillis()
+                        viewModel.deleteCard(card)
+                        hasModification = true
+                        Log.d("MARKO", "10 days have passed $card")
+                    } else {
+                        Log.d("MARKO", "10 days have not passed $card")
+                    }
+                }
+            }
+        }
+
+        val adapter = HomePromotionsAdapter(filteredList, { promotion ->
+            if (isSerbiaAdded() && promotion.code != "RS") {
+                //showSerbiaRequiredDialog()
+            } else {
+               /* val action = HomeFragmentDirections.actionHomeFragmentToCardFragment(promotion)
+                findNavController().navigate(action)*/
+            }
+
+        }, { delete ->
+            binding.progBar.visibility = View.VISIBLE
+            viewModel.deleteCard(delete)
+        })
+        val adapterProgress = HomeProgressAdapter(filteredList.size)
+
+        binding.cyclerPromotions.visibility = View.VISIBLE
+        binding.cyclerPromotions.adapter = adapter
+
+        binding.cyclerProgress.visibility = View.VISIBLE
+        binding.cyclerProgress.adapter = adapterProgress
+        binding.cyclerProgress.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        binding.cyclerPromotions.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                val currentCompletelyVisibleLab =
+                    (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                Log.d("MARKO", "onScrollStateChanged: $currentCompletelyVisibleLab")
+                adapterProgress.setCurrentDot(currentCompletelyVisibleLab)
+            }
+        })
+
+        if (hasModification) {
+            hasModification = false
+           // viewModelHome.reloadPromotionList()
+        }
+
     }
 
     override fun onDestroyView() {

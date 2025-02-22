@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.ProfileImage
+import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.data.repository.HomeRepository
 import com.mobility.enp.util.NetworkError
@@ -16,6 +17,7 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.ui_models.home.HomeTollHistoryUI
 import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
 import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TOKEN
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -34,6 +36,9 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
     private val _profileImage = MutableStateFlow<ProfileImage?>(null)
     val profileImage: StateFlow<ProfileImage?> get() = _profileImage
 
+    private val _homeCards = MutableStateFlow<List<HomeCardsEntity>?>(null)
+    val homeCards: StateFlow<List<HomeCardsEntity>?> get() = _homeCards
+
 
     fun fetchHomeData() {
         viewModelScope.launch {
@@ -43,12 +48,30 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
                 _homeData.value = SubmitResult.Success(it)
                 _homeDetails.value = it
                 _homeTollHistory.value = it.toUITollHistoryList()
-
             }
 
-            val result = repositoryHome.getHomeDataFromServer()
-            if (result.isSuccess) {
-                val homeEntity = result.getOrNull()
+            val localHomeCards = repositoryHome.getHomeCards()
+            val localAddedCards = repositoryHome.getLocalAddedCards()
+            localHomeCards?.let { homeCards ->
+                localAddedCards?.let { addedCards ->
+                    val filteredCards = homeCards.filter { homeCards ->
+                        homeCards.code !in addedCards.map { it.countryCode }
+                    }
+                    _homeCards.value = filteredCards
+                }
+            }
+
+            val homeDataDeferred = async { repositoryHome.getHomeDataFromServer() }
+            val homeCardsDeferred = async { repositoryHome.getCardsFromServer() }
+            val homeAddedCardsDeferred = async { repositoryHome.getAddedCardsFromServer() }
+
+            val homeDataResult = homeDataDeferred.await()
+            val homeCardsResult = homeCardsDeferred.await()
+            val userAddedCardsResult  = homeAddedCardsDeferred.await()
+
+            //val result = repositoryHome.getHomeDataFromServer()
+            if (homeDataResult.isSuccess) {
+                val homeEntity = homeDataResult.getOrNull()
 
                 if (homeEntity == null) {
                     _homeData.value = SubmitResult.Empty
@@ -58,7 +81,7 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
                     _homeTollHistory.value = homeEntity.toUITollHistoryList()
                 }
             } else {
-                when (val error = result.exceptionOrNull()) {
+                when (val error = homeDataResult.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.e(
                             "HomeViewModel",
@@ -94,6 +117,19 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
                     }
                 }
             }
+
+            if (homeCardsResult.isSuccess && userAddedCardsResult.isSuccess) {
+                val homeCardsEntity = homeCardsResult.getOrNull()
+                val userAddedCards = userAddedCardsResult.getOrNull()
+                homeCardsEntity?.let { homeCards ->
+                    userAddedCards?.let { addedCards ->
+                        val filteredCards = homeCards.filter { homeCards ->
+                            homeCards.code !in addedCards.map { it.countryCode }
+                        }
+                        _homeCards.value = filteredCards
+                    }
+                }
+            }
         }
     }
 
@@ -101,6 +137,12 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
         viewModelScope.launch {
             val image = repositoryHome.getProfileImage(displayName)
             _profileImage.value = image
+        }
+    }
+
+    fun deleteCard(card: HomeCardsEntity) {
+        viewModelScope.launch {
+            repositoryHome.deleteCard(card)
         }
     }
 
