@@ -69,7 +69,6 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
             val homeCardsResult = homeCardsDeferred.await()
             val userAddedCardsResult  = homeAddedCardsDeferred.await()
 
-            //val result = repositoryHome.getHomeDataFromServer()
             if (homeDataResult.isSuccess) {
                 val homeEntity = homeDataResult.getOrNull()
 
@@ -140,9 +139,9 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
         }
     }
 
-    fun deleteCard(card: HomeCardsEntity) {
+    fun updateDeleteHomeCard(card: HomeCardsEntity) {
         viewModelScope.launch {
-            repositoryHome.deleteCard(card)
+            repositoryHome.updateHomeCard(card)
         }
     }
 

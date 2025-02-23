@@ -6,7 +6,6 @@ import android.util.Log
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.home.cards.added_cards.entity.AddedCardsEntity
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
-import com.mobility.enp.data.model.home.cards.response.CardsHome
 import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.data.model.home.response.Data
 import com.mobility.enp.data.room.database.DRoom
@@ -134,8 +133,8 @@ class HomeRepository(
         database.homeCardsDao().insertHomeCards(cards)
     }
 
-    suspend fun deleteCard(card: HomeCardsEntity) {
-        database.homeCardsDao().deleteHomeCard(card)
+    suspend fun updateHomeCard(card: HomeCardsEntity) {
+        database.homeCardsDao().updatePromotionCard(card)
     }
 
     suspend fun getAddedCardsFromServer(): Result<List<AddedCardsEntity>> {

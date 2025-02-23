@@ -5,14 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_home_page.homedata.Promotion
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.databinding.CardFlagsPromotionHomeBinding
 
 class HomePromotionsAdapter(
     private val list: List<HomeCardsEntity>,
     private val onItemClicked: (HomeCardsEntity) -> Unit,
-    private val upsertPromotion: (HomeCardsEntity) -> Unit
+    private val updateDeleteCard: (HomeCardsEntity) -> Unit
 ) :
     RecyclerView.Adapter<HomePromotionsAdapter.HomeInvoicesAdapterViewHolder>() {
 
@@ -42,7 +41,7 @@ class HomePromotionsAdapter(
             binding.closeButton.setOnClickListener {
                 card.deletedByUser = true
                 card.time = System.currentTimeMillis()
-                upsertPromotion(card)
+                updateDeleteCard(card)
             }
 
             binding.executePendingBindings()

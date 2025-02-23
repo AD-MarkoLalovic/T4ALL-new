@@ -19,7 +19,6 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ProfileImage
-import com.mobility.enp.data.model.api_home_page.homedata.Promotion
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.databinding.FragmentHomeWelcomeBinding
@@ -31,6 +30,7 @@ import com.mobility.enp.view.adapters.TotalCurrencyAdapter
 import com.mobility.enp.view.adapters.home.HomePassageAdapter
 import com.mobility.enp.view.adapters.home.HomeProgressAdapter
 import com.mobility.enp.view.adapters.home.HomePromotionsAdapter
+import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.HomeViewModel
 import java.io.File
 
@@ -69,7 +69,8 @@ class HomeFragment : Fragment() {
 
     private fun setupAdapters() {
         binding.rvTotalCurrency.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             totalCurrencyAdapter = TotalCurrencyAdapter(emptyList())
             adapter = totalCurrencyAdapter
         }
@@ -85,7 +86,8 @@ class HomeFragment : Fragment() {
 
         collectLatestLifecycleFlow(viewModel.profileImage) { profileImage ->
             profileImage?.let {
-                displayProfileImage(binding.imageAccountHomeScreen, it) }
+                displayProfileImage(binding.imageAccountHomeScreen, it)
+            }
         }
 
         collectLatestLifecycleFlow(viewModel.homeTollHistory) { tollHistory ->
@@ -94,6 +96,7 @@ class HomeFragment : Fragment() {
 
         collectLatestLifecycleFlow(viewModel.homeCards) { cards ->
             cards?.let {
+                Log.d("MARKO", "Primljena lista kartica: $cards")
                 setHomeCardsAdapter(it)
             }
         }
@@ -173,40 +176,37 @@ class HomeFragment : Fragment() {
     }
 
     private fun setHomeCardsAdapter(cardsList: List<HomeCardsEntity>) {
-        val filteredList: ArrayList<HomeCardsEntity> = arrayListOf()
-        var hasModification = false
+        val filteredList = mutableListOf<HomeCardsEntity>()
 
-        val isSerbiaAdded = { cardsList.any { it.code == "RS" } }
-
-        for (card in cardsList) {  // removes user deleted promotions
-            card.deletedByUser.let { deletedByUser ->
-                if (!deletedByUser) {
-                    filteredList.add(card)
-                } else {
-                    if (Util.hasTimePassed(card.time)) {
-                        card.deletedByUser = false
-                        card.time = System.currentTimeMillis()
-                        viewModel.deleteCard(card)
-                        hasModification = true
-                        Log.d("MARKO", "10 days have passed $card")
-                    } else {
-                        Log.d("MARKO", "10 days have not passed $card")
-                    }
-                }
+        cardsList.forEach { card ->
+            if (!card.deletedByUser) {
+                filteredList.add(card)
+            } else if (Util.hasTimePassed(card.time)) {
+                card.deletedByUser = false
+                card.time = System.currentTimeMillis()
+                viewModel.updateDeleteHomeCard(card)
+                filteredList.add(card)
+                Log.d("HomeFragment hasTimePassed", "10 days have passed $card")
+            } else {
+                Log.d("HomeFragment hasTimePassed", "10 days have not passed $card")
             }
         }
 
-        val adapter = HomePromotionsAdapter(filteredList, { promotion ->
-            if (isSerbiaAdded() && promotion.code != "RS") {
-                //showSerbiaRequiredDialog()
+        val isSerbiaAdded = { cardsList.any { it.code == "RS" } }
+
+        val adapter = HomePromotionsAdapter(filteredList, { promotionCard ->
+            if (isSerbiaAdded() && promotionCard.code != "RS") {
+                showSerbiaRequiredDialog()
             } else {
-               /* val action = HomeFragmentDirections.actionHomeFragmentToCardFragment(promotion)
-                findNavController().navigate(action)*/
+                val action = HomeFragmentDirections.actionHomeFragmentToCardFragment(
+                    promotionCard.code
+                )
+                findNavController().navigate(action)
             }
 
         }, { delete ->
             binding.progBar.visibility = View.VISIBLE
-            viewModel.deleteCard(delete)
+            viewModel.updateDeleteHomeCard(delete)
         })
         val adapterProgress = HomeProgressAdapter(filteredList.size)
 
@@ -227,12 +227,14 @@ class HomeFragment : Fragment() {
                 adapterProgress.setCurrentDot(currentCompletelyVisibleLab)
             }
         })
+    }
 
-        if (hasModification) {
-            hasModification = false
-           // viewModelHome.reloadPromotionList()
-        }
-
+    private fun showSerbiaRequiredDialog() {
+        val dialog = GeneralMessageDialog(
+            getString(R.string.notification),
+            getString(R.string.first_add_card_serbia)
+        )
+        dialog.show(parentFragmentManager, "HomeNoAddCardDialog")
     }
 
     override fun onDestroyView() {
