@@ -74,8 +74,16 @@ class MainActivity : AppCompatActivity() {
 
         // Povezujemo BottomNavigationView sa NavController-om
         binding.bottomNavigation.setupWithNavController(navController)
-    }
 
+        // Dodavanje provere da se ne reaguje na klik ako je destinacija već aktivna
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            if (navController.currentDestination?.id == item.itemId) {
+                return@setOnItemSelectedListener false // Ne reaguj ako je trenutna destinacija ista
+            }
+            navController.navigate(item.itemId)
+            true
+        }
+    }
 
     private fun setListeners() {
         onBackPressedDispatcher.addCallback(this) {

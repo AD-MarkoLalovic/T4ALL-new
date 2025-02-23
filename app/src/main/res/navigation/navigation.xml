@@ -312,8 +312,8 @@
         android:label="CardFragment"
         tools:layout="@layout/fragment_tos">
         <argument
-            android:name="promotion"
-            app:argType="com.mobility.enp.data.model.api_home_page.homedata.Promotion"
+            android:name="countryCode"
+            app:argType="string"
             app:nullable="true" />
     </fragment>
     <fragment

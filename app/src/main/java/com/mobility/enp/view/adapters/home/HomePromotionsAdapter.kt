@@ -9,7 +9,7 @@ import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.databinding.CardFlagsPromotionHomeBinding
 
 class HomePromotionsAdapter(
-    private val list: List<HomeCardsEntity>,
+    private var list: List<HomeCardsEntity>,
     private val onItemClicked: (HomeCardsEntity) -> Unit,
     private val updateDeleteCard: (HomeCardsEntity) -> Unit
 ) :
@@ -42,6 +42,13 @@ class HomePromotionsAdapter(
                 card.deletedByUser = true
                 card.time = System.currentTimeMillis()
                 updateDeleteCard(card)
+
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    list = list.toMutableList().apply { removeAt(position) }
+                    notifyItemRemoved(position)
+                }
+
             }
 
             binding.executePendingBindings()

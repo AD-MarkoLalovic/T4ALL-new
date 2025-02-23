@@ -39,12 +39,20 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
     private val _homeCards = MutableStateFlow<List<HomeCardsEntity>?>(null)
     val homeCards: StateFlow<List<HomeCardsEntity>?> get() = _homeCards
 
+    private val _isTollHistoryEmpty = MutableStateFlow(false)
+    val isTollHistoryEmpty: StateFlow<Boolean> get() = _isTollHistoryEmpty
+
+    private val _isInvoiceEmpty = MutableStateFlow(false)
+    val isInvoiceEmpty: StateFlow<Boolean> get() = _isInvoiceEmpty
+
 
     fun fetchHomeData() {
         viewModelScope.launch {
 
             val localHomeData = repositoryHome.getLocalAllHomeData()
             localHomeData?.let {
+                _isTollHistoryEmpty.value = localHomeData.tollHistory.isEmpty()
+                _isInvoiceEmpty.value = localHomeData.invoice.isEmpty()
                 _homeData.value = SubmitResult.Success(it)
                 _homeDetails.value = it
                 _homeTollHistory.value = it.toUITollHistoryList()
@@ -52,14 +60,12 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
 
             val localHomeCards = repositoryHome.getHomeCards()
             val localAddedCards = repositoryHome.getLocalAddedCards()
-            localHomeCards?.let { homeCards ->
-                localAddedCards?.let { addedCards ->
-                    val filteredCards = homeCards.filter { homeCards ->
-                        homeCards.code !in addedCards.map { it.countryCode }
-                    }
-                    _homeCards.value = filteredCards
-                }
+
+            val filteredCards = localHomeCards.filter { homeCard ->
+                homeCard.code !in localAddedCards.map { it.countryCode }
             }
+
+            _homeCards.value = filteredCards
 
             val homeDataDeferred = async { repositoryHome.getHomeDataFromServer() }
             val homeCardsDeferred = async { repositoryHome.getCardsFromServer() }
@@ -67,7 +73,7 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
 
             val homeDataResult = homeDataDeferred.await()
             val homeCardsResult = homeCardsDeferred.await()
-            val userAddedCardsResult  = homeAddedCardsDeferred.await()
+            val userAddedCardsResult = homeAddedCardsDeferred.await()
 
             if (homeDataResult.isSuccess) {
                 val homeEntity = homeDataResult.getOrNull()
@@ -75,6 +81,9 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
                 if (homeEntity == null) {
                     _homeData.value = SubmitResult.Empty
                 } else {
+                    _isTollHistoryEmpty.value = homeEntity.tollHistory.isEmpty()
+                    _isInvoiceEmpty.value = homeEntity.invoice.isEmpty()
+
                     _homeData.value = SubmitResult.Success(homeEntity)
                     _homeDetails.value = homeEntity
                     _homeTollHistory.value = homeEntity.toUITollHistoryList()
@@ -122,10 +131,10 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
                 val userAddedCards = userAddedCardsResult.getOrNull()
                 homeCardsEntity?.let { homeCards ->
                     userAddedCards?.let { addedCards ->
-                        val filteredCards = homeCards.filter { homeCards ->
+                        val filterCards = homeCards.filter { homeCards ->
                             homeCards.code !in addedCards.map { it.countryCode }
                         }
-                        _homeCards.value = filteredCards
+                        _homeCards.value = filterCards
                     }
                 }
             }

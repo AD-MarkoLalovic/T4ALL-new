@@ -18,7 +18,7 @@ interface HomeCardsDao {
     suspend fun updatePromotionCard(cad: HomeCardsEntity)
 
     @Query("SELECT * FROM home_cards")
-    suspend fun getHomeCardsList(): List<HomeCardsEntity>?
+    suspend fun getHomeCardsList(): List<HomeCardsEntity>
 
     @Query("DELETE FROM home_cards")
     suspend fun deleteAllCards()

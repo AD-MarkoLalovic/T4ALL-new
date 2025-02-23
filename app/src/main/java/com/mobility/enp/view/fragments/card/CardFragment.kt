@@ -48,20 +48,23 @@ class CardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val args: CardFragmentArgs by navArgs()
-        val promotion = args.promotion
+        val countryCode = args.countryCode
 
-        promotion?.let {
+        countryCode?.let {
 
             val baseUrl = when {
                 BuildConfig.FLAVOR.contains("stage") -> {
                     "https://admintest.toll4all.com/mweb/customers/add-card/"
                 }
+
                 BuildConfig.FLAVOR.contains("prod") -> {
                     "https://openbalkan-etc.com/mweb/customers/add-card/"
                 }
+
                 BuildConfig.FLAVOR.contains("debug") -> {
                     "https://admindev.toll4all.com/mweb/customers/add-card/"
                 }
+
                 else -> {
                     Log.w("BuildType", "Unrecognized BUILD_TYPE: ${BuildConfig.BUILD_TYPE}")
                     "about:blank"
@@ -74,7 +77,7 @@ class CardFragment : Fragment() {
                 "RS" to "rs"
             )
 
-            url = baseUrl + (countryUrls[it.countryCode] ?: "rs")
+            url = baseUrl + (countryUrls[countryCode] ?: "rs")
 
         }
 

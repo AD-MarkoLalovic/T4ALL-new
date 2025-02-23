@@ -2,7 +2,6 @@ package com.mobility.enp.data.repository
 
 import android.content.Context
 import android.util.Log
-
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.home.cards.added_cards.entity.AddedCardsEntity
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
@@ -80,17 +79,7 @@ class HomeRepository(
     }
 
     suspend fun getLocalAllHomeData(): HomeWithDetails? {
-        return try {
-            val data = database.homeScreenDao().getHomeWithDetails()
-            data
-        } catch (e: Exception) {
-            Log.e(
-                "HomeRepository getLocalAllHomeData",
-                "Greška pri dohvaćanju podataka: ${e.message}",
-                e
-            )
-            null
-        }
+        return database.homeScreenDao().getHomeWithDetails()
     }
 
     /**
@@ -103,8 +92,13 @@ class HomeRepository(
     /**
      * Home Cards GET
      */
-    suspend fun getCardsFromServer(): Result<List<HomeCardsEntity>?> {
+    suspend fun getCardsFromServer(): Result<List<HomeCardsEntity>> {
         val userToken = getUserToken() ?: return Result.failure(NetworkError.NoConnection)
+
+        val localCards = getHomeCards()
+        if (localCards.isNotEmpty()) {
+            return Result.success(localCards)
+        }
 
         return try {
             val remoteData = apiService(userToken).getAvailableCards()
@@ -113,7 +107,7 @@ class HomeRepository(
                     val cardsEntities = responseBody.data.toEntityList(context)
                     saveHomeCards(cardsEntities)
 
-                    Result.success(getHomeCards())
+                    Result.success(cardsEntities)
                 } ?: Result.failure(NetworkError.ServerError)
             } else {
                 Result.failure(NetworkError.ServerError)
@@ -124,7 +118,7 @@ class HomeRepository(
         }
     }
 
-    suspend fun getHomeCards(): List<HomeCardsEntity>? {
+    suspend fun getHomeCards(): List<HomeCardsEntity> {
         return database.homeCardsDao().getHomeCardsList()
     }
 

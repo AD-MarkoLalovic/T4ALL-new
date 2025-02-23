@@ -89,17 +89,36 @@ class HomeFragment : Fragment() {
                 displayProfileImage(binding.imageAccountHomeScreen, it)
             }
         }
+        collectLatestLifecycleFlow(viewModel.homeCards) { cards ->
+            cards?.let {
+                setHomeCardsAdapter(it)
+                Log.d("MARKO", "collectLatestLifecycleFlow(viewModel.homeCards) : 1")
+                binding.progBar.visibility = View.GONE
+            }
+        }
+
+        collectLatestLifecycleFlow(viewModel.isInvoiceEmpty) { isEmpty ->
+            if (isEmpty) {
+                binding.noInvoices.visibility = View.VISIBLE
+                binding.invoicesContainerHome.visibility = View.GONE
+            } else {
+                binding.noInvoices.visibility = View.GONE
+                binding.invoicesContainerHome.visibility = View.VISIBLE
+            }
+        }
+
+        collectLatestLifecycleFlow(viewModel.isTollHistoryEmpty) { isEmpty ->
+            if (isEmpty) {
+                binding.noToolHistory.visibility = View.VISIBLE
+            } else {
+                binding.noToolHistory.visibility = View.GONE
+            }
+        }
 
         collectLatestLifecycleFlow(viewModel.homeTollHistory) { tollHistory ->
             homePassageAdapter.submitList(tollHistory)
         }
 
-        collectLatestLifecycleFlow(viewModel.homeCards) { cards ->
-            cards?.let {
-                Log.d("MARKO", "Primljena lista kartica: $cards")
-                setHomeCardsAdapter(it)
-            }
-        }
     }
 
     private fun setupClickListeners() {
@@ -124,11 +143,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun handleSuccess(result: SubmitResult.Success<HomeWithDetails>) {
-        binding.apply {
-            noInvoices.visibility = View.GONE
-            noToolHistory.visibility = View.GONE
-            progBar.visibility = View.GONE
-        }
+        binding.progBar.visibility = View.GONE
 
         result.data.home.displayName?.let { viewModel.loadProfileImage(it) }
 
@@ -207,7 +222,9 @@ class HomeFragment : Fragment() {
         }, { delete ->
             binding.progBar.visibility = View.VISIBLE
             viewModel.updateDeleteHomeCard(delete)
+            binding.progBar.visibility = View.GONE
         })
+
         val adapterProgress = HomeProgressAdapter(filteredList.size)
 
         binding.cyclerPromotions.visibility = View.VISIBLE
@@ -236,6 +253,7 @@ class HomeFragment : Fragment() {
         )
         dialog.show(parentFragmentManager, "HomeNoAddCardDialog")
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
