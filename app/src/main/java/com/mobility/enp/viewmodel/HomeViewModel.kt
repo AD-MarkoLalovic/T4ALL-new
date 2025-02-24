@@ -1,177 +1,167 @@
 package com.mobility.enp.viewmodel
 
-import android.app.Application
-import android.content.Context
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
-import com.mobility.enp.data.model.api_home_page.homedata.HomeScreenData
-import com.mobility.enp.data.model.api_home_page.homedata.Promotion
-import com.mobility.enp.data.model.cards.response.CardsResponse
-import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
-import com.mobility.enp.data.model.countries.CountriesModel
-import com.mobility.enp.data.room.database.DRoom
-import com.mobility.enp.network.Repository
-import kotlinx.coroutines.Dispatchers
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.mobility.enp.MyApplication
+import com.mobility.enp.data.model.ProfileImage
+import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
+import com.mobility.enp.data.model.home.relation.HomeWithDetails
+import com.mobility.enp.data.repository.HomeRepository
+import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.view.ui_models.home.HomeTollHistoryUI
+import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
+import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TOKEN
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
 
-    private val database: DRoom = DRoom.getRoomInstance(application)
-    private var _countryData = MutableLiveData<CountriesModel>()
-    val countryData: LiveData<CountriesModel> get() = _countryData
+    private val _homeData = MutableStateFlow<SubmitResult<HomeWithDetails>>(SubmitResult.Loading)
+    val homeData: StateFlow<SubmitResult<HomeWithDetails>> get() = _homeData
 
-    private val _promotionsList: MutableLiveData<List<Promotion>> = MutableLiveData()
-    val promotionList: LiveData<List<Promotion>> get() = _promotionsList
+    private val _homeDetails = MutableStateFlow<HomeWithDetails?>(null)
+    val homeDetails: StateFlow<HomeWithDetails?> get() = _homeDetails
 
-    private val _userCreditCards: MutableLiveData<CardsResponse> = MutableLiveData()
-    val userCreditCards: LiveData<CardsResponse> get() = _userCreditCards
+    private val _homeTollHistory = MutableStateFlow<List<HomeTollHistoryUI>>(emptyList())
+    val homeTollHistory: StateFlow<List<HomeTollHistoryUI>> get() = _homeTollHistory
 
-    fun checkStoredPromotions() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val promotions = database.promotionsDao().getPromotionsList()
-            _promotionsList.postValue(promotions)
-        }
-    }
+    private val _profileImage = MutableStateFlow<ProfileImage?>(null)
+    val profileImage: StateFlow<ProfileImage?> get() = _profileImage
 
-    fun getCreditCards(
-        errorBody: MutableLiveData<ErrorBody>,
-    ) {
-        if (Repository.isNetworkAvailable(getApplication())) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val userToken = getUserToken()
-                userToken?.let {
-                    Repository.getCreditCards(
-                        _userCreditCards, it.accessToken, errorBody, getApplication()
-                    )
-                }
-            }
-        }
-    }
+    private val _homeCards = MutableStateFlow<List<HomeCardsEntity>?>(null)
+    val homeCards: StateFlow<List<HomeCardsEntity>?> get() = _homeCards
 
-    fun getUserHomeData(
-        context: Context,
-        errorBody: MutableLiveData<ErrorBody>,
-        homeUserData: MutableLiveData<HomeScreenData>,
-        isInternetAvailable: MutableLiveData<Boolean>
-    ) {
-        if (Repository.isNetworkAvailable(context)) {
-            viewModelScope.launch {
-                val userToken = getUserToken()
-                userToken?.let {
-                    Repository.getUserHomeData(
-                        homeUserData, it.accessToken, context, errorBody
-                    )
-                }
-            }
-        } else {
-            isInternetAvailable.postValue(false)
-        }
-    }
+    private val _isTollHistoryEmpty = MutableStateFlow(false)
+    val isTollHistoryEmpty: StateFlow<Boolean> get() = _isTollHistoryEmpty
 
-    fun getUserAllowedCountries(
-        errorBody: MutableLiveData<ErrorBody>
-    ) {
+    private val _isInvoiceEmpty = MutableStateFlow(false)
+    val isInvoiceEmpty: StateFlow<Boolean> get() = _isInvoiceEmpty
+
+
+    fun fetchHomeData() {
         viewModelScope.launch {
-            val token = getUserToken()
-            token.accessToken?.let { accessToken ->
-                if (Repository.isNetworkAvailable(getApplication())) {
-                    Repository.getUserCountries(_countryData, errorBody, accessToken)
+
+            val localHomeData = repositoryHome.getLocalAllHomeData()
+            localHomeData?.let {
+                _isTollHistoryEmpty.value = localHomeData.tollHistory.isEmpty()
+                _isInvoiceEmpty.value = localHomeData.invoice.isEmpty()
+                _homeData.value = SubmitResult.Success(it)
+                _homeDetails.value = it
+                _homeTollHistory.value = it.toUITollHistoryList()
+            }
+
+            val localHomeCards = repositoryHome.getHomeCards()
+            val localAddedCards = repositoryHome.getLocalAddedCards()
+
+            val filteredCards = localHomeCards.filter { homeCard ->
+                homeCard.code !in localAddedCards.map { it.countryCode }
+            }
+
+            _homeCards.value = filteredCards
+
+            val homeDataDeferred = async { repositoryHome.getHomeDataFromServer() }
+            val homeCardsDeferred = async { repositoryHome.getCardsFromServer() }
+            val homeAddedCardsDeferred = async { repositoryHome.getAddedCardsFromServer() }
+
+            val homeDataResult = homeDataDeferred.await()
+            val homeCardsResult = homeCardsDeferred.await()
+            val userAddedCardsResult = homeAddedCardsDeferred.await()
+
+            if (homeDataResult.isSuccess) {
+                val homeEntity = homeDataResult.getOrNull()
+
+                if (homeEntity == null) {
+                    _homeData.value = SubmitResult.Empty
+                } else {
+                    _isTollHistoryEmpty.value = homeEntity.tollHistory.isEmpty()
+                    _isInvoiceEmpty.value = homeEntity.invoice.isEmpty()
+
+                    _homeData.value = SubmitResult.Success(homeEntity)
+                    _homeDetails.value = homeEntity
+                    _homeTollHistory.value = homeEntity.toUITollHistoryList()
+                }
+            } else {
+                when (val error = homeDataResult.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.e(
+                            "HomeViewModel",
+                            "Greška tokom preuzimanja podataka za pocetnu stranu",
+                            error
+                        )
+                        _homeData.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _homeData.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(TOKEN, "invalid token detected login out user")
+                                _homeData.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _homeData.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(TAG, "HomeViewModel api error ${error.errorResponse.message}")
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (homeCardsResult.isSuccess && userAddedCardsResult.isSuccess) {
+                val homeCardsEntity = homeCardsResult.getOrNull()
+                val userAddedCards = userAddedCardsResult.getOrNull()
+                homeCardsEntity?.let { homeCards ->
+                    userAddedCards?.let { addedCards ->
+                        val filterCards = homeCards.filter { homeCards ->
+                            homeCards.code !in addedCards.map { it.countryCode }
+                        }
+                        _homeCards.value = filterCards
+                    }
                 }
             }
         }
     }
 
-    suspend fun getUserToken(): UserLoginResponseRoomTable {
-        return withContext(Dispatchers.IO) {
-            database.loginDao().fetchAllowedUsers()
-        }
-    }
-
-    fun insertHomeData(homeScreenData: HomeScreenData) {
+    fun loadProfileImage(displayName: String) {
         viewModelScope.launch {
-            database.homeDao().insertData(homeScreenData)
+            val image = repositoryHome.getProfileImage(displayName)
+            _profileImage.value = image
         }
     }
 
-    suspend fun fetchHomeData(): HomeScreenData {
-        return withContext(Dispatchers.IO) {
-            database.homeDao().fetchData()
+    fun updateDeleteHomeCard(card: HomeCardsEntity) {
+        viewModelScope.launch {
+            repositoryHome.updateHomeCard(card)
         }
     }
 
-    fun savePromotion(promotion: List<Promotion>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val storedPromotions = database.promotionsDao().getPromotionsList()
-
-            val newPromotions = promotion.filter { newPromotion ->
-                storedPromotions.none { storedPromo -> storedPromo.countryCode == newPromotion.countryCode }
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val myRepository = (this[APPLICATION_KEY] as MyApplication).repositoryHome
+                HomeViewModel(
+                    repositoryHome = myRepository
+                )
             }
-
-            if (newPromotions.isNotEmpty()) {
-                database.promotionsDao().upsertPromotion(newPromotions)
-            }
-            
-            checkStoredPromotions()
         }
     }
-
-    fun createPromotion(context: Context, code: String?): Promotion? {
-        return when {
-            code?.contains("RS") == true -> Promotion(
-                context.getString(R.string.serbian_passage),
-                context.getString(R.string.tag_device_payment_method_serbia),
-                0,
-                "",
-                "RS",
-                false
-            )
-
-            code?.contains("MK") == true -> Promotion(
-                context.getString(R.string.north_macedonian_passage),
-                context.getString(R.string.tag_device_payment_method_north_macedonia),
-                0,
-                "",
-                "MK",
-                false
-            )
-
-            code?.contains("ME") == true -> Promotion(
-                context.getString(R.string.montenegro_passage),
-                context.getString(R.string.tag_device_payment_method_montenegro),
-                0,
-                "",
-                "ME",
-                false
-            )
-
-            else -> null
-        }
-    }
-
-    fun userDeletedPromotion(promotion: Promotion) {
-        viewModelScope.launch(Dispatchers.IO) {
-            database.promotionsDao().deletedByUser(promotion)
-            val newList = database.promotionsDao().getPromotionsList()
-            _promotionsList.postValue(newList)
-        }
-    }
-
-    fun upsertPromotion(promotion: Promotion) {
-        viewModelScope.launch(Dispatchers.IO) {
-            database.promotionsDao().upsertSinglePromotion(promotion)
-        }
-    }
-
-    fun reloadPromotionList() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val list = database.promotionsDao().getPromotionsList()
-            _promotionsList.postValue(list)
-        }
-    }
-
 }

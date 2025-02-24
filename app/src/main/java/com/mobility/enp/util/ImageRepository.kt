@@ -10,6 +10,7 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
+import com.mobility.enp.R
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.room.database.DRoom
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +44,7 @@ class ImageRepository(private val context: Context) {
                         }
 
                         // Dodajem novi zapis s novom putanjom
-                        val newProfileImage = ProfileImage(displayName, newImagePath)
+                        val newProfileImage = ProfileImage(displayName = displayName, imagePath = newImagePath)
                         database.profileImageDao().insertImage(newProfileImage)
                     }
                 } catch (e: Exception) {
@@ -96,22 +97,18 @@ class ImageRepository(private val context: Context) {
     }
 
     private fun displayProfileImage(imageView: ImageView, profileImage: ProfileImage) {
-        val imageFile = File(profileImage.imagePath)
-        if (imageFile.exists()) {
-
-            val glideOption = RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.ALL) // Omogućava keširanje učitanih slika
-                .override(imageView.width, imageView.height) // Velicina slike
-                .centerCrop() //Nacin skaliranja
-                .transform(CircleCrop())
-                .format(DecodeFormat.PREFER_RGB_565) // Preferirani format slike
-            // ARGB_8888 za bolji kvalitet slike
-
-            Glide.with(imageView.context)
-                .load(imageFile)
-                .apply(glideOption)
-                .into(imageView)
-        }
+        Glide.with(imageView.context)
+            .load(File(profileImage.imagePath))
+            .apply(
+                RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL) // Omogućava keširanje učitanih slika
+                    .override(imageView.width, imageView.height) // Velicina slike
+                    .centerCrop() //Nacin skaliranja
+                    .transform(CircleCrop())
+                    .format(DecodeFormat.PREFER_ARGB_8888) // Kvalitetnije, ali troši više RAM-a
+                    .error(R.drawable.ic_account_home_screen) // Ako slika ne postoji, postavi default
+            )
+            .into(imageView)
     }
 
     private fun deleteImageFile(imagePath: String) {

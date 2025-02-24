@@ -14,7 +14,7 @@
             android:layout_width="@dimen/dimens_50dp"
             android:layout_height="@dimen/dimens_50dp"
             android:elevation="@dimen/dimens_10dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

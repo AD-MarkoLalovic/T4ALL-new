@@ -5,13 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_home_page.homedata.Promotion
+import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.databinding.CardFlagsPromotionHomeBinding
 
 class HomePromotionsAdapter(
-    val list: List<Promotion>,
-    private val onItemClicked: (Promotion) -> Unit,
-    private val upsertPromotion: (Promotion) -> Unit
+    private var list: List<HomeCardsEntity>,
+    private val onItemClicked: (HomeCardsEntity) -> Unit,
+    private val updateDeleteCard: (HomeCardsEntity) -> Unit
 ) :
     RecyclerView.Adapter<HomePromotionsAdapter.HomeInvoicesAdapterViewHolder>() {
 
@@ -20,10 +20,10 @@ class HomePromotionsAdapter(
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(promotion: Promotion) {
-            binding.data = promotion
+        fun bind(card: HomeCardsEntity) {
+            binding.data = card
 
-            when (promotion.countryCode) {
+            when (card.code) {
                 "RS" -> Glide.with(binding.root.context).load(R.drawable.serbian_flag_home)
                     .into(binding.backgroundImage)
 
@@ -35,13 +35,20 @@ class HomePromotionsAdapter(
             }
 
             binding.btnObjection.setOnClickListener {
-                onItemClicked(promotion)
+                onItemClicked(card)
             }
 
             binding.closeButton.setOnClickListener {
-                promotion.deletedByUser = true
-                promotion.time = System.currentTimeMillis()
-                upsertPromotion(promotion)
+                card.deletedByUser = true
+                card.time = System.currentTimeMillis()
+                updateDeleteCard(card)
+
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    list = list.toMutableList().apply { removeAt(position) }
+                    notifyItemRemoved(position)
+                }
+
             }
 
             binding.executePendingBindings()

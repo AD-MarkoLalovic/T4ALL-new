@@ -5,14 +5,12 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.network.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -38,12 +36,8 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private var _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    private val homeDisplayName: String = Repository.getDisplayName(getApplication()).toString()
-    val displayName: LiveData<String> =
-        database.basicInfoDao().fetchDisplayName()
-            .map { it.orEmpty().ifEmpty { homeDisplayName } }
-            .asLiveData()
-
+    private val _displayName = MutableLiveData<String>()
+    val displayName: LiveData<String> = _displayName
 
     private suspend fun getUserToken(): String? {
         return withContext(Dispatchers.IO) {
@@ -67,6 +61,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                     val token = getUserToken()
                     token?.let {
                         val userInfo = Repository.getUserPersonalInfo(it)
+                        _displayName.value = userInfo.data.displayName
                         val userCountry = userInfo.data.country.code
                         val userType = userInfo.data.customerType.type
                         val isFranchiser = userInfo.data.isFranchiser
@@ -111,7 +106,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun deleteProfilePicture() {
         viewModelScope.launch(Dispatchers.IO) {
-            database.profileImageDao().deleteAll();
+            database.profileImageDao().deleteAll()
             _deletePic.postValue(true)
         }
     }
@@ -162,10 +157,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     fun isNetworkAvailable(): Boolean {
         return Repository.isNetworkAvailable(getApplication())
-    }
-
-    fun fetchDisplayName(): String {
-        return Repository.getDisplayName(getApplication()).toString()
     }
 
 }

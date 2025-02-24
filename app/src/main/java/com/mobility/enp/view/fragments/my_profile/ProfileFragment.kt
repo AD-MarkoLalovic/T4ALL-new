@@ -2,7 +2,6 @@ package com.mobility.enp.view.fragments.my_profile
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,19 +59,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         setObserver()
 
         viewModelProfile.setRefundRequestVisibility()
-
-        lifecycleScope.launch {
-            try {
-
-                val displayName = viewModelProfile.displayName.value
-                displayName?.let {
-                    imageRepository.getAndSetProfileImage(binding.imageProfile, it)
-                }
-
-            } catch (e: Exception) {
-                Log.d(TAG, "error: null data in room")
-            }
-        }
 
 
         binding.bttChangeProfilePicture.setOnClickListener {
@@ -143,6 +129,9 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
     private fun setObserver() {
         viewModelProfile.displayName.observe(viewLifecycleOwner) { displayName ->
             binding.userName.text = displayName
+            viewLifecycleOwner.lifecycleScope.launch {
+                imageRepository.getAndSetProfileImage(binding.imageProfile, displayName)
+            }
         }
 
         errorBody.observe(viewLifecycleOwner) { errorBody ->

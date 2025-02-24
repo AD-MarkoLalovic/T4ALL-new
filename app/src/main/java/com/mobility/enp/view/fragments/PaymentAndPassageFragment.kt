@@ -173,7 +173,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             if (selectedCountry != "All" && selectedCountry.isNotEmpty()) {
                 val action =
                     PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
-                        promotion
+                        promotion.countryCode
                     )
                 findNavController().navigate(action)
             }

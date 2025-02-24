@@ -2,7 +2,6 @@ package com.mobility.enp.network
 
 import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
@@ -49,8 +48,6 @@ import java.net.SocketTimeoutException
 object Repository {
 
     const val TAG = "REPOSITORY"
-    private const val PREFS_NAME = "user_prefs"
-    private const val KEY_DISPLAY_NAME = "display_name"
 
     private fun apiService(token: String?): ApiService {
         return RestClient.create(ApiService::class.java, token).apiService
@@ -854,16 +851,5 @@ object Repository {
         return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
-    fun saveDisplayName(context: Context, displayName: String) {
-        val sharedPreferences: SharedPreferences =
-            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        sharedPreferences.edit().putString(KEY_DISPLAY_NAME, displayName).apply()
-    }
-
-    fun getDisplayName(context: Context): String? {
-        val sharedPreferences: SharedPreferences =
-            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        return sharedPreferences.getString(KEY_DISPLAY_NAME, null)
-    }
 
 }

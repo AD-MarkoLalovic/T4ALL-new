@@ -3,24 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.mobility.enp.viewmodel.HomeViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/white"
+        tools:context=".view.fragments.HomeFragment">
 
         <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/lineHome"
-            android:layout_alignParentTop="true"
-            android:focusable="true"
-            tools:context=".view.fragments.HomeFragment">
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/lineHome"
+            >
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/firstConstraintLayoutHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp">
+                android:layout_marginHorizontal="@dimen/dimens_16dp">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewAccountHomeScreen"
@@ -51,6 +60,7 @@
                             android:ellipsize="end"
                             android:gravity="center_horizontal"
                             android:maxLines="1"
+                            android:text="@{viewModel.homeDetails.home.displayName}"
                             android:textColor="@color/white"
                             android:textSize="@dimen/dimens_25sp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -85,113 +95,126 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/cyclerPromotions"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_16dp"
-                    android:orientation="horizontal"
-                    android:visibility="gone"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cardViewAccountHomeScreen"
-                    tools:listitem="@layout/card_flags_promotion_home"
-                    tools:visibility="visible" />
+                    android:paddingTop="@dimen/dimens_8dp">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/cyclerProgress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_10dp"
-                    android:orientation="horizontal"
-                    android:visibility="gone"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/cyclerPromotions"
-                    tools:itemCount="5"
-                    tools:listitem="@layout/card_progress_bar"
-                    tools:visibility="visible" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/cyclerPromotions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/card_flags_promotion_home"
+                        tools:visibility="visible" />
 
-                <TextView
-                    android:id="@+id/tvTollMyInvoicesHomeScreen"
-                    style="@style/H3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_20dp"
-                    android:text="@string/my_invoices"
-                    android:textColor="@color/primary_light_darkest"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/cyclerProgress" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/cyclerProgress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:importantForAccessibility="no"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:itemCount="5"
+                        tools:listitem="@layout/card_progress_bar"
+                        tools:visibility="visible" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewMonthlyBills"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_13dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvTollMyInvoicesHomeScreen"
-                    tools:itemCount="5"
-                    tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/home_invoices_card" />
+                    <TextView
+                        android:id="@+id/tvTollMyInvoicesHomeScreen"
+                        style="@style/H3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/my_invoices"
+                        android:textColor="@color/primary_light_darkest" />
 
-                <TextView
-                    android:id="@+id/noInvoices"
-                    style="@style/Paragraph"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="3"
-                    android:scrollHorizontally="true"
-                    android:text="@string/no_invoices"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@+id/tvTollHistoryHomeScreen"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvTollMyInvoicesHomeScreen"
-                    app:layout_constraintVertical_bias="0.05" />
+                    <TextView
+                        android:id="@+id/noInvoices"
+                        style="@style/Paragraph"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_10dp"
+                        android:text="@string/no_invoices"
+                        android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/tvTollHistoryHomeScreen"
-                    style="@style/H3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_34dp"
-                    android:text="@string/tool_history"
-                    android:textColor="@color/primary_light_darkest"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/recyclerViewMonthlyBills" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/invoicesContainerHome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerLastPassages"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_6dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvTollHistoryHomeScreen"
-                    tools:itemCount="5"
-                    tools:listitem="@layout/item_relation_home" />
+                        <TextView
+                            android:id="@+id/txtInvoiceMonth"
+                            style="@style/Paragraph"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimens_10dp"
+                            android:text="@{viewModel.homeDetails.invoice[0].montAndYearUI}"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="Januar 1990" />
 
-                <TextView
-                    android:id="@+id/noToolHistory"
-                    style="@style/Paragraph"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="3"
-                    android:scrollHorizontally="true"
-                    android:text="@string/no_tool_history"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@+id/recyclerLastPassages"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvTollHistoryHomeScreen"
-                    app:layout_constraintVertical_bias="0.05" />
+                        <ImageButton
+                            android:id="@+id/switchToPageBill"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/arrow_right"
+                            android:contentDescription="@null"
+                            android:importantForAccessibility="no"
+                            app:layout_constraintBottom_toBottomOf="@+id/rvTotalCurrency"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/txtInvoiceMonth" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvTotalCurrency"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimens_13dp"
+                            android:layout_marginEnd="@dimen/dimens_16dp"
+                            app:layout_constraintEnd_toStartOf="@+id/switchToPageBill"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/txtInvoiceMonth"
+                            tools:itemCount="3"
+                            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/card_home_page_currency"
+                            tools:orientation="horizontal"
+                            tools:visibility="visible" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:id="@+id/tvTollHistoryHomeScreen"
+                        style="@style/H3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_34dp"
+                        android:text="@string/tool_history"
+                        android:textColor="@color/primary_light_darkest" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerLastPassages"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_10dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:itemCount="5"
+                        tools:listitem="@layout/item_relation_home" />
+
+                    <TextView
+                        android:id="@+id/noToolHistory"
+                        style="@style/Paragraph"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_10dp"
+                        android:layout_marginBottom="@dimen/dimens_10dp"
+                        android:text="@string/no_tool_history"
+                        android:visibility="gone" />
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
@@ -200,18 +223,20 @@
             android:id="@+id/lineHome"
             android:layout_width="@dimen/dimens_0dp"
             android:layout_height="@dimen/dimens_1dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:background="@color/primary_light_light" />
 
         <ProgressBar
             android:id="@+id/progBar"
-            android:layout_width="@dimen/dimens_50dp"
-            android:layout_height="@dimen/dimens_50dp"
-            android:layout_centerInParent="true"
-            android:elevation="@dimen/dimens_10dp"
-            android:visibility="gone" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="visible" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

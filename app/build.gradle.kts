@@ -58,16 +58,6 @@ android {
 
     flavorDimensions += "mode"
     productFlavors {
-        create("dev") {
-            // Dev flavor configuration
-            dimension = "mode"
-            applicationIdSuffix = ".dev"
-            versionNameSuffix = "-dev"
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            buildConfigField("String", "API_URL", "\"https://mobileapidev.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+53972@gmail.com\"")
-            buildConfigField("String", "TEST_PASSWORD", "\"demodemo\"")
-        }
         create("stage") {
             dimension = "mode"
             applicationIdSuffix = ".stage"
@@ -75,7 +65,7 @@ android {
             versionNameSuffix = "-stage"
             multiDexEnabled = true
             buildConfigField("String", "API_URL", "\"https://mobileapitest.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+28080@gmail.com\"")
+            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+92425@gmail.com\"")
             buildConfigField("String", "TEST_PASSWORD", "\"demodemo\"")
         }
         create("prod") {
