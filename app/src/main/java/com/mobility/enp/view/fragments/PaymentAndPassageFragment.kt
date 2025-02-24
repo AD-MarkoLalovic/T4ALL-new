@@ -14,17 +14,18 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_home_page.homedata.Promotion
 import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.cards.response.Country
+import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.databinding.FragmentPaymentAndPassageBinding
 import com.mobility.enp.network.Repository
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.CardsCountryAdapter
 import com.mobility.enp.view.adapters.PaymentAndPassageAdapter
@@ -42,11 +43,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private var _binding: FragmentPaymentAndPassageBinding? = null
     private val binding: FragmentPaymentAndPassageBinding get() = _binding!!
 
-    private val viewModel: PaymentAndPassageViewModel by activityViewModels()
+    private val viewModel: PaymentAndPassageViewModel by activityViewModels { PaymentAndPassageViewModel.Factory }
     private lateinit var adapter: PaymentAndPassageAdapter
     private lateinit var cardsCountryAdapter: CardsCountryAdapter
     private var allCards: List<Card> = emptyList()
-    private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     private var selectedCountry = "All"
     private var isButtonEnabled = false
 
@@ -62,13 +62,58 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        fetchCardData()
         setupAdapters()
+        setObservers()
         setObserversError()
         setListener()
-        setupCountryList()
         handlePrimaryCardChange()
         setAddCardButton()
+
+        viewModel.fetchCardFlow()
+    }
+
+
+    private fun setObservers() {
+        collectLatestLifecycleFlow(viewModel.getCardDataFlow) { cardWeb ->
+            when (cardWeb) {
+                is SubmitResult.Loading -> {
+                    binding.loadingCards.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+
+                    binding.rvCreditCard.visibility = View.VISIBLE
+                    binding.recyclerCardsCountry.visibility = View.VISIBLE
+                    binding.loadingCards.visibility = View.GONE
+
+                    processCardResponse(cardWeb.data)
+                    updateAdapter(cardWeb.data)
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.loadingCards.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.loadingCards.visibility = View.GONE
+                    showError(cardWeb.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(cardWeb.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {
+                    SubmitResult.Empty
+                }
+            }
+        }
     }
 
     private fun setupAdapters() {
@@ -80,98 +125,88 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
 
-    private fun fetchCardData() {
-        viewModel.paymentAndPassageList.observe(viewLifecycleOwner) { cardWebResponse ->
+    private fun processCardResponse(cardWebResponse: CardWebModel) {
+        val paymentAndPassage: CardsResponse = viewModel.objectTransformer(cardWebResponse)
 
-            val paymentAndPassage: CardsResponse = viewModel.objectTransformer(cardWebResponse)
+        paymentAndPassage.let {
+            val sortedCards =
+                it.data?.sortedWith(compareByDescending<Card> { card -> card.defaultCard })
 
+            allCards = sortedCards ?: emptyList()
 
-            paymentAndPassage.let {
-                val sortedCards =
-                    it.data?.sortedWith(compareByDescending<Card> { card -> card.defaultCard })
-
-                allCards = sortedCards ?: emptyList()
-
-                if (selectedCountry == "All") {
-                    toggleNoCardsMessage(allCards.isEmpty())
-                    adapter.updateListCards(allCards)
-                } else {
-                    filterCardsByCountry(selectedCountry)
-                }
+            if (selectedCountry == "All") {
+                toggleNoCardsMessage(allCards.isEmpty())
+                adapter.updateListCards(allCards)
+            } else {
+                filterCardsByCountry(selectedCountry)
             }
         }
-
-        viewModel.fetchCard(errorBody)
     }
 
-    private fun setupCountryList() {
-        viewModel.paymentAndPassageList.observe(viewLifecycleOwner) { cardWebResponse ->
-            viewLifecycleOwner.lifecycleScope.launch {
-                // logic to change new object to old ones for easy use
-                val paymentAndPassage: CardsResponse = viewModel.objectTransformer(cardWebResponse)
+    private fun updateAdapter(cardWebResponse: CardWebModel) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            val paymentAndPassage: CardsResponse = viewModel.objectTransformer(cardWebResponse)
 
-                // Preuzimanje dodatih kartica
-                val addedCards = paymentAndPassage.data?.map { it.country?.code } ?: emptyList()
-                Log.d("PaymentAndPassageFragment", "Added cards: $addedCards")
+            // Preuzimanje dodatih kartica
+            val addedCards = paymentAndPassage.data?.map { it.country?.code } ?: emptyList()
+            Log.d("PaymentAndPassageFragment", "Added cards: $addedCards")
 
-                val availableCountries: ArrayList<String> = arrayListOf()
+            val availableCountries: ArrayList<String> = arrayListOf()
 
-                if (cardWebResponse.data?.showTabMK == true) {
-                    availableCountries.add("MK")
+            if (cardWebResponse.data?.showTabMK == true) {  // api is sending us when tabs are visible now
+                availableCountries.add("MK")
+            }
+
+            if (cardWebResponse.data?.showTabME == true) {
+                availableCountries.add("ME")
+            }
+
+            if (cardWebResponse.data?.showTabHR == true) {
+                availableCountries.add("HR")
+            }
+
+            if (cardWebResponse.data?.isFranchiser == false) {  // if serbia is not a franshizer then it gets shown
+                availableCountries.add("RS")
+            }
+
+            // Mapiranje kodova zemalja u string resurse
+            val countryMapping = mapOf(
+                "All" to R.string.all_country,
+                "RS" to R.string.serbia,
+                "MK" to R.string.macedonia,
+                "ME" to R.string.montenegro
+            )
+
+            // Filtrirajte zemlje koje postoje u availableCountries ili "All"
+            val filteredCountryMapping = countryMapping.filter { (code, _) ->
+                code == "All" || availableCountries.contains(code)
+            }
+
+            // Priprema liste zemalja sa statusom klikabilnosti
+            val countryNameAndAdditionalField = mutableListOf<Country>()
+
+            filteredCountryMapping.forEach { (code, resId) ->
+                val isClickable = when (code) {
+                    "All" -> true
+                    "RS" -> true // Srbija je uvek klikabilna
+                    "MK" -> cardWebResponse.data?.showTabMK
+                    "ME" -> cardWebResponse.data?.showTabME
+                    else -> false
                 }
 
-                if (cardWebResponse.data?.showTabME == true) {
-                    availableCountries.add("ME")
-                }
-
-                if (cardWebResponse.data?.showTabHR == true) {
-                    availableCountries.add("HR")
-                }
-
-                if (cardWebResponse.data?.isFranchiser == false) {  // if serbia is not a franshizer then it gets shown
-                    availableCountries.add("RS")
-                }
-
-                // Mapiranje kodova zemalja u string resurse
-                val countryMapping = mapOf(
-                    "All" to R.string.all_country,
-                    "RS" to R.string.serbia,
-                    "MK" to R.string.macedonia,
-                    "ME" to R.string.montenegro
-                )
-
-                // Filtrirajte zemlje koje postoje u availableCountries ili "All"
-                val filteredCountryMapping = countryMapping.filter { (code, _) ->
-                    code == "All" || availableCountries.contains(code)
-                }
-
-                // Priprema liste zemalja sa statusom klikabilnosti
-                val countryNameAndAdditionalField = mutableListOf<Country>()
-
-                filteredCountryMapping.forEach { (code, resId) ->
-                    val isClickable = when (code) {
-                        "All" -> true
-                        "RS" -> true // Srbija je uvek klikabilna
-                        "MK" -> cardWebResponse.data?.showTabMK
-                        "ME" -> cardWebResponse.data?.showTabME
-                        else -> false
-                    }
-
-                    countryNameAndAdditionalField.add(
-                        Country(
-                            code,
-                            getString(resId),
-                            isClickable = isClickable!!
-                        )
+                countryNameAndAdditionalField.add(
+                    Country(
+                        code,
+                        getString(resId),
+                        isClickable = isClickable!!
                     )
-                }
+                )
+            }
 
-                // Ažurirajte adapter sa novom listom zemalja
-                withContext(Dispatchers.Main) {
-                    cardsCountryAdapter.updateCountries(countryNameAndAdditionalField)
-                    cardsCountryAdapter.setSelectedCountry(selectedCountry)
-                }
-
+            // Ažurirajte adapter sa novom listom zemalja
+            withContext(Dispatchers.Main) {
+                cardsCountryAdapter.updateCountries(countryNameAndAdditionalField)
+                cardsCountryAdapter.setSelectedCountry(selectedCountry)
                 setClickableText()  // terms and conditions
             }
         }
@@ -184,7 +219,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 Toast.makeText(
                     requireContext(), getString(R.string.primary_card_changed), Toast.LENGTH_LONG
                 ).show()
-                viewModel.fetchCard(errorBody)
+                viewModel.fetchCardFlow()
             }
         }
     }
@@ -226,14 +261,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun setListener() {
-        viewModel.paymentAndPassageList.observe(viewLifecycleOwner) { paymentAndPassage ->
-            paymentAndPassage?.let {
-                binding.rvCreditCard.visibility = View.VISIBLE
-                binding.recyclerCardsCountry.visibility = View.VISIBLE
-                binding.loadingCards.visibility = View.GONE
-            }
-        }
-
         binding.termsConditionsCheckmark.setOnCheckedChangeListener { _, isChecked ->
             when (isChecked) {
                 true -> {
@@ -250,18 +277,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun setObserversError() {
-        errorBody = MutableLiveData()
-        errorBody.observe(viewLifecycleOwner) { errorBody ->
-            context?.let { context ->
-                Toast.makeText(
-                    context, errorBody.errorBody, Toast.LENGTH_SHORT
-                ).show()
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
-                }
-            }
-        }
-
         viewModel.checkNetCards.observe(viewLifecycleOwner) { hasInternet ->
             if (hasInternet != null && !hasInternet) {
 
@@ -315,7 +330,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 MainActivity.showSnackMessage(getString(R.string.connection_restored), it)
                 binding.loadingCards.visibility = View.GONE
 
-                viewModel.fetchCard(errorBody)
+                viewModel.fetchCardFlow()
             }
         }
     }
@@ -326,7 +341,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             getString(R.string.confirm_change_primary_card),
             object : LostTagDialog.OnButtonClickInLostTag {
                 override fun onClickConfirmed() {
-                    viewModel.setNewPrimaryCard(cardId, errorBody)
+//                    viewModel.setNewPrimaryCard(cardId, errorBody)
                 }
             })
         primaryCardDialog.isCancelable = false
@@ -338,7 +353,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         val confirmRemovalCardDialog =
             ConfirmRemovalCardDialog(object : ConfirmRemovalCardDialog.ClickedDeleteCardInterface {
                 override fun onPositiveButtonClicked() {
-                    viewModel.deleteCard(cardId, errorBody)
+//                    viewModel.deleteCard(cardId, errorBody)
                 }
 
             })
@@ -510,6 +525,19 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
     }
 
+    private fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showNoConnectionState() {
+        binding.loadingCards.visibility = View.GONE
+        noInternetMessage()
+    }
+
+    private fun noInternetMessage() {
+        val mainBinding = (activity as MainActivity).binding
+        MainActivity.showSnackMessage(getString(R.string.no_internet), mainBinding)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
