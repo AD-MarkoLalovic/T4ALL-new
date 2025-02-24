@@ -107,20 +107,30 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private fun setupCountryList() {
         viewModel.paymentAndPassageList.observe(viewLifecycleOwner) { cardWebResponse ->
             viewLifecycleOwner.lifecycleScope.launch {
-                val availableCountries = withContext(Dispatchers.IO) {
-                    viewModel.cardLimitByUserType()
-                }
-
                 // logic to change new object to old ones for easy use
-
                 val paymentAndPassage: CardsResponse = viewModel.objectTransformer(cardWebResponse)
 
                 // Preuzimanje dodatih kartica
                 val addedCards = paymentAndPassage.data?.map { it.country?.code } ?: emptyList()
-                Log.d("PaymentAndPassageFragment", "Available countries: $availableCountries")
                 Log.d("PaymentAndPassageFragment", "Added cards: $addedCards")
 
-                val isSerbiaAdded = addedCards.contains("RS")
+                val availableCountries: ArrayList<String> = arrayListOf()
+
+                if (cardWebResponse.data?.showTabMK == true) {
+                    availableCountries.add("MK")
+                }
+
+                if (cardWebResponse.data?.showTabME == true) {
+                    availableCountries.add("ME")
+                }
+
+                if (cardWebResponse.data?.showTabHR == true) {
+                    availableCountries.add("HR")
+                }
+
+                if (cardWebResponse.data?.isFranchiser == false) {  // if serbia is not a franshizer then it gets shown
+                    availableCountries.add("RS")
+                }
 
                 // Mapiranje kodova zemalja u string resurse
                 val countryMapping = mapOf(
@@ -142,14 +152,16 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     val isClickable = when (code) {
                         "All" -> true
                         "RS" -> true // Srbija je uvek klikabilna
-                        else -> isSerbiaAdded // Ostale zemlje su klikabilne samo ako je Srbija dodata
+                        "MK" -> cardWebResponse.data?.showTabMK
+                        "ME" -> cardWebResponse.data?.showTabME
+                        else -> false
                     }
 
                     countryNameAndAdditionalField.add(
                         Country(
                             code,
                             getString(resId),
-                            isClickable = isClickable
+                            isClickable = isClickable!!
                         )
                     )
                 }
