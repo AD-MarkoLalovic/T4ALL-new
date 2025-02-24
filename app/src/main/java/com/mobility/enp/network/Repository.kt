@@ -26,6 +26,7 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.cards.response.CardsResponse
+import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.countries.CountriesModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
@@ -718,6 +719,25 @@ object Repository {
         try {
             val lang = getUserLanguage(application)
             val response = apiService(token).getCreditCards(lang)
+            if (response.isSuccessful) {
+                data.postValue(response.body())
+            } else {
+                errorBody.postValue(getMessageFromErrorBody(response))
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "getUserCards: ${e.cause} \n ${e.message}")
+        }
+    }
+
+    suspend fun getCreditCardsWeb(
+        data: MutableLiveData<CardWebModel>,
+        token: String?,
+        errorBody: MutableLiveData<ErrorBody>,
+        application: Application
+    ) {
+        try {
+            val lang = getUserLanguage(application)
+            val response = apiService(token).getCreditCardsWeb(lang)
             if (response.isSuccessful) {
                 data.postValue(response.body())
             } else {

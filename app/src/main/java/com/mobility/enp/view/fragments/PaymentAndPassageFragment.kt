@@ -21,6 +21,7 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_home_page.homedata.Promotion
 import com.mobility.enp.data.model.cards.response.Card
+import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.cards.response.Country
 import com.mobility.enp.databinding.FragmentPaymentAndPassageBinding
 import com.mobility.enp.network.Repository
@@ -78,12 +79,41 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         binding.recyclerCardsCountry.adapter = cardsCountryAdapter
     }
 
+
+    private fun fetchCardData() {
+        viewModel.paymentAndPassageList.observe(viewLifecycleOwner) { cardWebResponse ->
+
+            val paymentAndPassage: CardsResponse = viewModel.objectTransformer(cardWebResponse)
+
+
+            paymentAndPassage.let {
+                val sortedCards =
+                    it.data?.sortedWith(compareByDescending<Card> { card -> card.defaultCard })
+
+                allCards = sortedCards ?: emptyList()
+
+                if (selectedCountry == "All") {
+                    toggleNoCardsMessage(allCards.isEmpty())
+                    adapter.updateListCards(allCards)
+                } else {
+                    filterCardsByCountry(selectedCountry)
+                }
+            }
+        }
+
+        viewModel.fetchCard(errorBody)
+    }
+
     private fun setupCountryList() {
-        viewModel.paymentAndPassageList.observe(viewLifecycleOwner) { paymentAndPassage ->
+        viewModel.paymentAndPassageList.observe(viewLifecycleOwner) { cardWebResponse ->
             viewLifecycleOwner.lifecycleScope.launch {
                 val availableCountries = withContext(Dispatchers.IO) {
                     viewModel.cardLimitByUserType()
                 }
+
+                // logic to change new object to old ones for easy use
+
+                val paymentAndPassage: CardsResponse = viewModel.objectTransformer(cardWebResponse)
 
                 // Preuzimanje dodatih kartica
                 val addedCards = paymentAndPassage.data?.map { it.country?.code } ?: emptyList()
@@ -135,26 +165,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
     }
 
-
-    private fun fetchCardData() {
-        viewModel.paymentAndPassageList.observe(viewLifecycleOwner) { paymentAndPassage ->
-            paymentAndPassage?.let {
-                val sortedCards =
-                    it.data?.sortedWith(compareByDescending<Card> { card -> card.defaultCard })
-
-                allCards = sortedCards ?: emptyList()
-
-                if (selectedCountry == "All") {
-                    toggleNoCardsMessage(allCards.isEmpty())
-                    adapter.updateListCards(allCards)
-                } else {
-                    filterCardsByCountry(selectedCountry)
-                }
-            }
-        }
-
-        viewModel.fetchCard(errorBody)
-    }
 
     private fun handlePrimaryCardChange() {
         viewModel.successfullyChangedPrimaryCard.observe(viewLifecycleOwner) { isSuccess ->

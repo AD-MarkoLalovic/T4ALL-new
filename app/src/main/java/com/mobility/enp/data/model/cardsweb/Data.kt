@@ -7,11 +7,11 @@ import androidx.annotation.Keep
 @Keep
 data class Data(
     @SerializedName("cardsME")
-    val cardsME: List<CardsME>?,
+    val cardsME: List<CardsWebUnified>?,
     @SerializedName("cardsMK")
-    val cardsMK: List<CardsMK>?,
+    val cardsMK: List<CardsWebUnified>?,
     @SerializedName("cardsRS")
-    val cardsRS: List<CardsRS>?,
+    val cardsRS: List<CardsWebUnified>?,
     @SerializedName("country")
     val country: CountryXXX?,
     @SerializedName("hasSerbianCard")
