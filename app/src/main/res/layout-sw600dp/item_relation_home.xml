@@ -1,177 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="relation"
-            type="com.mobility.enp.data.model.api_home_page.homedata.TollHistory" />
+            type="com.mobility.enp.view.ui_models.home.HomeTollHistoryUI" />
 
-        <variable
-            name="tagSerial"
-            type="String" />
 
     </data>
 
-    <!--    adapter sets background drawable not this xml-->
-    <RelativeLayout
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/relationItemHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/dimens_10dp"
-        tools:background="@drawable/border_purchase_information">
+        android:layout_marginBottom="@dimen/dimens_8dp"
+        android:backgroundTint="@color/figmaToolHistoryPaidBackground"
+        android:elevation="@dimen/dimens_8dp"
+        app:cardCornerRadius="@dimen/dimens_20dp"
+        app:strokeColor="@color/figmaToolHistoryPaidBackground"
+        app:strokeWidth="@dimen/dimens_2dp">
 
-        <RelativeLayout
-            android:id="@+id/topContainer"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dimens_20dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/txtAccountNumber"
-                style="@style/SubtitlesMediumTablet"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/firstContainerHomeRelation"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginEnd="@dimen/dimens_10dp"
-                android:layout_toStartOf="@id/carTagNumber"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:text="@string/account_number" />
+                android:padding="@dimen/dimens_16dp">
 
-            <TextView
-                android:id="@+id/carInvoiceNumber"
-                style="@style/CaptionRegularTablet"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/txtAccountNumber"
+                    style="@style/SubtitlesMedium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimens_16dp"
+                    android:text="@string/account_number"
+                    app:layout_constraintEnd_toStartOf="@+id/tollHistoryTotalHome"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/carInvoiceNumber"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_14dp"
+                    android:layout_marginEnd="@dimen/dimens_16dp"
+                    android:text="@{relation.invoiceNumber}"
+                    android:textColor="@color/primary_light_darkest"
+                    app:layout_constraintEnd_toStartOf="@+id/tollHistoryTotalHome"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtAccountNumber"
+                    tools:text="62458/2024-web" />
+
+                <ImageView
+                    android:id="@+id/toolHistoryStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/status_icon_green"
+                    android:importantForAccessibility="no"
+                    app:layout_constraintBottom_toBottomOf="@+id/tollHistoryTotalHome"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tollHistoryTotalHome" />
+
+                <TextView
+                    android:id="@+id/tollHistoryCurrencyHome"
+                    style="@style/Paragraph"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimens_8dp"
+                    android:layout_marginBottom="@dimen/dimens_2dp"
+                    android:text="@{relation.paymentCurrency}"
+                    android:textSize="@dimen/dimens_10sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tollHistoryTotalHome"
+                    app:layout_constraintEnd_toStartOf="@+id/toolHistoryStatus"
+                    tools:text="RSD" />
+
+                <TextView
+                    android:id="@+id/tollHistoryTotalHome"
+                    style="@style/ParagraphMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimens_4dp"
+                    android:text="@{relation.paymentAmount}"
+                    app:layout_constraintBottom_toBottomOf="@+id/carInvoiceNumber"
+                    app:layout_constraintEnd_toStartOf="@+id/tollHistoryCurrencyHome"
+                    app:layout_constraintTop_toTopOf="@+id/txtAccountNumber"
+                    tools:text="1.500,00" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/secondContainerTollHistoryHome"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txtAccountNumber"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="@dimen/dimens_5dp"
-                android:layout_marginEnd="@dimen/dimens_10dp"
-                android:layout_toStartOf="@id/carTagNumber"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:text="@{relation.invoiceNumber}"
-                android:textSize="@dimen/dimens_14sp"
-                tools:text="62458/2024-web" />
+                android:background="@color/white"
+                android:padding="@dimen/dimens_16dp">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideLineHomeRelation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.5" />
+
+                <TextView
+                    android:id="@+id/passageRelationEntry"
+                    style="@style/CaptionRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimens_16dp"
+                    android:text="@{relation.entryToll}"
+                    app:layout_constraintEnd_toEndOf="@+id/guideLineHomeRelation"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Beograd" />
+
+                <TextView
+                    android:id="@+id/passageRelationExit"
+                    style="@style/CaptionRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_16dp"
+                    android:gravity="end"
+                    android:text="@{relation.exitToll}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/guideLineHomeRelation"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Novi Sad" />
+
+                <TextView
+                    android:id="@+id/passageEntryDateAndTime"
+                    style="@style/CaptionRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_14dp"
+                    android:layout_marginEnd="@dimen/dimens_16dp"
+                    android:text="@{relation.entryDataAndTime}"
+                    android:textColor="@color/figmaIntroEclipseColorInactive"
+                    app:layout_constraintEnd_toEndOf="@+id/guideLineHomeRelation"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/passageRelationEntry"
+                    tools:text="14.07.2023. 10:11" />
+
+                <TextView
+                    android:id="@+id/passageExitDateAndTime"
+                    style="@style/CaptionRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_16dp"
+                    android:layout_marginTop="@dimen/dimens_14dp"
+                    android:gravity="end"
+                    android:text="@{relation.exitDateAndTime}"
+                    android:textColor="@color/figmaIntroEclipseColorInactive"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/guideLineHomeRelation"
+                    app:layout_constraintTop_toBottomOf="@+id/passageRelationExit"
+                    tools:text="15.07.2023. 12:50" />
 
 
-            <ImageView
-                android:id="@+id/toolHistoryStatus"
-                android:layout_width="@dimen/dimens_10dp"
-                android:layout_height="@dimen/dimens_10dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/dimens_10dp"
-                android:background="@drawable/status_icon_green" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
 
 
-            <TextView
-                android:id="@+id/carTagNumber"
-                style="@style/CaptionRegularTablet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/txtAccountNumber"
-                android:layout_alignBottom="@+id/carInvoiceNumber"
-                android:layout_marginEnd="@dimen/dimens_20dp"
-                android:layout_toStartOf="@id/toolHistoryStatus"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:text='@{relation.paymentAmount.amount + " " +relation.paymentAmount.currency}'
-                android:textSize="23sp"
-                android:textStyle="bold"
-                tools:text="1000,00 RSD" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/bottomContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/topContainer"
-            android:background="@color/white"
-            android:padding="@dimen/dimens_20dp">
-
-            <TextView
-                android:id="@+id/passageRelationEntry"
-                style="@style/CaptionRegularTablet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginEnd="@dimen/dimens_10dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:text='@{relation.entryToll}'
-                tools:text="Beograd" />
-
-            <TextView
-                android:id="@+id/passageRelationExit"
-                style="@style/CaptionRegularTablet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/dimens_10dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:text='@{relation.exitToll}'
-                tools:text="Novi Sad" />
-
-            <TextView
-                android:id="@+id/passageEntryTime"
-                style="@style/CaptionRegularTablet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/passageRelationEntry"
-                android:layout_marginTop="@dimen/dimens_5dp"
-                android:layout_marginEnd="@dimen/dimens_10dp"
-                android:layout_toEndOf="@id/passageEntryDate"
-                android:text='@{relation.entryTime}'
-                tools:text="10:11" />
-
-            <TextView
-                android:id="@+id/passageEntryDate"
-                style="@style/CaptionRegularTablet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/passageRelationEntry"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="@dimen/dimens_5dp"
-                android:layout_marginEnd="@dimen/dimens_10dp"
-                android:text='@{relation.entryDate}'
-                tools:text="14.07.2023." />
-
-            <TextView
-                android:id="@+id/passageExitTime"
-                style="@style/CaptionRegularTablet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/passageRelationEntry"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="@dimen/dimens_5dp"
-                android:layout_marginEnd="@dimen/dimens_10dp"
-                android:text='@{relation.exitTime}'
-                tools:text="10:20" />
-
-            <TextView
-                android:id="@+id/passageExitDate"
-                style="@style/CaptionRegularTablet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/passageRelationEntry"
-                android:layout_marginTop="@dimen/dimens_5dp"
-                android:layout_marginEnd="@dimen/dimens_10dp"
-                android:layout_toStartOf="@id/passageExitTime"
-                android:text='@{relation.exitDate}'
-                tools:text="15.07.2023." />
-
-        </RelativeLayout>
-    </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

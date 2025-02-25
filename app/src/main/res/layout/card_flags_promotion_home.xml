@@ -7,13 +7,12 @@
 
         <variable
             name="data"
-            type="com.mobility.enp.data.model.api_home_page.homedata.Promotion" />
+            type="com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity" />
     </data>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/dimens_5dp"
         android:layout_marginEnd="@dimen/dimens_15dp">
 
         <androidx.cardview.widget.CardView

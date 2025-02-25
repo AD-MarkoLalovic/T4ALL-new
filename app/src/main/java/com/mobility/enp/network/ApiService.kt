@@ -25,6 +25,9 @@ import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.countries.CountriesModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
+import com.mobility.enp.data.model.home.cards.added_cards.response.AddedCardsResponse
+import com.mobility.enp.data.model.home.cards.response.HomeCardsResponse
+import com.mobility.enp.data.model.home.response.HomeResponse
 import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.data.model.login.LoginBody
@@ -57,6 +60,12 @@ interface ApiService {
     fun getUserHomeData(
         @Query(value = "lang") language: String
     ): Call<HomeScreenData>
+
+    //new api for home
+    @GET("/api/v1/home")
+    suspend fun geHomeScreenData(
+        @Query(value = "lang") language: String
+    ): Response<HomeResponse>
 
     @POST("/api/v1/firebase")
     fun postFirebaseFcmToken(
@@ -243,6 +252,13 @@ interface ApiService {
 
     @GET("/api/v1/countries")
     suspend fun getCountriesList(): Response<CountriesModel>
+
+    //new home cards
+    @GET("/api/v1/countries")
+    suspend fun getAvailableCards(): Response<HomeCardsResponse>
+
+    @GET("/api/v1/cards")
+    suspend fun getHomeAddedCards(): Response<AddedCardsResponse>
 
     @FormUrlEncoded
     @POST("/api/v1/tags/found-tag")

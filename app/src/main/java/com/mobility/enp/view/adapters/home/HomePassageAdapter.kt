@@ -1,74 +1,68 @@
 package com.mobility.enp.view.adapters.home
 
-import android.content.Context
-import android.content.res.Configuration
-import android.util.Log
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_home_page.homedata.TollHistory
 import com.mobility.enp.databinding.ItemRelationHomeBinding
+import com.mobility.enp.view.ui_models.home.HomeTollHistoryUI
 
-class HomePassageAdapter(
-    context: Context, private val relation: ArrayList<TollHistory> = arrayListOf()
-) : RecyclerView.Adapter<HomePassageAdapter.RelationViewHolder>() {
-
-    private var serial: String = ""
-    private var context: Context
-
-    init {
-        this.context = context
-    }
+class HomePassageAdapter : ListAdapter<HomeTollHistoryUI, HomePassageAdapter.RelationViewHolder>(
+    HomeTollHistoryDiffCallback()
+) {
 
     inner class RelationViewHolder(private val binding: ItemRelationHomeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(relation: TollHistory, serial: String) {
+        fun bind(relation: HomeTollHistoryUI) {
             binding.relation = relation
-            binding.tagSerial = serial
-            binding.executePendingBindings()
 
-            when (relation.status.value) {
+            val context = binding.root.context
+            when (relation.status) {
                 1 -> {
                     binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_green)
-
-                    if (isTabletXml(binding.root.context)) {
-                        binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_green_tablet)
-                        binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_green_tablet)
-                    } else {
-                        binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_green)
-                        binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_green)
-                    }
+                    binding.relationItemHome.backgroundTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.figmaToolHistoryPaidBackground
+                        )
+                    )
+                    binding.relationItemHome.strokeColor =
+                        ContextCompat.getColor(context, R.color.figmaToolHistoryPaidBackground)
                 }
 
                 7 -> {
                     binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_orange)
-                    if (isTabletXml(binding.root.context)) {
-                        binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_orange_tablet)
-                        binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_orange_tablet)
-                    } else {
-                        binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_orange)
-                        binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_orange)
-                    }
+                    binding.relationItemHome.backgroundTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.primary_light_orange
+                        )
+                    )
+                    binding.relationItemHome.strokeColor =
+                        ContextCompat.getColor(context, R.color.primary_light_orange)
                 }
 
                 3 -> {
                     binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_red)
+                    binding.relationItemHome.backgroundTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.figmaToolHistoryUnpaidBackground
+                        )
+                    )
+                    binding.relationItemHome.strokeColor =
+                        ContextCompat.getColor(context, R.color.figmaToolHistoryUnpaidBackground)
 
-                    if (isTabletXml(binding.root.context)) {
-                        binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_red_tablet)
-                        binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_red_tablet)
-                    } else {
-                        binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_red)
-                        binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_red)
-                    }
                 }
             }
 
 
-            val titleEntry = binding.passageRelationEntry.text.isEmpty()
+            /*val titleEntry = binding.passageRelationEntry.text.isEmpty()
             val titleEntryDate = binding.passageEntryDate.text.isEmpty()
             val titleEntryTime = binding.passageEntryTime.text.isEmpty()
 
@@ -87,7 +81,7 @@ class HomePassageAdapter(
                 binding.passageRelationExit.visibility = View.VISIBLE
                 binding.passageExitDate.visibility = View.VISIBLE
                 binding.passageExitTime.visibility = View.VISIBLE
-            }
+            }*/
 
             binding.executePendingBindings()
         }
@@ -100,19 +94,29 @@ class HomePassageAdapter(
         return RelationViewHolder(binding)
     }
 
-    override fun getItemCount() = relation.size
+    override fun getItemCount() = currentList.size
 
     override fun onBindViewHolder(holder: RelationViewHolder, position: Int) {
-        val currentRelation = relation[position]
-        Log.d("test", "onBindViewHolder: $currentRelation")
-        holder.bind(currentRelation, serial)
+        val currentRelation = getItem(position)
+        holder.bind(currentRelation)
     }
 
+    class HomeTollHistoryDiffCallback : DiffUtil.ItemCallback<HomeTollHistoryUI>() {
+        override fun areItemsTheSame(
+            oldItem: HomeTollHistoryUI,
+            newItem: HomeTollHistoryUI
+        ): Boolean {
+            return oldItem.invoiceNumber == newItem.invoiceNumber
+        }
 
-    private fun isTabletXml(context: Context): Boolean {
-        val config: Configuration = context.resources.configuration
-        val smallestScreenWidthDp: Int = config.smallestScreenWidthDp
-        return smallestScreenWidthDp >= 600 // min layout with for tablet
+        override fun areContentsTheSame(
+            oldItem: HomeTollHistoryUI,
+            newItem: HomeTollHistoryUI
+        ): Boolean {
+            return oldItem == newItem
+        }
+
     }
 
 }
+

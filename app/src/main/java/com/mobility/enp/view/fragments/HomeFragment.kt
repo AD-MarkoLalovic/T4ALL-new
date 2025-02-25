@@ -5,123 +5,230 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
-import com.mobility.enp.data.model.api_home_page.homedata.HomeScreenData
-import com.mobility.enp.data.model.api_home_page.homedata.Promotion
+import com.mobility.enp.data.model.ProfileImage
+import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
+import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.databinding.FragmentHomeWelcomeBinding
-import com.mobility.enp.network.Repository
-import com.mobility.enp.util.ImageRepository
+import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.Util
+import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.adapters.home.HomeBillsAdapter
+import com.mobility.enp.view.adapters.TotalCurrencyAdapter
 import com.mobility.enp.view.adapters.home.HomePassageAdapter
 import com.mobility.enp.view.adapters.home.HomeProgressAdapter
 import com.mobility.enp.view.adapters.home.HomePromotionsAdapter
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.HomeViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import java.io.File
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeWelcomeBinding? = null
     private val binding: FragmentHomeWelcomeBinding get() = _binding!!
-    private val viewModelHome: HomeViewModel by viewModels()
-    private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
-    var homeUserData = MutableLiveData<HomeScreenData>()
-    private lateinit var isInternetAvailable: MutableLiveData<Boolean>
-    private var returnedListPromotion: List<Promotion> = emptyList()
+    private lateinit var totalCurrencyAdapter: TotalCurrencyAdapter
+    private lateinit var homePassageAdapter: HomePassageAdapter
 
-    private val imageRepository: ImageRepository by lazy {
-        ImageRepository(requireContext())
-    }
-
-    private val TAG = "HOME"
+    private val viewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_home_welcome, container, false)
+            FragmentHomeWelcomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        context?.let {
-            binding.progBar.visibility = View.VISIBLE
+        setupBinding()
+        setupAdapters()
+        setupObservers()
+        setupClickListeners()
 
-            homeUserData = MutableLiveData()
-            errorBody = MutableLiveData()
-            isInternetAvailable = MutableLiveData()
+        viewModel.fetchHomeData()
+    }
 
-            setObserver()
+    private fun setupBinding() {
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+    }
 
-            viewModelHome.getUserHomeData(it, errorBody, homeUserData, isInternetAvailable)
-            viewModelHome.checkStoredPromotions()
-
-            binding.lifecycleOwner = viewLifecycleOwner
+    private fun setupAdapters() {
+        binding.rvTotalCurrency.apply {
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            totalCurrencyAdapter = TotalCurrencyAdapter(emptyList())
+            adapter = totalCurrencyAdapter
         }
 
+        homePassageAdapter = HomePassageAdapter()
+        binding.recyclerLastPassages.adapter = homePassageAdapter
+    }
+
+    private fun setupObservers() {
+        collectLatestLifecycleFlow(viewModel.homeData) { result ->
+            handleHomeDataResult(result)
+        }
+
+        collectLatestLifecycleFlow(viewModel.profileImage) { profileImage ->
+            profileImage?.let {
+                displayProfileImage(binding.imageAccountHomeScreen, it)
+            }
+        }
+        collectLatestLifecycleFlow(viewModel.homeCards) { cards ->
+            cards?.let {
+                setHomeCardsAdapter(it)
+                Log.d("MARKO", "collectLatestLifecycleFlow(viewModel.homeCards) : 1")
+                binding.progBar.visibility = View.GONE
+            }
+        }
+
+        collectLatestLifecycleFlow(viewModel.isInvoiceEmpty) { isEmpty ->
+            if (isEmpty) {
+                binding.noInvoices.visibility = View.VISIBLE
+                binding.invoicesContainerHome.visibility = View.GONE
+            } else {
+                binding.noInvoices.visibility = View.GONE
+                binding.invoicesContainerHome.visibility = View.VISIBLE
+            }
+        }
+
+        collectLatestLifecycleFlow(viewModel.isTollHistoryEmpty) { isEmpty ->
+            if (isEmpty) {
+                binding.noToolHistory.visibility = View.VISIBLE
+            } else {
+                binding.noToolHistory.visibility = View.GONE
+            }
+        }
+
+        collectLatestLifecycleFlow(viewModel.homeTollHistory) { tollHistory ->
+            homePassageAdapter.submitList(tollHistory)
+        }
 
     }
 
-    private fun setPromotionAdapter(promotionsList: ArrayList<Promotion>) {
-        val filteredList: ArrayList<Promotion> = arrayListOf()
-        var hasModification = false
+    private fun setupClickListeners() {
+        binding.switchToPageBill.setOnClickListener {
+            findNavController().navigate(R.id.action_global_invoicesFragment)
+        }
+    }
 
-        val isSerbiaAdded = { promotionsList.any { it.countryCode == "RS" } }
+    private fun handleHomeDataResult(result: SubmitResult<HomeWithDetails>) {
+        when (result) {
+            is SubmitResult.Loading -> binding.progBar.visibility = View.VISIBLE
+            is SubmitResult.Success -> handleSuccess(result)
+            is SubmitResult.Empty -> handleEmptyState()
+            is SubmitResult.FailureNoConnection -> showNoInternetDialog()
+            is SubmitResult.FailureServerError -> showErrorMessage(getString(R.string.server_error_msg))
+            is SubmitResult.FailureApiError -> showErrorMessage(result.errorMessage)
+            is SubmitResult.InvalidApiToken -> {
+                showErrorMessage(result.errorMessage)
+                MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+            }
+        }
+    }
 
-        for (promotion in promotionsList) {  // removes user deleted promotions
-            promotion.deletedByUser?.let { deletedByUser ->
-                if (!deletedByUser) {
-                    filteredList.add(promotion)
-                } else {
-                    if (Util.hasTimePassed(promotion.time)) {
-                        promotion.deletedByUser = false
-                        promotion.time = System.currentTimeMillis()
-                        viewModelHome.upsertPromotion(promotion)
-                        hasModification = true
-                        Log.d(TAG, "10 days have passed $promotion")
-                    } else {
-                        Log.d(TAG, "10 days have not passed $promotion")
-                    }
-                }
+    private fun handleSuccess(result: SubmitResult.Success<HomeWithDetails>) {
+        binding.progBar.visibility = View.GONE
+
+        result.data.home.displayName?.let { viewModel.loadProfileImage(it) }
+
+        val invoiceDetails = result.data.invoice.flatMap { it.invoiceDetails }
+        totalCurrencyAdapter.submitList(invoiceDetails)
+    }
+
+    private fun handleEmptyState() {
+        binding.apply {
+            noInvoices.visibility = View.VISIBLE
+            noToolHistory.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showErrorMessage(message: String) {
+        binding.progBar.visibility = View.GONE
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showNoInternetDialog() {
+        val bundle = Bundle().apply {
+            putString(getString(R.string.title), getString(R.string.no_connection_title))
+            putString(
+                getString(R.string.subtitle),
+                getString(R.string.please_connect_to_the_internet)
+            )
+        }
+        findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
+    }
+
+    private fun displayProfileImage(imageView: ImageView, profileImage: ProfileImage) {
+        Glide.with(imageView.context)
+            .load(File(profileImage.imagePath))
+            .apply(
+                RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL) // Omogućava keširanje učitanih slika
+                    .override(imageView.width, imageView.height) // Velicina slike
+                    .centerCrop() //Nacin skaliranja
+                    .transform(CircleCrop())
+                    .format(DecodeFormat.PREFER_ARGB_8888) // Kvalitetnije, ali troši više RAM-a
+                    // Preferirani format slike
+                    .error(R.drawable.ic_account_home_screen) // Ako slika ne postoji, postavi default
+            )
+            .into(imageView)
+    }
+
+    private fun setHomeCardsAdapter(cardsList: List<HomeCardsEntity>) {
+        val filteredList = mutableListOf<HomeCardsEntity>()
+
+        cardsList.forEach { card ->
+            if (!card.deletedByUser) {
+                filteredList.add(card)
+            } else if (Util.hasTimePassed(card.time)) {
+                card.deletedByUser = false
+                card.time = System.currentTimeMillis()
+                viewModel.updateDeleteHomeCard(card)
+                filteredList.add(card)
+                Log.d("HomeFragment hasTimePassed", "10 days have passed $card")
+            } else {
+                Log.d("HomeFragment hasTimePassed", "10 days have not passed $card")
             }
         }
 
-        val adapter = HomePromotionsAdapter(filteredList, { promotion ->
-            if (isSerbiaAdded() && promotion.countryCode != "RS") {
+        val isSerbiaAdded = { cardsList.any { it.code == "RS" } }
+
+        val adapter = HomePromotionsAdapter(filteredList, { promotionCard ->
+            if (isSerbiaAdded() && promotionCard.code != "RS") {
                 showSerbiaRequiredDialog()
             } else {
-                val action = HomeFragmentDirections.actionHomeFragmentToCardFragment(promotion)
+                val action = HomeFragmentDirections.actionHomeFragmentToCardFragment(
+                    promotionCard.code
+                )
                 findNavController().navigate(action)
             }
 
-        }, { promotion ->
+        }, { delete ->
             binding.progBar.visibility = View.VISIBLE
-            viewModelHome.userDeletedPromotion(promotion)
+            viewModel.updateDeleteHomeCard(delete)
+            binding.progBar.visibility = View.GONE
         })
+
         val adapterProgress = HomeProgressAdapter(filteredList.size)
 
         binding.cyclerPromotions.visibility = View.VISIBLE
-
         binding.cyclerPromotions.adapter = adapter
-        binding.cyclerPromotions.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         binding.cyclerProgress.visibility = View.VISIBLE
         binding.cyclerProgress.adapter = adapterProgress
@@ -133,210 +240,10 @@ class HomeFragment : Fragment() {
                 super.onScrollStateChanged(recyclerView, newState)
                 val currentCompletelyVisibleLab =
                     (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
-                Log.d(TAG, "onScrollStateChanged: $currentCompletelyVisibleLab")
+                Log.d("MARKO", "onScrollStateChanged: $currentCompletelyVisibleLab")
                 adapterProgress.setCurrentDot(currentCompletelyVisibleLab)
             }
         })
-
-        if (hasModification) {
-            hasModification = false
-            viewModelHome.reloadPromotionList()
-        }
-
-    }
-
-    private fun triggerUpdate() {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val bindingMain = (activity as MainActivity).binding
-            MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
-            binding.progBar.visibility = View.GONE
-
-            viewModelHome.getUserHomeData(
-                requireContext(), errorBody, homeUserData, isInternetAvailable
-            )
-        }
-    }
-
-    private fun setObserver() {
-        isInternetAvailable.observe(viewLifecycleOwner) { hasInternet ->
-            if (hasInternet != null && !hasInternet) {
-                var homeScreenData: HomeScreenData? = null
-
-                lifecycleScope.launch {
-                    val diff = async(Dispatchers.IO) {
-                        viewModelHome.fetchHomeData()
-                    }
-                    homeScreenData = diff.await()
-                }
-
-
-                if (homeScreenData != null) {
-                    val bindingMain = (activity as MainActivity).binding
-                    MainActivity.showSnackMessage(
-                        getString(R.string.offline_using_stored_data), bindingMain
-                    )
-                    homeScreenData?.let {
-                        homeUserData.value = it
-                    }
-                } else {
-                    val bundle = Bundle().apply {
-                        putString(
-                            getString(R.string.title),
-                            getString(R.string.no_connection_title)
-                        )
-                        putString(
-                            getString(R.string.subtitle),
-                            getString(R.string.please_connect_to_the_internet)
-                        )
-                    }
-
-                    findNavController().navigate(
-                        R.id.action_global_noInternetConnectionDialog,
-                        bundle
-                    )
-
-                    val binding = (activity as MainActivity).binding
-                    MainActivity.showSnackMessage(
-                        getString(R.string.checking_for_connection), binding
-                    )
-
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        while (true) {
-                            if (Repository.isNetworkAvailable(requireContext())) {
-                                triggerUpdate()
-                                break
-                            } else {
-                                delay(1000L)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        errorBody.observe(viewLifecycleOwner) { errorBody ->
-            if (errorBody.errorCode != 500) {
-                Toast.makeText(
-                    context, errorBody.errorBody, Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                binding.progBar.visibility = View.GONE
-                binding.noInvoices.visibility = View.VISIBLE
-                binding.noToolHistory.visibility = View.VISIBLE
-            }
-            if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
-            }
-        }
-
-        viewModelHome.promotionList.observe(viewLifecycleOwner) { promotionList ->
-            Log.d(TAG, "list: $promotionList")
-            if (promotionList == null || promotionList.isEmpty()) {  // no initial list from api set up so call will be made
-                viewModelHome.getUserAllowedCountries(errorBody)
-            } else { // set before no new api call will be made for countries
-                viewModelHome.getCreditCards(errorBody) // fetch existing user credit cards
-                returnedListPromotion = promotionList
-            }
-        }
-
-        viewModelHome.userCreditCards.observe(viewLifecycleOwner) { creditCardData ->
-            binding.progBar.visibility = View.GONE
-            Log.d(TAG, "credit cards: $creditCardData")
-
-            val existingCountryCodes = creditCardData?.data?.map { data ->
-                data.country?.code
-            } ?: emptyList()
-
-            Log.d(TAG, "existing codes: $existingCountryCodes")
-
-            val finalList: ArrayList<Promotion> = ArrayList()
-
-            for (promotion in returnedListPromotion) {  // second filter removes added cards from list
-                promotion.countryCode?.let { countryCode ->
-                    if (!existingCountryCodes.contains(countryCode)) {
-                        finalList.add(promotion)
-                    }
-                }
-            }
-
-            setPromotionAdapter(finalList)
-
-        }
-
-        homeUserData.observe(viewLifecycleOwner) { homeData ->
-
-            // Ažuriraj bazu sa novim podacima
-            viewModelHome.insertHomeData(homeData)
-
-            // Sakrij progress bar i postavi display name
-            binding.progBar.visibility = View.GONE
-            homeData.data?.customer?.displayName?.let { displayName ->
-                binding.homeUserName.text = displayName
-                Repository.saveDisplayName(requireContext(), displayName)
-            }
-
-            // Postavi sliku korisnika
-            viewLifecycleOwner.lifecycleScope.launch {
-                val displayName = homeData.data?.customer?.displayName.orEmpty()
-                imageRepository.getAndSetProfileImage(binding.imageAccountHomeScreen, displayName)
-            }
-
-            // Postavi adapter i podatke za listu prolaza
-            homeData.data?.tollHistory?.let { list ->
-
-                if (list.isEmpty()) {
-                    binding.noToolHistory.visibility = View.VISIBLE
-                }
-
-                val adapter = HomePassageAdapter(requireContext(), list.toCollection(ArrayList()))
-                binding.recyclerLastPassages.adapter = adapter
-                binding.recyclerLastPassages.layoutManager = LinearLayoutManager(requireContext())
-            }
-
-            // Postavi adapter i podatke za listu mesečnih računa
-            homeData.data?.invoices?.let { invoices ->
-
-                if (invoices.isEmpty()) {
-                    binding.noInvoices.visibility = View.VISIBLE
-                }
-
-                val adapter = HomeBillsAdapter(
-                    invoices,
-                    object : HomeBillsAdapter.AdapterSwitchToPage {
-                        override fun switchToBills() {
-                            findNavController().navigate(R.id.action_global_invoicesFragment)
-                        }
-
-                        override fun switchToInvoices() {
-                            findNavController().navigate(R.id.action_global_toolHistoryFragment)
-                        }
-                    },
-                    requireContext()
-                )
-                binding.recyclerViewMonthlyBills.layoutManager =
-                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                binding.recyclerViewMonthlyBills.adapter = adapter
-
-            }
-
-
-        }
-
-
-        context?.let {
-            viewModelHome.countryData.observe(viewLifecycleOwner) { model ->
-                //generates objects has iterator
-                Log.d(TAG, "setObserver: $model")
-                val promotionsList = model.data?.results?.mapNotNull { data ->
-                    viewModelHome.createPromotion(requireContext(), data!!.code)
-                } ?: emptyList()
-
-                //save to room promotion here
-                Log.d(TAG, "promotion list: $promotionsList")
-
-                viewModelHome.savePromotion(promotionsList)
-            }
-        }
     }
 
     private fun showSerbiaRequiredDialog() {
