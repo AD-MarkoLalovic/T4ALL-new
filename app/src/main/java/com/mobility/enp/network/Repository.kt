@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
-import com.mobility.enp.data.model.api_home_page.homedata.HomeScreenData
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
@@ -101,33 +100,6 @@ object Repository {
         })
     }
 
-    //updated
-    suspend fun getUserHomeData(
-        data: MutableLiveData<HomeScreenData>,
-        token: String?,
-        context: Context,
-        errorBody: MutableLiveData<ErrorBody>
-    ) {
-
-        val lang = getUserLanguage(context)
-
-        val call = apiService(token).getUserHomeData(lang)
-        call.enqueue(object : Callback<HomeScreenData> {
-            override fun onResponse(
-                call: Call<HomeScreenData>, response: Response<HomeScreenData>
-            ) {
-                if (response.isSuccessful) {
-                    data.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<HomeScreenData>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-        })
-    }
 
     //updated
     fun postFcmToken(

@@ -5,7 +5,6 @@ import androidx.room.TypeConverters
 import com.google.gson.GsonBuilder
 import com.google.gson.Strictness
 import com.google.gson.reflect.TypeToken
-import com.mobility.enp.data.model.api_home_page.homedata.Data
 import com.mobility.enp.data.model.api_my_invoices.DataMonthly
 import com.mobility.enp.data.model.api_tool_history.listing.InvoiceData
 
@@ -17,21 +16,6 @@ class Converters {
         .setPrettyPrinting()
         .disableHtmlEscaping()
         .create()
-
-    @TypeConverter
-    fun fromData(data: Data?): String? {
-        synchronized(this) {  // Ensures that no other thread modifies data while Gson is serializing it.
-            val safeData = data?.copy() // Ensure a safe copy before serialization
-            return gson.toJson(safeData)
-        }
-    }
-
-    @TypeConverter
-    fun toData(jsonString: String?): Data? {
-        synchronized(this) {
-            return gson.fromJson(jsonString, Data::class.java)
-        }
-    }
 
     @TypeConverter
     fun fromDataHistory(data: com.mobility.enp.data.model.api_tool_history.index.Data?): String? {
