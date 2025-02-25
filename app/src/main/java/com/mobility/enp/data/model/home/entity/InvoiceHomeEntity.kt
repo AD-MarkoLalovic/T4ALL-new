@@ -2,7 +2,6 @@ package com.mobility.enp.data.model.home.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(

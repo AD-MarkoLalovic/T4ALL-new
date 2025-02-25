@@ -3,7 +3,6 @@ package com.mobility.enp.view.adapters.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mobility.enp.R
 import com.mobility.enp.databinding.CardProgressBarBinding
 
