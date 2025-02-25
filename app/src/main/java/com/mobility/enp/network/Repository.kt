@@ -620,29 +620,6 @@ object Repository {
         }
     }
 
-    suspend fun setPrimaryCard(
-        token: String?,
-        billId: Int,
-        errorBody: MutableLiveData<ErrorBody>,
-        result: MutableLiveData<Boolean>,
-        application: Application
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        try {
-            val response = apiService(token).cardsSetDefault(billId, lang)
-            if (response.isSuccessful) {
-                result.postValue(true)
-            } else {
-                result.postValue(false)
-                errorBody.postValue(getMessageFromErrorBody(response))
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
     fun postForgotPassword(
         email: ForgotPasswordRequest,
         errorBody: MutableLiveData<ErrorBody>,

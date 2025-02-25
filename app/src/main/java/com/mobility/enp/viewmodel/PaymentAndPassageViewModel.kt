@@ -46,9 +46,8 @@ class PaymentAndPassageViewModel(
         MutableStateFlow<SubmitResult<CardWebModel>>(SubmitResult.Loading)
     val getCardDataFlow: StateFlow<SubmitResult<CardWebModel>> get() = _getCardDataFlow
 
-
-    private val _successfullyChangedPrimaryCard = MutableLiveData<Boolean>()
-    val successfullyChangedPrimaryCard: LiveData<Boolean> get() = _successfullyChangedPrimaryCard
+    private val _successfullyChangedPrimaryCard = MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Loading)
+    val successfullyChangedPrimaryCard :StateFlow<SubmitResult<Boolean>> get() = _successfullyChangedPrimaryCard
 
     private val _checkNetCards = MutableLiveData<Boolean>()
     val checkNetCards: LiveData<Boolean> get() = _checkNetCards
@@ -90,6 +89,40 @@ class PaymentAndPassageViewModel(
         }
     }
 
+    fun setNewPrimaryCard(billId: Int){
+        _successfullyChangedPrimaryCard.value = SubmitResult.Loading
+        viewModelScope.launch (Dispatchers.IO) {
+            val result = repository.setNewPrimaryCard(billId)
+            if (result.isSuccess){
+                val data = result.getOrNull()
+                if (data == null){
+                    _successfullyChangedPrimaryCard.value = SubmitResult.Empty
+                }else{
+                    _successfullyChangedPrimaryCard.value = SubmitResult.Success(true)
+                }
+            }else{
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _successfullyChangedPrimaryCard.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _successfullyChangedPrimaryCard.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        _successfullyChangedPrimaryCard.value =
+                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                        Log.d(TAG, "api error ${error.errorResponse.message}")
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
+
 //
 //    fun deleteCard(cardId: String, errorBody: MutableLiveData<ErrorBody>) {
 //        if (isNetworkAvailable()) {
@@ -115,25 +148,7 @@ class PaymentAndPassageViewModel(
 //        }
 //    }
 //
-//    fun setNewPrimaryCard(billId: Int, errorBody: MutableLiveData<ErrorBody>) {
-//        if (isNetworkAvailable()) {
-//            viewModelScope.launch {
-//                val userToken = getUserToken()
-//                userToken?.let { token ->
-//                    Repository.setPrimaryCard(
-//                        token,
-//                        billId,
-//                        errorBody,
-//                        _successfullyChangedPrimaryCard,
-//                        getApplication()
-//                    )
-//                }
-//
-//            }
-//        } else {
-//            _checkNetCards.postValue(false)
-//        }
-//    }
+
 
     fun objectTransformer(input: CardWebModel?): CardsResponse {
         val cardsRS: List<CardsWebUnified> = input?.data?.cardsRS ?: emptyList()

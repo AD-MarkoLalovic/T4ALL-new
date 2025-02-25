@@ -66,7 +66,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         setObservers()
         setObserversError()
         setListener()
-        handlePrimaryCardChange()
         setAddCardButton()
 
         viewModel.fetchCardFlow()
@@ -106,6 +105,43 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 is SubmitResult.InvalidApiToken -> {
                     showError(cardWeb.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {
+                    SubmitResult.Empty
+                }
+            }
+        }
+
+        collectLatestLifecycleFlow(viewModel.successfullyChangedPrimaryCard){ cardChanged ->
+            when(cardChanged){
+                is SubmitResult.Loading -> {
+                    binding.loadingCards.visibility = View.VISIBLE
+                }
+                is SubmitResult.Success -> {
+                    binding.loadingCards.visibility = View.GONE
+
+                    Toast.makeText(requireContext(), getString(R.string.primary_card_changed), Toast.LENGTH_LONG).show()
+
+                    viewModel.fetchCardFlow()
+                }
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.loadingCards.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.loadingCards.visibility = View.GONE
+                    showError(cardChanged.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(cardChanged.errorMessage)
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
 
@@ -208,18 +244,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 cardsCountryAdapter.updateCountries(countryNameAndAdditionalField)
                 cardsCountryAdapter.setSelectedCountry(selectedCountry)
                 setClickableText()  // terms and conditions
-            }
-        }
-    }
-
-
-    private fun handlePrimaryCardChange() {
-        viewModel.successfullyChangedPrimaryCard.observe(viewLifecycleOwner) { isSuccess ->
-            if (isSuccess) {
-                Toast.makeText(
-                    requireContext(), getString(R.string.primary_card_changed), Toast.LENGTH_LONG
-                ).show()
-                viewModel.fetchCardFlow()
             }
         }
     }
@@ -341,7 +365,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             getString(R.string.confirm_change_primary_card),
             object : LostTagDialog.OnButtonClickInLostTag {
                 override fun onClickConfirmed() {
-//                    viewModel.setNewPrimaryCard(cardId, errorBody)
+                    viewModel.setNewPrimaryCard(cardId)
                 }
             })
         primaryCardDialog.isCancelable = false
