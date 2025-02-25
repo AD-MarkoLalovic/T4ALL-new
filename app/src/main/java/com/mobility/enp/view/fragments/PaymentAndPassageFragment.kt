@@ -410,9 +410,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         val confirmRemovalCardDialog =
             ConfirmRemovalCardDialog(object : ConfirmRemovalCardDialog.ClickedDeleteCardInterface {
                 override fun onPositiveButtonClicked() {
-//                    viewModel.deleteCard(cardId, errorBody)
+                    viewModel.deleteCard(cardId)
                 }
-
             })
         confirmRemovalCardDialog.isCancelable = false
         confirmRemovalCardDialog.show(childFragmentManager, "ConfirmRemovalCardDialog")
