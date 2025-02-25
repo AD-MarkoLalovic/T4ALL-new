@@ -64,9 +64,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         setupAdapters()
         setObservers()
-        setObserversError()
         setListener()
-        setAddCardButton()
 
         viewModel.fetchCardFlow()
     }
@@ -77,10 +75,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             when (cardWeb) {
                 is SubmitResult.Loading -> {
                     binding.loadingCards.visibility = View.VISIBLE
+                    binding.rvCreditCard.visibility = View.GONE
+                    binding.recyclerCardsCountry.visibility = View.GONE
                 }
 
                 is SubmitResult.Success -> {
-
                     binding.rvCreditCard.visibility = View.VISIBLE
                     binding.recyclerCardsCountry.visibility = View.VISIBLE
                     binding.loadingCards.visibility = View.GONE
@@ -91,6 +90,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 is SubmitResult.FailureNoConnection -> {
                     showNoConnectionState()
+                    internetReconnectMethod()
                 }
 
                 is SubmitResult.FailureServerError -> {
@@ -114,18 +114,24 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             }
         }
 
-        collectLatestLifecycleFlow(viewModel.successfullyChangedPrimaryCard){ cardChanged ->
-            when(cardChanged){
+        collectLatestLifecycleFlow(viewModel.successfullyChangedPrimaryCard) { cardChanged ->
+            when (cardChanged) {
                 is SubmitResult.Loading -> {
                     binding.loadingCards.visibility = View.VISIBLE
                 }
+
                 is SubmitResult.Success -> {
                     binding.loadingCards.visibility = View.GONE
 
-                    Toast.makeText(requireContext(), getString(R.string.primary_card_changed), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.primary_card_changed),
+                        Toast.LENGTH_LONG
+                    ).show()
 
                     viewModel.fetchCardFlow()
                 }
+
                 is SubmitResult.FailureNoConnection -> {
                     showNoConnectionState()
                 }
@@ -248,19 +254,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
     }
 
-    private fun setAddCardButton() {
-        binding.bttAddCard.setOnClickListener {
-            val promotion = Promotion("", "", 0, "", selectedCountry, false)
-            if (selectedCountry != "All" && selectedCountry.isNotEmpty()) {
-                val action =
-                    PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
-                        promotion
-                    )
-                findNavController().navigate(action)
-            }
-        }
-    }
-
     private fun toggleNoCardsMessage(isEmpty: Boolean) {
         if (isEmpty) {
             binding.txNoCards.visibility = View.VISIBLE
@@ -298,49 +291,46 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 }
             }
         }
+
+        binding.bttAddCard.setOnClickListener {
+            val promotion = Promotion("", "", 0, "", selectedCountry, false)
+            if (selectedCountry != "All" && selectedCountry.isNotEmpty()) {
+                val action =
+                    PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
+                        promotion
+                    )
+                findNavController().navigate(action)
+            }
+        }
     }
 
-    private fun setObserversError() {
-        viewModel.checkNetCards.observe(viewLifecycleOwner) { hasInternet ->
-            if (hasInternet != null && !hasInternet) {
+    private fun internetReconnectMethod() {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
 
-                val bundle = Bundle().apply {
-                    putString(getString(R.string.title), getString(R.string.no_connection_title))
-                    putString(
-                        getString(R.string.subtitle),
-                        getString(R.string.please_connect_to_the_internet)
-                    )
-                }
+            val bundle = Bundle().apply {
+                putString(getString(R.string.title), getString(R.string.no_connection_title))
+                putString(
+                    getString(R.string.subtitle),
+                    getString(R.string.please_connect_to_the_internet)
+                )
+            }
 
-                findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
+            findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
 
-                val binding = (activity as MainActivity).binding
-                MainActivity.showSnackMessage(getString(R.string.checking_for_connection), binding)
+            val binding = (activity as MainActivity).binding
+            MainActivity.showSnackMessage(getString(R.string.checking_for_connection), binding)
 
-                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                    context?.let {
-                        while (true) {
-                            if (Repository.isNetworkAvailable(it)) {
-                                triggerUpdate()
-                                break
-                            } else {
-                                delay(1000L)
-                            }
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                context?.let {
+                    while (true) {
+                        if (Repository.isNetworkAvailable(it)) {
+                            triggerUpdate()
+                            break
+                        } else {
+                            delay(1000L)
                         }
                     }
                 }
-            }
-        }
-
-        viewModel.dataLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                binding.loadingCards.visibility = View.VISIBLE
-                binding.rvCreditCard.visibility = View.GONE
-                binding.recyclerCardsCountry.visibility = View.GONE
-            } else {
-                binding.loadingCards.visibility = View.GONE
-                binding.rvCreditCard.visibility = View.VISIBLE
-                binding.recyclerCardsCountry.visibility = View.VISIBLE
             }
         }
     }

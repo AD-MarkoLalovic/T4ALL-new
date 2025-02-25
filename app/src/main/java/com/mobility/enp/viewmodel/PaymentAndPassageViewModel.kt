@@ -49,11 +49,6 @@ class PaymentAndPassageViewModel(
     private val _successfullyChangedPrimaryCard = MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Loading)
     val successfullyChangedPrimaryCard :StateFlow<SubmitResult<Boolean>> get() = _successfullyChangedPrimaryCard
 
-    private val _checkNetCards = MutableLiveData<Boolean>()
-    val checkNetCards: LiveData<Boolean> get() = _checkNetCards
-
-    private val _dataLoading: MutableLiveData<Boolean> = MutableLiveData(false)
-    val dataLoading: LiveData<Boolean> get() = _dataLoading
 
     fun fetchCardFlow() {
         _getCardDataFlow.value = SubmitResult.Loading
