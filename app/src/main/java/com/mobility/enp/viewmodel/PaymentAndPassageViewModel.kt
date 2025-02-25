@@ -1,8 +1,6 @@
 package com.mobility.enp.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -10,14 +8,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
-import com.mobility.enp.data.model.ErrorBody
+import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.cards.response.Country
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.cardsweb.CardsWebUnified
 import com.mobility.enp.data.repository.CardRepository
-import com.mobility.enp.network.Repository
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
@@ -46,8 +43,9 @@ class PaymentAndPassageViewModel(
         MutableStateFlow<SubmitResult<CardWebModel>>(SubmitResult.Loading)
     val getCardDataFlow: StateFlow<SubmitResult<CardWebModel>> get() = _getCardDataFlow
 
-    private val _successfullyChangedPrimaryCard = MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Loading)
-    val successfullyChangedPrimaryCard :StateFlow<SubmitResult<Boolean>> get() = _successfullyChangedPrimaryCard
+    private val _successfullyChangedPrimaryCard =
+        MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Loading)
+    val successfullyChangedPrimaryCard: StateFlow<SubmitResult<Boolean>> get() = _successfullyChangedPrimaryCard
 
 
     fun fetchCardFlow() {
@@ -84,18 +82,18 @@ class PaymentAndPassageViewModel(
         }
     }
 
-    fun setNewPrimaryCard(billId: Int){
+    fun setNewPrimaryCard(billId: Int) {
         _successfullyChangedPrimaryCard.value = SubmitResult.Loading
-        viewModelScope.launch (Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             val result = repository.setNewPrimaryCard(billId)
-            if (result.isSuccess){
+            if (result.isSuccess) {
                 val data = result.getOrNull()
-                if (data == null){
+                if (data == null) {
                     _successfullyChangedPrimaryCard.value = SubmitResult.Empty
-                }else{
+                } else {
                     _successfullyChangedPrimaryCard.value = SubmitResult.Success(true)
                 }
-            }else{
+            } else {
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(TAG, "Error while fetching tag serial data")
@@ -173,6 +171,10 @@ class PaymentAndPassageViewModel(
             list.add(cardObject)
         }
         return list
+    }
+
+    suspend fun getUserTokenCardWeb(): UserLoginResponseRoomTable {
+        return repository.getUserTokenData()
     }
 
 }

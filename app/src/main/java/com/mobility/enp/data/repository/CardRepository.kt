@@ -2,10 +2,13 @@ package com.mobility.enp.data.repository
 
 import android.content.Context
 import android.util.Log
+import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 class CardRepository(database: DRoom, context: Context) : BaseRepository(database, context) {
@@ -68,6 +71,12 @@ class CardRepository(database: DRoom, context: Context) : BaseRepository(databas
         }
 
         return Result.failure(NetworkError.ServerError)
+    }
+
+    suspend fun getUserTokenData(): UserLoginResponseRoomTable {
+        return withContext(Dispatchers.IO){
+            database.loginDao().fetchAllowedUsers()
+        }
     }
 
 }

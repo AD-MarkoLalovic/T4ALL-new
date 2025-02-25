@@ -293,11 +293,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
 
         binding.bttAddCard.setOnClickListener {
-            val promotion = Promotion("", "", 0, "", selectedCountry, false)
             if (selectedCountry != "All" && selectedCountry.isNotEmpty()) {
                 val action =
                     PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
-                        promotion
+                        selectedCountry
                     )
                 findNavController().navigate(action)
             }
