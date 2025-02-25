@@ -17,7 +17,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_home_page.homedata.Promotion
 import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.cards.response.Country
@@ -155,6 +154,51 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     SubmitResult.Empty
                 }
             }
+        }
+
+        collectLatestLifecycleFlow(viewModel.successfullyDeletedCard) { cardDeleted ->
+
+            when (cardDeleted) {
+                is SubmitResult.Loading -> {
+                    binding.loadingCards.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.loadingCards.visibility = View.GONE
+
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.card_successfully_deleted),
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    viewModel.fetchCardFlow()
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.loadingCards.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.loadingCards.visibility = View.GONE
+                    showError(cardDeleted.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(cardDeleted.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {
+                    SubmitResult.Empty
+                }
+            }
+
         }
     }
 

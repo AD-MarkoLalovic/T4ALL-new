@@ -73,6 +73,34 @@ class CardRepository(database: DRoom, context: Context) : BaseRepository(databas
         return Result.failure(NetworkError.ServerError)
     }
 
+    suspend fun deleteCard(cardID:String):Result<Unit>{
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken()
+        userToken?.let { token ->
+            return try {
+                val response = apiService(token).deleteCard(cardID)
+                if (response.isSuccessful) {
+                    response.body()?.let { data ->
+                        Result.success(data)
+                    } ?: Result.failure(NetworkError.ServerError)
+                } else {
+                    response.errorBody()?.let { errorBody ->
+                        val errorResponse = parseErrorResponse(response.code(), errorBody)
+                        Result.failure(NetworkError.ApiError(errorResponse))
+                    } ?: Result.failure(NetworkError.ServerError)
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "getIndexData: ${e.message} ${e.cause}")
+                Result.failure(NetworkError.ServerError)
+            }
+
+        }
+        return Result.failure(NetworkError.ServerError)
+    }
+
     suspend fun getUserTokenData(): UserLoginResponseRoomTable {
         return withContext(Dispatchers.IO){
             database.loginDao().fetchAllowedUsers()

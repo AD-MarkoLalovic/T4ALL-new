@@ -15,6 +15,7 @@ import com.mobility.enp.data.model.cards.response.Country
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.cardsweb.CardsWebUnified
 import com.mobility.enp.data.repository.CardRepository
+import com.mobility.enp.network.Repository
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
@@ -46,6 +47,11 @@ class PaymentAndPassageViewModel(
     private val _successfullyChangedPrimaryCard =
         MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Loading)
     val successfullyChangedPrimaryCard: StateFlow<SubmitResult<Boolean>> get() = _successfullyChangedPrimaryCard
+
+
+    private val _successfullyDeletedCard =
+        MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Loading)
+    val successfullyDeletedCard: StateFlow<SubmitResult<Boolean>> get() = _successfullyDeletedCard
 
 
     fun fetchCardFlow() {
@@ -116,31 +122,39 @@ class PaymentAndPassageViewModel(
         }
     }
 
-//
-//    fun deleteCard(cardId: String, errorBody: MutableLiveData<ErrorBody>) {
-//        if (isNetworkAvailable()) {
-//            viewModelScope.launch {
-//                val userToken = getUserToken()
-//                userToken?.let { token ->
-//                    try {
-//                        //todo fix this
-////                        Repository.deleteCard(cardId, token, getApplication(), errorBody)
-////                        val updatedPaymentAndPassage =
-////                            _paymentAndPassageList.value?.data?.filter { it.id.toString() != cardId }
-////                        _paymentAndPassageList.postValue(CardsResponse(updatedPaymentAndPassage))
-//                    } catch (e: Exception) {
-//                        Log.e(
-//                            "PaymentAndPassageViewModel",
-//                            "Greška pri brisanju kartice: ${e.message}"
-//                        )
-//                    }
-//                }
-//            }
-//        } else {
-//            _checkNetCards.postValue(false)
-//        }
-//    }
-//
+    fun deleteCard(cardId: String){
+        _successfullyDeletedCard.value = SubmitResult.Loading
+        viewModelScope.launch (Dispatchers.IO) {
+            val result = repository.deleteCard(cardId)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _successfullyDeletedCard.value = SubmitResult.Empty
+                } else {
+                    _successfullyDeletedCard.value = SubmitResult.Success(true)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _successfullyDeletedCard.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _successfullyDeletedCard.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        _successfullyDeletedCard.value =
+                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                        Log.d(TAG, "api error ${error.errorResponse.message}")
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
 
 
     fun objectTransformer(input: CardWebModel?): CardsResponse {

@@ -99,9 +99,9 @@ interface ApiService {
     suspend fun getToolHistoryIndexN(): Response<IndexData>
 
     @DELETE("/api/v1/cards/{card_id}")
-    fun deleteCard(
+    suspend fun deleteCard(
         @Path("card_id") cardId: String
-    ): Call<Unit>
+    ): Response<Unit>
 
     @GET("/api/v1/history/transit")
     suspend fun getToolHistoryTransitNew(

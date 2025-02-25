@@ -270,33 +270,6 @@ object Repository {
         })
     }
 
-    fun deleteCard(
-        cardId: String, token: String?, context: Context, errorBody: MutableLiveData<ErrorBody>
-    ) {
-
-        apiService(token).deleteCard(cardId).enqueue(object : Callback<Unit> {
-
-            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                if (response.isSuccessful) {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.card_successfully_deleted),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                    Toast.makeText(
-                        context, context.getString(R.string.card_not_deleted), Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-
-            override fun onFailure(call: Call<Unit>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-        })
-    }
-
     suspend fun getInvoices(
         data: MutableLiveData<MyInvoicesResponse>,
         token: String?,
