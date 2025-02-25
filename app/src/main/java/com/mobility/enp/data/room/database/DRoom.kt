@@ -9,7 +9,6 @@ import androidx.room.TypeConverters
 import com.mobility.enp.Config
 import com.mobility.enp.data.model.IntroPageStatus
 import com.mobility.enp.data.model.ProfileImage
-import com.mobility.enp.data.model.api_home_page.homedata.HomeScreenData
 import com.mobility.enp.data.model.api_home_page.homedata.Promotion
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.basic_information.entity.BasicInfoEntity
@@ -42,7 +41,6 @@ import com.mobility.enp.data.room.api_related_daos.FcmTokenDao
 import com.mobility.enp.data.room.api_related_daos.HistoryIndexDao
 import com.mobility.enp.data.room.api_related_daos.HistoryListingDao
 import com.mobility.enp.data.room.api_related_daos.HomeCardsDao
-import com.mobility.enp.data.room.api_related_daos.HomeDao
 import com.mobility.enp.data.room.api_related_daos.HomeScreenDao
 import com.mobility.enp.data.room.api_related_daos.IntroPageStatusDao
 import com.mobility.enp.data.room.api_related_daos.MyInvoicesDao
@@ -56,17 +54,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Database(
-    entities = [UserLoginResponseRoomTable::class, FcmToken::class, UserLanguage::class, NotificationModel::class, HomeScreenData::class, IndexData::class, ToolHistoryListing::class,
+    entities = [UserLoginResponseRoomTable::class, FcmToken::class, UserLanguage::class, NotificationModel::class, IndexData::class, ToolHistoryListing::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, Promotion::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class, HomeEntity::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class, HomeCardsEntity::class, AddedCardsEntity::class],
-    version = 185,
+    version = 190,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
 abstract class DRoom : RoomDatabase() {
 
     abstract fun loginDao(): LoginDao // modified for api response
-    abstract fun homeDao(): HomeDao
     abstract fun pdfDao(): PdfDao
     abstract fun languageDao(): UserLanguageDao
     abstract fun fcmToken(): FcmTokenDao
@@ -128,7 +125,6 @@ abstract class DRoom : RoomDatabase() {
     }
 
     suspend fun clearAllData() {
-        homeDao().deleteData()
         loginDao().deleteAll()
         notificationDao().deleteAll()
         fcmToken().deleteTable()

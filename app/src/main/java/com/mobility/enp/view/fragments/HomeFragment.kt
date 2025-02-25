@@ -92,8 +92,6 @@ class HomeFragment : Fragment() {
         collectLatestLifecycleFlow(viewModel.homeCards) { cards ->
             cards?.let {
                 setHomeCardsAdapter(it)
-                Log.d("MARKO", "collectLatestLifecycleFlow(viewModel.homeCards) : 1")
-                binding.progBar.visibility = View.GONE
             }
         }
 
@@ -101,6 +99,7 @@ class HomeFragment : Fragment() {
             if (isEmpty) {
                 binding.noInvoices.visibility = View.VISIBLE
                 binding.invoicesContainerHome.visibility = View.GONE
+                binding.noInvoices.visibility = View.VISIBLE
             } else {
                 binding.noInvoices.visibility = View.GONE
                 binding.invoicesContainerHome.visibility = View.VISIBLE
@@ -131,7 +130,7 @@ class HomeFragment : Fragment() {
         when (result) {
             is SubmitResult.Loading -> binding.progBar.visibility = View.VISIBLE
             is SubmitResult.Success -> handleSuccess(result)
-            is SubmitResult.Empty -> handleEmptyState()
+            is SubmitResult.Empty -> {}
             is SubmitResult.FailureNoConnection -> showNoInternetDialog()
             is SubmitResult.FailureServerError -> showErrorMessage(getString(R.string.server_error_msg))
             is SubmitResult.FailureApiError -> showErrorMessage(result.errorMessage)
@@ -143,19 +142,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun handleSuccess(result: SubmitResult.Success<HomeWithDetails>) {
-        binding.progBar.visibility = View.GONE
-
         result.data.home.displayName?.let { viewModel.loadProfileImage(it) }
 
         val invoiceDetails = result.data.invoice.flatMap { it.invoiceDetails }
         totalCurrencyAdapter.submitList(invoiceDetails)
-    }
-
-    private fun handleEmptyState() {
-        binding.apply {
-            noInvoices.visibility = View.VISIBLE
-            noToolHistory.visibility = View.VISIBLE
-        }
+        binding.progBar.visibility = View.GONE
     }
 
     private fun showErrorMessage(message: String) {
@@ -225,25 +216,31 @@ class HomeFragment : Fragment() {
             binding.progBar.visibility = View.GONE
         })
 
-        val adapterProgress = HomeProgressAdapter(filteredList.size)
+        if (filteredList.isNotEmpty()) {
+            val adapterProgress = HomeProgressAdapter(filteredList.size)
 
-        binding.cyclerPromotions.visibility = View.VISIBLE
-        binding.cyclerPromotions.adapter = adapter
+            binding.cyclerPromotions.visibility = View.VISIBLE
+            binding.cyclerPromotions.adapter = adapter
 
-        binding.cyclerProgress.visibility = View.VISIBLE
-        binding.cyclerProgress.adapter = adapterProgress
-        binding.cyclerProgress.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            binding.cyclerProgress.visibility = View.VISIBLE
+            binding.cyclerProgress.adapter = adapterProgress
+            binding.cyclerProgress.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        binding.cyclerPromotions.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                val currentCompletelyVisibleLab =
-                    (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
-                Log.d("MARKO", "onScrollStateChanged: $currentCompletelyVisibleLab")
-                adapterProgress.setCurrentDot(currentCompletelyVisibleLab)
-            }
-        })
+            binding.cyclerPromotions.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val currentCompletelyVisiblePosition =
+                        (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                    // Pozivam setCurrentDot samo kada se pozicija stvarno promeni
+                    if (currentCompletelyVisiblePosition != adapterProgress.checkedPosition) {
+                        adapterProgress.setCurrentDot(currentCompletelyVisiblePosition)
+                    }
+                }
+            })
+        } else {
+            Log.d("HomeFragment", "Filtered list is empty, no items to display")
+        }
     }
 
     private fun showSerbiaRequiredDialog() {
@@ -253,7 +250,6 @@ class HomeFragment : Fragment() {
         )
         dialog.show(parentFragmentManager, "HomeNoAddCardDialog")
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
