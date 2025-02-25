@@ -75,7 +75,10 @@ class BasicInformationFragment : Fragment() {
                     binding.loadingBasicInformation.visibility = View.GONE
                     showMessage(result.errorMessage)
                 }
-                is SubmitResult.InvalidApiToken -> {}
+                is SubmitResult.InvalidApiToken -> {
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                    showMessage(result.errorMessage)
+                }
             }
         }
     }
@@ -108,7 +111,10 @@ class BasicInformationFragment : Fragment() {
                     binding.loadingBasicInformation.visibility = View.GONE
                     showMessage(result.errorMessage)
                 }
-                is SubmitResult.InvalidApiToken -> {}
+                is SubmitResult.InvalidApiToken -> {
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                    showMessage(result.errorMessage)
+                }
             }
         }
     }
