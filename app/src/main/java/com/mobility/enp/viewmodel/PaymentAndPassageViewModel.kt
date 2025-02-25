@@ -15,7 +15,6 @@ import com.mobility.enp.data.model.cards.response.Country
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.cardsweb.CardsWebUnified
 import com.mobility.enp.data.repository.CardRepository
-import com.mobility.enp.network.Repository
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
@@ -122,9 +121,9 @@ class PaymentAndPassageViewModel(
         }
     }
 
-    fun deleteCard(cardId: String){
+    fun deleteCard(cardId: String) {
         _successfullyDeletedCard.value = SubmitResult.Loading
-        viewModelScope.launch (Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             val result = repository.deleteCard(cardId)
             if (result.isSuccess) {
                 val data = result.getOrNull()

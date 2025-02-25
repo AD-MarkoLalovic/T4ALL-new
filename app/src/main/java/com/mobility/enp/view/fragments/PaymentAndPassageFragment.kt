@@ -275,9 +275,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 val isClickable = when (code) {
                     "All" -> true
                     "RS" -> true // Srbija je uvek klikabilna
-                    "MK" -> cardWebResponse.data?.showTabMK
-                    "ME" -> cardWebResponse.data?.showTabME
-                    else -> false
+                    else -> cardWebResponse.data?.hasSerbianCard
                 }
 
                 countryNameAndAdditionalField.add(
