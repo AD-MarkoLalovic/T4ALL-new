@@ -79,7 +79,6 @@ class RestClient<T>(apiServiceClass: Class<T>, token: String?) {
                         .addHeader("X-Platform", "Android")
                         .addHeader("Content-Type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("X-Platform", "Android" )
 
                     if (!token.isNullOrEmpty()) {
                         requestBuilder.addHeader("Authorization", "Bearer $token")
