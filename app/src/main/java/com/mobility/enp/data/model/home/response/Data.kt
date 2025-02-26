@@ -6,7 +6,7 @@ import com.mobility.enp.data.model.home.entity.InvoiceHomeTotalCurrencyEntity
 import com.mobility.enp.data.model.home.entity.TollHistoryHomeEntity
 
 data class Data(
-    val customer: Customer?,
+    val customer: Customer,
     val tollHistory: List<TollHistory?>?,
     val invoices: List<Invoice?>?,
     val promotions: List<Any?>?
@@ -14,10 +14,11 @@ data class Data(
 ) {
     fun toHomeEntity(): HomeEntity {
         return HomeEntity(
-            firstName = customer?.firstName,
-            lastName = customer?.lastName,
-            displayName = customer?.displayName,
-            customerType = customer?.customerType?.type
+            firstName = customer.firstName,
+            lastName = customer.lastName,
+            displayName = customer.displayName,
+            customerType = customer.customerType.type,
+            portalKey = customer.portalKey
         )
     }
 
