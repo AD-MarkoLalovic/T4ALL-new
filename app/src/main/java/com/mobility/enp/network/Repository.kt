@@ -25,6 +25,7 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.cards.response.CardsResponse
+import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.countries.CountriesModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
@@ -98,34 +99,6 @@ object Repository {
                 Log.d(TAG, "Fcm token onFailure: \n ${t.cause} \n\n ${t.message}")
             }
 
-        })
-    }
-
-    //updated
-    suspend fun getUserHomeData(
-        data: MutableLiveData<HomeScreenData>,
-        token: String?,
-        context: Context,
-        errorBody: MutableLiveData<ErrorBody>
-    ) {
-
-        val lang = getUserLanguage(context)
-
-        val call = apiService(token).getUserHomeData(lang)
-        call.enqueue(object : Callback<HomeScreenData> {
-            override fun onResponse(
-                call: Call<HomeScreenData>, response: Response<HomeScreenData>
-            ) {
-                if (response.isSuccessful) {
-                    data.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<HomeScreenData>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
         })
     }
 
@@ -218,75 +191,6 @@ object Repository {
             override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                 if (!response.isSuccessful) {
                     errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<Unit>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-        })
-    }
-
-    suspend fun getToolHistoryListingMutableTimeFiltered(    // fills inner adapter data and sends errors to fragment if any
-        data: MutableLiveData<ToolHistoryListing>,
-        errorBody: MutableLiveData<ErrorBody>,
-        token: String,
-        tagSerialNumber: String,
-        page: Int,
-        perPage: Int,
-        application: Context,
-        filterFrom: String,
-        filterTo: String,
-        currency: String
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        val call = apiService(token).getToolHistoryTransitResultFragment(
-            tagSerialNumber,
-            page.toString(),
-            perPage.toString(),
-            filterFrom,
-            filterTo,
-            lang,
-            currency
-        )
-        call.enqueue(object : Callback<ToolHistoryListing> {
-            override fun onResponse(
-                call: Call<ToolHistoryListing>, response: Response<ToolHistoryListing>
-            ) {
-                if (response.isSuccessful) {
-                    data.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<ToolHistoryListing>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
-    }
-
-    fun deleteCard(
-        cardId: String, token: String?, context: Context, errorBody: MutableLiveData<ErrorBody>
-    ) {
-
-        apiService(token).deleteCard(cardId).enqueue(object : Callback<Unit> {
-
-            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                if (response.isSuccessful) {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.card_successfully_deleted),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                    Toast.makeText(
-                        context, context.getString(R.string.card_not_deleted), Toast.LENGTH_LONG
-                    ).show()
                 }
             }
 
@@ -616,29 +520,6 @@ object Repository {
         }
     }
 
-    suspend fun setPrimaryCard(
-        token: String?,
-        billId: Int,
-        errorBody: MutableLiveData<ErrorBody>,
-        result: MutableLiveData<Boolean>,
-        application: Application
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        try {
-            val response = apiService(token).cardsSetDefault(billId, lang)
-            if (response.isSuccessful) {
-                result.postValue(true)
-            } else {
-                result.postValue(false)
-                errorBody.postValue(getMessageFromErrorBody(response))
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
     fun postForgotPassword(
         email: ForgotPasswordRequest,
         errorBody: MutableLiveData<ErrorBody>,
@@ -665,23 +546,6 @@ object Repository {
         })
     }
 
-    suspend fun getUserCountries(
-        data: MutableLiveData<CountriesModel>, errorBody: MutableLiveData<ErrorBody>, token: String
-    ) {
-
-        try {
-            val response = apiService(token).getCountriesList()
-            if (response.isSuccessful) {
-                data.postValue(response.body())
-            } else {
-                errorBody.postValue(getMessageFromErrorBody(response))
-            }
-        } catch (e: Exception) {
-            Log.d(TAG, "getUserCountries: ${e.cause} \n ${e.message}")
-        }
-
-    }
-
     suspend fun postFoundLostTag(
         token: String,
         serialNumber: String,
@@ -704,25 +568,6 @@ object Repository {
         customerSupport: CustomerSupport
     ): Response<Unit> {
         return apiService("").sendCustomerSupport(customerSupport)
-    }
-
-    suspend fun getCreditCards(
-        data: MutableLiveData<CardsResponse>,
-        token: String?,
-        errorBody: MutableLiveData<ErrorBody>,
-        application: Application
-    ) {
-        try {
-            val lang = getUserLanguage(application)
-            val response = apiService(token).getCreditCards(lang)
-            if (response.isSuccessful) {
-                data.postValue(response.body())
-            } else {
-                errorBody.postValue(getMessageFromErrorBody(response))
-            }
-        } catch (e: Exception) {
-            Log.d(TAG, "getUserCards: ${e.cause} \n ${e.message}")
-        }
     }
 
     suspend fun getCsvData(
@@ -823,23 +668,6 @@ object Repository {
             }
         }
         return error
-    }
-
-    private fun socketTimeOutMessage(t: Throwable, context: Context) {
-        when (t) {
-            is SocketTimeoutException -> {
-                Toast.makeText(context, "SocketTimeOutError ${t.message}", Toast.LENGTH_SHORT)
-                    .show()
-            }
-
-            is IOException -> {
-                Log.d(TAG, "IOException: ${t.message} ${t.cause}")
-            }
-
-            else -> {
-                Log.d(TAG, "Error: ${t.message} ${t.cause}")
-            }
-        }
     }
 
     fun isNetworkAvailable(context: Context): Boolean {
