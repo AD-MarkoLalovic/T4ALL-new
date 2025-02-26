@@ -3,7 +3,6 @@ package com.mobility.enp.view.adapters.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mobility.enp.R
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.databinding.CardFlagsPromotionHomeBinding
@@ -24,14 +23,10 @@ class HomePromotionsAdapter(
             binding.data = card
 
             when (card.code) {
-                "RS" -> Glide.with(binding.root.context).load(R.drawable.serbian_flag_home)
-                    .into(binding.backgroundImage)
+                "RS" -> binding.backgroundImage.setImageResource(R.drawable.serbian_flag_home)
+                "MK" -> binding.backgroundImage.setImageResource(R.drawable.flag_home_macedonian)
+                "ME" -> binding.backgroundImage.setImageResource(R.drawable.flag_home_crna_gora)
 
-                "MK" -> Glide.with(binding.root.context).load(R.drawable.flag_home_macedonian)
-                    .into(binding.backgroundImage)
-
-                "ME" -> Glide.with(binding.root.context).load(R.drawable.flag_home_crna_gora)
-                    .into(binding.backgroundImage)
             }
 
             binding.btnObjection.setOnClickListener {
