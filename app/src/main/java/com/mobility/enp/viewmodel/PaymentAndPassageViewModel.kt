@@ -1,122 +1,193 @@
 package com.mobility.enp.viewmodel
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import com.mobility.enp.data.model.ErrorBody
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
+import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.data.model.cards.response.CardsResponse
-import com.mobility.enp.data.room.database.DRoom
-import com.mobility.enp.network.Repository
+import com.mobility.enp.data.model.cards.response.Country
+import com.mobility.enp.data.model.cardsweb.CardWebModel
+import com.mobility.enp.data.model.cardsweb.CardsWebUnified
+import com.mobility.enp.data.repository.CardRepository
+import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class PaymentAndPassageViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val database: DRoom = DRoom.getRoomInstance(application)
-
-    private val _paymentAndPassageList = MutableLiveData<CardsResponse>()
-    val paymentAndPassageList: MutableLiveData<CardsResponse> get() = _paymentAndPassageList
-
-    private val _successfullyChangedPrimaryCard = MutableLiveData<Boolean>()
-    val successfullyChangedPrimaryCard: LiveData<Boolean> get() = _successfullyChangedPrimaryCard
-
-    private val _checkNetCards = MutableLiveData<Boolean>()
-    val checkNetCards: LiveData<Boolean> get() = _checkNetCards
-
-    private val _dataLoading: MutableLiveData<Boolean> = MutableLiveData(false)
-    val dataLoading: LiveData<Boolean> get() = _dataLoading
+class PaymentAndPassageViewModel(
+    private val repository: CardRepository
+) : ViewModel() {
 
 
-    private suspend fun getUserToken(): String? {
-        return withContext(Dispatchers.IO) {
-            database.loginDao().fetchAllowedUsers().accessToken
-        }
-    }
-
-    private fun isNetworkAvailable(): Boolean {
-        return Repository.isNetworkAvailable(getApplication())
-    }
-
-    fun fetchCard(errorBody: MutableLiveData<ErrorBody>) {
-        _dataLoading.value = true
-
-        if (isNetworkAvailable()) {
-            viewModelScope.launch {
-                val userToken = getUserToken()
-                userToken?.let { token ->
-                    Repository.getCreditCards(
-                        _paymentAndPassageList,
-                        token,
-                        errorBody,
-                        getApplication()
-                    )
-                }
-                _dataLoading.value = false
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val myRepository = (this[APPLICATION_KEY] as MyApplication).repositoryCard
+                PaymentAndPassageViewModel(
+                    repository = myRepository
+                )
             }
-        } else {
-            _checkNetCards.postValue(false)
         }
     }
 
-    fun deleteCard(cardId: String, errorBody: MutableLiveData<ErrorBody>) {
-        if (isNetworkAvailable()) {
-            viewModelScope.launch {
-                val userToken = getUserToken()
-                userToken?.let { token ->
-                    try {
-                        Repository.deleteCard(cardId, token, getApplication(), errorBody)
-                        val updatedPaymentAndPassage =
-                            _paymentAndPassageList.value?.data?.filter { it.id.toString() != cardId }
-                        _paymentAndPassageList.postValue(CardsResponse(updatedPaymentAndPassage))
-                    } catch (e: Exception) {
-                        Log.e(
-                            "PaymentAndPassageViewModel",
-                            "Greška pri brisanju kartice: ${e.message}"
-                        )
+    private val _getCardDataFlow =
+        MutableStateFlow<SubmitResult<CardWebModel>>(SubmitResult.Loading)
+    val getCardDataFlow: StateFlow<SubmitResult<CardWebModel>> get() = _getCardDataFlow
+
+    private val _successfullyChangedPrimaryCard =
+        MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Loading)
+    val successfullyChangedPrimaryCard: StateFlow<SubmitResult<Boolean>> get() = _successfullyChangedPrimaryCard
+
+
+    private val _successfullyDeletedCard =
+        MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Loading)
+    val successfullyDeletedCard: StateFlow<SubmitResult<Boolean>> get() = _successfullyDeletedCard
+
+
+    fun fetchCardFlow() {
+        _getCardDataFlow.value = SubmitResult.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.getCardData()
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _getCardDataFlow.value = SubmitResult.Empty
+                } else {
+                    _getCardDataFlow.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _getCardDataFlow.value = SubmitResult.FailureServerError
                     }
+
+                    is NetworkError.NoConnection -> {
+                        _getCardDataFlow.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        _getCardDataFlow.value =
+                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                        Log.d(TAG, "api error ${error.errorResponse.message}")
+                    }
+
+                    else -> {}
                 }
             }
-        } else {
-            _checkNetCards.postValue(false)
         }
     }
 
-    fun setNewPrimaryCard(billId: Int, errorBody: MutableLiveData<ErrorBody>) {
-        if (isNetworkAvailable()) {
-            viewModelScope.launch {
-                val userToken = getUserToken()
-                userToken?.let { token ->
-                    Repository.setPrimaryCard(
-                        token,
-                        billId,
-                        errorBody,
-                        _successfullyChangedPrimaryCard,
-                        getApplication()
-                    )
+    fun setNewPrimaryCard(billId: Int) {
+        _successfullyChangedPrimaryCard.value = SubmitResult.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.setNewPrimaryCard(billId)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _successfullyChangedPrimaryCard.value = SubmitResult.Empty
+                } else {
+                    _successfullyChangedPrimaryCard.value = SubmitResult.Success(true)
                 }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _successfullyChangedPrimaryCard.value = SubmitResult.FailureServerError
+                    }
 
+                    is NetworkError.NoConnection -> {
+                        _successfullyChangedPrimaryCard.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        _successfullyChangedPrimaryCard.value =
+                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                        Log.d(TAG, "api error ${error.errorResponse.message}")
+                    }
+
+                    else -> {}
+                }
             }
-        } else {
-            _checkNetCards.postValue(false)
         }
     }
 
-    suspend fun cardLimitByUserType(): List<String> {
-        val list = database.promotionsDao().getPromotionsList()
-        val countriesAvailable = list.mapNotNull { promotion -> promotion.countryCode }
-        return countriesAvailable
+    fun deleteCard(cardId: String) {
+        _successfullyDeletedCard.value = SubmitResult.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.deleteCard(cardId)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _successfullyDeletedCard.value = SubmitResult.Empty
+                } else {
+                    _successfullyDeletedCard.value = SubmitResult.Success(true)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _successfullyDeletedCard.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _successfullyDeletedCard.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        _successfullyDeletedCard.value =
+                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                        Log.d(TAG, "api error ${error.errorResponse.message}")
+                    }
+
+                    else -> {}
+                }
+            }
+        }
     }
 
-    //za Card Fragment
+
+    fun objectTransformer(input: CardWebModel?): CardsResponse {
+        val cardsRS: List<CardsWebUnified> = input?.data?.cardsRS ?: emptyList()
+        val cardsME: List<CardsWebUnified> = input?.data?.cardsME ?: emptyList()
+        val cardsMK: List<CardsWebUnified> = input?.data?.cardsMK ?: emptyList()
+
+        val sortedList: ArrayList<Card> = arrayListOf()
+        sortedList.addAll(transformCard(cardsRS))
+        sortedList.addAll(transformCard(cardsME))
+        sortedList.addAll(transformCard(cardsMK))
+
+        val cardResponse = CardsResponse(sortedList)
+        return cardResponse
+    }
+
+    private fun transformCard(cardList: List<CardsWebUnified>): List<Card> {
+        val list: ArrayList<Card> = arrayListOf()
+        for (card in cardList) {
+            val cardObject = Card(
+                card.active,
+                card.details,
+                card.cardType,
+                Country(card.country?.code, card.country?.name, false),
+                card.defaultCard,
+                card.id
+            )
+            list.add(cardObject)
+        }
+        return list
+    }
+
     suspend fun getUserTokenCardWeb(): UserLoginResponseRoomTable {
-        return withContext(Dispatchers.IO) {
-            database.loginDao().fetchAllowedUsers()
-        }
+        return repository.getUserTokenData()
     }
 
 }

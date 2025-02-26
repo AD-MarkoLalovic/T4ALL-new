@@ -20,6 +20,7 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.banks.response.BanksResponse
 import com.mobility.enp.data.model.cards.response.CardsResponse
+import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.countries.CountriesModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
@@ -92,9 +93,9 @@ interface ApiService {
     suspend fun getToolHistoryIndexN(): Response<IndexData>
 
     @DELETE("/api/v1/cards/{card_id}")
-    fun deleteCard(
+    suspend fun deleteCard(
         @Path("card_id") cardId: String
-    ): Call<Unit>
+    ): Response<Unit>
 
     @GET("/api/v1/history/transit")
     suspend fun getToolHistoryTransitNew(
@@ -261,6 +262,9 @@ interface ApiService {
 
     @GET("/api/v1/cards")
     suspend fun getCreditCards(@Query("lang") language: String): Response<CardsResponse>
+
+    @GET("/api/v1/cards/web")
+    suspend fun getCreditCardsWeb(@Query("lang") language: String): Response<CardWebModel>
 
     @FormUrlEncoded
     @POST("/api/v1/delete-account-request")
