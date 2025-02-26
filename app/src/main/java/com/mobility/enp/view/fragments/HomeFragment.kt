@@ -127,7 +127,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun handleSuccess(result: SubmitResult.Success<HomeWithDetails>) {
-        result.data.home.displayName?.let { viewModel.loadProfileImage(it) }
+        result.data.home.displayName.let { viewModel.loadProfileImage(it) }
         val invoiceDetails = result.data.invoice
         if (invoiceDetails.isNotEmpty()){
             val invoice = invoiceDetails.flatMap { it.invoiceDetails }
