@@ -95,25 +95,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-        collectLatestLifecycleFlow(viewModel.isInvoiceEmpty) { isEmpty ->
-            if (isEmpty) {
-                binding.noInvoices.visibility = View.VISIBLE
-                binding.invoicesContainerHome.visibility = View.GONE
-                binding.noInvoices.visibility = View.VISIBLE
-            } else {
-                binding.noInvoices.visibility = View.GONE
-                binding.invoicesContainerHome.visibility = View.VISIBLE
-            }
-        }
-
-        collectLatestLifecycleFlow(viewModel.isTollHistoryEmpty) { isEmpty ->
-            if (isEmpty) {
-                binding.noToolHistory.visibility = View.VISIBLE
-            } else {
-                binding.noToolHistory.visibility = View.GONE
-            }
-        }
-
         collectLatestLifecycleFlow(viewModel.homeTollHistory) { tollHistory ->
             homePassageAdapter.submitList(tollHistory)
         }
@@ -129,7 +110,11 @@ class HomeFragment : Fragment() {
     private fun handleHomeDataResult(result: SubmitResult<HomeWithDetails>) {
         when (result) {
             is SubmitResult.Loading -> binding.progBar.visibility = View.VISIBLE
-            is SubmitResult.Success -> handleSuccess(result)
+            is SubmitResult.Success -> {
+                handleSuccess(result)
+                binding.progBar.visibility = View.GONE
+                binding.linearHomeContainer?.visibility = View.VISIBLE
+            }
             is SubmitResult.Empty -> {}
             is SubmitResult.FailureNoConnection -> showNoInternetDialog()
             is SubmitResult.FailureServerError -> showErrorMessage(getString(R.string.server_error_msg))
@@ -143,10 +128,23 @@ class HomeFragment : Fragment() {
 
     private fun handleSuccess(result: SubmitResult.Success<HomeWithDetails>) {
         result.data.home.displayName?.let { viewModel.loadProfileImage(it) }
-
-        val invoiceDetails = result.data.invoice.flatMap { it.invoiceDetails }
-        totalCurrencyAdapter.submitList(invoiceDetails)
-        binding.progBar.visibility = View.GONE
+        val invoiceDetails = result.data.invoice
+        if (invoiceDetails.isNotEmpty()){
+            val invoice = invoiceDetails.flatMap { it.invoiceDetails }
+            totalCurrencyAdapter.submitList(invoice)
+            binding.noInvoices.visibility = View.GONE
+            binding.invoicesContainerHome.visibility = View.VISIBLE
+        } else {
+            binding.noInvoices.visibility = View.VISIBLE
+            binding.invoicesContainerHome.visibility = View.GONE
+            binding.noInvoices.visibility = View.VISIBLE
+        }
+        val tollHistory = result.data.tollHistory
+        if (tollHistory.isNotEmpty()) {
+            binding.noToolHistory.visibility = View.GONE
+        } else {
+            binding.noToolHistory.visibility = View.VISIBLE
+        }
     }
 
     private fun showErrorMessage(message: String) {

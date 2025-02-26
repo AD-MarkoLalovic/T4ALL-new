@@ -39,12 +39,6 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
     private val _homeCards = MutableStateFlow<List<HomeCardsEntity>?>(null)
     val homeCards: StateFlow<List<HomeCardsEntity>?> get() = _homeCards
 
-    private val _isTollHistoryEmpty = MutableStateFlow(false)
-    val isTollHistoryEmpty: StateFlow<Boolean> get() = _isTollHistoryEmpty
-
-    private val _isInvoiceEmpty = MutableStateFlow(false)
-    val isInvoiceEmpty: StateFlow<Boolean> get() = _isInvoiceEmpty
-
 
     fun fetchHomeData() {
         viewModelScope.launch {
@@ -124,8 +118,6 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
     }
 
     private fun updateHomeData(homeEntity: HomeWithDetails) {
-        _isTollHistoryEmpty.value = homeEntity.tollHistory.isEmpty()
-        _isInvoiceEmpty.value = homeEntity.invoice.isEmpty()
         _homeDetails.value = homeEntity
         _homeTollHistory.value = homeEntity.toUITollHistoryList()
         _homeData.value = SubmitResult.Success(homeEntity)
