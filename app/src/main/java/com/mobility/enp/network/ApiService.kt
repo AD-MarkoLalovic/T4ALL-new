@@ -1,7 +1,6 @@
 package com.mobility.enp.network
 
 import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
-import com.mobility.enp.data.model.api_home_page.homedata.HomeScreenData
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
@@ -55,11 +54,6 @@ interface ApiService {
     @POST("/api/v1/logout")
     fun postLogoutUser(
     ): Call<HomePageFcmTokenResponse>
-
-    @GET("/api/v1/home")
-    fun getUserHomeData(
-        @Query(value = "lang") language: String
-    ): Call<HomeScreenData>
 
     //new api for home
     @GET("/api/v1/home")

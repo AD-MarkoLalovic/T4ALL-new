@@ -7,10 +7,8 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
-import com.mobility.enp.data.model.api_home_page.homedata.HomeScreenData
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
@@ -23,10 +21,6 @@ import com.mobility.enp.data.model.api_tags.PostLostTag
 import com.mobility.enp.data.model.api_tags.TagsResponse
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
-import com.mobility.enp.data.model.cards.response.CardsResponse
-import com.mobility.enp.data.model.cardsweb.CardWebModel
-import com.mobility.enp.data.model.countries.CountriesModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
 import com.mobility.enp.data.model.login.CustomerSupport
@@ -43,8 +37,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
 import retrofit2.Response
-import java.io.IOException
-import java.net.SocketTimeoutException
 
 object Repository {
 
@@ -101,6 +93,7 @@ object Repository {
 
         })
     }
+
 
     //updated
     fun postFcmToken(

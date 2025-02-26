@@ -66,8 +66,32 @@ class BasicInfoViewModel(val repository: UserRepository) : ViewModel() {
                     is NetworkError.NoConnection -> {
                         _basicInfoUI.value = SubmitResult.FailureNoConnection
                     }
+
                     is NetworkError.ApiError -> {
-                        _basicInfoUI.value = SubmitResult.FailureApiError(error.errorResponse.message!!)
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN BasicInfoViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                _basicInfoUI.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _basicInfoUI.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(
+                                    "API_TOKEN BasicInfoViewModel",
+                                    "BasicInfoViewModel api error ${error.errorResponse.message}"
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -102,8 +126,32 @@ class BasicInfoViewModel(val repository: UserRepository) : ViewModel() {
                     is NetworkError.NoConnection -> {
                         _updateBasicInfoUI.value = SubmitResult.FailureNoConnection
                     }
+
                     is NetworkError.ApiError -> {
-                        _updateBasicInfoUI.value = SubmitResult.FailureApiError(error.errorResponse.message!!)
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN BasicInfoViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                _updateBasicInfoUI.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _updateBasicInfoUI.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(
+                                    "API_TOKEN BasicInfoViewModel",
+                                    "BasicInfoViewModel api error ${error.errorResponse.message}"
+                                )
+                            }
+                        }
                     }
                 }
             }

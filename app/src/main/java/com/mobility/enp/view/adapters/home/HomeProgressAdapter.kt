@@ -3,7 +3,6 @@ package com.mobility.enp.view.adapters.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mobility.enp.R
 import com.mobility.enp.databinding.CardProgressBarBinding
 
@@ -14,20 +13,22 @@ class HomeProgressAdapter(val total: Int) :
 
     fun setCurrentDot(position: Int) {
         if (position != checkedPosition && position != -1) {
+            val previousPosition = checkedPosition
             checkedPosition = position
-            notifyDataSetChanged()
+            notifyItemChanged(previousPosition)
+            notifyItemChanged(checkedPosition)
         }
     }
 
+
     inner class HomeProgressAdapterViewHolder(val binding: CardProgressBarBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind(currentPosition: Int) {
-            if (checkedPosition == currentPosition) {
-                Glide.with(binding.root.context).load(R.drawable.dot_checked).into(binding.dot)
-            } else {
-                Glide.with(binding.root.context).load(R.drawable.dot_unchecked).into(binding.dot)
-            }
+            val drawable = if (checkedPosition == currentPosition) R.drawable.dot_checked else R.drawable.dot_unchecked
+            binding.dot.setImageResource(drawable)
         }
+
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): HomeProgressAdapterViewHolder {
