@@ -113,7 +113,7 @@ class HomeFragment : Fragment() {
             is SubmitResult.Success -> {
                 handleSuccess(result)
                 binding.progBar.visibility = View.GONE
-                binding.linearHomeContainer?.visibility = View.VISIBLE
+                binding.linearHomeContainer.visibility = View.VISIBLE
             }
             is SubmitResult.Empty -> {}
             is SubmitResult.FailureNoConnection -> showNoInternetDialog()
