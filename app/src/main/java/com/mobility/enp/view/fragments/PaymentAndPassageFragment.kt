@@ -346,7 +346,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun internetReconnectMethod() {
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
 
             val bundle = Bundle().apply {
                 putString(getString(R.string.title), getString(R.string.no_connection_title))
