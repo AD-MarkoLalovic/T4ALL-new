@@ -9,7 +9,6 @@ import androidx.room.TypeConverters
 import com.mobility.enp.Config
 import com.mobility.enp.data.model.IntroPageStatus
 import com.mobility.enp.data.model.ProfileImage
-import com.mobility.enp.data.model.api_home_page.homedata.Promotion
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.basic_information.entity.BasicInfoEntity
 import com.mobility.enp.data.model.api_my_profile.refund_request.entity.DataRefundRequestEntity
@@ -45,7 +44,6 @@ import com.mobility.enp.data.room.api_related_daos.HomeScreenDao
 import com.mobility.enp.data.room.api_related_daos.IntroPageStatusDao
 import com.mobility.enp.data.room.api_related_daos.MyInvoicesDao
 import com.mobility.enp.data.room.api_related_daos.ProfileImageDao
-import com.mobility.enp.data.room.api_related_daos.PromotionsDao
 import com.mobility.enp.data.room.api_related_daos.RefundRequestDao
 import com.mobility.enp.data.room.api_related_daos.TagsRefundRequestDao
 import com.mobility.enp.data.room.notification.NotificationDao
@@ -55,9 +53,9 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [UserLoginResponseRoomTable::class, FcmToken::class, UserLanguage::class, NotificationModel::class, IndexData::class, ToolHistoryListing::class,
-        IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, Promotion::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
+        IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class, HomeEntity::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class, HomeCardsEntity::class, AddedCardsEntity::class],
-    version = 190,
+    version = 193,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -73,7 +71,6 @@ abstract class DRoom : RoomDatabase() {
     abstract fun profileImageDao(): ProfileImageDao
     abstract fun myInvoicesDao(): MyInvoicesDao
     abstract fun notificationDao(): NotificationDao
-    abstract fun promotionsDao(): PromotionsDao
     abstract fun lastUserDao(): LastUserDao // dont delete this on logout
     abstract fun refundRequestDao(): RefundRequestDao
     abstract fun csvTableDao(): CsvDao
@@ -132,7 +129,6 @@ abstract class DRoom : RoomDatabase() {
         toolListingDao().deleteData()
         myInvoicesDao().deleteDataMonthlyInvoices()
         pdfDao().deleteData()
-        promotionsDao().deleteAllPromotions()
         refundRequestDao().deleteRefundRequests()
         tagsRefundRequest().deleteTagsRefundRequest()
         basicInfoDao().deleteBasicInfo()

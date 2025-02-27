@@ -8,6 +8,7 @@ data class HomeEntity(
     @PrimaryKey val id: Int = 1,
     val firstName: String?,
     val lastName: String?,
-    val displayName: String?,
-    val customerType: Int?
+    val displayName: String,
+    val customerType: Int,
+    val portalKey: String?
 )

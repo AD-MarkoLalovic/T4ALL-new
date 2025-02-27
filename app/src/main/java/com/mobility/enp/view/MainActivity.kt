@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -149,38 +148,6 @@ class MainActivity : AppCompatActivity() {
 
             context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
 
-            setStringTranslations(context)
-        }
-
-        private fun setStringTranslations(context: Context) {  // fixes stored room data translations
-            CoroutineScope(Dispatchers.IO).launch {
-                val database = DRoom.getRoomInstance(context)
-                val promotions = database.promotionsDao().getPromotionsList()
-
-                for (promotion in promotions) {
-                    when (promotion.countryCode) {
-                        "RS" -> {
-                            promotion.title = context.getString(R.string.serbian_passage)
-                            promotion.description =
-                                context.getString(R.string.tag_device_payment_method_serbia)
-                        }
-
-                        "MK" -> {
-                            promotion.title = context.getString(R.string.north_macedonian_passage)
-                            promotion.description =
-                                context.getString(R.string.tag_device_payment_method_north_macedonia)
-                        }
-
-                        "ME" -> {
-                            promotion.title = context.getString(R.string.montenegro_passage)
-                            promotion.description =
-                                context.getString(R.string.tag_device_payment_method_montenegro)
-                        }
-                    }
-                }
-
-                database.promotionsDao().upsertPromotion(promotions)
-            }
         }
 
         fun logoutOnInvalidToken(context: Context, navController: NavController) {
