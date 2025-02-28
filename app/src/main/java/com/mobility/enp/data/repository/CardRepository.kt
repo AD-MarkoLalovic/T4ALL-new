@@ -107,4 +107,8 @@ class CardRepository(database: DRoom, context: Context) : BaseRepository(databas
         }
     }
 
+    fun isNetAvailable(): Boolean {
+        return isNetworkAvailable()
+    }
+
 }

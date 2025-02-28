@@ -22,7 +22,6 @@ import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.cards.response.Country
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.databinding.FragmentPaymentAndPassageBinding
-import com.mobility.enp.network.Repository
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
@@ -33,6 +32,7 @@ import com.mobility.enp.view.dialogs.LostTagDialog
 import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -316,7 +316,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             binding.txNoCards.visibility = View.GONE
             binding.rvCreditCard.visibility = View.VISIBLE
         }
-
     }
 
     private fun setListener() {
@@ -346,31 +345,29 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun internetReconnectMethod() {
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
 
-            val bundle = Bundle().apply {
-                putString(getString(R.string.title), getString(R.string.no_connection_title))
-                putString(
-                    getString(R.string.subtitle),
-                    getString(R.string.please_connect_to_the_internet)
-                )
+            withContext(Dispatchers.Main) {
+                val bundle = Bundle().apply {
+                    putString(getString(R.string.title), getString(R.string.no_connection_title))
+                    putString(
+                        getString(R.string.subtitle),
+                        getString(R.string.please_connect_to_the_internet)
+                    )
+                }
+
+                findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
+
+                val binding = (activity as MainActivity).binding
+                MainActivity.showSnackMessage(getString(R.string.checking_for_connection), binding)
             }
 
-            findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
-
-            val binding = (activity as MainActivity).binding
-            MainActivity.showSnackMessage(getString(R.string.checking_for_connection), binding)
-
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                context?.let {
-                    while (true) {
-                        if (Repository.isNetworkAvailable(it)) {
-                            triggerUpdate()
-                            break
-                        } else {
-                            delay(1000L)
-                        }
-                    }
+            while (isActive && isAdded) {
+                if (viewModel.isInternetAvailable()) {
+                    triggerUpdate()
+                    break
+                } else {
+                    delay(3000L)
                 }
             }
         }
