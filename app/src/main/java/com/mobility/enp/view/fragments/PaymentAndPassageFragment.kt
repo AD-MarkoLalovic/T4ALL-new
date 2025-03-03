@@ -461,7 +461,9 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 isButtonEnabled = false
                 selectedCountry = "All"
                 adapter.updateListCards(allCards)
-                binding.txNoCards.visibility = if (allCards.isEmpty()) View.VISIBLE else View.GONE
+                if (viewModel.getCardDataFlow.value != SubmitResult.Loading){
+                    binding.txNoCards.visibility = if (allCards.isEmpty()) View.VISIBLE else View.GONE
+                }
                 binding.rvCreditCard.visibility =
                     if (allCards.isEmpty()) View.GONE else View.VISIBLE
                 binding.termsConditionsCheckmark.isChecked = false
