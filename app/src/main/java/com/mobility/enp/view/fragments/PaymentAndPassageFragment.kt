@@ -47,7 +47,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private lateinit var cardsCountryAdapter: CardsCountryAdapter
     private var allCards: List<Card> = emptyList()
     private var selectedCountry = "All"
-    private var isButtonEnabled = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -322,12 +321,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         binding.termsConditionsCheckmark.setOnCheckedChangeListener { _, isChecked ->
             when (isChecked) {
                 true -> {
-                    isButtonEnabled = true
                     makeCardClickable(true)
                 }
 
                 false -> {
-                    isButtonEnabled = false
                     makeCardClickable(false)
                 }
             }
@@ -416,12 +413,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         when (country) {
             "RS" -> {
                 selectedCountry = "RS"
+                binding.termsConditionsCheckmark.isChecked = false
                 filterCardsByCountry("RS")
                 setBlockVisibility(false)
                 setCardVisibility(true)
                 makeCardClickable(true)
-                isButtonEnabled = true
-                binding.termsConditionsCheckmark.isChecked = false
             }
 
             "MK" -> {
@@ -430,7 +426,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
-                isButtonEnabled = false
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
@@ -440,7 +435,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
-                isButtonEnabled = false
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
@@ -450,7 +444,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
-                isButtonEnabled = false
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
@@ -458,7 +451,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(false)
                 setCardVisibility(false)
                 makeCardClickable(false)
-                isButtonEnabled = false
                 selectedCountry = "All"
                 adapter.updateListCards(allCards)
                 if (viewModel.getCardDataFlow.value != SubmitResult.Loading){
@@ -599,7 +591,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
     override fun onResume() {
         super.onResume()
-        isButtonEnabled = false
         binding.termsConditionsCheckmark.isChecked = false
         setCountryListener(selectedCountry)
     }
