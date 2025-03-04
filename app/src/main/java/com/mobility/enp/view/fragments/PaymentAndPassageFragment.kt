@@ -214,11 +214,13 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private fun processCardResponse(cardWebResponse: CardWebModel) {
         val paymentAndPassage: CardsResponse = viewModel.objectTransformer(cardWebResponse)
 
-        paymentAndPassage.let {
+        paymentAndPassage.let { it ->
             val sortedCards =
                 it.data?.sortedWith(compareByDescending<Card> { card -> card.defaultCard })
 
             allCards = sortedCards ?: emptyList()
+
+//            binding.tvTerms.let { view -> view.updateColorBasedOnFranshizer(view) }
 
             if (selectedCountry == "All") {
                 toggleNoCardsMessage(allCards.isEmpty())
@@ -464,8 +466,9 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 isButtonEnabled = false
                 selectedCountry = "All"
                 adapter.updateListCards(allCards)
-                if (viewModel.getCardDataFlow.value != SubmitResult.Loading){
-                    binding.txNoCards.visibility = if (allCards.isEmpty()) View.VISIBLE else View.GONE
+                if (viewModel.getCardDataFlow.value != SubmitResult.Loading) {
+                    binding.txNoCards.visibility =
+                        if (allCards.isEmpty()) View.VISIBLE else View.GONE
                 }
                 binding.rvCreditCard.visibility =
                     if (allCards.isEmpty()) View.GONE else View.VISIBLE
