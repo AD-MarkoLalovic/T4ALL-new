@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,6 +32,7 @@ import com.mobility.enp.view.adapters.home.HomePassageAdapter
 import com.mobility.enp.view.adapters.home.HomeProgressAdapter
 import com.mobility.enp.view.adapters.home.HomePromotionsAdapter
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.HomeViewModel
 import java.io.File
 
@@ -41,6 +43,7 @@ class HomeFragment : Fragment() {
     private lateinit var totalCurrencyAdapter: TotalCurrencyAdapter
     private lateinit var homePassageAdapter: HomePassageAdapter
 
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
 
     override fun onCreateView(

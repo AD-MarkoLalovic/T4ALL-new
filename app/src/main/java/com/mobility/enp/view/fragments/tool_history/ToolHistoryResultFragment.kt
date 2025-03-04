@@ -24,6 +24,7 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.result.HistoryContentPagingAdapter
 import com.mobility.enp.view.adapters.tool_history.result.HistoryResultAdapter
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +35,7 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
 
     private lateinit var binding: FragmentToolHistorySearchResultBinding
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
 
     companion object {

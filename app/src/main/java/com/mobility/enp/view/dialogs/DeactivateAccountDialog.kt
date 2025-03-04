@@ -1,8 +1,6 @@
 package com.mobility.enp.view.dialogs
 
-import android.content.res.Resources
 import android.graphics.Color
-import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
@@ -20,12 +19,14 @@ import com.mobility.enp.databinding.DeactivateDialogBinding
 import com.mobility.enp.util.Util
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.view.MainActivity
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.SupportViewModel
 
 class DeactivateAccountDialog : DialogFragment() {
 
     private var _binding: DeactivateDialogBinding? = null
     private val binding: DeactivateDialogBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: SupportViewModel by viewModels()
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
 
@@ -79,8 +80,10 @@ class DeactivateAccountDialog : DialogFragment() {
 
     private fun openSuccessDialog() {
         val generalDialog =
-            GeneralMessageDialog(requireContext().getString(R.string.support_successful_mail),
-                requireContext().getString(R.string.support_successful_massage))
+            GeneralMessageDialog(
+                requireContext().getString(R.string.support_successful_mail),
+                requireContext().getString(R.string.support_successful_massage)
+            )
         generalDialog.show(childFragmentManager, "GeneralDialogSupport")
     }
 

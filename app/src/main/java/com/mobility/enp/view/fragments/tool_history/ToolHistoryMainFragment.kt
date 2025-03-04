@@ -25,6 +25,7 @@ import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingPassageAdapter
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +41,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
     private var _binding: FragmentPassageHistoryBinding? = null
     private val binding: FragmentPassageHistoryBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
 
     private lateinit var isInternetAvailable: MutableLiveData<Boolean>

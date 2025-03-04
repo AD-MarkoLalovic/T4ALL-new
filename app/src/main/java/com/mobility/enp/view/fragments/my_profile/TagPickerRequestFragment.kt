@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -24,11 +25,13 @@ import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.refund_request_adapters.RefundRequestTagPickerAdapter
 import com.mobility.enp.view.ui_models.BankUIModel
 import com.mobility.enp.view.ui_models.refund_request.TagsRefundRequestUIModel
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.TagPickerRequestViewModel
 import kotlinx.coroutines.launch
 
 class TagPickerRequestFragment : Fragment() {
 
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: TagPickerRequestViewModel by viewModels { TagPickerRequestViewModel.Factory }
     private var _binding: FragmentTagPickerRequestBinding? = null
     private val binding: FragmentTagPickerRequestBinding get() = _binding!!

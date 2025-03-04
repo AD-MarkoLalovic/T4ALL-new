@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +21,7 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.ui_models.BasicInfoUIModel
 import com.mobility.enp.viewmodel.BasicInfoViewModel
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,6 +30,7 @@ class BasicInformationFragment : Fragment() {
 
     private var _binding: FragmentBasicInformationBinding? = null
     private val binding: FragmentBasicInformationBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: BasicInfoViewModel by viewModels { BasicInfoViewModel.Factory }
 
     override fun onCreateView(

@@ -29,6 +29,7 @@ import com.mobility.enp.view.adapters.CardsCountryAdapter
 import com.mobility.enp.view.adapters.PaymentAndPassageAdapter
 import com.mobility.enp.view.dialogs.ConfirmRemovalCardDialog
 import com.mobility.enp.view.dialogs.LostTagDialog
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -42,6 +43,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private var _binding: FragmentPaymentAndPassageBinding? = null
     private val binding: FragmentPaymentAndPassageBinding get() = _binding!!
 
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: PaymentAndPassageViewModel by activityViewModels { PaymentAndPassageViewModel.Factory }
     private lateinit var adapter: PaymentAndPassageAdapter
     private lateinit var cardsCountryAdapter: CardsCountryAdapter

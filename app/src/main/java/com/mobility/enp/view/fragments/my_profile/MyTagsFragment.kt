@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -24,6 +25,7 @@ import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tags.AdapterTagFilterType
 import com.mobility.enp.view.adapters.tags.MyTagsAdapter
 import com.mobility.enp.view.dialogs.LostTagDialog
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyTagsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -34,6 +36,7 @@ class MyTagsFragment : Fragment(), AdapterTagFilterType.OnClick, MyTagsAdapter.O
 
     private var _binding: FragmentTagsBinding? = null
     private val binding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: MyTagsViewModel by viewModels()
 
     companion object {

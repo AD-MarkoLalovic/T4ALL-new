@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
@@ -18,10 +19,12 @@ import com.mobility.enp.network.Repository
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.GeneralMessageAddTag
 import com.mobility.enp.viewmodel.AddTagViewModel
+import com.mobility.enp.viewmodel.FranchiseViewModel
 
 class AddTagFragment : Fragment() {
 
     private lateinit var binding: FragmentAddTagBinding
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: AddTagViewModel by viewModels()
 
     private var data: MutableLiveData<LostTagResponse> = MutableLiveData()

@@ -7,4 +7,5 @@ class FranshizerRepository(
     database: DRoom,
     context: Context,
 ) : BaseRepository(database, context) {
+
 }

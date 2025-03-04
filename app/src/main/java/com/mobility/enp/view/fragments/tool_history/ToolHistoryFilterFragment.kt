@@ -23,6 +23,7 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.select.ToolHistoryTagsAdapter
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -33,6 +34,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
     private var _binding: FragmentToolHistorySearchQueryBinding? = null
     private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
 
     companion object {
