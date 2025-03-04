@@ -22,7 +22,6 @@ import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.cards.response.Country
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.databinding.FragmentPaymentAndPassageBinding
-import com.mobility.enp.network.Repository
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
@@ -33,6 +32,7 @@ import com.mobility.enp.view.dialogs.LostTagDialog
 import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -47,7 +47,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private lateinit var cardsCountryAdapter: CardsCountryAdapter
     private var allCards: List<Card> = emptyList()
     private var selectedCountry = "All"
-    private var isButtonEnabled = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -318,19 +317,16 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             binding.txNoCards.visibility = View.GONE
             binding.rvCreditCard.visibility = View.VISIBLE
         }
-
     }
 
     private fun setListener() {
         binding.termsConditionsCheckmark.setOnCheckedChangeListener { _, isChecked ->
             when (isChecked) {
                 true -> {
-                    isButtonEnabled = true
                     makeCardClickable(true)
                 }
 
                 false -> {
-                    isButtonEnabled = false
                     makeCardClickable(false)
                 }
             }
@@ -348,31 +344,29 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun internetReconnectMethod() {
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
 
-            val bundle = Bundle().apply {
-                putString(getString(R.string.title), getString(R.string.no_connection_title))
-                putString(
-                    getString(R.string.subtitle),
-                    getString(R.string.please_connect_to_the_internet)
-                )
+            withContext(Dispatchers.Main) {
+                val bundle = Bundle().apply {
+                    putString(getString(R.string.title), getString(R.string.no_connection_title))
+                    putString(
+                        getString(R.string.subtitle),
+                        getString(R.string.please_connect_to_the_internet)
+                    )
+                }
+
+                findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
+
+                val binding = (activity as MainActivity).binding
+                MainActivity.showSnackMessage(getString(R.string.checking_for_connection), binding)
             }
 
-            findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
-
-            val binding = (activity as MainActivity).binding
-            MainActivity.showSnackMessage(getString(R.string.checking_for_connection), binding)
-
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                context?.let {
-                    while (true) {
-                        if (Repository.isNetworkAvailable(it)) {
-                            triggerUpdate()
-                            break
-                        } else {
-                            delay(1000L)
-                        }
-                    }
+            while (isActive && isAdded) {
+                if (viewModel.isInternetAvailable()) {
+                    triggerUpdate()
+                    break
+                } else {
+                    delay(3000L)
                 }
             }
         }
@@ -421,12 +415,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         when (country) {
             "RS" -> {
                 selectedCountry = "RS"
+                binding.termsConditionsCheckmark.isChecked = false
                 filterCardsByCountry("RS")
                 setBlockVisibility(false)
                 setCardVisibility(true)
                 makeCardClickable(true)
-                isButtonEnabled = true
-                binding.termsConditionsCheckmark.isChecked = false
             }
 
             "MK" -> {
@@ -435,7 +428,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
-                isButtonEnabled = false
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
@@ -445,7 +437,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
-                isButtonEnabled = false
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
@@ -455,7 +446,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
-                isButtonEnabled = false
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
@@ -463,7 +453,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(false)
                 setCardVisibility(false)
                 makeCardClickable(false)
-                isButtonEnabled = false
                 selectedCountry = "All"
                 adapter.updateListCards(allCards)
                 if (viewModel.getCardDataFlow.value != SubmitResult.Loading) {
@@ -605,7 +594,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
     override fun onResume() {
         super.onResume()
-        isButtonEnabled = false
         binding.termsConditionsCheckmark.isChecked = false
         setCountryListener(selectedCountry)
     }
