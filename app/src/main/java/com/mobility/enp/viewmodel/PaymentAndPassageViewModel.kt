@@ -190,4 +190,8 @@ class PaymentAndPassageViewModel(
         return repository.getUserTokenData()
     }
 
+    fun isInternetAvailable(): Boolean {
+        return repository.isNetAvailable()
+    }
+
 }

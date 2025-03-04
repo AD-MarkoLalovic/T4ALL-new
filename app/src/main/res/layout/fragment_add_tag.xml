@@ -161,7 +161,7 @@
         <View
             android:id="@+id/basicLine"
             android:layout_width="@dimen/dimens_0dp"
-            android:layout_height="@dimen/dimens_2dp"
+            android:layout_height="@dimen/dimens_1dp"
             android:layout_marginBottom="@dimen/dimens_8dp"
             android:background="@color/primary_light_light"
             app:layout_constraintBottom_toTopOf="@id/bttConfirmAddTag"

@@ -1,8 +1,6 @@
 package com.mobility.enp.view.dialogs
 
-import android.content.res.Resources
 import android.graphics.Color
-import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -47,6 +45,8 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         observerBanks()
 
         binding.cancelComplaintForm.setOnClickListener {
@@ -54,68 +54,61 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
         }
 
         binding.buttonConfirmComplaint.setOnClickListener {
-
-            val uniqueNumber = binding.uniqueNumbersSpinner.selectedItem.toString().trim()
-            val centerAccountNumber = binding.etCenterAccountNumber.text.toString().trim()
-            val rightAccountNumber = binding.etRightAccountNumber.text.toString().trim()
-
-
-            if (uniqueNumber.isEmpty() || centerAccountNumber.isEmpty() || rightAccountNumber.isEmpty()) {
-                showError(getString(R.string.enter_bank_account))
-            }
-
-            val selectedBankPosition = binding.bankSpinner.selectedItemPosition
-
-            if (selectedBankPosition == 0) {
-                showError(getString(R.string.enter_name_bank))
-            }
-
-            if (centerAccountNumber.length == 13 && rightAccountNumber.length == 2) {
-
-                if (binding.licencePlateVal.text.toString().isNotEmpty()
-                    && binding.reasonForComplaintVal.text.toString().isNotEmpty()
-                ) {
-
-                    if (binding.reasonForComplaintVal.text.toString().length > 10) {
-                        dialog?.dismiss()
-
-                        val complaintBody = ComplaintBody(
-                            id,
-                            binding.reasonForComplaintVal.text.toString(),
-                            selectedBankPosition,
-                            binding.licencePlateVal.text.toString(),
-                            uniqueNumber, centerAccountNumber, rightAccountNumber
-                        )
-
-                        onConfirmButton(complaintBody)
-
-                    } else {
-                        Toast.makeText(
-                            context,
-                            getString(R.string.complaint_min_length),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-
-                } else {
-                    Toast.makeText(
-                        context,
-                        getString(R.string.please_enter_all_required_data), Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-            } else {
-                showError(getString(R.string.invalid_account_number))
-            }
+            handleComplaintFormSubmission()
         }
 
         enableAccountInputs()
     }
 
+    private fun handleComplaintFormSubmission() {
+        val uniqueNumber = binding.uniqueNumbersSpinner.selectedItem.toString().trim()
+        val centerAccountNumber = binding.etCenterAccountNumber.text.toString().trim()
+        val rightAccountNumber = binding.etRightAccountNumber.text.toString().trim()
+
+        // Provera da li su uneti svi podaci
+        if (uniqueNumber.isEmpty() || centerAccountNumber.isEmpty() || rightAccountNumber.isEmpty()) {
+            showError(getString(R.string.enter_bank_account))
+            return
+        }
+
+        val selectedBankPosition = binding.bankSpinner.selectedItemPosition
+        if (selectedBankPosition == 0) {
+            showError(getString(R.string.enter_name_bank))
+            return
+        }
+
+        // Provera duzine brojeva računa
+        if (centerAccountNumber.length == 13 && rightAccountNumber.length == 2) {
+            if (binding.licencePlateVal.text.toString().isNotEmpty() &&
+                binding.reasonForComplaintVal.text.toString().isNotEmpty()
+            ) {
+                if (binding.reasonForComplaintVal.text.toString().length > 10) {
+                    dialog?.dismiss()
+
+                    val complaintBody = ComplaintBody(
+                        id,
+                        binding.reasonForComplaintVal.text.toString(),
+                        selectedBankPosition,
+                        binding.licencePlateVal.text.toString(),
+                        uniqueNumber, centerAccountNumber, rightAccountNumber
+                    )
+
+                    onConfirmButton(complaintBody)
+                } else {
+                    showError(getString(R.string.complaint_min_length))
+                }
+            } else {
+                showError(getString(R.string.please_enter_all_required_data))
+            }
+        } else {
+            showError(getString(R.string.invalid_account_number))
+        }
+    }
+
     override fun onStart() {
         super.onStart()
-        setDimensionsPercent(95)
+        isCancelable = false
+        setDimensionsPercent(95, 80)
     }
 
     private fun observerBanks() {
