@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +18,7 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
+import com.mobility.enp.BuildConfig
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
@@ -35,9 +35,6 @@ import com.mobility.enp.view.adapters.home.HomePromotionsAdapter
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.HomeViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 
 class HomeFragment : Fragment() {
@@ -66,7 +63,20 @@ class HomeFragment : Fragment() {
         setupObservers()
         setupClickListeners()
 
+        // test method for franchisers
+        setUpFranchisePicker()
+
         viewModel.fetchHomeData()
+    }
+
+    private fun setUpFranchisePicker() {  // for testing purposes only - remove in production
+        if (BuildConfig.DEBUG) {
+            binding.testFranchise.visibility = View.VISIBLE
+            binding.testFranchise.setOnClickListener {
+                val action = HomeFragmentDirections.actionGlobalFranchiseTestDialog()
+                findNavController().navigate(action)
+            }
+        }
     }
 
     private fun setupBinding() {
@@ -106,7 +116,7 @@ class HomeFragment : Fragment() {
             homePassageAdapter.submitList(tollHistory)
         }
 
-        franchiseViewModel.portalKey.observe(viewLifecycleOwner){ portalKey ->
+        franchiseViewModel.portalKey.observe(viewLifecycleOwner) { portalKey ->
             portalKey?.let {
                 Log.d("KEY", "portal key $portalKey")
             }

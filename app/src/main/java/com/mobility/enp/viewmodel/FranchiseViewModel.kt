@@ -41,6 +41,8 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
             homeEntity?.let {
                 repository.upsertHomeEntity(it)
             }
+
+            getPortalKey()
         }
     }
 
