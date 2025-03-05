@@ -232,7 +232,7 @@ class HomeFragment : Fragment() {
             }
         }
 
-        val adapter = HomePromotionsAdapter(filteredList, onItemClicked = {
+        homePromotionsAdapter = HomePromotionsAdapter(filteredList, onItemClicked = {
             findNavController().navigate(R.id.action_homeFragment_to_paymentAndPassageFragment)
         }, { delete ->
             binding.progBar.visibility = View.VISIBLE
