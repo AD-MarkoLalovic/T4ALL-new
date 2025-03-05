@@ -52,7 +52,8 @@ object Util {
             context.resources.getColor(R.color.franchiser_telekom_srbija_mtel, null),
             ContextCompat.getDrawable(context, R.drawable.telekom_srbija),
             ContextCompat.getDrawable(context, R.drawable.telekom_srbija_profile),
-            ContextCompat.getDrawable(context, R.drawable.telekom_logo),false
+            ContextCompat.getDrawable(context, R.drawable.telekom_logo), false,
+            ContextCompat.getColorStateList(context, R.color.bottom_nav_color_telekom)
         )
 
         map["a2ac8612-4b25-43e3-8017-fcf8ad0da0c4"] = FranchiseModel(
@@ -61,7 +62,8 @@ object Util {
             context.resources.getColor(R.color.franchiser_s_blue, null),
             ContextCompat.getDrawable(context, R.drawable.s_blue),
             ContextCompat.getDrawable(context, R.drawable.s_blue_profile),
-            ContextCompat.getDrawable(context, R.drawable.s_blue_logo),true
+            ContextCompat.getDrawable(context, R.drawable.s_blue_logo), true,
+            ContextCompat.getColorStateList(context, R.color.bottom_nav_color_s_blue)
 
         )
 
@@ -71,7 +73,9 @@ object Util {
             context.resources.getColor(R.color.franchiser_amss, null),
             ContextCompat.getDrawable(context, R.drawable.novi_amss),
             ContextCompat.getDrawable(context, R.drawable.novi_amss_profile),
-            ContextCompat.getDrawable(context, R.drawable.amss_logo),true
+            ContextCompat.getDrawable(context, R.drawable.amss_logo), true,
+            ContextCompat.getColorStateList(context, R.color.bottom_nav_color_amss)
+
         )
 
         map["d47b35d1-bb44-4618-9b31-cf7e961595ec"] = FranchiseModel(
@@ -80,7 +84,8 @@ object Util {
             context.resources.getColor(R.color.franchiser_tehnomania, null),
             ContextCompat.getDrawable(context, R.drawable.tehnomanija),
             ContextCompat.getDrawable(context, R.drawable.tehnomanija_profile),
-            ContextCompat.getDrawable(context, R.drawable.tehnomanija_logo),true
+            ContextCompat.getDrawable(context, R.drawable.tehnomanija_logo), true,
+            ContextCompat.getColorStateList(context, R.color.bottom_nav_color_tehnomania)
         )
 
         return map[portalKey]

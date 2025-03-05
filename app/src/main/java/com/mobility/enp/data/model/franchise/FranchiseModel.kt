@@ -1,5 +1,6 @@
 package com.mobility.enp.data.model.franchise
 
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 
 data class FranchiseModel(
@@ -9,5 +10,6 @@ data class FranchiseModel(
     val franchiseHomeBackgroundLocation: Drawable?,
     val franchiseProfileResource: Drawable?,
     val franchiseLogoToolbar:Drawable?,
-    val enableBackgroundColorOnToolBar:Boolean
+    val enableBackgroundColorOnToolBar:Boolean,
+    val navHomeDrawable : ColorStateList?
 )
