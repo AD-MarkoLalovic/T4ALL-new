@@ -30,7 +30,6 @@ import com.mobility.enp.view.adapters.TotalCurrencyAdapter
 import com.mobility.enp.view.adapters.home.HomePassageAdapter
 import com.mobility.enp.view.adapters.home.HomeProgressAdapter
 import com.mobility.enp.view.adapters.home.HomePromotionsAdapter
-import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.HomeViewModel
 import java.io.File
 
@@ -115,6 +114,7 @@ class HomeFragment : Fragment() {
                 binding.progBar.visibility = View.GONE
                 binding.linearHomeContainer.visibility = View.VISIBLE
             }
+
             is SubmitResult.Empty -> {}
             is SubmitResult.FailureNoConnection -> showNoInternetDialog()
             is SubmitResult.FailureServerError -> showErrorMessage(getString(R.string.server_error_msg))
@@ -129,7 +129,7 @@ class HomeFragment : Fragment() {
     private fun handleSuccess(result: SubmitResult.Success<HomeWithDetails>) {
         result.data.home.displayName.let { viewModel.loadProfileImage(it) }
         val invoiceDetails = result.data.invoice
-        if (invoiceDetails.isNotEmpty()){
+        if (invoiceDetails.isNotEmpty()) {
             val invoice = invoiceDetails.flatMap { it.invoiceDetails }
             totalCurrencyAdapter.submitList(invoice)
             binding.noInvoices.visibility = View.GONE
@@ -196,18 +196,8 @@ class HomeFragment : Fragment() {
             }
         }
 
-        val isSerbiaAdded = { cardsList.any { it.code == "RS" } }
-
-        val adapter = HomePromotionsAdapter(filteredList, { promotionCard ->
-            if (isSerbiaAdded() && promotionCard.code != "RS") {
-                showSerbiaRequiredDialog()
-            } else {
-                val action = HomeFragmentDirections.actionHomeFragmentToCardFragment(
-                    promotionCard.code
-                )
-                findNavController().navigate(action)
-            }
-
+        val adapter = HomePromotionsAdapter(filteredList, onItemClicked = {
+            findNavController().navigate(R.id.action_homeFragment_to_paymentAndPassageFragment)
         }, { delete ->
             binding.progBar.visibility = View.VISIBLE
             viewModel.updateDeleteHomeCard(delete)
@@ -239,14 +229,6 @@ class HomeFragment : Fragment() {
         } else {
             Log.d("HomeFragment", "Filtered list is empty, no items to display")
         }
-    }
-
-    private fun showSerbiaRequiredDialog() {
-        val dialog = GeneralMessageDialog(
-            getString(R.string.notification),
-            getString(R.string.first_add_card_serbia)
-        )
-        dialog.show(parentFragmentManager, "HomeNoAddCardDialog")
     }
 
     override fun onDestroyView() {
