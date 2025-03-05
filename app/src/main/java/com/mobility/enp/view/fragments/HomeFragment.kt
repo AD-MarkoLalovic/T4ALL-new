@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,9 @@ import com.mobility.enp.view.adapters.home.HomePromotionsAdapter
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.HomeViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class HomeFragment : Fragment() {
@@ -102,6 +106,12 @@ class HomeFragment : Fragment() {
             homePassageAdapter.submitList(tollHistory)
         }
 
+        franchiseViewModel.portalKey.observe(viewLifecycleOwner){ portalKey ->
+            portalKey?.let {
+                Log.d("KEY", "portal key $portalKey")
+            }
+        }
+
     }
 
     private fun setupClickListeners() {
@@ -110,7 +120,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun handleHomeDataResult(result: SubmitResult<HomeWithDetails>) {
+    private fun handleHomeDataResult(result: SubmitResult<HomeWithDetails>) {  // data save in room directly on api response / model returned combined
         when (result) {
             is SubmitResult.Loading -> binding.progBar.visibility = View.VISIBLE
             is SubmitResult.Success -> {
@@ -118,6 +128,7 @@ class HomeFragment : Fragment() {
                 binding.progBar.visibility = View.GONE
                 binding.linearHomeContainer.visibility = View.VISIBLE
             }
+
             is SubmitResult.Empty -> {}
             is SubmitResult.FailureNoConnection -> showNoInternetDialog()
             is SubmitResult.FailureServerError -> showErrorMessage(getString(R.string.server_error_msg))
@@ -132,7 +143,7 @@ class HomeFragment : Fragment() {
     private fun handleSuccess(result: SubmitResult.Success<HomeWithDetails>) {
         result.data.home.displayName.let { viewModel.loadProfileImage(it) }
         val invoiceDetails = result.data.invoice
-        if (invoiceDetails.isNotEmpty()){
+        if (invoiceDetails.isNotEmpty()) {
             val invoice = invoiceDetails.flatMap { it.invoiceDetails }
             totalCurrencyAdapter.submitList(invoice)
             binding.noInvoices.visibility = View.GONE
@@ -148,6 +159,8 @@ class HomeFragment : Fragment() {
         } else {
             binding.noToolHistory.visibility = View.VISIBLE
         }
+
+        franchiseViewModel.getPortalKey()
     }
 
     private fun showErrorMessage(message: String) {

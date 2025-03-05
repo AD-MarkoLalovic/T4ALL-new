@@ -1,0 +1,24 @@
+package com.mobility.enp.data.repository
+
+import android.content.Context
+import com.mobility.enp.data.model.home.entity.HomeEntity
+import com.mobility.enp.data.room.database.DRoom
+
+class FranchiserRepository(
+    database: DRoom,
+    context: Context,
+) : BaseRepository(database, context) {
+    private val homeDao = database.homeScreenDao()
+
+    suspend fun getPortalKey(): String? {
+        return homeDao.getHomeData()?.portalKey
+    }
+
+    suspend fun getHomeEntity(): HomeEntity? {
+        return homeDao.getHomeData()
+    }
+
+    suspend fun upsertHomeEntity(homeEntity: HomeEntity) {
+        homeDao.upsertHome(homeEntity)
+    }
+}

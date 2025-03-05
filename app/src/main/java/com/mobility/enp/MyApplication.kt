@@ -3,7 +3,7 @@ package com.mobility.enp
 import android.app.Application
 import com.mobility.enp.data.repository.AuthRepository
 import com.mobility.enp.data.repository.CardRepository
-import com.mobility.enp.data.repository.FranshizerRepository
+import com.mobility.enp.data.repository.FranchiserRepository
 import com.mobility.enp.data.repository.HomeRepository
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.repository.UserRepository
@@ -32,8 +32,8 @@ class MyApplication : Application() {
         PassageHistoryRepository(database, this)
     }
 
-    val franchiseRepository: FranshizerRepository by lazy {
-        FranshizerRepository(database, this)
+    val franchiseRepository: FranchiserRepository by lazy {
+        FranchiserRepository(database, this)
     }
 
 }
