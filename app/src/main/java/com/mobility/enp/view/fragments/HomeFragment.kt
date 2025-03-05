@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -43,6 +44,7 @@ class HomeFragment : Fragment() {
     private val binding: FragmentHomeWelcomeBinding get() = _binding!!
     private lateinit var totalCurrencyAdapter: TotalCurrencyAdapter
     private lateinit var homePassageAdapter: HomePassageAdapter
+    private lateinit var homePromotionsAdapter :HomePromotionsAdapter
 
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
@@ -64,8 +66,6 @@ class HomeFragment : Fragment() {
         setupClickListeners()
 
         // test method for franchisers
-        setUpFranchisePicker()
-
         viewModel.fetchHomeData()
     }
 
@@ -119,6 +119,14 @@ class HomeFragment : Fragment() {
         franchiseViewModel.portalKey.observe(viewLifecycleOwner) { portalKey ->
             portalKey?.let {
                 Log.d("KEY", "portal key $portalKey")
+                val franchiseModel = Util.fransizerID(portalKey,requireContext())
+                franchiseModel?.let { data ->
+                    binding.cardViewAccountHomeScreen.backgroundTintList = ColorStateList.valueOf(data.franchisePrimaryColor)
+                    binding.constraintLayoutInCard.background = data.franchiseHomeBackgroundLocation
+                    if (::homePromotionsAdapter.isInitialized){
+                        homePromotionsAdapter.updateColor(franchiseModel)
+                    }
+                }
             }
         }
 
@@ -137,6 +145,9 @@ class HomeFragment : Fragment() {
                 handleSuccess(result)
                 binding.progBar.visibility = View.GONE
                 binding.linearHomeContainer.visibility = View.VISIBLE
+
+                setUpFranchisePicker()
+                franchiseViewModel.getPortalKey()
             }
 
             is SubmitResult.Empty -> {}
@@ -170,7 +181,6 @@ class HomeFragment : Fragment() {
             binding.noToolHistory.visibility = View.VISIBLE
         }
 
-        franchiseViewModel.getPortalKey()
     }
 
     private fun showErrorMessage(message: String) {
@@ -224,7 +234,7 @@ class HomeFragment : Fragment() {
 
         val isSerbiaAdded = { cardsList.any { it.code == "RS" } }
 
-        val adapter = HomePromotionsAdapter(filteredList, { promotionCard ->
+        homePromotionsAdapter = HomePromotionsAdapter(filteredList, { promotionCard ->
             if (isSerbiaAdded() && promotionCard.code != "RS") {
                 showSerbiaRequiredDialog()
             } else {
@@ -244,7 +254,7 @@ class HomeFragment : Fragment() {
             val adapterProgress = HomeProgressAdapter(filteredList.size)
 
             binding.cyclerPromotions.visibility = View.VISIBLE
-            binding.cyclerPromotions.adapter = adapter
+            binding.cyclerPromotions.adapter = homePromotionsAdapter
 
             binding.cyclerProgress.visibility = View.VISIBLE
             binding.cyclerProgress.adapter = adapterProgress
