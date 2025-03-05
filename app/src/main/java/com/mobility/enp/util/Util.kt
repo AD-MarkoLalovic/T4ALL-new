@@ -51,7 +51,8 @@ object Util {
             "Telekom portal",
             context.resources.getColor(R.color.franchiser_telekom_srbija_mtel, null),
             ContextCompat.getDrawable(context, R.drawable.telekom_srbija),
-            ContextCompat.getDrawable(context, R.drawable.telekom_srbija_profile)
+            ContextCompat.getDrawable(context, R.drawable.telekom_srbija_profile),
+            ContextCompat.getDrawable(context, R.drawable.telekom_logo),false
         )
 
         map["a2ac8612-4b25-43e3-8017-fcf8ad0da0c4"] = FranchiseModel(
@@ -59,7 +60,9 @@ object Util {
             "S-blue",
             context.resources.getColor(R.color.franchiser_s_blue, null),
             ContextCompat.getDrawable(context, R.drawable.s_blue),
-            ContextCompat.getDrawable(context, R.drawable.s_blue_profile)
+            ContextCompat.getDrawable(context, R.drawable.s_blue_profile),
+            ContextCompat.getDrawable(context, R.drawable.s_blue_logo),true
+
         )
 
         map["9aa3e972-d84b-40df-b35d-d14a229c03e3"] = FranchiseModel(
@@ -67,7 +70,8 @@ object Util {
             "AMSS portal",
             context.resources.getColor(R.color.franchiser_amss, null),
             ContextCompat.getDrawable(context, R.drawable.novi_amss),
-            ContextCompat.getDrawable(context, R.drawable.novi_amss_profile)
+            ContextCompat.getDrawable(context, R.drawable.novi_amss_profile),
+            ContextCompat.getDrawable(context, R.drawable.amss_logo),true
         )
 
         map["d47b35d1-bb44-4618-9b31-cf7e961595ec"] = FranchiseModel(
@@ -75,7 +79,8 @@ object Util {
             "Tehnomanija portal",
             context.resources.getColor(R.color.franchiser_tehnomania, null),
             ContextCompat.getDrawable(context, R.drawable.tehnomanija),
-            ContextCompat.getDrawable(context, R.drawable.tehnomanija_profile)
+            ContextCompat.getDrawable(context, R.drawable.tehnomanija_profile),
+            ContextCompat.getDrawable(context, R.drawable.tehnomanija_logo),true
         )
 
         return map[portalKey]

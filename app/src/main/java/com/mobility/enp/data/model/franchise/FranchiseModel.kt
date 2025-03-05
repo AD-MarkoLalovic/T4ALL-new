@@ -7,5 +7,7 @@ data class FranchiseModel(
     val franchiseName: String,
     val franchisePrimaryColor: Int,
     val franchiseHomeBackgroundLocation: Drawable?,
-    val franchiseProfileResource: Drawable?
+    val franchiseProfileResource: Drawable?,
+    val franchiseLogoToolbar:Drawable?,
+    val enableBackgroundColorOnToolBar:Boolean
 )

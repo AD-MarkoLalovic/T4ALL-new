@@ -85,7 +85,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/dimens_2dp"
                             android:text="@string/welcome_back"
-                            android:textColor="@color/primary_light_light"
+                            android:textColor="@color/white"
                             app:layout_constraintBottom_toTopOf="@+id/homeUserName"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent" />

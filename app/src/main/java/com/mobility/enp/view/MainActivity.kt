@@ -6,15 +6,20 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.addCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
 import com.mobility.enp.R
+import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.databinding.ActivityMainBinding
+import com.mobility.enp.util.Util
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,6 +30,8 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private val franchiseViewModel: FranchiseViewModel by viewModels { FranchiseViewModel.Factory }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +40,24 @@ class MainActivity : AppCompatActivity() {
         setupNavigation()
         setListeners()
         setExistingLanguage(this)
+
+        franchiseViewModel.portalKey.observe(this){ portalKey->
+            portalKey?.let {
+                setFranchiserLogoVisible(Util.fransizerID(it,this))
+            }
+        }
+    }
+
+    private fun setFranchiserLogoVisible(franchiseModel: FranchiseModel?){
+        franchiseModel?.let { data ->
+            binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
+            binding.toolbarShared.iconLogo.setImageDrawable(data.franchiseLogoToolbar)
+            if (data.enableBackgroundColorOnToolBar){
+                binding.toolbarShared.constraintBlock.setBackgroundColor(data.franchisePrimaryColor)
+            }else{
+                binding.toolbarShared.constraintBlock.setBackgroundColor(getColor(R.color.white))
+            }
+        }
     }
 
     private fun setupNavigation() {

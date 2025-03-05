@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:paddingHorizontal="@dimen/dimens_16dp">
+    android:paddingHorizontal="@dimen/dimens_16dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintBlock"
+    >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
@@ -36,6 +39,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/franchiserFlavorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/powered_by_toll4all"
+        android:textColor="@color/franchiser_gray_color"
+        android:textSize="@dimen/dimens_10sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/iconLogo"
+        app:layout_constraintStart_toStartOf="@id/iconLogo"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
 
     <ImageView
         android:id="@+id/iconNotification"
