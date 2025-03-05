@@ -196,18 +196,8 @@ class HomeFragment : Fragment() {
             }
         }
 
-        val isSerbiaAdded = { cardsList.any { it.code == "RS" } }
-
-        val adapter = HomePromotionsAdapter(filteredList, { promotionCard ->
-            if (isSerbiaAdded() && promotionCard.code != "RS") {
-                showSerbiaRequiredDialog()
-            } else {
-                val action = HomeFragmentDirections.actionHomeFragmentToCardFragment(
-                    promotionCard.code
-                )
-                findNavController().navigate(action)
-            }
-
+        val adapter = HomePromotionsAdapter(filteredList, onItemClicked = {
+            findNavController().navigate(R.id.action_homeFragment_to_paymentAndPassageFragment)
         }, { delete ->
             binding.progBar.visibility = View.VISIBLE
             viewModel.updateDeleteHomeCard(delete)

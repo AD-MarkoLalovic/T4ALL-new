@@ -9,7 +9,7 @@ import com.mobility.enp.databinding.CardFlagsPromotionHomeBinding
 
 class HomePromotionsAdapter(
     private var list: List<HomeCardsEntity>,
-    private val onItemClicked: (HomeCardsEntity) -> Unit,
+    private val onItemClicked: () -> Unit,
     private val updateDeleteCard: (HomeCardsEntity) -> Unit
 ) :
     RecyclerView.Adapter<HomePromotionsAdapter.HomeInvoicesAdapterViewHolder>() {
@@ -26,11 +26,10 @@ class HomePromotionsAdapter(
                 "RS" -> binding.backgroundImage.setImageResource(R.drawable.serbian_flag_home)
                 "MK" -> binding.backgroundImage.setImageResource(R.drawable.flag_home_macedonian)
                 "ME" -> binding.backgroundImage.setImageResource(R.drawable.flag_home_crna_gora)
-
             }
 
             binding.btnObjection.setOnClickListener {
-                onItemClicked(card)
+                onItemClicked()
             }
 
             binding.closeButton.setOnClickListener {
@@ -43,7 +42,6 @@ class HomePromotionsAdapter(
                     list = list.toMutableList().apply { removeAt(position) }
                     notifyItemRemoved(position)
                 }
-
             }
 
             binding.executePendingBindings()
