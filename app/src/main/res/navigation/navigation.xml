@@ -227,8 +227,8 @@
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home_welcome">
         <action
-            android:id="@+id/action_homeFragment_to_cardFragment"
-            app:destination="@id/cardFragment" />
+            android:id="@+id/action_homeFragment_to_paymentAndPassageFragment"
+            app:destination="@id/paymentAndPassageFragment" />
     </fragment>
 
     <action

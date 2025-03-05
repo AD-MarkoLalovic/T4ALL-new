@@ -232,18 +232,8 @@ class HomeFragment : Fragment() {
             }
         }
 
-        val isSerbiaAdded = { cardsList.any { it.code == "RS" } }
-
-        homePromotionsAdapter = HomePromotionsAdapter(filteredList, { promotionCard ->
-            if (isSerbiaAdded() && promotionCard.code != "RS") {
-                showSerbiaRequiredDialog()
-            } else {
-                val action = HomeFragmentDirections.actionHomeFragmentToCardFragment(
-                    promotionCard.code
-                )
-                findNavController().navigate(action)
-            }
-
+        val adapter = HomePromotionsAdapter(filteredList, onItemClicked = {
+            findNavController().navigate(R.id.action_homeFragment_to_paymentAndPassageFragment)
         }, { delete ->
             binding.progBar.visibility = View.VISIBLE
             viewModel.updateDeleteHomeCard(delete)
@@ -275,14 +265,6 @@ class HomeFragment : Fragment() {
         } else {
             Log.d("HomeFragment", "Filtered list is empty, no items to display")
         }
-    }
-
-    private fun showSerbiaRequiredDialog() {
-        val dialog = GeneralMessageDialog(
-            getString(R.string.notification),
-            getString(R.string.first_add_card_serbia)
-        )
-        dialog.show(parentFragmentManager, "HomeNoAddCardDialog")
     }
 
     override fun onDestroyView() {
