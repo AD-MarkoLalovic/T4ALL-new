@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
@@ -339,6 +340,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 findNavController().navigate(action)
             }
         }
+
+        setFragmentResultListener("htmlDialogDismissed") { _, _ ->
+            binding.loadingCards.visibility = View.GONE
+        }
     }
 
     private fun internetReconnectMethod() {
@@ -386,7 +391,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
     override fun setPrimaryCard(cardId: Int) {
 
-        val primaryCardDialog = LostTagDialog(getString(R.string.choose_primary_card),
+        val primaryCardDialog = LostTagDialog(
+            getString(R.string.choose_primary_card),
             getString(R.string.confirm_change_primary_card),
             object : LostTagDialog.OnButtonClickInLostTag {
                 override fun onClickConfirmed() {
@@ -453,8 +459,9 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 makeCardClickable(false)
                 selectedCountry = "All"
                 adapter.updateListCards(allCards)
-                if (viewModel.getCardDataFlow.value != SubmitResult.Loading){
-                    binding.txNoCards.visibility = if (allCards.isEmpty()) View.VISIBLE else View.GONE
+                if (viewModel.getCardDataFlow.value != SubmitResult.Loading) {
+                    binding.txNoCards.visibility =
+                        if (allCards.isEmpty()) View.VISIBLE else View.GONE
                 }
                 binding.rvCreditCard.visibility =
                     if (allCards.isEmpty()) View.GONE else View.VISIBLE

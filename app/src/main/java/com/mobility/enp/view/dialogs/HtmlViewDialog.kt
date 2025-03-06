@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.mobility.enp.databinding.PdfDialogBinding
@@ -38,6 +39,8 @@ class HtmlViewDialog() : DialogFragment() {
 
         setObserver()
 
+        dialog?.setCancelable(false)
+
         when (receivedPair.first) {
             "ME", "MK" -> {
                 viewModel.processContent(
@@ -53,6 +56,7 @@ class HtmlViewDialog() : DialogFragment() {
         }
 
         binding.confirmButton.setOnClickListener {
+            setFragmentResult("htmlDialogDismissed", Bundle())
             dismiss()
         }
     }
