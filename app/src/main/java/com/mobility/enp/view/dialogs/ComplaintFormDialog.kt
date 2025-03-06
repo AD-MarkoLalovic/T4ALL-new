@@ -1,7 +1,6 @@
 package com.mobility.enp.view.dialogs
 
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.mobility.enp.R
@@ -37,15 +37,13 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         binding = DialogComplaintFormBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
 
         observerBanks()
 
@@ -61,49 +59,55 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
     }
 
     private fun handleComplaintFormSubmission() {
-        val uniqueNumber = binding.uniqueNumbersSpinner.selectedItem.toString().trim()
+        val selectedItem = binding.uniqueNumbersSpinner.selectedItem
+        val uniqueNumber = selectedItem?.toString()?.trim() ?: ""
         val centerAccountNumber = binding.etCenterAccountNumber.text.toString().trim()
         val rightAccountNumber = binding.etRightAccountNumber.text.toString().trim()
+        val licencePlate = binding.licencePlateVal.text.toString().trim()
+        val reasonForComplaint = binding.reasonForComplaintVal.text.toString().trim()
+        val selectedBankPosition = binding.bankSpinner.selectedItemPosition
 
-        // Provera da li su uneti svi podaci
-        if (uniqueNumber.isEmpty() || centerAccountNumber.isEmpty() || rightAccountNumber.isEmpty()) {
-            showError(getString(R.string.enter_bank_account))
+        if (licencePlate.isEmpty() || reasonForComplaint.isEmpty()) {
+            showError(getString(R.string.please_enter_all_required_data))
             return
         }
 
-        val selectedBankPosition = binding.bankSpinner.selectedItemPosition
+        // Provera minimalne dužine razloga žalbe
+        if (reasonForComplaint.length <= 10) {
+            showError(getString(R.string.complaint_min_length))
+            return
+        }
+
         if (selectedBankPosition == 0) {
             showError(getString(R.string.enter_name_bank))
             return
         }
 
-        // Provera duzine brojeva računa
-        if (centerAccountNumber.length == 13 && rightAccountNumber.length == 2) {
-            if (binding.licencePlateVal.text.toString().isNotEmpty() &&
-                binding.reasonForComplaintVal.text.toString().isNotEmpty()
-            ) {
-                if (binding.reasonForComplaintVal.text.toString().length > 10) {
-                    dialog?.dismiss()
-
-                    val complaintBody = ComplaintBody(
-                        id,
-                        binding.reasonForComplaintVal.text.toString(),
-                        selectedBankPosition,
-                        binding.licencePlateVal.text.toString(),
-                        uniqueNumber, centerAccountNumber, rightAccountNumber
-                    )
-
-                    onConfirmButton(complaintBody)
-                } else {
-                    showError(getString(R.string.complaint_min_length))
-                }
-            } else {
-                showError(getString(R.string.please_enter_all_required_data))
-            }
-        } else {
-            showError(getString(R.string.invalid_account_number))
+        if (uniqueNumber.isEmpty() || centerAccountNumber.isEmpty() || rightAccountNumber.isEmpty()) {
+            showError(getString(R.string.enter_bank_account))
+            return
         }
+
+        // Provera dužine brojeva računa
+        val isValidAccount = centerAccountNumber.length == 13 && rightAccountNumber.length == 2
+        if (!isValidAccount) {
+            showError(getString(R.string.invalid_account_number))
+            return
+        }
+
+        dialog?.dismiss()
+
+        val complaintBody = ComplaintBody(
+            id,
+            reasonForComplaint,
+            selectedBankPosition,
+            licencePlate,
+            uniqueNumber, centerAccountNumber, rightAccountNumber
+        )
+
+        onConfirmButton(complaintBody)
     }
+
 
     override fun onStart() {
         super.onStart()
