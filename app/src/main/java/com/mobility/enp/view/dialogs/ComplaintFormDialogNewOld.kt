@@ -12,6 +12,7 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.databinding.DialogComplaintFormNewOldBinding
 import com.mobility.enp.util.setDimensionsPercent
+import androidx.core.graphics.drawable.toDrawable
 
 class ComplaintFormDialogNewOld(val onConfirmButton: (ComplaintBody) -> Unit, complaintId: Int) :
     DialogFragment() {
@@ -24,7 +25,7 @@ class ComplaintFormDialogNewOld(val onConfirmButton: (ComplaintBody) -> Unit, co
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         binding = DialogComplaintFormNewOldBinding.inflate(inflater, container, false)
         return binding.root
     }
