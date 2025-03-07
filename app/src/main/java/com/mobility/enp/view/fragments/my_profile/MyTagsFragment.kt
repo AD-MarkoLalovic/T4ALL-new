@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -55,6 +56,7 @@ class MyTagsFragment : Fragment(), AdapterTagFilterType.OnClick, MyTagsAdapter.O
 
         setObservers()
         setListeners()
+        setFranchiser()
 
         viewLifecycleOwner.lifecycleScope.launch {
             binding.progbar.visibility = View.VISIBLE
@@ -63,6 +65,14 @@ class MyTagsFragment : Fragment(), AdapterTagFilterType.OnClick, MyTagsAdapter.O
 
         binding.buttonAddTag.setOnClickListener {
             findNavController().navigate(R.id.action_myTagsFragment2_to_addTagFragment)
+        }
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let {
+                binding.buttonAddTag.backgroundTintList = ColorStateList.valueOf(it)
+            }
         }
     }
 

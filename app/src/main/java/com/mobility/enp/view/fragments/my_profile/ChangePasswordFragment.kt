@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -20,6 +22,7 @@ import com.mobility.enp.databinding.FragmentChangePasswordBinding
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.ChangePasswordDialog
 import com.mobility.enp.viewmodel.ChangePasswordViewModel
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
@@ -28,6 +31,7 @@ class ChangePasswordFragment : Fragment() {
     private lateinit var binding: FragmentChangePasswordBinding
     private val viewModel: ChangePasswordViewModel by viewModels()
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +46,7 @@ class ChangePasswordFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         setObservers()
+        setFranchiser()
 
         binding.btChangePassword.setOnClickListener {
             val oldPassword = binding.enterOldPassword.text.toString()
@@ -157,6 +162,14 @@ class ChangePasswordFragment : Fragment() {
 
         observeChangePasswordStatus()
 
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let {
+                binding.btChangePassword.backgroundTintList = ColorStateList.valueOf(it)
+            }
+        }
     }
 
     private fun setObservers() {

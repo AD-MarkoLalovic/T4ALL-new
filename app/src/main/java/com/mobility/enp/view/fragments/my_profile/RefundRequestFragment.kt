@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,6 +40,8 @@ class RefundRequestFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupUI()
+        setFranchiser()
+
         observeViewModel()
     }
 
@@ -50,6 +53,14 @@ class RefundRequestFragment : Fragment() {
         if (!::adapter.isInitialized) {
             adapter = RefundRequestsCreatedAdapter(emptyList())
             binding.rvRefundRequest.adapter = adapter
+        }
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let {
+                binding.buttonRequest.backgroundTintList = ColorStateList.valueOf(it)
+            }
         }
     }
 

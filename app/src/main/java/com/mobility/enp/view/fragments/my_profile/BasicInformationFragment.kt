@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -47,11 +48,20 @@ class BasicInformationFragment : Fragment() {
 
         setObserverGetBasicInfo()
         setObserverUpdateBasicInfo()
+        setFranchiser()
 
         binding.saveChangesButton.setOnClickListener {
             handleSaveChangesButtonClick()
         }
 
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let {
+                binding.saveChangesButton.backgroundTintList = ColorStateList.valueOf(it)
+            }
+        }
     }
 
     private fun setObserverGetBasicInfo() {

@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -52,10 +53,10 @@ class TagPickerRequestFragment : Fragment() {
         observeTagPickerRequest()
         observerBanks()
         observeSubmitRefundRequest()
+        setFranchiser()
 
         binding.buttonSendRequest.setOnClickListener {
             onSendRefundRequestClicked()
-
         }
     }
 
@@ -104,6 +105,16 @@ class TagPickerRequestFragment : Fragment() {
 
         }
     }
+
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let {
+                binding.buttonSendRequest.backgroundTintList = ColorStateList.valueOf(it)
+            }
+        }
+    }
+
 
     /**
      * Observes submit refund request
