@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintBlock"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:paddingHorizontal="@dimen/dimens_100dp"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintBlock"
-    >
+    android:paddingBottom="@dimen/dimens_5dp">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
@@ -23,12 +23,13 @@
         android:id="@+id/backArrow"
         android:layout_width="@dimen/dimens_54dp"
         android:layout_height="@dimen/dimens_54dp"
+        android:layout_marginTop="@dimen/dimens_3dp"
         android:contentDescription="@null"
         android:elevation="@dimen/dimens_10dp"
         android:src="@drawable/toolbar_shared_back_arrow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/toolBar"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/franchiserFlavorText" />
 
     <ImageView
         android:id="@+id/iconLogo"
@@ -47,12 +48,11 @@
         android:text="@string/powered_by_toll4all"
         android:textColor="@color/franchiser_gray_color"
         android:textSize="@dimen/dimens_10sp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/iconLogo"
         app:layout_constraintStart_toStartOf="@id/iconLogo"
-        android:visibility="gone"
-        tools:visibility="visible"
-        />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/iconNotification"

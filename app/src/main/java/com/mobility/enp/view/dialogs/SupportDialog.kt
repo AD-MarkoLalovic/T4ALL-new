@@ -1,5 +1,6 @@
 package com.mobility.enp.view.dialogs
 
+import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
@@ -43,6 +44,7 @@ class SupportDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setObserversError()
+        setFranchiser()
 
         binding.bttSendSupportMessage.setOnClickListener {
             val enteredText = binding.enterSupportMessage.text.toString()
@@ -61,6 +63,14 @@ class SupportDialog : DialogFragment() {
 
         binding.supportDialogClose.setOnClickListener {
             dismiss()
+        }
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let {
+                binding.bttSendSupportMessage.backgroundTintList = ColorStateList.valueOf(it)
+            }
         }
     }
 
