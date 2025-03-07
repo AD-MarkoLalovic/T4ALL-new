@@ -29,7 +29,7 @@ class MonthlyBillsAdapter(
     private val spinnerInterface: TriggerSpinner,
     val lifecycleOwner: LifecycleOwner,
     private val montYearListener: MontYearListener,
-    private val franchiserResource :FranchiseModel?
+    private val franchiserResource: FranchiseModel?
 ) : RecyclerView.Adapter<MonthlyBillsAdapter.MonthlyBillsViewHolder>() {
 
     private val monthlyBillsArray: ArrayList<Month> = ArrayList(data.months)
@@ -148,9 +148,23 @@ class MonthlyBillsAdapter(
                             }
                         }, montYear, availableCurrency.toString(), error)
 
-                        binding.arrowDown.setImageDrawable(
-                            ContextCompat.getDrawable(binding.root.context, R.drawable.ic_arrow_up)
-                        )
+
+                        franchiserResource?.let { data ->
+                            binding.arrowDown.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    binding.root.context,
+                                    data.upArrowResource
+                                )
+                            )
+                        } ?: run {
+                            binding.arrowDown.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    binding.root.context,
+                                    R.drawable.ic_arrow_up
+                                )
+                            )
+                        }
+
                     } else {
                         Toast.makeText(
                             binding.root.context,
@@ -162,9 +176,18 @@ class MonthlyBillsAdapter(
                 } else { // Ako se zatvara
                     binding.recyclerViewMonthlyBills.visibility = View.GONE
                     binding.scrollView.visibility = View.GONE
-                    binding.arrowDown.setImageDrawable(
-                        ContextCompat.getDrawable(binding.root.context, R.drawable.ic_arrow_down)
-                    )
+                    franchiserResource?.let { data ->
+                        binding.arrowDown.setImageDrawable(
+                            ContextCompat.getDrawable(binding.root.context, data.downArrowResource)
+                        )
+                    } ?: run {
+                        binding.arrowDown.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                binding.root.context,
+                                R.drawable.ic_arrow_down
+                            )
+                        )
+                    }
                 }
             }
 
@@ -181,15 +204,36 @@ class MonthlyBillsAdapter(
             if (isExpanded) {
                 binding.recyclerViewMonthlyBills.visibility = View.VISIBLE
                 binding.scrollView.visibility = View.VISIBLE
-                binding.arrowDown.setImageDrawable(
-                    ContextCompat.getDrawable(binding.root.context, R.drawable.ic_arrow_up)
-                )
+                franchiserResource?.let { data ->
+                    binding.arrowDown.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            binding.root.context,
+                            data.upArrowResource
+                        )
+                    )
+                } ?: run {
+                    binding.arrowDown.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            binding.root.context,
+                            R.drawable.ic_arrow_up
+                        )
+                    )
+                }
             } else {
                 binding.recyclerViewMonthlyBills.visibility = View.GONE
                 binding.scrollView.visibility = View.GONE
-                binding.arrowDown.setImageDrawable(
-                    ContextCompat.getDrawable(binding.root.context, R.drawable.ic_arrow_down)
-                )
+                franchiserResource?.let { data ->
+                    binding.arrowDown.setImageDrawable(
+                        ContextCompat.getDrawable(binding.root.context, data.downArrowResource)
+                    )
+                } ?: run {
+                    binding.arrowDown.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            binding.root.context,
+                            R.drawable.ic_arrow_down
+                        )
+                    )
+                }
             }
         }
     }
