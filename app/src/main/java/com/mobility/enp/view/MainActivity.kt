@@ -54,6 +54,9 @@ class MainActivity : AppCompatActivity() {
         franchiseModel?.let { data ->
             binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
             binding.toolbarShared.iconLogo.setImageDrawable(data.franchiseLogoToolbar)
+
+            binding.toolbarShared.backArrow.setImageResource(franchiseModel.backButtonResource)
+
             if (data.enableBackgroundColorOnToolBar){
                 binding.toolbarShared.constraintBlock.setBackgroundColor(data.franchisePrimaryColor)
             }else{

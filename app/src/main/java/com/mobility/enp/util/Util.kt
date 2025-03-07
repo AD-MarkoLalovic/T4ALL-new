@@ -55,7 +55,11 @@ object Util {
             ContextCompat.getDrawable(context, R.drawable.telekom_logo), false,
             ContextCompat.getColorStateList(context, R.color.bottom_nav_color_telekom),
             R.drawable.promotions_dot_telekom,
-            context.resources.getColor(R.color.franchiser_telekom_srbija_mtel_half_visibility, null),
+            context.resources.getColor(
+                R.color.franchiser_telekom_srbija_mtel_half_visibility,
+                null
+            ),
+            R.drawable.toolbar_shared_back_telekom
         )
 
         map["a2ac8612-4b25-43e3-8017-fcf8ad0da0c4"] = FranchiseModel(
@@ -68,6 +72,7 @@ object Util {
             ContextCompat.getColorStateList(context, R.color.bottom_nav_color_s_blue),
             R.drawable.promotions_dot_s_blue,
             context.resources.getColor(R.color.franchiser_s_blue_half_visibility, null),
+            R.drawable.toolbar_shared_back_s_blue
         )
 
         map["9aa3e972-d84b-40df-b35d-d14a229c03e3"] = FranchiseModel(
@@ -80,6 +85,7 @@ object Util {
             ContextCompat.getColorStateList(context, R.color.bottom_nav_color_amss),
             R.drawable.promotions_dot_amcc,
             context.resources.getColor(R.color.franchiser_amss_half_visibility, null),
+            R.drawable.toolbar_shared_back_amss
         )
 
         map["d47b35d1-bb44-4618-9b31-cf7e961595ec"] = FranchiseModel(
@@ -92,6 +98,7 @@ object Util {
             ContextCompat.getColorStateList(context, R.color.bottom_nav_color_tehnomania),
             R.drawable.promotions_dot_tehnomania,
             context.resources.getColor(R.color.franchiser_tehnomania_half_visibility, null),
+            R.drawable.toolbar_shared_back_tehnomania
         )
 
 

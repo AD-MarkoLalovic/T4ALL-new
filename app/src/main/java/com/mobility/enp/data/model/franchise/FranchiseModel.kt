@@ -13,5 +13,6 @@ data class FranchiseModel(
     val enableBackgroundColorOnToolBar:Boolean,
     val navHomeDrawable : ColorStateList?,
     val promotionsDot:Int?,
-    val halfColor : Int
+    val halfColor : Int,
+    val backButtonResource :Int
 )
