@@ -70,6 +70,7 @@ class SupportDialog : DialogFragment() {
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
             franchiseModel?.franchisePrimaryColor?.let {
                 binding.bttSendSupportMessage.backgroundTintList = ColorStateList.valueOf(it)
+                binding.supportDialogInput.boxStrokeColor = it
             }
         }
     }

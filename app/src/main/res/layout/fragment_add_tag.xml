@@ -10,6 +10,7 @@
         tools:context=".view.fragments.my_profile.AddTagFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="@dimen/dimens_0dp"
             android:layout_height="@dimen/dimens_0dp"
             android:background="@drawable/border_login"

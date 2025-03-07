@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_tags.LostTagResponse
@@ -44,6 +46,7 @@ class AddTagFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setObservers()
+        setFranchiser()
 
         binding.bttConfirmAddTag.setOnClickListener {
             if (Repository.isNetworkAvailable(requireContext())) {
@@ -80,6 +83,23 @@ class AddTagFragment : Fragment() {
 
         }
 
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.bttConfirmAddTag.backgroundTintList = ColorStateList.valueOf(color)
+
+                val parent = binding.constraintLayout
+
+                for (i in 0 until parent.childCount) {
+                    val view = parent.getChildAt(i)
+                    if (view is TextInputLayout) {
+                        view.boxStrokeColor = color
+                    }
+                }
+            }
+        }
     }
 
     private fun setObservers() {

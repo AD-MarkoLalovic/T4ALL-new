@@ -72,6 +72,7 @@ class MyTagsFragment : Fragment(), AdapterTagFilterType.OnClick, MyTagsAdapter.O
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
             franchiseModel?.franchisePrimaryColor?.let {
                 binding.buttonAddTag.backgroundTintList = ColorStateList.valueOf(it)
+                binding.inputSerialNumber.boxStrokeColor = it
             }
         }
     }

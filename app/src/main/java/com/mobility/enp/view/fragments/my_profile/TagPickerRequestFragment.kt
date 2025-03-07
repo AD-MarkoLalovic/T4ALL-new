@@ -17,6 +17,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_my_profile.refund_request.SendRefundRequest
 import com.mobility.enp.databinding.FragmentTagPickerRequestBinding
@@ -109,8 +110,17 @@ class TagPickerRequestFragment : Fragment() {
 
     private fun setFranchiser() {
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
-            franchiseModel?.franchisePrimaryColor?.let {
-                binding.buttonSendRequest.backgroundTintList = ColorStateList.valueOf(it)
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.buttonSendRequest.backgroundTintList = ColorStateList.valueOf(color)
+
+                val parent = binding.constraintContainerRefund
+
+                for (i in 0 until parent.childCount) {
+                    val view = parent.getChildAt(i)
+                    if (view is TextInputLayout) {
+                        view.boxStrokeColor = color
+                    }
+                }
             }
         }
     }
