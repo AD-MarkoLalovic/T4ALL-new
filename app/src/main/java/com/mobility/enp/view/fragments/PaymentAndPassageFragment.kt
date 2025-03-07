@@ -564,19 +564,32 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun makeCardClickable(enable: Boolean) {
+        val franchiseModel = franchiseViewModel.franchiseModel.value
         when (enable) {
             true -> {
                 binding.bttAddCard.isClickable = true
                 binding.bttAddCard.isEnabled = true
-                binding.bttAddCard.backgroundTintList =
-                    ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
+
+                franchiseModel?.franchisePrimaryColor?.let {
+                    binding.bttAddCard.backgroundTintList =
+                        ColorStateList.valueOf(it)
+                } ?: run {
+                    binding.bttAddCard.backgroundTintList =
+                        ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
+                }
             }
 
             false -> {
                 binding.bttAddCard.isClickable = false
                 binding.bttAddCard.isEnabled = false
-                binding.bttAddCard.backgroundTintList =
-                    ColorStateList.valueOf(requireContext().getColor(R.color.button_not_enabled_web))
+
+                franchiseModel?.halfColor?.let {
+                    binding.bttAddCard.backgroundTintList =
+                        ColorStateList.valueOf(it)
+                }?:run {
+                    binding.bttAddCard.backgroundTintList =
+                        ColorStateList.valueOf(requireContext().getColor(R.color.button_not_enabled_web))
+                }
             }
         }
     }

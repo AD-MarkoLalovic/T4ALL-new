@@ -42,12 +42,17 @@
     <color name="button_not_enabled_web">#A60D6EFD</color>
 
     <color name="franchiser_telekom_srbija_mtel">#ED1A3B</color>
+    <color name="franchiser_telekom_srbija_mtel_half_visibility">#B3ED1A3B</color>
     <color name="franchiser_s_blue">#4A628A</color>
+    <color name="franchiser_s_blue_half_visibility">#B34A628A</color>
     <color name="franchiser_tehnomania">#FFCB05</color>
+    <color name="franchiser_tehnomania_half_visibility">#B3FFCB05</color>
     <color name="franchiser_enput">#00346D</color>
     <color name="franchiser_amss">#FFDD04</color>
+    <color name="franchiser_amss_half_visibility">#B3FFDD04</color>
     <color name="franchiser_pay_and_roll">#092E53</color>
     <color name="franchiser_technocoop">#ED1A3B</color>
+    <color name="franchiser_technocoop_half_visibility">#B3ED1A3B</color>
     <color name="franchiser_tag_rafaelo">#295F98</color>
     <color name="franchiser_e_box">#1C5A9A</color>
     <color name="franchiser_freetrans">#4A628A</color>
