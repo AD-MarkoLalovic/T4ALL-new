@@ -16,6 +16,7 @@ import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.DataMonthly
 import com.mobility.enp.data.model.api_my_invoices.Month
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
+import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.databinding.ItemBillBinding
 import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingPassageAdapter
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
@@ -27,7 +28,8 @@ class MonthlyBillsAdapter(
     private val errorBody: MutableLiveData<ErrorBody>,
     private val spinnerInterface: TriggerSpinner,
     val lifecycleOwner: LifecycleOwner,
-    private val montYearListener: MontYearListener
+    private val montYearListener: MontYearListener,
+    private val franchiserResource :FranchiseModel?
 ) : RecyclerView.Adapter<MonthlyBillsAdapter.MonthlyBillsViewHolder>() {
 
     private val monthlyBillsArray: ArrayList<Month> = ArrayList(data.months)

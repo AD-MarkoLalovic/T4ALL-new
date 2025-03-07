@@ -14,5 +14,6 @@ data class FranchiseModel(
     val navHomeDrawable : ColorStateList?,
     val promotionsDot:Int?,
     val halfColor : Int,
-    val backButtonResource :Int
+    val backButtonResource :Int,
+    val downArrowResource : Int
 )

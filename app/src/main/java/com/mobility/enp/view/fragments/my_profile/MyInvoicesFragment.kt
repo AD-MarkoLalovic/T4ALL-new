@@ -85,7 +85,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                     binding.textNoBills.visibility = View.GONE
                     binding.recyclerViewBills.visibility = View.VISIBLE
                     binding.recyclerViewBills.adapter =
-                        MonthlyBillsAdapter(it.data, viewModel, errorBody, this, this, this)
+                        MonthlyBillsAdapter(it.data, viewModel, errorBody, this, this, this,franchiseViewModel.franchiseModel.value)
                     binding.recyclerViewBills.layoutManager = LinearLayoutManager(requireContext())
 
                     viewModel.setLocalData(it)
