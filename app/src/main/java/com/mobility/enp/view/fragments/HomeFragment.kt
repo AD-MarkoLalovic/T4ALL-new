@@ -44,6 +44,7 @@ class HomeFragment : Fragment() {
     private lateinit var totalCurrencyAdapter: TotalCurrencyAdapter
     private lateinit var homePassageAdapter: HomePassageAdapter
     private lateinit var homePromotionsAdapter :HomePromotionsAdapter
+    private lateinit var  adapterProgress :HomeProgressAdapter
 
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
@@ -121,6 +122,9 @@ class HomeFragment : Fragment() {
                 binding.constraintLayoutInCard.background = data.franchiseHomeBackgroundLocation
                 if (::homePromotionsAdapter.isInitialized){
                     homePromotionsAdapter.updateColor(franchiseModel)
+                }
+                if (::adapterProgress.isInitialized){
+                    adapterProgress.updateFranchiserDotColor(franchiseModel.promotionsDot)
                 }
             }
         }
@@ -236,7 +240,7 @@ class HomeFragment : Fragment() {
         })
 
         if (filteredList.isNotEmpty()) {
-            val adapterProgress = HomeProgressAdapter(filteredList.size)
+            adapterProgress = HomeProgressAdapter(filteredList.size)
 
             binding.cyclerPromotions.visibility = View.VISIBLE
             binding.cyclerPromotions.adapter = homePromotionsAdapter

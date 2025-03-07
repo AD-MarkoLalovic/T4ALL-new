@@ -54,7 +54,7 @@ object Util {
             ContextCompat.getDrawable(context, R.drawable.telekom_srbija_profile),
             ContextCompat.getDrawable(context, R.drawable.telekom_logo), false,
             ContextCompat.getColorStateList(context, R.color.bottom_nav_color_telekom),
-            ContextCompat.getDrawable(context, R.drawable.promotions_dot_telekom),
+            R.drawable.promotions_dot_telekom
         )
 
         map["a2ac8612-4b25-43e3-8017-fcf8ad0da0c4"] = FranchiseModel(
@@ -65,7 +65,7 @@ object Util {
             ContextCompat.getDrawable(context, R.drawable.s_blue_profile),
             ContextCompat.getDrawable(context, R.drawable.s_blue_logo), true,
             ContextCompat.getColorStateList(context, R.color.bottom_nav_color_s_blue),
-            ContextCompat.getDrawable(context, R.drawable.promotions_dot_s_blue),
+            R.drawable.promotions_dot_s_blue
         )
 
         map["9aa3e972-d84b-40df-b35d-d14a229c03e3"] = FranchiseModel(
@@ -76,9 +76,8 @@ object Util {
             ContextCompat.getDrawable(context, R.drawable.novi_amss_profile),
             ContextCompat.getDrawable(context, R.drawable.amss_logo), true,
             ContextCompat.getColorStateList(context, R.color.bottom_nav_color_amss),
-            ContextCompat.getDrawable(context, R.drawable.promotions_dot_amcc),
-
-            )
+            R.drawable.promotions_dot_amcc,
+        )
 
         map["d47b35d1-bb44-4618-9b31-cf7e961595ec"] = FranchiseModel(
             "d47b35d1-bb44-4618-9b31-cf7e961595ec",
@@ -88,9 +87,9 @@ object Util {
             ContextCompat.getDrawable(context, R.drawable.tehnomanija_profile),
             ContextCompat.getDrawable(context, R.drawable.tehnomanija_logo), true,
             ContextCompat.getColorStateList(context, R.color.bottom_nav_color_tehnomania),
-            ContextCompat.getDrawable(context, R.drawable.promotions_dot_tehnomania),
+            R.drawable.promotions_dot_tehnomania
+        )
 
-            )
 
         return map[portalKey]
     }

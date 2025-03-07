@@ -10,6 +10,12 @@ class HomeProgressAdapter(val total: Int) :
     RecyclerView.Adapter<HomeProgressAdapter.HomeProgressAdapterViewHolder>() {
 
     var checkedPosition = 0
+    var dotFranchiserColor: Int? = null
+
+    fun updateFranchiserDotColor(dot: Int?) {
+        this.dotFranchiserColor = dot
+        notifyDataSetChanged()
+    }
 
     fun setCurrentDot(position: Int) {
         if (position != checkedPosition && position != -1) {
@@ -25,7 +31,16 @@ class HomeProgressAdapter(val total: Int) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(currentPosition: Int) {
-            val drawable = if (checkedPosition == currentPosition) R.drawable.dot_checked else R.drawable.dot_unchecked
+
+            var drawable: Int = 0
+
+            dotFranchiserColor?.let {
+                drawable = if (checkedPosition == currentPosition) it else R.drawable.dot_unchecked
+            } ?: run {
+                drawable =
+                    if (checkedPosition == currentPosition) R.drawable.dot_checked else R.drawable.dot_unchecked
+            }
+
             binding.dot.setImageResource(drawable)
         }
 
