@@ -43,8 +43,8 @@ class HomeFragment : Fragment() {
     private val binding: FragmentHomeWelcomeBinding get() = _binding!!
     private lateinit var totalCurrencyAdapter: TotalCurrencyAdapter
     private lateinit var homePassageAdapter: HomePassageAdapter
-    private lateinit var homePromotionsAdapter :HomePromotionsAdapter
-    private lateinit var  adapterProgress :HomeProgressAdapter
+    private lateinit var homePromotionsAdapter: HomePromotionsAdapter
+    private lateinit var adapterProgress: HomeProgressAdapter
 
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
@@ -66,6 +66,8 @@ class HomeFragment : Fragment() {
         setupClickListeners()
 
         // test method for franchisers
+        setUpFranchisePicker()
+
         viewModel.fetchHomeData()
     }
 
@@ -118,12 +120,13 @@ class HomeFragment : Fragment() {
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
             franchiseModel?.let { data ->
-                binding.cardViewAccountHomeScreen.backgroundTintList = ColorStateList.valueOf(data.franchisePrimaryColor)
+                binding.cardViewAccountHomeScreen.backgroundTintList =
+                    ColorStateList.valueOf(data.franchisePrimaryColor)
                 binding.constraintLayoutInCard.background = data.franchiseHomeBackgroundLocation
-                if (::homePromotionsAdapter.isInitialized){
+                if (::homePromotionsAdapter.isInitialized) {
                     homePromotionsAdapter.updateColor(franchiseModel)
                 }
-                if (::adapterProgress.isInitialized){
+                if (::adapterProgress.isInitialized) {
                     adapterProgress.updateFranchiserDotColor(franchiseModel.promotionsDot)
                 }
             }
@@ -145,8 +148,7 @@ class HomeFragment : Fragment() {
                 binding.progBar.visibility = View.GONE
                 binding.linearHomeContainer.visibility = View.VISIBLE
 
-                setUpFranchisePicker()
-                franchiseViewModel.getPortalKey(requireContext())
+                franchiseViewModel.getFranchiseModel(requireContext())
             }
 
             is SubmitResult.Empty -> {}

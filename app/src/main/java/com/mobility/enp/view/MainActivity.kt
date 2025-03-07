@@ -38,8 +38,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupNavigation()
         setListeners()
+        setObservers();
         setExistingLanguage(this)
+    }
 
+    private fun setObservers(){
         franchiseViewModel.franchiseModel.observe(this){ franchiseModel->
             franchiseModel?.let {
                 setFranchiserLogoVisible(it)

@@ -27,20 +27,20 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
         return repository.getHomeEntity()
     }
 
-    fun getPortalKey(context: Context) {
+    fun getFranchiseModel(context: Context) {
         viewModelScope.launch {
             val portalKey = withContext(Dispatchers.IO) {
                 repository.getPortalKey()
             }
 
             portalKey?.let {
-                val franchiseModel = Util.fransizerID(it,context)
-                this@FranchiseViewModel._franchiseModel.value = franchiseModel
+                val franchiseModel = Util.fransizerID(it, context)
+                _franchiseModel.value = franchiseModel
             }
         }
     }
 
-    fun upsertHomeData(portalKey: String,context: Context) { // for testing
+    fun upsertHomeData(portalKey: String, context: Context) { // for testing
         viewModelScope.launch(Dispatchers.IO) {
             val homeEntity = repository.getHomeEntity()
             homeEntity?.portalKey = portalKey
@@ -48,7 +48,7 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
                 repository.upsertHomeEntity(it)
             }
 
-            getPortalKey(context)
+            getFranchiseModel(context)
         }
     }
 
