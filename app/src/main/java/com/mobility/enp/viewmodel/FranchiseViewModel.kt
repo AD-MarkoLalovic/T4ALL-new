@@ -1,6 +1,6 @@
 package com.mobility.enp.viewmodel
 
-import android.util.Log
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,31 +10,37 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
+import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.home.entity.HomeEntity
 import com.mobility.enp.data.repository.FranchiserRepository
+import com.mobility.enp.util.Util
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class FranchiseViewModel(private val repository: FranchiserRepository) : ViewModel() {
 
-    private val _portalKey: MutableLiveData<String?> = MutableLiveData()
-    val portalKey: LiveData<String?> get() = _portalKey
+    private val _franchiseModel: MutableLiveData<FranchiseModel?> = MutableLiveData()
+    val franchiseModel: LiveData<FranchiseModel?> get() = _franchiseModel
 
     suspend fun getHomeData(): HomeEntity? {
         return repository.getHomeEntity()
     }
 
-    fun getPortalKey() {
+    fun getPortalKey(context: Context) {
         viewModelScope.launch {
             val portalKey = withContext(Dispatchers.IO) {
                 repository.getPortalKey()
             }
-            _portalKey.value = portalKey
+
+            portalKey?.let {
+                val franchiseModel = Util.fransizerID(it,context)
+                this@FranchiseViewModel._franchiseModel.value = franchiseModel
+            }
         }
     }
 
-    fun upsertHomeData(portalKey: String) { // for testing
+    fun upsertHomeData(portalKey: String,context: Context) { // for testing
         viewModelScope.launch(Dispatchers.IO) {
             val homeEntity = repository.getHomeEntity()
             homeEntity?.portalKey = portalKey
@@ -42,7 +48,7 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
                 repository.upsertHomeEntity(it)
             }
 
-            getPortalKey()
+            getPortalKey(context)
         }
     }
 

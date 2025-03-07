@@ -49,7 +49,7 @@ class FranchiseTestDialog() :
             viewLifecycleOwner.lifecycleScope.launch {
                 delay(500L)
                 dialog?.dismiss()
-                franchiseViewModel.upsertHomeData(languageCode)
+                franchiseViewModel.upsertHomeData(languageCode,requireContext())
             }
         }
     }

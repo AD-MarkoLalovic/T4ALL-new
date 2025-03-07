@@ -11,5 +11,6 @@ data class FranchiseModel(
     val franchiseProfileResource: Drawable?,
     val franchiseLogoToolbar:Drawable?,
     val enableBackgroundColorOnToolBar:Boolean,
-    val navHomeDrawable : ColorStateList?
+    val navHomeDrawable : ColorStateList?,
+    val promotionsDot:Drawable?
 )

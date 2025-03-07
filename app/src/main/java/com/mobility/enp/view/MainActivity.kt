@@ -1,7 +1,6 @@
 package com.mobility.enp.view
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -9,9 +8,6 @@ import android.view.View
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.view.get
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -44,9 +40,9 @@ class MainActivity : AppCompatActivity() {
         setListeners()
         setExistingLanguage(this)
 
-        franchiseViewModel.portalKey.observe(this){ portalKey->
-            portalKey?.let {
-                setFranchiserLogoVisible(Util.fransizerID(it,this))
+        franchiseViewModel.franchiseModel.observe(this){ franchiseModel->
+            franchiseModel?.let {
+                setFranchiserLogoVisible(it)
             }
         }
     }

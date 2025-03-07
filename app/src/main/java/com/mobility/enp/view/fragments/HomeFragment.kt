@@ -33,7 +33,6 @@ import com.mobility.enp.view.adapters.TotalCurrencyAdapter
 import com.mobility.enp.view.adapters.home.HomePassageAdapter
 import com.mobility.enp.view.adapters.home.HomeProgressAdapter
 import com.mobility.enp.view.adapters.home.HomePromotionsAdapter
-import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.HomeViewModel
 import java.io.File
@@ -116,16 +115,12 @@ class HomeFragment : Fragment() {
             homePassageAdapter.submitList(tollHistory)
         }
 
-        franchiseViewModel.portalKey.observe(viewLifecycleOwner) { portalKey ->
-            portalKey?.let {
-                Log.d("KEY", "portal key $portalKey")
-                val franchiseModel = Util.fransizerID(portalKey,requireContext())
-                franchiseModel?.let { data ->
-                    binding.cardViewAccountHomeScreen.backgroundTintList = ColorStateList.valueOf(data.franchisePrimaryColor)
-                    binding.constraintLayoutInCard.background = data.franchiseHomeBackgroundLocation
-                    if (::homePromotionsAdapter.isInitialized){
-                        homePromotionsAdapter.updateColor(franchiseModel)
-                    }
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.let { data ->
+                binding.cardViewAccountHomeScreen.backgroundTintList = ColorStateList.valueOf(data.franchisePrimaryColor)
+                binding.constraintLayoutInCard.background = data.franchiseHomeBackgroundLocation
+                if (::homePromotionsAdapter.isInitialized){
+                    homePromotionsAdapter.updateColor(franchiseModel)
                 }
             }
         }
@@ -147,7 +142,7 @@ class HomeFragment : Fragment() {
                 binding.linearHomeContainer.visibility = View.VISIBLE
 
                 setUpFranchisePicker()
-                franchiseViewModel.getPortalKey()
+                franchiseViewModel.getPortalKey(requireContext())
             }
 
             is SubmitResult.Empty -> {}
