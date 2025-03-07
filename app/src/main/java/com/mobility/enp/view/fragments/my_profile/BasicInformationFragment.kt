@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
 import com.mobility.enp.databinding.FragmentBasicInformationBinding
@@ -57,9 +58,19 @@ class BasicInformationFragment : Fragment() {
     }
 
     private fun setFranchiser() {
-        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
-            franchiseModel?.franchisePrimaryColor?.let {
-                binding.saveChangesButton.backgroundTintList = ColorStateList.valueOf(it)
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.saveChangesButton.backgroundTintList = ColorStateList.valueOf(color)
+
+
+                val parent = binding.basicInformationCon
+
+                for (i in 0 until parent.childCount) {
+                    val view = parent.getChildAt(i)
+                    if (view is TextInputLayout) {
+                        view.boxStrokeColor = color
+                    }
+                }
             }
         }
     }
@@ -88,6 +99,7 @@ class BasicInformationFragment : Fragment() {
                     binding.loadingBasicInformation.visibility = View.GONE
                     showMessage(result.errorMessage)
                 }
+
                 is SubmitResult.InvalidApiToken -> {
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                     showMessage(result.errorMessage)
@@ -124,6 +136,7 @@ class BasicInformationFragment : Fragment() {
                     binding.loadingBasicInformation.visibility = View.GONE
                     showMessage(result.errorMessage)
                 }
+
                 is SubmitResult.InvalidApiToken -> {
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                     showMessage(result.errorMessage)
@@ -247,7 +260,7 @@ class BasicInformationFragment : Fragment() {
             }
 
             (customerType == 3) && ((pib.isNotEmpty()) && (pib.length !in 9..13)) -> {
-               showFieldError(R.string.pib_invalid_length)
+                showFieldError(R.string.pib_invalid_length)
                 return
             }
 
@@ -278,6 +291,7 @@ class BasicInformationFragment : Fragment() {
                             phone = phone,
                             postalCode = postalCode
                         )
+
                         2 -> UpdateUserDataRequest(
                             address = address,
                             city = city,
@@ -287,6 +301,7 @@ class BasicInformationFragment : Fragment() {
                             postalCode = postalCode,
                             pib = pib
                         )
+
                         3 -> UpdateUserDataRequest(
                             address = address,
                             city = city,
@@ -295,6 +310,7 @@ class BasicInformationFragment : Fragment() {
                             postalCode = postalCode,
                             pib = pib
                         )
+
                         else -> throw IllegalArgumentException("Invalid customer type in BasicInformationFragment: $customerType")
 
                     }

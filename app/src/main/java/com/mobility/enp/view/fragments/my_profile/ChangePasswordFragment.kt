@@ -166,8 +166,18 @@ class ChangePasswordFragment : Fragment() {
 
     private fun setFranchiser() {
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
-            franchiseModel?.franchisePrimaryColor?.let {
-                binding.btChangePassword.backgroundTintList = ColorStateList.valueOf(it)
+            franchiseModel?.franchisePrimaryColor?.let { color->
+                binding.btChangePassword.backgroundTintList = ColorStateList.valueOf(color)
+
+
+                val parent = binding.constaintLayout
+
+                for (i in 0 until parent.childCount) {
+                    val view = parent.getChildAt(i)
+                    if (view is TextInputLayout) {
+                        view.boxStrokeColor = color
+                    }
+                }
             }
         }
     }
