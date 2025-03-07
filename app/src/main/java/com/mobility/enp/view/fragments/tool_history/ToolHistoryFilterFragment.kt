@@ -54,6 +54,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         super.onViewCreated(view, savedInstanceState)
 
         setObservers()
+        setFranchiser()
 
         vModel.selectedTags.clear()
 
@@ -144,6 +145,15 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             binding.progBar.visibility = View.VISIBLE
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 vModel.getCsvData(requireContext())
+            }
+        }
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let {
+                binding.btnSearch.backgroundTintList = ColorStateList.valueOf(it)
+                binding.exportBlock.setTextColor(it)
             }
         }
     }

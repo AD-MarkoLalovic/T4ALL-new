@@ -1,5 +1,6 @@
 package com.mobility.enp.view.dialogs
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -29,11 +30,22 @@ class NoInternetConnectionDialog : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setFranchiser()
+
         binding.title.text = arguments?.getString(getString(R.string.title)) ?: ""
         binding.subTitle.text = arguments?.getString(getString(R.string.subtitle)) ?: ""
 
         binding.confirmButton.setOnClickListener {
             dismiss()
+        }
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let {
+                binding.confirmButton.backgroundTintList = ColorStateList.valueOf(it)
+            }
         }
     }
 
