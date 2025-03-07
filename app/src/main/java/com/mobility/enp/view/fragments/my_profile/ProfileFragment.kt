@@ -72,7 +72,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 withContext(Dispatchers.Main) {
                     val image = ProfileImagePickerDialog(this@ProfileFragment, imageExists)
                     image.show(parentFragmentManager, "Profile Image")
-
                 }
             }
         }
@@ -134,6 +133,12 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
             binding.userName.text = displayName
             viewLifecycleOwner.lifecycleScope.launch {
                 imageRepository.getAndSetProfileImage(binding.imageProfile, displayName)
+            }
+        }
+
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){ data ->
+            data?.franchiseProfileResource?.let {
+                binding.rectangleProfilePicture.setImageResource(it)
             }
         }
 

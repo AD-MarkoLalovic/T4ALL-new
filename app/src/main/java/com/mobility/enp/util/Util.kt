@@ -51,7 +51,7 @@ object Util {
             "Telekom portal",
             context.resources.getColor(R.color.franchiser_telekom_srbija_mtel, null),
             ContextCompat.getDrawable(context, R.drawable.telekom_srbija),
-            ContextCompat.getDrawable(context, R.drawable.telekom_srbija_profile),
+            R.drawable.telekom_srbija_profile,
             ContextCompat.getDrawable(context, R.drawable.telekom_logo), false,
             ContextCompat.getColorStateList(context, R.color.bottom_nav_color_telekom),
             R.drawable.promotions_dot_telekom
@@ -62,7 +62,7 @@ object Util {
             "S-blue",
             context.resources.getColor(R.color.franchiser_s_blue, null),
             ContextCompat.getDrawable(context, R.drawable.s_blue),
-            ContextCompat.getDrawable(context, R.drawable.s_blue_profile),
+            R.drawable.s_blue_profile,
             ContextCompat.getDrawable(context, R.drawable.s_blue_logo), true,
             ContextCompat.getColorStateList(context, R.color.bottom_nav_color_s_blue),
             R.drawable.promotions_dot_s_blue
@@ -73,7 +73,7 @@ object Util {
             "AMSS portal",
             context.resources.getColor(R.color.franchiser_amss, null),
             ContextCompat.getDrawable(context, R.drawable.novi_amss),
-            ContextCompat.getDrawable(context, R.drawable.novi_amss_profile),
+            R.drawable.novi_amss_profile,
             ContextCompat.getDrawable(context, R.drawable.amss_logo), true,
             ContextCompat.getColorStateList(context, R.color.bottom_nav_color_amss),
             R.drawable.promotions_dot_amcc,
@@ -84,7 +84,7 @@ object Util {
             "Tehnomanija portal",
             context.resources.getColor(R.color.franchiser_tehnomania, null),
             ContextCompat.getDrawable(context, R.drawable.tehnomanija),
-            ContextCompat.getDrawable(context, R.drawable.tehnomanija_profile),
+            R.drawable.tehnomanija_profile,
             ContextCompat.getDrawable(context, R.drawable.tehnomanija_logo), true,
             ContextCompat.getColorStateList(context, R.color.bottom_nav_color_tehnomania),
             R.drawable.promotions_dot_tehnomania
