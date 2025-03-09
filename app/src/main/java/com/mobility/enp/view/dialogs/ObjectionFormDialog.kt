@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -46,7 +47,7 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
     private fun setupUI() {
         binding.subjectNumberVal.setText(String.format(Locale.getDefault(), "%d", id))
         binding.checkbox1.buttonTintList =
-            ColorStateList.valueOf(resources.getColor(R.color.figmaSplashScreenColor))
+            ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.figmaSplashScreenColor))
         binding.checkbox1.isEnabled = false
     }
 
