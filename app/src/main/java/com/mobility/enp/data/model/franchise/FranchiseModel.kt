@@ -16,5 +16,6 @@ data class FranchiseModel(
     val halfColor : Int,
     val backButtonResource :Int,
     val downArrowResource : Int,
-    val upArrowResource : Int
+    val upArrowResource : Int,
+    val rightArrowResource : Int
 )

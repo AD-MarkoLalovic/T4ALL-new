@@ -129,6 +129,7 @@ class HomeFragment : Fragment() {
                 if (::adapterProgress.isInitialized) {
                     adapterProgress.updateFranchiserDotColor(franchiseModel.promotionsDot)
                 }
+                binding.switchToPageBill.setBackgroundResource(data.rightArrowResource)
             }
         }
 

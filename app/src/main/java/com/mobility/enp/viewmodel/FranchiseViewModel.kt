@@ -34,7 +34,7 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
             }
 
             portalKey?.let {
-                val franchiseModel = Util.fransizerID(it, context)
+                val franchiseModel = Util.franchiseID(it, context)
                 _franchiseModel.value = franchiseModel
             }
         }
