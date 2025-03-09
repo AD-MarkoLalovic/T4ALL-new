@@ -298,8 +298,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                             }
                         }
                     }
-
-                    else -> {}
                 }
             }
         }
@@ -331,12 +329,26 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                     }
 
                     is NetworkError.ApiError -> {
-                        _baseTagDataState.value =
-                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
-                        Log.d(TAG, "api error ${error.errorResponse.message}")
-                    }
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN UserPassViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                _baseTagDataState.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
 
-                    else -> {}
+                            else -> {
+                                _baseTagDataState.value =
+                                    SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                                Log.d(TAG, "api error ${error.errorResponse.message}")
+                            }
+                        }
+                    }
                 }
             }
         }
