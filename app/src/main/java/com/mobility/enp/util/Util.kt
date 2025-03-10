@@ -65,7 +65,8 @@ object Util {
             R.drawable.arrow_right_telekom,
             R.drawable.loop_telekom,
             R.drawable.ic_camera_telekom,
-            R.drawable.ic_language_home_screen_telekom
+            R.drawable.ic_language_home_screen_telekom,
+            R.drawable.calendar_today_telekom
         )
 
         map["a2ac8612-4b25-43e3-8017-fcf8ad0da0c4"] = FranchiseModel(
@@ -84,7 +85,8 @@ object Util {
             R.drawable.arrow_right_s_blue,
             R.drawable.loop_s_blue,
             R.drawable.ic_camera_s_blue,
-            R.drawable.ic_language_home_screen_s_blue
+            R.drawable.ic_language_home_screen_s_blue,
+            R.drawable.calendar_today_s_blue
         )
 
         map["9aa3e972-d84b-40df-b35d-d14a229c03e3"] = FranchiseModel(
@@ -103,7 +105,8 @@ object Util {
             R.drawable.arrow_right_amss,
             R.drawable.loop_amss,
             R.drawable.ic_camera_amss,
-            R.drawable.ic_language_home_screen_amss
+            R.drawable.ic_language_home_screen_amss,
+            R.drawable.calendar_today_amss
         )
 
         map["d47b35d1-bb44-4618-9b31-cf7e961595ec"] = FranchiseModel(
@@ -122,7 +125,8 @@ object Util {
             R.drawable.arrow_right_tehnomania,
             R.drawable.loop_tehnomania,
             R.drawable.ic_camera_tehnomania,
-            R.drawable.ic_language_home_screen_tehnomania
+            R.drawable.ic_language_home_screen_tehnomania,
+            R.drawable.calendar_today_tehnomania
         )
 
 
