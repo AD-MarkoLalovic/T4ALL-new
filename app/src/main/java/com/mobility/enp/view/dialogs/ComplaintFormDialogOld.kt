@@ -1,23 +1,28 @@
 package com.mobility.enp.view.dialogs
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
+import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.databinding.DialogComplaintFormNewOldBinding
 import com.mobility.enp.util.setDimensionsPercent
-import androidx.core.graphics.drawable.toDrawable
+import com.mobility.enp.viewmodel.FranchiseViewModel
 
-class ComplaintFormDialogNewOld(val onConfirmButton: (ComplaintBody) -> Unit, complaintId: Int) :
+class ComplaintFormDialogOld(val onConfirmButton: (ComplaintBody) -> Unit, complaintId: Int) :
     DialogFragment() {
 
     private lateinit var binding: DialogComplaintFormNewOldBinding
     private val id: Int = complaintId
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +37,8 @@ class ComplaintFormDialogNewOld(val onConfirmButton: (ComplaintBody) -> Unit, co
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setFranchise()
+
         binding.cancelComplaintForm.setOnClickListener {
             dialog?.dismiss()
         }
@@ -40,6 +47,26 @@ class ComplaintFormDialogNewOld(val onConfirmButton: (ComplaintBody) -> Unit, co
             handleComplaintFormSubmission()
         }
 
+    }
+
+    private fun setFranchise() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.buttonConfirmComplaint.backgroundTintList = ColorStateList.valueOf(color)
+
+
+                val parent = binding.constraintLayout
+
+                for (i in 0 until parent.childCount) {
+                    val view = parent.getChildAt(i)
+                    if (view is TextInputLayout) {
+                        view.boxStrokeColor = color
+                        val editText = view.editText
+                        editText?.setTextColor(color)
+                    }
+                }
+            }
+        }
     }
 
     override fun onStart() {

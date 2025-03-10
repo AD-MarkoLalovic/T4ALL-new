@@ -20,7 +20,7 @@ import com.mobility.enp.databinding.ItemRelationPassageRealBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.dialogs.ComplaintFormDialog
-import com.mobility.enp.view.dialogs.ComplaintFormDialogNewOld
+import com.mobility.enp.view.dialogs.ComplaintFormDialogOld
 import com.mobility.enp.view.dialogs.ObjectionFormDialog
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -71,7 +71,7 @@ class HistoryContentPagingAdapter(
                 } else if (countryCode.isNotEmpty() && countryCode != "RS") {
                     val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
-                    val complaintFormDialog = ComplaintFormDialogNewOld({ complaintBody ->
+                    val complaintFormDialog = ComplaintFormDialogOld({ complaintBody ->
                         complaintInterface.sendComplaintData(complaintBody)
                     }, relation.itemId)
 
