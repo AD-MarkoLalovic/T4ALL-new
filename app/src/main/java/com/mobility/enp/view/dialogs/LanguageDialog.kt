@@ -1,17 +1,21 @@
 package com.mobility.enp.view.dialogs
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.mobility.enp.R
 import com.mobility.enp.databinding.LanguageDialogLayoutBinding
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.LanguageViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -22,6 +26,7 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
     private var _binding: LanguageDialogLayoutBinding? = null
     private val binding: LanguageDialogLayoutBinding get() = _binding!!
     private val viewModel: LanguageViewModel by viewModels { LanguageViewModel.Factory }
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
     private var previousLanguageCode: String? = null
 
@@ -38,6 +43,7 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setFranchise()
         observeViewModel()
         viewModel.fetchAllowedLanguages()
 
@@ -59,8 +65,22 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
             }
             languageCode?.let { viewModel.saveLanguage(it) }
         }
+    }
 
+    private fun setFranchise() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.buttonCloseDialog.backgroundTintList = ColorStateList.valueOf(color)
 
+                val parent = binding.radioGroup
+                for (i in 0 until parent.childCount) {
+                    val view = parent.getChildAt(i)
+                    if (view is RadioButton) {
+                        view.buttonTintList = franchiseModel.navHomeDrawable
+                    }
+                }
+            }
+        }
     }
 
     private fun observeViewModel() {
