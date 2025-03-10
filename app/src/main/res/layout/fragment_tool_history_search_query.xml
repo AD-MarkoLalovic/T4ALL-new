@@ -95,8 +95,8 @@
                 android:id="@+id/chkBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:buttonTint="@color/primary_light_dark"
                 android:layout_marginEnd="@dimen/dimens_3dp"
+                android:elevation="@dimen/dimens_10dp"
                 app:layout_constraintBottom_toBottomOf="@+id/txtShowAllTags"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/txtShowAllTags" />
