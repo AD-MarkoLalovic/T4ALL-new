@@ -3,6 +3,7 @@ package com.mobility.enp.view.dialogs
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
@@ -47,7 +50,12 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
     private fun setupUI() {
         binding.subjectNumberVal.setText(String.format(Locale.getDefault(), "%d", id))
         binding.checkbox1.buttonTintList =
-            ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.figmaSplashScreenColor))
+            ColorStateList.valueOf(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.figmaSplashScreenColor
+                )
+            )
         binding.checkbox1.isEnabled = false
     }
 
@@ -64,9 +72,13 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
 
     private fun showDatePicker() {
         val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
+        val constraintsBuilder = CalendarConstraints.Builder()
+            .setValidator(DateValidatorPointBackward.now())
+
         val datePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText(getString(R.string.select_date))
             .setSelection(System.currentTimeMillis())
+            .setCalendarConstraints(constraintsBuilder.build())
             .setNegativeButtonText(getString(R.string.cancel))
             .setPositiveButtonText(getString(R.string.confirm))
             .build()
@@ -75,6 +87,7 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
             try {
                 binding.complaintId.setText(convertLongToDateString(it))
             } catch (e: Exception) {
+                Log.e("ObjectionFormDialog", "fun showDatePicker", e)
                 Toast.makeText(
                     requireContext(),
                     getString(R.string.please_enter_date_manually),
