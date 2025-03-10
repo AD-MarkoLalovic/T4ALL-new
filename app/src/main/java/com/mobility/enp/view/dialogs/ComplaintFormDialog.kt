@@ -196,11 +196,11 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
             ): View {
                 val view = super.getDropDownView(position, convertView, parent)
 
-                if (color != null) {
+                color?.let {
                     (view as? TextView)?.setTextColor(
-                        color
+                        ColorStateList.valueOf(it)
                     )
-                } else {
+                }?:run {
                     (view as? TextView)?.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),
@@ -208,6 +208,7 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                         )
                     )
                 }
+
                 return view
             }
 
@@ -223,7 +224,7 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                     id: Long
                 ) {
                     val textView = view as? TextView
-                    if (color != null) {
+                    color?.let {
                         if (position == 0) {
                             textView?.setTextColor(
                                 ContextCompat.getColor(requireContext(), R.color.hint_text_color)
@@ -234,7 +235,7 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                                 color
                             )
                         }
-                    } else {
+                    }?:run {
                         if (position == 0) {
                             textView?.setTextColor(
                                 ContextCompat.getColor(requireContext(), R.color.hint_text_color)
@@ -263,15 +264,37 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
     }
 
     private fun setupUniqueNumberSpinner(uniqueNumbers: List<Int>) {
+        val color = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
+
         if (uniqueNumbers.size == 1) {
             // Ako postoji samo jedan element
             val singleItem = uniqueNumbers.first().toString()
             binding.uniqueNumbersSpinner.apply {
-                adapter = ArrayAdapter(
+                adapter = object : ArrayAdapter<String>(
                     requireContext(),
                     R.layout.item_unique_numbers_spinner,
                     listOf(singleItem)
-                )
+                ) {
+                    override fun getView(
+                        position: Int,
+                        convertView: View?,
+                        parent: ViewGroup
+                    ): View {
+                        val view = super.getView(position, convertView, parent)
+                        color?.let {
+                            (view as? TextView)?.setTextColor(color)
+
+                        } ?: run {
+                            (view as? TextView)?.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.figmaSplashScreenColor
+                                )
+                            )
+                        }
+                        return view
+                    }
+                }
                 setSelection(0)
                 isClickable = false
                 isEnabled = false
@@ -289,16 +312,15 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                     convertView: View?,
                     parent: ViewGroup
                 ): View {
-                    val color = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
 
                     val view = super.getDropDownView(position, convertView, parent)
                     view.layoutParams.height =
                         (32 * resources.displayMetrics.density).toInt() // 32dp u px
-                    if (color != null) {
+                    color?.let {
                         (view as? TextView)?.setTextColor(
                             color
                         )
-                    } else {
+                    }?:run {
                         (view as? TextView)?.setTextColor(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -310,12 +332,11 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                 }
 
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                    val color = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
-
                     val view = super.getView(position, convertView, parent)
-                    if (color != null) {
+                    color?.let {
                         (view as? TextView)?.setTextColor(color)
-                    } else {
+
+                    }?:run {
                         (view as? TextView)?.setTextColor(
                             ContextCompat.getColor(requireContext(), R.color.figmaSplashScreenColor)
                         )
