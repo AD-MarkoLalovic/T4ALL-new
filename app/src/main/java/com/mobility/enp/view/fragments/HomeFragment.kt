@@ -94,11 +94,6 @@ class HomeFragment : Fragment() {
                 displayProfileImage(binding.imageAccountHomeScreen, it)
             }
         }
-        collectLatestLifecycleFlow(viewModel.homeCards) { cards ->
-            cards?.let {
-                setHomeCardsAdapter(it)
-            }
-        }
 
         collectLatestLifecycleFlow(viewModel.homeTollHistory) { tollHistory ->
             homePassageAdapter.submitList(tollHistory)
@@ -148,6 +143,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun handleSuccess(result: SubmitResult.Success<HomeWithDetails>) {
+        viewModel.homeCards.value?.let {
+            setHomeCardsAdapter(it)
+        }
 
         franchiseViewModel.getFranchiseModel(result.data.home.portalKey, requireContext())
 
