@@ -52,7 +52,10 @@
                     app:cardElevation="@dimen/dimens_4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    >
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/constraintLayoutInCard"
@@ -99,6 +102,8 @@
                     android:layout_height="@dimen/dimens_85dp"
                     android:layout_gravity="center_horizontal"
                     android:contentDescription="@null"
+                    android:visibility="gone"
+                    tools:visibility="visible"
                     android:src="@drawable/ic_account_home_screen"
                     android:translationZ="@dimen/dimens_6dp"
                     app:layout_constraintEnd_toEndOf="parent"

@@ -129,6 +129,8 @@ class HomeFragment : Fragment() {
                 handleSuccess(result)
                 binding.progBar.visibility = View.GONE
                 binding.linearHomeContainer.visibility = View.VISIBLE
+                binding.cardViewAccountHomeScreen.visibility = View.VISIBLE
+                binding.imageAccountHomeScreen.visibility = View.VISIBLE
             }
 
             is SubmitResult.Empty -> {}
