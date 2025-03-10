@@ -102,6 +102,8 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 viewModelProfile.logout() // this deletes room local
                 franchiseViewModel.deleteData() // this deletes stored object as it will persist on logout otherwise
 
+                (requireContext() as MainActivity).setDefaultLogo()
+
                 findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
             }
         }
@@ -135,7 +137,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
             }
         }
 
-        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){ data ->
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { data ->
             data?.franchiseProfileResource?.let {
                 binding.rectangleProfilePicture.setImageResource(it)
             }

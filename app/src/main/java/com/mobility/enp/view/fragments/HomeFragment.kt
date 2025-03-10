@@ -124,7 +124,11 @@ class HomeFragment : Fragment() {
 
     private fun handleHomeDataResult(result: SubmitResult<HomeWithDetails>) {  // data save in room directly on api response / model returned combined
         when (result) {
-            is SubmitResult.Loading -> binding.progBar.visibility = View.VISIBLE
+            is SubmitResult.Loading -> {
+                binding.progBar.visibility = View.VISIBLE
+                (requireActivity() as MainActivity).hideLogo(true)
+            }
+
             is SubmitResult.Success -> {
                 handleSuccess(result)
                 binding.progBar.visibility = View.GONE
@@ -148,6 +152,8 @@ class HomeFragment : Fragment() {
         viewModel.homeCards.value?.let {
             setHomeCardsAdapter(it)
         }
+
+        (requireActivity() as MainActivity).hideLogo(false)
 
         franchiseViewModel.getFranchiseModel(result.data.home.portalKey, requireContext())
 
