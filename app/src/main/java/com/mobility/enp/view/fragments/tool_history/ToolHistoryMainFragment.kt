@@ -92,6 +92,12 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
     private fun setObservers() {
 
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+               binding.loopIcon.setBackgroundResource(franchiseModel.loopIcon)
+            }
+        }
+
         collectLatestLifecycleFlow(vModel.baseTagDataState) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {

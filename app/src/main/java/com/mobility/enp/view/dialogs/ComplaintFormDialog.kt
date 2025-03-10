@@ -1,5 +1,6 @@
 package com.mobility.enp.view.dialogs
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +14,9 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.databinding.DialogComplaintFormBinding
@@ -22,6 +25,7 @@ import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.ui_models.BankUIModel
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.PassageHistoryBanksVm
 
 class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complaintId: Int) :
@@ -31,6 +35,7 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
     private lateinit var binding: DialogComplaintFormBinding
     private val id: Int = complaintId
     private lateinit var bankNames: MutableList<String>
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +50,7 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setUpFranchise()
         observerBanks()
 
         binding.cancelComplaintForm.setOnClickListener {
@@ -56,6 +62,26 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
         }
 
         enableAccountInputs()
+    }
+
+    private fun setUpFranchise() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.buttonConfirmComplaint.backgroundTintList = ColorStateList.valueOf(color)
+
+                val parent = binding.constraintLayout
+
+                for (i in 0 until parent.childCount) {
+                    val view = parent.getChildAt(i)
+
+                    if (view is TextInputLayout) {
+                        view.boxStrokeColor = color
+                        val editText = view.editText
+                        editText?.setTextColor(color)
+                    }
+                }
+            }
+        }
     }
 
     private fun handleComplaintFormSubmission() {
@@ -152,6 +178,7 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
         bankNames = mutableListOf(getString(R.string.hint_select_bank)).apply {
             addAll(bankList.map { it.bankName })
         }
+        val color = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
 
         // Adapter za spinner
         val bankAdapter = object : ArrayAdapter<String>(
@@ -168,12 +195,19 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                 parent: ViewGroup
             ): View {
                 val view = super.getDropDownView(position, convertView, parent)
-                (view as? TextView)?.setTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        if (position == 0) R.color.hint_text_color else R.color.figmaSplashScreenColor
+
+                if (color != null) {
+                    (view as? TextView)?.setTextColor(
+                        color
                     )
-                )
+                } else {
+                    (view as? TextView)?.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            if (position == 0) R.color.hint_text_color else R.color.figmaSplashScreenColor
+                        )
+                    )
+                }
                 return view
             }
 
@@ -189,18 +223,31 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                     id: Long
                 ) {
                     val textView = view as? TextView
-                    if (position == 0) {
-                        textView?.setTextColor(
-                            ContextCompat.getColor(requireContext(), R.color.hint_text_color)
-                        )
-                        return // Ako je hint, ne radimo ništa
+                    if (color != null) {
+                        if (position == 0) {
+                            textView?.setTextColor(
+                                ContextCompat.getColor(requireContext(), R.color.hint_text_color)
+                            )
+                            return
+                        } else {
+                            textView?.setTextColor(
+                                color
+                            )
+                        }
                     } else {
-                        textView?.setTextColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.figmaSplashScreenColor
-                            ) // Plava boja za izabranu stavku
-                        )
+                        if (position == 0) {
+                            textView?.setTextColor(
+                                ContextCompat.getColor(requireContext(), R.color.hint_text_color)
+                            )
+                            return
+                        } else {
+                            textView?.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.figmaSplashScreenColor
+                                )
+                            )
+                        }
                     }
 
                     // Obrada odabrane stavke
@@ -236,14 +283,43 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                 R.layout.item_unique_numbers_spinner_arrow,
                 uniqueNumberStrings
             ) {
+
                 override fun getDropDownView(
                     position: Int,
                     convertView: View?,
                     parent: ViewGroup
                 ): View {
+                    val color = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
+
                     val view = super.getDropDownView(position, convertView, parent)
                     view.layoutParams.height =
                         (32 * resources.displayMetrics.density).toInt() // 32dp u px
+                    if (color != null) {
+                        (view as? TextView)?.setTextColor(
+                            color
+                        )
+                    } else {
+                        (view as? TextView)?.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                if (position == 0) R.color.hint_text_color else R.color.figmaSplashScreenColor
+                            )
+                        )
+                    }
+                    return view
+                }
+
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val color = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
+
+                    val view = super.getView(position, convertView, parent)
+                    if (color != null) {
+                        (view as? TextView)?.setTextColor(color)
+                    } else {
+                        (view as? TextView)?.setTextColor(
+                            ContextCompat.getColor(requireContext(), R.color.figmaSplashScreenColor)
+                        )
+                    }
                     return view
                 }
             }
