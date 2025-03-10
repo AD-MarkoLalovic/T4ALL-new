@@ -19,7 +19,6 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
-import com.mobility.enp.BuildConfig
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
@@ -65,20 +64,7 @@ class HomeFragment : Fragment() {
         setupObservers()
         setupClickListeners()
 
-        // test method for franchisers
-        setUpFranchisePicker()
-
         viewModel.fetchHomeData()
-    }
-
-    private fun setUpFranchisePicker() {  // for testing purposes only - remove in production
-        if (BuildConfig.DEBUG) {
-            binding.testFranchise.visibility = View.VISIBLE
-            binding.testFranchise.setOnClickListener {
-                val action = HomeFragmentDirections.actionGlobalFranchiseTestDialog()
-                findNavController().navigate(action)
-            }
-        }
     }
 
     private fun setupBinding() {
@@ -148,8 +134,6 @@ class HomeFragment : Fragment() {
                 handleSuccess(result)
                 binding.progBar.visibility = View.GONE
                 binding.linearHomeContainer.visibility = View.VISIBLE
-
-                franchiseViewModel.getFranchiseModel(requireContext())
             }
 
             is SubmitResult.Empty -> {}
@@ -164,6 +148,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun handleSuccess(result: SubmitResult.Success<HomeWithDetails>) {
+
+        franchiseViewModel.getFranchiseModel(result.data.home.portalKey, requireContext())
+
         result.data.home.displayName.let { viewModel.loadProfileImage(it) }
         val invoiceDetails = result.data.invoice
         if (invoiceDetails.isNotEmpty()) {

@@ -23,7 +23,7 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
     private val _franchiseModel: MutableLiveData<FranchiseModel?> = MutableLiveData()
     val franchiseModel: LiveData<FranchiseModel?> get() = _franchiseModel
 
-    suspend fun deleteData(){
+    fun deleteData(){
         _franchiseModel.value = null
     }
 
@@ -31,6 +31,17 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
         return repository.getHomeEntity()
     }
 
+
+    fun getFranchiseModel(portalKey: String?,context: Context){
+        portalKey?.let {
+            val franchiseModel = Util.franchiseID(it, context)
+            _franchiseModel.value = franchiseModel
+        }
+    }
+
+
+
+    //testing method
     fun getFranchiseModel(context: Context) {
         viewModelScope.launch {
             val portalKey = withContext(Dispatchers.IO) {
@@ -44,6 +55,7 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
         }
     }
 
+    //testing method
     fun upsertHomeData(portalKey: String, context: Context) { // for testing
         viewModelScope.launch(Dispatchers.IO) {
             val homeEntity = repository.getHomeEntity()
