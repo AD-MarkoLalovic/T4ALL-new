@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tags.PostLostTag
 import com.mobility.enp.data.model.api_tags.TagFilterData
@@ -70,9 +71,18 @@ class MyTagsFragment : Fragment(), AdapterTagFilterType.OnClick, MyTagsAdapter.O
 
     private fun setFranchiser() {
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
-            franchiseModel?.franchisePrimaryColor?.let {
-                binding.buttonAddTag.backgroundTintList = ColorStateList.valueOf(it)
-                binding.inputSerialNumber.boxStrokeColor = it
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.buttonAddTag.backgroundTintList = ColorStateList.valueOf(color)
+                binding.inputSerialNumber.boxStrokeColor = color
+                binding.editSerialNumberMyTags.setTextColor(ColorStateList.valueOf(color))
+                val parent = binding.constraintLayout
+
+                for (i in 0 until parent.childCount) {
+                    val view = parent.getChildAt(i)
+                    if (view is TextInputLayout) {
+                        view.boxStrokeColor = color
+                    }
+                }
             }
         }
     }
