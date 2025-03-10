@@ -93,17 +93,16 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         }
 
         binding.buttonSignOut.setOnClickListener {
-            context?.let {
-                lifecycleScope.launch {
-                    // added internet check if no internet just logout without token delete
+            viewLifecycleOwner.lifecycleScope.launch {
+                // added internet check if no internet just logout without token delete
 
-                    viewModelProfile.deleteFirebaseToken(errorBody)  // this deletes from server
-                    viewModelProfile.postLogoutUser(errorBody)
+                viewModelProfile.deleteFirebaseToken(errorBody)  // this deletes from server
+                viewModelProfile.postLogoutUser(errorBody)
 
-                    viewModelProfile.logout() // this deletes room local
+                viewModelProfile.logout() // this deletes room local
+                franchiseViewModel.deleteData() // this deletes stored object as it will persist on logout otherwise
 
-                    findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
-                }
+                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
             }
         }
 
