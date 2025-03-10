@@ -1,7 +1,6 @@
 package com.mobility.enp.view.fragments.tool_history
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,13 +57,22 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated: ${vModel.startDate.value} ${vModel.endDate.value} ")
 
         setObservers()
         setAdapter()
+        setFranchise()
 
         binding.btnReset.setOnClickListener {
             findNavController().navigate(ToolHistoryResultFragmentDirections.actionToolHistorySearchResultFragmentToToolHistoryFragment())
+        }
+    }
+
+    private fun setFranchise() {
+        //btnReset
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.btnReset.setTextColor(color)
+            }
         }
     }
 
