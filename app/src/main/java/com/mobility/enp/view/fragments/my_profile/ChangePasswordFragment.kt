@@ -56,7 +56,12 @@ class ChangePasswordFragment : Fragment() {
             validatePassword(oldPassword, newPassword, repeatPassword)
         }
 
-        with(binding){
+        val color = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
+        if (color == null) {
+            requireContext().resources.getColor(R.color.figmaSplashScreenColor, null)
+        }
+
+        with(binding) {
             enterOldPassword.setOnClickListener {
                 if (enterOldPassword.inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                     enterOldPassword.inputType =
@@ -67,10 +72,7 @@ class ChangePasswordFragment : Fragment() {
                     )
                     enterOldPassword.setTextAppearance(R.style.Paragraph)
                     enterOldPassword.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.figmaSplashScreenColor
-                        )
+                        color!!
                     )
 
                 } else {
@@ -81,10 +83,7 @@ class ChangePasswordFragment : Fragment() {
                     )
                     enterOldPassword.setTextAppearance(R.style.Paragraph)
                     enterOldPassword.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.figmaSplashScreenColor
-                        )
+                        color!!
                     )
                 }
 
@@ -101,10 +100,7 @@ class ChangePasswordFragment : Fragment() {
                     )
                     enterNewPassword.setTextAppearance(R.style.Paragraph)
                     enterNewPassword.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.figmaSplashScreenColor
-                        )
+                        color!!
                     )
 
                 } else {
@@ -115,10 +111,7 @@ class ChangePasswordFragment : Fragment() {
                     )
                     enterNewPassword.setTextAppearance(R.style.Paragraph)
                     enterNewPassword.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.figmaSplashScreenColor
-                        )
+                        color!!
                     )
                 }
 
@@ -135,10 +128,7 @@ class ChangePasswordFragment : Fragment() {
                     )
                     enterRepeatPassword.setTextAppearance(R.style.Paragraph)
                     enterRepeatPassword.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.figmaSplashScreenColor
-                        )
+                        color!!
                     )
 
                 } else {
@@ -149,10 +139,7 @@ class ChangePasswordFragment : Fragment() {
                     )
                     enterRepeatPassword.setTextAppearance(R.style.Paragraph)
                     enterRepeatPassword.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.figmaSplashScreenColor
-                        )
+                        color!!
                     )
                 }
 
@@ -165,8 +152,8 @@ class ChangePasswordFragment : Fragment() {
     }
 
     private fun setFranchiser() {
-        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
-            franchiseModel?.franchisePrimaryColor?.let { color->
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
                 binding.btChangePassword.backgroundTintList = ColorStateList.valueOf(color)
 
 
