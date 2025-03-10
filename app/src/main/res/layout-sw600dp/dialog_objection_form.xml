@@ -112,8 +112,12 @@
                     style="@style/Paragraph"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:drawableEnd="@drawable/calendar_today"
-                    android:hint="mm/dd/yyyy"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:hint="@string/mm_dd_yyyy"
+                    android:inputType="none"
                     android:textColor="@color/figmaSplashScreenColor"
                     android:textColorHint="@color/figmaIntroEclipseColorInactive" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -135,9 +139,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dimens_16dp"
                 android:text="@string/response_to_toll_complaint"
+                android:textColor="@color/figmaSplashScreenColor"
                 app:layout_constraintBottom_toBottomOf="@+id/checkbox1"
                 app:layout_constraintEnd_toStartOf="@id/checkbox1"
-                android:textColor="@color/figmaSplashScreenColor"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/checkbox1" />
 
@@ -145,6 +149,7 @@
                 android:id="@+id/checkbox1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txHintEnterRegistrationPlate" />
 

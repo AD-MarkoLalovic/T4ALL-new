@@ -73,7 +73,6 @@
                         android:inputType="number"
                         android:textColor="@color/figmaSplashScreenColor"
                         android:textColorHint="@color/figmaIntroEclipseColorInactive" />
-
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -99,7 +98,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/subText" />
-
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/txtComplaintId"
@@ -127,12 +125,13 @@
                         android:layout_height="wrap_content"
                         android:drawableEnd="@drawable/calendar_today"
                         android:hint="@string/mm_dd_yyyy"
-                        android:imeOptions="actionNext"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:inputType="none"
+                        android:focusableInTouchMode="true"
                         android:textColor="@color/figmaSplashScreenColor"
                         android:textColorHint="@color/figmaIntroEclipseColorInactive" />
-
                 </com.google.android.material.textfield.TextInputLayout>
-
 
                 <TextView
                     android:id="@+id/txHintEnterRegistrationPlate"
@@ -171,6 +170,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@id/textView1"
+                        android:checked="true"
                         android:layout_alignBottom="@id/textView1"
                         android:layout_alignParentEnd="true" />
 
