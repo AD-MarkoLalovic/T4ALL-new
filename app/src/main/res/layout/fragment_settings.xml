@@ -61,7 +61,7 @@
                 app:layout_constraintTop_toTopOf="@+id/txAllowPush"
                 app:thumbTint="@color/white"
                 app:trackThickness="40dp"
-                app:trackTint="@color/switch_track_colors" />
+                />
 
             <View
                 android:id="@+id/lineSecondSettings"

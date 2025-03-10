@@ -71,6 +71,7 @@ class SupportDialog : DialogFragment() {
             franchiseModel?.franchisePrimaryColor?.let {
                 binding.bttSendSupportMessage.backgroundTintList = ColorStateList.valueOf(it)
                 binding.supportDialogInput.boxStrokeColor = it
+                binding.enterSupportMessage.setTextColor(ColorStateList.valueOf(it))
             }
         }
     }

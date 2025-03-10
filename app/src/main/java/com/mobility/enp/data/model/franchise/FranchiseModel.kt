@@ -19,5 +19,6 @@ data class FranchiseModel(
     val upArrowResource : Int,
     val rightArrowResource : Int,
     val loopIcon: Int,
-    val cameraResource : Int
+    val cameraResource : Int,
+    val languageIcon : Int
 )
