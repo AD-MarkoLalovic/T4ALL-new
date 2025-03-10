@@ -13,10 +13,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.databinding.ItemPaymentAndPassagesBinding
+import com.mobility.enp.viewmodel.FranchiseViewModel
 
 class PaymentAndPassageAdapter(
     private val cards: ArrayList<Card> = arrayListOf(),
-    private val listener: PrimaryCardListener
+    private val listener: PrimaryCardListener,
+    private val franchiseVm: FranchiseViewModel
 ) :
     RecyclerView.Adapter<PaymentAndPassageAdapter.PaymentAndPassageViewHolder>() {
 
@@ -79,14 +81,21 @@ class PaymentAndPassageAdapter(
         private fun setNonPrimaryCardStyle(card: Card) {
             val context = binding.root.context
             val text = context.getString(R.string.choose_primary_card)
+
+            var color = franchiseVm.franchiseModel.value?.franchisePrimaryColor
+
+            if (color == null) {
+                color = ContextCompat.getColor(
+                    context,
+                    R.color.figmaSplashScreenColor
+                )
+            }
+
             val spannableString = SpannableString(text).apply {
                 setSpan(UnderlineSpan(), 0, text.length, 0)
                 setSpan(
                     ForegroundColorSpan(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.figmaSplashScreenColor
-                        )
+                        color
                     ), 0, text.length, 0
                 )
             }

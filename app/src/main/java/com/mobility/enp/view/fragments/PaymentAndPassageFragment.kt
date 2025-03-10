@@ -205,7 +205,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun setupAdapters() {
-        adapter = PaymentAndPassageAdapter(arrayListOf(), this)
+        adapter = PaymentAndPassageAdapter(arrayListOf(), this,franchiseViewModel)
         binding.rvCreditCard.adapter = adapter
 
         cardsCountryAdapter = CardsCountryAdapter(arrayListOf(), this)
@@ -221,8 +221,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 it.data?.sortedWith(compareByDescending<Card> { card -> card.defaultCard })
 
             allCards = sortedCards ?: emptyList()
-
-//            binding.tvTerms.let { view -> view.updateColorBasedOnFranshizer(view) }
 
             if (selectedCountry == "All") {
                 toggleNoCardsMessage(allCards.isEmpty())
@@ -489,6 +487,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         val privacyEnd =
             privacyStart + resources.getString(R.string.card_term_right_clickable).length
 
+        val color = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
+
 
         val clickableSpanTerms = object : ClickableSpan() { // terms and conditions
             override fun onClick(widget: View) {
@@ -502,7 +502,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true
-                ds.color = requireContext().getColor(R.color.figmaSplashScreenColor)
+                if (color != null) {
+                    ds.color = color
+                } else {
+                    ds.color = requireContext().getColor(R.color.figmaSplashScreenColor)
+                }
             }
         }
 
@@ -518,7 +522,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true
-                ds.color = requireContext().getColor(R.color.figmaSplashScreenColor)
+                if (color != null) {
+                    ds.color = color
+                } else {
+                    ds.color = requireContext().getColor(R.color.figmaSplashScreenColor)
+                }
             }
         }
 
@@ -586,7 +594,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 franchiseModel?.halfColor?.let {
                     binding.bttAddCard.backgroundTintList =
                         ColorStateList.valueOf(it)
-                }?:run {
+                } ?: run {
                     binding.bttAddCard.backgroundTintList =
                         ColorStateList.valueOf(requireContext().getColor(R.color.button_not_enabled_web))
                 }
