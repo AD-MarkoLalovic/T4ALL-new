@@ -96,6 +96,8 @@ class AddTagFragment : Fragment() {
                     val view = parent.getChildAt(i)
                     if (view is TextInputLayout) {
                         view.boxStrokeColor = color
+                        val editText = view.editText
+                        editText?.setTextColor(color)
                     }
                 }
             }
