@@ -10,7 +10,7 @@
     <string name="passage_history" translatable="true">Историја на премин</string>
     <string name="search" translatable="true">Пребарај</string>
     <string name="tag_serial_number" translatable="true">Сериски број на таг</string>
-    <string name="complaint" translatable="true">Рекламација</string>
+    <string name="complaint" translatable="true">Жалба</string>
     <string name="refund_request" translatable="true">Побарај враќање на парите.</string>
     <string name="forgot_your_password" translatable="true">Заборавена лозинка?</string>
     <string name="enter_email_for_password_reset" translatable="true">Внесете ја вашата е-пошта и

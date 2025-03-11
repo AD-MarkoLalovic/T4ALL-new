@@ -99,6 +99,13 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Loading)
     val complaintObjectionState: StateFlow<SubmitResult<LostTagResponse>> get() = _complaintObjectionState
 
+    suspend fun getLanguage(): String {
+        return withContext(Dispatchers.IO) {
+            repository.getUserLanguage()
+        }
+    }
+
+
     fun setStateIndex(indexData: IndexData) { // from room
         _baseTagDataState.value = SubmitResult.Success(indexData)
     }

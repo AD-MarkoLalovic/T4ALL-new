@@ -10,7 +10,7 @@
     <string name="passage_history">Ιστορικό διοδίων</string>
     <string name="search">Αναζήτηση</string>
     <string name="tag_serial_number">Σειριακός αριθμός ετικέτας</string>
-    <string name="complaint">Φόρμα παραπόνων</string>
+    <string name="complaint">Καταγγελία</string>
     <string name="refund_request">Αίτημα επιστροφής χρημάτων</string>
     <string name="forgot_your_password">Ξεχάσατε τον κωδικό σας;</string>
     <string name="enter_email_for_password_reset">Εισάγετε τη διεύθυνση email σας και θα σταλούν οδηγίες για την επαναφορά του κωδικού σας.</string>
