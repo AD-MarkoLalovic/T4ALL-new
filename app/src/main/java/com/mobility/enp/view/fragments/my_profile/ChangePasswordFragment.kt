@@ -57,9 +57,7 @@ class ChangePasswordFragment : Fragment() {
         }
 
         val color = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
-        if (color == null) {
-            requireContext().resources.getColor(R.color.figmaSplashScreenColor, null)
-        }
+            ?: requireContext().resources.getColor(R.color.figmaSplashScreenColor, null)
 
         with(binding) {
             enterOldPassword.setOnClickListener {

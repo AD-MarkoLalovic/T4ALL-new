@@ -82,14 +82,9 @@ class PaymentAndPassageAdapter(
             val context = binding.root.context
             val text = context.getString(R.string.choose_primary_card)
 
-            var color = franchiseVm.franchiseModel.value?.franchisePrimaryColor
-
-            if (color == null) {
-                color = ContextCompat.getColor(
-                    context,
-                    R.color.figmaSplashScreenColor
-                )
-            }
+            var color =
+                franchiseVm.franchiseModel.value?.franchisePrimaryColor
+                    ?: context.resources.getColor(R.color.figmaSplashScreenColor, null)
 
             val spannableString = SpannableString(text).apply {
                 setSpan(UnderlineSpan(), 0, text.length, 0)

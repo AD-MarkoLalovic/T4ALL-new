@@ -205,7 +205,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun setupAdapters() {
-        adapter = PaymentAndPassageAdapter(arrayListOf(), this,franchiseViewModel)
+        adapter = PaymentAndPassageAdapter(arrayListOf(), this, franchiseViewModel)
         binding.rvCreditCard.adapter = adapter
 
         cardsCountryAdapter = CardsCountryAdapter(arrayListOf(), this)
@@ -502,9 +502,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true
-                if (color != null) {
-                    ds.color = color
-                } else {
+
+                color?.let {
+                    ds.color = it
+                } ?: run {
                     ds.color = requireContext().getColor(R.color.figmaSplashScreenColor)
                 }
             }
@@ -522,9 +523,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true
-                if (color != null) {
-                    ds.color = color
-                } else {
+
+                color?.let {
+                    ds.color = it
+                } ?: run {
                     ds.color = requireContext().getColor(R.color.figmaSplashScreenColor)
                 }
             }
