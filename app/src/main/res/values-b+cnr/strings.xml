@@ -10,7 +10,7 @@
     <string name="passage_history">Istorija prolaza</string>
     <string name="search">Pretraga</string>
     <string name="tag_serial_number">Seriski broj oznake</string>
-    <string name="complaint">Žalba</string>
+    <string name="complaint">Reklamacija</string>
     <string name="refund_request">Zahtjev za povrat novca</string>
     <string name="forgot_your_password">Zaboravili ste šifru?</string>
     <string name="enter_email_for_password_reset">Unesite vašu email adresu i instrukcije za resetovanje šifre će vam biti poslate na email.</string>

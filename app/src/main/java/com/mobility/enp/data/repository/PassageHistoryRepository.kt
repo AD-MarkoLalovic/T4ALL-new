@@ -227,12 +227,6 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         return Result.failure(NetworkError.ServerError)
     }
 
-    suspend fun getToken(): String? {
-        return withContext(Dispatchers.IO) {
-            getUserToken()
-        }
-    }
-
     fun fetchContext(): Context {
         return context
     }
@@ -259,6 +253,12 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         return withContext(Dispatchers.IO) {
             database.toolListingDao().fetchPassageBySerial(serial)
         }
+    }
+
+    suspend fun getUserLanguage(): String {
+        val languageTable = database.languageDao().fetchAllowedUsers()
+        return languageTable?.userLanguage ?: "en"
+
     }
 
 }
