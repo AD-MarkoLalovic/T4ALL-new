@@ -28,6 +28,8 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.PdfWriter
@@ -861,17 +863,27 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
             Log.d(TAG, "showDatePicker: ${convertLongToDateString(selectedDate)}")
 
-            val langContext =
-                getLocale()  // dont delete this it gives context to date picker even if the variable is not used.
+            val locale = when (val lang = getLanguage()) {
+                "cyr" -> Locale("sr", "RS")
+                "sr", "cnr" -> Locale("sr_Latn", "RS", "Latn")
+                else -> Locale(lang)
+            }
+
+            Locale.setDefault(locale)
+            val config = context.resources.configuration
+            config.setLocale(locale)
+            context.createConfigurationContext(config)
+
+            val constraintsBuilder = CalendarConstraints.Builder()
+                .setValidator(DateValidatorPointBackward.now())
 
             val datePicker = MaterialDatePicker.Builder.datePicker()
-
                 .setTitleText(context.getString(R.string.select_date))
                 .setSelection(selectedDate)
+                .setCalendarConstraints(constraintsBuilder.build())
                 .setNegativeButtonText(context.getString(R.string.cancel))
                 .setPositiveButtonText(context.getString(R.string.confirm))
                 .build()
-
 
             datePicker.addOnPositiveButtonClickListener {// time in long
                 try {
@@ -905,7 +917,8 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
             languageKey?.let { key ->
                 val locale: Locale
                 if (key == "cyr" || key.isEmpty()) {
-                    locale = Locale("SR")
+                    locale =
+                        Locale.Builder().setLanguage("sr").setRegion("RS").setScript("Cyrl").build()
                 } else if (key == "sr" || key == "cnr") {
                     locale =
                         Locale.Builder().setLanguage("sr").setRegion("RS").setScript("Latn").build()
