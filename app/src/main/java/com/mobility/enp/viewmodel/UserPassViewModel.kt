@@ -917,7 +917,8 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
             languageKey?.let { key ->
                 val locale: Locale
                 if (key == "cyr" || key.isEmpty()) {
-                    locale = Locale("SR")
+                    locale =
+                        Locale.Builder().setLanguage("sr").setRegion("RS").setScript("Cyrl").build()
                 } else if (key == "sr" || key == "cnr") {
                     locale =
                         Locale.Builder().setLanguage("sr").setRegion("RS").setScript("Latn").build()
