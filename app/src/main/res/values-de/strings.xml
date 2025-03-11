@@ -105,7 +105,7 @@
     <string name="invoice_details">Rechnungsdetails</string>
     <string name="lorem_ipsum">Lorem Ipsum</string>
     <string name="order_number">Bestellnummer</string>
-    <string name="credit_card_successful">Kreditkarte erfolgreich</string>
+    <string name="credit_card_successful">Die Kreditkarte wurde erfolgreich hinzugefügt.</string>
     <string name="tag_confirmed">Tag bestätigt</string>
     <string name="name_and_surname">Name und Nachname</string>
     <string name="tag">Etikett</string>

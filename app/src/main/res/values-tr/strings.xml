@@ -104,7 +104,7 @@
     <string name="invoice_details">Fatura Detayları</string>
     <string name="lorem_ipsum">Lorem Ipsum</string>
     <string name="order_number">Sipariş numarası</string>
-    <string name="credit_card_successful">Kredi kartı başarılı</string>
+    <string name="credit_card_successful">Kredi kartı başarıyla eklendi.</string>
     <string name="tag_confirmed">Etiket onaylandı</string>
     <string name="name_and_surname">Ad ve Soyad</string>
     <string name="tag">Etiket</string>

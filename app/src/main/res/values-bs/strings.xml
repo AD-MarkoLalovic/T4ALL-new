@@ -97,7 +97,7 @@
     <string name="invoice_details">Detalji fakture</string>
     <string name="lorem_ipsum">Lorem Ipsum</string>
     <string name="order_number">Broj narudžbe</string>
-    <string name="credit_card_successful">Kreditna kartica uspješna</string>
+    <string name="credit_card_successful">Kreditna kartica je uspješno dodana.</string>
     <string name="tag_confirmed">Oznaka potvrđena</string>
     <string name="name_and_surname">Ime i prezime</string>
     <string name="tag">Oznaka</string>
