@@ -28,7 +28,6 @@ class CardFragment : Fragment() {
 
     private var _binding: FragmentTosBinding? = null
     private val binding: FragmentTosBinding get() = _binding!!
-    private var url: String = "https://admindev.toll4all.com/mweb/customers/add-card/rs"
     private val viewModel: PaymentAndPassageViewModel by activityViewModels()
 
     companion object {
@@ -47,40 +46,34 @@ class CardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val args: CardFragmentArgs by navArgs()
-        val countryCode = args.countryCode
+        val countryCode = args.countryCode ?: "RS"
 
-        countryCode?.let {
-
-            val baseUrl = when {
-                BuildConfig.FLAVOR.contains("stage") -> {
-                    "https://admintest.toll4all.com/mweb/customers/add-card/"
-                }
-
-                BuildConfig.FLAVOR.contains("prod") -> {
-                    "https://openbalkan-etc.com/mweb/customers/add-card/"
-                }
-
-                else -> {
-                    Log.w("BuildType", "Unrecognized BUILD_TYPE: ${BuildConfig.BUILD_TYPE}")
-                    "about:blank"
-                }
+        val baseUrl = when {
+            BuildConfig.FLAVOR.contains("stage") -> {
+                "https://admintest.toll4all.com/mweb/customers/add-card/"
             }
-
-            val countryUrls = mapOf(
-                "MK" to "mk",
-                "ME" to "me",
-                "RS" to "rs"
-            )
-
-            url = baseUrl + (countryUrls[countryCode] ?: "rs")
-
+            BuildConfig.FLAVOR.contains("prod") -> {
+                "https://openbalkan-etc.com/mweb/customers/add-card/"
+            }
+            else -> {
+                Log.w("BuildType", "Unrecognized BUILD_TYPE: ${BuildConfig.BUILD_TYPE}")
+                "about:blank"
+            }
         }
 
-        initializeWebViewSettings()
-        fetchAndLoadUrl()
+        val countryUrls = mapOf(
+            "MK" to "mk",
+            "ME" to "me",
+            "RS" to "rs"
+        )
+
+        val finalUrl = baseUrl + (countryUrls[countryCode] ?: "rs") // Ako nema u mapi, koristi "rs"
+
+        initializeWebViewSettings(finalUrl)
+        fetchAndLoadUrl(finalUrl)
     }
 
-    private fun initializeWebViewSettings() {
+    private fun initializeWebViewSettings(url: String) {
         binding.webView.settings.apply {
             javaScriptEnabled = url.startsWith("https://admintest.toll4all.com") ||
                     url.startsWith("https://openbalkan-etc.com")
@@ -140,7 +133,7 @@ class CardFragment : Fragment() {
     }
 
     // Ova metoda učitava URL u WebView sa dodanim Authorization header-om
-    private fun fetchAndLoadUrl() {
+    private fun fetchAndLoadUrl(url: String) {
         viewLifecycleOwner.lifecycleScope.launch {
             val token = fetchToken()
             val headers = mapOf("Authorization" to token)
