@@ -118,7 +118,7 @@
     <string name="invoice_details" translatable="true">Детаљи рачуна</string>
     <string name="lorem_ipsum">Lorem Ipsum</string>
     <string name="order_number" translatable="true">Редни број</string>
-    <string name="credit_card_successful" translatable="true">Кредитна картица је успела</string>
+    <string name="credit_card_successful" translatable="true">Кредитна картица је успешно додата.</string>
     <string name="tag_confirmed" translatable="true">Ознака потврђена</string>
     <string name="name_and_surname" translatable="true">Име и презиме</string>
     <string name="tag" translatable="true">Таг</string>

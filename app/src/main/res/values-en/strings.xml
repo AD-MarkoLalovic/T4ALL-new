@@ -96,7 +96,7 @@
     <string name="invoice_details">Invoice Details</string>
     <string name="lorem_ipsum">Lorem Ipsum</string>
     <string name="order_number">Order number</string>
-    <string name="credit_card_successful">Credit card successful</string>
+    <string name="credit_card_successful">The credit card has been successfully added.</string>
     <string name="tag_confirmed">Tag confirmed</string>
     <string name="name_and_surname">Name and surname</string>
     <string name="tag">Tag</string>
