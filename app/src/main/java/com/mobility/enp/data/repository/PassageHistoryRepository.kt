@@ -227,12 +227,6 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         return Result.failure(NetworkError.ServerError)
     }
 
-    suspend fun getToken(): String? {
-        return withContext(Dispatchers.IO) {
-            getUserToken()
-        }
-    }
-
     fun fetchContext(): Context {
         return context
     }
