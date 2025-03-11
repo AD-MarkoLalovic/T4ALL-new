@@ -24,7 +24,6 @@ import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
 class CardFragment : Fragment() {
 
     private var _binding: FragmentTosBinding? = null
@@ -61,10 +60,6 @@ class CardFragment : Fragment() {
                     "https://openbalkan-etc.com/mweb/customers/add-card/"
                 }
 
-                BuildConfig.FLAVOR.contains("debug") -> {
-                    "https://admindev.toll4all.com/mweb/customers/add-card/"
-                }
-
                 else -> {
                     Log.w("BuildType", "Unrecognized BUILD_TYPE: ${BuildConfig.BUILD_TYPE}")
                     "about:blank"
@@ -87,7 +82,9 @@ class CardFragment : Fragment() {
 
     private fun initializeWebViewSettings() {
         binding.webView.settings.apply {
-            javaScriptEnabled = true
+            javaScriptEnabled = url.startsWith("https://admintest.toll4all.com") ||
+                    url.startsWith("https://openbalkan-etc.com")
+
             setGeolocationEnabled(false)
             useWideViewPort = true
             loadWithOverviewMode = false
@@ -114,11 +111,13 @@ class CardFragment : Fragment() {
 
             url?.let { link ->
                 if (link.contains("/payment/success")) {
-                    Toast.makeText(
-                        context,
-                        R.string.credit_card_successful,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    activity?.runOnUiThread {
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.credit_card_successful,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
 
                     viewLifecycleOwner.lifecycleScope.launch {
                         delay(2000L)
