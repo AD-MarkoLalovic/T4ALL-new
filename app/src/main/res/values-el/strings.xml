@@ -94,7 +94,7 @@
     <string name="invoice_details">Λεπτομέρειες τιμολογίου</string>
     <string name="lorem_ipsum">Λόρεμ Ίψουμ</string>
     <string name="order_number">Αριθμός παραγγελίας</string>
-    <string name="credit_card_successful">Η πληρωμή με πιστωτική κάρτα ήταν επιτυχής</string>
+    <string name="credit_card_successful">Η πιστωτική κάρτα προστέθηκε με επιτυχία.</string>
     <string name="tag_confirmed">Η ετικέτα επιβεβαιώθηκε</string>
     <string name="name_and_surname">Όνομα και επώνυμο</string>
     <string name="tag">Ετικέτα</string>
