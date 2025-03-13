@@ -6,15 +6,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.addCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
 import com.mobility.enp.R
+import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.databinding.ActivityMainBinding
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,6 +29,8 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private val franchiseViewModel: FranchiseViewModel by viewModels { FranchiseViewModel.Factory }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +38,54 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupNavigation()
         setListeners()
+        setObservers();
         setExistingLanguage(this)
+    }
+
+    private fun setObservers() {
+        franchiseViewModel.franchiseModel.observe(this) { franchiseModel ->
+            franchiseModel?.let {
+                setFranchiserLogoVisible(it)
+            }
+        }
+    }
+
+    fun setDefaultLogo() {
+        binding.toolbarShared.iconLogo.setImageResource(R.drawable.ic_logo_home_screen)
+        binding.toolbarShared.franchiserFlavorText.text = ""
+        binding.toolbarShared.constraintBlock.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                android.R.color.white
+            )
+        )
+        binding.toolbarShared.root.visibility = View.GONE
+    }
+
+    fun hideLogo(hideLogo: Boolean) {
+        if (hideLogo){
+            binding.toolbarShared.iconLogo.visibility = View.INVISIBLE
+        }else{
+            binding.toolbarShared.iconLogo.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setFranchiserLogoVisible(franchiseModel: FranchiseModel?) {
+        franchiseModel?.let { data ->
+            binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
+            binding.toolbarShared.franchiserFlavorText.text = franchiseModel.franchiseFlavorText
+            binding.toolbarShared.iconLogo.setImageDrawable(data.franchiseLogoToolbar)
+
+            binding.toolbarShared.backArrow.setImageResource(franchiseModel.backButtonResource)
+
+            if (data.enableBackgroundColorOnToolBar) {
+                binding.toolbarShared.constraintBlock.setBackgroundColor(data.franchisePrimaryColor)
+            } else {
+                binding.toolbarShared.constraintBlock.setBackgroundColor(getColor(R.color.white))
+            }
+
+            binding.bottomNavigation.itemIconTintList = franchiseModel.navHomeDrawable
+        }
     }
 
     private fun setupNavigation() {
@@ -44,7 +97,7 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             Log.d(TAG, "destination: $destination")
             when (destination.id) {
-                R.id.homeFragment, R.id.paymentAndPassageFragment, R.id.toolHistoryFragment, R.id.profileFragment, R.id.supportDialog, R.id.notificationDialog, R.id.deactivateAccountDialog, R.id.pdfViewDialog -> {
+                R.id.homeFragment, R.id.paymentAndPassageFragment, R.id.toolHistoryFragment, R.id.profileFragment, R.id.supportDialog, R.id.franchiseTestDialog, R.id.notificationDialog, R.id.deactivateAccountDialog, R.id.pdfViewDialog -> {
                     // Ako je destinacija neki od ovih fragmenata, prikaži BottomNavigationView
                     binding.bottomNavigation.visibility = View.VISIBLE
                     binding.toolbarShared.root.visibility = View.VISIBLE
@@ -55,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.basicInformationFragment, R.id.changePasswordFragment, R.id.invoicesFragment,
                 R.id.myTagsFragment2, R.id.addTagFragment, R.id.refundRequestFragment2, R.id.tagPickerRequestFragment,
                 R.id.settingsFragment, R.id.toolHistorySearchFragment, R.id.toolHistorySearchResultFragment,
-                R.id.termsAndPrivacyFragment, R.id.cardFragment , R.id.noInternetConnectionDialog , R.id.loginNoInternetConnectionDialog-> {
+                R.id.termsAndPrivacyFragment, R.id.cardFragment, R.id.noInternetConnectionDialog, R.id.loginNoInternetConnectionDialog -> {
                     // Ako je destinacija neki od ovih fragmenata, prikaži Toolbar i sakrij BottomNavigationView
                     binding.bottomNavigation.visibility = View.GONE
                     binding.toolbarShared.root.visibility = View.VISIBLE

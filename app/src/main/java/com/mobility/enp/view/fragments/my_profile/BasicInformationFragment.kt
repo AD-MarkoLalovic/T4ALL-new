@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,10 +10,12 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
 import com.mobility.enp.databinding.FragmentBasicInformationBinding
@@ -20,6 +23,7 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.ui_models.BasicInfoUIModel
 import com.mobility.enp.viewmodel.BasicInfoViewModel
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,6 +32,7 @@ class BasicInformationFragment : Fragment() {
 
     private var _binding: FragmentBasicInformationBinding? = null
     private val binding: FragmentBasicInformationBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: BasicInfoViewModel by viewModels { BasicInfoViewModel.Factory }
 
     override fun onCreateView(
@@ -44,11 +49,32 @@ class BasicInformationFragment : Fragment() {
 
         setObserverGetBasicInfo()
         setObserverUpdateBasicInfo()
+        setFranchiser()
 
         binding.saveChangesButton.setOnClickListener {
             handleSaveChangesButtonClick()
         }
 
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.saveChangesButton.backgroundTintList = ColorStateList.valueOf(color)
+
+
+                val parent = binding.basicInformationCon
+
+                for (i in 0 until parent.childCount) {
+                    val view = parent.getChildAt(i)
+                    if (view is TextInputLayout) {
+                        view.boxStrokeColor = color
+                        val editText = view.editText
+                        editText?.setTextColor(color)
+                    }
+                }
+            }
+        }
     }
 
     private fun setObserverGetBasicInfo() {
@@ -75,6 +101,7 @@ class BasicInformationFragment : Fragment() {
                     binding.loadingBasicInformation.visibility = View.GONE
                     showMessage(result.errorMessage)
                 }
+
                 is SubmitResult.InvalidApiToken -> {
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                     showMessage(result.errorMessage)
@@ -111,6 +138,7 @@ class BasicInformationFragment : Fragment() {
                     binding.loadingBasicInformation.visibility = View.GONE
                     showMessage(result.errorMessage)
                 }
+
                 is SubmitResult.InvalidApiToken -> {
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                     showMessage(result.errorMessage)
@@ -234,7 +262,7 @@ class BasicInformationFragment : Fragment() {
             }
 
             (customerType == 3) && ((pib.isNotEmpty()) && (pib.length !in 9..13)) -> {
-               showFieldError(R.string.pib_invalid_length)
+                showFieldError(R.string.pib_invalid_length)
                 return
             }
 
@@ -265,6 +293,7 @@ class BasicInformationFragment : Fragment() {
                             phone = phone,
                             postalCode = postalCode
                         )
+
                         2 -> UpdateUserDataRequest(
                             address = address,
                             city = city,
@@ -274,6 +303,7 @@ class BasicInformationFragment : Fragment() {
                             postalCode = postalCode,
                             pib = pib
                         )
+
                         3 -> UpdateUserDataRequest(
                             address = address,
                             city = city,
@@ -282,6 +312,7 @@ class BasicInformationFragment : Fragment() {
                             postalCode = postalCode,
                             pib = pib
                         )
+
                         else -> throw IllegalArgumentException("Invalid customer type in BasicInformationFragment: $customerType")
 
                     }

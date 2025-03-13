@@ -14,15 +14,18 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.databinding.DialogObjectionFormBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.launch
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -35,7 +38,7 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
 
     private val id: Int = objection
-
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +53,7 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
+        setFranchise()
         setupListeners()
     }
 
@@ -63,6 +67,47 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
                 )
             )
         binding.checkbox1.isEnabled = false
+    }
+
+    private fun setFranchise() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.bttSendObjection.backgroundTintList = ColorStateList.valueOf(color)
+                binding.textView1.setTextColor(color)
+                val newDrawable =
+                    ContextCompat.getDrawable(requireContext(), franchiseModel.calendarResource)
+                binding.complaintId.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    null,
+                    newDrawable,
+                    null
+                )
+
+                val states = arrayOf(
+                    intArrayOf(android.R.attr.state_checked),  // When switch is ON
+                    intArrayOf(-android.R.attr.state_checked) // When switch is OFF
+                )
+
+                val colors = intArrayOf(
+                    color,  // ON color
+                    ContextCompat.getColor(requireContext(), R.color.white) // OFF color
+                )
+
+                val colorStateList = ColorStateList(states, colors)
+                binding.checkbox1.buttonTintList = colorStateList
+
+                val parent = binding.constraintLayout
+
+                for (i in 0 until parent.childCount) {
+                    val view = parent.getChildAt(i)
+                    if (view is TextInputLayout) {
+                        view.boxStrokeColor = color
+                        val editText = view.editText
+                        editText?.setTextColor(color)
+                    }
+                }
+            }
+        }
     }
 
     private fun setupListeners() {

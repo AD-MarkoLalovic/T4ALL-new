@@ -412,6 +412,12 @@
             app:argType="string"
             app:nullable="true" />
     </dialog>
+    <dialog
+        android:id="@+id/franchiseTestDialog"
+        android:name="com.mobility.enp.view.dialogs.FranchiseTestDialog"
+        tools:layout="@layout/franchise_dialog_layout"
+        android:label="FranchiseTestDialog" /><action android:id="@+id/action_global_franchiseTestDialog"
+    app:destination="@id/franchiseTestDialog"/>
 
 
 </navigation>

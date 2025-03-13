@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +20,7 @@ import com.mobility.enp.databinding.FragmentBillsBinding
 import com.mobility.enp.network.Repository
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -30,6 +32,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
     private var _binding: FragmentBillsBinding? = null
     private val binding: FragmentBillsBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: MyInvoicesViewModel by viewModels()
 
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
@@ -82,7 +85,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                     binding.textNoBills.visibility = View.GONE
                     binding.recyclerViewBills.visibility = View.VISIBLE
                     binding.recyclerViewBills.adapter =
-                        MonthlyBillsAdapter(it.data, viewModel, errorBody, this, this, this)
+                        MonthlyBillsAdapter(it.data, viewModel, errorBody, this, this, this,franchiseViewModel.franchiseModel.value)
                     binding.recyclerViewBills.layoutManager = LinearLayoutManager(requireContext())
 
                     viewModel.setLocalData(it)

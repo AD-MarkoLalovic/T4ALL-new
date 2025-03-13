@@ -390,5 +390,6 @@
     <string name="cards_terms_text_full">Сагласан сам са Општим условима и Правилима приватности</string>
     <string name="card_terms_left_clickable">Општим условима</string>
     <string name="card_term_right_clickable">Правилима приватности</string>
+    <string name="powered_by_toll4all">Powered by Toll4All</string>
 
 </resources>

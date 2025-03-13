@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +24,7 @@ import com.mobility.enp.databinding.FragmentProfileBinding
 import com.mobility.enp.util.ImageRepository
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.ProfileImagePickerDialog
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.ProfileViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,6 +34,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
     private var _binding: FragmentProfileBinding? = null
     private val binding: FragmentProfileBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModelProfile: ProfileViewModel by viewModels()
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
 
@@ -69,7 +72,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 withContext(Dispatchers.Main) {
                     val image = ProfileImagePickerDialog(this@ProfileFragment, imageExists)
                     image.show(parentFragmentManager, "Profile Image")
-
                 }
             }
         }
@@ -91,17 +93,18 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         }
 
         binding.buttonSignOut.setOnClickListener {
-            context?.let {
-                lifecycleScope.launch {
-                    // added internet check if no internet just logout without token delete
+            viewLifecycleOwner.lifecycleScope.launch {
+                // added internet check if no internet just logout without token delete
 
-                    viewModelProfile.deleteFirebaseToken(errorBody)  // this deletes from server
-                    viewModelProfile.postLogoutUser(errorBody)
+                viewModelProfile.deleteFirebaseToken(errorBody)  // this deletes from server
+                viewModelProfile.postLogoutUser(errorBody)
 
-                    viewModelProfile.logout() // this deletes room local
+                viewModelProfile.logout() // this deletes room local
+                franchiseViewModel.deleteData() // this deletes stored object as it will persist on logout otherwise
 
-                    findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
-                }
+                (requireContext() as MainActivity).setDefaultLogo()
+
+                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
             }
         }
 
@@ -131,6 +134,12 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
             binding.userName.text = displayName
             viewLifecycleOwner.lifecycleScope.launch {
                 imageRepository.getAndSetProfileImage(binding.imageProfile, displayName)
+            }
+        }
+
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { data ->
+            data?.franchiseProfileResource?.let {
+                binding.rectangleProfilePicture.setImageResource(it)
             }
         }
 

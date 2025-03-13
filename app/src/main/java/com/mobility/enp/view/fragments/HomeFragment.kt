@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +32,7 @@ import com.mobility.enp.view.adapters.TotalCurrencyAdapter
 import com.mobility.enp.view.adapters.home.HomePassageAdapter
 import com.mobility.enp.view.adapters.home.HomeProgressAdapter
 import com.mobility.enp.view.adapters.home.HomePromotionsAdapter
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.HomeViewModel
 import java.io.File
 
@@ -39,7 +42,10 @@ class HomeFragment : Fragment() {
     private val binding: FragmentHomeWelcomeBinding get() = _binding!!
     private lateinit var totalCurrencyAdapter: TotalCurrencyAdapter
     private lateinit var homePassageAdapter: HomePassageAdapter
+    private lateinit var homePromotionsAdapter: HomePromotionsAdapter
+    private lateinit var adapterProgress: HomeProgressAdapter
 
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
 
     override fun onCreateView(
@@ -88,14 +94,24 @@ class HomeFragment : Fragment() {
                 displayProfileImage(binding.imageAccountHomeScreen, it)
             }
         }
-        collectLatestLifecycleFlow(viewModel.homeCards) { cards ->
-            cards?.let {
-                setHomeCardsAdapter(it)
-            }
-        }
 
         collectLatestLifecycleFlow(viewModel.homeTollHistory) { tollHistory ->
             homePassageAdapter.submitList(tollHistory)
+        }
+
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.let { data ->
+                binding.cardViewAccountHomeScreen.backgroundTintList =
+                    ColorStateList.valueOf(data.franchisePrimaryColor)
+                binding.constraintLayoutInCard.background = data.franchiseHomeBackgroundLocation
+                if (::homePromotionsAdapter.isInitialized) {
+                    homePromotionsAdapter.updateColor(franchiseModel)
+                }
+                if (::adapterProgress.isInitialized) {
+                    adapterProgress.updateFranchiserDotColor(franchiseModel.promotionsDot)
+                }
+                binding.switchToPageBill.setBackgroundResource(data.rightArrowResource)
+            }
         }
 
     }
@@ -106,13 +122,19 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun handleHomeDataResult(result: SubmitResult<HomeWithDetails>) {
+    private fun handleHomeDataResult(result: SubmitResult<HomeWithDetails>) {  // data save in room directly on api response / model returned combined
         when (result) {
-            is SubmitResult.Loading -> binding.progBar.visibility = View.VISIBLE
+            is SubmitResult.Loading -> {
+                binding.progBar.visibility = View.VISIBLE
+                (requireActivity() as MainActivity).hideLogo(true)
+            }
+
             is SubmitResult.Success -> {
                 handleSuccess(result)
                 binding.progBar.visibility = View.GONE
                 binding.linearHomeContainer.visibility = View.VISIBLE
+                binding.cardViewAccountHomeScreen.visibility = View.VISIBLE
+                binding.imageAccountHomeScreen.visibility = View.VISIBLE
             }
 
             is SubmitResult.Empty -> {}
@@ -127,6 +149,14 @@ class HomeFragment : Fragment() {
     }
 
     private fun handleSuccess(result: SubmitResult.Success<HomeWithDetails>) {
+        viewModel.homeCards.value?.let {
+            setHomeCardsAdapter(it)
+        }
+
+        (requireActivity() as MainActivity).hideLogo(false)
+
+        franchiseViewModel.getFranchiseModel(result.data.home.portalKey, requireContext())
+
         result.data.home.displayName.let { viewModel.loadProfileImage(it) }
         val invoiceDetails = result.data.invoice
         if (invoiceDetails.isNotEmpty()) {
@@ -145,6 +175,7 @@ class HomeFragment : Fragment() {
         } else {
             binding.noToolHistory.visibility = View.VISIBLE
         }
+
     }
 
     private fun showErrorMessage(message: String) {
@@ -196,7 +227,7 @@ class HomeFragment : Fragment() {
             }
         }
 
-        val adapter = HomePromotionsAdapter(filteredList, onItemClicked = {
+        homePromotionsAdapter = HomePromotionsAdapter(filteredList, onItemClicked = {
             findNavController().navigate(R.id.action_homeFragment_to_paymentAndPassageFragment)
         }, { delete ->
             binding.progBar.visibility = View.VISIBLE
@@ -205,10 +236,10 @@ class HomeFragment : Fragment() {
         })
 
         if (filteredList.isNotEmpty()) {
-            val adapterProgress = HomeProgressAdapter(filteredList.size)
+            adapterProgress = HomeProgressAdapter(filteredList.size)
 
             binding.cyclerPromotions.visibility = View.VISIBLE
-            binding.cyclerPromotions.adapter = adapter
+            binding.cyclerPromotions.adapter = homePromotionsAdapter
 
             binding.cyclerProgress.visibility = View.VISIBLE
             binding.cyclerProgress.adapter = adapterProgress

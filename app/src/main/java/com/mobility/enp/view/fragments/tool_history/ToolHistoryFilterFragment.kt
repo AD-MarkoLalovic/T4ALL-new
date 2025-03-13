@@ -23,6 +23,7 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.select.ToolHistoryTagsAdapter
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -33,6 +34,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
     private var _binding: FragmentToolHistorySearchQueryBinding? = null
     private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
 
     companion object {
@@ -52,6 +54,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         super.onViewCreated(view, savedInstanceState)
 
         setObservers()
+        setFranchiser()
 
         vModel.selectedTags.clear()
 
@@ -91,7 +94,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         binding.chkBox.setOnClickListener {
             val isChecked = binding.chkBox.isChecked
             vModel.allTagsSelected = isChecked
-            setCheckboxColors(isChecked)
         }
 
         vModel.startDate.observe(viewLifecycleOwner) { data ->
@@ -142,6 +144,43 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             binding.progBar.visibility = View.VISIBLE
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 vModel.getCsvData(requireContext())
+            }
+        }
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.btnSearch.backgroundTintList = ColorStateList.valueOf(color)
+                binding.exportBlock.setTextColor(color)
+
+                binding.searchMark.setImageResource(franchiseModel.loopIcon)
+
+                val states = arrayOf(
+                    intArrayOf(android.R.attr.state_checked),  // When switch is ON
+                    intArrayOf(-android.R.attr.state_checked) // When switch is OFF
+                )
+
+                val colors = intArrayOf(
+                    color,  // ON color
+                    ContextCompat.getColor(requireContext(), R.color.primary_light_dark) // OFF color
+                )
+
+                val colorStateList = ColorStateList(states, colors)
+                binding.chkBox.buttonTintList = colorStateList
+            }?:run {
+                val states = arrayOf(
+                    intArrayOf(android.R.attr.state_checked),  // When switch is ON
+                    intArrayOf(-android.R.attr.state_checked) // When switch is OFF
+                )
+
+                val colors = intArrayOf(
+                    ContextCompat.getColor(requireContext(), R.color.figmaSplashScreenColor),  // ON color
+                    ContextCompat.getColor(requireContext(), R.color.primary_light_dark) // OFF color
+                )
+
+                val colorStateList = ColorStateList(states, colors)
+                binding.chkBox.buttonTintList = colorStateList
             }
         }
     }
@@ -260,7 +299,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                 vModel.tagSerials = index.tags as ArrayList<Tag>
                 Log.d(TAG, "setObservers: ${vModel.tagSerials}")
 
-                val adapter = ToolHistoryTagsAdapter(vModel.tagSerials, this)
+                val adapter = ToolHistoryTagsAdapter(vModel.tagSerials, this,franchiseViewModel)
 
                 binding.cycler.adapter = adapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
@@ -295,24 +334,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     override fun onTagRemove(tag: Tag) {
         vModel.selectedTags.remove(tag)
         Log.d(TAG, "onSendTag: ${vModel.selectedTags}")
-    }
-
-    private fun setCheckboxColors(isChecked: Boolean) {
-        if (isChecked) {
-            binding.chkBox.buttonTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.figmaSplashScreenColor
-                )
-            )
-        } else {
-            binding.chkBox.buttonTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.primary_light_dark
-                )
-            )
-        }
     }
 
     override fun onDestroyView() {

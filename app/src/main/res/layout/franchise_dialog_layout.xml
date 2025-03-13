@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialogBackground"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_dialog_borders"
+    android:minWidth="260dp"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/txChooseLanguage"
+        style="@style/H3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/dimens_16dp"
+        android:text="Franchise Picker" />
+
+    <RelativeLayout
+        android:id="@+id/firstBlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txChooseLanguage"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true">
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/telekom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Telekom portal" />
+
+            <RadioButton
+                android:id="@+id/s_blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="S-blue" />
+
+            <RadioButton
+                android:id="@+id/amss"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AMSS portal" />
+
+            <RadioButton
+                android:id="@+id/tehnomania"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tehnomanija portal" />
+
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/buttonCloseDialog"
+            style="@style/MyButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/radioGroup"
+            android:layout_marginTop="16dp"
+            android:text="Close" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

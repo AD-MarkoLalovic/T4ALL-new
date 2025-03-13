@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Upsert
 import com.mobility.enp.data.model.home.entity.HomeEntity
 import com.mobility.enp.data.model.home.entity.InvoiceHomeEntity
 import com.mobility.enp.data.model.home.entity.InvoiceHomeTotalCurrencyEntity
@@ -32,4 +33,10 @@ interface HomeScreenDao {
     @Transaction
     @Query("SELECT * FROM home_entity WHERE id = 1")
     suspend fun getHomeWithDetails(): HomeWithDetails?
+
+    @Query("SELECT * FROM home_entity")
+    suspend fun getHomeData(): HomeEntity?
+
+    @Upsert
+    suspend fun upsertHome(home: HomeEntity)
 }

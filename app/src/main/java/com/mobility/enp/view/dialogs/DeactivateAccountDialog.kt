@@ -1,31 +1,35 @@
 package com.mobility.enp.view.dialogs
 
-import android.content.res.Resources
+import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.databinding.DeactivateDialogBinding
 import com.mobility.enp.util.Util
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.view.MainActivity
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.SupportViewModel
 
 class DeactivateAccountDialog : DialogFragment() {
 
     private var _binding: DeactivateDialogBinding? = null
     private val binding: DeactivateDialogBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: SupportViewModel by viewModels()
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
 
@@ -44,6 +48,7 @@ class DeactivateAccountDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setFranchise()
         setObserversError()
 
         binding.bttSendSupportMessage.setOnClickListener {
@@ -76,11 +81,31 @@ class DeactivateAccountDialog : DialogFragment() {
         }
     }
 
+    private fun setFranchise() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.bttSendSupportMessage.backgroundTintList = ColorStateList.valueOf(color)
+                val parent = binding.constraintLayout
+
+                for (i in 0 until parent.childCount) {
+                    val view = parent.getChildAt(i)
+                    if (view is TextInputLayout) {
+                        view.boxStrokeColor = color
+                        val editText = view.editText
+                        editText?.setTextColor(color)
+                    }
+                }
+            }
+        }
+    }
+
 
     private fun openSuccessDialog() {
         val generalDialog =
-            GeneralMessageDialog(requireContext().getString(R.string.support_successful_mail),
-                requireContext().getString(R.string.support_successful_massage))
+            GeneralMessageDialog(
+                requireContext().getString(R.string.support_successful_mail),
+                requireContext().getString(R.string.support_successful_massage)
+            )
         generalDialog.show(childFragmentManager, "GeneralDialogSupport")
     }
 
