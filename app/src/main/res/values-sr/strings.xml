@@ -333,5 +333,6 @@
     <string name="cards_terms_text_full">Saglasan sam sa Opštim uslovima i Pravilima privatnosti</string>
     <string name="card_terms_left_clickable">Opštim uslovima</string>
     <string name="card_term_right_clickable">Pravilima privatnosti</string>
+    <string name="version">Verzija:</string>
 
 </resources>

@@ -331,6 +331,7 @@
     <string name="cards_terms_text_full">Се согласувам со Општите услови и Политиката за приватност</string>
     <string name="card_terms_left_clickable">Општите услови</string>
     <string name="card_term_right_clickable">Политиката за приватност</string>
+    <string name="version">Верзија:</string>
 
 
 </resources>
