@@ -1,6 +1,7 @@
 package com.mobility.enp.view.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,7 @@ class LocationSelectFragment : Fragment() {
     private lateinit var adapter: SelectCountryAdapter
 
     private val viewModel: LocationSelectViewModel by viewModels { LocationSelectViewModel.Factory }
-    private var selectedCountry: String? = null
+    private var selectedCountry: String = "RS"
 
 
     override fun onCreateView(
@@ -43,20 +44,24 @@ class LocationSelectFragment : Fragment() {
         binding.rvListCountries.adapter = adapter
 
         binding.button.setOnClickListener {
-            selectedCountry?.let { countryCode ->
-                findNavController().navigate(
-                    LocationSelectFragmentDirections.actionLocationSelectFragmentToTosFragment(
-                        countryCode
-                    )
-                )
-            }
+            Log.d("MARKO", "onViewCreated: $selectedCountry")
+            findNavController().navigate(
+                LocationSelectFragmentDirections.actionLocationSelectFragmentToTosFragment(selectedCountry)
+            )
         }
+
 
         binding.backArrow.setOnClickListener {
             findNavController().popBackStack()
         }
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        selectedCountry = "RS"
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
