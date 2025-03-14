@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -60,6 +62,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         errorBody = MutableLiveData()
 
         setObserver()
+        setCurrentVersion()
 
         viewModelProfile.setRefundRequestVisibility()
 
@@ -126,6 +129,23 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
         binding.buttonDeactivateAccount.setOnClickListener {
             findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToDeactivateAccountDialog())
+        }
+    }
+
+    private fun setCurrentVersion() {
+        try {
+            val packageInfo =
+                requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
+            packageInfo.versionName.let { gradleVersionName ->  // use version code for other one
+
+                binding.versionCode.text = buildString {
+                    append(ContextCompat.getString(requireContext(), R.string.version))
+                    append(" ")
+                    append(gradleVersionName)
+                }
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
         }
     }
 
