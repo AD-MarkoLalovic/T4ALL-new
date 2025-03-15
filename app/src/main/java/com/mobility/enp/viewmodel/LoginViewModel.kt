@@ -36,8 +36,6 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
     private val _lastUserEmail: MutableLiveData<LastUser> = MutableLiveData()
     val lastUserEmail: LiveData<LastUser> get() = _lastUserEmail
 
-    var loginLiveData = MutableLiveData<UserResponse>()
-
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -111,14 +109,13 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
 
     suspend fun insertLoginToken(
         userLoginResponseRoomTable: UserLoginResponseRoomTable,
-        errorBody: MutableLiveData<ErrorBody>
     ) {
         repository.getRoomDatabase()?.loginDao()?.deleteAll()
         repository.getRoomDatabase()?.loginDao()?.insert(userLoginResponseRoomTable)
         repository.getRoomDatabase()?.loginDao()?.fetchAllowedUsers()?.let { user ->
             repository.getRoomDatabase()?.fcmToken()?.getTableData().let { fcmToken ->
                 fcmToken?.let {
-                    Repository.postFcmToken(it, user.accessToken, errorBody)
+                    Repository.postFcmToken(it, user.accessToken)
                 }
             }
         }

@@ -11,16 +11,13 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.messaging.FirebaseMessaging
 import com.mobility.enp.BuildConfig
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.login.LoginBody
-import com.mobility.enp.data.model.login.UserResponse
 import com.mobility.enp.databinding.FragmentLoginBinding
 import com.mobility.enp.network.Repository
 import com.mobility.enp.util.SubmitResult
@@ -36,10 +33,11 @@ class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding: FragmentLoginBinding get() = _binding!!
+
     private val loginViewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
+
     private lateinit var userName: String
     private lateinit var userPassword: String
-    private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -252,7 +250,7 @@ class LoginFragment : Fragment() {
                                 result.data.data?.accessToken,
                                 result.data.data?.tokenType,
                                 userName, userPassword
-                            ), errorBody
+                            )
                         )
 
                         loginViewModel.storeLastUserEmail(userName)
@@ -271,24 +269,6 @@ class LoginFragment : Fragment() {
                 is SubmitResult.FailureApiError -> showErrorMessage(result.errorMessage)
                 is SubmitResult.InvalidApiToken -> {
                     showErrorMessage(result.errorMessage)
-                }
-            }
-        }
-
-        loginViewModel.loginLiveData = MutableLiveData<UserResponse>()
-        errorBody = MutableLiveData()
-
-        errorBody.observe(viewLifecycleOwner) { errorBody ->
-            binding.progbar.visibility = View.GONE
-
-            context?.let { context ->
-                Toast.makeText(
-                    context,
-                    errorBody.errorBody,
-                    Toast.LENGTH_SHORT
-                ).show()
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
                 }
             }
         }
