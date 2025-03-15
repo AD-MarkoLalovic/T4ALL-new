@@ -18,10 +18,21 @@ import com.mobility.enp.data.model.login.UserResponse
 import com.mobility.enp.data.repository.LoginRepository
 import com.mobility.enp.data.room.LastUser
 import com.mobility.enp.network.Repository
+import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
+import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TOKEN
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
+
+    private val _userLogin = MutableStateFlow<SubmitResult<UserResponse>>(SubmitResult.Empty)
+    val userLogin: StateFlow<SubmitResult<UserResponse>> get() = _userLogin
+
+
     private val _lastUserEmail: MutableLiveData<LastUser> = MutableLiveData()
     val lastUserEmail: LiveData<LastUser> get() = _lastUserEmail
 
@@ -47,12 +58,55 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
         }
     }
 
-    suspend fun loginUser(
-        context: Context,
+    fun loginUser(
         loginBody: LoginBody,
-        errorBody: MutableLiveData<ErrorBody>
     ) {
-        Repository.loginUser(loginLiveData, context, loginBody, errorBody)
+        viewModelScope.launch(Dispatchers.IO) {
+            _userLogin.value = SubmitResult.Loading
+            val result = repository.loginUser(loginBody)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _userLogin.value = SubmitResult.Empty
+                } else {
+                    _userLogin.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _userLogin.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _userLogin.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(TOKEN, "invalid token detected login out user")
+                                _userLogin.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code ?: 0,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _userLogin.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(TAG, "api error ${error.errorResponse.message}")
+                            }
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+        }
     }
 
     suspend fun insertLoginToken(

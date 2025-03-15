@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
@@ -17,17 +17,15 @@ import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.databinding.FragmentSplashScreenBinding
 import com.mobility.enp.util.IntroScreensRepository
 import com.mobility.enp.viewmodel.LoginViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreenFragment : Fragment() {
 
     private lateinit var binding: FragmentSplashScreenBinding
     private lateinit var action: NavDirections
-    private val loginViewModel: LoginViewModel by activityViewModels{ LoginViewModel.Factory }
+    private val loginViewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
     private var userData: UserLoginResponseRoomTable? = null
 
     override fun onCreateView(

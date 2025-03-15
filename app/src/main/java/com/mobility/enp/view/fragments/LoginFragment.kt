@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,10 +23,11 @@ import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
 import com.mobility.enp.databinding.FragmentLoginBinding
 import com.mobility.enp.network.Repository
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.LanguageDialog
 import com.mobility.enp.viewmodel.LoginViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -35,7 +36,7 @@ class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding: FragmentLoginBinding get() = _binding!!
-    private val loginViewModel: LoginViewModel by activityViewModels{ LoginViewModel.Factory }
+    private val loginViewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
     private lateinit var userName: String
     private lateinit var userPassword: String
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
@@ -75,29 +76,25 @@ class LoginFragment : Fragment() {
 
                 val body = LoginBody(userName, userPassword)
 
-                context?.let {
-                    if (Repository.isNetworkAvailable(it)) {
-                        binding.progbar.visibility = View.VISIBLE
-                        CoroutineScope(Dispatchers.IO).launch {
-                            loginViewModel.loginUser(it, body, errorBody)
-                        }
-                    } else {
-                        val bundle = Bundle().apply {
-                            putString(
-                                getString(R.string.title),
-                                getString(R.string.no_connection_title)
-                            )
-                            putString(
-                                getString(R.string.subtitle),
-                                getString(R.string.please_connect_to_the_internet)
-                            )
-                        }
-
-                        findNavController().navigate(
-                            R.id.action_global_loginNoInternetConnectionDialog,
-                            bundle
+                if (Repository.isNetworkAvailable(requireContext())) {
+                    binding.progbar.visibility = View.VISIBLE
+                    loginViewModel.loginUser(body)
+                } else {
+                    val bundle = Bundle().apply {
+                        putString(
+                            getString(R.string.title),
+                            getString(R.string.no_connection_title)
+                        )
+                        putString(
+                            getString(R.string.subtitle),
+                            getString(R.string.please_connect_to_the_internet)
                         )
                     }
+
+                    findNavController().navigate(
+                        R.id.action_global_loginNoInternetConnectionDialog,
+                        bundle
+                    )
                 }
 
             } else {
@@ -120,7 +117,8 @@ class LoginFragment : Fragment() {
                         .scaleY(1f)
                         .setDuration(100)
 
-                    val action = LoginFragmentDirections.actionLoginFragmentToForgotPasswordFragment()
+                    val action =
+                        LoginFragmentDirections.actionLoginFragmentToForgotPasswordFragment()
                     findNavController().navigate(action)
                 }
         }
@@ -238,6 +236,45 @@ class LoginFragment : Fragment() {
     }
 
     private fun setObservers() {
+        collectLatestLifecycleFlow(loginViewModel.userLogin) { result ->
+            when (result) {
+                is SubmitResult.Loading -> {
+                    binding.progbar.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.progbar.visibility = View.GONE
+
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        loginViewModel.insertLoginToken(
+                            UserLoginResponseRoomTable(
+                                null,
+                                result.data.data?.accessToken,
+                                result.data.data?.tokenType,
+                                userName, userPassword
+                            ), errorBody
+                        )
+
+                        loginViewModel.storeLastUserEmail(userName)
+
+                        loginViewModel.sendLanguage(requireContext())
+
+                        withContext(Dispatchers.Main) {
+                            findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment())
+                        }
+                    }
+                }
+
+                is SubmitResult.Empty -> {}
+                is SubmitResult.FailureNoConnection -> showNoInternetDialog()
+                is SubmitResult.FailureServerError -> showErrorMessage(getString(R.string.server_error_msg))
+                is SubmitResult.FailureApiError -> showErrorMessage(result.errorMessage)
+                is SubmitResult.InvalidApiToken -> {
+                    showErrorMessage(result.errorMessage)
+                }
+            }
+        }
+
         loginViewModel.loginLiveData = MutableLiveData<UserResponse>()
         errorBody = MutableLiveData()
 
@@ -261,30 +298,22 @@ class LoginFragment : Fragment() {
                 binding.editEmail.setText(lastUser.email)
             }
         }
+    }
 
-        loginViewModel.loginLiveData.observe(viewLifecycleOwner) { userServerResponse ->
-            binding.progbar.visibility = View.GONE
+    private fun showErrorMessage(message: String) {
+        binding.progbar.visibility = View.GONE
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
 
-            lifecycleScope.launch(Dispatchers.IO) {
-                loginViewModel.insertLoginToken(
-                    UserLoginResponseRoomTable(
-                        null,
-                        userServerResponse.data?.accessToken,
-                        userServerResponse.data?.tokenType,
-                        userServerResponse.message,
-                        userName, userPassword
-                    ), errorBody
-                )
-
-                loginViewModel.storeLastUserEmail(userName)
-
-                loginViewModel.sendLanguage(requireContext())
-
-                withContext(Dispatchers.Main) {
-                    findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment())
-                }
-            }
+    private fun showNoInternetDialog() {
+        val bundle = Bundle().apply {
+            putString(getString(R.string.title), getString(R.string.no_connection_title))
+            putString(
+                getString(R.string.subtitle),
+                getString(R.string.please_connect_to_the_internet)
+            )
         }
+        findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
     }
 
     companion object {

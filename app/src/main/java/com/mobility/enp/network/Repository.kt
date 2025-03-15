@@ -25,8 +25,6 @@ import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
 import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
-import com.mobility.enp.data.model.login.LoginBody
-import com.mobility.enp.data.model.login.UserResponse
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
@@ -46,32 +44,6 @@ object Repository {
         return RestClient.create(ApiService::class.java, token).apiService
     }
 
-    suspend fun loginUser(
-        data: MutableLiveData<UserResponse>,
-        context: Context,
-        loginBody: LoginBody,
-        errorBody: MutableLiveData<ErrorBody>
-    ) {
-        val lang = getUserLanguage(context)
-
-        val call = apiService("").getUserLogin(lang, loginBody)
-        call.enqueue(object : Callback<UserResponse> {
-            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-
-
-                if (response.isSuccessful) {
-                    data.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                Log.d(TAG, "Fcm Token onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
-    }
 
     //updated
     fun deleteFirebaseToken(auth: String, fcmToken: String, errorBody: MutableLiveData<ErrorBody>) {

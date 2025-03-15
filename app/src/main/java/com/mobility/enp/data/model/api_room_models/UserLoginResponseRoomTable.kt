@@ -12,15 +12,13 @@ data class UserLoginResponseRoomTable(
     val userId: Int? = null,  // do not provide the value
     val accessToken: String?,
     val tokenType: String?,
-    val message: String?,
     val username: String?,
     val password: String?,
 ) : Serializable {
     constructor(
         accessToken: String?,
         tokenType: String?,
-        message: String?,
         username: String?,
         password: String?
-    ) : this(null, accessToken, tokenType, message, username, password)
+    ) : this(null, accessToken, tokenType, username, password)
 }

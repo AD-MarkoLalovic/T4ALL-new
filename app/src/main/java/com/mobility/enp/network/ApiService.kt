@@ -46,10 +46,10 @@ import retrofit2.http.Query
 interface ApiService {
 
     @POST("/api/v1/login")
-    fun getUserLogin(
+    suspend fun getUserLogin(
         @Query("lang") language: String,
         @Body user: LoginBody
-    ): Call<UserResponse>
+    ): Response<UserResponse>
 
     @POST("/api/v1/logout")
     fun postLogoutUser(
