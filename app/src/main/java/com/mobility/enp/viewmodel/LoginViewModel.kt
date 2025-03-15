@@ -1,38 +1,48 @@
 package com.mobility.enp.viewmodel
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
+import com.mobility.enp.data.repository.LoginRepository
 import com.mobility.enp.data.room.LastUser
-import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.network.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class LoginViewModel(application: Application) : AndroidViewModel(application) {
-    private var database: DRoom? = null
+class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
     private val _lastUserEmail: MutableLiveData<LastUser> = MutableLiveData()
     val lastUserEmail: LiveData<LastUser> get() = _lastUserEmail
 
     var loginLiveData = MutableLiveData<UserResponse>()
 
-    fun initDatabase() {
-        database = DRoom.getRoomInstance(getApplication())
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val myRepository = (this[APPLICATION_KEY] as MyApplication).loginRepository
+                LoginViewModel(
+                    repository = myRepository
+                )
+            }
+        }
     }
 
     fun getLastUser() {
         viewModelScope.launch(Dispatchers.IO) {
-            val lastUser = database?.lastUserDao()?.getLastUser()
+            val lastUser = repository.getRoomDatabase()?.lastUserDao()?.getLastUser()
             lastUser?.let {
                 _lastUserEmail.postValue(it)
             }
@@ -51,10 +61,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         userLoginResponseRoomTable: UserLoginResponseRoomTable,
         errorBody: MutableLiveData<ErrorBody>
     ) {
-        database?.loginDao()?.deleteAll()
-        database?.loginDao()?.insert(userLoginResponseRoomTable)
-        database?.loginDao()?.fetchAllowedUsers()?.let { user ->
-            database?.fcmToken()?.getTableData().let { fcmToken ->
+        repository.getRoomDatabase()?.loginDao()?.deleteAll()
+        repository.getRoomDatabase()?.loginDao()?.insert(userLoginResponseRoomTable)
+        repository.getRoomDatabase()?.loginDao()?.fetchAllowedUsers()?.let { user ->
+            repository.getRoomDatabase()?.fcmToken()?.getTableData().let { fcmToken ->
                 fcmToken?.let {
                     Repository.postFcmToken(it, user.accessToken, errorBody)
                 }
@@ -63,32 +73,32 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     suspend fun storeLastUserEmail(email: String) {
-        database?.lastUserDao()?.deleteLastUser()
-        database?.lastUserDao()?.upsertLastUser(LastUser(email))
+        repository.getRoomDatabase()?.lastUserDao()?.deleteLastUser()
+        repository.getRoomDatabase()?.lastUserDao()?.upsertLastUser(LastUser(email))
     }
 
     suspend fun getUserToken(): UserLoginResponseRoomTable? {
         return withContext(Dispatchers.IO) {
-            database?.loginDao()?.fetchAllowedUsers()
+            repository.getRoomDatabase()?.loginDao()?.fetchAllowedUsers()
         }
     }
 
     suspend fun writeFcmToken(token: String) {
-        database?.fcmToken()?.deleteTable()
-        database?.fcmToken()?.insertData(FcmToken(token))
+        repository.getRoomDatabase()?.fcmToken()?.deleteTable()
+        repository.getRoomDatabase()?.fcmToken()?.insertData(FcmToken(token))
     }
 
-    suspend fun getLanguageKey(): String {
-        val lang = Repository.getUserLanguage(getApplication())
+    suspend fun getLanguageKey(context: Context): String {
+        val lang = Repository.getUserLanguage(context)
         return "RS/$lang"
     }
 
-    fun sendLanguage() {
+    fun sendLanguage(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val token = getUserToken()
                 token?.let {
-                    Repository.sendLanguageKey(it.accessToken, getApplication())
+                    Repository.sendLanguageKey(it.accessToken, context)
                     Log.d("LoginViewModel", "Language send successfully")
                 } ?: run {
                     Log.e("LoginViewModel", "Token is null")

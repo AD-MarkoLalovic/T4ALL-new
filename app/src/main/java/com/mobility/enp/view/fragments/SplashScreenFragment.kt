@@ -27,7 +27,7 @@ class SplashScreenFragment : Fragment() {
 
     private lateinit var binding: FragmentSplashScreenBinding
     private lateinit var action: NavDirections
-    private val loginViewModel: LoginViewModel by activityViewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels{ LoginViewModel.Factory }
     private var userData: UserLoginResponseRoomTable? = null
 
     override fun onCreateView(
@@ -43,10 +43,6 @@ class SplashScreenFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                loginViewModel.initDatabase()
-            }
-
             userData = loginViewModel.getUserToken()
 
             proceedAfterDatabaseInitialization()

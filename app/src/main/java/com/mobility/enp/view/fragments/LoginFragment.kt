@@ -35,7 +35,7 @@ class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding: FragmentLoginBinding get() = _binding!!
-    private val loginViewModel: LoginViewModel by activityViewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels{ LoginViewModel.Factory }
     private lateinit var userName: String
     private lateinit var userPassword: String
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
@@ -52,12 +52,6 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setFcmToken()
-
-        context?.let {
-            lifecycleScope.launch(Dispatchers.IO) {
-                loginViewModel.initDatabase()
-            }
-        }
 
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -145,7 +139,7 @@ class LoginFragment : Fragment() {
                     it.animate().scaleX(1f).scaleY(1f).setDuration(100)
 
                     viewLifecycleOwner.lifecycleScope.launch {
-                        val arg = loginViewModel.getLanguageKey()
+                        val arg = loginViewModel.getLanguageKey(requireContext())
                         val action =
                             LoginFragmentDirections.actionLoginFragmentToTermsAndPrivacyFragment(arg)
                         findNavController().navigate(action)
@@ -286,7 +280,7 @@ class LoginFragment : Fragment() {
 
                 loginViewModel.storeLastUserEmail(userName)
 
-                loginViewModel.sendLanguage()
+                loginViewModel.sendLanguage(requireContext())
 
                 withContext(Dispatchers.Main) {
                     findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment())
