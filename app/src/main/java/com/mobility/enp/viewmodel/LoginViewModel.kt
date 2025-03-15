@@ -12,7 +12,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.ErrorBody
-import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
@@ -21,7 +20,6 @@ import com.mobility.enp.data.room.LastUser
 import com.mobility.enp.network.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
     private val _lastUserEmail: MutableLiveData<LastUser> = MutableLiveData()
@@ -42,7 +40,7 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
 
     fun getLastUser() {
         viewModelScope.launch(Dispatchers.IO) {
-            val lastUser = repository.getRoomDatabase()?.lastUserDao()?.getLastUser()
+            val lastUser = repository.getLastUser()
             lastUser?.let {
                 _lastUserEmail.postValue(it)
             }
@@ -73,23 +71,21 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
     }
 
     suspend fun storeLastUserEmail(email: String) {
-        repository.getRoomDatabase()?.lastUserDao()?.deleteLastUser()
-        repository.getRoomDatabase()?.lastUserDao()?.upsertLastUser(LastUser(email))
+        repository.storeLastUserEmail(email)
     }
 
     suspend fun getUserToken(): UserLoginResponseRoomTable? {
-        return withContext(Dispatchers.IO) {
-            repository.getRoomDatabase()?.loginDao()?.fetchAllowedUsers()
+        return repository.getStoredUser()
+    }
+
+    fun writeFcmToken(token: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.writeFcmToken(token)
         }
     }
 
-    suspend fun writeFcmToken(token: String) {
-        repository.getRoomDatabase()?.fcmToken()?.deleteTable()
-        repository.getRoomDatabase()?.fcmToken()?.insertData(FcmToken(token))
-    }
-
-    suspend fun getLanguageKey(context: Context): String {
-        val lang = Repository.getUserLanguage(context)
+    suspend fun getLanguageKey(): String {
+        val lang = repository.getLanguageKey()
         return "RS/$lang"
     }
 

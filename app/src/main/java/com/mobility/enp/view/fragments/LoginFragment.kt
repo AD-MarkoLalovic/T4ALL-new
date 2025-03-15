@@ -139,7 +139,7 @@ class LoginFragment : Fragment() {
                     it.animate().scaleX(1f).scaleY(1f).setDuration(100)
 
                     viewLifecycleOwner.lifecycleScope.launch {
-                        val arg = loginViewModel.getLanguageKey(requireContext())
+                        val arg = loginViewModel.getLanguageKey()
                         val action =
                             LoginFragmentDirections.actionLoginFragmentToTermsAndPrivacyFragment(arg)
                         findNavController().navigate(action)
@@ -193,9 +193,7 @@ class LoginFragment : Fragment() {
             // Get new FCM registration token
             val token = task.result
 
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                loginViewModel.writeFcmToken(token)
-            }
+            loginViewModel.writeFcmToken(token)
 
             Log.w(TAG, token)
         }
