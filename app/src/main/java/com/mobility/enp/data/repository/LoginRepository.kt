@@ -19,11 +19,6 @@ class LoginRepository(
     context: Context,
 ) : BaseRepository(database, context) {
 
-
-    fun getRoomDatabase(): DRoom {
-        return database
-    }
-
     suspend fun getLastUser(): LastUser? {
         return withContext(Dispatchers.IO) {
             database.lastUserDao().getLastUser()
