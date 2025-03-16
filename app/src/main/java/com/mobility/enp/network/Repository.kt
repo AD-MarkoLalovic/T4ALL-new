@@ -67,27 +67,6 @@ object Repository {
     }
 
 
-    //updated
-    fun postFcmToken(
-        fcmToken: FcmToken, token: String?
-    ) {
-        val call = apiService(token).postFirebaseFcmToken(fcmToken)
-        call.enqueue(object : Callback<HomePageFcmTokenResponse> {
-            override fun onResponse(
-                call: Call<HomePageFcmTokenResponse>, response: Response<HomePageFcmTokenResponse>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d(TAG, "fcmToken posted is isSuccessful : ${response.isSuccessful}")
-                }
-            }
-
-            override fun onFailure(call: Call<HomePageFcmTokenResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-                val eb = ErrorBody(500, t.message + "\n" + t.cause)
-            }
-        })
-    }
-
     // updated
     suspend fun getUserPersonalInfo(
         token: String?

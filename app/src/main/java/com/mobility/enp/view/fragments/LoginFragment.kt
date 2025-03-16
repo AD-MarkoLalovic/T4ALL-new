@@ -273,6 +273,26 @@ class LoginFragment : Fragment() {
             }
         }
 
+        collectLatestLifecycleFlow(loginViewModel.fcmToken) { result ->
+            when (result) {
+                is SubmitResult.Loading -> {
+                    logMessage("posting fcm token")
+                }
+
+                is SubmitResult.Success -> {
+                    logMessage("fcm token posted")
+                }
+
+                is SubmitResult.Empty -> {}
+                is SubmitResult.FailureNoConnection -> showNoInternetDialog()
+                is SubmitResult.FailureServerError -> showErrorMessage(getString(R.string.server_error_msg))
+                is SubmitResult.FailureApiError -> showErrorMessage(result.errorMessage)
+                is SubmitResult.InvalidApiToken -> {
+                    showErrorMessage(result.errorMessage)
+                }
+            }
+        }
+
         if (!BuildConfig.DEBUG) {
             loginViewModel.lastUserEmail.observe(viewLifecycleOwner) { lastUser ->
                 binding.editEmail.setText(lastUser.email)
@@ -283,6 +303,10 @@ class LoginFragment : Fragment() {
     private fun showErrorMessage(message: String) {
         binding.progbar.visibility = View.GONE
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun logMessage(msg: String) {
+        Log.d(TAG, "fcmToken: $msg")
     }
 
     private fun showNoInternetDialog() {

@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
-import com.mobility.enp.data.model.ErrorBody
+import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
@@ -32,6 +32,8 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
     private val _userLogin = MutableStateFlow<SubmitResult<UserResponse>>(SubmitResult.Empty)
     val userLogin: StateFlow<SubmitResult<UserResponse>> get() = _userLogin
 
+    private val _fcmResponse = MutableStateFlow<SubmitResult<HomePageFcmTokenResponse>>(SubmitResult.Empty)
+    val fcmToken : StateFlow<SubmitResult<HomePageFcmTokenResponse>> get() = _fcmResponse
 
     private val _lastUserEmail: MutableLiveData<LastUser> = MutableLiveData()
     val lastUserEmail: LiveData<LastUser> get() = _lastUserEmail
@@ -110,14 +112,51 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
     suspend fun insertLoginToken(
         userLoginResponseRoomTable: UserLoginResponseRoomTable,
     ) {
-        repository.getRoomDatabase()?.loginDao()?.deleteAll()
-        repository.getRoomDatabase()?.loginDao()?.insert(userLoginResponseRoomTable)
-        repository.getRoomDatabase()?.loginDao()?.fetchAllowedUsers()?.let { user ->
-            repository.getRoomDatabase()?.fcmToken()?.getTableData().let { fcmToken ->
-                fcmToken?.let {
-                    Repository.postFcmToken(it, user.accessToken)
+        repository.insertLoginToken(userLoginResponseRoomTable)
+        repository.getUserFcmData().let { pair ->
+            _fcmResponse.value = SubmitResult.Loading
+           val result = repository.postFcmToken(pair.second, pair.first)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _fcmResponse.value = SubmitResult.Empty
+                } else {
+                    _fcmResponse.value = SubmitResult.Success(data)
                 }
-            }
+            }else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _fcmResponse.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _fcmResponse.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(TOKEN, "invalid token detected login out user")
+                                _fcmResponse.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code ?: 0,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _fcmResponse.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(TAG, "api error ${error.errorResponse.message}")
+                            }
+                        }
+                    }
+
+                    else -> {}
+                }}
         }
     }
 

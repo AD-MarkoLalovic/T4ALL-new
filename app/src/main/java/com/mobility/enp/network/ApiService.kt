@@ -62,9 +62,9 @@ interface ApiService {
     ): Response<HomeResponse>
 
     @POST("/api/v1/firebase")
-    fun postFirebaseFcmToken(
+    suspend fun postFirebaseFcmToken(
         @Body fcmToken: FcmToken
-    ): Call<HomePageFcmTokenResponse>
+    ): Response<HomePageFcmTokenResponse>
 
     @DELETE("/api/v1/firebase/{fcm_token}")
     fun deleteFirebaseToken(
