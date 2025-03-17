@@ -90,7 +90,9 @@ class SettingsFragment : Fragment() {
                             p1?.continuePermissionRequest()
                         }
 
-                    }).check()
+                    })
+                    .withErrorListener { error -> Log.d("Dexter", "Error: ${error.toString()}") }
+                    .check()
             }
         }
 

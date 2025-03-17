@@ -10,23 +10,21 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.messaging.FirebaseMessaging
 import com.mobility.enp.BuildConfig
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.login.LoginBody
-import com.mobility.enp.data.model.login.UserResponse
 import com.mobility.enp.databinding.FragmentLoginBinding
 import com.mobility.enp.network.Repository
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.LanguageDialog
 import com.mobility.enp.viewmodel.LoginViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -35,10 +33,11 @@ class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding: FragmentLoginBinding get() = _binding!!
-    private val loginViewModel: LoginViewModel by activityViewModels()
+
+    private val loginViewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
+
     private lateinit var userName: String
     private lateinit var userPassword: String
-    private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -52,12 +51,6 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setFcmToken()
-
-        context?.let {
-            lifecycleScope.launch(Dispatchers.IO) {
-                loginViewModel.initDatabase()
-            }
-        }
 
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -81,29 +74,25 @@ class LoginFragment : Fragment() {
 
                 val body = LoginBody(userName, userPassword)
 
-                context?.let {
-                    if (Repository.isNetworkAvailable(it)) {
-                        binding.progbar.visibility = View.VISIBLE
-                        CoroutineScope(Dispatchers.IO).launch {
-                            loginViewModel.loginUser(it, body, errorBody)
-                        }
-                    } else {
-                        val bundle = Bundle().apply {
-                            putString(
-                                getString(R.string.title),
-                                getString(R.string.no_connection_title)
-                            )
-                            putString(
-                                getString(R.string.subtitle),
-                                getString(R.string.please_connect_to_the_internet)
-                            )
-                        }
-
-                        findNavController().navigate(
-                            R.id.action_global_loginNoInternetConnectionDialog,
-                            bundle
+                if (Repository.isNetworkAvailable(requireContext())) {
+                    binding.progbar.visibility = View.VISIBLE
+                    loginViewModel.loginUser(body)
+                } else {
+                    val bundle = Bundle().apply {
+                        putString(
+                            getString(R.string.title),
+                            getString(R.string.no_connection_title)
+                        )
+                        putString(
+                            getString(R.string.subtitle),
+                            getString(R.string.please_connect_to_the_internet)
                         )
                     }
+
+                    findNavController().navigate(
+                        R.id.action_global_loginNoInternetConnectionDialog,
+                        bundle
+                    )
                 }
 
             } else {
@@ -126,7 +115,8 @@ class LoginFragment : Fragment() {
                         .scaleY(1f)
                         .setDuration(100)
 
-                    val action = LoginFragmentDirections.actionLoginFragmentToForgotPasswordFragment()
+                    val action =
+                        LoginFragmentDirections.actionLoginFragmentToForgotPasswordFragment()
                     findNavController().navigate(action)
                 }
         }
@@ -199,9 +189,7 @@ class LoginFragment : Fragment() {
             // Get new FCM registration token
             val token = task.result
 
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                loginViewModel.writeFcmToken(token)
-            }
+            loginViewModel.writeFcmToken(token)
 
             Log.w(TAG, token)
         }
@@ -246,20 +234,61 @@ class LoginFragment : Fragment() {
     }
 
     private fun setObservers() {
-        loginViewModel.loginLiveData = MutableLiveData<UserResponse>()
-        errorBody = MutableLiveData()
+        collectLatestLifecycleFlow(loginViewModel.userLogin) { result ->
+            when (result) {
+                is SubmitResult.Loading -> {
+                    binding.progbar.visibility = View.VISIBLE
+                }
 
-        errorBody.observe(viewLifecycleOwner) { errorBody ->
-            binding.progbar.visibility = View.GONE
+                is SubmitResult.Success -> {
+                    binding.progbar.visibility = View.GONE
 
-            context?.let { context ->
-                Toast.makeText(
-                    context,
-                    errorBody.errorBody,
-                    Toast.LENGTH_SHORT
-                ).show()
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        loginViewModel.insertLoginToken(
+                            UserLoginResponseRoomTable(
+                                null,
+                                result.data.data?.accessToken,
+                                result.data.data?.tokenType,
+                                userName, userPassword
+                            )
+                        )
+
+                        loginViewModel.storeLastUserEmail(userName)
+
+                        loginViewModel.sendLanguage(requireContext())
+
+                        withContext(Dispatchers.Main) {
+                            findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment())
+                        }
+                    }
+                }
+
+                is SubmitResult.Empty -> {}
+                is SubmitResult.FailureNoConnection -> showNoInternetDialog()
+                is SubmitResult.FailureServerError -> showErrorMessage(getString(R.string.server_error_msg))
+                is SubmitResult.FailureApiError -> showErrorMessage(result.errorMessage)
+                is SubmitResult.InvalidApiToken -> {
+                    showErrorMessage(result.errorMessage)
+                }
+            }
+        }
+
+        collectLatestLifecycleFlow(loginViewModel.fcmToken) { result ->
+            when (result) {
+                is SubmitResult.Loading -> {
+                    logMessage("posting fcm token")
+                }
+
+                is SubmitResult.Success -> {
+                    logMessage("fcm token posted")
+                }
+
+                is SubmitResult.Empty -> {}
+                is SubmitResult.FailureNoConnection -> showNoInternetDialog()
+                is SubmitResult.FailureServerError -> showErrorMessage(getString(R.string.server_error_msg))
+                is SubmitResult.FailureApiError -> showErrorMessage(result.errorMessage)
+                is SubmitResult.InvalidApiToken -> {
+                    showErrorMessage(result.errorMessage)
                 }
             }
         }
@@ -269,30 +298,26 @@ class LoginFragment : Fragment() {
                 binding.editEmail.setText(lastUser.email)
             }
         }
+    }
 
-        loginViewModel.loginLiveData.observe(viewLifecycleOwner) { userServerResponse ->
-            binding.progbar.visibility = View.GONE
+    private fun showErrorMessage(message: String) {
+        binding.progbar.visibility = View.GONE
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
 
-            lifecycleScope.launch(Dispatchers.IO) {
-                loginViewModel.insertLoginToken(
-                    UserLoginResponseRoomTable(
-                        null,
-                        userServerResponse.data?.accessToken,
-                        userServerResponse.data?.tokenType,
-                        userServerResponse.message,
-                        userName, userPassword
-                    ), errorBody
-                )
+    private fun logMessage(msg: String) {
+        Log.d(TAG, "fcmToken: $msg")
+    }
 
-                loginViewModel.storeLastUserEmail(userName)
-
-                loginViewModel.sendLanguage()
-
-                withContext(Dispatchers.Main) {
-                    findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment())
-                }
-            }
+    private fun showNoInternetDialog() {
+        val bundle = Bundle().apply {
+            putString(getString(R.string.title), getString(R.string.no_connection_title))
+            putString(
+                getString(R.string.subtitle),
+                getString(R.string.please_connect_to_the_internet)
+            )
         }
+        findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
     }
 
     companion object {
