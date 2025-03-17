@@ -252,15 +252,6 @@ class LoginFragment : Fragment() {
                                 userName, userPassword
                             )
                         )
-            lifecycleScope.launch(Dispatchers.IO) {
-                loginViewModel.insertLoginToken(
-                    UserLoginResponseRoomTable(
-                        userServerResponse.data?.accessToken,
-                        userServerResponse.data?.tokenType,
-                        userServerResponse.message,
-                        userName, userPassword
-                    ), errorBody
-                )
 
                         loginViewModel.storeLastUserEmail(userName)
 

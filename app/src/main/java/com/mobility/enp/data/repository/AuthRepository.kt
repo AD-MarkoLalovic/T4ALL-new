@@ -10,11 +10,8 @@ import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
 import com.mobility.enp.data.room.LastUser
-import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
