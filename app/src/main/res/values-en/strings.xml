@@ -327,4 +327,6 @@
     <string name="version">Version:</string>
     <string name="next">Next</string>
     <string name="welcome_to_toll_for_all">Welcome to Toll For All</string>
+    <string name="what_is_toll_for_all_system">What is Toll For All system?</string>
+    <string name="toll_for_all_description">Toll For All is a platform that provides         integrated toll collection services in European countries. No more waiting at toll booths and         currency exchanges. With the Toll For All platform, a new era of mobility has arrived.</string>
 </resources>

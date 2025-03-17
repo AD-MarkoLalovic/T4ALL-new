@@ -36,6 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dimens_0dp"
                 android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="3dp"
                 android:importantForAccessibility="no"
                 android:src="@drawable/t4all"
                 app:layout_constraintStart_toStartOf="parent"
@@ -62,13 +63,13 @@
                     android:focusable="true"
                     android:fontFamily="@font/noto_sans_medium"
                     android:gravity="center_vertical"
-                    android:text="SRP"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     app:drawableStartCompat="@drawable/arrow_down_spinner_intro"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="SRP" />
 
                 <LinearLayout
                     android:id="@+id/languageOptions"
@@ -89,9 +90,9 @@
                         android:layout_gravity="end"
                         android:layout_marginTop="7dp"
                         android:fontFamily="@font/noto_sans_medium"
-                        android:text="СРП"
                         android:textColor="@color/white"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        tools:text="СРП" />
 
                     <TextView
                         android:id="@+id/langThree"
@@ -100,9 +101,9 @@
                         android:layout_gravity="end"
                         android:layout_marginTop="7dp"
                         android:fontFamily="@font/noto_sans_medium"
-                        android:text="ENG"
                         android:textColor="@color/white"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        tools:text="ENG" />
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -131,7 +132,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewWelcome" />
 
-
             <TextView
                 android:id="@+id/textViewTitle"
                 style="@style/H3"
@@ -139,7 +139,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dimens_16dp"
                 android:layout_marginTop="@dimen/dimens_25dp"
-
                 android:text="@string/what_is_toll_for_all_system"
                 android:textColor="@color/primary_dark_lightest"
                 app:layout_constraintStart_toStartOf="parent"

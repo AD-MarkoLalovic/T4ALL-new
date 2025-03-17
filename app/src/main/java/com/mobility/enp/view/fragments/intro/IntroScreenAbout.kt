@@ -1,7 +1,6 @@
 package com.mobility.enp.view.fragments.intro
 
 import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +10,8 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
 import androidx.core.animation.doOnEnd
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentIntroScreenAboutBinding
 
 class IntroScreenAbout : Fragment() {
@@ -34,28 +35,31 @@ class IntroScreenAbout : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sharedPreferences = requireContext().getSharedPreferences("IntroLanguage", Context.MODE_PRIVATE)
-        val savedLanguage = sharedPreferences.getString("selected_Language", "sr") // Podrazumevano "sr"
+        val sharedPreferences =
+            requireContext().getSharedPreferences("IntroLanguage", Context.MODE_PRIVATE)
+        val savedLanguage =
+            sharedPreferences.getString("selected_Language", "sr") // Podrazumevano "sr"
 
         when (savedLanguage) {
             "cyr" -> {
-                binding.tvSelectedLanguage?.text = "СРП"
-                binding.langTwo?.text = "SRP"
-                binding.langThree?.text = "ENG"
+                binding.tvSelectedLanguage?.text = getString(R.string.srp_cyr)
+                binding.langTwo?.text = getString(R.string.srp)
+                binding.langThree?.text = getString(R.string.eng)
             }
+
             "sr" -> {
-                binding.tvSelectedLanguage?.text = "SRP"
-                binding.langTwo?.text = "СРП"
-                binding.langThree?.text = "ENG"
+                binding.tvSelectedLanguage?.text = getString(R.string.srp)
+                binding.langTwo?.text = getString(R.string.srp_cyr)
+                binding.langThree?.text = getString(R.string.eng)
             }
+
             "en" -> {
-                binding.tvSelectedLanguage?.text = "ENG"
-                binding.langTwo?.text = "SRP"
-                binding.langThree?.text = "СРП"
+                binding.tvSelectedLanguage?.text = getString(R.string.eng)
+                binding.langTwo?.text = getString(R.string.srp)
+                binding.langThree?.text = getString(R.string.srp_cyr)
             }
         }
 
@@ -87,18 +91,24 @@ class IntroScreenAbout : Fragment() {
                 "ENG" -> setLanguage("en")
             }
         }
+
+        binding.buttonNext?.setOnClickListener {
+            findNavController().navigate(R.id.action_introScreenAbout_to_introScreenRegions)
+        }
+
     }
 
     private fun setLanguage(languageCode: String) {
-        val sharedPreferences = requireContext().getSharedPreferences("IntroLanguage", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            requireContext().getSharedPreferences("IntroLanguage", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
-            putString("selected_Language", languageCode) // Spremanje izabranog jezika
+            putString("selected_Language", languageCode)
             apply()
         }
 
         val shared = requireContext().getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
         with(shared.edit()) {
-            putString("user_language", languageCode) // Spremanje izabranog jezika
+            putString("user_language", languageCode)
             apply()
         }
         activity?.recreate()
@@ -106,29 +116,29 @@ class IntroScreenAbout : Fragment() {
 
     private fun toggleDropdown(view: LinearLayout) {
         if (isExpanded) {
-            // Ako je trenutno otvoren, animiramo smanjenje visine na 0 i zatim ga sakrivamo
             animateHeight(view, view.height, 0) {
                 view.visibility = View.GONE
             }
         } else {
-            // Prvo omogućavamo vidljivost da bismo mogli da izmerimo visinu
             view.visibility = View.VISIBLE
 
-            // Merimo njegovu visinu tako da odgovara sadržaju (wrap_content)
             view.measure(
-                ViewGroup.LayoutParams.MATCH_PARENT, // Može biti i WRAP_CONTENT ako želiš širu kontrolu
+                ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-            val targetHeight = view.measuredHeight // Dobijamo pravu visinu sadržaja
+            val targetHeight = view.measuredHeight
 
-            // Sada animiramo otvaranje do stvarne visine
             animateHeight(view, 0, targetHeight)
         }
         isExpanded = !isExpanded
     }
 
-
-    private fun animateHeight(view: View, startHeight: Int, endHeight: Int, onEnd: (() -> Unit)? = null) {
+    private fun animateHeight(
+        view: View,
+        startHeight: Int,
+        endHeight: Int,
+        onEnd: (() -> Unit)? = null
+    ) {
         ValueAnimator.ofInt(startHeight, endHeight).apply {
             duration = 300
             interpolator = AccelerateDecelerateInterpolator()
@@ -145,6 +155,4 @@ class IntroScreenAbout : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
 }

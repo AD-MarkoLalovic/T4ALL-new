@@ -326,4 +326,6 @@
     <string name="version">Verzija:</string>
     <string name="next">Dalje</string>
     <string name="welcome_to_toll_for_all">Welcome to Toll For All</string>
+    <string name="what_is_toll_for_all_system">Šta je Toll For All sistem?</string>
+    <string name="toll_for_all_description">Toll For All je platforma koja omogućava integrisanu naplatu putarine u zemljama Evrope. Nema više čekanja na naplatnim rampama i promena valute. Sa Toll For All platformom stigla je nova era mobilnosti!</string>
 </resources>
