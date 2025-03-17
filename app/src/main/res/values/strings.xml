@@ -305,10 +305,6 @@
     <string name="no_currency_exchange" translatable="false">No currency exchange.</string>
     <string name="welcome_to_toll_for_all">Добро дошли у Toll For All</string>
     <string name="what_is_toll_for_all_system">Шта је Toll For All систем?</string>
-    <string name="toll_for_all_supported_countries" translatable="false">Countries that support Toll For All system</string>
-    <string name="serbia_eng" translatable="false">Serbia</string>
-    <string name="macedonia_eng" translatable="false">N. Macedonia</string>
-    <string name="montenegro_eng" translatable="false">Montenegro</string>
     <string name="croatia_eng" translatable="false">Croatia</string>
     <string name="eur" translatable="false">EUR</string>
     <string name="rsd" translatable="false">RSD</string>
@@ -399,5 +395,9 @@
         <item>ENG</item>
     </string-array>
     <string name="toll_for_all_description">Toll For All је платформа која омогућава интегрисану наплату путарине у земљама Европе. Нема више чекања на наплатним рампама и промена валуте. Са Toll For All платформом стигла је нова ера мобилности!</string>
+    <string name="toll_for_all_supported_countries">Државе у којима функционише Toll For All систем</string>
+    <string name="serbia_eng">Србија</string>
+    <string name="macedonia_eng">Северна Македонија</string>
+    <string name="montenegro_eng">"Црна Гора        "</string>
 
 </resources>

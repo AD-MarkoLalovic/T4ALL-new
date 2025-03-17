@@ -338,5 +338,9 @@
     <string name="welcome_to_toll_for_all">Welcome to Toll For All</string>
     <string name="what_is_toll_for_all_system">Šta je Toll For All sistem?</string>
     <string name="toll_for_all_description">Toll For All je platforma koja omogućava integrisanu naplatu putarine u zemljama Evrope. Nema više čekanja na naplatnim rampama i promena valute. Sa Toll For All platformom stigla je nova era mobilnosti!</string>
+    <string name="toll_for_all_supported_countries">Države u kojima funkcioniše Toll For All sistem</string>
+    <string name="serbia_eng">Srbija</string>
+    <string name="macedonia_eng">Severna Makedonija</string>
+    <string name="montenegro_eng">Crna Gora</string>
 
 </resources>

@@ -41,7 +41,7 @@ class IntroScreenAbout : Fragment() {
         val sharedPreferences =
             requireContext().getSharedPreferences("IntroLanguage", Context.MODE_PRIVATE)
         val savedLanguage =
-            sharedPreferences.getString("selected_Language", "sr") // Podrazumevano "sr"
+            sharedPreferences.getString("selected_Language", "sr")
 
         when (savedLanguage) {
             "cyr" -> {
