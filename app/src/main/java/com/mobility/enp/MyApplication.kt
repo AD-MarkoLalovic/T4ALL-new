@@ -5,7 +5,6 @@ import com.mobility.enp.data.repository.AuthRepository
 import com.mobility.enp.data.repository.CardRepository
 import com.mobility.enp.data.repository.FranchiserRepository
 import com.mobility.enp.data.repository.HomeRepository
-import com.mobility.enp.data.repository.LoginRepository
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.repository.UserRepository
 import com.mobility.enp.data.room.database.DRoom
@@ -35,10 +34,6 @@ class MyApplication : Application() {
 
     val franchiseRepository: FranchiserRepository by lazy {
         FranchiserRepository(database, this)
-    }
-
-    val loginRepository: LoginRepository by lazy {
-        LoginRepository(database, this)
     }
 
 }

@@ -15,7 +15,7 @@ import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
-import com.mobility.enp.data.repository.LoginRepository
+import com.mobility.enp.data.repository.AuthRepository
 import com.mobility.enp.data.room.LastUser
 import com.mobility.enp.network.Repository
 import com.mobility.enp.util.NetworkError
@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
+class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
 
     private val _userLogin = MutableStateFlow<SubmitResult<UserResponse>>(SubmitResult.Empty)
     val userLogin: StateFlow<SubmitResult<UserResponse>> get() = _userLogin
@@ -41,7 +41,7 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val myRepository = (this[APPLICATION_KEY] as MyApplication).loginRepository
+                val myRepository = (this[APPLICATION_KEY] as MyApplication).repositoryAuth
                 LoginViewModel(
                     repository = myRepository
                 )
