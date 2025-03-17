@@ -6,15 +6,12 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -90,7 +87,7 @@ class SettingsFragment : Fragment() {
                             p0: PermissionRequest?,
                             p1: PermissionToken?
                         ) {
-                            showCustomPermissionDialog(p1)
+                            p1?.continuePermissionRequest()
                         }
 
                     })
@@ -122,23 +119,6 @@ class SettingsFragment : Fragment() {
             }
             languageDialog.show(parentFragmentManager, "languageDialog")
         }
-    }
-
-    private fun showCustomPermissionDialog(token: PermissionToken?) {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Dozvolite T4A da vam šalje notifikacije")
-            .setMessage("Notifikacije služe za preuzimanje računa i export tabela u istoriji prolazaka.")
-            .setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    token?.continuePermissionRequest()
-                }, 200) // Short delay to prevent overlapping dialogs
-            }
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
-                token?.cancelPermissionRequest()
-            }
-            .show()
     }
 
     private fun setFranchise() {
