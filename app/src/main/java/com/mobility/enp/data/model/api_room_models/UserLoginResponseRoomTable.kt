@@ -14,11 +14,13 @@ data class UserLoginResponseRoomTable(
     val tokenType: String?,
     val username: String?,
     val password: String?,
+    val portalKey: String?
 ) : Serializable {
     constructor(
         accessToken: String?,
         tokenType: String?,
         username: String?,
-        password: String?
-    ) : this(null, accessToken, tokenType, username, password)
+        password: String?,
+        portalKey: String?
+    ) : this(null, accessToken, tokenType, username, password,portalKey)
 }

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -58,10 +59,11 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        franchiseViewModel.getFranchiseModel(requireContext())
 
+        setupObservers()
         setupBinding()
         setupAdapters()
-        setupObservers()
         setupClickListeners()
 
         viewModel.fetchHomeData()
@@ -104,16 +106,9 @@ class HomeFragment : Fragment() {
                 binding.cardViewAccountHomeScreen.backgroundTintList =
                     ColorStateList.valueOf(data.franchisePrimaryColor)
                 binding.constraintLayoutInCard.background = data.franchiseHomeBackgroundLocation
-                if (::homePromotionsAdapter.isInitialized) {
-                    homePromotionsAdapter.updateColor(franchiseModel)
-                }
-                if (::adapterProgress.isInitialized) {
-                    adapterProgress.updateFranchiserDotColor(franchiseModel.promotionsDot)
-                }
                 binding.switchToPageBill.setBackgroundResource(data.rightArrowResource)
             }
         }
-
     }
 
     private fun setupClickListeners() {
@@ -126,7 +121,6 @@ class HomeFragment : Fragment() {
         when (result) {
             is SubmitResult.Loading -> {
                 binding.progBar.visibility = View.VISIBLE
-                (requireActivity() as MainActivity).hideLogo(true)
             }
 
             is SubmitResult.Success -> {
@@ -152,10 +146,6 @@ class HomeFragment : Fragment() {
         viewModel.homeCards.value?.let {
             setHomeCardsAdapter(it)
         }
-
-        (requireActivity() as MainActivity).hideLogo(false)
-
-        franchiseViewModel.getFranchiseModel(result.data.home.portalKey, requireContext())
 
         result.data.home.displayName.let { viewModel.loadProfileImage(it) }
         val invoiceDetails = result.data.invoice
@@ -233,10 +223,10 @@ class HomeFragment : Fragment() {
             binding.progBar.visibility = View.VISIBLE
             viewModel.updateDeleteHomeCard(delete)
             binding.progBar.visibility = View.GONE
-        })
+        },franchiseViewModel.franchiseModel.value)
 
         if (filteredList.isNotEmpty()) {
-            adapterProgress = HomeProgressAdapter(filteredList.size)
+            adapterProgress = HomeProgressAdapter(filteredList.size,franchiseViewModel.franchiseModel.value)
 
             binding.cyclerPromotions.visibility = View.VISIBLE
             binding.cyclerPromotions.adapter = homePromotionsAdapter

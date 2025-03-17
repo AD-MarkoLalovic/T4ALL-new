@@ -1,11 +1,14 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
@@ -87,7 +90,7 @@ class SettingsFragment : Fragment() {
                             p0: PermissionRequest?,
                             p1: PermissionToken?
                         ) {
-                            p1?.continuePermissionRequest()
+                            showCustomPermissionDialog(p1)
                         }
 
                     })
@@ -119,6 +122,21 @@ class SettingsFragment : Fragment() {
             }
             languageDialog.show(parentFragmentManager, "languageDialog")
         }
+    }
+
+    private fun showCustomPermissionDialog(token: PermissionToken?) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Dozvolite T4A da vam šalje notifikacije")
+            .setMessage("Notifikacije služe za preuzimanje računa i export tabela u istoriji prolazaka.")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+                token?.continuePermissionRequest()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+                token?.cancelPermissionRequest()
+            }
+            .show()
     }
 
     private fun setFranchise() {
