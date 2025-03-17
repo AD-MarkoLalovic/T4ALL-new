@@ -145,15 +145,15 @@
                 app:layout_constraintTop_toBottomOf="@+id/midEclipse" />
 
             <TextView
+                android:id="@+id/textViewDescription"
                 style="@style/Paragraph"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dimens_16dp"
                 android:layout_marginTop="@dimen/dimens_16dp"
                 android:layout_marginBottom="@dimen/dimens_16dp"
                 android:text="@string/toll_for_all_description"
                 android:textColor="@color/primary_dark_lightest"
-                app:layout_constraintBottom_toTopOf="@+id/buttonNext"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textViewTitle" />
@@ -162,6 +162,7 @@
                 android:id="@+id/buttonNext"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_16dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
                 android:layout_marginBottom="@dimen/dimens_22dp"
                 android:background="@drawable/spinner_intro_lang_background"
@@ -175,7 +176,9 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/dimens_12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewDescription"
+                app:layout_constraintVertical_bias="1.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
