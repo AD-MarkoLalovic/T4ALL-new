@@ -324,5 +324,6 @@
     <string name="cards_terms_text_full">I agree with General Terms and Conditions and Privacy Policy</string>
     <string name="card_terms_left_clickable">General Terms and Conditions</string>
     <string name="card_term_right_clickable">Privacy Policy</string>
+    <string name="version">Version:</string>
     <string name="next">Next</string>
 </resources>

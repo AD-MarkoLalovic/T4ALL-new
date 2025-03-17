@@ -25,7 +25,6 @@ class LocationSelectFragment : Fragment() {
     private lateinit var adapter: SelectCountryAdapter
     private lateinit var adapterData: ArrayList<CountryModel>
     private lateinit var selectedCountry: CountryModel
-    private val viewModel: LoginViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,42 +39,39 @@ class LocationSelectFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapterData = arrayListOf<CountryModel>()
-        context?.let {
-            viewModel.initDatabase()
-            adapterData.add(
-                CountryModel(
-                    getString(R.string.serbia_country_code),
-                    getString(R.string.serbia),
-                    AppCompatResources.getDrawable(it, R.drawable.serbia_flag)
-                )
+        adapterData.add(
+            CountryModel(
+                getString(R.string.serbia_country_code),
+                getString(R.string.serbia),
+                AppCompatResources.getDrawable(requireContext(), R.drawable.serbia_flag)
             )
-            adapterData.add(
-                CountryModel(
-                    getString(R.string.macedonia_country_code),
-                    getString(R.string.macedonia),
-                    AppCompatResources.getDrawable(it, R.drawable.macedonia_flag)
-                )
+        )
+        adapterData.add(
+            CountryModel(
+                getString(R.string.macedonia_country_code),
+                getString(R.string.macedonia),
+                AppCompatResources.getDrawable(requireContext(), R.drawable.macedonia_flag)
             )
-            adapterData.add(
-                CountryModel(
-                    getString(R.string.montenegro_country_code),
-                    getString(R.string.montenegro),
-                    AppCompatResources.getDrawable(it, R.drawable.montenegro_flag)
-                )
+        )
+        adapterData.add(
+            CountryModel(
+                getString(R.string.montenegro_country_code),
+                getString(R.string.montenegro),
+                AppCompatResources.getDrawable(requireContext(), R.drawable.montenegro_flag)
             )
+        )
 
-            adapter = SelectCountryAdapter(adapterData)
-            adapter.setInter(object : SelectCountryAdapter.SelectedCountry {
-                override fun pickedCountry(county: CountryModel) {
-                    selectedCountry = county
-                    Log.d(Config.TAGREG, "selected : $selectedCountry")
-                }
-            })
-            binding.cycler.adapter = adapter
-            binding.cycler.layoutManager = LinearLayoutManager(context)
-            selectedCountry = adapterData[0] // initially set to 0
-            Log.d(Config.TAGREG, "selected : $selectedCountry")
-        }
+        adapter = SelectCountryAdapter(adapterData)
+        adapter.setInter(object : SelectCountryAdapter.SelectedCountry {
+            override fun pickedCountry(county: CountryModel) {
+                selectedCountry = county
+                Log.d(Config.TAGREG, "selected : $selectedCountry")
+            }
+        })
+        binding.cycler.adapter = adapter
+        binding.cycler.layoutManager = LinearLayoutManager(context)
+        selectedCountry = adapterData[0] // initially set to 0
+        Log.d(Config.TAGREG, "selected : $selectedCountry")
 
         binding.button.setOnClickListener {
             findNavController().navigate(

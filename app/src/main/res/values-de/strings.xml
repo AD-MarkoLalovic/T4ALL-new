@@ -343,6 +343,7 @@
     <string name="cards_terms_text_full">Ich stimme den Allgemeinen Geschäftsbedingungen und der Datenschutzrichtlinie zu</string>
     <string name="card_terms_left_clickable">Allgemeinen Geschäftsbedingungen</string>
     <string name="card_term_right_clickable">Datenschutzrichtlinie</string>
+    <string name="version">Version:</string>
     <string name="next">Dalje</string>
 
 </resources>

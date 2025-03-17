@@ -333,6 +333,7 @@
     <string name="cards_terms_text_full">Genel Şartlar ve Koşullar ile Gizlilik Politikası\'nı kabul ediyorum</string>
     <string name="card_terms_left_clickable">Genel Şartlar ve Koşullar</string>
     <string name="card_term_right_clickable">Gizlilik Politikası</string>
+    <string name="version">Sürüm:</string>
     <string name="next">Dalje</string>
 
 </resources>

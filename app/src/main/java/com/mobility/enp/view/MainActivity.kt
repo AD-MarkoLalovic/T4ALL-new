@@ -65,8 +65,10 @@ class MainActivity : AppCompatActivity() {
     fun hideLogo(hideLogo: Boolean) {
         if (hideLogo){
             binding.toolbarShared.iconLogo.visibility = View.INVISIBLE
+            binding.bottomNavigation.visibility = View.GONE
         }else{
             binding.toolbarShared.iconLogo.visibility = View.VISIBLE
+            binding.bottomNavigation.visibility = View.VISIBLE
         }
     }
 
