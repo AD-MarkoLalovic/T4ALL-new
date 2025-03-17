@@ -303,7 +303,7 @@
     <string name="payment_directly_from_the_user_s_account" translatable="false">Payment directly from the user\'s account.</string>
     <string name="no_waiting_in_line" translatable="false">No waiting in line.</string>
     <string name="no_currency_exchange" translatable="false">No currency exchange.</string>
-    <string name="welcome_to_toll_for_all" translatable="false">Welcome to Toll For All</string>
+    <string name="welcome_to_toll_for_all">Добро дошли у Toll For All</string>
     <string name="what_is_toll_for_all_system" translatable="false">What is Toll For All system?</string>
     <string name="toll_for_all_description" translatable="false">Toll For All is a platform that provides
         integrated toll collection services in European countries. No more waiting at toll booths and

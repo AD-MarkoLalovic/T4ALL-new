@@ -345,5 +345,6 @@
     <string name="card_term_right_clickable">Datenschutzrichtlinie</string>
     <string name="version">Version:</string>
     <string name="next">Dalje</string>
+    <string name="welcome_to_toll_for_all">Welcome to Toll For All</string>
 
 </resources>

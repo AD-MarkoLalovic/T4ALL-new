@@ -63,10 +63,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun hideLogo(hideLogo: Boolean) {
-        if (hideLogo){
+        if (hideLogo) {
             binding.toolbarShared.iconLogo.visibility = View.INVISIBLE
             binding.bottomNavigation.visibility = View.GONE
-        }else{
+        } else {
             binding.toolbarShared.iconLogo.visibility = View.VISIBLE
             binding.bottomNavigation.visibility = View.VISIBLE
         }
@@ -158,32 +158,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setExistingLanguage(context: Context) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val database = DRoom.getRoomInstance(context)
-            val userLanguage = database.languageDao()?.fetchAllowedUsers()?.userLanguage
+        val sharedPreferences = context.getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
+        val userLanguage = sharedPreferences.getString("user_language", "sr") ?: "sr"
 
-            Log.d("MARKO", "setExistingLanguage: $userLanguage")
-
-            val locale = if (!userLanguage.isNullOrEmpty()) {
-                Log.d("MARKO 2 ", "setExistingLanguage: $userLanguage")
-                Locale(userLanguage)
-            } else {
-                Log.d("MARKO 3", "setExistingLanguage: $userLanguage")
-                Locale("sr", "RS", "Latn") // Podrazumevani srpski latinica
-            }
-
-            withContext(Dispatchers.Main) {
-                val configuration = Configuration(context.resources.configuration)
-                configuration.setLocale(locale)
-
-                context.resources.updateConfiguration(
-                    configuration, context.resources.displayMetrics
-                )
-            }
+        val lang = when (userLanguage) {
+            "cyr" -> Locale("sr_Cyrl", "RS")
+            "sr", "cnr" -> Locale("sr", "RS")
+            else -> Locale(userLanguage)
         }
+
+        Locale.setDefault(lang)
+
+        val configuration = resources.configuration
+        configuration.setLocale(lang)
+
+        context.resources.updateConfiguration(
+            configuration,
+            context.resources.displayMetrics
+        )
+
     }
-
-
 
 
     companion object {  // class tied static method

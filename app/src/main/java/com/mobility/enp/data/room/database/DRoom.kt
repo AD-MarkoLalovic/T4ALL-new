@@ -89,21 +89,21 @@ abstract class DRoom : RoomDatabase() {
             if (instance == null) {
                 synchronized(DRoom::class) {
                     instance = buildDatabase(context)
-                    prepopulateDatabase(instance!!)
+                    //prepopulateDatabase(instance!!)
                 }
             }
             return instance!!
         }
 
-        private fun prepopulateDatabase(db: DRoom) {
+        /*private fun prepopulateDatabase(db: DRoom) {
             CoroutineScope(Dispatchers.IO).launch {
 
                 val getInvoicesTable = instance?.languageDao()?.getTableSize()
                 if (getInvoicesTable == 0) {
-                    db.languageDao().insert(UserLanguage("en"))
+                    db.languageDao().insert(UserLanguage("sr_Latn"))
                 }
             }
-        }
+        }*/
 
         fun buildDatabase(context: Context): DRoom {  // its a singleton
             if (instance == null) {
