@@ -1,11 +1,13 @@
 package com.mobility.enp.data.model.api_room_models
 
+import android.os.Parcelable
 import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.io.Serializable
+import kotlinx.parcelize.Parcelize
 
 @Keep
+@Parcelize
 @Entity(tableName = "loginTable")
 data class UserLoginResponseRoomTable(
     @PrimaryKey(autoGenerate = true) // no need to pass this room will handle it
@@ -15,7 +17,7 @@ data class UserLoginResponseRoomTable(
     val message: String?,
     val username: String?,
     val password: String?,
-) : Serializable {
+) : Parcelable {
     constructor(
         accessToken: String?,
         tokenType: String?,

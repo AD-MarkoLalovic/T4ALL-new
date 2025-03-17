@@ -322,5 +322,6 @@
     <string name="cards_terms_text_full">Συμφωνώ με τους Γενικούς Όρους και Προϋποθέσεις και την Πολιτική Απορρήτου</string>
     <string name="card_terms_left_clickable">Γενικούς Όρους και Προϋποθέσεις</string>
     <string name="card_term_right_clickable">Πολιτική Απορρήτου</string>
+    <string name="next">Dalje</string>
 
 </resources>

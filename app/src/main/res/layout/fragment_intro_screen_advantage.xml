@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimens_22dp"
             android:layout_marginEnd="@dimen/dimens_16dp"
-            android:text="@string/skip"
+            android:text="SKIP"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

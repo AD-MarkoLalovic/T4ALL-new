@@ -1,30 +1,20 @@
 package com.mobility.enp.view.fragments.intro
 
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
-import com.mobility.enp.Config
+import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentIntroScreenAboutBinding
-import com.mobility.enp.interf.VpInterface
 
 class IntroScreenAbout : Fragment() {
 
     private var _binding: FragmentIntroScreenAboutBinding? = null
-    private val binding get() = _binding!!
-
-    private lateinit var countDownTimer: CountDownTimer  // for progBar
-    private lateinit var navController: NavController
-    private var vpInterface: VpInterface? = null
-
-    fun setInterface(vpInterface: VpInterface) {
-        this.vpInterface = vpInterface
-    }
+    private val binding: FragmentIntroScreenAboutBinding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,43 +32,43 @@ class IntroScreenAbout : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = viewLifecycleOwner
+        setSpinner()
 
-        navController = findNavController()
+    }
 
-        countDownTimer = object :
-            CountDownTimer(Config.TOTAL_TIME_MILLIS.toLong(), Config.INTERVAL_MILLIS.toLong()) {
-            override fun onTick(millisUntilFinished: Long) {
-                val timeRemaining = millisUntilFinished / 1000
-                Log.d(Config.TAG_INTRO, "onTick: $timeRemaining")
-                val progress =
-                    ((Config.TOTAL_TIME_MILLIS - millisUntilFinished) * 100 / Config.TOTAL_TIME_MILLIS).toInt()
-                binding.progressBar.progress = progress
-            }
+    private fun setSpinner() {
+        val spinner = binding.spinnerIntroAboutLang
+        val language = resources.getStringArray(R.array.language_options_intro)
 
-            override fun onFinish() {
-                try {
-                    vpInterface?.switchToPage(1)
-                } catch (e: UninitializedPropertyAccessException) {
-                    Log.d(IntroScreenFragment.Tag, "exception: \n\n ${e.cause} \n ${e.message}")
+        val adapter = ArrayAdapter(requireContext(), R.layout.spiner_intro_lang_item, language)
+        adapter.setDropDownViewResource(R.layout.spiner_intro_lang_dropdown_item)
+
+        spinner?.adapter = adapter
+
+        spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                when (position) {
+                    0 -> Toast.makeText(requireContext(), "Izabran Srpski (Latinica)", Toast.LENGTH_SHORT).show()
+                    1 -> Toast.makeText(requireContext(), "Izabran Srpski (Ćirilica)", Toast.LENGTH_SHORT).show()
+                    2 -> Toast.makeText(requireContext(), "Izabran Engleski", Toast.LENGTH_SHORT).show()
                 }
             }
-        }
 
-        binding.btnSkipPage.setOnClickListener {
-            countDownTimer.cancel()
-            vpInterface?.switchToLogin()
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        countDownTimer.start()
-        binding.progressBar.progress = 0
-    }
+
 
     override fun onDestroyView() {
-        countDownTimer.cancel()
         super.onDestroyView()
         _binding = null
     }

@@ -278,7 +278,6 @@ class LoginFragment : Fragment() {
             lifecycleScope.launch(Dispatchers.IO) {
                 loginViewModel.insertLoginToken(
                     UserLoginResponseRoomTable(
-                        null,
                         userServerResponse.data?.accessToken,
                         userServerResponse.data?.tokenType,
                         userServerResponse.message,

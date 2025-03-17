@@ -156,31 +156,33 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setExistingLanguage(context: Context) {
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                val database = DRoom.getRoomInstance(applicationContext)
-                val userLanguageTable = database.languageDao()?.fetchAllowedUsers()
+        lifecycleScope.launch(Dispatchers.IO) {
+            val database = DRoom.getRoomInstance(context)
+            val userLanguage = database.languageDao()?.fetchAllowedUsers()?.userLanguage
 
-                userLanguageTable?.userLanguage?.let { languageKey ->
-                    val locale = if (languageKey.isNotEmpty()) {
-                        Locale(languageKey)
-                    } else {
-                        Locale.getDefault()
-                    }
+            Log.d("MARKO", "setExistingLanguage: $userLanguage")
 
-                    // Promena konfiguracije na glavnoj niti
-                    withContext(Dispatchers.Main) {
-                        val configuration = Configuration(context.resources.configuration)
-                        configuration.setLocale(locale)
+            val locale = if (!userLanguage.isNullOrEmpty()) {
+                Log.d("MARKO 2 ", "setExistingLanguage: $userLanguage")
+                Locale(userLanguage)
+            } else {
+                Log.d("MARKO 3", "setExistingLanguage: $userLanguage")
+                Locale("sr", "RS", "Latn") // Podrazumevani srpski latinica
+            }
 
-                        context.resources.updateConfiguration(
-                            configuration, context.resources.displayMetrics
-                        )
-                    }
-                }
+            withContext(Dispatchers.Main) {
+                val configuration = Configuration(context.resources.configuration)
+                configuration.setLocale(locale)
+
+                context.resources.updateConfiguration(
+                    configuration, context.resources.displayMetrics
+                )
             }
         }
     }
+
+
+
 
     companion object {  // class tied static method
         const val TAG = "FirebaseFcm"
