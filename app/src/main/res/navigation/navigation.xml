@@ -396,14 +396,6 @@
             app:argType="string"
             app:nullable="true" />
     </dialog>
-    <dialog
-        android:id="@+id/franchiseTestDialog"
-        android:name="com.mobility.enp.view.dialogs.FranchiseTestDialog"
-        android:label="FranchiseTestDialog"
-        tools:layout="@layout/franchise_dialog_layout" />
-    <action
-        android:id="@+id/action_global_franchiseTestDialog"
-        app:destination="@id/franchiseTestDialog" />
     <fragment
         android:id="@+id/introScreenAbout"
         android:name="com.mobility.enp.view.fragments.intro.IntroScreenAbout"

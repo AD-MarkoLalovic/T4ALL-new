@@ -11,7 +11,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.franchise.FranchiseModel
-import com.mobility.enp.data.model.home.entity.HomeEntity
 import com.mobility.enp.data.repository.FranchiserRepository
 import com.mobility.enp.util.Util
 import kotlinx.coroutines.Dispatchers
@@ -23,48 +22,19 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
     private val _franchiseModel: MutableLiveData<FranchiseModel?> = MutableLiveData()
     val franchiseModel: LiveData<FranchiseModel?> get() = _franchiseModel
 
-    fun deleteData(){
+    fun deleteData() {
         _franchiseModel.value = null
     }
 
-    suspend fun getHomeData(): HomeEntity? {
-        return repository.getHomeEntity()
-    }
 
-
-    fun getFranchiseModel(portalKey: String?,context: Context){
-        portalKey?.let {
-            val franchiseModel = Util.franchiseID(it, context)
-            _franchiseModel.value = franchiseModel
-        }
-    }
-
-
-
-    //testing method
     fun getFranchiseModel(context: Context) {
-        viewModelScope.launch {
-            val portalKey = withContext(Dispatchers.IO) {
-                repository.getPortalKey()
-            }
-
-            portalKey?.let {
-                val franchiseModel = Util.franchiseID(it, context)
-                _franchiseModel.value = franchiseModel
-            }
-        }
-    }
-
-    //testing method
-    fun upsertHomeData(portalKey: String, context: Context) { // for testing
         viewModelScope.launch(Dispatchers.IO) {
-            val homeEntity = repository.getHomeEntity()
-            homeEntity?.portalKey = portalKey
-            homeEntity?.let {
-                repository.upsertHomeEntity(it)
+            repository.getPortalKey()?.let {
+                val franchiseModel = Util.franchiseID(it, context)
+                withContext (Dispatchers.Main) {
+                    _franchiseModel.value = franchiseModel
+                }
             }
-
-            getFranchiseModel(context)
         }
     }
 

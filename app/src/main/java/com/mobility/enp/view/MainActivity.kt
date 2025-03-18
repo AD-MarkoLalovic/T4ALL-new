@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             Log.d(TAG, "destination: $destination")
             when (destination.id) {
-                R.id.homeFragment, R.id.paymentAndPassageFragment, R.id.toolHistoryFragment, R.id.profileFragment, R.id.supportDialog, R.id.franchiseTestDialog, R.id.notificationDialog, R.id.deactivateAccountDialog, R.id.pdfViewDialog -> {
+                R.id.homeFragment, R.id.paymentAndPassageFragment, R.id.toolHistoryFragment, R.id.profileFragment, R.id.supportDialog, R.id.notificationDialog, R.id.deactivateAccountDialog, R.id.pdfViewDialog -> {
                     // Ako je destinacija neki od ovih fragmenata, prikaži BottomNavigationView
                     binding.bottomNavigation.visibility = View.VISIBLE
                     binding.toolbarShared.root.visibility = View.VISIBLE
