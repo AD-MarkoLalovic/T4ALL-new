@@ -3,7 +3,6 @@ package com.mobility.enp.view.dialogs
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,6 +21,7 @@ import com.mobility.enp.viewmodel.LanguageViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.core.graphics.drawable.toDrawable
 
 class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) : DialogFragment() {
 
@@ -37,7 +37,7 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = LanguageDialogLayoutBinding.inflate(inflater, container, false)
         return binding.root
     }
