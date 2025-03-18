@@ -4,18 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
+import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.databinding.CardProgressBarBinding
 
-class HomeProgressAdapter(val total: Int) :
+class HomeProgressAdapter(val total: Int, val franchiseModel: FranchiseModel?) :
     RecyclerView.Adapter<HomeProgressAdapter.HomeProgressAdapterViewHolder>() {
 
     var checkedPosition = 0
-    var dotFranchiserColor: Int? = null
-
-    fun updateFranchiserDotColor(dot: Int?) {
-        this.dotFranchiserColor = dot
-        notifyDataSetChanged()
-    }
 
     fun setCurrentDot(position: Int) {
         if (position != checkedPosition && position != -1) {
@@ -34,7 +29,7 @@ class HomeProgressAdapter(val total: Int) :
 
             var drawable: Int = 0
 
-            dotFranchiserColor?.let {
+            franchiseModel?.promotionsDot?.let {
                 drawable = if (checkedPosition == currentPosition) it else R.drawable.dot_unchecked
             } ?: run {
                 drawable =

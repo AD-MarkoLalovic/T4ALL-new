@@ -12,11 +12,10 @@ import com.mobility.enp.databinding.CardFlagsPromotionHomeBinding
 class HomePromotionsAdapter(
     private var list: List<HomeCardsEntity>,
     private val onItemClicked: () -> Unit,
-    private val updateDeleteCard: (HomeCardsEntity) -> Unit
+    private val updateDeleteCard: (HomeCardsEntity) -> Unit,
+    private val franchiseModel: FranchiseModel?
 ) :
     RecyclerView.Adapter<HomePromotionsAdapter.HomeInvoicesAdapterViewHolder>() {
-
-    lateinit var franchiseModel: FranchiseModel
 
     inner class HomeInvoicesAdapterViewHolder(
         val binding: CardFlagsPromotionHomeBinding,
@@ -27,12 +26,10 @@ class HomePromotionsAdapter(
             binding.data = card
 
 
-            if (::franchiseModel.isInitialized) {
-                franchiseModel.franchisePrimaryColor.let {
-                    binding.btnObjection.backgroundTintList = ColorStateList.valueOf(franchiseModel.franchisePrimaryColor)
-                }
+            franchiseModel?.franchisePrimaryColor?.let {
+                binding.btnObjection.backgroundTintList =
+                    ColorStateList.valueOf(it)
             }
-
 
             when (card.code) {
                 "RS" -> binding.backgroundImage.setImageResource(R.drawable.serbian_flag_home)
@@ -58,11 +55,6 @@ class HomePromotionsAdapter(
 
             binding.executePendingBindings()
         }
-    }
-
-    fun updateColor(franchiseModel: FranchiseModel) {
-        this.franchiseModel = franchiseModel
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(

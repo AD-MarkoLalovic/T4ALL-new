@@ -10,15 +10,7 @@ class FranchiserRepository(
 ) : BaseRepository(database, context) {
     private val homeDao = database.homeScreenDao()
 
-    suspend fun getPortalKey(): String? {
-        return homeDao.getHomeData()?.portalKey
-    }
-
-    suspend fun getHomeEntity(): HomeEntity? {
-        return homeDao.getHomeData()
-    }
-
-    suspend fun upsertHomeEntity(homeEntity: HomeEntity) {
-        homeDao.upsertHome(homeEntity)
+    suspend fun getPortalKey(): String?{
+        return database.loginDao().fetchAllowedUsers().portalKey
     }
 }

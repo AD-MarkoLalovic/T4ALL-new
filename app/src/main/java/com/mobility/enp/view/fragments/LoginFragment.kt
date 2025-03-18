@@ -249,7 +249,7 @@ class LoginFragment : Fragment() {
                                 null,
                                 result.data.data?.accessToken,
                                 result.data.data?.tokenType,
-                                userName, userPassword
+                                userName, userPassword, result.data.data?.portal_key
                             )
                         )
 
@@ -258,7 +258,9 @@ class LoginFragment : Fragment() {
                         loginViewModel.sendLanguage(requireContext())
 
                         withContext(Dispatchers.Main) {
-                            findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment())
+                            findNavController().navigate(
+                                LoginFragmentDirections.actionGlobalHomeFragment()
+                            )
                         }
                     }
                 }
