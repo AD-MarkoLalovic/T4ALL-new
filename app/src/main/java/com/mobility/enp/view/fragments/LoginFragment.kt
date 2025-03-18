@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -146,10 +147,16 @@ class LoginFragment : Fragment() {
         binding.languagePicker.setOnClickListener {
             val languageDialog = LanguageDialog { languageSelected, canSwitchLanguage ->
                 if (canSwitchLanguage) {
-                    MainActivity.setLocale(requireContext(), languageSelected)
+                    val shared = requireContext().getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
+                    with(shared.edit()) {
+                        putString("user_language", languageSelected)
+                        apply()
+                    }
+                    activity?.recreate()
+                    /*MainActivity.setLocale(requireContext(), languageSelected)
                     activity?.let { act ->
                         act.recreate()
-                    }
+                    }*/
                 } else {
                     Log.d(
                         TAG,

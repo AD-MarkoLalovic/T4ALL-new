@@ -1,9 +1,11 @@
 package com.mobility.enp.view.dialogs
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,10 +87,20 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
 
     private fun observeViewModel() {
         viewModel.languages.observe(viewLifecycleOwner) { userLanguage ->
+            Log.d("MARKO", "observeViewModel: $userLanguage ")
             userLanguage?.let {
+                Log.d("MARKO 1", "observeViewModel: $userLanguage ")
                 previousLanguageCode = it.userLanguage // Inicijalizujemo prethodni jezik
                 updateSelectedLanguage(it.userLanguage)
+            } ?: run {
+
+                val shredPref = requireContext().getSharedPreferences("IntroLanguage", Context.MODE_PRIVATE)
+                val langPick = shredPref.getString("selected_Language", "sr")
+                Log.d("MARKO 2", "observeViewModel: $langPick ")
+                previousLanguageCode = langPick
+                updateSelectedLanguage(langPick)
             }
+
         }
 
 
