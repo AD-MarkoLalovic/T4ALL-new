@@ -297,12 +297,6 @@
     <string name="montenegro_passage">Црна Гора</string>
     <string name="north_macedonian_passage">Северна Македонија</string>
     <string name="loop_icon" translatable="false">loop Icon</string>
-    <string name="advantages_of_the_toll_for_all_system" translatable="false">Advantages of the Toll For All system</string>
-    <string name="with_a_one_tag_through_multiple_countries" translatable="false">With a one tag through multiple countries.</string>
-    <string name="payment_via_the_phone_bill" translatable="false">Payment via the phone bill.</string>
-    <string name="payment_directly_from_the_user_s_account" translatable="false">Payment directly from the user\'s account.</string>
-    <string name="no_waiting_in_line" translatable="false">No waiting in line.</string>
-    <string name="no_currency_exchange" translatable="false">No currency exchange.</string>
     <string name="welcome_to_toll_for_all">Добро дошли у Toll For All</string>
     <string name="what_is_toll_for_all_system">Шта је Toll For All систем?</string>
     <string name="croatia_eng" translatable="false">Croatia</string>
@@ -399,5 +393,11 @@
     <string name="serbia_eng">Србија</string>
     <string name="macedonia_eng">Северна Македонија</string>
     <string name="montenegro_eng">"Црна Гора        "</string>
+    <string name="advantages_of_the_toll_for_all_system">"Предности Toll For All система        "</string>
+    <string name="with_a_one_tag_through_multiple_countries">"Српским тагом кроз Северну Македонију        "</string>
+    <string name="payment_via_the_phone_bill">"Плаћање преко телефонског рачуна        "</string>
+    <string name="payment_directly_from_the_user_s_account">"Плаћање директно са корисничког налога        "</string>
+    <string name="no_waiting_in_line">"Без чекања у реду        "</string>
+    <string name="no_currency_exchange">"Без промене валута        "</string>
 
 </resources>

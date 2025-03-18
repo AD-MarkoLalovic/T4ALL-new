@@ -70,10 +70,6 @@ class IntroScreenAbout : Fragment() {
             toggleDropdown(languageOptions!!)
         }
 
-        binding.tvSelectedLanguage?.setOnClickListener {
-            toggleDropdown(languageOptions!!)
-        }
-
         binding.langTwo?.setOnClickListener {
             toggleDropdown(languageOptions!!)
             when (binding.langTwo?.text) {

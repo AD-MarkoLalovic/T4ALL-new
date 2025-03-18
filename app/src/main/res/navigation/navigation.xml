@@ -68,7 +68,7 @@
         <action
             android:id="@+id/action_introScreenAdvantages_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:popUpTo="@id/introScreenAdvantages"
+            app:popUpTo="@id/splashScreenFragment"
             app:popUpToInclusive="true" />
 
     </fragment>

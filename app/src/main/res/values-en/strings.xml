@@ -333,4 +333,10 @@
     <string name="serbia_eng">Serbia</string>
     <string name="macedonia_eng">N. Macedonia</string>
     <string name="montenegro_eng">Montenegro</string>
+    <string name="advantages_of_the_toll_for_all_system">Advantages of the Toll For All system</string>
+    <string name="with_a_one_tag_through_multiple_countries">With a one tag through multiple countries</string>
+    <string name="payment_via_the_phone_bill">Payment via the phone bill</string>
+    <string name="payment_directly_from_the_user_s_account">Payment directly from the user\'s account.</string>
+    <string name="no_waiting_in_line">No waiting in line</string>
+    <string name="no_currency_exchange">No currency exchange</string>
 </resources>
