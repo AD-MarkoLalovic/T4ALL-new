@@ -34,18 +34,17 @@ class SplashScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        findNavController().navigate(R.id.action_splashScreenFragment_to_introScreenAbout)
-        /*viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val userToken = viewModel.fetchUserToken()
             delay(Config.SLASH_SCREEN_TIME)
 
             setNavigation(userToken)
-        }*/
+        }
     }
 
     private fun setNavigation(token: String?) {
         val sharedPreferences =
-            requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+            requireContext().getSharedPreferences("FirstLaunch", Context.MODE_PRIVATE)
         val isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true)
 
         if (isFirstLaunch) {
