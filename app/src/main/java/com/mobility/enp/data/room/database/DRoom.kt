@@ -47,9 +47,6 @@ import com.mobility.enp.data.room.api_related_daos.ProfileImageDao
 import com.mobility.enp.data.room.api_related_daos.RefundRequestDao
 import com.mobility.enp.data.room.api_related_daos.TagsRefundRequestDao
 import com.mobility.enp.data.room.notification.NotificationDao
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Database(
     entities = [UserLoginResponseRoomTable::class, FcmToken::class, UserLanguage::class, NotificationModel::class, IndexData::class, ToolHistoryListing::class,
@@ -89,21 +86,21 @@ abstract class DRoom : RoomDatabase() {
             if (instance == null) {
                 synchronized(DRoom::class) {
                     instance = buildDatabase(context)
-                    prepopulateDatabase(instance!!)
+                    //prepopulateDatabase(instance!!)
                 }
             }
             return instance!!
         }
 
-        private fun prepopulateDatabase(db: DRoom) {
+        /*private fun prepopulateDatabase(db: DRoom) {
             CoroutineScope(Dispatchers.IO).launch {
 
                 val getInvoicesTable = instance?.languageDao()?.getTableSize()
                 if (getInvoicesTable == 0) {
-                    db.languageDao().insert(UserLanguage("en"))
+                    db.languageDao().insert(UserLanguage("sr_Latn"))
                 }
             }
-        }
+        }*/
 
         fun buildDatabase(context: Context): DRoom {  // its a singleton
             if (instance == null) {

@@ -22,7 +22,6 @@ import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
@@ -38,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupNavigation()
         setListeners()
-        setObservers();
+        setObservers()
         setExistingLanguage(this)
     }
 
@@ -63,10 +62,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun hideLogo(hideLogo: Boolean) {
-        if (hideLogo){
+        if (hideLogo) {
             binding.toolbarShared.iconLogo.visibility = View.INVISIBLE
             binding.bottomNavigation.visibility = View.GONE
-        }else{
+        } else {
             binding.toolbarShared.iconLogo.visibility = View.VISIBLE
             binding.bottomNavigation.visibility = View.VISIBLE
         }
@@ -158,31 +157,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setExistingLanguage(context: Context) {
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                val database = DRoom.getRoomInstance(applicationContext)
-                val userLanguageTable = database.languageDao()?.fetchAllowedUsers()
+        val sharedPreferences = context.getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
+        val userLanguage = sharedPreferences.getString("user_language", "sr") ?: "sr"
 
-                userLanguageTable?.userLanguage?.let { languageKey ->
-                    val locale = if (languageKey.isNotEmpty()) {
-                        Locale(languageKey)
-                    } else {
-                        Locale.getDefault()
-                    }
-
-                    // Promena konfiguracije na glavnoj niti
-                    withContext(Dispatchers.Main) {
-                        val configuration = Configuration(context.resources.configuration)
-                        configuration.setLocale(locale)
-
-                        context.resources.updateConfiguration(
-                            configuration, context.resources.displayMetrics
-                        )
-                    }
-                }
-            }
+        val lang = when (userLanguage) {
+            "cyr" -> Locale("sr_Cyrl", "RS")
+            "sr", "cnr" -> Locale("sr", "RS")
+            else -> Locale(userLanguage)
         }
+
+        Locale.setDefault(lang)
+
+        val configuration = resources.configuration
+        configuration.setLocale(lang)
+
+        context.resources.updateConfiguration(
+            configuration,
+            context.resources.displayMetrics
+        )
+
     }
+
 
     companion object {  // class tied static method
         const val TAG = "FirebaseFcm"

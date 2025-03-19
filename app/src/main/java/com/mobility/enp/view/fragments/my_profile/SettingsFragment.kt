@@ -99,10 +99,16 @@ class SettingsFragment : Fragment() {
         binding.languageIconInSettings.setOnClickListener {
             val languageDialog = LanguageDialog { languageSelected, canSwitchLanguage ->
                 if (canSwitchLanguage) {
-                    MainActivity.setLocale(requireContext(), languageSelected)
+                    val shared = requireContext().getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
+                    with(shared.edit()) {
+                        putString("user_language", languageSelected)
+                        apply()
+                    }
+                    activity?.recreate()
+                    /*MainActivity.setLocale(requireContext(), languageSelected)
                     activity?.let { act ->
                         act.recreate()
-                    }
+                    }*/
                     viewModel.sendingLangToServer()
                 } else {
                     Log.d(

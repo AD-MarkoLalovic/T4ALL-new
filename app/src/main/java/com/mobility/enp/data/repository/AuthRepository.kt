@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 /**
  * Odgovornost: Upravljanje autentifikacijom i funkcionalnostima za korisnički nalog.
  * Logovanje korisnika, Promena lozinke,Resetovanje lozinke,Deaktivacija korisničkog naloga.
- * Promena jezika
+ * Promena jezika.
  */
 
 class AuthRepository(database: DRoom, context: Context) : BaseRepository(database, context) {
@@ -136,4 +136,11 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
 
         return Result.failure(NetworkError.ServerError)
     }
+
+    suspend fun getToken(): UserLoginResponseRoomTable? {
+        return withContext(Dispatchers.IO) {
+            database.loginDao().fetchAllowedUsers()
+        }
+    }
+
 }
