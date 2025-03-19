@@ -338,4 +338,7 @@
     <string name="payment_directly_from_the_user_s_account">Plaćanje direktno sa korisničkog naloga</string>
     <string name="no_waiting_in_line">Bez čekanja u redu</string>
     <string name="no_currency_exchange">Bez promene valuta</string>
+    <string name="permission_granted">Dozvola odobrena</string>
+    <string name="notification_title">Dozvolite T4A da vam šalje notifikacije</string>
+    <string name="notification_subtitle">Notifikacije služe za preuzimanje računa i eksportovanje tabela u istoriji prolazaka</string>
 </resources>

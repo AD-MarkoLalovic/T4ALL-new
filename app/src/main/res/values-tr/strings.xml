@@ -348,5 +348,8 @@
     <string name="payment_directly_from_the_user_s_account">Plaćanje direktno sa korisničkog naloga</string>
     <string name="no_waiting_in_line">Bez čekanja u redu</string>
     <string name="no_currency_exchange">Bez promene valuta</string>
+    <string name="permission_granted">İzin Verildi</string>
+    <string name="notification_title">T4A’nın size bildirim göndermesine izin verin</string>
+    <string name="notification_subtitle">Bildirimler, faturaları indirmek ve geçiş geçmişindeki tabloları dışa aktarmak için kullanılır</string>
 
 </resources>

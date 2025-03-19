@@ -339,4 +339,7 @@
     <string name="payment_directly_from_the_user_s_account">Payment directly from the user\'s account.</string>
     <string name="no_waiting_in_line">No waiting in line</string>
     <string name="no_currency_exchange">No currency exchange</string>
+    <string name="permission_granted">Permission Granted</string>
+    <string name="notification_title">Allow T4A to send you notifications</string>
+    <string name="notification_subtitle">Notifications are used for downloading invoices and exporting tables in the passage history</string>
 </resources>
