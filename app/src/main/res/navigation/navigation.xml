@@ -57,7 +57,9 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_splashScreenFragment_to_introScreenAbout"
-            app:destination="@id/introScreenAbout" />
+            app:destination="@id/introScreenAbout"
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true"/>
 
     </fragment>
     <fragment

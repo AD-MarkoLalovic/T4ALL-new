@@ -38,6 +38,13 @@ class IntroScreenAdvantages : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val isFirstLaunch =
+            requireContext().getSharedPreferences("FirstLaunch", Context.MODE_PRIVATE)
+        with(isFirstLaunch.edit()) {
+            putBoolean("isFirstLaunch", false)
+            apply()
+        }
+
         val sharedPreferences =
             requireContext().getSharedPreferences("IntroLanguage", Context.MODE_PRIVATE)
         val savedLanguage =
