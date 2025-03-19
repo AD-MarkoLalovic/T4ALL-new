@@ -48,10 +48,6 @@ class SplashScreenFragment : Fragment() {
         val isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true)
 
         if (isFirstLaunch) {
-            with(sharedPreferences.edit()) {
-                putBoolean("isFirstLaunch", false)
-                apply()
-            }
             findNavController().navigate(R.id.action_splashScreenFragment_to_introScreenAbout)
         } else {
             if (token != null) {
