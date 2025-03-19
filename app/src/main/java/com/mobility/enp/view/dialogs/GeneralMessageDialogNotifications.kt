@@ -48,8 +48,6 @@ class GeneralMessageDialogNotifications : DialogFragment {
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
             franchiseModel?.franchisePrimaryColor?.let { color ->
                 binding.confirmButton.backgroundTintList = ColorStateList.valueOf(color)
-                binding.title.setTextColor(color)
-                binding.subTitle.setTextColor(color)
             }
         }
 
