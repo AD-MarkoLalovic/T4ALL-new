@@ -1,24 +1,39 @@
 package com.mobility.enp.view.fragments.intro
 
+import android.Manifest
 import android.animation.ValueAnimator
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentIntroScreenAboutBinding
+import com.mobility.enp.view.dialogs.NotificationsRequestDialog
+import kotlinx.coroutines.launch
 
 class IntroScreenAbout : Fragment() {
 
     private var _binding: FragmentIntroScreenAboutBinding? = null
     private val binding: FragmentIntroScreenAboutBinding get() = _binding!!
-
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                // Permission is granted. You can proceed with sending notifications.
+                sendNotification()
+            }
+        }
     private var isExpanded = false
 
 
@@ -92,6 +107,17 @@ class IntroScreenAbout : Fragment() {
             findNavController().navigate(R.id.action_introScreenAbout_to_introScreenRegions)
         }
 
+        permissionCheck()
+    }
+
+    private fun permissionCheck() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_DENIED
+        ) {
+            showNotificationPermissionRationale()
+        }
     }
 
     private fun setLanguage(languageCode: String) {
@@ -127,6 +153,27 @@ class IntroScreenAbout : Fragment() {
             animateHeight(view, 0, targetHeight)
         }
         isExpanded = !isExpanded
+    }
+
+    private fun sendNotification() {
+        Toast.makeText(requireContext(), getString(R.string.permission_granted), Toast.LENGTH_SHORT)
+            .show()
+    }
+
+    private fun showNotificationPermissionRationale() {
+        lifecycleScope.launch {
+            val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
+            val generalMessageDialog = NotificationsRequestDialog(
+                getString(R.string.notification_title),
+                getString(R.string.notification_subtitle),
+                object : NotificationsRequestDialog.OnButtonClick {
+                    override fun onClickConfirmed() {
+                        requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                }
+            )
+            generalMessageDialog.show(fragmentManager, "permDialog")
+        }
     }
 
     private fun animateHeight(

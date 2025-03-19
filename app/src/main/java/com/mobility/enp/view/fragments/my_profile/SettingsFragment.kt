@@ -43,9 +43,6 @@ class SettingsFragment : Fragment() {
             if (isGranted) {
                 // Permission is granted. You can proceed with sending notifications.
                 sendNotification()
-            } else {
-                // Permission denied. Explain to the user that notifications are unavailable.
-                showNotificationPermissionDeniedMessage()
             }
         }
 
@@ -172,8 +169,6 @@ class SettingsFragment : Fragment() {
         Toast.makeText(requireContext(), getString(R.string.permission_granted), Toast.LENGTH_SHORT)
             .show()
     }
-
-    private fun showNotificationPermissionDeniedMessage() {}
 
     private fun openAppSettings() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
