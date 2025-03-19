@@ -316,6 +316,7 @@ class MonthlyBillsAdapter(
             data: MutableLiveData<BillsDetailsResponse>,
             availableCurrencies: String
         )
+        fun requestNotificationFromUser()
     }
 
     interface MontYearListener {

@@ -1,5 +1,7 @@
 package com.mobility.enp.view.adapters.my_invoices_adapters
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.os.Build
 import android.os.CountDownTimer
@@ -18,12 +20,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.single.PermissionListener
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.Bill
@@ -179,29 +175,18 @@ class BillsDetailsAdapter(
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
                             showNotification(binding, id, false)
                         } else {
-                            Dexter.withContext(binding.root.context)
-                                .withPermission(android.Manifest.permission.POST_NOTIFICATIONS)
-                                .withListener(object : PermissionListener {
-                                    override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
-                                        showNotification(binding, id, false)
-                                    }
+                            when {
+                                ContextCompat.checkSelfPermission(
+                                    binding.root.context,
+                                    Manifest.permission.POST_NOTIFICATIONS
+                                ) == PackageManager.PERMISSION_GRANTED -> {
+                                    showNotification(binding, id, true)
+                                }
 
-                                    override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
-                                        Toast.makeText(
-                                            binding.root.context,
-                                            binding.root.context.getString(R.string.perm_required),
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-
-                                    override fun onPermissionRationaleShouldBeShown(
-                                        p0: PermissionRequest?,
-                                        p1: PermissionToken?
-                                    ) {
-                                        p1?.continuePermissionRequest()
-                                    }
-
-                                }).check()
+                                else -> {
+                                    spinnerInterface.requestNotificationFromUser()
+                                }
+                            }
                         }
                         true
                     }
@@ -212,29 +197,18 @@ class BillsDetailsAdapter(
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
                             showNotification(binding, id, true)
                         } else {
-                            Dexter.withContext(binding.root.context)
-                                .withPermission(android.Manifest.permission.POST_NOTIFICATIONS)
-                                .withListener(object : PermissionListener {
-                                    override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
-                                        showNotification(binding, id, true)
-                                    }
+                            when {
+                                ContextCompat.checkSelfPermission(
+                                    binding.root.context,
+                                    Manifest.permission.POST_NOTIFICATIONS
+                                ) == PackageManager.PERMISSION_GRANTED -> {
+                                    showNotification(binding, id, true)
+                                }
 
-                                    override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
-                                        Toast.makeText(
-                                            binding.root.context,
-                                            binding.root.context.getString(R.string.perm_required),
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-
-                                    override fun onPermissionRationaleShouldBeShown(
-                                        p0: PermissionRequest?,
-                                        p1: PermissionToken?
-                                    ) {
-                                        p1?.continuePermissionRequest()
-                                    }
-
-                                }).check()
+                                else -> {
+                                    spinnerInterface.requestNotificationFromUser()
+                                }
+                            }
                         }
                         true
                     }
