@@ -1,5 +1,7 @@
 package com.mobility.enp.view.fragments.tool_history
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -23,11 +27,13 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.select.ToolHistoryTagsAdapter
+import com.mobility.enp.view.dialogs.NotificationsRequestDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 
 class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
@@ -36,6 +42,13 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                // Permission is granted. You can proceed with sending notifications.
+                sendNotification()
+            }
+        }
 
     companion object {
         const val TAG = "ToolDetails"
@@ -163,20 +176,29 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
                 val colors = intArrayOf(
                     color,  // ON color
-                    ContextCompat.getColor(requireContext(), R.color.primary_light_dark) // OFF color
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.primary_light_dark
+                    ) // OFF color
                 )
 
                 val colorStateList = ColorStateList(states, colors)
                 binding.chkBox.buttonTintList = colorStateList
-            }?:run {
+            } ?: run {
                 val states = arrayOf(
                     intArrayOf(android.R.attr.state_checked),  // When switch is ON
                     intArrayOf(-android.R.attr.state_checked) // When switch is OFF
                 )
 
                 val colors = intArrayOf(
-                    ContextCompat.getColor(requireContext(), R.color.figmaSplashScreenColor),  // ON color
-                    ContextCompat.getColor(requireContext(), R.color.primary_light_dark) // OFF color
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.figmaSplashScreenColor
+                    ),  // ON color
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.primary_light_dark
+                    ) // OFF color
                 )
 
                 val colorStateList = ColorStateList(states, colors)
@@ -220,8 +242,27 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
         vModel.csvData.observe(viewLifecycleOwner) { csvData ->
             binding.progBar.visibility = View.GONE
-            csvData?.let {
-                vModel.processCsvData(it)
+            csvData?.let { csvData ->
+                val nameExtra = UUID.randomUUID().toString().substring(0, 8)
+                vModel.processCsvData(csvData, nameExtra)
+                // moved logic because of permissions
+                when {
+                    ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        csvData.data?.csvContent?.let {
+                            vModel.saveBase64ToCSV(
+                                it, nameExtra
+                            ) // <- converts csv to pdf saves locally and in room byte array
+                        }
+                    }
+
+                    else -> {
+                        showNotificationPermissionRationale()
+                    }
+                }
+
             }
         }
 
@@ -291,6 +332,28 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         }
     }
 
+
+    private fun showNotificationPermissionRationale() {
+        lifecycleScope.launch {
+            val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
+            val generalMessageDialog = NotificationsRequestDialog(
+                getString(R.string.notification_title),
+                getString(R.string.notification_subtitle),
+                object : NotificationsRequestDialog.OnButtonClick {
+                    override fun onClickConfirmed() {
+                        requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                }
+            )
+            generalMessageDialog.show(fragmentManager, "permDialog")
+        }
+    }
+
+    private fun sendNotification() {
+        Toast.makeText(requireContext(), getString(R.string.permission_granted), Toast.LENGTH_SHORT)
+            .show()
+    }
+
     private fun setIndexData(indexData: IndexData) {
         indexData.data?.let { index ->
             if (!index.tags.isNullOrEmpty()) {
@@ -299,7 +362,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                 vModel.tagSerials = index.tags as ArrayList<Tag>
                 Log.d(TAG, "setObservers: ${vModel.tagSerials}")
 
-                val adapter = ToolHistoryTagsAdapter(vModel.tagSerials, this,franchiseViewModel)
+                val adapter = ToolHistoryTagsAdapter(vModel.tagSerials, this, franchiseViewModel)
 
                 binding.cycler.adapter = adapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
