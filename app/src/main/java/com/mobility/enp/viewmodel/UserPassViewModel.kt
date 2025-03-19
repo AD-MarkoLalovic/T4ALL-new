@@ -76,7 +76,6 @@ import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.UUID
 
 class UserPassViewModel(private val repository: PassageHistoryRepository) : ViewModel() {
 
@@ -100,6 +99,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     private val _complaintObjectionState =
         MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Loading)
     val complaintObjectionState: StateFlow<SubmitResult<LostTagResponse>> get() = _complaintObjectionState
+
 
     suspend fun getLanguage(): String {
         return withContext(Dispatchers.IO) {
@@ -474,7 +474,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     }
 
-
     fun fetchStoredData(
         dataInterface: ToolHistoryListingAdapter.PassageDataInterface,
         tagSerialNumber: String
@@ -485,7 +484,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
             }
         }
     }
-
 
     fun fetchStoredData(
         dataInterface: HistoryResultAdapter.PassageDataInterface,
@@ -539,55 +537,15 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun runPermissionCheck() {
-        Dexter.withContext(repository.fetchContext())
-            .withPermission(Manifest.permission.POST_NOTIFICATIONS)
-            .withListener(object : PermissionListener {
-                override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
-                    postNotification()
-                }
-
-                override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
-                    Toast.makeText(
-                        repository.fetchContext(),
-                        R.string.csv_saved,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                override fun onPermissionRationaleShouldBeShown(
-                    p0: PermissionRequest?, p1: PermissionToken?
-                ) {
-                    p1?.continuePermissionRequest()
-                }
-
-            }).check()
-    }
-
-
-    fun processCsvData(csvModel: CsvModel) {
+    fun processCsvData(csvModel: CsvModel, nameExtra: String) {
         Log.d(TAG, "csv data: $csvModel")
 
         if (!csvModel.data?.csvContent.isNullOrEmpty()) {
             csvModel.data?.csvContent?.let { data ->
-                val nameExtra = UUID.randomUUID().toString().substring(0, 8)
-
                 viewModelScope.launch(Dispatchers.IO) {
                     saveCsvLocally(data, nameExtra) // <- csv excel export
-                    saveBase64ToCSV(
-                        data, nameExtra
-                    ) // <- converts csv to pdf saves locally and in room byte array
                 }
-
             }
-        } else {
-            Toast.makeText(
-                repository.fetchContext(),
-                repository.fetchContext().resources.getString(R.string.no_passage_data),
-                Toast.LENGTH_SHORT
-            ).show()
-            _errorBody.postValue(ErrorBody(200, "No export data received"))
         }
     }
 
@@ -641,92 +599,93 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
-    private suspend fun saveBase64ToCSV(base64Data: String, nameExtra: String) = coroutineScope {
-        try {
+    fun saveBase64ToCSV(base64Data: String, nameExtra: String) {
+        viewModelScope.launch {
+            try {
 
-            // Regular expression to match CSV fields with commas, allowing quoted fields to contain commas
-            val regex = """"([^"]*)"|([^",]+)""".toRegex()
+                // Regular expression to match CSV fields with commas, allowing quoted fields to contain commas
+                val regex = """"([^"]*)"|([^",]+)""".toRegex()
 
-            // Decode the Base64 string
-            val decodedBytes = Base64.decode(base64Data, Base64.DEFAULT)
-            val decodedString = String(decodedBytes)
+                // Decode the Base64 string
+                val decodedBytes = Base64.decode(base64Data, Base64.DEFAULT)
+                val decodedString = String(decodedBytes)
 
-            val rows = decodedString.split("\n")
-            val headers = listOf(
-                repository.fetchContext().getString(R.string.bill_number),
-                repository.fetchContext().getString(R.string.time_of_passage),
-                repository.fetchContext().getString(R.string.pay_ramp),
-                repository.fetchContext().getString(R.string.price)
-            )
-
-
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            val pdfWriter = PdfWriter(byteArrayOutputStream)
-            val pdfDocument = PdfDocument(pdfWriter)
-            val document = Document(pdfDocument)
-
-            val table = Table(headers.size)
-
-            headers.forEach { header ->
-                table.addCell(Cell().add(Paragraph(header).setBold()))
-            }
+                val rows = decodedString.split("\n")
+                val headers = listOf(
+                    repository.fetchContext().getString(R.string.bill_number),
+                    repository.fetchContext().getString(R.string.time_of_passage),
+                    repository.fetchContext().getString(R.string.pay_ramp),
+                    repository.fetchContext().getString(R.string.price)
+                )
 
 
-            rows.forEach { row ->
-                val columns = mutableListOf<String>()
-                val matches = regex.findAll(row)
-                matches.forEach { match ->
-                    // Get either quoted field or unquoted field
-                    columns.add(match.groupValues[1].ifEmpty { match.groupValues[2] })
+                val byteArrayOutputStream = ByteArrayOutputStream()
+                val pdfWriter = PdfWriter(byteArrayOutputStream)
+                val pdfDocument = PdfDocument(pdfWriter)
+                val document = Document(pdfDocument)
+
+                val table = Table(headers.size)
+
+                headers.forEach { header ->
+                    table.addCell(Cell().add(Paragraph(header).setBold()))
                 }
 
-                columns.forEach { column ->
-                    table.addCell(Cell().add(Paragraph(column)))
+
+                rows.forEach { row ->
+                    val columns = mutableListOf<String>()
+                    val matches = regex.findAll(row)
+                    matches.forEach { match ->
+                        // Get either quoted field or unquoted field
+                        columns.add(match.groupValues[1].ifEmpty { match.groupValues[2] })
+                    }
+
+                    columns.forEach { column ->
+                        table.addCell(Cell().add(Paragraph(column)))
+                    }
                 }
-            }
 
-            document.add(table)
-            document.close()
+                document.add(table)
+                document.close()
 
-            val pdfData = byteArrayOutputStream.toByteArray()
-            repository.deleteCsvTable()
-            repository.upsertCsvTable(CsvTable(0, pdfData))
+                val pdfData = byteArrayOutputStream.toByteArray()
+                repository.deleteCsvTable()
+                repository.upsertCsvTable(CsvTable(0, pdfData))
 
-            // Save CSV to shared storage using MediaStore
-            val fileName = "export-$nameExtra.csv"
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
-                put(
-                    MediaStore.MediaColumns.RELATIVE_PATH, "Documents/"
-                ) // Save in the Documents folder
-            }
+                // Save CSV to shared storage using MediaStore
+                val fileName = "export-$nameExtra.csv"
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
+                    put(
+                        MediaStore.MediaColumns.RELATIVE_PATH, "Documents/"
+                    ) // Save in the Documents folder
+                }
 
-            val uri = repository.fetchContext().contentResolver.insert(
-                MediaStore.Files.getContentUri("external"), contentValues
-            )
+                val uri = repository.fetchContext().contentResolver.insert(
+                    MediaStore.Files.getContentUri("external"), contentValues
+                )
 
-            uri?.let { fileUri ->
-                repository.fetchContext().contentResolver.openOutputStream(fileUri)
-                    ?.use { outputStream ->
-                        outputStream.write(pdfData)
-                        outputStream.flush()
+                uri?.let { fileUri ->
+                    repository.fetchContext().contentResolver.openOutputStream(fileUri)
+                        ?.use { outputStream ->
+                            outputStream.write(pdfData)
+                            outputStream.flush()
 
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
                             postNotification()
-                        } else {
-                            runPermissionCheck()
-                        }
 
-                        Log.d(
-                            ToolHistoryFilterFragment.TAG,
-                            "PDF file saved successfully in Documents folder."
-                        )
-                    } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to open OutputStream.")
-            } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to create file URI in MediaStore.")
+                            Log.d(
+                                ToolHistoryFilterFragment.TAG,
+                                "PDF file saved successfully in Documents folder."
+                            )
+                        } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to open OutputStream.")
+                } ?: Log.d(
+                    ToolHistoryFilterFragment.TAG,
+                    "Failed to create file URI in MediaStore."
+                )
 
-        } catch (e: Exception) {
-            e.printStackTrace()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -908,28 +867,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
             val fm = (context as AppCompatActivity).supportFragmentManager
             datePicker.show(fm, "dateSelect")
-        }
-    }
-
-    private suspend fun getLocale(): Context? {
-        return withContext(Dispatchers.IO) {
-            val languageKey = database.languageDao().fetchAllowedUsers()?.userLanguage
-            languageKey?.let { key ->
-                val locale: Locale
-                if (key == "cyr" || key.isEmpty()) {
-                    locale =
-                        Locale.Builder().setLanguage("sr").setRegion("RS").setScript("Cyrl").build()
-                } else if (key == "sr" || key == "cnr") {
-                    locale =
-                        Locale.Builder().setLanguage("sr").setRegion("RS").setScript("Latn").build()
-                } else {
-                    locale = Locale(key)
-                }
-                Locale.setDefault(locale)
-                val config = repository.fetchContext().resources.configuration
-                config.setLocale(locale)
-                repository.fetchContext().createConfigurationContext(config)
-            }
         }
     }
 
