@@ -401,6 +401,6 @@
     <string name="no_currency_exchange">"Без промене валута        "</string>
     <string name="permission_granted">Дозвола одобрена</string>
     <string name="notification_title">Дозволите T4A да вам шаље нотификације</string>
-    <string name="notification_subtitle">Нотификације служе за преузимање рачуна и извоз табела у историји пролазака</string>
+    <string name="notification_subtitle">Нотификације служе за преузимање рачуна и експортовање табела у историји пролазака</string>
 
 </resources>

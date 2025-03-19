@@ -345,7 +345,7 @@
     <string name="no_currency_exchange">Bez promene valuta</string>
     <string name="permission_granted">Dozvola odobrena</string>
     <string name="notification_title">Dozvolite T4A da vam šalje obavijesti</string>
-    <string name="notification_subtitle">Obavijesti služe za preuzimanje računa i izvoz tablica u povijesti prolazaka</string>
+    <string name="notification_subtitle">Obavijesti služe za preuzimanje računa i eksportovanje tablica u povijesti prolazaka</string>
 
 
 </resources>
