@@ -1,5 +1,7 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.Manifest
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -12,25 +14,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.single.PermissionListener
+import androidx.lifecycle.lifecycleScope
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentSettingsBinding
-import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.GeneralMessageDialogNotifications
 import com.mobility.enp.view.dialogs.LanguageDialog
 import com.mobility.enp.view.fragments.LoginFragment.Companion.TAG
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.SettingsViewModel
+import kotlinx.coroutines.launch
 
 class SettingsFragment : Fragment() {
 
@@ -38,6 +36,18 @@ class SettingsFragment : Fragment() {
     private val binding: FragmentSettingsBinding get() = _binding!!
     private val viewModel: SettingsViewModel by viewModels { SettingsViewModel.Factory }
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
+
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                // Permission is granted. You can proceed with sending notifications.
+                sendNotification()
+            } else {
+                // Permission denied. Explain to the user that notifications are unavailable.
+                showNotificationPermissionDeniedMessage()
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,7 +66,7 @@ class SettingsFragment : Fragment() {
         val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
 
         binding.notificationSwitch.setOnClickListener { _ ->
-            if (isPermissionGranted(requireContext())) {
+            if (isPermissionGranted()) {
                 // Permission is granted, allow the switch to change its state
                 binding.notificationSwitch.isChecked = true
                 val generalMessageDialog = GeneralMessageDialogNotifications(
@@ -69,37 +79,26 @@ class SettingsFragment : Fragment() {
                     })
                 generalMessageDialog.show(fragmentManager, "NotificationDialog")
             } else {
-                Dexter.withContext(requireContext())
-                    .withPermission(android.Manifest.permission.POST_NOTIFICATIONS)
-                    .withListener(object : PermissionListener {
-                        override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
-                            Log.d(
-                                MainActivity.TAG,
-                                "onPermissionGranted: can get notifications"
-                            )
-                        }
+                when {
+                    ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.POST_NOTIFICATIONS
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        sendNotification()
+                    }
 
-                        override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
-                            Log.d(MainActivity.TAG, "onPermissionDenied: denied")
-                        }
-
-                        override fun onPermissionRationaleShouldBeShown(
-                            p0: PermissionRequest?,
-                            p1: PermissionToken?
-                        ) {
-                            p1?.continuePermissionRequest()
-                        }
-
-                    })
-                    .withErrorListener { error -> Log.d("Dexter", "Error: ${error.toString()}") }
-                    .check()
+                    else -> {
+                        showNotificationPermissionRationale()
+                    }
+                }
             }
         }
 
         binding.languageIconInSettings.setOnClickListener {
             val languageDialog = LanguageDialog { languageSelected, canSwitchLanguage ->
                 if (canSwitchLanguage) {
-                    val shared = requireContext().getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
+                    val shared =
+                        requireContext().getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
                     with(shared.edit()) {
                         putString("user_language", languageSelected)
                         apply()
@@ -124,6 +123,25 @@ class SettingsFragment : Fragment() {
                 }
             }
             languageDialog.show(parentFragmentManager, "languageDialog")
+        }
+    }
+
+    private fun showNotificationPermissionRationale() {
+        lifecycleScope.launch {
+            AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.notification_title))
+                .setMessage(
+                    getString(R.string.notification_subtitle)
+                )
+                .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                    requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                }
+                .setNegativeButton(getString(R.string.no)) { dialog, _ ->
+                    dialog.dismiss()
+                    binding.notificationSwitch.isChecked = isPermissionGranted()
+                }
+                .setCancelable(false)
+                .show()
         }
     }
 
@@ -153,6 +171,13 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    private fun sendNotification() {
+        Toast.makeText(requireContext(), getString(R.string.permission_granted), Toast.LENGTH_SHORT)
+            .show()
+    }
+
+    private fun showNotificationPermissionDeniedMessage() {}
+
     private fun openAppSettings() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         val uri = Uri.fromParts("package", context?.packageName, null)
@@ -160,18 +185,16 @@ class SettingsFragment : Fragment() {
         startActivity(intent)
     }
 
-    private fun isPermissionGranted(context: Context): Boolean {
+    private fun isPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
-            context,
-            android.Manifest.permission.POST_NOTIFICATIONS
+            requireContext(),
+            Manifest.permission.POST_NOTIFICATIONS
         ) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onResume() {
         super.onResume()
-        context?.let {
-            binding.notificationSwitch.isChecked = isPermissionGranted(it)
-        }
+        binding.notificationSwitch.isChecked = isPermissionGranted()
     }
 
     override fun onDestroyView() {
