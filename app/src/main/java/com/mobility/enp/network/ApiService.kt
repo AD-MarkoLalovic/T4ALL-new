@@ -46,10 +46,10 @@ import retrofit2.http.Query
 interface ApiService {
 
     @POST("/api/v1/login")
-    fun getUserLogin(
+    suspend fun getUserLogin(
         @Query("lang") language: String,
         @Body user: LoginBody
-    ): Call<UserResponse>
+    ): Response<UserResponse>
 
     @POST("/api/v1/logout")
     fun postLogoutUser(
@@ -62,9 +62,9 @@ interface ApiService {
     ): Response<HomeResponse>
 
     @POST("/api/v1/firebase")
-    fun postFirebaseFcmToken(
+    suspend fun postFirebaseFcmToken(
         @Body fcmToken: FcmToken
-    ): Call<HomePageFcmTokenResponse>
+    ): Response<HomePageFcmTokenResponse>
 
     @DELETE("/api/v1/firebase/{fcm_token}")
     fun deleteFirebaseToken(

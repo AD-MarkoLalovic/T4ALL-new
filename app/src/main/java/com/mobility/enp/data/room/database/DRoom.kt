@@ -47,15 +47,12 @@ import com.mobility.enp.data.room.api_related_daos.ProfileImageDao
 import com.mobility.enp.data.room.api_related_daos.RefundRequestDao
 import com.mobility.enp.data.room.api_related_daos.TagsRefundRequestDao
 import com.mobility.enp.data.room.notification.NotificationDao
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Database(
     entities = [UserLoginResponseRoomTable::class, FcmToken::class, UserLanguage::class, NotificationModel::class, IndexData::class, ToolHistoryListing::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class, HomeEntity::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class, HomeCardsEntity::class, AddedCardsEntity::class],
-    version = 195,
+    version = 197,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -89,21 +86,21 @@ abstract class DRoom : RoomDatabase() {
             if (instance == null) {
                 synchronized(DRoom::class) {
                     instance = buildDatabase(context)
-                    prepopulateDatabase(instance!!)
+                    //prepopulateDatabase(instance!!)
                 }
             }
             return instance!!
         }
 
-        private fun prepopulateDatabase(db: DRoom) {
+        /*private fun prepopulateDatabase(db: DRoom) {
             CoroutineScope(Dispatchers.IO).launch {
 
                 val getInvoicesTable = instance?.languageDao()?.getTableSize()
                 if (getInvoicesTable == 0) {
-                    db.languageDao().insert(UserLanguage("en"))
+                    db.languageDao().insert(UserLanguage("sr_Latn"))
                 }
             }
-        }
+        }*/
 
         fun buildDatabase(context: Context): DRoom {  // its a singleton
             if (instance == null) {

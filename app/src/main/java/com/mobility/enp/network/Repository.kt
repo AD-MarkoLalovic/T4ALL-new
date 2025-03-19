@@ -25,8 +25,6 @@ import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
 import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
-import com.mobility.enp.data.model.login.LoginBody
-import com.mobility.enp.data.model.login.UserResponse
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
@@ -46,32 +44,6 @@ object Repository {
         return RestClient.create(ApiService::class.java, token).apiService
     }
 
-    suspend fun loginUser(
-        data: MutableLiveData<UserResponse>,
-        context: Context,
-        loginBody: LoginBody,
-        errorBody: MutableLiveData<ErrorBody>
-    ) {
-        val lang = getUserLanguage(context)
-
-        val call = apiService("").getUserLogin(lang, loginBody)
-        call.enqueue(object : Callback<UserResponse> {
-            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-
-
-                if (response.isSuccessful) {
-                    data.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                Log.d(TAG, "Fcm Token onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
-    }
 
     //updated
     fun deleteFirebaseToken(auth: String, fcmToken: String, errorBody: MutableLiveData<ErrorBody>) {
@@ -94,30 +66,6 @@ object Repository {
         })
     }
 
-
-    //updated
-    fun postFcmToken(
-        fcmToken: FcmToken, token: String?, errorBody: MutableLiveData<ErrorBody>
-    ) {
-        val call = apiService(token).postFirebaseFcmToken(fcmToken)
-        call.enqueue(object : Callback<HomePageFcmTokenResponse> {
-            override fun onResponse(
-                call: Call<HomePageFcmTokenResponse>, response: Response<HomePageFcmTokenResponse>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d(TAG, "fcmToken posted is isSuccessful : ${response.isSuccessful}")
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<HomePageFcmTokenResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-                val eb = ErrorBody(500, t.message + "\n" + t.cause)
-                errorBody.postValue(eb)
-            }
-        })
-    }
 
     // updated
     suspend fun getUserPersonalInfo(

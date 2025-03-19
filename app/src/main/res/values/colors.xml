@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_transparent">#80FFFFFF</color>
     <color name="logo_color">#FF1C3671</color>
     <color name="light_gray">#FFCCCCCC</color>
     <color name="very_light_gray">#80D3D3D3</color>
@@ -12,6 +13,7 @@
     <color name="figmaIntroScreensGreyColor">#DADCE0</color>
     <color name="figmaIntroEclipseColorInactive">#7A92AF</color>
     <color name="figmaIntroDarkColor">#222426</color>
+    <color name="figmaIntroDarkColorReduced">#B3222426</color>
 
     <color name="primary_light_light">#DAE5F2</color>
     <color name="primary_light_dark">#405063</color>

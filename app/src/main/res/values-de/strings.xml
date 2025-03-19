@@ -343,5 +343,20 @@
     <string name="cards_terms_text_full">Ich stimme den Allgemeinen Geschäftsbedingungen und der Datenschutzrichtlinie zu</string>
     <string name="card_terms_left_clickable">Allgemeinen Geschäftsbedingungen</string>
     <string name="card_term_right_clickable">Datenschutzrichtlinie</string>
+    <string name="version">Version:</string>
+    <string name="next">Dalje</string>
+    <string name="welcome_to_toll_for_all">Welcome to Toll For All</string>
+    <string name="what_is_toll_for_all_system">Šta je Toll For All sistem?</string>
+    <string name="toll_for_all_description">Toll For All je platforma koja omogućava integrisanu naplatu putarine u zemljama Evrope. Nema više čekanja na naplatnim rampama i promena valute. Sa Toll For All platformom stigla je nova era mobilnosti!</string>
+    <string name="toll_for_all_supported_countries">Države u kojima funkcioniše Toll For All sistem</string>
+    <string name="serbia_eng">Srbija</string>
+    <string name="macedonia_eng">Severna Makedonija</string>
+    <string name="montenegro_eng">Crna Gora</string>
+    <string name="advantages_of_the_toll_for_all_system">Prednosti Toll For All sistema</string>
+    <string name="with_a_one_tag_through_multiple_countries">"Sa jednim tagom kroz više država "</string>
+    <string name="payment_via_the_phone_bill">Plaćanje preko telefonskog računa</string>
+    <string name="payment_directly_from_the_user_s_account">Plaćanje direktno sa korisničkog naloga</string>
+    <string name="no_waiting_in_line">Bez čekanja u redu</string>
+    <string name="no_currency_exchange">Bez promene valuta</string>
 
 </resources>

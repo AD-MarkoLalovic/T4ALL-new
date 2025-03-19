@@ -324,4 +324,19 @@
     <string name="cards_terms_text_full">I agree with General Terms and Conditions and Privacy Policy</string>
     <string name="card_terms_left_clickable">General Terms and Conditions</string>
     <string name="card_term_right_clickable">Privacy Policy</string>
+    <string name="version">Version:</string>
+    <string name="next">Next</string>
+    <string name="welcome_to_toll_for_all">Welcome to Toll For All</string>
+    <string name="what_is_toll_for_all_system">What is Toll For All system?</string>
+    <string name="toll_for_all_description">Toll For All is a platform that provides         integrated toll collection services in European countries. No more waiting at toll booths and         currency exchanges. With the Toll For All platform, a new era of mobility has arrived.</string>
+    <string name="toll_for_all_supported_countries">Countries that support Toll For All system</string>
+    <string name="serbia_eng">Serbia</string>
+    <string name="macedonia_eng">N. Macedonia</string>
+    <string name="montenegro_eng">Montenegro</string>
+    <string name="advantages_of_the_toll_for_all_system">Advantages of the Toll For All system</string>
+    <string name="with_a_one_tag_through_multiple_countries">With a one tag through multiple countries</string>
+    <string name="payment_via_the_phone_bill">Payment via the phone bill</string>
+    <string name="payment_directly_from_the_user_s_account">Payment directly from the user\'s account.</string>
+    <string name="no_waiting_in_line">No waiting in line</string>
+    <string name="no_currency_exchange">No currency exchange</string>
 </resources>
