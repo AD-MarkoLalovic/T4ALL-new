@@ -10,16 +10,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.mobility.enp.databinding.GeneralDialogNotificationsBinding
+import com.mobility.enp.databinding.NotificationsRequestDiagBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
 
-class GeneralMessageDialogNotifications : DialogFragment {
+class NotificationsRequestDialog : DialogFragment {
 
     private lateinit var title: String
     private lateinit var subtitle: String
 
-    private var _binding: GeneralDialogNotificationsBinding? = null
-    private val binding: GeneralDialogNotificationsBinding get() = _binding!!
+    private var _binding: NotificationsRequestDiagBinding? = null
+    private val binding: NotificationsRequestDiagBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
     private lateinit var onButtonClick: OnButtonClick
@@ -38,7 +39,7 @@ class GeneralMessageDialogNotifications : DialogFragment {
         savedInstanceState: Bundle?
     ): View {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        _binding = GeneralDialogNotificationsBinding.inflate(inflater, container, false)
+        _binding = NotificationsRequestDiagBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -60,7 +61,7 @@ class GeneralMessageDialogNotifications : DialogFragment {
             onButtonClick.onClickConfirmed()
         }
         binding.rejectButton.setOnClickListener {
-            dismiss()
+            dialog?.dismiss()
         }
     }
 

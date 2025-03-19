@@ -1,7 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -25,6 +24,7 @@ import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentSettingsBinding
 import com.mobility.enp.view.dialogs.GeneralMessageDialogNotifications
 import com.mobility.enp.view.dialogs.LanguageDialog
+import com.mobility.enp.view.dialogs.NotificationsRequestDialog
 import com.mobility.enp.view.fragments.LoginFragment.Companion.TAG
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.SettingsViewModel
@@ -128,20 +128,17 @@ class SettingsFragment : Fragment() {
 
     private fun showNotificationPermissionRationale() {
         lifecycleScope.launch {
-            AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.notification_title))
-                .setMessage(
-                    getString(R.string.notification_subtitle)
-                )
-                .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                    requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
+            val generalMessageDialog = NotificationsRequestDialog(
+                getString(R.string.notification_title),
+                getString(R.string.notification_subtitle),
+                object : NotificationsRequestDialog.OnButtonClick {
+                    override fun onClickConfirmed() {
+                        requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                    }
                 }
-                .setNegativeButton(getString(R.string.no)) { dialog, _ ->
-                    dialog.dismiss()
-                    binding.notificationSwitch.isChecked = isPermissionGranted()
-                }
-                .setCancelable(false)
-                .show()
+            )
+            generalMessageDialog.show(fragmentManager, "permDialog")
         }
     }
 
