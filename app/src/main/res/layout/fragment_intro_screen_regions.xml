@@ -44,12 +44,12 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/languageContainerRegions"
-                android:layout_width="80dp"
+                android:layout_width="@dimen/dimens_70dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="29dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
                 android:background="@drawable/spinner_intro_lang_background"
-                android:paddingHorizontal="@dimen/dimens_16dp"
+                android:paddingHorizontal="@dimen/dimens_12dp"
                 android:paddingVertical="11dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -58,6 +58,7 @@
                     android:id="@+id/tvSelectedLanguage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimens_4dp"
                     android:clickable="true"
                     android:drawablePadding="@dimen/dimens_2dp"
                     android:focusable="true"
@@ -136,10 +137,10 @@
                 style="@style/SubtitlesRegular"
                 android:layout_width="@dimen/dimens_0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_25dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
                 android:text="@string/serbia_eng"
-                android:layout_marginTop="@dimen/dimens_25dp"
-                android:layout_marginStart="@dimen/dimens_16dp"
                 android:textColor="@color/primary_dark_lightest"
                 app:layout_constraintEnd_toStartOf="@+id/flagSerbiaIntro"
                 app:layout_constraintStart_toStartOf="parent"
@@ -149,9 +150,9 @@
                 android:id="@+id/flagSerbiaIntro"
                 android:layout_width="22dp"
                 android:layout_height="@dimen/dimens_16dp"
+                android:layout_marginEnd="@dimen/dimens_16dp"
                 android:contentDescription="@null"
                 android:src="@drawable/serbia_flag"
-                android:layout_marginEnd="@dimen/dimens_16dp"
                 app:layout_constraintBottom_toBottomOf="@id/txSerbiaIntroRegions"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/txSerbiaIntroRegions" />
@@ -161,8 +162,8 @@
                 style="@style/SubtitlesRegular"
                 android:layout_width="@dimen/dimens_0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimens_16dp"
                 android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_16dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
                 android:text="@string/macedonia_eng"
                 android:textColor="@color/primary_dark_lightest"
@@ -174,9 +175,9 @@
                 android:id="@+id/flagMacedoniaIntro"
                 android:layout_width="22dp"
                 android:layout_height="16dp"
+                android:layout_marginEnd="@dimen/dimens_16dp"
                 android:contentDescription="@null"
                 android:src="@drawable/macedonia_flag"
-                android:layout_marginEnd="@dimen/dimens_16dp"
                 app:layout_constraintBottom_toBottomOf="@id/txMacedoniaIntroRegions"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/txMacedoniaIntroRegions" />
@@ -186,8 +187,8 @@
                 style="@style/SubtitlesRegular"
                 android:layout_width="@dimen/dimens_0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimens_16dp"
                 android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_16dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
                 android:text="@string/montenegro_eng"
                 android:textColor="@color/primary_dark_lightest"
@@ -199,8 +200,8 @@
                 android:id="@+id/flagMontenegroIntro"
                 android:layout_width="22dp"
                 android:layout_height="16dp"
-                android:contentDescription="@null"
                 android:layout_marginEnd="@dimen/dimens_16dp"
+                android:contentDescription="@null"
                 android:src="@drawable/montenegro_flag"
                 app:layout_constraintBottom_toBottomOf="@id/txMontenegroIntroRegions"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -233,8 +234,9 @@
 
             <TextView
                 android:id="@+id/buttonNextRegions"
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_16dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
                 android:layout_marginBottom="@dimen/dimens_22dp"
                 android:background="@drawable/spinner_intro_lang_background"
@@ -247,11 +249,10 @@
                 android:text="@string/next"
                 android:textColor="@color/white"
                 android:textSize="@dimen/dimens_12sp"
-                android:layout_marginTop="@dimen/dimens_16dp"
-                app:layout_constraintVertical_bias="1.0"
-                app:layout_constraintTop_toBottomOf="@+id/txMontenegroIntroRegions"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txMontenegroIntroRegions"
+                app:layout_constraintVertical_bias="1.0" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
