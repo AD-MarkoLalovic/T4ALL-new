@@ -474,7 +474,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     }
 
-
     fun fetchStoredData(
         dataInterface: ToolHistoryListingAdapter.PassageDataInterface,
         tagSerialNumber: String
@@ -485,7 +484,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
             }
         }
     }
-
 
     fun fetchStoredData(
         dataInterface: HistoryResultAdapter.PassageDataInterface,
@@ -538,33 +536,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
             .notify(NOTIFICATION_ID, builder.build())
 
     }
-
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun runPermissionCheck() {
-        Dexter.withContext(repository.fetchContext())
-            .withPermission(Manifest.permission.POST_NOTIFICATIONS)
-            .withListener(object : PermissionListener {
-                override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
-                    postNotification()
-                }
-
-                override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
-                    Toast.makeText(
-                        repository.fetchContext(),
-                        R.string.csv_saved,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                override fun onPermissionRationaleShouldBeShown(
-                    p0: PermissionRequest?, p1: PermissionToken?
-                ) {
-                    p1?.continuePermissionRequest()
-                }
-
-            }).check()
-    }
-
 
     fun processCsvData(csvModel: CsvModel, nameExtra: String) {
         Log.d(TAG, "csv data: $csvModel")
@@ -700,11 +671,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                             outputStream.write(pdfData)
                             outputStream.flush()
 
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-                                postNotification()
-                            } else {
-                                runPermissionCheck()
-                            }
+                            postNotification()
 
                             Log.d(
                                 ToolHistoryFilterFragment.TAG,
@@ -900,28 +867,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
             val fm = (context as AppCompatActivity).supportFragmentManager
             datePicker.show(fm, "dateSelect")
-        }
-    }
-
-    private suspend fun getLocale(): Context? {
-        return withContext(Dispatchers.IO) {
-            val languageKey = database.languageDao().fetchAllowedUsers()?.userLanguage
-            languageKey?.let { key ->
-                val locale: Locale
-                if (key == "cyr" || key.isEmpty()) {
-                    locale =
-                        Locale.Builder().setLanguage("sr").setRegion("RS").setScript("Cyrl").build()
-                } else if (key == "sr" || key == "cnr") {
-                    locale =
-                        Locale.Builder().setLanguage("sr").setRegion("RS").setScript("Latn").build()
-                } else {
-                    locale = Locale(key)
-                }
-                Locale.setDefault(locale)
-                val config = repository.fetchContext().resources.configuration
-                config.setLocale(locale)
-                repository.fetchContext().createConfigurationContext(config)
-            }
         }
     }
 
