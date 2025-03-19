@@ -242,10 +242,9 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
         vModel.csvData.observe(viewLifecycleOwner) { csvData ->
             binding.progBar.visibility = View.GONE
-            csvData?.let { csvData ->
+            if (!csvData.data?.csvContent.isNullOrEmpty()) {
                 val nameExtra = UUID.randomUUID().toString().substring(0, 8)
                 vModel.processCsvData(csvData, nameExtra)
-                // moved logic because of permissions
                 when {
                     ContextCompat.checkSelfPermission(
                         requireContext(),
@@ -262,7 +261,12 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                         showNotificationPermissionRationale()
                     }
                 }
-
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.no_passage_data),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 

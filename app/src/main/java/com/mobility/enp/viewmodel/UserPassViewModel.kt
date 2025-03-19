@@ -575,13 +575,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                     saveCsvLocally(data, nameExtra) // <- csv excel export
                 }
             }
-        } else {
-            Toast.makeText(
-                repository.fetchContext(),
-                repository.fetchContext().resources.getString(R.string.no_passage_data),
-                Toast.LENGTH_SHORT
-            ).show()
-            _errorBody.postValue(ErrorBody(200, "No export data received"))
         }
     }
 
