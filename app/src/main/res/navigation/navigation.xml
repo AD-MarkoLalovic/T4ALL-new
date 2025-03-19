@@ -59,8 +59,26 @@
             android:id="@+id/action_splashScreenFragment_to_introScreenAbout"
             app:destination="@id/introScreenAbout"
             app:popUpTo="@id/splashScreenFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/introScreenAbout"
+        android:name="com.mobility.enp.view.fragments.intro.IntroScreenAbout"
+        android:label="IntroScreenAbout"
+        tools:layout="@layout/fragment_intro_screen_about">
+        <action
+            android:id="@+id/action_introScreenAbout_to_introScreenRegions"
+            app:destination="@id/introScreenRegions" />
+    </fragment>
+    <fragment
+        android:id="@+id/introScreenRegions"
+        android:name="com.mobility.enp.view.fragments.intro.IntroScreenRegions"
+        android:label="IntroScreenRegions"
+        tools:layout="@layout/fragment_intro_screen_regions">
+        <action
+            android:id="@+id/action_introScreenRegions_to_introScreenAdvantages"
+            app:destination="@id/introScreenAdvantages" />
     </fragment>
     <fragment
         android:id="@+id/introScreenAdvantages"
@@ -70,9 +88,8 @@
         <action
             android:id="@+id/action_introScreenAdvantages_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:popUpTo="@id/splashScreenFragment"
+            app:popUpTo="@id/introScreenAbout"
             app:popUpToInclusive="true" />
-
     </fragment>
 
     <fragment
@@ -398,24 +415,6 @@
             app:argType="string"
             app:nullable="true" />
     </dialog>
-    <fragment
-        android:id="@+id/introScreenAbout"
-        android:name="com.mobility.enp.view.fragments.intro.IntroScreenAbout"
-        android:label="IntroScreenAbout"
-        tools:layout="@layout/fragment_intro_screen_about">
-        <action
-            android:id="@+id/action_introScreenAbout_to_introScreenRegions"
-            app:destination="@id/introScreenRegions" />
-    </fragment>
-    <fragment
-        android:id="@+id/introScreenRegions"
-        android:name="com.mobility.enp.view.fragments.intro.IntroScreenRegions"
-        android:label="IntroScreenRegions"
-        tools:layout="@layout/fragment_intro_screen_regions">
-        <action
-            android:id="@+id/action_introScreenRegions_to_introScreenAdvantages"
-            app:destination="@id/introScreenAdvantages" />
-    </fragment>
 
 
 </navigation>
