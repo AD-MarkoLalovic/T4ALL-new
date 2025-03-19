@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -20,6 +19,7 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
+import com.mobility.enp.BuildConfig
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
@@ -59,7 +59,10 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        franchiseViewModel.getFranchiseModel(requireContext())
+
+        if (!BuildConfig.FLAVOR.contains("prod")){
+            franchiseViewModel.getFranchiseModel(requireContext())
+        }
 
         setupObservers()
         setupBinding()
