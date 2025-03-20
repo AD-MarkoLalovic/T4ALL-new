@@ -16,17 +16,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentIntroScreenAboutBinding
 import com.mobility.enp.view.dialogs.NotificationsRequestDialog
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.launch
+import kotlin.getValue
 
 class IntroScreenAbout : Fragment() {
 
     private var _binding: FragmentIntroScreenAboutBinding? = null
     private val binding: FragmentIntroScreenAboutBinding get() = _binding!!
+
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
+
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
@@ -35,7 +41,6 @@ class IntroScreenAbout : Fragment() {
             }
         }
     private var isExpanded = false
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -106,8 +111,10 @@ class IntroScreenAbout : Fragment() {
         binding.buttonNext?.setOnClickListener {
             findNavController().navigate(R.id.action_introScreenAbout_to_introScreenRegions)
         }
-
-        permissionCheck()
+        if (!franchiseViewModel.getDialogStatus()){
+            franchiseViewModel.setDialogStatus(true)
+            permissionCheck()
+        }
     }
 
     private fun permissionCheck() {

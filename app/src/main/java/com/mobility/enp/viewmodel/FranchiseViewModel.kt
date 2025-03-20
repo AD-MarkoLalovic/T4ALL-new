@@ -22,6 +22,16 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
     private val _franchiseModel: MutableLiveData<FranchiseModel?> = MutableLiveData()
     val franchiseModel: LiveData<FranchiseModel?> get() = _franchiseModel
 
+    private var isDialogShown = false
+
+    fun getDialogStatus(): Boolean {
+        return isDialogShown
+    }
+
+    fun setDialogStatus(status: Boolean) {
+        isDialogShown = status
+    }
+
     fun deleteData() {
         _franchiseModel.value = null
     }
