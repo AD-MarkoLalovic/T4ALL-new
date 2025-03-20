@@ -166,6 +166,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             franchiseModel?.franchisePrimaryColor?.let { color ->
                 binding.btnSearch.backgroundTintList = ColorStateList.valueOf(color)
                 binding.exportBlock.setTextColor(color)
+                binding.exportBlock.visibility = View.GONE // because frashizers can not export from what daniel told me
 
                 binding.searchMark.setImageResource(franchiseModel.loopIcon)
 
