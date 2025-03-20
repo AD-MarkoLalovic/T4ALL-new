@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import com.mobility.enp.databinding.GeneralDialogNotificationsBinding
 import com.mobility.enp.databinding.NotificationsRequestDiagBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
@@ -60,11 +59,13 @@ class NotificationsRequestDialog : DialogFragment {
         }
         binding.rejectButton.setOnClickListener {
             dialog?.dismiss()
+            onButtonClick.onClickRejected()
         }
     }
 
     interface OnButtonClick {
         fun onClickConfirmed()
+        fun onClickRejected()
     }
 
     override fun onStart() {
