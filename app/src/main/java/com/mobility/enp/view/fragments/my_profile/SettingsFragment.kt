@@ -43,6 +43,8 @@ class SettingsFragment : Fragment() {
             if (isGranted) {
                 // Permission is granted. You can proceed with sending notifications.
                 sendNotification()
+            } else {
+                binding.notificationSwitch.isChecked = isPermissionGranted()
             }
         }
 
@@ -133,6 +135,10 @@ class SettingsFragment : Fragment() {
                     override fun onClickConfirmed() {
                         requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
                     }
+
+                    override fun onClickRejected() {
+                        binding.notificationSwitch.isChecked = isPermissionGranted()
+                    }
                 }
             )
             generalMessageDialog.show(fragmentManager, "permDialog")
@@ -166,6 +172,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun sendNotification() {
+        binding.notificationSwitch.isChecked = isPermissionGranted()
         Toast.makeText(requireContext(), getString(R.string.permission_granted), Toast.LENGTH_SHORT)
             .show()
     }

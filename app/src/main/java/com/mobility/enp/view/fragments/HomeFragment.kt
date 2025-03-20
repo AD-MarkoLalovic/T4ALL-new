@@ -230,10 +230,11 @@ class HomeFragment : Fragment() {
             binding.progBar.visibility = View.VISIBLE
             viewModel.updateDeleteHomeCard(delete)
             binding.progBar.visibility = View.GONE
-        },franchiseViewModel.franchiseModel.value)
+        }, franchiseViewModel.franchiseModel.value)
 
         if (filteredList.isNotEmpty()) {
-            adapterProgress = HomeProgressAdapter(filteredList.size,franchiseViewModel.franchiseModel.value)
+            adapterProgress =
+                HomeProgressAdapter(filteredList.size, franchiseViewModel.franchiseModel.value)
 
             binding.cyclerPromotions.visibility = View.VISIBLE
             binding.cyclerPromotions.adapter = homePromotionsAdapter

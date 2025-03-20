@@ -240,6 +240,9 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                     override fun onClickConfirmed() {
                         requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
                     }
+
+                    override fun onClickRejected() {
+                    }
                 }
             )
             generalMessageDialog.show(fragmentManager, "permDialog")
