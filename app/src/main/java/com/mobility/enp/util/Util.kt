@@ -160,6 +160,29 @@ object Util {
         )
 
 
+        map["2263768e-e3a5-48f8-8e7a-545f6c141318"] = FranchiseModel(
+            "2263768e-e3a5-48f8-8e7a-545f6c141318",
+            "Enput",
+            context.resources.getColor(R.color.franchiser_enput, null),
+            ContextCompat.getDrawable(context, R.drawable.enput_home),
+            R.drawable.enput_profile,
+            ContextCompat.getDrawable(context, R.drawable.enput_logo), true,
+            ContextCompat.getColorStateList(context, R.color.franchiser_enput),
+            R.drawable.enput_promotion_dot,
+            context.resources.getColor(R.color.franchiser_enput_half_color, null),
+            R.drawable.toolbar_shared_back_enput,
+            R.drawable.ic_arrow_down_enput,
+            R.drawable.ic_arrow_up_enput,
+            R.drawable.arrow_right_enput,
+            R.drawable.loop_enput,
+            R.drawable.ic_camera_enput,
+            R.drawable.ic_language_home_screen_enput,
+            R.drawable.calendar_today_enput,
+            R.drawable.plus_ic_enput,
+            R.drawable.ic_close_enput
+        )
+
+
         return map[portalKey]
     }
 
