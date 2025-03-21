@@ -137,6 +137,28 @@ object Util {
             R.drawable.ic_close_tehnomania
         )
 
+        map["96371708-44d7-4438-b4f1-79f42bbac918"] = FranchiseModel(
+            "96371708-44d7-4438-b4f1-79f42bbac918",
+            "Tehno-coop portal",
+            context.resources.getColor(R.color.franchiser_tehnocoop, null),
+            ContextCompat.getDrawable(context, R.drawable.technocoop_home),
+            R.drawable.technocoop_profile,
+            ContextCompat.getDrawable(context, R.drawable.technocoop_logo), true,
+            ContextCompat.getColorStateList(context, R.color.bottom_nav_color_tehnocoop),
+            R.drawable.promotion_dot_technocoop,
+            context.resources.getColor(R.color.franchiser_technocoop_half_visibility, null),
+            R.drawable.toolbar_shared_back_tehnocoop,
+            R.drawable.ic_arrow_down_tehnocoop,
+            R.drawable.ic_arrow_up_tehnocoop,
+            R.drawable.arrow_right_tehnocoop,
+            R.drawable.loop_tehnocoop,
+            R.drawable.ic_camera_tehnocoop,
+            R.drawable.ic_language_home_screen_tehnocoop,
+            R.drawable.calendar_today_tehnocoop,
+            R.drawable.plus_ic_tehnocoop,
+            R.drawable.ic_close_tehnocoop
+        )
+
 
         return map[portalKey]
     }

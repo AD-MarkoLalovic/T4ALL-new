@@ -43,6 +43,8 @@
     <color name="country_filter">#7E91AC</color>
     <color name="button_not_enabled_web">#A60D6EFD</color>
 
+    <color name="franchiser_tehnocoop">#ED1A3B</color>
+    <color name="franchiser_tehnocoop_half_visibility">#B3ED1A3B</color>
     <color name="franchiser_telekom_srbija_mtel">#ED1A3B</color>
     <color name="franchiser_telekom_srbija_mtel_half_visibility">#B3ED1A3B</color>
     <color name="franchiser_s_blue">#4A628A</color>
