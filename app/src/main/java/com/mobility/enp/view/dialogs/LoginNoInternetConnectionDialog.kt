@@ -18,7 +18,6 @@ import com.mobility.enp.viewmodel.FranchiseViewModel
 class LoginNoInternetConnectionDialog : DialogFragment() {
 
     private var _binding: GeneralDialogBinding? = null
-    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val binding: GeneralDialogBinding get() = _binding!!
 
     override fun onCreateView(

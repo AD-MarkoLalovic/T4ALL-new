@@ -1,5 +1,6 @@
 package com.mobility.enp.view.dialogs
 
+import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
@@ -9,8 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import com.mobility.enp.databinding.DialogLostTagBinding
 import com.mobility.enp.util.setDimensionsPercent
+import com.mobility.enp.viewmodel.FranchiseViewModel
+import kotlin.getValue
 
 class LostTagDialog : DialogFragment {
 
@@ -20,6 +24,7 @@ class LostTagDialog : DialogFragment {
     private lateinit var title: String
     private lateinit var subtitle: String
     private lateinit var onButtonClickInLostTag: OnButtonClickInLostTag
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
     constructor() : super()
 
@@ -46,6 +51,12 @@ class LostTagDialog : DialogFragment {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.buttonConfirmLostTag.backgroundTintList = ColorStateList.valueOf(color)
+            }
+        }
 
         binding.titleLostTag.text = title
         binding.subtitleLostTag.text = subtitle
