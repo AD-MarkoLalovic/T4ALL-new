@@ -4,12 +4,14 @@ import android.content.Context
 import android.util.Log
 import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
 import com.mobility.enp.data.model.api_room_models.FcmToken
+import com.mobility.enp.R
 import com.mobility.enp.data.model.api_room_models.UserLanguage
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
 import com.mobility.enp.data.room.LastUser
+import com.mobility.enp.data.model.registration.RegistrationCountry
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +20,7 @@ import kotlinx.coroutines.withContext
 /**
  * Odgovornost: Upravljanje autentifikacijom i funkcionalnostima za korisnički nalog.
  * Logovanje korisnika, Promena lozinke,Resetovanje lozinke,Deaktivacija korisničkog naloga.
- * Promena jezika.
+ * Promena jezika> Registracija korisnika
  */
 
 class AuthRepository(database: DRoom, context: Context) : BaseRepository(database, context) {
@@ -143,4 +145,27 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
         }
     }
 
+
+    /**
+     * Registration
+     */
+    fun getCountries(): List<RegistrationCountry> {
+        return listOf(
+            RegistrationCountry(
+                context.getString(R.string.serbia_country_code),
+                context.getString(R.string.serbia),
+                R.drawable.serbia_flag
+            ),
+            RegistrationCountry(
+                context.getString(R.string.macedonia_country_code),
+                context.getString(R.string.macedonia),
+                R.drawable.macedonia_flag
+            ),
+            RegistrationCountry(
+                context.getString(R.string.montenegro_country_code),
+                context.getString(R.string.montenegro),
+                R.drawable.montenegro_flag
+            )
+        )
+    }
 }

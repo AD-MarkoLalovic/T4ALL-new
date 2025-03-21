@@ -109,8 +109,7 @@
         tools:layout="@layout/fragment_tos">
         <argument
             android:name="countryData"
-            app:argType="com.mobility.enp.data.model.registration.CountryModel"
-            app:nullable="true" />
+            app:argType="string"/>
     </fragment>
     <fragment
         android:id="@+id/myTagsFragment2"
