@@ -39,7 +39,8 @@
         android:src="@drawable/ic_logo_home_screen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/backArrow"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="@dimen/dimens_200dp" />
 
     <TextView
         android:id="@+id/franchiserFlavorText"
