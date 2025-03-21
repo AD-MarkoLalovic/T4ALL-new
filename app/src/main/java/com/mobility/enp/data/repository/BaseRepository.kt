@@ -29,11 +29,9 @@ abstract class BaseRepository(
         }
     }
 
-    protected suspend fun getLangKey(): String {
-        val languageTable = database.languageDao().fetchAllowedUsers()
-        // Ako je userLanguage null, vraćamo en
-        val languageCode = languageTable?.userLanguage ?: return "en"
-
+    protected fun getLangKey(): String {
+        val sharedPreferences = context.getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
+        val languageCode = sharedPreferences.getString("user_language", "sr") ?: "sr"
         return when {
             languageCode.contains("sr") -> "lat"
             languageCode.contains("cnr") -> "me"
@@ -43,7 +41,7 @@ abstract class BaseRepository(
         }
     }
 
-    protected suspend fun getRoomLanguage():String?{
+    protected suspend fun getRoomLanguage(): String? {
         return withContext(Dispatchers.IO) {
             database.languageDao().fetchAllowedUsers()?.userLanguage
         }

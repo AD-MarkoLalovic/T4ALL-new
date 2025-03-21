@@ -10,16 +10,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.os.Build
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,12 +36,6 @@ import com.itextpdf.layout.Document
 import com.itextpdf.layout.element.Cell
 import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.element.Table
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.single.PermissionListener
 import com.mobility.enp.MyApplication
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
@@ -95,6 +88,13 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     private val _baseTagDataState = MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)
     val baseTagDataState: StateFlow<SubmitResult<IndexData>> get() = _baseTagDataState
+
+    private val _csvTable = MutableStateFlow<SubmitResult<CsvModel>>(SubmitResult.Empty)
+    val csvTable: StateFlow<SubmitResult<CsvModel>> get() = _csvTable
+
+    fun setCsvState() {
+        _csvTable.value = SubmitResult.Empty
+    }
 
     private val _complaintObjectionState =
         MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Loading)
@@ -537,69 +537,83 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     }
 
-    fun processCsvData(csvModel: CsvModel, nameExtra: String) {
+    fun processCsvData(csvModel: CsvModel, nameExtra: String, context: Context) {
         Log.d(TAG, "csv data: $csvModel")
 
         if (!csvModel.data?.csvContent.isNullOrEmpty()) {
             csvModel.data?.csvContent?.let { data ->
                 viewModelScope.launch(Dispatchers.IO) {
-                    saveCsvLocally(data, nameExtra) // <- csv excel export
+                    saveCsvLocally(data, nameExtra, context) // <- csv excel export
                 }
             }
         }
     }
 
-    private suspend fun saveCsvLocally(encoded: String, nameExtra: String) = coroutineScope {
-        try {
-            // Decode the Base64 string
-            val decodedBytes = Base64.decode(encoded, Base64.DEFAULT)
-            val decodedString = String(decodedBytes)
+    private suspend fun saveCsvLocally(encoded: String, nameExtra: String, context: Context) =
+        coroutineScope {
+            try {
+                // Decode the Base64 string
+                val decodedBytes = Base64.decode(encoded, Base64.DEFAULT)
+                val decodedString = String(decodedBytes)
 
-            // Parse the data and format it as CSV
-            val rows = decodedString.split("\n")
-            val csvBuilder = StringBuilder()
+                // Parse the data and format it as CSV
+                val rows = decodedString.split("\n")
+                val csvBuilder = StringBuilder()
 
-            // Add a header if your data format is known
-            csvBuilder.append("Bill number,Time of passage,Pay ramp,Price\n")
+                // Add a header if your data format is known
 
-            // Add each row to the CSV content
-            for (row in rows) {
-                csvBuilder.append(row).append("\n")
+                val billNumber = ContextCompat.getString(context, R.string.bill_number)
+                val price = ContextCompat.getString(context, R.string.price)
+                val payRamp = ContextCompat.getString(context, R.string.pay_ramp)
+                val timeOfPassage = ContextCompat.getString(context, R.string.time_of_passage)
+
+                val titleHeader =
+                    StringBuilder().append(billNumber).append(",").append(timeOfPassage).append(",")
+                        .append(payRamp).append(",").append(price).append(",").append("\n")
+
+                csvBuilder.append(titleHeader.toString())
+
+                // Add each row to the CSV content
+                for (row in rows) {
+                    csvBuilder.append(row).append("\n")
+                }
+
+                // Save CSV to shared storage using MediaStore
+                val fileName = "export-$nameExtra.csv"
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
+                    put(
+                        MediaStore.MediaColumns.RELATIVE_PATH, "Documents/"
+                    ) // Save in the Documents folder
+                }
+
+                // Get the URI for the file in shared storage
+                val uri = repository.fetchContext().contentResolver.insert(
+                    MediaStore.Files.getContentUri("external"), contentValues
+                )
+
+                uri?.let { fileUri ->
+                    repository.fetchContext().contentResolver.openOutputStream(fileUri)
+                        ?.use { outputStream ->
+                            // Write the CSV content to the file
+                            outputStream.write(csvBuilder.toString().toByteArray())
+                            outputStream.flush()
+                            Log.d(
+                                ToolHistoryFilterFragment.TAG,
+                                "CSV file saved successfully in Documents folder."
+                            )
+                        } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to open OutputStream.")
+                } ?: Log.d(
+                    ToolHistoryFilterFragment.TAG,
+                    "Failed to create file URI in MediaStore."
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-
-            // Save CSV to shared storage using MediaStore
-            val fileName = "export-$nameExtra.csv"
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
-                put(
-                    MediaStore.MediaColumns.RELATIVE_PATH, "Documents/"
-                ) // Save in the Documents folder
-            }
-
-            // Get the URI for the file in shared storage
-            val uri = repository.fetchContext().contentResolver.insert(
-                MediaStore.Files.getContentUri("external"), contentValues
-            )
-
-            uri?.let { fileUri ->
-                repository.fetchContext().contentResolver.openOutputStream(fileUri)
-                    ?.use { outputStream ->
-                        // Write the CSV content to the file
-                        outputStream.write(csvBuilder.toString().toByteArray())
-                        outputStream.flush()
-                        Log.d(
-                            ToolHistoryFilterFragment.TAG,
-                            "CSV file saved successfully in Documents folder."
-                        )
-                    } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to open OutputStream.")
-            } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to create file URI in MediaStore.")
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
-    }
 
-    fun saveBase64ToCSV(base64Data: String, nameExtra: String) {
+    fun saveBase64ToCSV(base64Data: String, nameExtra: String, context: Context) {
         viewModelScope.launch {
             try {
 
@@ -611,13 +625,18 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 val decodedString = String(decodedBytes)
 
                 val rows = decodedString.split("\n")
-                val headers = listOf(
-                    repository.fetchContext().getString(R.string.bill_number),
-                    repository.fetchContext().getString(R.string.time_of_passage),
-                    repository.fetchContext().getString(R.string.pay_ramp),
-                    repository.fetchContext().getString(R.string.price)
-                )
 
+                val billNumber = ContextCompat.getString(context, R.string.bill_number)
+                val price = ContextCompat.getString(context, R.string.price)
+                val payRamp = ContextCompat.getString(context, R.string.pay_ramp)
+                val timeOfPassage = ContextCompat.getString(context, R.string.time_of_passage)
+
+                val headers = listOf(
+                    billNumber,
+                    timeOfPassage,
+                    payRamp,
+                    price
+                )
 
                 val byteArrayOutputStream = ByteArrayOutputStream()
                 val pdfWriter = PdfWriter(byteArrayOutputStream)
@@ -702,9 +721,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     private var _data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
     val data: LiveData<IndexData> get() = _data
-
-    private val _csvData: MutableLiveData<CsvModel> = MutableLiveData()
-    val csvData: LiveData<CsvModel> get() = _csvData
 
     var tagSerials: ArrayList<Tag> = ArrayList()
     var selectedTags: ArrayList<Tag> = ArrayList()
@@ -877,68 +893,122 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         return TimeSave(formDate, date)
     }
 
-    suspend fun getCsvData(context: Context) = coroutineScope {
-        if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
+    fun getCsvData(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _csvTable.value = SubmitResult.Loading
+            if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
+                if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
+                    _csvTable.value =
+                        SubmitResult.FailureApiError(
+                            ContextCompat.getString(
+                                context,
+                                R.string.end_date_check
+                            )
+                        )
+                } else {
+                    try {
+                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
-            if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
-                _errorBody.postValue(ErrorBody(200, context.getString(R.string.end_date_check)))
-            } else {
-                try {
-                    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+                        val dateStart = Date(userSelectedCalendarStart ?: 0)
+                        val dateEnd = Date(userSelectedCalendarEnd ?: 0)
 
-                    val dateStart = Date(userSelectedCalendarStart ?: 0)
-                    val dateEnd = Date(userSelectedCalendarEnd ?: 0)
+                        val dateStartApi = sdf.format(dateStart)
+                        val dateEndApi = sdf.format(dateEnd)
 
-                    val dateStartApi = sdf.format(dateStart)
-                    val dateEndApi = sdf.format(dateEnd)
+                        Log.d(TAG, "startDate: $dateStartApi endDate $dateEndApi")
 
-                    Log.d(TAG, "startDate: $dateStartApi endDate $dateEndApi")
+                        if (selectedTags.isNotEmpty() && selectedTags.size == 1 || allTagsSelected) {
 
+                            val tagSerial = if (allTagsSelected) {
+                                ""
+                            } else {
+                                tagSerials[0].serialNumber ?: ""
+                            }
 
-                    if (selectedTags.isNotEmpty() && selectedTags.size == 1 || allTagsSelected) {
-
-                        val tagSerial = if (allTagsSelected) {
-                            ""
-                        } else {
-                            tagSerials[0].serialNumber ?: ""
-                        }
-
-                        Log.d(TAG, "getCsvData: $tagSerial")
-
-                        database.loginDao()?.fetchAllowedUsers()?.accessToken?.let { token ->
-                            Repository.getCsvData(
-                                token,
-                                repository.fetchContext(),
+                            val result = repository.getCsvTableData(
                                 tagSerial,
                                 dateStartApi,
                                 dateEndApi,
-                                selectedCurrency,
-                                _errorBody,
-                                _csvData
+                                selectedCurrency
                             )
+
+                            val body = result.getOrNull()
+                            body?.let { data ->
+
+                                if (result.isSuccess) {
+                                    _csvTable.value = SubmitResult.Success(body)
+                                } else {
+                                    when (val error = result.exceptionOrNull()) {
+                                        is NetworkError.ServerError -> {
+                                            Log.d(TAG, "Error while fetching tag serial data")
+                                            _csvTable.value = SubmitResult.FailureServerError
+                                        }
+
+                                        is NetworkError.NoConnection -> {
+                                            _csvTable.value = SubmitResult.FailureNoConnection
+                                        }
+
+                                        is NetworkError.ApiError -> {
+                                            when (error.errorResponse.code) {
+                                                401, 405 -> {
+                                                    Log.d(
+                                                        TOKEN,
+                                                        "invalid token detected login out user"
+                                                    )
+                                                    _csvTable.value =
+                                                        SubmitResult.InvalidApiToken(
+                                                            error.errorResponse.code ?: 0,
+                                                            error.errorResponse.message ?: ""
+                                                        )
+                                                }
+
+                                                else -> {
+                                                    _csvTable.value =
+                                                        SubmitResult.FailureApiError(
+                                                            error.errorResponse.message ?: ""
+                                                        )
+                                                    Log.d(
+                                                        TAG,
+                                                        "api error ${error.errorResponse.message}"
+                                                    )
+                                                }
+                                            }
+                                        }
+
+                                        else -> {}
+                                    }
+                                }
+                            }
+
+                        } else {
+                            _csvTable.value =
+                                SubmitResult.FailureApiError(
+                                    ContextCompat.getString(
+                                        context,
+                                        R.string.please_select_one_tag
+                                    )
+                                )
                         }
-
-                    } else {
-                        _errorBody.postValue(
-                            ErrorBody(
-                                200, context.getString(R.string.please_select_one_tag)
+                    } catch (e: Exception) {
+                        Log.d(TAG, "getCsvData: ${e.message} ${e.cause}")
+                        _csvTable.value =
+                            SubmitResult.FailureApiError(
+                                ContextCompat.getString(
+                                    context,
+                                    R.string.formatting_error
+                                )
                             )
-                        )
                     }
-
-                } catch (e: Exception) {
-                    Log.d(TAG, "getCsvData: ${e.message} ${e.cause}")
-                    _errorBody.postValue(
-                        ErrorBody(
-                            200, context.getString(R.string.formatting_error)
+                }
+            } else {
+                _csvTable.value =
+                    SubmitResult.FailureApiError(
+                        ContextCompat.getString(
+                            context,
+                            R.string.please_select_dates
                         )
                     )
-                }
-
             }
-
-        } else {
-            _errorBody.postValue(ErrorBody(200, context.getString(R.string.please_select_dates)))
         }
     }
 
