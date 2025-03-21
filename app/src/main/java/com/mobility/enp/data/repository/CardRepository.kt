@@ -13,8 +13,8 @@ import kotlinx.coroutines.withContext
 
 class CardRepository(database: DRoom, context: Context) : BaseRepository(database, context) {
 
-    suspend fun getLangForCard(): String? {
-        return getRoomLanguage()
+     fun getLangForCard(): String? {
+        return getApplicationLanguage()
     }
 
     suspend fun getCardData(): Result<CardWebModel> {

@@ -41,10 +41,10 @@ abstract class BaseRepository(
         }
     }
 
-    protected suspend fun getRoomLanguage(): String? {
-        return withContext(Dispatchers.IO) {
-            database.languageDao().fetchAllowedUsers()?.userLanguage
-        }
+    protected fun getApplicationLanguage(): String? { // for string resources do not modify codes
+        val sharedPreferences = context.getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
+        val languageCode = sharedPreferences.getString("user_language", "sr") ?: "sr"
+        return languageCode
     }
 
     protected fun isNetworkAvailable(): Boolean {
