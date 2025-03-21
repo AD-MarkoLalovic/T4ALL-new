@@ -9,7 +9,6 @@ import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -58,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                 android.R.color.white
             )
         )
-        binding.toolbarShared.root.visibility = View.GONE
+//        binding.toolbarShared.root.visibility = View.GONE
     }
 
     fun hideLogo(hideLogo: Boolean) {

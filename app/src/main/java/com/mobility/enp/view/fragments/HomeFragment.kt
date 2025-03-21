@@ -62,6 +62,8 @@ class HomeFragment : Fragment() {
 
         if (!BuildConfig.FLAVOR.contains("prod")){
             franchiseViewModel.getFranchiseModel(requireContext())
+        }else{
+            (activity as MainActivity).setDefaultLogo()
         }
 
         setupObservers()
