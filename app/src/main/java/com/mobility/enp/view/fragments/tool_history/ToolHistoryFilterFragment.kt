@@ -88,8 +88,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                 } else {
                     val bundle = Bundle().apply {
                         putString(
-                            getString(R.string.title),
-                            getString(R.string.no_connection_title)
+                            getString(R.string.title), getString(R.string.no_connection_title)
                         )
                         putString(
                             getString(R.string.subtitle),
@@ -166,7 +165,8 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             franchiseModel?.franchisePrimaryColor?.let { color ->
                 binding.btnSearch.backgroundTintList = ColorStateList.valueOf(color)
                 binding.exportBlock.setTextColor(color)
-                binding.exportBlock.visibility = View.GONE // because frashizers can not export from what daniel told me
+                binding.exportBlock.visibility =
+                    View.GONE // because frashizers can not export from what daniel told me
 
                 binding.searchMark.setImageResource(franchiseModel.loopIcon)
 
@@ -178,8 +178,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                 val colors = intArrayOf(
                     color,  // ON color
                     ContextCompat.getColor(
-                        requireContext(),
-                        R.color.primary_light_dark
+                        requireContext(), R.color.primary_light_dark
                     ) // OFF color
                 )
 
@@ -193,12 +192,10 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
                 val colors = intArrayOf(
                     ContextCompat.getColor(
-                        requireContext(),
-                        R.color.figmaSplashScreenColor
+                        requireContext(), R.color.figmaSplashScreenColor
                     ),  // ON color
                     ContextCompat.getColor(
-                        requireContext(),
-                        R.color.primary_light_dark
+                        requireContext(), R.color.primary_light_dark
                     ) // OFF color
                 )
 
@@ -241,37 +238,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             }
         }
 
-        vModel.csvData.observe(viewLifecycleOwner) { csvData ->
-            binding.progBar.visibility = View.GONE
-            if (!csvData.data?.csvContent.isNullOrEmpty()) {
-                val nameExtra = UUID.randomUUID().toString().substring(0, 8)
-                vModel.processCsvData(csvData, nameExtra)
-                when {
-                    ContextCompat.checkSelfPermission(
-                        requireContext(),
-                        Manifest.permission.POST_NOTIFICATIONS
-                    ) == PackageManager.PERMISSION_GRANTED -> {
-                        csvData.data?.csvContent?.let {
-                            vModel.saveBase64ToCSV(
-                                it, nameExtra
-                            ) // <- converts csv to pdf saves locally and in room byte array
-                        }
-                    }
-
-                    else -> {
-                        showNotificationPermissionRationale()
-                    }
-                }
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.no_passage_data),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-
-
         collectLatestLifecycleFlow(vModel.baseTagDataState) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {
@@ -307,15 +273,78 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                 }
             }
         }
+
+        collectLatestLifecycleFlow(vModel.csvTable) { csvTable ->
+            when (csvTable) {
+                is SubmitResult.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.progBar.visibility = View.GONE
+
+                    if (!csvTable.data.data?.csvContent.isNullOrEmpty()) {
+                        val nameExtra = UUID.randomUUID().toString().substring(0, 8)
+                        vModel.processCsvData(csvTable.data, nameExtra,requireContext())
+                        when {
+                            ContextCompat.checkSelfPermission(
+                                requireContext(), Manifest.permission.POST_NOTIFICATIONS
+                            ) == PackageManager.PERMISSION_GRANTED -> {
+                                csvTable.data.data?.csvContent?.let {
+                                    vModel.saveBase64ToCSV(
+                                        it, nameExtra,requireContext()
+                                    ) // <- converts csv to pdf saves locally and in room byte array
+                                }
+                                vModel.setCsvState()
+                            }
+
+                            else -> {
+                                showNotificationPermissionRationale()
+                                vModel.setCsvState()
+                            }
+                        }
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.no_passage_data),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(csvTable.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(csvTable.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {
+                    SubmitResult.Empty
+                }
+            }
+        }
     }
+
 
     private fun checkInternet() {
         if (!vModel.internetAvailable()) {
             val bundle = Bundle().apply {
                 putString(getString(R.string.title), getString(R.string.no_connection_title))
                 putString(
-                    getString(R.string.subtitle),
-                    getString(R.string.please_connect_to_the_internet)
+                    getString(R.string.subtitle), getString(R.string.please_connect_to_the_internet)
                 )
             }
 
@@ -351,8 +380,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
                     override fun onClickRejected() {
                     }
-                }
-            )
+                })
             generalMessageDialog.show(fragmentManager, "permDialog")
         }
     }

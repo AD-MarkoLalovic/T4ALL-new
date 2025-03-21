@@ -15,21 +15,16 @@ import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
-import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_tags.LostTagResponse
 import com.mobility.enp.data.model.api_tags.PostLostTag
 import com.mobility.enp.data.model.api_tags.TagsResponse
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
-import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
 import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
-import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -511,34 +506,6 @@ object Repository {
         return apiService("").sendCustomerSupport(customerSupport)
     }
 
-    suspend fun getCsvData(
-        token: String?,
-        application: Context,
-        serialNumber: String,
-        dateFrom: String,
-        dateTo: String,
-        currency: String,
-        errorBody: MutableLiveData<ErrorBody>,
-        data: MutableLiveData<CsvModel>
-    ) {
-        try {
-            val lang = getUserLanguage(application)
-
-            val response = apiService(token).getCsvData(
-                serialNumber, lang, dateFrom, dateTo, currency
-            )
-            if (response.isSuccessful) {
-                data.postValue(response.body())
-            } else {
-                errorBody.postValue(getMessageFromErrorBody(response))
-            }
-        } catch (e: HttpException) { // 500 400
-            val errorResponse = e.response()?.errorBody()?.string() ?: "Server Error"
-            errorBody.postValue(ErrorBody(500, errorResponse))
-        }
-    }
-
-
     suspend fun postDeactivateAccount(
         pair: Pair<String, String>,
         errorBody: MutableLiveData<ErrorBody>,
@@ -565,28 +532,16 @@ object Repository {
         apiService(token).changeLanguage(language)
     }
 
-    suspend fun getUserLanguage(context: Context): String {  // cyr lat en de tr mk el
-        val database: DRoom = DRoom.getRoomInstance(context)
-        var lang = ""
-
-        val languageTable = withContext(Dispatchers.IO) {
-            database.languageDao().fetchAllowedUsers()
+    fun getUserLanguage(context: Context): String { 
+        val sharedPreferences = context.getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
+        val languageCode = sharedPreferences.getString("user_language", "sr") ?: "sr"
+        return when {
+            languageCode.contains("sr") -> "lat"
+            languageCode.contains("cnr") -> "me"
+            languageCode.contains("el") -> "gr"
+            languageCode.contains("bs") -> "ba"
+            else -> languageCode
         }
-
-        languageTable?.userLanguage?.let { languageCode ->
-            if (languageCode.contains("sr")) {  // difference between country code for strings and parameter for query
-                lang = "lat"
-            } else if (languageCode.contains("cnr")) { // macedonian send me for language key cnr is for local strings
-                lang = "me"
-            } else if (languageCode.contains("el")) { // greek send gr
-                lang = "gr"
-            } else if (languageCode.contains("bs")) { // Bosnia
-                lang = "ba"
-            } else {
-                lang = languageCode
-            }
-        }
-        return lang
     }
 
     private fun <T> getMessageFromErrorBody(response: Response<T>): ErrorBody {
