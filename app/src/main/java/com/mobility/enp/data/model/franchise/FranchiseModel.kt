@@ -22,5 +22,7 @@ data class FranchiseModel(
     val cameraResource : Int,
     val languageIcon : Int,
     val calendarResource : Int,
-    val franchiseFlavorText: String = "Powered by Toll4All"
+    val franchisePlusButton : Int,
+    val franchiseFlavorText: String = "Powered by Toll4All",
+
 )

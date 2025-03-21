@@ -158,8 +158,11 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         }
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { data ->
-            data?.franchiseProfileResource?.let {
-                binding.rectangleProfilePicture.setImageResource(it)
+            data?.let { model->
+                model.franchiseProfileResource?.let {
+                    binding.rectangleProfilePicture.setImageResource(it)
+                }
+                binding.bttChangeProfilePicture.setImageResource(model.franchisePlusButton)
             }
         }
 
