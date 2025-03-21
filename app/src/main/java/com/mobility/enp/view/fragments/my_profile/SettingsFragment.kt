@@ -103,10 +103,6 @@ class SettingsFragment : Fragment() {
                         apply()
                     }
                     activity?.recreate()
-                    /*MainActivity.setLocale(requireContext(), languageSelected)
-                    activity?.let { act ->
-                        act.recreate()
-                    }*/
                     viewModel.sendingLangToServer()
                 } else {
                     Log.d(

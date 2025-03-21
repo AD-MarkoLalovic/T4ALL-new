@@ -92,7 +92,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     private val _csvTable = MutableStateFlow<SubmitResult<CsvModel>>(SubmitResult.Empty)
     val csvTable: StateFlow<SubmitResult<CsvModel>> get() = _csvTable
 
-    fun setCsvState(){
+    fun setCsvState() {
         _csvTable.value = SubmitResult.Empty
     }
 
@@ -537,69 +537,83 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     }
 
-    fun processCsvData(csvModel: CsvModel, nameExtra: String) {
+    fun processCsvData(csvModel: CsvModel, nameExtra: String, context: Context) {
         Log.d(TAG, "csv data: $csvModel")
 
         if (!csvModel.data?.csvContent.isNullOrEmpty()) {
             csvModel.data?.csvContent?.let { data ->
                 viewModelScope.launch(Dispatchers.IO) {
-                    saveCsvLocally(data, nameExtra) // <- csv excel export
+                    saveCsvLocally(data, nameExtra, context) // <- csv excel export
                 }
             }
         }
     }
 
-    private suspend fun saveCsvLocally(encoded: String, nameExtra: String) = coroutineScope {
-        try {
-            // Decode the Base64 string
-            val decodedBytes = Base64.decode(encoded, Base64.DEFAULT)
-            val decodedString = String(decodedBytes)
+    private suspend fun saveCsvLocally(encoded: String, nameExtra: String, context: Context) =
+        coroutineScope {
+            try {
+                // Decode the Base64 string
+                val decodedBytes = Base64.decode(encoded, Base64.DEFAULT)
+                val decodedString = String(decodedBytes)
 
-            // Parse the data and format it as CSV
-            val rows = decodedString.split("\n")
-            val csvBuilder = StringBuilder()
+                // Parse the data and format it as CSV
+                val rows = decodedString.split("\n")
+                val csvBuilder = StringBuilder()
 
-            // Add a header if your data format is known
-            csvBuilder.append("Bill number,Time of passage,Pay ramp,Price\n")
+                // Add a header if your data format is known
 
-            // Add each row to the CSV content
-            for (row in rows) {
-                csvBuilder.append(row).append("\n")
+                val billNumber = ContextCompat.getString(context, R.string.bill_number)
+                val price = ContextCompat.getString(context, R.string.price)
+                val payRamp = ContextCompat.getString(context, R.string.pay_ramp)
+                val timeOfPassage = ContextCompat.getString(context, R.string.time_of_passage)
+
+                val titleHeader =
+                    StringBuilder().append(billNumber).append(",").append(timeOfPassage).append(",")
+                        .append(payRamp).append(",").append(price).append(",").append("\n")
+
+                csvBuilder.append(titleHeader.toString())
+
+                // Add each row to the CSV content
+                for (row in rows) {
+                    csvBuilder.append(row).append("\n")
+                }
+
+                // Save CSV to shared storage using MediaStore
+                val fileName = "export-$nameExtra.csv"
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
+                    put(
+                        MediaStore.MediaColumns.RELATIVE_PATH, "Documents/"
+                    ) // Save in the Documents folder
+                }
+
+                // Get the URI for the file in shared storage
+                val uri = repository.fetchContext().contentResolver.insert(
+                    MediaStore.Files.getContentUri("external"), contentValues
+                )
+
+                uri?.let { fileUri ->
+                    repository.fetchContext().contentResolver.openOutputStream(fileUri)
+                        ?.use { outputStream ->
+                            // Write the CSV content to the file
+                            outputStream.write(csvBuilder.toString().toByteArray())
+                            outputStream.flush()
+                            Log.d(
+                                ToolHistoryFilterFragment.TAG,
+                                "CSV file saved successfully in Documents folder."
+                            )
+                        } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to open OutputStream.")
+                } ?: Log.d(
+                    ToolHistoryFilterFragment.TAG,
+                    "Failed to create file URI in MediaStore."
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-
-            // Save CSV to shared storage using MediaStore
-            val fileName = "export-$nameExtra.csv"
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
-                put(
-                    MediaStore.MediaColumns.RELATIVE_PATH, "Documents/"
-                ) // Save in the Documents folder
-            }
-
-            // Get the URI for the file in shared storage
-            val uri = repository.fetchContext().contentResolver.insert(
-                MediaStore.Files.getContentUri("external"), contentValues
-            )
-
-            uri?.let { fileUri ->
-                repository.fetchContext().contentResolver.openOutputStream(fileUri)
-                    ?.use { outputStream ->
-                        // Write the CSV content to the file
-                        outputStream.write(csvBuilder.toString().toByteArray())
-                        outputStream.flush()
-                        Log.d(
-                            ToolHistoryFilterFragment.TAG,
-                            "CSV file saved successfully in Documents folder."
-                        )
-                    } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to open OutputStream.")
-            } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to create file URI in MediaStore.")
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
-    }
 
-    fun saveBase64ToCSV(base64Data: String, nameExtra: String) {
+    fun saveBase64ToCSV(base64Data: String, nameExtra: String, context: Context) {
         viewModelScope.launch {
             try {
 
@@ -611,13 +625,18 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 val decodedString = String(decodedBytes)
 
                 val rows = decodedString.split("\n")
-                val headers = listOf(
-                    repository.fetchContext().getString(R.string.bill_number),
-                    repository.fetchContext().getString(R.string.time_of_passage),
-                    repository.fetchContext().getString(R.string.pay_ramp),
-                    repository.fetchContext().getString(R.string.price)
-                )
 
+                val billNumber = ContextCompat.getString(context, R.string.bill_number)
+                val price = ContextCompat.getString(context, R.string.price)
+                val payRamp = ContextCompat.getString(context, R.string.pay_ramp)
+                val timeOfPassage = ContextCompat.getString(context, R.string.time_of_passage)
+
+                val headers = listOf(
+                    billNumber,
+                    timeOfPassage,
+                    payRamp,
+                    price
+                )
 
                 val byteArrayOutputStream = ByteArrayOutputStream()
                 val pdfWriter = PdfWriter(byteArrayOutputStream)

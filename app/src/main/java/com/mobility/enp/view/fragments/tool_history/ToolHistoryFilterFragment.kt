@@ -285,14 +285,14 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
                     if (!csvTable.data.data?.csvContent.isNullOrEmpty()) {
                         val nameExtra = UUID.randomUUID().toString().substring(0, 8)
-                        vModel.processCsvData(csvTable.data, nameExtra)
+                        vModel.processCsvData(csvTable.data, nameExtra,requireContext())
                         when {
                             ContextCompat.checkSelfPermission(
                                 requireContext(), Manifest.permission.POST_NOTIFICATIONS
                             ) == PackageManager.PERMISSION_GRANTED -> {
                                 csvTable.data.data?.csvContent?.let {
                                     vModel.saveBase64ToCSV(
-                                        it, nameExtra
+                                        it, nameExtra,requireContext()
                                     ) // <- converts csv to pdf saves locally and in room byte array
                                 }
                                 vModel.setCsvState()

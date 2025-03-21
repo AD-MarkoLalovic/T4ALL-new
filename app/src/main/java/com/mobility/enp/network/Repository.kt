@@ -23,11 +23,8 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
 import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
-import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -535,28 +532,16 @@ object Repository {
         apiService(token).changeLanguage(language)
     }
 
-    suspend fun getUserLanguage(context: Context): String {  // cyr lat en de tr mk el
-        val database: DRoom = DRoom.getRoomInstance(context)
-        var lang = ""
-
-        val languageTable = withContext(Dispatchers.IO) {
-            database.languageDao().fetchAllowedUsers()
+    fun getUserLanguage(context: Context): String { 
+        val sharedPreferences = context.getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
+        val languageCode = sharedPreferences.getString("user_language", "sr") ?: "sr"
+        return when {
+            languageCode.contains("sr") -> "lat"
+            languageCode.contains("cnr") -> "me"
+            languageCode.contains("el") -> "gr"
+            languageCode.contains("bs") -> "ba"
+            else -> languageCode
         }
-
-        languageTable?.userLanguage?.let { languageCode ->
-            if (languageCode.contains("sr")) {  // difference between country code for strings and parameter for query
-                lang = "lat"
-            } else if (languageCode.contains("cnr")) { // macedonian send me for language key cnr is for local strings
-                lang = "me"
-            } else if (languageCode.contains("el")) { // greek send gr
-                lang = "gr"
-            } else if (languageCode.contains("bs")) { // Bosnia
-                lang = "ba"
-            } else {
-                lang = languageCode
-            }
-        }
-        return lang
     }
 
     private fun <T> getMessageFromErrorBody(response: Response<T>): ErrorBody {
