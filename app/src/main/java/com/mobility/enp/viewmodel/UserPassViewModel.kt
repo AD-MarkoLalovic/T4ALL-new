@@ -10,16 +10,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.os.Build
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,12 +36,6 @@ import com.itextpdf.layout.Document
 import com.itextpdf.layout.element.Cell
 import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.element.Table
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.single.PermissionListener
 import com.mobility.enp.MyApplication
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
@@ -95,6 +88,13 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     private val _baseTagDataState = MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)
     val baseTagDataState: StateFlow<SubmitResult<IndexData>> get() = _baseTagDataState
+
+    private val _csvTable = MutableStateFlow<SubmitResult<CsvModel>>(SubmitResult.Empty)
+    val csvTable: StateFlow<SubmitResult<CsvModel>> get() = _csvTable
+
+    fun setCsvState(){
+        _csvTable.value = SubmitResult.Empty
+    }
 
     private val _complaintObjectionState =
         MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Loading)
@@ -703,9 +703,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     private var _data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
     val data: LiveData<IndexData> get() = _data
 
-    private val _csvData: MutableLiveData<CsvModel> = MutableLiveData()
-    val csvData: LiveData<CsvModel> get() = _csvData
-
     var tagSerials: ArrayList<Tag> = ArrayList()
     var selectedTags: ArrayList<Tag> = ArrayList()
 
@@ -877,68 +874,122 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         return TimeSave(formDate, date)
     }
 
-    suspend fun getCsvData(context: Context) = coroutineScope {
-        if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
+    fun getCsvData(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _csvTable.value = SubmitResult.Loading
+            if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
+                if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
+                    _csvTable.value =
+                        SubmitResult.FailureApiError(
+                            ContextCompat.getString(
+                                context,
+                                R.string.end_date_check
+                            )
+                        )
+                } else {
+                    try {
+                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
-            if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
-                _errorBody.postValue(ErrorBody(200, context.getString(R.string.end_date_check)))
-            } else {
-                try {
-                    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+                        val dateStart = Date(userSelectedCalendarStart ?: 0)
+                        val dateEnd = Date(userSelectedCalendarEnd ?: 0)
 
-                    val dateStart = Date(userSelectedCalendarStart ?: 0)
-                    val dateEnd = Date(userSelectedCalendarEnd ?: 0)
+                        val dateStartApi = sdf.format(dateStart)
+                        val dateEndApi = sdf.format(dateEnd)
 
-                    val dateStartApi = sdf.format(dateStart)
-                    val dateEndApi = sdf.format(dateEnd)
+                        Log.d(TAG, "startDate: $dateStartApi endDate $dateEndApi")
 
-                    Log.d(TAG, "startDate: $dateStartApi endDate $dateEndApi")
+                        if (selectedTags.isNotEmpty() && selectedTags.size == 1 || allTagsSelected) {
 
+                            val tagSerial = if (allTagsSelected) {
+                                ""
+                            } else {
+                                tagSerials[0].serialNumber ?: ""
+                            }
 
-                    if (selectedTags.isNotEmpty() && selectedTags.size == 1 || allTagsSelected) {
-
-                        val tagSerial = if (allTagsSelected) {
-                            ""
-                        } else {
-                            tagSerials[0].serialNumber ?: ""
-                        }
-
-                        Log.d(TAG, "getCsvData: $tagSerial")
-
-                        database.loginDao()?.fetchAllowedUsers()?.accessToken?.let { token ->
-                            Repository.getCsvData(
-                                token,
-                                repository.fetchContext(),
+                            val result = repository.getCsvTableData(
                                 tagSerial,
                                 dateStartApi,
                                 dateEndApi,
-                                selectedCurrency,
-                                _errorBody,
-                                _csvData
+                                selectedCurrency
                             )
+
+                            val body = result.getOrNull()
+                            body?.let { data ->
+
+                                if (result.isSuccess) {
+                                    _csvTable.value = SubmitResult.Success(body)
+                                } else {
+                                    when (val error = result.exceptionOrNull()) {
+                                        is NetworkError.ServerError -> {
+                                            Log.d(TAG, "Error while fetching tag serial data")
+                                            _csvTable.value = SubmitResult.FailureServerError
+                                        }
+
+                                        is NetworkError.NoConnection -> {
+                                            _csvTable.value = SubmitResult.FailureNoConnection
+                                        }
+
+                                        is NetworkError.ApiError -> {
+                                            when (error.errorResponse.code) {
+                                                401, 405 -> {
+                                                    Log.d(
+                                                        TOKEN,
+                                                        "invalid token detected login out user"
+                                                    )
+                                                    _csvTable.value =
+                                                        SubmitResult.InvalidApiToken(
+                                                            error.errorResponse.code ?: 0,
+                                                            error.errorResponse.message ?: ""
+                                                        )
+                                                }
+
+                                                else -> {
+                                                    _csvTable.value =
+                                                        SubmitResult.FailureApiError(
+                                                            error.errorResponse.message ?: ""
+                                                        )
+                                                    Log.d(
+                                                        TAG,
+                                                        "api error ${error.errorResponse.message}"
+                                                    )
+                                                }
+                                            }
+                                        }
+
+                                        else -> {}
+                                    }
+                                }
+                            }
+
+                        } else {
+                            _csvTable.value =
+                                SubmitResult.FailureApiError(
+                                    ContextCompat.getString(
+                                        context,
+                                        R.string.please_select_one_tag
+                                    )
+                                )
                         }
-
-                    } else {
-                        _errorBody.postValue(
-                            ErrorBody(
-                                200, context.getString(R.string.please_select_one_tag)
+                    } catch (e: Exception) {
+                        Log.d(TAG, "getCsvData: ${e.message} ${e.cause}")
+                        _csvTable.value =
+                            SubmitResult.FailureApiError(
+                                ContextCompat.getString(
+                                    context,
+                                    R.string.formatting_error
+                                )
                             )
-                        )
                     }
-
-                } catch (e: Exception) {
-                    Log.d(TAG, "getCsvData: ${e.message} ${e.cause}")
-                    _errorBody.postValue(
-                        ErrorBody(
-                            200, context.getString(R.string.formatting_error)
+                }
+            } else {
+                _csvTable.value =
+                    SubmitResult.FailureApiError(
+                        ContextCompat.getString(
+                            context,
+                            R.string.please_select_dates
                         )
                     )
-                }
-
             }
-
-        } else {
-            _errorBody.postValue(ErrorBody(200, context.getString(R.string.please_select_dates)))
         }
     }
 

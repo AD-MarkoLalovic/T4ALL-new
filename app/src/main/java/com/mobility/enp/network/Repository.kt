@@ -15,13 +15,11 @@ import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
-import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_tags.LostTagResponse
 import com.mobility.enp.data.model.api_tags.PostLostTag
 import com.mobility.enp.data.model.api_tags.TagsResponse
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
-import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
 import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
@@ -510,34 +508,6 @@ object Repository {
     ): Response<Unit> {
         return apiService("").sendCustomerSupport(customerSupport)
     }
-
-    suspend fun getCsvData(
-        token: String?,
-        application: Context,
-        serialNumber: String,
-        dateFrom: String,
-        dateTo: String,
-        currency: String,
-        errorBody: MutableLiveData<ErrorBody>,
-        data: MutableLiveData<CsvModel>
-    ) {
-        try {
-            val lang = getUserLanguage(application)
-
-            val response = apiService(token).getCsvData(
-                serialNumber, lang, dateFrom, dateTo, currency
-            )
-            if (response.isSuccessful) {
-                data.postValue(response.body())
-            } else {
-                errorBody.postValue(getMessageFromErrorBody(response))
-            }
-        } catch (e: HttpException) { // 500 400
-            val errorResponse = e.response()?.errorBody()?.string() ?: "Server Error"
-            errorBody.postValue(ErrorBody(500, errorResponse))
-        }
-    }
-
 
     suspend fun postDeactivateAccount(
         pair: Pair<String, String>,
