@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -102,6 +103,12 @@ class SettingsFragment : Fragment() {
                         putString("user_language", languageSelected)
                         apply()
                     }
+
+                    val langChanged = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                    langChanged.edit {
+                        putBoolean("languageChanged", true)
+                    }
+
                     activity?.recreate()
                     viewModel.sendingLangToServer()
                 } else {

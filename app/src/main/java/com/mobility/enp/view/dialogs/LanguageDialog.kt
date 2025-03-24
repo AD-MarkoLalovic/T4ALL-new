@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -111,11 +110,6 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
                     delay(500L)
                     dismiss()
                     onLanguageSelected(languageCode, true)
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.language_changed),
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
             }
         }

@@ -29,6 +29,7 @@ import com.mobility.enp.viewmodel.LoginViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.core.content.edit
 
 class LoginFragment : Fragment() {
 
@@ -152,6 +153,13 @@ class LoginFragment : Fragment() {
                         putString("user_language", languageSelected)
                         apply()
                     }
+
+                    val langChanged = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                    langChanged.edit {
+                        putBoolean("languageChanged", true)
+                    }
+
+
                     activity?.recreate()
                     /*MainActivity.setLocale(requireContext(), languageSelected)
                     activity?.let { act ->

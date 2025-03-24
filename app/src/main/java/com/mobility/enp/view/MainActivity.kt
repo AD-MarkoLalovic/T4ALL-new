@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
+import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,6 +40,8 @@ class MainActivity : AppCompatActivity() {
         setListeners()
         setObservers()
         setExistingLanguage(this)
+        messageLanguageChanged(this)
+
     }
 
     private fun setObservers() {
@@ -177,6 +181,17 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun messageLanguageChanged(context: Context) {
+        val langChanged = context.getSharedPreferences("app_prefs", MODE_PRIVATE)
+        if (langChanged.getBoolean("languageChanged", false)) {
+            Toast.makeText(
+                context,
+                getString(R.string.language_changed),
+                Toast.LENGTH_SHORT
+            ).show()
+            langChanged.edit { putBoolean("languageChanged", false) }
+        }
+    }
 
     companion object {  // class tied static method
         const val TAG = "FirebaseFcm"
