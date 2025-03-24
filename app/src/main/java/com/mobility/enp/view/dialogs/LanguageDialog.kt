@@ -111,11 +111,6 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
                     delay(500L)
                     dismiss()
                     onLanguageSelected(languageCode, true)
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.language_changed),
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
             }
         }
