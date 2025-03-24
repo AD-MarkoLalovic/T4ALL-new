@@ -9,18 +9,14 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.mobility.enp.R
-import com.mobility.enp.data.model.registration.CountryModel
 import com.mobility.enp.databinding.FragmentTosBinding
 
 class RegistrationFragment : Fragment() {
 
     private var _binding: FragmentTosBinding? = null
     private val binding: FragmentTosBinding get() = _binding!!
-    private var url: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -31,23 +27,18 @@ class RegistrationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Enable JavaScript (if needed)
 
-        val args = RegistrationFragmentArgs.fromBundle(requireArguments())
-        val selectedCountry: CountryModel? = args.countryData
+        val selectedCountry = arguments?.getString("countryData") ?: "RS"
 
-        selectedCountry?.countryCode?.let {
-            if (it.contains(getString(R.string.serbia_country_code))) {
-                url = "https://openbalkan-etc.com/tag-registracija"
-            } else if (it.contains(getString(R.string.macedonia_country_code))) {
-                url = "https://openbalkan-etc.com/mk/tag-registracija"
-            } else {
-                url = "https://toll4all.com/mne/tag-registracija"
-            }
+        val url = when (selectedCountry) {
+            "RS" -> "https://toll4all.com/tag-registracija"
+            "MK" -> "https://toll4all.com/mk/tag-registracija"
+            "ME" -> "https://toll4all.com/mne/tag-registracija"
+            else -> "https://toll4all.com/"
         }
 
         binding.progBar.visibility = View.VISIBLE
-        binding.webView.settings.javaScriptEnabled = true  // required or buttons wont work
+        binding.webView.settings.javaScriptEnabled = url.startsWith("https://toll4all.com/")
 
         binding.webView.settings.setGeolocationEnabled(true)
 
@@ -95,7 +86,7 @@ class RegistrationFragment : Fragment() {
         // Set up WebChromeClient to handle JavaScript alerts, progress, etc.
         binding.webView.webChromeClient = WebChromeClient()
 
-        binding.webView.loadUrl(url!!)
+        binding.webView.loadUrl(url)
     }
 
     inner class WebAppInterface {
