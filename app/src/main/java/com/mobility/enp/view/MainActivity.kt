@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         setListeners()
         setObservers()
         setExistingLanguage(this)
-        languageChanged(this)
+        messageLanguageChanged(this)
 
     }
 
@@ -181,7 +181,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun languageChanged(context: Context) {
+    private fun messageLanguageChanged(context: Context) {
         val langChanged = context.getSharedPreferences("app_prefs", MODE_PRIVATE)
         if (langChanged.getBoolean("languageChanged", false)) {
             Toast.makeText(
