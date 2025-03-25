@@ -1,6 +1,7 @@
 package com.mobility.enp.view.fragments.my_profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -209,12 +210,17 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     }
 
     override fun onStartSpinner() {
-        binding.invoicesLoadingView.visibility = View.VISIBLE
+        _binding?.let {
+            it.invoicesLoadingView.visibility = View.VISIBLE
+        }
     }
 
     override fun onStopSpinner() {
-        binding.invoicesLoadingView.visibility = View.GONE
+        _binding?.let {
+            it.invoicesLoadingView.visibility = View.GONE
+        }
     }
+
 
     override fun pagingUpdate(nextPage: Int, data: MutableLiveData<MyInvoicesResponse>) {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
