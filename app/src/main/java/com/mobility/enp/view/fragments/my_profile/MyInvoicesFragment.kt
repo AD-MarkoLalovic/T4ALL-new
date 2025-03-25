@@ -1,7 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
