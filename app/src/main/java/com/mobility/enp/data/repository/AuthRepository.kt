@@ -149,7 +149,7 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
     /**
      * Registration
      */
-    fun getCountries(): List<RegistrationCountry> {
+    fun getCountries(context: Context): List<RegistrationCountry> {
         return listOf(
             RegistrationCountry(
                 context.getString(R.string.serbia_country_code),

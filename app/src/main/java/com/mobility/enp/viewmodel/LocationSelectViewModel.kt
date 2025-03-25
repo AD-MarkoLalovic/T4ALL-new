@@ -1,5 +1,6 @@
 package com.mobility.enp.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -11,8 +12,8 @@ import com.mobility.enp.data.repository.AuthRepository
 
 class LocationSelectViewModel(private val repository: AuthRepository): ViewModel() {
 
-    fun fetchCountries(): List<RegistrationCountry> {
-        return repository.getCountries()
+    fun fetchCountries(context: Context): List<RegistrationCountry> {
+        return repository.getCountries(context)
     }
 
     companion object {
