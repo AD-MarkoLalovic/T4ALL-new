@@ -5,7 +5,6 @@ import android.util.Log
 import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_room_models.UserLanguage
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
