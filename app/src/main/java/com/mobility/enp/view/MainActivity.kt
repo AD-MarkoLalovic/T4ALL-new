@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                 android.R.color.white
             )
         )
-//        binding.toolbarShared.root.visibility = View.GONE
+        binding.toolbarShared.root.visibility = View.GONE
     }
 
     fun hideLogo(hideLogo: Boolean) {

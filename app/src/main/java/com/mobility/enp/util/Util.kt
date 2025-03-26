@@ -66,7 +66,9 @@ object Util {
             R.drawable.loop_telekom,
             R.drawable.ic_camera_telekom,
             R.drawable.ic_language_home_screen_telekom,
-            R.drawable.calendar_today_telekom
+            R.drawable.calendar_today_telekom,
+            R.drawable.plus_ic_telekom,
+            R.drawable.ic_close_telekom,
         )
 
         map["a2ac8612-4b25-43e3-8017-fcf8ad0da0c4"] = FranchiseModel(
@@ -86,7 +88,9 @@ object Util {
             R.drawable.loop_s_blue,
             R.drawable.ic_camera_s_blue,
             R.drawable.ic_language_home_screen_s_blue,
-            R.drawable.calendar_today_s_blue
+            R.drawable.calendar_today_s_blue,
+            R.drawable.plus_ic_s_blue,
+            R.drawable.ic_close_s_blue
         )
 
         map["9aa3e972-d84b-40df-b35d-d14a229c03e3"] = FranchiseModel(
@@ -106,7 +110,9 @@ object Util {
             R.drawable.loop_amss,
             R.drawable.ic_camera_amss,
             R.drawable.ic_language_home_screen_amss,
-            R.drawable.calendar_today_amss
+            R.drawable.calendar_today_amss,
+            R.drawable.plus_ic_amss,
+            R.drawable.ic_close_amss
         )
 
         map["d47b35d1-bb44-4618-9b31-cf7e961595ec"] = FranchiseModel(
@@ -126,7 +132,54 @@ object Util {
             R.drawable.loop_tehnomania,
             R.drawable.ic_camera_tehnomania,
             R.drawable.ic_language_home_screen_tehnomania,
-            R.drawable.calendar_today_tehnomania
+            R.drawable.calendar_today_tehnomania,
+            R.drawable.plus_ic_tehnomania,
+            R.drawable.ic_close_tehnomania
+        )
+
+        map["96371708-44d7-4438-b4f1-79f42bbac918"] = FranchiseModel(
+            "96371708-44d7-4438-b4f1-79f42bbac918",
+            "Tehno-coop portal",
+            context.resources.getColor(R.color.franchiser_tehnocoop, null),
+            ContextCompat.getDrawable(context, R.drawable.technocoop_home),
+            R.drawable.technocoop_profile,
+            ContextCompat.getDrawable(context, R.drawable.technocoop_logo), true,
+            ContextCompat.getColorStateList(context, R.color.bottom_nav_color_tehnocoop),
+            R.drawable.promotion_dot_technocoop,
+            context.resources.getColor(R.color.franchiser_technocoop_half_visibility, null),
+            R.drawable.toolbar_shared_back_tehnocoop,
+            R.drawable.ic_arrow_down_tehnocoop,
+            R.drawable.ic_arrow_up_tehnocoop,
+            R.drawable.arrow_right_tehnocoop,
+            R.drawable.loop_tehnocoop,
+            R.drawable.ic_camera_tehnocoop,
+            R.drawable.ic_language_home_screen_tehnocoop,
+            R.drawable.calendar_today_tehnocoop,
+            R.drawable.plus_ic_tehnocoop,
+            R.drawable.ic_close_tehnocoop
+        )
+
+
+        map["2263768e-e3a5-48f8-8e7a-545f6c141318"] = FranchiseModel(
+            "2263768e-e3a5-48f8-8e7a-545f6c141318",
+            "Enput",
+            context.resources.getColor(R.color.franchiser_enput, null),
+            ContextCompat.getDrawable(context, R.drawable.enput_home),
+            R.drawable.enput_profile,
+            ContextCompat.getDrawable(context, R.drawable.enput_logo), true,
+            ContextCompat.getColorStateList(context, R.color.franchiser_enput),
+            R.drawable.enput_promotion_dot,
+            context.resources.getColor(R.color.franchiser_enput_half_color, null),
+            R.drawable.toolbar_shared_back_enput,
+            R.drawable.ic_arrow_down_enput,
+            R.drawable.ic_arrow_up_enput,
+            R.drawable.arrow_right_enput,
+            R.drawable.loop_enput,
+            R.drawable.ic_camera_enput,
+            R.drawable.ic_language_home_screen_enput,
+            R.drawable.calendar_today_enput,
+            R.drawable.plus_ic_enput,
+            R.drawable.ic_close_enput
         )
 
 

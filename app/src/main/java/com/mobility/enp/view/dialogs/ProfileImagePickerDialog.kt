@@ -6,10 +6,8 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.MediaStore
@@ -21,13 +19,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.mobility.enp.databinding.DialogChangeProfilePictureBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
-import kotlin.getValue
 
-class ProfileImagePickerDialog(private val imageSelectionListener: ImagePickDialogListener,val imageExists:Boolean) : DialogFragment() {
+class ProfileImagePickerDialog(
+    private val imageSelectionListener: ImagePickDialogListener,
+    val imageExists: Boolean
+) : DialogFragment() {
 
     private var _binding: DialogChangeProfilePictureBinding? = null
     private val binding: DialogChangeProfilePictureBinding get() = _binding!!
@@ -93,9 +92,9 @@ class ProfileImagePickerDialog(private val imageSelectionListener: ImagePickDial
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (imageExists){
+        if (imageExists) {
             binding.bttDelete.visibility = View.VISIBLE
-        }else{
+        } else {
             binding.bttDelete.visibility = View.GONE
         }
 
@@ -117,10 +116,14 @@ class ProfileImagePickerDialog(private val imageSelectionListener: ImagePickDial
         }
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
-            franchiseModel?.franchisePrimaryColor?.let { color ->
-                binding.bttFromGallery.backgroundTintList = ColorStateList.valueOf(color)
-                binding.bttFromCamera.setImageResource(franchiseModel.cameraResource)
+            franchiseModel?.let { model ->
+                model.franchisePrimaryColor.let { color ->
+                    binding.bttFromGallery.backgroundTintList = ColorStateList.valueOf(color)
+                    binding.bttFromCamera.setImageResource(franchiseModel.cameraResource)
+                }
+                binding.changeProfilePictureDialogClose.setImageResource(model.franchiseCloseButton)
             }
+
         }
     }
 
