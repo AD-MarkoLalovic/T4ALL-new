@@ -37,7 +37,7 @@ class LocationSelectFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val countries = viewModel.fetchCountries()
+        val countries = viewModel.fetchCountries(requireContext())
         adapter = SelectCountryAdapter(countries) { country ->
             selectedCountry = country
         }
