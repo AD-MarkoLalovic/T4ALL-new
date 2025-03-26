@@ -1,6 +1,5 @@
 package com.mobility.enp.view.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -21,6 +20,7 @@ import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.databinding.FragmentLoginBinding
 import com.mobility.enp.network.Repository
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
@@ -29,7 +29,6 @@ import com.mobility.enp.viewmodel.LoginViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import androidx.core.content.edit
 
 class LoginFragment : Fragment() {
 
@@ -148,23 +147,10 @@ class LoginFragment : Fragment() {
         binding.languagePicker.setOnClickListener {
             val languageDialog = LanguageDialog { languageSelected, canSwitchLanguage ->
                 if (canSwitchLanguage) {
-                    val shared = requireContext().getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
-                    with(shared.edit()) {
-                        putString("user_language", languageSelected)
-                        apply()
-                    }
-
-                    val langChanged = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                    langChanged.edit {
-                        putBoolean("languageChanged", true)
-                    }
-
+                    SharedPreferencesHelper.setLanguageChanged(requireContext(), true)
+                    SharedPreferencesHelper.setUserLanguage(requireContext(), languageSelected)
 
                     activity?.recreate()
-                    /*MainActivity.setLocale(requireContext(), languageSelected)
-                    activity?.let { act ->
-                        act.recreate()
-                    }*/
                 } else {
                     Log.d(
                         TAG,

@@ -25,21 +25,6 @@ import kotlinx.coroutines.withContext
 
 class AuthRepository(database: DRoom, context: Context) : BaseRepository(database, context) {
 
-    /**
-     * Language picker
-     */
-    suspend fun getAllowedUserLanguage(): UserLanguage? {
-        return database.languageDao().fetchAllowedUsers()
-    }
-
-    suspend fun clearLanguages() {
-        database.languageDao().deleteAll()
-    }
-
-    suspend fun saveLanguage(language: UserLanguage) {
-        database.languageDao().insertLanguage(language)
-    }
-
     suspend fun getLastUser(): LastUser? {
         return withContext(Dispatchers.IO) {
             database.lastUserDao().getLastUser()

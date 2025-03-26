@@ -14,7 +14,6 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.fragment.app.activityViewModels
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -22,8 +21,8 @@ import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.databinding.DialogObjectionFormBinding
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.setDimensionsPercent
-import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.launch
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import java.text.SimpleDateFormat
@@ -35,7 +34,6 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
 
     private var _binding: DialogObjectionFormBinding? = null
     private val binding: DialogObjectionFormBinding get() = _binding!!
-    private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
 
     private val id: Int = objection
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
@@ -124,7 +122,7 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
 
     private fun showDatePicker() {
         viewLifecycleOwner.lifecycleScope.launch {
-            val locale = when (val lang = vModel.getLanguage()) {
+            val locale = when (val lang = SharedPreferencesHelper.getUserLanguage(requireContext())) {
                 "cyr" -> Locale("sr", "RS")
                 "sr", "cnr" -> Locale("sr_Latn", "RS", "Latn")
                 else -> Locale(lang)

@@ -1,7 +1,6 @@
 package com.mobility.enp.view.fragments.intro
 
 import android.animation.ValueAnimator
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentIntroScreenAdvantageBinding
+import com.mobility.enp.util.SharedPreferencesHelper
 
 class IntroScreenAdvantages : Fragment() {
 
@@ -38,17 +38,8 @@ class IntroScreenAdvantages : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val isFirstLaunch =
-            requireContext().getSharedPreferences("FirstLaunch", Context.MODE_PRIVATE)
-        with(isFirstLaunch.edit()) {
-            putBoolean("isFirstLaunch", false)
-            apply()
-        }
-
-        val sharedPreferences =
-            requireContext().getSharedPreferences("IntroLanguage", Context.MODE_PRIVATE)
-        val savedLanguage =
-            sharedPreferences.getString("selected_Language", "sr")
+        SharedPreferencesHelper.setFirstLaunch(requireContext(), false)
+        val savedLanguage = SharedPreferencesHelper.getSaveIntroSelectedLanguage(requireContext())
 
         when (savedLanguage) {
             "cyr" -> {
@@ -102,18 +93,9 @@ class IntroScreenAdvantages : Fragment() {
     }
 
     private fun setLanguage(languageCode: String) {
-        val sharedPreferences =
-            requireContext().getSharedPreferences("IntroLanguage", Context.MODE_PRIVATE)
-        with(sharedPreferences.edit()) {
-            putString("selected_Language", languageCode)
-            apply()
-        }
+        SharedPreferencesHelper.setSaveIntroSelectedLanguage(requireContext(), languageCode)
+        SharedPreferencesHelper.setUserLanguage(requireContext(), languageCode)
 
-        val shared = requireContext().getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
-        with(shared.edit()) {
-            putString("user_language", languageCode)
-            apply()
-        }
         activity?.recreate()
     }
 
@@ -158,6 +140,5 @@ class IntroScreenAdvantages : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 
 }

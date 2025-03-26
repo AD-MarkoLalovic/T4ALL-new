@@ -8,6 +8,7 @@ import com.mobility.enp.data.model.ApiErrorResponse
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.network.ApiService
 import com.mobility.enp.network.RestClient
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers
@@ -30,8 +31,7 @@ abstract class BaseRepository(
     }
 
     protected fun getLangKey(): String {
-        val sharedPreferences = context.getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
-        val languageCode = sharedPreferences.getString("user_language", "sr") ?: "sr"
+        val languageCode = SharedPreferencesHelper.getUserLanguage(context)
         return when {
             languageCode.contains("sr") -> "lat"
             languageCode.contains("cnr") -> "me"
@@ -39,12 +39,6 @@ abstract class BaseRepository(
             languageCode.contains("bs") -> "ba"
             else -> languageCode
         }
-    }
-
-    protected fun getApplicationLanguage(): String? { // for string resources do not modify codes
-        val sharedPreferences = context.getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
-        val languageCode = sharedPreferences.getString("user_language", "sr") ?: "sr"
-        return languageCode
     }
 
     protected fun isNetworkAvailable(): Boolean {
