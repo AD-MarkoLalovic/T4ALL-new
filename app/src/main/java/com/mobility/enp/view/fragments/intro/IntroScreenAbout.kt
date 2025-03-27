@@ -2,7 +2,6 @@ package com.mobility.enp.view.fragments.intro
 
 import android.Manifest
 import android.animation.ValueAnimator
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,10 +20,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentIntroScreenAboutBinding
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.view.dialogs.NotificationsRequestDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
 class IntroScreenAbout : Fragment() {
 
@@ -58,10 +57,7 @@ class IntroScreenAbout : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sharedPreferences =
-            requireContext().getSharedPreferences("IntroLanguage", Context.MODE_PRIVATE)
-        val savedLanguage =
-            sharedPreferences.getString("selected_Language", "sr")
+        val savedLanguage = SharedPreferencesHelper.getSaveIntroSelectedLanguage(requireContext())
 
         when (savedLanguage) {
             "cyr" -> {
@@ -111,7 +107,7 @@ class IntroScreenAbout : Fragment() {
         binding.buttonNext?.setOnClickListener {
             findNavController().navigate(R.id.action_introScreenAbout_to_introScreenRegions)
         }
-        if (!franchiseViewModel.getDialogStatus()){
+        if (!franchiseViewModel.getDialogStatus()) {
             franchiseViewModel.setDialogStatus(true)
             permissionCheck()
         }
@@ -128,18 +124,9 @@ class IntroScreenAbout : Fragment() {
     }
 
     private fun setLanguage(languageCode: String) {
-        val sharedPreferences =
-            requireContext().getSharedPreferences("IntroLanguage", Context.MODE_PRIVATE)
-        with(sharedPreferences.edit()) {
-            putString("selected_Language", languageCode)
-            apply()
-        }
+        SharedPreferencesHelper.setSaveIntroSelectedLanguage(requireContext(), languageCode)
+        SharedPreferencesHelper.setUserLanguage(requireContext(), languageCode)
 
-        val shared = requireContext().getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
-        with(shared.edit()) {
-            putString("user_language", languageCode)
-            apply()
-        }
         activity?.recreate()
     }
 

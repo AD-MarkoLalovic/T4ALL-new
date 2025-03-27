@@ -14,7 +14,6 @@ import com.mobility.enp.data.model.api_my_profile.basic_information.entity.Basic
 import com.mobility.enp.data.model.api_my_profile.refund_request.entity.DataRefundRequestEntity
 import com.mobility.enp.data.model.api_my_profile.refund_request.tags.entity.TagsRefundRequestEntity
 import com.mobility.enp.data.model.api_room_models.FcmToken
-import com.mobility.enp.data.model.api_room_models.UserLanguage
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
@@ -33,7 +32,6 @@ import com.mobility.enp.data.room.LastUser
 import com.mobility.enp.data.room.LastUserDao
 import com.mobility.enp.data.room.LoginDao
 import com.mobility.enp.data.room.PdfDao
-import com.mobility.enp.data.room.UserLanguageDao
 import com.mobility.enp.data.room.api_related_daos.BankDao
 import com.mobility.enp.data.room.api_related_daos.BasicInfoDao
 import com.mobility.enp.data.room.api_related_daos.FcmTokenDao
@@ -49,10 +47,10 @@ import com.mobility.enp.data.room.api_related_daos.TagsRefundRequestDao
 import com.mobility.enp.data.room.notification.NotificationDao
 
 @Database(
-    entities = [UserLoginResponseRoomTable::class, FcmToken::class, UserLanguage::class, NotificationModel::class, IndexData::class, ToolHistoryListing::class,
+    entities = [UserLoginResponseRoomTable::class, FcmToken::class, NotificationModel::class, IndexData::class, ToolHistoryListing::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class, HomeEntity::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class, HomeCardsEntity::class, AddedCardsEntity::class],
-    version = 197,
+    version = 198,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -60,7 +58,6 @@ abstract class DRoom : RoomDatabase() {
 
     abstract fun loginDao(): LoginDao // modified for api response
     abstract fun pdfDao(): PdfDao
-    abstract fun languageDao(): UserLanguageDao
     abstract fun fcmToken(): FcmTokenDao
     abstract fun toolHistoryDao(): HistoryIndexDao
     abstract fun toolListingDao(): HistoryListingDao
@@ -91,16 +88,6 @@ abstract class DRoom : RoomDatabase() {
             }
             return instance!!
         }
-
-        /*private fun prepopulateDatabase(db: DRoom) {
-            CoroutineScope(Dispatchers.IO).launch {
-
-                val getInvoicesTable = instance?.languageDao()?.getTableSize()
-                if (getInvoicesTable == 0) {
-                    db.languageDao().insert(UserLanguage("sr_Latn"))
-                }
-            }
-        }*/
 
         fun buildDatabase(context: Context): DRoom {  // its a singleton
             if (instance == null) {

@@ -18,12 +18,12 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.databinding.ActivityMainBinding
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
-import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
@@ -160,10 +160,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setExistingLanguage(context: Context) {
-        val sharedPreferences = context.getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
-        val userLanguage = sharedPreferences.getString("user_language", "sr") ?: "sr"
-
-        val lang = when (userLanguage) {
+        val lang = when (val userLanguage = SharedPreferencesHelper.getUserLanguage(context)) {
             "cyr" -> Locale("sr_Cyrl", "RS")
             "sr", "cnr" -> Locale("sr", "RS")
             else -> Locale(userLanguage)
@@ -182,37 +179,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun messageLanguageChanged(context: Context) {
-        val langChanged = context.getSharedPreferences("app_prefs", MODE_PRIVATE)
-        if (langChanged.getBoolean("languageChanged", false)) {
+        if (SharedPreferencesHelper.getLanguageChanged(context)) {
             Toast.makeText(
                 context,
                 getString(R.string.language_changed),
                 Toast.LENGTH_SHORT
             ).show()
-            langChanged.edit { putBoolean("languageChanged", false) }
+            SharedPreferencesHelper.setLanguageChanged(context, false)
         }
     }
 
     companion object {  // class tied static method
         const val TAG = "FirebaseFcm"
-        const val defCountryCode = "sr"
-
-        fun setLocale(context: Context, languageKey: String) {
-
-            val locale: Locale
-
-            if (languageKey.isNotEmpty()) {
-                locale = Locale(languageKey)
-            } else {
-                locale = Locale(defCountryCode)
-            }
-
-            val configuration = Configuration(context.resources.configuration)
-            configuration.setLocale(locale)
-
-            context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
-
-        }
 
         fun logoutOnInvalidToken(context: Context, navController: NavController) {
             CoroutineScope(Dispatchers.IO).launch {

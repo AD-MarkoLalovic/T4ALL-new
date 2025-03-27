@@ -1,7 +1,6 @@
 package com.mobility.enp.view.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.mobility.enp.Config
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentSplashScreenBinding
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.viewmodel.SplashAndIntroScreensViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 class SplashScreenFragment : Fragment() {
 
     private lateinit var binding: FragmentSplashScreenBinding
-    private val viewModel: SplashAndIntroScreensViewModel by viewModels { SplashAndIntroScreensViewModel.factory  }
+    private val viewModel: SplashAndIntroScreensViewModel by viewModels { SplashAndIntroScreensViewModel.factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,11 +43,7 @@ class SplashScreenFragment : Fragment() {
     }
 
     private fun setNavigation(token: String?) {
-        val sharedPreferences =
-            requireContext().getSharedPreferences("FirstLaunch", Context.MODE_PRIVATE)
-        val isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true)
-
-        if (isFirstLaunch) {
+        if (SharedPreferencesHelper.isFirstLaunch(requireContext())) {
             findNavController().navigate(R.id.action_splashScreenFragment_to_introScreenAbout)
         } else {
             if (token != null) {

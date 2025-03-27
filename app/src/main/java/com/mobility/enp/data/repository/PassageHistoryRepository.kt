@@ -303,10 +303,4 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         }
     }
 
-    suspend fun getUserLanguage(): String {
-        val languageTable = database.languageDao().fetchAllowedUsers()
-        return languageTable?.userLanguage ?: "en"
-
-    }
-
 }

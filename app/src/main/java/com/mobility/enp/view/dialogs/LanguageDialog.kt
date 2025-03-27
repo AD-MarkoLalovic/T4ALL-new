@@ -1,35 +1,30 @@
 package com.mobility.enp.view.dialogs
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.mobility.enp.R
 import com.mobility.enp.databinding.LanguageDialogLayoutBinding
 import com.mobility.enp.viewmodel.FranchiseViewModel
-import com.mobility.enp.viewmodel.LanguageViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.core.graphics.drawable.toDrawable
+import com.mobility.enp.util.SharedPreferencesHelper
 
 class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) : DialogFragment() {
 
     private var _binding: LanguageDialogLayoutBinding? = null
     private val binding: LanguageDialogLayoutBinding get() = _binding!!
-    private val viewModel: LanguageViewModel by viewModels { LanguageViewModel.Factory }
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
-    private var previousLanguageCode: String? = null
+    private lateinit var previousLanguageCode: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,9 +39,10 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        previousLanguageCode = SharedPreferencesHelper.getUserLanguage(requireContext())
+
+        updateSelectedLanguage(previousLanguageCode)
         setFranchise()
-        observeViewModel()
-        viewModel.fetchAllowedLanguages()
 
         binding.buttonCloseDialog.setOnClickListener { dismiss() }
 
@@ -64,7 +60,16 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
                 R.id.languageGreek -> "el"
                 else -> null
             }
-            languageCode?.let { viewModel.saveLanguage(it) }
+
+            languageCode?.let {
+                previousLanguageCode = it
+
+                lifecycleScope.launch {
+                    delay(500L)
+                    onLanguageSelected(it, true)
+                    dismiss()
+                }
+            }
         }
     }
 
@@ -84,39 +89,7 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
         }
     }
 
-    private fun observeViewModel() {
-        viewModel.languages.observe(viewLifecycleOwner) { userLanguage ->
-            Log.d("MARKO", "observeViewModel: $userLanguage ")
-            userLanguage?.let {
-                Log.d("MARKO 1", "observeViewModel: $userLanguage ")
-                previousLanguageCode = it.userLanguage // Inicijalizujemo prethodni jezik
-                updateSelectedLanguage(it.userLanguage)
-            } ?: run {
-
-                val shredPref = requireContext().getSharedPreferences("IntroLanguage", Context.MODE_PRIVATE)
-                val langPick = shredPref.getString("selected_Language", "sr")
-                Log.d("MARKO 2", "observeViewModel: $langPick ")
-                previousLanguageCode = langPick
-                updateSelectedLanguage(langPick)
-            }
-
-        }
-
-
-        viewModel.selectedLanguage.observe(viewLifecycleOwner) { languageCode ->
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                if (languageCode != null && languageCode != previousLanguageCode) {
-                    previousLanguageCode = languageCode
-                    delay(500L)
-                    dismiss()
-                    onLanguageSelected(languageCode, true)
-                }
-            }
-        }
-
-    }
-
-    private fun updateSelectedLanguage(languageCode: String?) {
+    private fun updateSelectedLanguage(languageCode: String) {
         when (languageCode) {
             "cyr" -> binding.languageSerbian.isChecked = true
             "sr" -> binding.languageSerbianLatin.isChecked = true

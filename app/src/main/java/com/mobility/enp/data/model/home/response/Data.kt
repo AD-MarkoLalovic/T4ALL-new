@@ -63,7 +63,7 @@ data class Data(
                     invoiceId = invoiceId,
                     total = totalCurrency.total,
                     isPaid = totalCurrency.isPaid,
-                    currencyValue = totalCurrency.currency.value
+                    currencyValue = totalCurrency.currency.label
                 )
             } ?: emptyList()
         } ?: emptyList()

@@ -54,6 +54,7 @@ import com.mobility.enp.network.Repository
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.CHANNEL_ID
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.NOTIFICATION_ID
 import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.CsvActivity
 import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingAdapter
@@ -99,14 +100,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     private val _complaintObjectionState =
         MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Loading)
     val complaintObjectionState: StateFlow<SubmitResult<LostTagResponse>> get() = _complaintObjectionState
-
-
-    suspend fun getLanguage(): String {
-        return withContext(Dispatchers.IO) {
-            repository.getUserLanguage()
-        }
-    }
-
 
     fun setStateIndex(indexData: IndexData) { // from room
         _baseTagDataState.value = SubmitResult.Success(indexData)
@@ -838,7 +831,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
             Log.d(TAG, "showDatePicker: ${convertLongToDateString(selectedDate)}")
 
-            val locale = when (val lang = getLanguage()) {
+            val locale = when (val lang = SharedPreferencesHelper.getUserLanguage(context)) {
                 "cyr" -> Locale("sr", "RS")
                 "sr", "cnr" -> Locale("sr_Latn", "RS", "Latn")
                 else -> Locale(lang)

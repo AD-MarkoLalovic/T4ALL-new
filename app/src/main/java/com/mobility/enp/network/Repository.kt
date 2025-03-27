@@ -23,6 +23,7 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
 import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
 import org.json.JSONObject
@@ -533,8 +534,8 @@ object Repository {
     }
 
     fun getUserLanguage(context: Context): String { 
-        val sharedPreferences = context.getSharedPreferences("AppLanguage", Context.MODE_PRIVATE)
-        val languageCode = sharedPreferences.getString("user_language", "sr") ?: "sr"
+
+        val languageCode = SharedPreferencesHelper.getUserLanguage(context)
         return when {
             languageCode.contains("sr") -> "lat"
             languageCode.contains("cnr") -> "me"
