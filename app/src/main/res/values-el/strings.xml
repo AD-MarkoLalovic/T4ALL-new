@@ -221,7 +221,7 @@
     <string name="no_connection_title">Πρόβλημα σύνδεσης</string>
     <string name="checking_for_connection">Έλεγχος σύνδεσης</string>
     <string name="connection_restored">Η σύνδεση αποκαταστάθηκε</string>
-    <string name="no_internet">Δεν έχετε σύνδεση στο διαδίκτυο.</string>
+    <string name="no_internet">Δεν υπάρχει σύνδεση στο διαδίκτυο.</string>
     <string name="offline_using_stored_data">Δεν είστε συνδεδεμένοι στο διαδίκτυο. Προβάλλονται αποθηκευμένα δεδομένα.</string>
     <string name="multiple_payment_cards_for_country">Μπορείτε να χρησιμοποιήσετε πολλές διαφορετικές κάρτες πληρωμής για μία χώρα.</string>
     <string name="tag_device_payment_method_north_macedonia">Εάν θέλετε να χρησιμοποιήσετε τη συσκευή TAG στους δρόμους της Βόρειας Μακεδονίας, παρακαλούμε να προσθέσετε μια έγκυρη κάρτα πληρωμής.</string>

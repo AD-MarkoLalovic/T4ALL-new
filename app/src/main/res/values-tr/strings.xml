@@ -231,7 +231,7 @@
     <string name="no_connection_title">Bağlantı Sorunu</string>
     <string name="checking_for_connection">Bağlantı Kontrolü</string>
     <string name="connection_restored">Bağlantı Yeniden Kuruldu</string>
-    <string name="no_internet">Немате интернет.</string>
+    <string name="no_internet">İnternet bağlantısı yok.</string>
     <string name="offline_using_stored_data">Şu anda internete bağlı değilsiniz. Saklanmış veriler görüntüleniyor.</string>
     <string name="multiple_payment_cards_for_country">Bir ülke için birden fazla farklı ödeme kartı kullanabilirsiniz.</string>
     <string name="tag_device_payment_method_north_macedonia">TAG cihazınızı Kuzey Makedonya\'daki yollarda kullanmak istiyorsanız, lütfen geçerli bir ödeme kartı ekleyin.</string>

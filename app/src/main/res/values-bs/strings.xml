@@ -221,7 +221,7 @@
     <string name="no_connection_title">Problem s vezom</string>
     <string name="checking_for_connection">Provjeravanje veze</string>
     <string name="connection_restored">Veza je obnovljena</string>
-    <string name="no_internet">Nemate internet.</string>
+    <string name="no_internet">Nema internet konekcije.</string>
     <string name="offline_using_stored_data">Trenutno niste povezani na internet. Prikazuju se sačuvani podaci.</string>
     <string name="multiple_payment_cards_for_country">Možete koristiti više različitih platnih kartica za jednu državu.</string>
     <string name="tag_device_payment_method_north_macedonia">Ukoliko želite da Vaš TAG uređaj koristite na cestama u Sjevernoj Makedoniji, molimo vas da dodate važeću platnu karticu</string>
