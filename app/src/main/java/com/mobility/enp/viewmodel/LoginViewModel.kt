@@ -25,6 +25,7 @@ import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TOKEN
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
@@ -32,22 +33,15 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
     private val _userLogin = MutableStateFlow<SubmitResult<UserResponse>>(SubmitResult.Empty)
     val userLogin: StateFlow<SubmitResult<UserResponse>> get() = _userLogin
 
-    private val _fcmResponse = MutableStateFlow<SubmitResult<HomePageFcmTokenResponse>>(SubmitResult.Empty)
-    val fcmToken : StateFlow<SubmitResult<HomePageFcmTokenResponse>> get() = _fcmResponse
+    private val _fcmResponse =
+        MutableStateFlow<SubmitResult<HomePageFcmTokenResponse>>(SubmitResult.Empty)
+    val fcmToken: StateFlow<SubmitResult<HomePageFcmTokenResponse>> get() = _fcmResponse
+
+    private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
+    val loginState: StateFlow<LoginState> get() = _loginState.asStateFlow()
 
     private val _lastUserEmail: MutableLiveData<LastUser> = MutableLiveData()
     val lastUserEmail: LiveData<LastUser> get() = _lastUserEmail
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val myRepository = (this[APPLICATION_KEY] as MyApplication).repositoryAuth
-                LoginViewModel(
-                    repository = myRepository
-                )
-            }
-        }
-    }
 
     fun getLastUser() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -58,64 +52,97 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
         }
     }
 
-    fun loginUser(
-        loginBody: LoginBody,
-    ) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _userLogin.value = SubmitResult.Loading
-            val result = repository.loginUser(loginBody)
-            if (result.isSuccess) {
-                val data = result.getOrNull()
-                if (data == null) {
-                    _userLogin.value = SubmitResult.Empty
-                } else {
-                    _userLogin.value = SubmitResult.Success(data)
+    fun loginUser(user: LoginBody, context: Context) {
+        viewModelScope.launch {
+            _loginState.value = LoginState.Loading
+
+            val result = repository.loginUser(user)
+
+            result.fold(
+                onSuccess = { response ->
+                    insertLoginToken(
+                        UserLoginResponseRoomTable(
+                            null,
+                            response.data?.accessToken,
+                            response.data?.tokenType,
+                            user.email, user.password, response.data?.portal_key
+                        )
+                    )
+                    storeLastUserEmail(user.email!!)
+                    sendLanguage(context)
+
+                    _loginState.value = LoginState.Success(response)
+                },
+                onFailure = { error ->
+                    _loginState.value = LoginState.Failure(error)
                 }
-            } else {
-                when (val error = result.exceptionOrNull()) {
-                    is NetworkError.ServerError -> {
-                        Log.d(TAG, "Error while fetching tag serial data")
-                        _userLogin.value = SubmitResult.FailureServerError
-                    }
-
-                    is NetworkError.NoConnection -> {
-                        _userLogin.value = SubmitResult.FailureNoConnection
-                    }
-
-                    is NetworkError.ApiError -> {
-                        when (error.errorResponse.code) {
-                            401, 405 -> {
-                                Log.d(TOKEN, "invalid token detected login out user")
-                                _userLogin.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code ?: 0,
-                                        error.errorResponse.message ?: ""
-                                    )
-                            }
-
-                            else -> {
-                                _userLogin.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
-                                Log.d(TAG, "api error ${error.errorResponse.message}")
-                            }
-                        }
-                    }
-
-                    else -> {}
-                }
-            }
+            )
         }
     }
 
-    suspend fun insertLoginToken(
+    fun setIdleState() {
+        _loginState.value = LoginState.Idle
+    }
+
+
+    /*   fun loginUser(
+           loginBody: LoginBody,
+       ) {
+           viewModelScope.launch(Dispatchers.IO) {
+               _userLogin.value = SubmitResult.Loading
+               val result = repository.loginUser(loginBody)
+               if (result.isSuccess) {
+                   val data = result.getOrNull()
+                   if (data == null) {
+                       _userLogin.value = SubmitResult.Empty
+                   } else {
+                       _userLogin.value = SubmitResult.Success(data)
+                   }
+               } else {
+                   when (val error = result.exceptionOrNull()) {
+                       is NetworkError.ServerError -> {
+                           Log.d(TAG, "Error while fetching tag serial data")
+                           _userLogin.value = SubmitResult.FailureServerError
+                       }
+
+                       is NetworkError.NoConnection -> {
+                           _userLogin.value = SubmitResult.FailureNoConnection
+                       }
+
+                       is NetworkError.ApiError -> {
+                           when (error.errorResponse.code) {
+                               401, 405 -> {
+                                   Log.d(TOKEN, "invalid token detected login out user")
+                                   _userLogin.value =
+                                       SubmitResult.InvalidApiToken(
+                                           error.errorResponse.code ?: 0,
+                                           error.errorResponse.message ?: ""
+                                       )
+                               }
+
+                               else -> {
+                                   _userLogin.value =
+                                       SubmitResult.FailureApiError(
+                                           error.errorResponse.message ?: ""
+                                       )
+                                   Log.d(TAG, "api error ${error.errorResponse.message}")
+                               }
+                           }
+                       }
+
+                       else -> {}
+                   }
+               }
+           }
+       }*/
+
+    private suspend fun insertLoginToken(
         userLoginResponseRoomTable: UserLoginResponseRoomTable,
     ) {
         repository.insertLoginToken(userLoginResponseRoomTable)
         repository.getUserFcmData().let { pair ->
             _fcmResponse.value = SubmitResult.Loading
-           val result = repository.postFcmToken(pair.second, pair.first)
+            val result = repository.postFcmToken(pair.second, pair.first)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -123,7 +150,7 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
                 } else {
                     _fcmResponse.value = SubmitResult.Success(data)
                 }
-            }else {
+            } else {
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(TAG, "Error while fetching tag serial data")
@@ -156,7 +183,8 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
                     }
 
                     else -> {}
-                }}
+                }
+            }
         }
     }
 
@@ -179,7 +207,7 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
         return "RS/$lang"
     }
 
-    fun sendLanguage(context: Context) {
+    private fun sendLanguage(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val token = getUserToken()
@@ -195,4 +223,22 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
         }
     }
 
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val myRepository = (this[APPLICATION_KEY] as MyApplication).repositoryAuth
+                LoginViewModel(
+                    repository = myRepository
+                )
+            }
+        }
+    }
+
+}
+
+sealed class LoginState {
+    object Idle : LoginState()
+    object Loading : LoginState()
+    data class Success(val userResponse: UserResponse) : LoginState()
+    data class Failure(val error: Throwable) : LoginState()
 }
