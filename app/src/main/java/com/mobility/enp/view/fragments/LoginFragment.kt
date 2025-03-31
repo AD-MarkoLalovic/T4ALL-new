@@ -69,7 +69,8 @@ class LoginFragment : Fragment() {
             userName = binding.editEmail.text.toString()
             userPassword = binding.editPassword.text.toString()
 
-            if (userName.isNotEmpty() || userPassword.isNotEmpty()) {
+            if (userName.isNotEmpty() && userPassword.isNotEmpty()) {
+                Log.d(TAG, "onViewCreated: username: $userName, pass: $")
 
                 val body = LoginBody(userName, userPassword)
                 loginViewModel.loginUser(body, requireContext())
