@@ -340,7 +340,7 @@ class LoginFragment : Fragment() {
     private fun showNoInternetDialog() {
         val binding = (activity as MainActivity).binding
         MainActivity.showSnackMessage(
-            getString(R.string.checking_for_connection), binding
+            getString(R.string.no_internet), binding
         )
        /* val bundle = Bundle().apply {
             putString(getString(R.string.title), getString(R.string.no_connection_title))
