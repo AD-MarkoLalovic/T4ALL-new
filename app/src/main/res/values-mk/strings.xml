@@ -228,7 +228,7 @@
     <string name="no_connection_title">Проблем со поврзување</string>
     <string name="checking_for_connection">Проверка за поврзување</string>
     <string name="connection_restored">Врската е обновена</string>
-    <string name="no_internet">Немате интернет.</string>
+    <string name="no_internet">"Нема интернет конекција.  "</string>
     <string name="offline_using_stored_data">Моментално не сте поврзани на интернет. Се прикажуваат зачуваните податоци.</string>
     <string name="multiple_payment_cards_for_country">Можете да користите повеќе различни платежни картички за една земја.</string>
     <string name="tag_device_payment_method_north_macedonia">Ако сакате да го користите вашиот уред TAG на патиштата во Северној Македонији, ве молиме додадете валидна платежна картичка</string>

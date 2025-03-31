@@ -16,19 +16,17 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.messaging.FirebaseMessaging
 import com.mobility.enp.BuildConfig
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.databinding.FragmentLoginBinding
-import com.mobility.enp.network.Repository
+import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.LanguageDialog
+import com.mobility.enp.viewmodel.LoginState
 import com.mobility.enp.viewmodel.LoginViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class LoginFragment : Fragment() {
 
@@ -71,13 +69,14 @@ class LoginFragment : Fragment() {
             userName = binding.editEmail.text.toString()
             userPassword = binding.editPassword.text.toString()
 
-            if (userName.isNotEmpty() || userPassword.isNotEmpty()) {
+            if (userName.isNotEmpty() && userPassword.isNotEmpty()) {
 
                 val body = LoginBody(userName, userPassword)
+                loginViewModel.loginUser(body, requireContext())
 
-                if (Repository.isNetworkAvailable(requireContext())) {
+                /*if (Repository.isNetworkAvailable(requireContext())) {
                     binding.progbar.visibility = View.VISIBLE
-                    loginViewModel.loginUser(body)
+                    loginViewModel.loginUser(body, requireContext())
                 } else {
                     val bundle = Bundle().apply {
                         putString(
@@ -94,7 +93,7 @@ class LoginFragment : Fragment() {
                         R.id.action_global_loginNoInternetConnectionDialog,
                         bundle
                     )
-                }
+                }*/
 
             } else {
                 Toast.makeText(
@@ -235,7 +234,35 @@ class LoginFragment : Fragment() {
     }
 
     private fun setObservers() {
-        collectLatestLifecycleFlow(loginViewModel.userLogin) { result ->
+
+        collectLatestLifecycleFlow(loginViewModel.loginState) { state ->
+            when (state) {
+                is LoginState.Loading -> {
+                    binding.progbar.visibility = View.VISIBLE
+                }
+                is LoginState.Success -> {
+                    binding.progbar.visibility = View.GONE
+                    findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment())
+                }
+                is LoginState.Failure -> {
+                    binding.progbar.visibility = View.GONE
+                    when (state.error) {
+                        is NetworkError.NoConnection -> showNoInternetDialog()
+                        is NetworkError.ServerError -> showErrorMessage(getString(R.string.server_error_msg))
+                        is NetworkError.ApiError -> {
+                            val errorMessage = state.error.errorResponse.message ?: getString(R.string.server_error_msg)
+                            showErrorMessage(errorMessage)
+                        }
+                    }
+                    loginViewModel.setIdleState()
+                }
+                is LoginState.Idle -> {}
+            }
+        }
+
+
+
+        /*collectLatestLifecycleFlow(loginViewModel.userLogin) { result ->
             when (result) {
                 is SubmitResult.Loading -> {
                     binding.progbar.visibility = View.VISIBLE
@@ -270,11 +297,9 @@ class LoginFragment : Fragment() {
                 is SubmitResult.FailureNoConnection -> showNoInternetDialog()
                 is SubmitResult.FailureServerError -> showErrorMessage(getString(R.string.server_error_msg))
                 is SubmitResult.FailureApiError -> showErrorMessage(result.errorMessage)
-                is SubmitResult.InvalidApiToken -> {
-                    showErrorMessage(result.errorMessage)
-                }
+                is SubmitResult.InvalidApiToken -> { }
             }
-        }
+        }*/
 
         collectLatestLifecycleFlow(loginViewModel.fcmToken) { result ->
             when (result) {
@@ -313,14 +338,18 @@ class LoginFragment : Fragment() {
     }
 
     private fun showNoInternetDialog() {
-        val bundle = Bundle().apply {
+        val binding = (activity as MainActivity).binding
+        MainActivity.showSnackMessage(
+            getString(R.string.no_internet), binding
+        )
+       /* val bundle = Bundle().apply {
             putString(getString(R.string.title), getString(R.string.no_connection_title))
             putString(
                 getString(R.string.subtitle),
                 getString(R.string.please_connect_to_the_internet)
             )
         }
-        findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
+        findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)*/
     }
 
     companion object {

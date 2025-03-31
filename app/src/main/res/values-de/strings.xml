@@ -239,7 +239,7 @@
     <string name="no_connection_title">Verbindungsprobleme</string>
     <string name="checking_for_connection">Auf Verbindung prüfen</string>
     <string name="connection_restored">Verbindung wiederhergestellt</string>
-    <string name="no_internet">Sie haben kein Internet.</string>
+    <string name="no_internet">Keine Internetverbindung.</string>
     <string name="offline_using_stored_data">Derzeit sind Sie nicht mit dem Internet verbunden. Es werden gespeicherte Daten angezeigt.</string>
     <string name="multiple_payment_cards_for_country">Sie können mehrere verschiedene Zahlungskarten für ein Land verwenden.</string>
     <string name="tag_device_payment_method_north_macedonia">Wenn Sie Ihr TAG-Gerät auf den Straßen Nordmazedoniens verwenden möchten, fügen Sie bitte eine gültige Zahlungskarte hinzu.</string>

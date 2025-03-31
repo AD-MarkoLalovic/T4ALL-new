@@ -1,7 +1,6 @@
 package com.mobility.enp.view
 
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -61,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                 android.R.color.white
             )
         )
-        binding.toolbarShared.root.visibility = View.GONE
+        binding.toolbarShared.root.visibility = View.VISIBLE
     }
 
     fun hideLogo(hideLogo: Boolean) {
