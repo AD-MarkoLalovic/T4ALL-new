@@ -30,8 +30,8 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
 
-    private val _userLogin = MutableStateFlow<SubmitResult<UserResponse>>(SubmitResult.Empty)
-    val userLogin: StateFlow<SubmitResult<UserResponse>> get() = _userLogin
+   /* private val _userLogin = MutableStateFlow<SubmitResult<UserResponse>>(SubmitResult.Empty)
+    val userLogin: StateFlow<SubmitResult<UserResponse>> get() = _userLogin*/
 
     private val _fcmResponse =
         MutableStateFlow<SubmitResult<HomePageFcmTokenResponse>>(SubmitResult.Empty)
