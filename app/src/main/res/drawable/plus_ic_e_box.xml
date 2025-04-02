@@ -1,0 +1,12 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+    <path
+        android:fillColor="#F5F7FA"
+        android:pathData="M16,14m-11,0a11,11 0,1 1,22 0a11,11 0,1 1,-22 0" />
+    <path
+        android:fillColor="@color/franchiser_e_box"
+        android:pathData="M16.546,18.702V14.547L20.701,14.547V13.453H16.546V9.298H15.452L15.452,13.453H11.297V14.547H15.452V18.702H16.546Z" />
+</vector>
