@@ -227,7 +227,7 @@ interface ApiService {
         @Query("lang") language: String
     ): Response<RefundRequestsResponse>
 
-    @POST("/api/v1/refund-requests")
+    @POST("/api/v2/refund-requests")
     suspend fun sendRefundRequest(
         @Query("lang") language: String,
         @Body request: SendRefundRequest

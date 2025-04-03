@@ -247,6 +247,7 @@ class LoginFragment : Fragment() {
                 is LoginState.Failure -> {
                     binding.progbar.visibility = View.GONE
                     when (state.error) {
+
                         is NetworkError.NoConnection -> showNoInternetDialog()
                         is NetworkError.ServerError -> showErrorMessage(getString(R.string.server_error_msg))
                         is NetworkError.ApiError -> {

@@ -40,6 +40,7 @@ class TagPickerRequestFragment : Fragment() {
     private lateinit var adapter: RefundRequestTagPickerAdapter
     private var tagSerialNumber: String? = null
     private lateinit var bankNames: MutableList<String>
+    private var bankId: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -373,6 +374,7 @@ class TagPickerRequestFragment : Fragment() {
 
                     // Obrada odabrane stavke
                     val selectedBank = bankList[position - 1]
+                    bankId = selectedBank.id
                     setupUniqueNumberSpinner(selectedBank.uniqueNumber)
                 }
 
@@ -467,8 +469,6 @@ class TagPickerRequestFragment : Fragment() {
                 }
             }
 
-
-
             binding.uniqueNumbersSpinner.apply {
                 adapter = bankCodeAdapter
                 isClickable = true
@@ -515,7 +515,7 @@ class TagPickerRequestFragment : Fragment() {
             return null
         }
 
-        val selectedBank = bankNames[selectedBankPosition]
+        val selectedBank = bankId ?: selectedBankPosition
 
         val uniqueNumber = binding.uniqueNumbersSpinner.selectedItem.toString().trim()
         val centerAccountNumber = binding.etCenterAccountNumber.text.toString().trim()
@@ -527,13 +527,12 @@ class TagPickerRequestFragment : Fragment() {
             return null
         }
 
-        // Pun broj računa
-        val fullAccountNumber = "$uniqueNumber-$centerAccountNumber-$rightAccountNumber"
-
         val sendRefundRequest = SendRefundRequest(
             selectTag,
-            fullAccountNumber,
-            selectedBank,
+            selectedBank.toString(),
+            uniqueNumber,
+            centerAccountNumber,
+            rightAccountNumber,
             amount
         )
 
