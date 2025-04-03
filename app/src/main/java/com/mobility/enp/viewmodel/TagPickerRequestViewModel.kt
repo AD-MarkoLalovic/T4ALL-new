@@ -20,7 +20,6 @@ import kotlinx.coroutines.launch
 
 class TagPickerRequestViewModel(private val repository: UserRepository) : ViewModel() {
 
-
     private val _tagPickerRequest = MutableStateFlow<SubmitResult<List<TagsRefundRequestUIModel>>>(
         SubmitResult.Loading
     )
@@ -65,7 +64,6 @@ class TagPickerRequestViewModel(private val repository: UserRepository) : ViewMo
                     _tagPickerRequest.value = SubmitResult.Success(uiModel)
                 }
             } else {
-                // Ako je neuspešno, prikaži grešku
                 when (val error = remoteData.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.e(
@@ -148,7 +146,7 @@ class TagPickerRequestViewModel(private val repository: UserRepository) : ViewMo
                     is NetworkError.ServerError -> {
                         Log.e(
                             "TagPickerRequestViewModel",
-                            "Greška tokom preuzimanja liste banaka",
+                            "Greška tokom postRefundsRequest ",
                             error
                         )
                         _refundRequestState.value =
@@ -162,14 +160,16 @@ class TagPickerRequestViewModel(private val repository: UserRepository) : ViewMo
 
                     is NetworkError.ApiError -> {
                         _refundRequestState.value =
-                            SubmitResult.FailureApiError(error.errorResponse.message!!)
-                        Log.d("TagPickerRequestViewModel", "postRefundsRequest: ${error.errorResponse.message}")
+                            SubmitResult.FailureApiError(error.errorResponse.message.toString())
+                        Log.d(
+                            "TagPickerRequestViewModel",
+                            "postRefundsRequest: ${error.errorResponse.message}"
+                        )
                     }
                 }
             }
         }
     }
-
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
