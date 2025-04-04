@@ -351,5 +351,6 @@
     <string name="permission_granted">İzin Verildi</string>
     <string name="notification_title">T4A’nın size bildirim göndermesine izin verin</string>
     <string name="notification_subtitle">Bildirimler, faturaları indirmek ve geçiş geçmişindeki tabloları dışa aktarmak için kullanılır</string>
+    <string name="listing_of_passages_downloaded_successfully">Geçiş listesi başarıyla indirildi.</string>
 
 </resources>

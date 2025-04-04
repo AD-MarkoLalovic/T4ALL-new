@@ -340,5 +340,6 @@
     <string name="permission_granted">Άδεια Εγκρίθηκε</string>
     <string name="notification_title">Επιτρέψτε στο T4A να σας στέλνει ειδοποιήσεις</string>
     <string name="notification_subtitle">Οι ειδοποιήσεις χρησιμοποιούνται για τη λήψη τιμολογίων και την εξαγωγή πινάκων στο ιστορικό διελεύσεων</string>
+    <string name="listing_of_passages_downloaded_successfully">Η λίστα διελεύσεων λήφθηκε με επιτυχία.</string>
 
 </resources>
