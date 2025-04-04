@@ -180,7 +180,7 @@ class BillsDetailsAdapter(
                                     binding.root.context,
                                     Manifest.permission.POST_NOTIFICATIONS
                                 ) == PackageManager.PERMISSION_GRANTED -> {
-                                    showNotification(binding, id, true)
+                                    showNotification(binding, id, false)
                                 }
 
                                 else -> {
@@ -252,7 +252,8 @@ class BillsDetailsAdapter(
                             viewModel.savePdfToDrive(
                                 it,
                                 downloadName,
-                                binding.root.context
+                                binding.root.context,
+                                true
                             )
                         }
                     }
@@ -276,7 +277,8 @@ class BillsDetailsAdapter(
                             viewModel.savePdfToDrive(
                                 it,
                                 downloadName,
-                                binding.root.context
+                                binding.root.context,
+                                false
                             )
                         }
                     }

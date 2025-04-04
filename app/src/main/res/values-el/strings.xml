@@ -65,8 +65,8 @@
     <string name="country">Χώρα</string>
     <string name="save_changes">Αποθήκευση αλλαγών</string>
     <string name="repeat_password">Επαναλάβετε τον κωδικό</string>
-    <string name="password_changed">Ο κωδικός πρόσβασης άλλαξε!</string>
-    <string name="you_will_be_asked_to_login_again">Θα σας ζητηθεί να συνδεθείτε ξανά.</string>
+    <string name="password_changed">Ο κωδικός πρόσβασης άλλαξε</string>
+    <string name="you_will_be_asked_to_login_again">Πρέπει να συνδεθείτε ξανά στον λογαριασμό σας.</string>
     <string name="email_address_validation_successful">Η επαλήθευση της διεύθυνσης email ήταν επιτυχής!</string>
     <string name="resend_it">Αποστολή ξανά.</string>
     <string name="address_and_number">Διεύθυνση και αριθμός</string>
@@ -146,7 +146,7 @@
     <string name="create_account">Δημιουργία λογαριασμού T4A</string>
     <string name="all_fields_are_mandatory">Όλα τα πεδία είναι υποχρεωτικά.</string>
     <string name="change_successfully_saved">Η αλλαγή αποθηκεύτηκε επιτυχώς.</string>
-    <string name="please_connect_to_the_internet">Παρακαλώ συνδεθείτε στο διαδίκτυο</string>
+    <string name="please_connect_to_the_internet">Παρακαλώ συνδεθείτε στο διαδίκτυο.</string>
     <string name="general_terms_and_conditions">Γενικοί Όροι και Προϋποθέσεις</string>
     <string name="privacy_policy">Πολιτική Απορρήτου</string>
     <string name="choose_country_and_payment">Επιλέξτε χώρα και τρόπο πληρωμής</string>
@@ -259,7 +259,7 @@
     <string name="enter_amount">Εισάγετε το ποσό</string>
     <string name="enter_bank_account">Εισαγάγετε τον πλήρη αριθμό λογαριασμού Giro.</string>
     <string name="enter_name_bank">Το πεδίο Τράπεζα είναι υποχρεωτικό.</string>
-    <string name="download_timeout">Παρακαλώ περιμένετε 5 δευτερόλεπτα πριν από τη λήψη</string>
+    <string name="download_timeout">Παρακαλώ περιμένετε 5 δευτερόλεπτα πριν από τη νέα λήψη.</string>
     <string name="enter_content_of_complaint">Εισάγετε το περιεχόμενο της καταγγελίας</string>
     <string name="hint_enter_verification_code">Εισάγετε τον κωδικό επαλήθευσης</string>
     <string name="serbian_passage">Σερβία</string>
@@ -340,5 +340,6 @@
     <string name="permission_granted">Άδεια Εγκρίθηκε</string>
     <string name="notification_title">Επιτρέψτε στο T4A να σας στέλνει ειδοποιήσεις</string>
     <string name="notification_subtitle">Οι ειδοποιήσεις χρησιμοποιούνται για τη λήψη τιμολογίων και την εξαγωγή πινάκων στο ιστορικό διελεύσεων</string>
+    <string name="listing_of_passages_downloaded_successfully">Η λίστα διελεύσεων λήφθηκε με επιτυχία.</string>
 
 </resources>

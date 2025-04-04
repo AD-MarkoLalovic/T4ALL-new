@@ -65,8 +65,8 @@
     <string name="country">Zemlja</string>
     <string name="save_changes">Spremi promjene</string>
     <string name="repeat_password">Ponovite lozinku</string>
-    <string name="password_changed">Lozinka je promijenjena!</string>
-    <string name="you_will_be_asked_to_login_again">Bit ćete zamoljeni da se ponovno prijavite.</string>
+    <string name="password_changed">Lozinka je promijenjena</string>
+    <string name="you_will_be_asked_to_login_again">Potrebno je da se ponovno prijavite na račun.</string>
     <string name="email_address_validation_successful">Validacija email adrese uspješna!</string>
     <string name="resend_it">Ponovno pošaljite.</string>
     <string name="address_and_number">Adresa i broj</string>
@@ -146,7 +146,7 @@
     <string name="create_account">Kreiraj T4A račun</string>
     <string name="all_fields_are_mandatory">Sva polja su obavezna.</string>
     <string name="change_successfully_saved">Promjena uspješno spremljena.</string>
-    <string name="please_connect_to_the_internet">Povežite se na internet</string>
+    <string name="please_connect_to_the_internet">Povežite se na internet.</string>
     <string name="general_terms_and_conditions">Opći uvjeti i odredbe</string>
     <string name="privacy_policy">Pravila o privatnosti</string>
     <string name="choose_country_and_payment">Odaberite zemlju i način plaćanja</string>
@@ -346,6 +346,7 @@
     <string name="permission_granted">Dozvola odobrena</string>
     <string name="notification_title">Dozvolite T4A da vam šalje obavijesti</string>
     <string name="notification_subtitle">Obavijesti služe za preuzimanje računa i eksportovanje tablica u povijesti prolazaka</string>
+    <string name="listing_of_passages_downloaded_successfully">Listing prolazaka je uspješno preuzet.</string>
 
 
 </resources>

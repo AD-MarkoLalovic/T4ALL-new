@@ -67,8 +67,8 @@
     <string name="country">Country</string>
     <string name="save_changes">Save Changes</string>
     <string name="repeat_password">Repeat password</string>
-    <string name="password_changed">Password changed!</string>
-    <string name="you_will_be_asked_to_login_again">You will be asked to login again.</string>
+    <string name="password_changed">Password changed</string>
+    <string name="you_will_be_asked_to_login_again">You need to sign in to your account again.</string>
     <string name="email_address_validation_successful">Email address validation successful!</string>
     <string name="resend_it">Resend it.</string>
     <string name="address_and_number">Address and number</string>
@@ -148,7 +148,7 @@
     <string name="create_account">Create T4A account</string>
     <string name="all_fields_are_mandatory">All fields are mandatory.</string>
     <string name="change_successfully_saved">Change successfully saved.</string>
-    <string name="please_connect_to_the_internet">Please connect to the internet</string>
+    <string name="please_connect_to_the_internet">Please connect to the internet.</string>
     <string name="general_terms_and_conditions">General Terms and Conditions</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="choose_country_and_payment">Choose country and payment</string>
@@ -259,7 +259,7 @@
     <string name="enter_amount">Enter the amount</string>
     <string name="enter_bank_account">Enter the full bank account number.</string>
     <string name="enter_name_bank">Field Bank is required.</string>
-    <string name="download_timeout">Please wait 5 seconds before downloading</string>
+    <string name="download_timeout">Molimo sačekajte 5 sekundi prije novog preuzimanja.</string>
     <string name="enter_content_of_complaint">Enter the content of the complaint</string>
     <string name="hint_enter_verification_code">Enter the verification code</string>
     <string name="serbian_passage">Serbia</string>
@@ -342,4 +342,5 @@
     <string name="permission_granted">Permission Granted</string>
     <string name="notification_title">Allow T4A to send you notifications</string>
     <string name="notification_subtitle">Notifications are used for downloading invoices and exporting tables in the passage history</string>
+    <string name="listing_of_passages_downloaded_successfully">The listing of passages was successfully downloaded.</string>
 </resources>

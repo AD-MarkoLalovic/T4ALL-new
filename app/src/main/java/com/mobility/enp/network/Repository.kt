@@ -5,7 +5,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
@@ -96,23 +95,18 @@ object Repository {
     fun changePassword(
         request: ChangePasswordRequest,
         token: String?,
-        context: Context,
         errorBody: MutableLiveData<ErrorBody>
     ) {
         val call = apiService(token).changePassword(request)
         call.enqueue(object : Callback<Unit> {
             override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                if (response.isSuccessful) {
-                    Toast.makeText(context, "Lozinka uspešno promenjena", Toast.LENGTH_SHORT).show()
-                } else {
+                if (!response.isSuccessful) {
                     errorBody.postValue(getMessageFromErrorBody(response))
                 }
             }
 
             override fun onFailure(call: Call<Unit>, t: Throwable) {
-                Toast.makeText(
-                    context, "Greška pri komunikaciji sa serverom: ${t.message}", Toast.LENGTH_SHORT
-                ).show()
+                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
             }
         })
     }
@@ -533,7 +527,7 @@ object Repository {
         apiService(token).changeLanguage(language)
     }
 
-    fun getUserLanguage(context: Context): String { 
+    fun getUserLanguage(context: Context): String {
 
         val languageCode = SharedPreferencesHelper.getUserLanguage(context)
         return when {

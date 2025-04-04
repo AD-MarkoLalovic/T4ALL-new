@@ -69,8 +69,8 @@
     <string name="country">Država</string>
     <string name="save_changes">Sačuvaj</string>
     <string name="repeat_password">Ponovo unesite novu lozinku</string>
-    <string name="password_changed">Lozinka promenjena!</string>
-    <string name="you_will_be_asked_to_login_again">Bićete ponovo zamoljeni da se prijavite.</string>
+    <string name="password_changed">Lozinka promenjena</string>
+    <string name="you_will_be_asked_to_login_again">Potrebno je da se opet prijavite na nalog.</string>
     <string name="email_address_validation_successful">Uspešna validacija email adrese!</string>
     <string name="resend_it">Pošaljite ponovo.</string>
     <string name="address_and_number">Adresa i broj</string>
@@ -154,7 +154,7 @@
     <string name="create_account">Kreirajte T4A nalog</string>
     <string name="all_fields_are_mandatory">Sva polja su obavezna.</string>
     <string name="change_successfully_saved">Izmene uspešno sačuvane.</string>
-    <string name="please_connect_to_the_internet">Povezite se na internet</string>
+    <string name="please_connect_to_the_internet">Povezite se na internet.</string>
     <string name="general_terms_and_conditions">Opšti uslovi i uslovi korišćenja</string>
     <string name="privacy_policy">Politika privatnosti</string>
     <string name="choose_country_and_payment">Izaberite zemlju i način plaćanja</string>
@@ -269,7 +269,7 @@
     <string name="enter_amount">Unesite iznos</string>
     <string name="enter_bank_account">Unesite kompletan broj žiro računa.</string>
     <string name="enter_name_bank">Polje Banka je obavezno.</string>
-    <string name="download_timeout">Molimo sacekajte 5 sekundi pre preuzimanja racuna</string>
+    <string name="download_timeout">Molimo sačekajte 5 sekundi pre novog preuzimanja.</string>
     <string name="enter_content_of_complaint">Unesite sadržaj prigovora</string>
     <string name="hint_enter_verification_code">Unesite verifikacioni kod</string>
     <string name="serbian_passage">Srbija</string>
@@ -351,5 +351,6 @@
     <string name="permission_granted">Dozvola odobrena</string>
     <string name="notification_title">Dozvolite T4A da vam šalje notifikacije</string>
     <string name="notification_subtitle">Notifikacije služe za preuzimanje računa i eksportovanje tabela u istoriji prolazaka</string>
+    <string name="listing_of_passages_downloaded_successfully">Listing prolazaka je uspešno preuzet.</string>
 
 </resources>

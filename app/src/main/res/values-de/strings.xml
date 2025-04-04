@@ -71,8 +71,8 @@
     <string name="country">Land</string>
     <string name="save_changes">Änderungen speichern</string>
     <string name="repeat_password">Passwort wiederholen</string>
-    <string name="password_changed">Passwort geändert!</string>
-    <string name="you_will_be_asked_to_login_again">Sie werden aufgefordert, sich erneut anzumelden.</string>
+    <string name="password_changed">Passwort geändert</string>
+    <string name="you_will_be_asked_to_login_again">Sie müssen sich erneut in Ihrem Konto anmelden.</string>
     <string name="email_address_validation_successful">E-Mail-Adresse erfolgreich validiert!</string>
     <string name="resend_it">Erneut senden.</string>
     <string name="address_and_number">Adresse und Nummer</string>
@@ -159,7 +159,7 @@
     <string name="create_account">Erstellen Sie ein T4A-Konto</string>
     <string name="all_fields_are_mandatory">Alle Felder sind erforderlich.</string>
     <string name="change_successfully_saved">Änderungen erfolgreich gespeichert.</string>
-    <string name="please_connect_to_the_internet">Bitte stellen Sie eine Verbindung zum Internet her</string>
+    <string name="please_connect_to_the_internet">Bitte stellen Sie eine Verbindung zum Internet her.</string>
     <string name="general_terms_and_conditions">Allgemeine Geschäftsbedingungen</string>
     <string name="privacy_policy">Datenschutzrichtlinie</string>
     <string name="choose_country_and_payment">Land und Zahlung auswählen</string>
@@ -277,7 +277,7 @@
     <string name="enter_amount">Betrag eingeben</string>
     <string name="enter_bank_account">Geben Sie die vollständige Girokontonummer ein.</string>
     <string name="enter_name_bank">Feld Bank ist Pflichtfeld.</string>
-    <string name="download_timeout">Bitte warten Sie 5 Sekunden, bevor Sie den Download durchführen</string>
+    <string name="download_timeout">Molimo pričekajte 5 sekundi prije novog preuzimanja</string>
     <string name="enter_content_of_complaint">"Beschwerdeinhalt eingeben "</string>
     <string name="hint_enter_verification_code">Geben Sie den Bestätigungscode ein</string>
     <string name="serbian_passage">Serbien</string>
@@ -361,5 +361,6 @@
     <string name="permission_granted">Erlaubnis erteilt</string>
     <string name="notification_title">Erlauben Sie T4A, Ihnen Benachrichtigungen zu senden</string>
     <string name="notification_subtitle">Benachrichtigungen werden für den Rechnungsdownload und den Export von Tabellen im Durchgangsverlauf verwendet</string>
+    <string name="listing_of_passages_downloaded_successfully">Die Durchgangsliste wurde erfolgreich heruntergeladen.</string>
 
 </resources>
