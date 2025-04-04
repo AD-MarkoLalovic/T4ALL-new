@@ -277,7 +277,7 @@
     <string name="enter_amount">Betrag eingeben</string>
     <string name="enter_bank_account">Geben Sie die vollständige Girokontonummer ein.</string>
     <string name="enter_name_bank">Feld Bank ist Pflichtfeld.</string>
-    <string name="download_timeout">Bitte warten Sie 5 Sekunden, bevor Sie den Download durchführen</string>
+    <string name="download_timeout">Molimo pričekajte 5 sekundi prije novog preuzimanja</string>
     <string name="enter_content_of_complaint">"Beschwerdeinhalt eingeben "</string>
     <string name="hint_enter_verification_code">Geben Sie den Bestätigungscode ein</string>
     <string name="serbian_passage">Serbien</string>
@@ -361,5 +361,6 @@
     <string name="permission_granted">Erlaubnis erteilt</string>
     <string name="notification_title">Erlauben Sie T4A, Ihnen Benachrichtigungen zu senden</string>
     <string name="notification_subtitle">Benachrichtigungen werden für den Rechnungsdownload und den Export von Tabellen im Durchgangsverlauf verwendet</string>
+    <string name="listing_of_passages_downloaded_successfully">Die Durchgangsliste wurde erfolgreich heruntergeladen.</string>
 
 </resources>

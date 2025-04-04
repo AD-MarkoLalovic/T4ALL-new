@@ -259,7 +259,7 @@
     <string name="enter_amount">Εισάγετε το ποσό</string>
     <string name="enter_bank_account">Εισαγάγετε τον πλήρη αριθμό λογαριασμού Giro.</string>
     <string name="enter_name_bank">Το πεδίο Τράπεζα είναι υποχρεωτικό.</string>
-    <string name="download_timeout">Παρακαλώ περιμένετε 5 δευτερόλεπτα πριν από τη λήψη</string>
+    <string name="download_timeout">Παρακαλώ περιμένετε 5 δευτερόλεπτα πριν από τη νέα λήψη.</string>
     <string name="enter_content_of_complaint">Εισάγετε το περιεχόμενο της καταγγελίας</string>
     <string name="hint_enter_verification_code">Εισάγετε τον κωδικό επαλήθευσης</string>
     <string name="serbian_passage">Σερβία</string>
@@ -340,5 +340,6 @@
     <string name="permission_granted">Άδεια Εγκρίθηκε</string>
     <string name="notification_title">Επιτρέψτε στο T4A να σας στέλνει ειδοποιήσεις</string>
     <string name="notification_subtitle">Οι ειδοποιήσεις χρησιμοποιούνται για τη λήψη τιμολογίων και την εξαγωγή πινάκων στο ιστορικό διελεύσεων</string>
+    <string name="listing_of_passages_downloaded_successfully">Η λίστα διελεύσεων λήφθηκε με επιτυχία.</string>
 
 </resources>

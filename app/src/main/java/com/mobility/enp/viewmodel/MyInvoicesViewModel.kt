@@ -210,8 +210,15 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    fun savePdfToDrive(base64EncodedData: String, fileName: String, context: Context) {
+    fun savePdfToDrive(base64EncodedData: String, fileName: String, context: Context, isListingOfPassages: Boolean) {
         val decodedData = Base64.decode(base64EncodedData, Base64.DEFAULT)
+
+        // Postavljanje poruke u zavisnosti od tipa fajla
+        val contentText = if (isListingOfPassages) {
+            context.getString(R.string.listing_of_passages_downloaded_successfully)
+        } else {
+            context.getString(R.string.bill_downloaded_successfully)
+        }
 
         try {
             val futureStudioIconFile = File(
@@ -268,7 +275,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
                     getApplication(), MyFirebaseMessagingService.CHANNEL_ID
                 ).setSmallIcon(R.drawable.select_country_icon)
                     .setContentTitle(context.getString(R.string.file_downloaded))
-                    .setContentText(context.getString(R.string.bill_downloaded_successfully))
+                    .setContentText(contentText)
                     .setContentIntent(pendingIntent).setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setAutoCancel(true)
 

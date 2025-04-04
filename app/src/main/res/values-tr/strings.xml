@@ -269,7 +269,7 @@
     <string name="enter_amount">Miktarı girin</string>
     <string name="enter_bank_account">Tam Giro hesap numarasını girin.</string>
     <string name="enter_name_bank">Banka alanını doldurmak şarttır.</string>
-    <string name="download_timeout">İndirmeden önce lütfen 5 saniye bekleyin</string>
+    <string name="download_timeout">Lütfen yeni indirme işleminden önce 5 saniye bekleyin.</string>
     <string name="enter_content_of_complaint">Şikayet içeriğini girin</string>
     <string name="hint_enter_verification_code">Doğrulama kodunu giriniz</string>
     <string name="serbian_passage">Sırbistan</string>
@@ -351,5 +351,6 @@
     <string name="permission_granted">İzin Verildi</string>
     <string name="notification_title">T4A’nın size bildirim göndermesine izin verin</string>
     <string name="notification_subtitle">Bildirimler, faturaları indirmek ve geçiş geçmişindeki tabloları dışa aktarmak için kullanılır</string>
+    <string name="listing_of_passages_downloaded_successfully">Geçiş listesi başarıyla indirildi.</string>
 
 </resources>

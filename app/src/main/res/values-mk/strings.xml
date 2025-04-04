@@ -266,7 +266,7 @@
     <string name="enter_amount">Внесете износ</string>
     <string name="enter_bank_account">Внесете комплетен број на Жиро сметката.</string>
     <string name="enter_name_bank">Полето Банка е задолжително.</string>
-    <string name="download_timeout">Ве молиме почекајте 5 секунди пред да преземете</string>
+    <string name="download_timeout">Ве молиме почекајте 5 секунди пред новото преземање.</string>
     <string name="enter_content_of_complaint">"Внесете содржина на приговорот "</string>
     <string name="hint_enter_verification_code">Внесете верификацискиот код</string>
     <string name="serbian_passage">Србија</string>
@@ -349,6 +349,7 @@
     <string name="permission_granted">Дозвола одобрена</string>
     <string name="notification_title">Дозволете на T4A да ви испраќа известувања</string>
     <string name="notification_subtitle">Известувањата служат за преземање фактури и експортовање на табели во историјата на премини</string>
+    <string name="listing_of_passages_downloaded_successfully">Листингот на поминувања е успешно преземен.</string>
 
 
 </resources>
