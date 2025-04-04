@@ -258,7 +258,7 @@
     <string name="enter_amount">Unesite iznos</string>
     <string name="enter_bank_account">Unesite kompletan broj žiro računa.</string>
     <string name="enter_name_bank">Polje Banka je obavezno.</string>
-    <string name="download_timeout">Molimo sacekajte 5 sekundi pre skidanja racuna</string>
+    <string name="download_timeout">Molimo sačekajte 5 sekundi prije novog preuzimanja.</string>
     <string name="enter_content_of_complaint">"Unesite sadržaj prigovora     "</string>
     <string name="hint_enter_verification_code">Unesite verifikacioni kod</string>
     <string name="serbian_passage">Srbija</string>

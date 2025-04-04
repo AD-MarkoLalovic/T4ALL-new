@@ -290,7 +290,7 @@
     <string name="enter_amount">Унесите износ</string>
     <string name="enter_bank_account">Унесите комплетан број Жиро рачуна.</string>
     <string name="enter_name_bank">Поље Банка је обавезно.</string>
-    <string name="download_timeout">Сачекајте 5 секунди пре преузимања</string>
+    <string name="download_timeout">Молимо сачекајте 5 секунди пре новог преузимања.</string>
     <string name="enter_content_of_complaint">Унесите садржај приговора</string>
     <string name="hint_enter_verification_code">Унесите верификациони код</string>
     <string name="serbian_passage">Србија</string>

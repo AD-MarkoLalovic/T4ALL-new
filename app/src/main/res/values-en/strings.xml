@@ -259,7 +259,7 @@
     <string name="enter_amount">Enter the amount</string>
     <string name="enter_bank_account">Enter the full bank account number.</string>
     <string name="enter_name_bank">Field Bank is required.</string>
-    <string name="download_timeout">Please wait 5 seconds before downloading</string>
+    <string name="download_timeout">Molimo sačekajte 5 sekundi prije novog preuzimanja.</string>
     <string name="enter_content_of_complaint">Enter the content of the complaint</string>
     <string name="hint_enter_verification_code">Enter the verification code</string>
     <string name="serbian_passage">Serbia</string>
