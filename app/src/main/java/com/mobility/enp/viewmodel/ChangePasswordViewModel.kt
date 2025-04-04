@@ -58,7 +58,6 @@ class ChangePasswordViewModel(application: Application) : AndroidViewModel(appli
                         Repository.changePassword(
                             changePasswordRequest,
                             token.accessToken,
-                            getApplication(),
                             errorBody
                         )
                         _changePasswordStatusLiveData.postValue(true)

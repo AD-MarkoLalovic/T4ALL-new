@@ -70,8 +70,8 @@
     <string name="country" translatable="true">Земја</string>
     <string name="save_changes" translatable="true">Зачувај промени</string>
     <string name="repeat_password" translatable="true">Поново внесете ја новата лозинка.</string>
-    <string name="password_changed" translatable="true">Лозинката е променета!</string>
-    <string name="you_will_be_asked_to_login_again" translatable="true">Ќе бидете прашани да се најавите повторно.</string>
+    <string name="password_changed" translatable="true">Лозинката е променета</string>
+    <string name="you_will_be_asked_to_login_again" translatable="true">Потребно е повторно да се најавите на вашата сметка.</string>
     <string name="email_address_validation_successful" translatable="true">Успешна валидација на е-поштата!</string>
     <string name="resend_it" translatable="true">Испрати повторно.</string>
     <string name="address_and_number" translatable="true">Адреса и број</string>
@@ -155,7 +155,7 @@
     <string name="create_account" translatable="true">Создадете сметка на T4A</string>
     <string name="all_fields_are_mandatory" translatable="true">Сите полиња се задолжителни.</string>
     <string name="change_successfully_saved" translatable="true">Промени успешно зачувани.</string>
-    <string name="please_connect_to_the_internet" translatable="true">Ве молиме поврзете се на интернет</string>
+    <string name="please_connect_to_the_internet" translatable="true">Ве молиме поврзете се на интернет.</string>
     <string name="general_terms_and_conditions" translatable="true">Општи Услови и Услови</string>
     <string name="privacy_policy" translatable="true">Политика за приватност</string>
     <string name="choose_country_and_payment" translatable="true">Изберете земја и начин на плаќање</string>

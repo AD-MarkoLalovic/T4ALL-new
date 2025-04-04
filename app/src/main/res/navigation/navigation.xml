@@ -109,7 +109,7 @@
         tools:layout="@layout/fragment_tos">
         <argument
             android:name="countryData"
-            app:argType="string"/>
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/myTagsFragment2"
@@ -227,7 +227,7 @@
     <action
         android:id="@+id/action_global_loginFragment"
         app:destination="@id/loginFragment"
-        app:popUpTo="@id/loginFragment"
+        app:popUpTo="@id/navigation"
         app:popUpToInclusive="true" />
 
     <action

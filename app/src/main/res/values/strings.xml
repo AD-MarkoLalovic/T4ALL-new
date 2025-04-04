@@ -81,9 +81,8 @@
     <string name="country" translatable="true">Држава</string>
     <string name="save_changes" translatable="true">Сачувај</string>
     <string name="repeat_password" translatable="true">Поново унесите нову лозинку</string>
-    <string name="password_changed" translatable="true">Лозинка промењена!</string>
-    <string name="you_will_be_asked_to_login_again" translatable="true">Од вас ће бити затражено
-        да се поново пријавите.</string>
+    <string name="password_changed" translatable="true">Лозинка промењена</string>
+    <string name="you_will_be_asked_to_login_again" translatable="true">Потребно је да се опет пријавите на налог.</string>
     <string name="email_address_validation_successful" translatable="true">Валидација емаил адресе
         је успешна!</string>
     <string name="resend_it" translatable="true">Пошаљи поново.</string>
@@ -174,7 +173,7 @@
     <string name="montenegro_country_code" translatable="false">ME</string>
     <string name="all_fields_are_mandatory" translatable="true">Сва поља су обавезна.</string>
     <string name="change_successfully_saved" translatable="true">Измeнe успешно сачуване.</string>
-    <string name="please_connect_to_the_internet" translatable="true">Повежите се на интернет</string>
+    <string name="please_connect_to_the_internet" translatable="true">Повежите се на интернет.</string>
     <string name="general_terms_and_conditions" translatable="true">Општи услови и услови коришћења</string>
     <string name="privacy_policy" translatable="true">Политика приватности</string>
     <string name="choose_country_and_payment" translatable="true">Изаберите земљу и начин плаћања</string>
