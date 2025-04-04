@@ -65,8 +65,8 @@
     <string name="country">Χώρα</string>
     <string name="save_changes">Αποθήκευση αλλαγών</string>
     <string name="repeat_password">Επαναλάβετε τον κωδικό</string>
-    <string name="password_changed">Ο κωδικός πρόσβασης άλλαξε!</string>
-    <string name="you_will_be_asked_to_login_again">Θα σας ζητηθεί να συνδεθείτε ξανά.</string>
+    <string name="password_changed">Ο κωδικός πρόσβασης άλλαξε</string>
+    <string name="you_will_be_asked_to_login_again">Πρέπει να συνδεθείτε ξανά στον λογαριασμό σας.</string>
     <string name="email_address_validation_successful">Η επαλήθευση της διεύθυνσης email ήταν επιτυχής!</string>
     <string name="resend_it">Αποστολή ξανά.</string>
     <string name="address_and_number">Διεύθυνση και αριθμός</string>
@@ -146,7 +146,7 @@
     <string name="create_account">Δημιουργία λογαριασμού T4A</string>
     <string name="all_fields_are_mandatory">Όλα τα πεδία είναι υποχρεωτικά.</string>
     <string name="change_successfully_saved">Η αλλαγή αποθηκεύτηκε επιτυχώς.</string>
-    <string name="please_connect_to_the_internet">Παρακαλώ συνδεθείτε στο διαδίκτυο</string>
+    <string name="please_connect_to_the_internet">Παρακαλώ συνδεθείτε στο διαδίκτυο.</string>
     <string name="general_terms_and_conditions">Γενικοί Όροι και Προϋποθέσεις</string>
     <string name="privacy_policy">Πολιτική Απορρήτου</string>
     <string name="choose_country_and_payment">Επιλέξτε χώρα και τρόπο πληρωμής</string>

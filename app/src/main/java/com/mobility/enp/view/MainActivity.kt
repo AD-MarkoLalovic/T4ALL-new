@@ -22,6 +22,7 @@ import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
@@ -195,11 +196,10 @@ class MainActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 val database = DRoom.getRoomInstance(context)
                 database.loginDao().deleteAll()
-            }
-            CoroutineScope(Dispatchers.Main).launch {
-                while (navController.popBackStack()) {
+
+                withContext(Dispatchers.Main) {
+                    navController.navigate(R.id.action_global_loginFragment)
                 }
-                navController.navigate(R.id.action_global_loginFragment)
             }
         }
 

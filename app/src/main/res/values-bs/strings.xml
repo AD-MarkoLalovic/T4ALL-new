@@ -66,8 +66,8 @@
     <string name="country">Država</string>
     <string name="save_changes">Sačuvaj promjene</string>
     <string name="repeat_password">Ponovite lozinku</string>
-    <string name="password_changed">Lozinka promijenjena!</string>
-    <string name="you_will_be_asked_to_login_again">Bićete ponovo upitani za prijavu.</string>
+    <string name="password_changed">Lozinka promijenjena</string>
+    <string name="you_will_be_asked_to_login_again">Potrebno je da se opet prijavite na nalog.</string>
     <string name="email_address_validation_successful">Validacija email adrese uspješna!</string>
     <string name="resend_it">Ponovo pošalji.</string>
     <string name="address_and_number">Adresa i broj</string>
@@ -149,7 +149,7 @@
     <string name="create_account">Kreiraj T4A račun</string>
     <string name="all_fields_are_mandatory">Sva polja su obavezna.</string>
     <string name="change_successfully_saved">Promjena uspješno sačuvana.</string>
-    <string name="please_connect_to_the_internet">Molimo vas da se povežete na internet</string>
+    <string name="please_connect_to_the_internet">Molimo vas da se povežete na internet.</string>
     <string name="general_terms_and_conditions">Opšti uslovi korištenja</string>
     <string name="privacy_policy">Politika privatnosti</string>
     <string name="choose_country_and_payment">Odaberite zemlju i način plaćanja</string>

@@ -44,7 +44,6 @@ class ChangePasswordFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = viewLifecycleOwner
         setObservers()
         setFranchiser()
 
@@ -70,7 +69,7 @@ class ChangePasswordFragment : Fragment() {
                     )
                     enterOldPassword.setTextAppearance(R.style.Paragraph)
                     enterOldPassword.setTextColor(
-                        color!!
+                        color
                     )
 
                 } else {
@@ -81,7 +80,7 @@ class ChangePasswordFragment : Fragment() {
                     )
                     enterOldPassword.setTextAppearance(R.style.Paragraph)
                     enterOldPassword.setTextColor(
-                        color!!
+                        color
                     )
                 }
 
@@ -98,7 +97,7 @@ class ChangePasswordFragment : Fragment() {
                     )
                     enterNewPassword.setTextAppearance(R.style.Paragraph)
                     enterNewPassword.setTextColor(
-                        color!!
+                        color
                     )
 
                 } else {
@@ -109,7 +108,7 @@ class ChangePasswordFragment : Fragment() {
                     )
                     enterNewPassword.setTextAppearance(R.style.Paragraph)
                     enterNewPassword.setTextColor(
-                        color!!
+                        color
                     )
                 }
 
@@ -126,7 +125,7 @@ class ChangePasswordFragment : Fragment() {
                     )
                     enterRepeatPassword.setTextAppearance(R.style.Paragraph)
                     enterRepeatPassword.setTextColor(
-                        color!!
+                        color
                     )
 
                 } else {
@@ -137,7 +136,7 @@ class ChangePasswordFragment : Fragment() {
                     )
                     enterRepeatPassword.setTextAppearance(R.style.Paragraph)
                     enterRepeatPassword.setTextColor(
-                        color!!
+                        color
                     )
                 }
 
@@ -171,7 +170,7 @@ class ChangePasswordFragment : Fragment() {
 
     private fun setObservers() {
         errorBody = MutableLiveData()
-        errorBody.observe(viewLifecycleOwner, Observer { errorBody ->
+        errorBody.observe(viewLifecycleOwner) { errorBody ->
             context?.let { context ->
                 Toast.makeText(
                     context,
@@ -182,9 +181,9 @@ class ChangePasswordFragment : Fragment() {
                     MainActivity.logoutOnInvalidToken(context, findNavController())
                 }
             }
-        })
+        }
 
-        viewModel.checkNetChangePass.observe(viewLifecycleOwner, Observer { hasInternet ->
+        viewModel.checkNetChangePass.observe(viewLifecycleOwner) { hasInternet ->
             if (hasInternet != null && !hasInternet) {
 
                 val bundle = Bundle().apply {
@@ -201,7 +200,7 @@ class ChangePasswordFragment : Fragment() {
                 MainActivity.showSnackMessage(getString(R.string.checking_for_connection), binding)
 
             }
-        })
+        }
     }
 
     private fun validatePassword(oldPassword: String, newPassword: String, repeatPassword: String) {
@@ -264,7 +263,7 @@ class ChangePasswordFragment : Fragment() {
     }
 
     private fun observeChangePasswordStatus() {
-        viewModel.changePasswordStatusLiveData.observe(viewLifecycleOwner, Observer { success ->
+        viewModel.changePasswordStatusLiveData.observe(viewLifecycleOwner) { success ->
             if (success) {
                 showDialogChangePassword()
             } else {
@@ -274,7 +273,7 @@ class ChangePasswordFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-        })
+        }
     }
 
     private fun showDialogChangePassword() {

@@ -71,7 +71,7 @@
     <string name="save_changes">Değişiklikleri Kaydet</string>
     <string name="repeat_password">Şifreyi Tekrarla</string>
     <string name="password_changed">Şifre değiştirildi!</string>
-    <string name="you_will_be_asked_to_login_again">Tekrar giriş yapmanız istenecek.</string>
+    <string name="you_will_be_asked_to_login_again">Hesabınıza tekrar giriş yapmanız gerekiyor.</string>
     <string name="email_address_validation_successful">E-posta adresi doğrulaması başarılı!</string>
     <string name="resend_it">Tekrar gönder</string>
     <string name="address_and_number">Adres ve numara</string>
@@ -156,7 +156,7 @@
     <string name="create_account">T4A hesabı oluştur</string>
     <string name="all_fields_are_mandatory">Tüm alanlar zorunludur.</string>
     <string name="change_successfully_saved">Değişiklikler başarıyla kaydedildi.</string>
-    <string name="please_connect_to_the_internet">Lütfen internete bağlanın</string>
+    <string name="please_connect_to_the_internet">Lütfen internete bağlanın.</string>
     <string name="general_terms_and_conditions">Genel Şartlar ve Koşullar</string>
     <string name="privacy_policy">Gizlilik Politikası</string>
     <string name="choose_country_and_payment">Ülke ve ödeme seçimi</string>
