@@ -521,9 +521,14 @@ class TagPickerRequestFragment : Fragment() {
         val centerAccountNumber = binding.etCenterAccountNumber.text.toString().trim()
         val rightAccountNumber = binding.etRightAccountNumber.text.toString().trim()
 
-        // Validacija unosa za račun
-        if (uniqueNumber.isEmpty() || centerAccountNumber.isEmpty() || rightAccountNumber.isEmpty()) {
+        if (centerAccountNumber.length < 13) {
+            showError(getString(R.string.field_bank_account_isrequired))
+            binding.etCenterAccountNumber.requestFocus()
+            return null
+        }
+        if (rightAccountNumber.length < 2 ) {
             showError(getString(R.string.enter_bank_account))
+            binding.etRightAccountNumber.requestFocus()
             return null
         }
 

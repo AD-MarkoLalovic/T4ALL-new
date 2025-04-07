@@ -352,5 +352,6 @@
     <string name="notification_title">Dozvolite T4A da vam šalje notifikacije</string>
     <string name="notification_subtitle">Notifikacije služe za preuzimanje računa i eksportovanje tabela u istoriji prolazaka</string>
     <string name="listing_of_passages_downloaded_successfully">Listing prolazaka je uspešno preuzet.</string>
+    <string name="field_bank_account_isrequired">Polje žiro račun treba da sadrži 13 cifara.</string>
 
 </resources>

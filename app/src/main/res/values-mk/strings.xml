@@ -350,6 +350,7 @@
     <string name="notification_title">Дозволете на T4A да ви испраќа известувања</string>
     <string name="notification_subtitle">Известувањата служат за преземање фактури и експортовање на табели во историјата на премини</string>
     <string name="listing_of_passages_downloaded_successfully">Листингот на поминувања е успешно преземен.</string>
+    <string name="field_bank_account_isrequired">Полето жиро сметка треба да содржи 13 цифри.</string>
 
 
 </resources>
