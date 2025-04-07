@@ -270,7 +270,6 @@ interface ApiService {
         @Query(value = "currency") currency: String
     ): Response<CsvModel>
 
-
     @GET("/api/v1/banks")
     suspend fun getBanks(): Response<BanksResponse>
 
