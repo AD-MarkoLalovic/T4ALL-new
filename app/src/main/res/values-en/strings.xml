@@ -343,4 +343,5 @@
     <string name="notification_title">Allow T4A to send you notifications</string>
     <string name="notification_subtitle">Notifications are used for downloading invoices and exporting tables in the passage history</string>
     <string name="listing_of_passages_downloaded_successfully">The listing of passages was successfully downloaded.</string>
+    <string name="field_bank_account_isrequired">The bank account field must contain 13 digits.</string>
 </resources>

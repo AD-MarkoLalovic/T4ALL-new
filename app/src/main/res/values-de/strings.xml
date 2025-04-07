@@ -362,5 +362,6 @@
     <string name="notification_title">Erlauben Sie T4A, Ihnen Benachrichtigungen zu senden</string>
     <string name="notification_subtitle">Benachrichtigungen werden für den Rechnungsdownload und den Export von Tabellen im Durchgangsverlauf verwendet</string>
     <string name="listing_of_passages_downloaded_successfully">Die Durchgangsliste wurde erfolgreich heruntergeladen.</string>
+    <string name="field_bank_account_isrequired">Das Feld „Girokonto“ muss 13 Ziffern enthalten.</string>
 
 </resources>
