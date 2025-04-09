@@ -7,7 +7,7 @@
         android:fillColor="#F5F7FA"
         android:pathData="M0,14a14,14 0,1 0,28 0a14,14 0,1 0,-28 0z" />
     <path
-        android:fillColor="@color/franchiser_serbian_post_office"
+        android:fillColor="@color/franchiser_euro_petrol"
         android:pathData="M11.025,21L10,19.971L15.949,14L10,8.029L11.025,7L18,14L11.025,21Z" />
 </vector>
 

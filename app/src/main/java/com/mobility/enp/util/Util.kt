@@ -318,6 +318,29 @@ object Util {
                 R.drawable.default_user_picture_posta_srbije
             )
 
+            "0e16dfd9-b94f-4e1a-aaca-47733b312e79" -> FranchiseModel(
+                "0e16dfd9-b94f-4e1a-aaca-47733b312e79",
+                "Euro Petrol",
+                context.resources.getColor(R.color.franchiser_euro_petrol, null),
+                ContextCompat.getDrawable(context, R.drawable.euro_petrol_home),
+                R.drawable.euro_petrol_profile,
+                ContextCompat.getDrawable(context, R.drawable.logo_euro_petrol), true,
+                ContextCompat.getColorStateList(context, R.color.bottom_nav_color_euro_petrol),
+                R.drawable.euro_petrol_promotion_dot,
+                context.resources.getColor(R.color.franchiser_euro_petrol_half_visibility, null),
+                R.drawable.toolbar_shared_back_euro_petrol,
+                R.drawable.ic_arrow_down_euro_petrol,
+                R.drawable.ic_arrow_up_euro_petrol,
+                R.drawable.arrow_right_euro_petrol,
+                R.drawable.loop_euro_petrol,
+                R.drawable.ic_camera_euro_petrol,
+                R.drawable.ic_language_home_screen_euro_petrol,
+                R.drawable.calendar_today_euro_petrol,
+                R.drawable.plus_ic_euro_petrol,
+                R.drawable.ic_close_euro_petrol,
+                R.drawable.default_user_picture_euro_petrol
+            )
+
             else -> null
         }
 

@@ -66,6 +66,8 @@
     <color name="franchiser_sbb_half_visibility">#80020303</color>
     <color name="franchiser_serbian_post_office">#0C4076</color>
     <color name="franchiser_serbian_post_office_half_visibility">#800C4076</color>
+    <color name="franchiser_euro_petrol">#00A651</color>
+    <color name="franchiser_euro_petrol_half_visibility">#8000A651</color>
     <color name="franchiser_e_box_half_visibility">#801C5A9A</color>
     <color name="franchiser_free_trans">#4A628A</color>
     <color name="franchiser_free_trans_half_visibility">#804A628A</color>
