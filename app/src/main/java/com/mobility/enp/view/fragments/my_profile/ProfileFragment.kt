@@ -219,7 +219,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                     binding.imageProfile.setImageDrawable(
                         AppCompatResources.getDrawable(
                             requireContext(),
-                            R.drawable.ic_account_home_screen
+                            R.drawable.profile_home_logo_default
                         )
                     )
                 }

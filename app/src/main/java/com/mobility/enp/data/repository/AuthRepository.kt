@@ -117,8 +117,6 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
             Log.d(TAG, "getIndexData: ${e.message} ${e.cause}")
             Result.failure(NetworkError.ServerError)
         }
-
-        return Result.failure(NetworkError.ServerError)
     }
 
     suspend fun getToken(): UserLoginResponseRoomTable? {
