@@ -205,7 +205,7 @@ class HomeFragment : Fragment() {
                     .transform(CircleCrop())
                     .format(DecodeFormat.PREFER_ARGB_8888) // Kvalitetnije, ali troši više RAM-a
                     // Preferirani format slike
-                    .error(R.drawable.profile_home_logo_default) // Ako slika ne postoji, postavi default
+                    .error(R.drawable.default_user_picture) // Ako slika ne postoji, postavi default
             )
             .into(imageView)
     }

@@ -84,7 +84,7 @@ object Util {
                 R.drawable.calendar_today_telekom,
                 R.drawable.plus_ic_telekom,
                 R.drawable.ic_close_telekom,
-                R.drawable.profile_home_logo_novi_mtel
+                R.drawable.default_user_picture_mtel
             )
 
             "a2ac8612-4b25-43e3-8017-fcf8ad0da0c4" -> FranchiseModel(
@@ -107,7 +107,7 @@ object Util {
                 R.drawable.calendar_today_s_blue,
                 R.drawable.plus_ic_s_blue,
                 R.drawable.ic_close_s_blue,
-                R.drawable.profile_home_logo_s_blue
+                R.drawable.default_user_picture_s_blue
             )
 
             "9aa3e972-d84b-40df-b35d-d14a229c03e3" -> FranchiseModel(
@@ -130,7 +130,7 @@ object Util {
                 R.drawable.calendar_today_amss,
                 R.drawable.plus_ic_amss,
                 R.drawable.ic_close_amss,
-                R.drawable.profile_home_logo_novi_amss
+                R.drawable.default_user_picture_amss
             )
 
             "d47b35d1-bb44-4618-9b31-cf7e961595ec" -> FranchiseModel(
@@ -153,7 +153,7 @@ object Util {
                 R.drawable.calendar_today_tehnomania,
                 R.drawable.plus_ic_tehnomania,
                 R.drawable.ic_close_tehnomania,
-                R.drawable.profile_home_logo_novi_tehnomania
+                R.drawable.default_user_picture_tehnomania
             )
 
             "2263768e-e3a5-48f8-8e7a-545f6c141318" -> FranchiseModel(
@@ -176,7 +176,7 @@ object Util {
                 R.drawable.calendar_today_enput,
                 R.drawable.plus_ic_enput,
                 R.drawable.ic_close_enput,
-                R.drawable.profile_home_logo_novi_enput
+                R.drawable.default_user_picture_enput
             )
 
             "ed232756-b001-42e7-a3aa-c6c43b9ce49f" -> FranchiseModel(
@@ -199,7 +199,7 @@ object Util {
                 R.drawable.calendar_today_tag_rafaelo,
                 R.drawable.plus_ic_tag_rafaelo,
                 R.drawable.ic_close_tag_rafaelo,
-                R.drawable.profile_home_logo_rafaelo
+                R.drawable.default_user_picture_rafaelo
             )
 
             "183e7ccd-353d-4dd6-950c-8f033dd94620" -> FranchiseModel(
@@ -222,7 +222,7 @@ object Util {
                 R.drawable.calendar_today_free_trans,
                 R.drawable.plus_ic_free_trans,
                 R.drawable.ic_close_free_trans,
-                R.drawable.profile_home_logo_free_trans
+                R.drawable.default_user_picture_free_trans
             )
 
             "0768bada-5f65-4521-8b81-bb0eda51b806" -> FranchiseModel(
@@ -245,7 +245,7 @@ object Util {
                 R.drawable.calendar_today_e_box,
                 R.drawable.plus_ic_e_box,
                 R.drawable.ic_close_e_box,
-                R.drawable.profile_home_logo_e_box
+                R.drawable.default_user_picture_e_box
             )
 
             // TODO: Treba ubaciti odgovarajuci primaryKey i Id za Pay&Roll
@@ -269,7 +269,7 @@ object Util {
                 R.drawable.calendar_today_pay_and_roll,
                 R.drawable.plus_ic_pay_and_roll,
                 R.drawable.ic_close_pay_and_roll,
-                R.drawable.profile_home_logo_pay_n_roll
+                R.drawable.default_user_picture_pay_n_roll
             )
 
             else -> null
