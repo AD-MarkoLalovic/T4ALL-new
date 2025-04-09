@@ -66,5 +66,6 @@
     <color name="franchiser_free_trans">#4A628A</color>
     <color name="franchiser_free_trans_half_visibility">#804A628A</color>
     <color name="franchiser_gray_color">#9CA0A6</color>
+    <color name="default_logo_profile_color_inner">#7A92AF</color>
 
 </resources>
