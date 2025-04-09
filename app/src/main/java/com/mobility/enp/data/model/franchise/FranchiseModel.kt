@@ -24,6 +24,6 @@ data class FranchiseModel(
     val calendarResource : Int,
     val franchisePlusButton : Int,
     val franchiseCloseButton : Int,
+    val franchiseProfilePictureResource : Int,
     val franchiseFlavorText: String = "Powered by Toll4All",
-
 )
