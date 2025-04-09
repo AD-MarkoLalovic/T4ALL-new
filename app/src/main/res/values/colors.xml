@@ -62,6 +62,8 @@
     <color name="franchiser_tag_rafaelo">#295F98</color>
     <color name="franchiser_tag_rafaelo_half_visibility">#80295F98</color>
     <color name="franchiser_e_box">#1C5A9A</color>
+    <color name="franchiser_sbb">#020303</color>
+    <color name="franchiser_sbb_half_visibility">#80020303</color>
     <color name="franchiser_e_box_half_visibility">#801C5A9A</color>
     <color name="franchiser_free_trans">#4A628A</color>
     <color name="franchiser_free_trans_half_visibility">#804A628A</color>

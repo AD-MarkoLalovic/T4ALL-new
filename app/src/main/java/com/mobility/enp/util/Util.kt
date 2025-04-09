@@ -272,6 +272,29 @@ object Util {
                 R.drawable.default_user_picture_pay_n_roll
             )
 
+            "5fcb381c-176c-4d94-93bc-feb476c9d62a" -> FranchiseModel(
+                "5fcb381c-176c-4d94-93bc-feb476c9d62a",
+                "SBB Portal",
+                context.resources.getColor(R.color.franchiser_sbb, null),
+                ContextCompat.getDrawable(context, R.drawable.sbb_home),
+                R.drawable.sbb_profile,
+                ContextCompat.getDrawable(context, R.drawable.logo_sbb), true,
+                ContextCompat.getColorStateList(context, R.color.bottom_nav_color_sbb),
+                R.drawable.sbb_promotion_dot,
+                context.resources.getColor(R.color.franchiser_sbb_half_visibility, null),
+                R.drawable.toolbar_shared_back_sbb,
+                R.drawable.ic_arrow_down_sbb,
+                R.drawable.ic_arrow_up_sbb,
+                R.drawable.arrow_right_sbb,
+                R.drawable.loop_sbb,
+                R.drawable.ic_camera_sbb,
+                R.drawable.ic_language_home_screen_sbb,
+                R.drawable.calendar_today_sbb,
+                R.drawable.plus_ic_sbb,
+                R.drawable.ic_close_sbb,
+                R.drawable.default_user_picture_sbb
+            )
+
             else -> null
         }
 
