@@ -162,7 +162,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_enput, null),
                 ContextCompat.getDrawable(context, R.drawable.enput_home),
                 R.drawable.enput_profile,
-                ContextCompat.getDrawable(context, R.drawable.enput_logo_4x), true,
+                ContextCompat.getDrawable(context, R.drawable.enput_logo_new), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_enput),
                 R.drawable.enput_promotion_dot,
                 context.resources.getColor(R.color.franchiser_enput_half_color, null),
