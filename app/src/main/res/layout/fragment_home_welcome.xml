@@ -104,7 +104,7 @@
                     android:contentDescription="@null"
                     android:visibility="gone"
                     tools:visibility="visible"
-                    android:src="@drawable/profile_home_logo_default"
+                    android:background="@drawable/profile_home_logo_default"
                     android:translationZ="@dimen/dimens_6dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

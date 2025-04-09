@@ -116,6 +116,7 @@ class HomeFragment : Fragment() {
                     ColorStateList.valueOf(data.franchisePrimaryColor)
                 binding.constraintLayoutInCard.background = data.franchiseHomeBackgroundLocation
                 binding.switchToPageBill.setBackgroundResource(data.rightArrowResource)
+                binding.imageAccountHomeScreen.setBackgroundResource(data.franchiseProfilePictureResource)
             }
         }
     }
