@@ -105,7 +105,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 viewModelProfile.logout() // this deletes room local
                 franchiseViewModel.deleteData() // this deletes stored object as it will persist on logout otherwise
 
-                (requireContext() as MainActivity).setDefaultLogo()
+                (requireContext() as MainActivity).resetToDefault()
 
                 findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
             }
@@ -158,11 +158,12 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         }
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { data ->
-            data?.let { model->
+            data?.let { model ->
                 model.franchiseProfileResource?.let {
                     binding.rectangleProfilePicture.setImageResource(it)
                 }
                 binding.bttChangeProfilePicture.setImageResource(model.franchisePlusButton)
+                binding.imageProfile.setBackgroundResource(data.franchiseProfilePictureResource)
             }
         }
 
@@ -206,13 +207,22 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         }
 
         viewModelProfile.deletePic.observe(viewLifecycleOwner) { deleted ->
-            if (deleted) {
-                binding.imageProfile.setImageDrawable(
-                    AppCompatResources.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_account_home_screen
+            if (deleted) { // deleted profile picture should return svg of franchise
+                franchiseViewModel.franchiseModel.value?.let { data ->
+                    binding.imageProfile.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            requireContext(),
+                            data.franchiseProfilePictureResource
+                        )
                     )
-                )
+                } ?: run {
+                    binding.imageProfile.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            requireContext(),
+                            R.drawable.profile_home_logo_default
+                        )
+                    )
+                }
             }
         }
 

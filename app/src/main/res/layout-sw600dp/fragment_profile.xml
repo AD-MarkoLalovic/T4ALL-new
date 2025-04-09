@@ -68,7 +68,7 @@
                         android:layout_width="@dimen/dimens_120dp"
                         android:layout_height="@dimen/dimens_120dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/ic_account_home_screen"
+                        android:src="@drawable/profile_home_logo_default"
                         android:translationZ="@dimen/dimens_6dp"
                         app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintEnd_toEndOf="parent"

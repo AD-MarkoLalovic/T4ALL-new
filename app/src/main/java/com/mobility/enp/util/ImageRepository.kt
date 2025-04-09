@@ -106,7 +106,7 @@ class ImageRepository(private val context: Context) {
                     .centerCrop() //Nacin skaliranja
                     .transform(CircleCrop())
                     .format(DecodeFormat.PREFER_ARGB_8888) // Kvalitetnije, ali troši više RAM-a
-                    .error(R.drawable.ic_account_home_screen) // Ako slika ne postoji, postavi default
+                    .error(R.drawable.profile_home_logo_default) // Ako slika ne postoji, postavi default
             )
             .into(imageView)
     }

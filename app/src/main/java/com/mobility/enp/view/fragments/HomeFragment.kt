@@ -63,7 +63,7 @@ class HomeFragment : Fragment() {
         if (!BuildConfig.FLAVOR.contains("prod")){
             franchiseViewModel.getFranchiseModel(requireContext())
         }else{
-            (activity as MainActivity).setDefaultLogo()
+            (activity as MainActivity).resetToDefault()
         }
 
         setupObservers()
@@ -116,6 +116,7 @@ class HomeFragment : Fragment() {
                     ColorStateList.valueOf(data.franchisePrimaryColor)
                 binding.constraintLayoutInCard.background = data.franchiseHomeBackgroundLocation
                 binding.switchToPageBill.setBackgroundResource(data.rightArrowResource)
+                binding.imageAccountHomeScreen.setBackgroundResource(data.franchiseProfilePictureResource)
             }
         }
     }
@@ -204,7 +205,7 @@ class HomeFragment : Fragment() {
                     .transform(CircleCrop())
                     .format(DecodeFormat.PREFER_ARGB_8888) // Kvalitetnije, ali troši više RAM-a
                     // Preferirani format slike
-                    .error(R.drawable.ic_account_home_screen) // Ako slika ne postoji, postavi default
+                    .error(R.drawable.profile_home_logo_default) // Ako slika ne postoji, postavi default
             )
             .into(imageView)
     }

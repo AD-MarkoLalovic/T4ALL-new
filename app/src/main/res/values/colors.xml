@@ -66,5 +66,19 @@
     <color name="franchiser_free_trans">#4A628A</color>
     <color name="franchiser_free_trans_half_visibility">#804A628A</color>
     <color name="franchiser_gray_color">#9CA0A6</color>
+    <color name="default_logo_profile_color_inner">#7A92AF</color>
+    <color name="s_blue_logo_profile_color_inner">#DAE8FF</color>
+    <color name="pay_n_roll_logo_profile_color_inner">#DAE8FF</color>
+    <color name="free_trans_logo_profile_color_inner">#C8CFDB</color>
+    <color name="novi_mtel_logo_profile_color_inner">#FBD1D8</color>
+    <color name="novi_tehnomania_logo_profile_color_inner">#FDF5D6</color>
+    <color name="tehnocoop_logo_profile_color_inner">#FCE9EC</color>
+    <color name="novi_enput_blue_logo_profile_color_inner">#B7CCF1</color>
+    <color name="novi_amss_blue_logo_profile_color_inner">#FFFCE6</color>
+    <color name="rafaelo_logo_profile_color_inner">#B3C7DD</color>
+    <color name="e_box_logo_profile_color_inner">#DFE7F1</color>
+    <color name="sbb_logo_profile_color_inner">#DFE7F1</color>
+    <color name="posta_srbije_logo_profile_color_inner">#DFE7F1</color>
+    <color name="euro_petrol_logo_profile_color_inner">#DFE7F1</color>
 
 </resources>
