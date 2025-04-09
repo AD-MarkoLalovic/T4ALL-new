@@ -105,7 +105,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 viewModelProfile.logout() // this deletes room local
                 franchiseViewModel.deleteData() // this deletes stored object as it will persist on logout otherwise
 
-                (requireContext() as MainActivity).setDefaultLogo()
+                (requireContext() as MainActivity).resetToDefault()
 
                 findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
             }

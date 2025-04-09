@@ -163,7 +163,7 @@ object Util {
                 ContextCompat.getDrawable(context, R.drawable.enput_home),
                 R.drawable.enput_profile,
                 ContextCompat.getDrawable(context, R.drawable.enput_logo), true,
-                ContextCompat.getColorStateList(context, R.color.franchiser_enput),
+                ContextCompat.getColorStateList(context, R.color.bottom_nav_color_enput),
                 R.drawable.enput_promotion_dot,
                 context.resources.getColor(R.color.franchiser_enput_half_color, null),
                 R.drawable.toolbar_shared_back_enput,

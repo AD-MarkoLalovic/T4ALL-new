@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun setDefaultLogo() {
+    fun resetToDefault() {
         binding.toolbarShared.iconLogo.setImageResource(R.drawable.ic_logo_home_screen)
         binding.toolbarShared.franchiserFlavorText.text = ""
         binding.toolbarShared.constraintBlock.setBackgroundColor(
@@ -62,16 +62,8 @@ class MainActivity : AppCompatActivity() {
             )
         )
         binding.toolbarShared.root.visibility = View.VISIBLE
-    }
-
-    fun hideLogo(hideLogo: Boolean) {
-        if (hideLogo) {
-            binding.toolbarShared.iconLogo.visibility = View.INVISIBLE
-            binding.bottomNavigation.visibility = View.GONE
-        } else {
-            binding.toolbarShared.iconLogo.visibility = View.VISIBLE
-            binding.bottomNavigation.visibility = View.VISIBLE
-        }
+        binding.bottomNavigation.itemIconTintList =
+            ContextCompat.getColorStateList(this, R.color.bottom_nav_color_default)
     }
 
     private fun setFranchiserLogoVisible(franchiseModel: FranchiseModel?) {
