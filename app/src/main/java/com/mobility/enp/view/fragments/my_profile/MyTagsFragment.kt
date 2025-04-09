@@ -81,6 +81,23 @@ class MyTagsFragment : Fragment(), AdapterTagFilterType.OnClick, MyTagsAdapter.O
                     val view = parent.getChildAt(i)
                     if (view is TextInputLayout) {
                         view.boxStrokeColor = color
+                        val editText = view.editText
+                        editText?.textSelectHandle?.setTint(color)
+                        editText?.setTextColor(color)
+
+                        val states = arrayOf(
+                            intArrayOf(android.R.attr.state_pressed),  // pressed
+                            intArrayOf(android.R.attr.state_focused),  // focused
+                            intArrayOf()                               // default
+                        )
+
+                        val colors = intArrayOf(
+                            color,        // pressed
+                            color,        // focused
+                            color         // default
+                        )
+
+                        view.cursorColor = ColorStateList(states, colors)
                     }
                 }
             }
