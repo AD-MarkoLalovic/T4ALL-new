@@ -295,6 +295,29 @@ object Util {
                 R.drawable.default_user_picture_sbb
             )
 
+            "86841eac-1d56-49fb-a1fb-219dae2b3681" -> FranchiseModel(
+                "86841eac-1d56-49fb-a1fb-219dae2b3681",
+                "POSTE SRBIJE",
+                context.resources.getColor(R.color.franchiser_serbian_post_office, null),
+                ContextCompat.getDrawable(context, R.drawable.serbian_post_office_home),
+                R.drawable.serbian_post_office_profile,
+                ContextCompat.getDrawable(context, R.drawable.logo_serbian_post_office), true,
+                ContextCompat.getColorStateList(context, R.color.bottom_nav_color_serbian_post_office),
+                R.drawable.serbian_post_office_promotion_dot,
+                context.resources.getColor(R.color.franchiser_serbian_post_office_half_visibility, null),
+                R.drawable.toolbar_shared_back_serbian_post_office,
+                R.drawable.ic_arrow_down_serbian_post_office,
+                R.drawable.ic_arrow_up_serbian_post_office,
+                R.drawable.arrow_right_serbian_post_office,
+                R.drawable.loop_serbian_post_office,
+                R.drawable.ic_camera_serbian_post_office,
+                R.drawable.ic_language_home_screen_serbian_post_office,
+                R.drawable.calendar_today_serbian_post_office,
+                R.drawable.plus_ic_serbian_post_office,
+                R.drawable.ic_close_serbian_post_office,
+                R.drawable.default_user_picture_posta_srbije
+            )
+
             else -> null
         }
 
