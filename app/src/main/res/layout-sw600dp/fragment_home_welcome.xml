@@ -98,7 +98,7 @@
                     android:layout_height="@dimen/dimens_85dp"
                     android:layout_gravity="center_horizontal"
                     android:contentDescription="@null"
-                    android:src="@drawable/profile_home_logo_default"
+                    android:src="@drawable/default_user_picture"
                     android:translationZ="@dimen/dimens_6dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
