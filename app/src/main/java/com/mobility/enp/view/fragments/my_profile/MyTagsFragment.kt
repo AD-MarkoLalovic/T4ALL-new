@@ -15,7 +15,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tags.PostLostTag
 import com.mobility.enp.data.model.api_tags.TagFilterData
@@ -70,18 +69,30 @@ class MyTagsFragment : Fragment(), AdapterTagFilterType.OnClick, MyTagsAdapter.O
     }
 
     private fun setFranchiser() {
-        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
             franchiseModel?.franchisePrimaryColor?.let { color ->
                 binding.buttonAddTag.backgroundTintList = ColorStateList.valueOf(color)
                 binding.inputSerialNumber.boxStrokeColor = color
-                binding.editSerialNumberMyTags.setTextColor(ColorStateList.valueOf(color))
-                val parent = binding.constraintLayout
 
-                for (i in 0 until parent.childCount) {
-                    val view = parent.getChildAt(i)
-                    if (view is TextInputLayout) {
-                        view.boxStrokeColor = color
-                    }
+                with(binding.inputSerialNumber) {
+                    val editText = this.editText
+                    editText?.textSelectHandle?.setTint(color)
+                    editText?.setTextColor(color)
+
+
+                    val states = arrayOf(
+                        intArrayOf(android.R.attr.state_pressed),  // pressed
+                        intArrayOf(android.R.attr.state_focused),  // focused
+                        intArrayOf()                               // default
+                    )
+
+                    val colors = intArrayOf(
+                        color,        // pressed
+                        color,        // focused
+                        color         // default
+                    )
+
+                    this.cursorColor = ColorStateList(states, colors)
                 }
             }
         }

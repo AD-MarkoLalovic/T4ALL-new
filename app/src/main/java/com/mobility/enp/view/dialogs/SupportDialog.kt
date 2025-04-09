@@ -66,10 +66,31 @@ class SupportDialog : DialogFragment() {
 
     private fun setFranchiser() {
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
-            franchiseModel?.franchisePrimaryColor?.let {
-                binding.bttSendSupportMessage.backgroundTintList = ColorStateList.valueOf(it)
-                binding.supportDialogInput.boxStrokeColor = it
-                binding.enterSupportMessage.setTextColor(ColorStateList.valueOf(it))
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.bttSendSupportMessage.backgroundTintList = ColorStateList.valueOf(color)
+                binding.enterSupportMessage.setTextColor(ColorStateList.valueOf(color))
+
+                binding.supportDialogInput.apply {
+                    boxStrokeColor = color
+
+                    val editText = this.editText
+                    editText?.textSelectHandle?.setTint(color)
+                    editText?.setTextColor(color)
+
+                    val states = arrayOf(
+                        intArrayOf(android.R.attr.state_pressed),  // pressed
+                        intArrayOf(android.R.attr.state_focused),  // focused
+                        intArrayOf()                               // default
+                    )
+
+                    val colors = intArrayOf(
+                        color,        // pressed
+                        color,        // focused
+                        color         // default
+                    )
+
+                    cursorColor = ColorStateList(states, colors)
+                }
             }
         }
     }
