@@ -106,7 +106,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 franchiseViewModel.deleteData() // this deletes stored object as it will persist on logout otherwise
 
                 (requireContext() as MainActivity).resetToDefault()
-                (requireContext() as MainActivity).modifyConstraints(false)
 
                 findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
             }

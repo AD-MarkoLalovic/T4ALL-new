@@ -53,25 +53,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun modifyConstraints(modify: Boolean) {  // for s_blue otherwise icon wont align left due to size on vector or on high quality pngs
-        val constraintLayout = binding.toolbarShared.constraintBlock
-
-        val constraintSet = ConstraintSet()
-        constraintSet.clone(constraintLayout)
-
-        if (modify) {
-            constraintSet.constrainMaxWidth(
-                R.id.iconLogo,
-                resources.getDimensionPixelSize(R.dimen.dimens_40dp)
-            )
-        } else {
-            constraintSet.constrainMaxWidth(
-                R.id.iconLogo,
-                resources.getDimensionPixelSize(R.dimen.dimens_100dp)
-            )
-        }
-    }
-
     fun resetToDefault() {
         binding.toolbarShared.iconLogo.setImageResource(R.drawable.ic_logo_home_screen)
         binding.toolbarShared.franchiserFlavorText.text = ""
