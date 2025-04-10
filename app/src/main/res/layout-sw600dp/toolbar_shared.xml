@@ -5,7 +5,8 @@
     android:id="@+id/constraintBlock"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/white_smoke"
+    android:elevation="@dimen/dimens_10dp"
     android:paddingHorizontal="@dimen/dimens_100dp"
     android:paddingBottom="@dimen/dimens_5dp">
 
