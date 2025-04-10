@@ -83,7 +83,7 @@ object Util {
                 R.drawable.plus_ic_telekom,
                 R.drawable.ic_close_telekom,
                 R.drawable.default_user_picture_mtel,
-                R.color.white
+                ContextCompat.getColorStateList(context, R.color.home_page_text_default)
             )
 
             "a2ac8612-4b25-43e3-8017-fcf8ad0da0c4" -> FranchiseModel(
@@ -107,7 +107,7 @@ object Util {
                 R.drawable.plus_ic_s_blue,
                 R.drawable.ic_close_s_blue,
                 R.drawable.default_user_picture_s_blue,
-                R.color.white
+                ContextCompat.getColorStateList(context, R.color.home_page_text_default)
             )
 
             "9aa3e972-d84b-40df-b35d-d14a229c03e3" -> FranchiseModel(
@@ -131,7 +131,7 @@ object Util {
                 R.drawable.plus_ic_amss,
                 R.drawable.ic_close_amss,
                 R.drawable.default_user_picture_amss,
-                R.color.amss_tehnomania_home_welcome_text_color
+                ContextCompat.getColorStateList(context, R.color.amss_tehnomania_home_welcome_text_color)
             )
 
             "d47b35d1-bb44-4618-9b31-cf7e961595ec" -> FranchiseModel(
@@ -155,7 +155,7 @@ object Util {
                 R.drawable.plus_ic_tehnomania,
                 R.drawable.ic_close_tehnomania,
                 R.drawable.default_user_picture_tehnomania,
-                R.color.amss_tehnomania_home_welcome_text_color
+                ContextCompat.getColorStateList(context, R.color.amss_tehnomania_home_welcome_text_color)
             )
 
             "2263768e-e3a5-48f8-8e7a-545f6c141318" -> FranchiseModel(
@@ -179,7 +179,8 @@ object Util {
                 R.drawable.plus_ic_enput,
                 R.drawable.ic_close_enput,
                 R.drawable.default_user_picture_enput,
-                R.color.white
+                ContextCompat.getColorStateList(context, R.color.home_page_text_default)
+
             )
 
             "ed232756-b001-42e7-a3aa-c6c43b9ce49f" -> FranchiseModel(
@@ -203,7 +204,8 @@ object Util {
                 R.drawable.plus_ic_tag_rafaelo,
                 R.drawable.ic_close_tag_rafaelo,
                 R.drawable.default_user_picture_rafaelo,
-                R.color.white
+                ContextCompat.getColorStateList(context, R.color.home_page_text_default)
+
             )
 
             "183e7ccd-353d-4dd6-950c-8f033dd94620" -> FranchiseModel(
@@ -227,7 +229,8 @@ object Util {
                 R.drawable.plus_ic_free_trans,
                 R.drawable.ic_close_free_trans,
                 R.drawable.default_user_picture_free_trans,
-                R.color.white
+                ContextCompat.getColorStateList(context, R.color.home_page_text_default)
+
             )
 
             "0768bada-5f65-4521-8b81-bb0eda51b806" -> FranchiseModel(
@@ -251,7 +254,8 @@ object Util {
                 R.drawable.plus_ic_e_box,
                 R.drawable.ic_close_e_box,
                 R.drawable.default_user_picture_e_box,
-                R.color.white
+                ContextCompat.getColorStateList(context, R.color.home_page_text_default)
+
             )
 
             // TODO: Treba ubaciti odgovarajuci primaryKey i Id za Pay&Roll
@@ -276,7 +280,8 @@ object Util {
                 R.drawable.plus_ic_pay_and_roll,
                 R.drawable.ic_close_pay_and_roll,
                 R.drawable.default_user_picture_pay_n_roll,
-                R.color.white
+                ContextCompat.getColorStateList(context, R.color.home_page_text_default)
+
             )
 
             "5fcb381c-176c-4d94-93bc-feb476c9d62a" -> FranchiseModel(
@@ -300,7 +305,8 @@ object Util {
                 R.drawable.plus_ic_sbb,
                 R.drawable.ic_close_sbb,
                 R.drawable.default_user_picture_sbb,
-                R.color.white
+                ContextCompat.getColorStateList(context, R.color.home_page_text_default)
+
             )
 
             "86841eac-1d56-49fb-a1fb-219dae2b3681" -> FranchiseModel(
@@ -324,7 +330,8 @@ object Util {
                 R.drawable.plus_ic_serbian_post_office,
                 R.drawable.ic_close_serbian_post_office,
                 R.drawable.default_user_picture_posta_srbije,
-                R.color.white
+                ContextCompat.getColorStateList(context, R.color.home_page_text_default)
+
             )
 
             "0e16dfd9-b94f-4e1a-aaca-47733b312e79" -> FranchiseModel(
@@ -348,7 +355,8 @@ object Util {
                 R.drawable.plus_ic_euro_petrol,
                 R.drawable.ic_close_euro_petrol,
                 R.drawable.default_user_picture_euro_petrol,
-                R.color.white
+                ContextCompat.getColorStateList(context, R.color.home_page_text_default)
+
             )
 
             else -> null
