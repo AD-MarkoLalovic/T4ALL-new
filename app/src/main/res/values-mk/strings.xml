@@ -10,7 +10,7 @@
     <string name="passage_history" translatable="true">Историја на премин</string>
     <string name="search" translatable="true">Пребарај</string>
     <string name="tag_serial_number" translatable="true">Сериски број на таг</string>
-    <string name="complaint" translatable="true">Рекламација</string>
+    <string name="complaint" translatable="true">Жалба</string>
     <string name="refund_request" translatable="true">Побарај враќање на парите.</string>
     <string name="forgot_your_password" translatable="true">Заборавена лозинка?</string>
     <string name="enter_email_for_password_reset" translatable="true">Внесете ја вашата е-пошта и
@@ -70,8 +70,8 @@
     <string name="country" translatable="true">Земја</string>
     <string name="save_changes" translatable="true">Зачувај промени</string>
     <string name="repeat_password" translatable="true">Поново внесете ја новата лозинка.</string>
-    <string name="password_changed" translatable="true">Лозинката е променета!</string>
-    <string name="you_will_be_asked_to_login_again" translatable="true">Ќе бидете прашани да се најавите повторно.</string>
+    <string name="password_changed" translatable="true">Лозинката е променета</string>
+    <string name="you_will_be_asked_to_login_again" translatable="true">Потребно е повторно да се најавите на вашата сметка.</string>
     <string name="email_address_validation_successful" translatable="true">Успешна валидација на е-поштата!</string>
     <string name="resend_it" translatable="true">Испрати повторно.</string>
     <string name="address_and_number" translatable="true">Адреса и број</string>
@@ -102,7 +102,7 @@
     <string name="invoice_details" translatable="true">Детали на фактура</string>
     <string name="lorem_ipsum" translatable="true">Lorem Ipsum</string>
     <string name="order_number" translatable="true">Број на нарачка</string>
-    <string name="credit_card_successful" translatable="true">Кредитната картичка е успешна</string>
+    <string name="credit_card_successful" translatable="true">Кредитната картичка е успешно додадена.</string>
     <string name="tag_confirmed" translatable="true">Тагот е потврден</string>
     <string name="name_and_surname" translatable="true">Име и презиме</string>
     <string name="tag" translatable="true">Таг</string>
@@ -155,7 +155,7 @@
     <string name="create_account" translatable="true">Создадете сметка на T4A</string>
     <string name="all_fields_are_mandatory" translatable="true">Сите полиња се задолжителни.</string>
     <string name="change_successfully_saved" translatable="true">Промени успешно зачувани.</string>
-    <string name="please_connect_to_the_internet" translatable="true">Ве молиме поврзете се на интернет</string>
+    <string name="please_connect_to_the_internet" translatable="true">Ве молиме поврзете се на интернет.</string>
     <string name="general_terms_and_conditions" translatable="true">Општи Услови и Услови</string>
     <string name="privacy_policy" translatable="true">Политика за приватност</string>
     <string name="choose_country_and_payment" translatable="true">Изберете земја и начин на плаќање</string>
@@ -228,7 +228,7 @@
     <string name="no_connection_title">Проблем со поврзување</string>
     <string name="checking_for_connection">Проверка за поврзување</string>
     <string name="connection_restored">Врската е обновена</string>
-    <string name="no_internet">Немате интернет.</string>
+    <string name="no_internet">"Нема интернет конекција.  "</string>
     <string name="offline_using_stored_data">Моментално не сте поврзани на интернет. Се прикажуваат зачуваните податоци.</string>
     <string name="multiple_payment_cards_for_country">Можете да користите повеќе различни платежни картички за една земја.</string>
     <string name="tag_device_payment_method_north_macedonia">Ако сакате да го користите вашиот уред TAG на патиштата во Северној Македонији, ве молиме додадете валидна платежна картичка</string>
@@ -266,7 +266,7 @@
     <string name="enter_amount">Внесете износ</string>
     <string name="enter_bank_account">Внесете комплетен број на Жиро сметката.</string>
     <string name="enter_name_bank">Полето Банка е задолжително.</string>
-    <string name="download_timeout">Ве молиме почекајте 5 секунди пред да преземете</string>
+    <string name="download_timeout">Ве молиме почекајте 5 секунди пред новото преземање.</string>
     <string name="enter_content_of_complaint">"Внесете содржина на приговорот "</string>
     <string name="hint_enter_verification_code">Внесете верификацискиот код</string>
     <string name="serbian_passage">Србија</string>
@@ -331,6 +331,26 @@
     <string name="cards_terms_text_full">Се согласувам со Општите услови и Политиката за приватност</string>
     <string name="card_terms_left_clickable">Општите услови</string>
     <string name="card_term_right_clickable">Политиката за приватност</string>
+    <string name="version">Верзија:</string>
+    <string name="next">Dalje</string>
+    <string name="welcome_to_toll_for_all">Welcome to Toll For All</string>
+    <string name="what_is_toll_for_all_system">Šta je Toll For All sistem?</string>
+    <string name="toll_for_all_description">Toll For All je platforma koja omogućava integrisanu naplatu putarine u zemljama Evrope. Nema više čekanja na naplatnim rampama i promena valute. Sa Toll For All platformom stigla je nova era mobilnosti!</string>
+    <string name="toll_for_all_supported_countries">Države u kojima funkcioniše Toll For All sistem</string>
+    <string name="serbia_eng">Srbija</string>
+    <string name="macedonia_eng">Severna Makedonija</string>
+    <string name="montenegro_eng">Crna Gora</string>
+    <string name="advantages_of_the_toll_for_all_system">Prednosti Toll For All sistema</string>
+    <string name="with_a_one_tag_through_multiple_countries">"Sa jednim tagom kroz više država "</string>
+    <string name="payment_via_the_phone_bill">Plaćanje preko telefonskog računa</string>
+    <string name="payment_directly_from_the_user_s_account">Plaćanje direktno sa korisničkog naloga</string>
+    <string name="no_waiting_in_line">Bez čekanja u redu</string>
+    <string name="no_currency_exchange">Bez promene valuta</string>
+    <string name="permission_granted">Дозвола одобрена</string>
+    <string name="notification_title">Дозволете на T4A да ви испраќа известувања</string>
+    <string name="notification_subtitle">Известувањата служат за преземање фактури и експортовање на табели во историјата на премини</string>
+    <string name="listing_of_passages_downloaded_successfully">Листингот на поминувања е успешно преземен.</string>
+    <string name="field_bank_account_isrequired">Полето жиро сметка треба да содржи 13 цифри.</string>
 
 
 </resources>

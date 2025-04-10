@@ -4,9 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
+import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.databinding.CardProgressBarBinding
 
-class HomeProgressAdapter(val total: Int) :
+class HomeProgressAdapter(val total: Int, val franchiseModel: FranchiseModel?) :
     RecyclerView.Adapter<HomeProgressAdapter.HomeProgressAdapterViewHolder>() {
 
     var checkedPosition = 0
@@ -25,7 +26,16 @@ class HomeProgressAdapter(val total: Int) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(currentPosition: Int) {
-            val drawable = if (checkedPosition == currentPosition) R.drawable.dot_checked else R.drawable.dot_unchecked
+
+            var drawable: Int = 0
+
+            franchiseModel?.promotionsDot?.let {
+                drawable = if (checkedPosition == currentPosition) it else R.drawable.dot_unchecked
+            } ?: run {
+                drawable =
+                    if (checkedPosition == currentPosition) R.drawable.dot_checked else R.drawable.dot_unchecked
+            }
+
             binding.dot.setImageResource(drawable)
         }
 

@@ -1,11 +1,13 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
@@ -15,12 +17,14 @@ import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.refund_request_adapters.RefundRequestsCreatedAdapter
 import com.mobility.enp.view.ui_models.refund_request.RefundRequestUIModel
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.RefundRequestViewModel
 
 class RefundRequestFragment : Fragment() {
 
     private var _binding: FragmentRefundRequestBinding? = null
     private val binding: FragmentRefundRequestBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: RefundRequestViewModel by viewModels { RefundRequestViewModel.Factory }
     private lateinit var adapter: RefundRequestsCreatedAdapter
 
@@ -36,6 +40,8 @@ class RefundRequestFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupUI()
+        setFranchiser()
+
         observeViewModel()
     }
 
@@ -47,6 +53,14 @@ class RefundRequestFragment : Fragment() {
         if (!::adapter.isInitialized) {
             adapter = RefundRequestsCreatedAdapter(emptyList())
             binding.rvRefundRequest.adapter = adapter
+        }
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let {
+                binding.buttonRequest.backgroundTintList = ColorStateList.valueOf(it)
+            }
         }
     }
 

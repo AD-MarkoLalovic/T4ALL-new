@@ -10,7 +10,7 @@
     <string name="passage_history">Povijest prolaza</string>
     <string name="search">Pretraga</string>
     <string name="tag_serial_number">Serijski broj oznake</string>
-    <string name="complaint">Prigovor</string>
+    <string name="complaint">Reklamacija</string>
     <string name="refund_request">Zahtjev za povrat</string>
     <string name="forgot_your_password">Zaboravili ste lozinku?</string>
     <string name="enter_email_for_password_reset">Unesite svoju email adresu i upute za poništavanje lozinke bit će poslane na vaš email.</string>
@@ -65,8 +65,8 @@
     <string name="country">Zemlja</string>
     <string name="save_changes">Spremi promjene</string>
     <string name="repeat_password">Ponovite lozinku</string>
-    <string name="password_changed">Lozinka je promijenjena!</string>
-    <string name="you_will_be_asked_to_login_again">Bit ćete zamoljeni da se ponovno prijavite.</string>
+    <string name="password_changed">Lozinka je promijenjena</string>
+    <string name="you_will_be_asked_to_login_again">Potrebno je da se ponovno prijavite na račun.</string>
     <string name="email_address_validation_successful">Validacija email adrese uspješna!</string>
     <string name="resend_it">Ponovno pošaljite.</string>
     <string name="address_and_number">Adresa i broj</string>
@@ -94,7 +94,7 @@
     <string name="invoice_details">Detalji računa</string>
     <string name="lorem_ipsum">Lorem Ipsum</string>
     <string name="order_number">Broj narudžbe</string>
-    <string name="credit_card_successful">Kreditna kartica uspješna</string>
+    <string name="credit_card_successful">Kreditna kartica je uspješno dodana.</string>
     <string name="tag_confirmed">Oznaka potvrđena</string>
     <string name="name_and_surname">Ime i prezime</string>
     <string name="tag">Oznaka</string>
@@ -146,7 +146,7 @@
     <string name="create_account">Kreiraj T4A račun</string>
     <string name="all_fields_are_mandatory">Sva polja su obavezna.</string>
     <string name="change_successfully_saved">Promjena uspješno spremljena.</string>
-    <string name="please_connect_to_the_internet">Povežite se na internet</string>
+    <string name="please_connect_to_the_internet">Povežite se na internet.</string>
     <string name="general_terms_and_conditions">Opći uvjeti i odredbe</string>
     <string name="privacy_policy">Pravila o privatnosti</string>
     <string name="choose_country_and_payment">Odaberite zemlju i način plaćanja</string>
@@ -224,7 +224,7 @@
     <string name="no_connection_title">Problem s vezom</string>
     <string name="checking_for_connection">Provjerava se veza</string>
     <string name="connection_restored">Veza obnovljena</string>
-    <string name="no_internet">Nemate internet.</string>
+    <string name="no_internet">Nema internet konekcije.</string>
     <string name="offline_using_stored_data">Trenutno niste spojeni na internet. Prikazuju se spremljeni podaci.</string>
     <string name="multiple_payment_cards_for_country">Možete koristiti više različitih platnih kartica za jednu zemlju.</string>
     <string name="tag_device_payment_method_north_macedonia">Ukoliko želite da Vaš TAG uređaj koristite na cestama u Sjevernoj Makedoniji, molimo vas da dodate važeću platnu karticu.</string>
@@ -328,6 +328,26 @@
     <string name="cards_terms_text_full">Slažem se s Općim uvjetima i Politikom privatnosti</string>
     <string name="card_terms_left_clickable">Općim uvjetima</string>
     <string name="card_term_right_clickable">Politikom privatnosti</string>
+    <string name="version">Verzija:</string>
+    <string name="next">Dalje</string>
+    <string name="welcome_to_toll_for_all">Welcome to Toll For All</string>
+    <string name="what_is_toll_for_all_system">Šta je Toll For All sistem?</string>
+    <string name="toll_for_all_description">Toll For All je platforma koja omogućava integrisanu naplatu putarine u zemljama Evrope. Nema više čekanja na naplatnim rampama i promena valute. Sa Toll For All platformom stigla je nova era mobilnosti!</string>
+    <string name="toll_for_all_supported_countries">Države u kojima funkcioniše Toll For All sistem</string>
+    <string name="serbia_eng">Srbija</string>
+    <string name="macedonia_eng">Severna Makedonija</string>
+    <string name="montenegro_eng">Crna Gora</string>
+    <string name="advantages_of_the_toll_for_all_system">Prednosti Toll For All sistema</string>
+    <string name="with_a_one_tag_through_multiple_countries">"Sa jednim tagom kroz više država "</string>
+    <string name="payment_via_the_phone_bill">Plaćanje preko telefonskog računa</string>
+    <string name="payment_directly_from_the_user_s_account">Plaćanje direktno sa korisničkog naloga</string>
+    <string name="no_waiting_in_line">Bez čekanja u redu</string>
+    <string name="no_currency_exchange">Bez promene valuta</string>
+    <string name="permission_granted">Dozvola odobrena</string>
+    <string name="notification_title">Dozvolite T4A da vam šalje obavijesti</string>
+    <string name="notification_subtitle">Obavijesti služe za preuzimanje računa i eksportovanje tablica u povijesti prolazaka</string>
+    <string name="listing_of_passages_downloaded_successfully">Listing prolazaka je uspješno preuzet.</string>
+    <string name="field_bank_account_isrequired">Polje žiro račun treba sadržavati 13 znamenki.</string>
 
 
 </resources>

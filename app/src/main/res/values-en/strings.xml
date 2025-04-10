@@ -10,7 +10,7 @@
     <string name="passage_history">Toll History</string>
     <string name="search">Search</string>
     <string name="tag_serial_number">Tag serial number</string>
-    <string name="complaint">Complaint form</string>
+    <string name="complaint">Complaint</string>
     <string name="refund_request">Refund Request</string>
     <string name="forgot_your_password">Forgot your password?</string>
     <string name="enter_email_for_password_reset">Enter your email address
@@ -67,8 +67,8 @@
     <string name="country">Country</string>
     <string name="save_changes">Save Changes</string>
     <string name="repeat_password">Repeat password</string>
-    <string name="password_changed">Password changed!</string>
-    <string name="you_will_be_asked_to_login_again">You will be asked to login again.</string>
+    <string name="password_changed">Password changed</string>
+    <string name="you_will_be_asked_to_login_again">You need to sign in to your account again.</string>
     <string name="email_address_validation_successful">Email address validation successful!</string>
     <string name="resend_it">Resend it.</string>
     <string name="address_and_number">Address and number</string>
@@ -96,7 +96,7 @@
     <string name="invoice_details">Invoice Details</string>
     <string name="lorem_ipsum">Lorem Ipsum</string>
     <string name="order_number">Order number</string>
-    <string name="credit_card_successful">Credit card successful</string>
+    <string name="credit_card_successful">The credit card has been successfully added.</string>
     <string name="tag_confirmed">Tag confirmed</string>
     <string name="name_and_surname">Name and surname</string>
     <string name="tag">Tag</string>
@@ -148,7 +148,7 @@
     <string name="create_account">Create T4A account</string>
     <string name="all_fields_are_mandatory">All fields are mandatory.</string>
     <string name="change_successfully_saved">Change successfully saved.</string>
-    <string name="please_connect_to_the_internet">Please connect to the internet</string>
+    <string name="please_connect_to_the_internet">Please connect to the internet.</string>
     <string name="general_terms_and_conditions">General Terms and Conditions</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="choose_country_and_payment">Choose country and payment</string>
@@ -221,7 +221,7 @@
     <string name="no_connection_title">Connection Issue</string>
     <string name="checking_for_connection">Checking For Connection</string>
     <string name="connection_restored">Connection Restored</string>
-    <string name="no_internet">You don\'t have internet.</string>
+    <string name="no_internet">No internet connection.</string>
     <string name="offline_using_stored_data">You are currently not connected to the internet. Saved data is being displayed.</string>
     <string name="multiple_payment_cards_for_country">You can use multiple different payment cards for one country.</string>
     <string name="tag_device_payment_method_north_macedonia">If you want to use your TAG device on the roads in North Macedonia, please add a valid payment card.</string>
@@ -259,7 +259,7 @@
     <string name="enter_amount">Enter the amount</string>
     <string name="enter_bank_account">Enter the full bank account number.</string>
     <string name="enter_name_bank">Field Bank is required.</string>
-    <string name="download_timeout">Please wait 5 seconds before downloading</string>
+    <string name="download_timeout">Molimo sačekajte 5 sekundi prije novog preuzimanja.</string>
     <string name="enter_content_of_complaint">Enter the content of the complaint</string>
     <string name="hint_enter_verification_code">Enter the verification code</string>
     <string name="serbian_passage">Serbia</string>
@@ -324,4 +324,24 @@
     <string name="cards_terms_text_full">I agree with General Terms and Conditions and Privacy Policy</string>
     <string name="card_terms_left_clickable">General Terms and Conditions</string>
     <string name="card_term_right_clickable">Privacy Policy</string>
+    <string name="version">Version:</string>
+    <string name="next">Next</string>
+    <string name="welcome_to_toll_for_all">Welcome to Toll For All</string>
+    <string name="what_is_toll_for_all_system">What is Toll For All system?</string>
+    <string name="toll_for_all_description">Toll For All is a platform that provides         integrated toll collection services in European countries. No more waiting at toll booths and         currency exchanges. With the Toll For All platform, a new era of mobility has arrived.</string>
+    <string name="toll_for_all_supported_countries">Countries that support Toll For All system</string>
+    <string name="serbia_eng">Serbia</string>
+    <string name="macedonia_eng">N. Macedonia</string>
+    <string name="montenegro_eng">Montenegro</string>
+    <string name="advantages_of_the_toll_for_all_system">Advantages of the Toll For All system</string>
+    <string name="with_a_one_tag_through_multiple_countries">With a one tag through multiple countries</string>
+    <string name="payment_via_the_phone_bill">Payment via the phone bill</string>
+    <string name="payment_directly_from_the_user_s_account">Payment directly from the user\'s account.</string>
+    <string name="no_waiting_in_line">No waiting in line</string>
+    <string name="no_currency_exchange">No currency exchange</string>
+    <string name="permission_granted">Permission Granted</string>
+    <string name="notification_title">Allow T4A to send you notifications</string>
+    <string name="notification_subtitle">Notifications are used for downloading invoices and exporting tables in the passage history</string>
+    <string name="listing_of_passages_downloaded_successfully">The listing of passages was successfully downloaded.</string>
+    <string name="field_bank_account_isrequired">The bank account field must contain 13 digits.</string>
 </resources>

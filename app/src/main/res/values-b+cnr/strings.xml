@@ -10,7 +10,7 @@
     <string name="passage_history">Istorija prolaza</string>
     <string name="search">Pretraga</string>
     <string name="tag_serial_number">Seriski broj oznake</string>
-    <string name="complaint">Žalba</string>
+    <string name="complaint">Reklamacija</string>
     <string name="refund_request">Zahtjev za povrat novca</string>
     <string name="forgot_your_password">Zaboravili ste šifru?</string>
     <string name="enter_email_for_password_reset">Unesite vašu email adresu i instrukcije za resetovanje šifre će vam biti poslate na email.</string>
@@ -65,8 +65,8 @@
     <string name="country">Zemlja</string>
     <string name="save_changes">Sačuvaj Promjene</string>
     <string name="repeat_password">Ponovi šifru</string>
-    <string name="password_changed">Šifra promijenjena!</string>
-    <string name="you_will_be_asked_to_login_again">Bićete ponovo pitani da se prijavite.</string>
+    <string name="password_changed">Šifra promijenjena</string>
+    <string name="you_will_be_asked_to_login_again">Potrebno je da se opet prijavite na nalog.</string>
     <string name="email_address_validation_successful">Validacija email adrese uspješna!</string>
     <string name="resend_it">Pošalji ponovo.</string>
     <string name="address_and_number">Adresa i broj</string>
@@ -94,7 +94,7 @@
     <string name="invoice_details">Detalji Fakture</string>
     <string name="lorem_ipsum">Lorem Ipsum</string>
     <string name="order_number">Broj narudžbe</string>
-    <string name="credit_card_successful">Kreditna kartica uspješno</string>
+    <string name="credit_card_successful">Kreditna kartica je uspješno dodata.</string>
     <string name="tag_confirmed">Oznaka potvrđena</string>
     <string name="name_and_surname">Ime i prezime</string>
     <string name="tag">Oznaka</string>
@@ -146,7 +146,7 @@
     <string name="create_account">Napravite T4A nalog</string>
     <string name="all_fields_are_mandatory">Sva polja su obavezna.</string>
     <string name="change_successfully_saved">Promjene uspješno sačuvane.</string>
-    <string name="please_connect_to_the_internet">Molimo vas povežite se na internet</string>
+    <string name="please_connect_to_the_internet">Povežite se na internet.</string>
     <string name="general_terms_and_conditions">Opšti uslovi i odredbe</string>
     <string name="privacy_policy">Politika privatnosti</string>
     <string name="choose_country_and_payment">Odaberite zemlju i način plaćanja</string>
@@ -220,7 +220,7 @@
     <string name="no_connection_title">Problemi sa konekcijom</string>
     <string name="checking_for_connection">Provjera konekcije</string>
     <string name="connection_restored">Konekcija obnovljena</string>
-    <string name="no_internet">Nemate internet.</string>
+    <string name="no_internet">Nema internet konekcije.</string>
     <string name="offline_using_stored_data">Trenutno niste povezani na internet. Prikazuju se sačuvani podaci.</string>
     <string name="multiple_payment_cards_for_country">Možete koristiti više različitih platnih kartica za jednu zemlju.</string>
     <string name="tag_device_payment_method_north_macedonia">Ukoliko želite da Vaš TAG uređaj koristite na putevima u Sjevernoj Makedoniji, molimo vas da dodate važeću platnu karticu.</string>
@@ -258,7 +258,7 @@
     <string name="enter_amount">Unesite iznos</string>
     <string name="enter_bank_account">Unesite kompletan broj žiro računa.</string>
     <string name="enter_name_bank">Polje Banka je obavezno.</string>
-    <string name="download_timeout">Molimo sacekajte 5 sekundi pre skidanja racuna</string>
+    <string name="download_timeout">Molimo sačekajte 5 sekundi prije novog preuzimanja.</string>
     <string name="enter_content_of_complaint">"Unesite sadržaj prigovora     "</string>
     <string name="hint_enter_verification_code">Unesite verifikacioni kod</string>
     <string name="serbian_passage">Srbija</string>
@@ -323,4 +323,24 @@
     <string name="cards_terms_text_full">Saglasan sam sa Opštim uslovima i Politikom privatnosti</string>
     <string name="card_terms_left_clickable">Opštim uslovima</string>
     <string name="card_term_right_clickable">Politikom privatnosti</string>
+    <string name="version">Verzija:</string>
+    <string name="next">Dalje</string>
+    <string name="welcome_to_toll_for_all">Welcome to Toll For All</string>
+    <string name="what_is_toll_for_all_system">Šta je Toll For All sistem?</string>
+    <string name="toll_for_all_description">Toll For All je platforma koja omogućava integrisanu naplatu putarine u zemljama Evrope. Nema više čekanja na naplatnim rampama i promena valute. Sa Toll For All platformom stigla je nova era mobilnosti!</string>
+    <string name="toll_for_all_supported_countries">Države u kojima funkcioniše Toll For All sistem</string>
+    <string name="serbia_eng">Srbija</string>
+    <string name="macedonia_eng">Severna Makedonija</string>
+    <string name="montenegro_eng">Crna Gora</string>
+    <string name="advantages_of_the_toll_for_all_system">Prednosti Toll For All sistema</string>
+    <string name="with_a_one_tag_through_multiple_countries">"Sa jednim tagom kroz više država "</string>
+    <string name="payment_via_the_phone_bill">Plaćanje preko telefonskog računa</string>
+    <string name="payment_directly_from_the_user_s_account">Plaćanje direktno sa korisničkog naloga</string>
+    <string name="no_waiting_in_line">Bez čekanja u redu</string>
+    <string name="no_currency_exchange">Bez promene valuta</string>
+    <string name="permission_granted">Dozvola odobrena</string>
+    <string name="notification_title">Dozvolite T4A da vam šalje notifikacije</string>
+    <string name="notification_subtitle">Notifikacije služe za preuzimanje računa i eksportovanje tabela u istoriji prolazaka</string>
+    <string name="listing_of_passages_downloaded_successfully">Listing prolazaka je uspješno preuzet.</string>
+    <string name="field_bank_account_isrequired">Polje žiro račun treba da sadrži 13 cifara.</string>
 </resources>

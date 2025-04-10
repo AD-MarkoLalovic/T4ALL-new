@@ -100,7 +100,8 @@
                         android:hint="@string/hint_enter_serial_number"
                         android:imeOptions="actionDone"
                         android:inputType="number"
-                        android:textColor="@color/figmaSplashScreenColor" />
+                        android:textColor="@color/figmaSplashScreenColor"
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <View

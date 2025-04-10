@@ -1,5 +1,7 @@
 package com.mobility.enp.view.fragments.tool_history
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -23,17 +27,28 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.select.ToolHistoryTagsAdapter
+import com.mobility.enp.view.dialogs.NotificationsRequestDialog
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 
 class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
     private var _binding: FragmentToolHistorySearchQueryBinding? = null
     private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                // Permission is granted. You can proceed with sending notifications.
+                sendNotification()
+            }
+        }
 
     companion object {
         const val TAG = "ToolDetails"
@@ -52,6 +67,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         super.onViewCreated(view, savedInstanceState)
 
         setObservers()
+        setFranchiser()
 
         vModel.selectedTags.clear()
 
@@ -72,8 +88,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                 } else {
                     val bundle = Bundle().apply {
                         putString(
-                            getString(R.string.title),
-                            getString(R.string.no_connection_title)
+                            getString(R.string.title), getString(R.string.no_connection_title)
                         )
                         putString(
                             getString(R.string.subtitle),
@@ -91,7 +106,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         binding.chkBox.setOnClickListener {
             val isChecked = binding.chkBox.isChecked
             vModel.allTagsSelected = isChecked
-            setCheckboxColors(isChecked)
         }
 
         vModel.startDate.observe(viewLifecycleOwner) { data ->
@@ -146,6 +160,51 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         }
     }
 
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.btnSearch.backgroundTintList = ColorStateList.valueOf(color)
+                binding.exportBlock.setTextColor(color)
+                binding.exportBlock.visibility =
+                    View.GONE // because frashizers can not export from what daniel told me
+
+                binding.searchMark.setImageResource(franchiseModel.loopIcon)
+
+                val states = arrayOf(
+                    intArrayOf(android.R.attr.state_checked),  // When switch is ON
+                    intArrayOf(-android.R.attr.state_checked) // When switch is OFF
+                )
+
+                val colors = intArrayOf(
+                    color,  // ON color
+                    ContextCompat.getColor(
+                        requireContext(), R.color.primary_light_dark
+                    ) // OFF color
+                )
+
+                val colorStateList = ColorStateList(states, colors)
+                binding.chkBox.buttonTintList = colorStateList
+            } ?: run {
+                val states = arrayOf(
+                    intArrayOf(android.R.attr.state_checked),  // When switch is ON
+                    intArrayOf(-android.R.attr.state_checked) // When switch is OFF
+                )
+
+                val colors = intArrayOf(
+                    ContextCompat.getColor(
+                        requireContext(), R.color.figmaSplashScreenColor
+                    ),  // ON color
+                    ContextCompat.getColor(
+                        requireContext(), R.color.primary_light_dark
+                    ) // OFF color
+                )
+
+                val colorStateList = ColorStateList(states, colors)
+                binding.chkBox.buttonTintList = colorStateList
+            }
+        }
+    }
+
     private fun setSelectedButton(selectedButton: View) = with(binding) {
         buttonAll.isSelected = false
         buttonEUR.isSelected = false
@@ -178,14 +237,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                 }
             }
         }
-
-        vModel.csvData.observe(viewLifecycleOwner) { csvData ->
-            binding.progBar.visibility = View.GONE
-            csvData?.let {
-                vModel.processCsvData(it)
-            }
-        }
-
 
         collectLatestLifecycleFlow(vModel.baseTagDataState) { tagIndex ->
             when (tagIndex) {
@@ -222,15 +273,78 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                 }
             }
         }
+
+        collectLatestLifecycleFlow(vModel.csvTable) { csvTable ->
+            when (csvTable) {
+                is SubmitResult.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.progBar.visibility = View.GONE
+
+                    if (!csvTable.data.data?.csvContent.isNullOrEmpty()) {
+                        val nameExtra = UUID.randomUUID().toString().substring(0, 8)
+                        vModel.processCsvData(csvTable.data, nameExtra,requireContext())
+                        when {
+                            ContextCompat.checkSelfPermission(
+                                requireContext(), Manifest.permission.POST_NOTIFICATIONS
+                            ) == PackageManager.PERMISSION_GRANTED -> {
+                                csvTable.data.data?.csvContent?.let {
+                                    vModel.saveBase64ToCSV(
+                                        it, nameExtra,requireContext()
+                                    ) // <- converts csv to pdf saves locally and in room byte array
+                                }
+                                vModel.setCsvState()
+                            }
+
+                            else -> {
+                                showNotificationPermissionRationale()
+                                vModel.setCsvState()
+                            }
+                        }
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.no_passage_data),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(csvTable.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(csvTable.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {
+                    SubmitResult.Empty
+                }
+            }
+        }
     }
+
 
     private fun checkInternet() {
         if (!vModel.internetAvailable()) {
             val bundle = Bundle().apply {
                 putString(getString(R.string.title), getString(R.string.no_connection_title))
                 putString(
-                    getString(R.string.subtitle),
-                    getString(R.string.please_connect_to_the_internet)
+                    getString(R.string.subtitle), getString(R.string.please_connect_to_the_internet)
                 )
             }
 
@@ -252,6 +366,30 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         }
     }
 
+
+    private fun showNotificationPermissionRationale() {
+        lifecycleScope.launch {
+            val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
+            val generalMessageDialog = NotificationsRequestDialog(
+                getString(R.string.notification_title),
+                getString(R.string.notification_subtitle),
+                object : NotificationsRequestDialog.OnButtonClick {
+                    override fun onClickConfirmed() {
+                        requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                    }
+
+                    override fun onClickRejected() {
+                    }
+                })
+            generalMessageDialog.show(fragmentManager, "permDialog")
+        }
+    }
+
+    private fun sendNotification() {
+        Toast.makeText(requireContext(), getString(R.string.permission_granted), Toast.LENGTH_SHORT)
+            .show()
+    }
+
     private fun setIndexData(indexData: IndexData) {
         indexData.data?.let { index ->
             if (!index.tags.isNullOrEmpty()) {
@@ -260,7 +398,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                 vModel.tagSerials = index.tags as ArrayList<Tag>
                 Log.d(TAG, "setObservers: ${vModel.tagSerials}")
 
-                val adapter = ToolHistoryTagsAdapter(vModel.tagSerials, this)
+                val adapter = ToolHistoryTagsAdapter(vModel.tagSerials, this, franchiseViewModel)
 
                 binding.cycler.adapter = adapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
@@ -295,24 +433,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     override fun onTagRemove(tag: Tag) {
         vModel.selectedTags.remove(tag)
         Log.d(TAG, "onSendTag: ${vModel.selectedTags}")
-    }
-
-    private fun setCheckboxColors(isChecked: Boolean) {
-        if (isChecked) {
-            binding.chkBox.buttonTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.figmaSplashScreenColor
-                )
-            )
-        } else {
-            binding.chkBox.buttonTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.primary_light_dark
-                )
-            )
-        }
     }
 
     override fun onDestroyView() {

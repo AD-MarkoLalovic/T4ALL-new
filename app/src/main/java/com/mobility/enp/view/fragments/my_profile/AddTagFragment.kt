@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,9 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_tags.LostTagResponse
@@ -18,10 +21,12 @@ import com.mobility.enp.network.Repository
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.GeneralMessageAddTag
 import com.mobility.enp.viewmodel.AddTagViewModel
+import com.mobility.enp.viewmodel.FranchiseViewModel
 
 class AddTagFragment : Fragment() {
 
     private lateinit var binding: FragmentAddTagBinding
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: AddTagViewModel by viewModels()
 
     private var data: MutableLiveData<LostTagResponse> = MutableLiveData()
@@ -41,6 +46,7 @@ class AddTagFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setObservers()
+        setFranchiser()
 
         binding.bttConfirmAddTag.setOnClickListener {
             if (Repository.isNetworkAvailable(requireContext())) {
@@ -77,6 +83,40 @@ class AddTagFragment : Fragment() {
 
         }
 
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.bttConfirmAddTag.backgroundTintList = ColorStateList.valueOf(color)
+
+                val parent = binding.constraintLayout
+
+                for (i in 0 until parent.childCount) {
+                    val view = parent.getChildAt(i)
+                    if (view is TextInputLayout) {
+                        view.boxStrokeColor = color
+                        val editText = view.editText
+                        editText?.textSelectHandle?.setTint(color)
+                        editText?.setTextColor(color)
+
+                        val states = arrayOf(
+                            intArrayOf(android.R.attr.state_pressed),  // pressed
+                            intArrayOf(android.R.attr.state_focused),  // focused
+                            intArrayOf()                               // default
+                        )
+
+                        val colors = intArrayOf(
+                            color,        // pressed
+                            color,        // focused
+                            color         // default
+                        )
+
+                        view.cursorColor = ColorStateList(states, colors)
+                    }
+                }
+            }
+        }
     }
 
     private fun setObservers() {

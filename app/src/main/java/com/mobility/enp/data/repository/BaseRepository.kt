@@ -8,6 +8,7 @@ import com.mobility.enp.data.model.ApiErrorResponse
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.network.ApiService
 import com.mobility.enp.network.RestClient
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers
@@ -29,23 +30,14 @@ abstract class BaseRepository(
         }
     }
 
-    protected suspend fun getLangKey(): String {
-        val languageTable = database.languageDao().fetchAllowedUsers()
-        // Ako je userLanguage null, vraćamo en
-        val languageCode = languageTable?.userLanguage ?: return "en"
-
+    protected fun getLangKey(): String {
+        val languageCode = SharedPreferencesHelper.getUserLanguage(context)
         return when {
             languageCode.contains("sr") -> "lat"
             languageCode.contains("cnr") -> "me"
             languageCode.contains("el") -> "gr"
             languageCode.contains("bs") -> "ba"
             else -> languageCode
-        }
-    }
-
-    protected suspend fun getRoomLanguage():String?{
-        return withContext(Dispatchers.IO) {
-            database.languageDao().fetchAllowedUsers()?.userLanguage
         }
     }
 
@@ -61,20 +53,50 @@ abstract class BaseRepository(
     protected fun parseErrorResponse(errorCode: Int, errorBody: ResponseBody): ApiErrorResponse {
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
-            .build()  // Create Moshi instance for JSON parsing
+            .build()
 
         val jsonAdapter = moshi.adapter(ApiErrorResponse::class.java)
 
-        // Read the error body string (avoid multiple reads)
-        val errorBodyString = errorBody.string()
-
-        // Try to parse the JSON and then set the error code; if parsing fails, return a default error object with the code.
-        return jsonAdapter.fromJson(errorBodyString)?.copy(code = errorCode)
-            ?: ApiErrorResponse(
+        val errorBodyString = try {
+            errorBody.string()
+        } catch (e: Exception) {
+            return ApiErrorResponse(
                 code = errorCode,
                 message = context.getString(R.string.server_error_msg),
                 errors = null
             )
+        }
+
+        return try {
+            val parsedResponse = jsonAdapter.fromJson(errorBodyString)?.copy(code = errorCode)
+                ?: ApiErrorResponse(
+                    code = errorCode,
+                    message = context.getString(R.string.server_error_msg),
+                    errors = null
+                )
+
+            // Prerađujemo errors kako bi uvek bio lista stringova
+            val processedErrors = when (parsedResponse.errors) {
+                is Map<*, *> -> {  // Ako je objekat, uzimamo sve vrednosti kao listu stringova
+                    (parsedResponse.errors).values.flatMap { it as? List<*> ?: emptyList() }
+                        .mapNotNull { it.toString() }
+                }
+
+                is List<*> -> parsedResponse.errors // Ako je već lista, koristimo je
+                else -> null  // Ako je nešto drugo, ignorišemo
+            }
+
+            // Vraćamo kopiju objekta sa obrađenim listama grešaka
+            parsedResponse.copy(errors = processedErrors)
+
+        } catch (e: Exception) {
+            ApiErrorResponse(
+                code = errorCode,
+                message = context.getString(R.string.server_error_msg),
+                errors = null
+            )
+        }
     }
+
 }
 

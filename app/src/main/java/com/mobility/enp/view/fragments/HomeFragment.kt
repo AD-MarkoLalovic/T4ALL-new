@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +19,7 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
+import com.mobility.enp.BuildConfig
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
@@ -30,6 +33,7 @@ import com.mobility.enp.view.adapters.TotalCurrencyAdapter
 import com.mobility.enp.view.adapters.home.HomePassageAdapter
 import com.mobility.enp.view.adapters.home.HomeProgressAdapter
 import com.mobility.enp.view.adapters.home.HomePromotionsAdapter
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.HomeViewModel
 import java.io.File
 
@@ -39,7 +43,10 @@ class HomeFragment : Fragment() {
     private val binding: FragmentHomeWelcomeBinding get() = _binding!!
     private lateinit var totalCurrencyAdapter: TotalCurrencyAdapter
     private lateinit var homePassageAdapter: HomePassageAdapter
+    private lateinit var homePromotionsAdapter: HomePromotionsAdapter
+    private lateinit var adapterProgress: HomeProgressAdapter
 
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
 
     override fun onCreateView(
@@ -53,9 +60,15 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (!BuildConfig.FLAVOR.contains("prod")){
+            franchiseViewModel.getFranchiseModel(requireContext())
+        }else{
+            (activity as MainActivity).resetToDefault()
+        }
+
+        setupObservers()
         setupBinding()
         setupAdapters()
-        setupObservers()
         setupClickListeners()
 
         viewModel.fetchHomeData()
@@ -93,11 +106,19 @@ class HomeFragment : Fragment() {
                 setHomeCardsAdapter(it)
             }
         }
-
         collectLatestLifecycleFlow(viewModel.homeTollHistory) { tollHistory ->
             homePassageAdapter.submitList(tollHistory)
         }
 
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.let { data ->
+                binding.cardViewAccountHomeScreen.backgroundTintList =
+                    ColorStateList.valueOf(data.franchisePrimaryColor)
+                binding.constraintLayoutInCard.background = data.franchiseHomeBackgroundLocation
+                binding.switchToPageBill.setBackgroundResource(data.rightArrowResource)
+                binding.imageAccountHomeScreen.setBackgroundResource(data.franchiseProfilePictureResource)
+            }
+        }
     }
 
     private fun setupClickListeners() {
@@ -106,13 +127,18 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun handleHomeDataResult(result: SubmitResult<HomeWithDetails>) {
+    private fun handleHomeDataResult(result: SubmitResult<HomeWithDetails>) {  // data save in room directly on api response / model returned combined
         when (result) {
-            is SubmitResult.Loading -> binding.progBar.visibility = View.VISIBLE
+            is SubmitResult.Loading -> {
+                binding.progBar.visibility = View.VISIBLE
+            }
+
             is SubmitResult.Success -> {
                 handleSuccess(result)
                 binding.progBar.visibility = View.GONE
                 binding.linearHomeContainer.visibility = View.VISIBLE
+                binding.cardViewAccountHomeScreen.visibility = View.VISIBLE
+                binding.imageAccountHomeScreen.visibility = View.VISIBLE
             }
 
             is SubmitResult.Empty -> {}
@@ -127,6 +153,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun handleSuccess(result: SubmitResult.Success<HomeWithDetails>) {
+        viewModel.homeCards.value?.let {
+            setHomeCardsAdapter(it)
+        }
+
         result.data.home.displayName.let { viewModel.loadProfileImage(it) }
         val invoiceDetails = result.data.invoice
         if (invoiceDetails.isNotEmpty()) {
@@ -145,6 +175,7 @@ class HomeFragment : Fragment() {
         } else {
             binding.noToolHistory.visibility = View.VISIBLE
         }
+
     }
 
     private fun showErrorMessage(message: String) {
@@ -174,7 +205,7 @@ class HomeFragment : Fragment() {
                     .transform(CircleCrop())
                     .format(DecodeFormat.PREFER_ARGB_8888) // Kvalitetnije, ali troši više RAM-a
                     // Preferirani format slike
-                    .error(R.drawable.ic_account_home_screen) // Ako slika ne postoji, postavi default
+                    .error(R.drawable.default_user_picture) // Ako slika ne postoji, postavi default
             )
             .into(imageView)
     }
@@ -196,19 +227,20 @@ class HomeFragment : Fragment() {
             }
         }
 
-        val adapter = HomePromotionsAdapter(filteredList, onItemClicked = {
+        homePromotionsAdapter = HomePromotionsAdapter(filteredList, onItemClicked = {
             findNavController().navigate(R.id.action_homeFragment_to_paymentAndPassageFragment)
         }, { delete ->
             binding.progBar.visibility = View.VISIBLE
             viewModel.updateDeleteHomeCard(delete)
             binding.progBar.visibility = View.GONE
-        })
+        }, franchiseViewModel.franchiseModel.value)
 
         if (filteredList.isNotEmpty()) {
-            val adapterProgress = HomeProgressAdapter(filteredList.size)
+            adapterProgress =
+                HomeProgressAdapter(filteredList.size, franchiseViewModel.franchiseModel.value)
 
             binding.cyclerPromotions.visibility = View.VISIBLE
-            binding.cyclerPromotions.adapter = adapter
+            binding.cyclerPromotions.adapter = homePromotionsAdapter
 
             binding.cyclerProgress.visibility = View.VISIBLE
             binding.cyclerProgress.adapter = adapterProgress

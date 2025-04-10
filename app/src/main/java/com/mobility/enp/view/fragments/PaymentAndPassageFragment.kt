@@ -30,6 +30,7 @@ import com.mobility.enp.view.adapters.CardsCountryAdapter
 import com.mobility.enp.view.adapters.PaymentAndPassageAdapter
 import com.mobility.enp.view.dialogs.ConfirmRemovalCardDialog
 import com.mobility.enp.view.dialogs.LostTagDialog
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -43,6 +44,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private var _binding: FragmentPaymentAndPassageBinding? = null
     private val binding: FragmentPaymentAndPassageBinding get() = _binding!!
 
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: PaymentAndPassageViewModel by activityViewModels { PaymentAndPassageViewModel.Factory }
     private lateinit var adapter: PaymentAndPassageAdapter
     private lateinit var cardsCountryAdapter: CardsCountryAdapter
@@ -203,7 +205,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun setupAdapters() {
-        adapter = PaymentAndPassageAdapter(arrayListOf(), this)
+        adapter = PaymentAndPassageAdapter(arrayListOf(), this, franchiseViewModel)
         binding.rvCreditCard.adapter = adapter
 
         cardsCountryAdapter = CardsCountryAdapter(arrayListOf(), this)
@@ -214,7 +216,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private fun processCardResponse(cardWebResponse: CardWebModel) {
         val paymentAndPassage: CardsResponse = viewModel.objectTransformer(cardWebResponse)
 
-        paymentAndPassage.let {
+        paymentAndPassage.let { it ->
             val sortedCards =
                 it.data?.sortedWith(compareByDescending<Card> { card -> card.defaultCard })
 
@@ -485,6 +487,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         val privacyEnd =
             privacyStart + resources.getString(R.string.card_term_right_clickable).length
 
+        val color = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
+
 
         val clickableSpanTerms = object : ClickableSpan() { // terms and conditions
             override fun onClick(widget: View) {
@@ -498,7 +502,12 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true
-                ds.color = requireContext().getColor(R.color.figmaSplashScreenColor)
+
+                color?.let {
+                    ds.color = it
+                } ?: run {
+                    ds.color = requireContext().getColor(R.color.figmaSplashScreenColor)
+                }
             }
         }
 
@@ -514,7 +523,12 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true
-                ds.color = requireContext().getColor(R.color.figmaSplashScreenColor)
+
+                color?.let {
+                    ds.color = it
+                } ?: run {
+                    ds.color = requireContext().getColor(R.color.figmaSplashScreenColor)
+                }
             }
         }
 
@@ -560,19 +574,32 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun makeCardClickable(enable: Boolean) {
+        val franchiseModel = franchiseViewModel.franchiseModel.value
         when (enable) {
             true -> {
                 binding.bttAddCard.isClickable = true
                 binding.bttAddCard.isEnabled = true
-                binding.bttAddCard.backgroundTintList =
-                    ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
+
+                franchiseModel?.franchisePrimaryColor?.let {
+                    binding.bttAddCard.backgroundTintList =
+                        ColorStateList.valueOf(it)
+                } ?: run {
+                    binding.bttAddCard.backgroundTintList =
+                        ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
+                }
             }
 
             false -> {
                 binding.bttAddCard.isClickable = false
                 binding.bttAddCard.isEnabled = false
-                binding.bttAddCard.backgroundTintList =
-                    ColorStateList.valueOf(requireContext().getColor(R.color.button_not_enabled_web))
+
+                franchiseModel?.halfColor?.let {
+                    binding.bttAddCard.backgroundTintList =
+                        ColorStateList.valueOf(it)
+                } ?: run {
+                    binding.bttAddCard.backgroundTintList =
+                        ColorStateList.valueOf(requireContext().getColor(R.color.button_not_enabled_web))
+                }
             }
         }
     }

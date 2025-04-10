@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +22,8 @@ import com.mobility.enp.databinding.FragmentBillsBinding
 import com.mobility.enp.network.Repository
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
+import com.mobility.enp.view.dialogs.NotificationsRequestDialog
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -30,10 +35,18 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
     private var _binding: FragmentBillsBinding? = null
     private val binding: FragmentBillsBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: MyInvoicesViewModel by viewModels()
 
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     private var month = ""
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                // Permission is granted. You can proceed with sending notifications.
+                sendNotification()
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -82,7 +95,15 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                     binding.textNoBills.visibility = View.GONE
                     binding.recyclerViewBills.visibility = View.VISIBLE
                     binding.recyclerViewBills.adapter =
-                        MonthlyBillsAdapter(it.data, viewModel, errorBody, this, this, this)
+                        MonthlyBillsAdapter(
+                            it.data,
+                            viewModel,
+                            errorBody,
+                            this,
+                            this,
+                            this,
+                            franchiseViewModel.franchiseModel.value
+                        )
                     binding.recyclerViewBills.layoutManager = LinearLayoutManager(requireContext())
 
                     viewModel.setLocalData(it)
@@ -148,6 +169,11 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
     }
 
+    private fun sendNotification() {
+        Toast.makeText(requireContext(), getString(R.string.permission_granted), Toast.LENGTH_SHORT)
+            .show()
+    }
+
     private suspend fun triggerUpdate() {
         val mainActivity = activity as? MainActivity
         val bindingMain = mainActivity?.binding
@@ -183,12 +209,17 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     }
 
     override fun onStartSpinner() {
-        binding.invoicesLoadingView.visibility = View.VISIBLE
+        _binding?.let {
+            it.invoicesLoadingView.visibility = View.VISIBLE
+        }
     }
 
     override fun onStopSpinner() {
-        binding.invoicesLoadingView.visibility = View.GONE
+        _binding?.let {
+            it.invoicesLoadingView.visibility = View.GONE
+        }
     }
+
 
     override fun pagingUpdate(nextPage: Int, data: MutableLiveData<MyInvoicesResponse>) {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
@@ -201,6 +232,25 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     ) {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             viewModel.fetchBillDetailsPaging(data, month, availableCurrencies, nextPage, errorBody)
+        }
+    }
+
+    override fun requestNotificationFromUser() {
+        lifecycleScope.launch {
+            val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
+            val generalMessageDialog = NotificationsRequestDialog(
+                getString(R.string.notification_title),
+                getString(R.string.notification_subtitle),
+                object : NotificationsRequestDialog.OnButtonClick {
+                    override fun onClickConfirmed() {
+                        requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                    }
+
+                    override fun onClickRejected() {
+                    }
+                }
+            )
+            generalMessageDialog.show(fragmentManager, "permDialog")
         }
     }
 

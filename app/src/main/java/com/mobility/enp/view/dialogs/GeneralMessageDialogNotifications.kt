@@ -1,16 +1,17 @@
 package com.mobility.enp.view.dialogs
 
-import android.content.res.Resources
+import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import com.mobility.enp.databinding.GeneralDialogNotificationsBinding
 import com.mobility.enp.util.setDimensionsPercent
+import com.mobility.enp.viewmodel.FranchiseViewModel
 
 class GeneralMessageDialogNotifications : DialogFragment {
 
@@ -19,6 +20,7 @@ class GeneralMessageDialogNotifications : DialogFragment {
 
     private var _binding: GeneralDialogNotificationsBinding? = null
     private val binding: GeneralDialogNotificationsBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
     private lateinit var onButtonClick: OnButtonClick
 
@@ -42,6 +44,13 @@ class GeneralMessageDialogNotifications : DialogFragment {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.confirmButton.backgroundTintList = ColorStateList.valueOf(color)
+            }
+        }
+
         binding.title.text = title
         binding.subTitle.text = subtitle
         binding.confirmButton.setOnClickListener {

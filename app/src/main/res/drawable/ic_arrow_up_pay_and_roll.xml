@@ -1,0 +1,12 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="28dp"
+    android:height="28dp"
+    android:viewportWidth="28"
+    android:viewportHeight="28">
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M14,28a14,14 0,1 0,0 -28a14,14 0,1 0,0 28z" />
+    <path
+        android:fillColor="@color/franchiser_pay_and_roll"
+        android:pathData="M21,16.975L19.971,18L14,12.051L8.029,18L7,16.975L14,10L21,16.975Z" />
+</vector>

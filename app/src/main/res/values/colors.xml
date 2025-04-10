@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_transparent">#80FFFFFF</color>
     <color name="logo_color">#FF1C3671</color>
     <color name="light_gray">#FFCCCCCC</color>
     <color name="very_light_gray">#80D3D3D3</color>
@@ -12,6 +13,7 @@
     <color name="figmaIntroScreensGreyColor">#DADCE0</color>
     <color name="figmaIntroEclipseColorInactive">#7A92AF</color>
     <color name="figmaIntroDarkColor">#222426</color>
+    <color name="figmaIntroDarkColorReduced">#B3222426</color>
 
     <color name="primary_light_light">#DAE5F2</color>
     <color name="primary_light_dark">#405063</color>
@@ -41,7 +43,48 @@
     <color name="country_filter">#7E91AC</color>
     <color name="button_not_enabled_web">#A60D6EFD</color>
 
-
-
+    <color name="franchiser_enput">#00346D</color>
+    <color name="franchiser_enput_half_color">#8000346D</color>
+    <color name="franchiser_tehnocoop">#ED1A3B</color>
+    <color name="franchiser_tehnocoop_half_visibility">#B3ED1A3B</color>
+    <color name="franchiser_telekom_srbija_mtel">#ED1A3B</color>
+    <color name="franchiser_telekom_srbija_mtel_half_visibility">#B3ED1A3B</color>
+    <color name="franchiser_s_blue">#4A628A</color>
+    <color name="franchiser_s_blue_half_visibility">#B34A628A</color>
+    <color name="franchiser_tehnomania">#FFCB05</color>
+    <color name="franchiser_tehnomania_half_visibility">#B3FFCB05</color>
+    <color name="franchiser_amss">#FFDD04</color>
+    <color name="franchiser_amss_half_visibility">#B3FFDD04</color>
+    <color name="franchiser_pay_and_roll">#092E53</color>
+    <color name="franchiser_pay_and_roll_half_visibility">#80092E53</color>
+    <color name="franchiser_technocoop">#ED1A3B</color>
+    <color name="franchiser_technocoop_half_visibility">#B3ED1A3B</color>
+    <color name="franchiser_tag_rafaelo">#295F98</color>
+    <color name="franchiser_tag_rafaelo_half_visibility">#80295F98</color>
+    <color name="franchiser_e_box">#1C5A9A</color>
+    <color name="franchiser_sbb">#020303</color>
+    <color name="franchiser_sbb_half_visibility">#80020303</color>
+    <color name="franchiser_serbian_post_office">#0C4076</color>
+    <color name="franchiser_serbian_post_office_half_visibility">#800C4076</color>
+    <color name="franchiser_euro_petrol">#00A651</color>
+    <color name="franchiser_euro_petrol_half_visibility">#8000A651</color>
+    <color name="franchiser_e_box_half_visibility">#801C5A9A</color>
+    <color name="franchiser_free_trans">#4A628A</color>
+    <color name="franchiser_free_trans_half_visibility">#804A628A</color>
+    <color name="franchiser_gray_color">#9CA0A6</color>
+    <color name="default_logo_profile_color_inner">#7A92AF</color>
+    <color name="s_blue_logo_profile_color_inner">#DAE8FF</color>
+    <color name="pay_n_roll_logo_profile_color_inner">#DAE8FF</color>
+    <color name="free_trans_logo_profile_color_inner">#C8CFDB</color>
+    <color name="novi_mtel_logo_profile_color_inner">#FBD1D8</color>
+    <color name="novi_tehnomania_logo_profile_color_inner">#FDF5D6</color>
+    <color name="tehnocoop_logo_profile_color_inner">#FCE9EC</color>
+    <color name="novi_enput_blue_logo_profile_color_inner">#B7CCF1</color>
+    <color name="novi_amss_blue_logo_profile_color_inner">#FFFCE6</color>
+    <color name="rafaelo_logo_profile_color_inner">#B3C7DD</color>
+    <color name="e_box_logo_profile_color_inner">#DFE7F1</color>
+    <color name="sbb_logo_profile_color_inner">#DFE7F1</color>
+    <color name="posta_srbije_logo_profile_color_inner">#DFE7F1</color>
+    <color name="euro_petrol_logo_profile_color_inner">#DFE7F1</color>
 
 </resources>

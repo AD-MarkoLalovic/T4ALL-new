@@ -1,31 +1,25 @@
 package com.mobility.enp.view.fragments.intro
 
+import android.animation.ValueAnimator
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.LinearLayout
+import androidx.core.animation.doOnEnd
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.mobility.enp.Config
+import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentIntroScreenAdvantageBinding
-import com.mobility.enp.interf.VpInterface
+import com.mobility.enp.util.SharedPreferencesHelper
 
 class IntroScreenAdvantages : Fragment() {
 
     private var _binding: FragmentIntroScreenAdvantageBinding? = null
     private val binding: FragmentIntroScreenAdvantageBinding get() = _binding!!
 
-    private var navController: NavController? = null
-
-    private lateinit var countDownTimerAdvantage: CountDownTimer  // for progBar
-    private var vpInterface: VpInterface? = null
-
-    fun setInterface(vpInterface: VpInterface) {
-        this.vpInterface = vpInterface
-    }
+    private var isExpanded = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,50 +38,107 @@ class IntroScreenAdvantages : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = viewLifecycleOwner
+        SharedPreferencesHelper.setFirstLaunch(requireContext(), false)
+        val savedLanguage = SharedPreferencesHelper.getSaveIntroSelectedLanguage(requireContext())
 
-        navController = findNavController()
-
-        countDownTimerAdvantage = object :
-            CountDownTimer(Config.TOTAL_TIME_MILLIS.toLong(), Config.INTERVAL_MILLIS.toLong()) {
-            override fun onTick(millisUntilFinished: Long) {
-                val timeRemaining = millisUntilFinished / 1000
-                Log.d(Config.TAG_INTRO, "onTick: $timeRemaining")
-                val progress =
-                    ((Config.TOTAL_TIME_MILLIS - millisUntilFinished) * 100 / Config.TOTAL_TIME_MILLIS).toInt()
-                binding.progressBar.progress = progress
+        when (savedLanguage) {
+            "cyr" -> {
+                binding.tvSelectedLanguage?.text = getString(R.string.srp_cyr)
+                binding.langTwo?.text = getString(R.string.srp)
+                binding.langThree?.text = getString(R.string.eng)
             }
 
-            override fun onFinish() {
-                try {
-                    vpInterface?.switchToLogin()
-                } catch (e: UninitializedPropertyAccessException) {
-                    Log.d(IntroScreenFragment.Tag, "exception: \n\n ${e.cause} \n ${e.message}")
-                }
+            "sr" -> {
+                binding.tvSelectedLanguage?.text = getString(R.string.srp)
+                binding.langTwo?.text = getString(R.string.srp_cyr)
+                binding.langThree?.text = getString(R.string.eng)
+            }
+
+            "en" -> {
+                binding.tvSelectedLanguage?.text = getString(R.string.eng)
+                binding.langTwo?.text = getString(R.string.srp)
+                binding.langThree?.text = getString(R.string.srp_cyr)
             }
         }
 
-        binding.btnSkipPage.setOnClickListener {
-            countDownTimerAdvantage.cancel()
-            vpInterface?.switchToLogin()
+
+        val languageOptions: LinearLayout? = binding.languageOptions
+
+        binding.tvSelectedLanguage?.setOnClickListener {
+            toggleDropdown(languageOptions!!)
         }
+
+        binding.langTwo?.setOnClickListener {
+            toggleDropdown(languageOptions!!)
+            when (binding.langTwo?.text) {
+                "SRP" -> setLanguage("sr")
+                "СРП" -> setLanguage("cyr")
+                "ENG" -> setLanguage("en")
+            }
+        }
+
+        binding.langThree?.setOnClickListener {
+            toggleDropdown(languageOptions!!)
+            when (binding.langThree?.text) {
+                "SRP" -> setLanguage("sr")
+                "СРП" -> setLanguage("cyr")
+                "ENG" -> setLanguage("en")
+            }
+        }
+
+        binding.buttonNextAdvantages?.setOnClickListener {
+            findNavController().navigate(R.id.action_introScreenAdvantages_to_loginFragment)
+        }
+
     }
 
-    override fun onResume() {
-        super.onResume()
-        countDownTimerAdvantage.start()
-        binding.progressBar.progress = 0
+    private fun setLanguage(languageCode: String) {
+        SharedPreferencesHelper.setSaveIntroSelectedLanguage(requireContext(), languageCode)
+        SharedPreferencesHelper.setUserLanguage(requireContext(), languageCode)
+
+        activity?.recreate()
     }
 
-    override fun onPause() {
-        super.onPause()
-        countDownTimerAdvantage.cancel()
+    private fun toggleDropdown(view: LinearLayout) {
+        if (isExpanded) {
+            animateHeight(view, view.height, 0) {
+                view.visibility = View.GONE
+            }
+        } else {
+            view.visibility = View.VISIBLE
+
+            view.measure(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            val targetHeight = view.measuredHeight
+
+            animateHeight(view, 0, targetHeight)
+        }
+        isExpanded = !isExpanded
+    }
+
+    private fun animateHeight(
+        view: View,
+        startHeight: Int,
+        endHeight: Int,
+        onEnd: (() -> Unit)? = null
+    ) {
+        ValueAnimator.ofInt(startHeight, endHeight).apply {
+            duration = 300
+            interpolator = AccelerateDecelerateInterpolator()
+            addUpdateListener {
+                view.layoutParams.height = it.animatedValue as Int
+                view.requestLayout()
+            }
+            doOnEnd { onEnd?.invoke() }
+            start()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 
 }

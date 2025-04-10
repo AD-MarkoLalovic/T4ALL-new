@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +13,11 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_my_profile.refund_request.SendRefundRequest
 import com.mobility.enp.databinding.FragmentTagPickerRequestBinding
@@ -24,17 +27,20 @@ import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.refund_request_adapters.RefundRequestTagPickerAdapter
 import com.mobility.enp.view.ui_models.BankUIModel
 import com.mobility.enp.view.ui_models.refund_request.TagsRefundRequestUIModel
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.TagPickerRequestViewModel
 import kotlinx.coroutines.launch
 
 class TagPickerRequestFragment : Fragment() {
 
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: TagPickerRequestViewModel by viewModels { TagPickerRequestViewModel.Factory }
     private var _binding: FragmentTagPickerRequestBinding? = null
     private val binding: FragmentTagPickerRequestBinding get() = _binding!!
     private lateinit var adapter: RefundRequestTagPickerAdapter
     private var tagSerialNumber: String? = null
     private lateinit var bankNames: MutableList<String>
+    private var bankId: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,10 +55,10 @@ class TagPickerRequestFragment : Fragment() {
         observeTagPickerRequest()
         observerBanks()
         observeSubmitRefundRequest()
+        setFranchiser()
 
         binding.buttonSendRequest.setOnClickListener {
             onSendRefundRequestClicked()
-
         }
     }
 
@@ -101,6 +107,42 @@ class TagPickerRequestFragment : Fragment() {
 
         }
     }
+
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.buttonSendRequest.backgroundTintList = ColorStateList.valueOf(color)
+
+                val parent = binding.constraintContainerRefund
+
+                for (i in 0 until parent.childCount) {
+                    val view = parent.getChildAt(i)
+                    if (view is TextInputLayout) {
+                        view.boxStrokeColor = color
+                        val editText = view.editText
+                        editText?.textSelectHandle?.setTint(color)
+                        editText?.setTextColor(color)
+
+                        val states = arrayOf(
+                            intArrayOf(android.R.attr.state_pressed),  // pressed
+                            intArrayOf(android.R.attr.state_focused),  // focused
+                            intArrayOf()                               // default
+                        )
+
+                        val colors = intArrayOf(
+                            color,        // pressed
+                            color,        // focused
+                            color         // default
+                        )
+
+                        view.cursorColor = ColorStateList(states, colors)
+                    }
+                }
+            }
+        }
+    }
+
 
     /**
      * Observes submit refund request
@@ -184,9 +226,9 @@ class TagPickerRequestFragment : Fragment() {
         binding.recyclerViewTagPicker.visibility = View.VISIBLE
 
         if (!::adapter.isInitialized) {
-            adapter = RefundRequestTagPickerAdapter { serialNumber ->
+            adapter = RefundRequestTagPickerAdapter({ serialNumber ->
                 tagSerialNumber = serialNumber
-            }
+            }, franchiseViewModel)
             binding.recyclerViewTagPicker.adapter = adapter
         }
         adapter.submitList(tag)
@@ -267,6 +309,8 @@ class TagPickerRequestFragment : Fragment() {
     }
 
     private fun setupBankSpinner(bankList: List<BankUIModel>) {
+        val color = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
+
         // Dodavanje hint-a na početak liste
         bankNames = mutableListOf(getString(R.string.hint_select_bank)).apply {
             addAll(bankList.map { it.bankName })
@@ -287,12 +331,20 @@ class TagPickerRequestFragment : Fragment() {
                 parent: ViewGroup
             ): View {
                 val view = super.getDropDownView(position, convertView, parent)
-                (view as? TextView)?.setTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        if (position == 0) R.color.hint_text_color else R.color.figmaSplashScreenColor
+
+                color?.let {
+                    (view as? TextView)?.setTextColor(
+                        ColorStateList.valueOf(it)
                     )
-                )
+                } ?: run {
+                    (view as? TextView)?.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            if (position == 0) R.color.hint_text_color else R.color.figmaSplashScreenColor
+                        )
+                    )
+                }
+
                 return view
             }
 
@@ -308,22 +360,36 @@ class TagPickerRequestFragment : Fragment() {
                     id: Long
                 ) {
                     val textView = view as? TextView
-                    if (position == 0) {
-                        textView?.setTextColor(
-                            ContextCompat.getColor(requireContext(), R.color.hint_text_color)
-                        )
-                        return // Ako je hint, ne radimo ništa
-                    } else {
-                        textView?.setTextColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.figmaSplashScreenColor
-                            ) // Plava boja za izabranu stavku
-                        )
+                    color?.let {
+                        if (position == 0) {
+                            textView?.setTextColor(
+                                ContextCompat.getColor(requireContext(), R.color.hint_text_color)
+                            )
+                            return
+                        } else {
+                            textView?.setTextColor(
+                                color
+                            )
+                        }
+                    } ?: run {
+                        if (position == 0) {
+                            textView?.setTextColor(
+                                ContextCompat.getColor(requireContext(), R.color.hint_text_color)
+                            )
+                            return
+                        } else {
+                            textView?.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.figmaSplashScreenColor
+                                )
+                            )
+                        }
                     }
 
                     // Obrada odabrane stavke
                     val selectedBank = bankList[position - 1]
+                    bankId = selectedBank.id
                     setupUniqueNumberSpinner(selectedBank.uniqueNumber)
                 }
 
@@ -335,15 +401,38 @@ class TagPickerRequestFragment : Fragment() {
     }
 
     private fun setupUniqueNumberSpinner(uniqueNumbers: List<Int>) {
+        val color = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
+
+
         if (uniqueNumbers.size == 1) {
             // Ako postoji samo jedan element
             val singleItem = uniqueNumbers.first().toString()
             binding.uniqueNumbersSpinner.apply {
-                adapter = ArrayAdapter(
+                adapter = object : ArrayAdapter<String>(
                     requireContext(),
                     R.layout.item_unique_numbers_spinner,
                     listOf(singleItem)
-                )
+                ) {
+                    override fun getView(
+                        position: Int,
+                        convertView: View?,
+                        parent: ViewGroup
+                    ): View {
+                        val view = super.getView(position, convertView, parent)
+                        color?.let {
+                            (view as? TextView)?.setTextColor(color)
+
+                        } ?: run {
+                            (view as? TextView)?.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.figmaSplashScreenColor
+                                )
+                            )
+                        }
+                        return view
+                    }
+                }
                 setSelection(0)
                 isClickable = false
                 isEnabled = false
@@ -363,6 +452,34 @@ class TagPickerRequestFragment : Fragment() {
                     val view = super.getDropDownView(position, convertView, parent)
                     view.layoutParams.height =
                         (32 * resources.displayMetrics.density).toInt() // 32dp u px
+
+                    color?.let {
+                        (view as? TextView)?.setTextColor(
+                            color
+                        )
+                    } ?: run {
+                        (view as? TextView)?.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                if (position == 0) R.color.hint_text_color else R.color.figmaSplashScreenColor
+                            )
+                        )
+                    }
+
+
+                    return view
+                }
+
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val view = super.getView(position, convertView, parent)
+                    color?.let {
+                        (view as? TextView)?.setTextColor(color)
+
+                    } ?: run {
+                        (view as? TextView)?.setTextColor(
+                            ContextCompat.getColor(requireContext(), R.color.figmaSplashScreenColor)
+                        )
+                    }
                     return view
                 }
             }
@@ -375,6 +492,7 @@ class TagPickerRequestFragment : Fragment() {
         }
 
         enableAccountInputs()
+
     }
 
     private fun enableAccountInputs() = with(binding) {
@@ -412,25 +530,29 @@ class TagPickerRequestFragment : Fragment() {
             return null
         }
 
-        val selectedBank = bankNames[selectedBankPosition]
+        val selectedBank = bankId ?: selectedBankPosition
 
         val uniqueNumber = binding.uniqueNumbersSpinner.selectedItem.toString().trim()
         val centerAccountNumber = binding.etCenterAccountNumber.text.toString().trim()
         val rightAccountNumber = binding.etRightAccountNumber.text.toString().trim()
 
-        // Validacija unosa za račun
-        if (uniqueNumber.isEmpty() || centerAccountNumber.isEmpty() || rightAccountNumber.isEmpty()) {
+        if (centerAccountNumber.length < 13) {
+            showError(getString(R.string.field_bank_account_isrequired))
+            binding.etCenterAccountNumber.requestFocus()
+            return null
+        }
+        if (rightAccountNumber.length < 2 ) {
             showError(getString(R.string.enter_bank_account))
+            binding.etRightAccountNumber.requestFocus()
             return null
         }
 
-        // Pun broj računa
-        val fullAccountNumber = "$uniqueNumber-$centerAccountNumber-$rightAccountNumber"
-
         val sendRefundRequest = SendRefundRequest(
             selectTag,
-            fullAccountNumber,
-            selectedBank,
+            selectedBank.toString(),
+            uniqueNumber,
+            centerAccountNumber,
+            rightAccountNumber,
             amount
         )
 

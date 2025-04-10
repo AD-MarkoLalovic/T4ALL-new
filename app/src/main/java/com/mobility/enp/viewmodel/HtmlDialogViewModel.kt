@@ -40,7 +40,7 @@ class HtmlDialogViewModel(private val repository: CardRepository) : ViewModel() 
             val list = AssetHelper.getFileNames(context, combined)
             Log.d(TAG, "processContent: $list")
 
-            val key = repository.getLangForCard()
+            val key = repository.getLangForCard(context)
 
             key?.let {
                 val file = list.filter { s -> s.contains("$it.html", true) }

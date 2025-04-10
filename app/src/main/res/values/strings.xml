@@ -81,9 +81,8 @@
     <string name="country" translatable="true">Држава</string>
     <string name="save_changes" translatable="true">Сачувај</string>
     <string name="repeat_password" translatable="true">Поново унесите нову лозинку</string>
-    <string name="password_changed" translatable="true">Лозинка промењена!</string>
-    <string name="you_will_be_asked_to_login_again" translatable="true">Од вас ће бити затражено
-        да се поново пријавите.</string>
+    <string name="password_changed" translatable="true">Лозинка промењена</string>
+    <string name="you_will_be_asked_to_login_again" translatable="true">Потребно је да се опет пријавите на налог.</string>
     <string name="email_address_validation_successful" translatable="true">Валидација емаил адресе
         је успешна!</string>
     <string name="resend_it" translatable="true">Пошаљи поново.</string>
@@ -118,7 +117,7 @@
     <string name="invoice_details" translatable="true">Детаљи рачуна</string>
     <string name="lorem_ipsum">Lorem Ipsum</string>
     <string name="order_number" translatable="true">Редни број</string>
-    <string name="credit_card_successful" translatable="true">Кредитна картица је успела</string>
+    <string name="credit_card_successful" translatable="true">Кредитна картица је успешно додата.</string>
     <string name="tag_confirmed" translatable="true">Ознака потврђена</string>
     <string name="name_and_surname" translatable="true">Име и презиме</string>
     <string name="tag" translatable="true">Таг</string>
@@ -174,7 +173,7 @@
     <string name="montenegro_country_code" translatable="false">ME</string>
     <string name="all_fields_are_mandatory" translatable="true">Сва поља су обавезна.</string>
     <string name="change_successfully_saved" translatable="true">Измeнe успешно сачуване.</string>
-    <string name="please_connect_to_the_internet" translatable="true">Повежите се на интернет</string>
+    <string name="please_connect_to_the_internet" translatable="true">Повежите се на интернет.</string>
     <string name="general_terms_and_conditions" translatable="true">Општи услови и услови коришћења</string>
     <string name="privacy_policy" translatable="true">Политика приватности</string>
     <string name="choose_country_and_payment" translatable="true">Изаберите земљу и начин плаћања</string>
@@ -252,7 +251,7 @@
     <string name="no_connection_title">Проблем са везом</string>
     <string name="checking_for_connection">Провера везе</string>
     <string name="connection_restored">Веза је обновљена</string>
-    <string name="no_internet" translatable="true">Немате интернет.</string>
+    <string name="no_internet" translatable="true">" Нема интернет конекције."</string>
     <string name="offline_using_stored_data">Тренутно нисте повезани на интернет. Приказују се сачувани подаци.</string>
     <string name="multiple_payment_cards_for_country">Можете користити више различитих платних картица за једну земљу.</string>
     <string name="tag_device_payment_method_north_macedonia">Уколико желите да Ваш ТАГ уређај користите на путевима у Северној Македонији, молимо Вас да додате валидну платну картицу.</string>
@@ -290,29 +289,15 @@
     <string name="enter_amount">Унесите износ</string>
     <string name="enter_bank_account">Унесите комплетан број Жиро рачуна.</string>
     <string name="enter_name_bank">Поље Банка је обавезно.</string>
-    <string name="download_timeout">Сачекајте 5 секунди пре преузимања</string>
+    <string name="download_timeout">Молимо сачекајте 5 секунди пре новог преузимања.</string>
     <string name="enter_content_of_complaint">Унесите садржај приговора</string>
     <string name="hint_enter_verification_code">Унесите верификациони код</string>
     <string name="serbian_passage">Србија</string>
     <string name="montenegro_passage">Црна Гора</string>
     <string name="north_macedonian_passage">Северна Македонија</string>
     <string name="loop_icon" translatable="false">loop Icon</string>
-    <string name="advantages_of_the_toll_for_all_system" translatable="false">Advantages of the Toll For All system</string>
-    <string name="with_a_one_tag_through_multiple_countries" translatable="false">With a one tag through multiple countries.</string>
-    <string name="payment_via_the_phone_bill" translatable="false">Payment via the phone bill.</string>
-    <string name="payment_directly_from_the_user_s_account" translatable="false">Payment directly from the user\'s account.</string>
-    <string name="no_waiting_in_line" translatable="false">No waiting in line.</string>
-    <string name="no_currency_exchange" translatable="false">No currency exchange.</string>
-    <string name="skip" translatable="false">Skip</string>
-    <string name="welcome_to_toll_for_all" translatable="false">Welcome to Toll For All</string>
-    <string name="what_is_toll_for_all_system" translatable="false">What is Toll For All system?</string>
-    <string name="toll_for_all_description" translatable="false">Toll For All is a platform that provides
-        integrated toll collection services in European countries. No more waiting at toll booths and
-        currency exchanges. With the Toll For All platform, a new era of mobility has arrived.</string>
-    <string name="toll_for_all_supported_countries" translatable="false">Countries that support Toll For All system</string>
-    <string name="serbia_eng" translatable="false">Serbia</string>
-    <string name="macedonia_eng" translatable="false">N. Macedonia</string>
-    <string name="montenegro_eng" translatable="false">Montenegro</string>
+    <string name="welcome_to_toll_for_all">Добро дошли у Toll For All</string>
+    <string name="what_is_toll_for_all_system">Шта је Toll For All систем?</string>
     <string name="croatia_eng" translatable="false">Croatia</string>
     <string name="eur" translatable="false">EUR</string>
     <string name="rsd" translatable="false">RSD</string>
@@ -390,5 +375,33 @@
     <string name="cards_terms_text_full">Сагласан сам са Општим условима и Правилима приватности</string>
     <string name="card_terms_left_clickable">Општим условима</string>
     <string name="card_term_right_clickable">Правилима приватности</string>
+    <string name="version">Верзија:</string>
+    <string name="powered_by_toll4all" translatable="false">Powered by Toll4All</string>
+    <string name="next">Даље</string>
+    <string name="srp" translatable="false">SRP</string>
+    <string name="srp_cyr" translatable="false">СРП</string>
+    <string name="eng" translatable="false">ENG</string>
+
+    <string-array name="language_options_intro">
+        <item>SRP</item>
+        <item>СРП</item>
+        <item>ENG</item>
+    </string-array>
+    <string name="toll_for_all_description">Toll For All је платформа која омогућава интегрисану наплату путарине у земљама Европе. Нема више чекања на наплатним рампама и промена валуте. Са Toll For All платформом стигла је нова ера мобилности!</string>
+    <string name="toll_for_all_supported_countries">Државе у којима функционише Toll For All систем</string>
+    <string name="serbia_eng">Србија</string>
+    <string name="macedonia_eng">Северна Македонија</string>
+    <string name="montenegro_eng">"Црна Гора        "</string>
+    <string name="advantages_of_the_toll_for_all_system">"Предности Toll For All система        "</string>
+    <string name="with_a_one_tag_through_multiple_countries">Са једним тагом кроз више држава</string>
+    <string name="payment_via_the_phone_bill">"Плаћање преко телефонског рачуна        "</string>
+    <string name="payment_directly_from_the_user_s_account">"Плаћање директно са корисничког налога        "</string>
+    <string name="no_waiting_in_line">"Без чекања у реду        "</string>
+    <string name="no_currency_exchange">"Без промене валута        "</string>
+    <string name="permission_granted">Дозвола одобрена</string>
+    <string name="notification_title">Дозволите T4A да вам шаље нотификације</string>
+    <string name="notification_subtitle">Нотификације служе за преузимање рачуна и експортовање табела у историји пролазака</string>
+    <string name="listing_of_passages_downloaded_successfully">Листинг пролазака је успешно преузет.</string>
+    <string name="field_bank_account_isrequired">Поље жиро рачун треба да садржи 13 цифара.</string>
 
 </resources>

@@ -1,20 +1,24 @@
 package com.mobility.enp.view
 
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
 import com.mobility.enp.R
+import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.databinding.ActivityMainBinding
+import com.mobility.enp.util.SharedPreferencesHelper
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,6 +29,8 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private val franchiseViewModel: FranchiseViewModel by viewModels { FranchiseViewModel.Factory }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +38,50 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupNavigation()
         setListeners()
+        setObservers()
         setExistingLanguage(this)
+        messageLanguageChanged(this)
+
+    }
+
+    private fun setObservers() {
+        franchiseViewModel.franchiseModel.observe(this) { franchiseModel ->
+            franchiseModel?.let {
+                setFranchiserLogoVisible(it)
+            }
+        }
+    }
+
+    fun resetToDefault() {
+        binding.toolbarShared.iconLogo.setImageResource(R.drawable.ic_logo_home_screen)
+        binding.toolbarShared.franchiserFlavorText.text = ""
+        binding.toolbarShared.constraintBlock.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                android.R.color.white
+            )
+        )
+        binding.toolbarShared.root.visibility = View.VISIBLE
+        binding.bottomNavigation.itemIconTintList =
+            ContextCompat.getColorStateList(this, R.color.bottom_nav_color_default)
+    }
+
+    private fun setFranchiserLogoVisible(franchiseModel: FranchiseModel?) {
+        franchiseModel?.let { data ->
+            binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
+            binding.toolbarShared.franchiserFlavorText.text = franchiseModel.franchiseFlavorText
+            binding.toolbarShared.iconLogo.setImageDrawable(data.franchiseLogoToolbar)
+
+            binding.toolbarShared.backArrow.setImageResource(franchiseModel.backButtonResource)
+
+            if (data.enableBackgroundColorOnToolBar) {
+                binding.toolbarShared.constraintBlock.setBackgroundColor(data.franchisePrimaryColor)
+            } else {
+                binding.toolbarShared.constraintBlock.setBackgroundColor(getColor(R.color.white))
+            }
+
+            binding.bottomNavigation.itemIconTintList = franchiseModel.navHomeDrawable
+        }
     }
 
     private fun setupNavigation() {
@@ -55,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.basicInformationFragment, R.id.changePasswordFragment, R.id.invoicesFragment,
                 R.id.myTagsFragment2, R.id.addTagFragment, R.id.refundRequestFragment2, R.id.tagPickerRequestFragment,
                 R.id.settingsFragment, R.id.toolHistorySearchFragment, R.id.toolHistorySearchResultFragment,
-                R.id.termsAndPrivacyFragment, R.id.cardFragment , R.id.noInternetConnectionDialog , R.id.loginNoInternetConnectionDialog-> {
+                R.id.termsAndPrivacyFragment, R.id.cardFragment, R.id.noInternetConnectionDialog, R.id.loginNoInternetConnectionDialog -> {
                     // Ako je destinacija neki od ovih fragmenata, prikaži Toolbar i sakrij BottomNavigationView
                     binding.bottomNavigation.visibility = View.GONE
                     binding.toolbarShared.root.visibility = View.VISIBLE
@@ -103,62 +152,46 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setExistingLanguage(context: Context) {
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                val database = DRoom.getRoomInstance(applicationContext)
-                val userLanguageTable = database.languageDao()?.fetchAllowedUsers()
+        val lang = when (val userLanguage = SharedPreferencesHelper.getUserLanguage(context)) {
+            "cyr" -> Locale("sr_Cyrl", "RS")
+            "sr", "cnr" -> Locale("sr", "RS")
+            else -> Locale(userLanguage)
+        }
 
-                userLanguageTable?.userLanguage?.let { languageKey ->
-                    val locale = if (languageKey.isNotEmpty()) {
-                        Locale(languageKey)
-                    } else {
-                        Locale.getDefault()
-                    }
+        Locale.setDefault(lang)
 
-                    // Promena konfiguracije na glavnoj niti
-                    withContext(Dispatchers.Main) {
-                        val configuration = Configuration(context.resources.configuration)
-                        configuration.setLocale(locale)
+        val configuration = resources.configuration
+        configuration.setLocale(lang)
 
-                        context.resources.updateConfiguration(
-                            configuration, context.resources.displayMetrics
-                        )
-                    }
-                }
-            }
+        context.resources.updateConfiguration(
+            configuration,
+            context.resources.displayMetrics
+        )
+
+    }
+
+    private fun messageLanguageChanged(context: Context) {
+        if (SharedPreferencesHelper.getLanguageChanged(context)) {
+            Toast.makeText(
+                context,
+                getString(R.string.language_changed),
+                Toast.LENGTH_SHORT
+            ).show()
+            SharedPreferencesHelper.setLanguageChanged(context, false)
         }
     }
 
     companion object {  // class tied static method
         const val TAG = "FirebaseFcm"
-        const val defCountryCode = "sr"
-
-        fun setLocale(context: Context, languageKey: String) {
-
-            val locale: Locale
-
-            if (languageKey.isNotEmpty()) {
-                locale = Locale(languageKey)
-            } else {
-                locale = Locale(defCountryCode)
-            }
-
-            val configuration = Configuration(context.resources.configuration)
-            configuration.setLocale(locale)
-
-            context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
-
-        }
 
         fun logoutOnInvalidToken(context: Context, navController: NavController) {
             CoroutineScope(Dispatchers.IO).launch {
                 val database = DRoom.getRoomInstance(context)
                 database.loginDao().deleteAll()
-            }
-            CoroutineScope(Dispatchers.Main).launch {
-                while (navController.popBackStack()) {
+
+                withContext(Dispatchers.Main) {
+                    navController.navigate(R.id.action_global_loginFragment)
                 }
-                navController.navigate(R.id.action_global_loginFragment)
             }
         }
 

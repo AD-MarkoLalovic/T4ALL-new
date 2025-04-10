@@ -16,6 +16,7 @@ import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.DataMonthly
 import com.mobility.enp.data.model.api_my_invoices.Month
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
+import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.databinding.ItemBillBinding
 import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingPassageAdapter
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
@@ -27,7 +28,8 @@ class MonthlyBillsAdapter(
     private val errorBody: MutableLiveData<ErrorBody>,
     private val spinnerInterface: TriggerSpinner,
     val lifecycleOwner: LifecycleOwner,
-    private val montYearListener: MontYearListener
+    private val montYearListener: MontYearListener,
+    private val franchiserResource: FranchiseModel?
 ) : RecyclerView.Adapter<MonthlyBillsAdapter.MonthlyBillsViewHolder>() {
 
     private val monthlyBillsArray: ArrayList<Month> = ArrayList(data.months)
@@ -146,9 +148,23 @@ class MonthlyBillsAdapter(
                             }
                         }, montYear, availableCurrency.toString(), error)
 
-                        binding.arrowDown.setImageDrawable(
-                            ContextCompat.getDrawable(binding.root.context, R.drawable.ic_arrow_up)
-                        )
+
+                        franchiserResource?.let { data ->
+                            binding.arrowDown.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    binding.root.context,
+                                    data.upArrowResource
+                                )
+                            )
+                        } ?: run {
+                            binding.arrowDown.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    binding.root.context,
+                                    R.drawable.ic_arrow_up
+                                )
+                            )
+                        }
+
                     } else {
                         Toast.makeText(
                             binding.root.context,
@@ -160,9 +176,18 @@ class MonthlyBillsAdapter(
                 } else { // Ako se zatvara
                     binding.recyclerViewMonthlyBills.visibility = View.GONE
                     binding.scrollView.visibility = View.GONE
-                    binding.arrowDown.setImageDrawable(
-                        ContextCompat.getDrawable(binding.root.context, R.drawable.ic_arrow_down)
-                    )
+                    franchiserResource?.let { data ->
+                        binding.arrowDown.setImageDrawable(
+                            ContextCompat.getDrawable(binding.root.context, data.downArrowResource)
+                        )
+                    } ?: run {
+                        binding.arrowDown.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                binding.root.context,
+                                R.drawable.ic_arrow_down
+                            )
+                        )
+                    }
                 }
             }
 
@@ -179,15 +204,36 @@ class MonthlyBillsAdapter(
             if (isExpanded) {
                 binding.recyclerViewMonthlyBills.visibility = View.VISIBLE
                 binding.scrollView.visibility = View.VISIBLE
-                binding.arrowDown.setImageDrawable(
-                    ContextCompat.getDrawable(binding.root.context, R.drawable.ic_arrow_up)
-                )
+                franchiserResource?.let { data ->
+                    binding.arrowDown.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            binding.root.context,
+                            data.upArrowResource
+                        )
+                    )
+                } ?: run {
+                    binding.arrowDown.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            binding.root.context,
+                            R.drawable.ic_arrow_up
+                        )
+                    )
+                }
             } else {
                 binding.recyclerViewMonthlyBills.visibility = View.GONE
                 binding.scrollView.visibility = View.GONE
-                binding.arrowDown.setImageDrawable(
-                    ContextCompat.getDrawable(binding.root.context, R.drawable.ic_arrow_down)
-                )
+                franchiserResource?.let { data ->
+                    binding.arrowDown.setImageDrawable(
+                        ContextCompat.getDrawable(binding.root.context, data.downArrowResource)
+                    )
+                } ?: run {
+                    binding.arrowDown.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            binding.root.context,
+                            R.drawable.ic_arrow_down
+                        )
+                    )
+                }
             }
         }
     }
@@ -270,6 +316,7 @@ class MonthlyBillsAdapter(
             data: MutableLiveData<BillsDetailsResponse>,
             availableCurrencies: String
         )
+        fun requestNotificationFromUser()
     }
 
     interface MontYearListener {

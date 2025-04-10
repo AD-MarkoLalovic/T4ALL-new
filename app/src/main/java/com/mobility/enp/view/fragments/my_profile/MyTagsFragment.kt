@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -24,6 +26,7 @@ import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tags.AdapterTagFilterType
 import com.mobility.enp.view.adapters.tags.MyTagsAdapter
 import com.mobility.enp.view.dialogs.LostTagDialog
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyTagsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -34,6 +37,7 @@ class MyTagsFragment : Fragment(), AdapterTagFilterType.OnClick, MyTagsAdapter.O
 
     private var _binding: FragmentTagsBinding? = null
     private val binding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: MyTagsViewModel by viewModels()
 
     companion object {
@@ -52,6 +56,7 @@ class MyTagsFragment : Fragment(), AdapterTagFilterType.OnClick, MyTagsAdapter.O
 
         setObservers()
         setListeners()
+        setFranchiser()
 
         viewLifecycleOwner.lifecycleScope.launch {
             binding.progbar.visibility = View.VISIBLE
@@ -60,6 +65,36 @@ class MyTagsFragment : Fragment(), AdapterTagFilterType.OnClick, MyTagsAdapter.O
 
         binding.buttonAddTag.setOnClickListener {
             findNavController().navigate(R.id.action_myTagsFragment2_to_addTagFragment)
+        }
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.buttonAddTag.backgroundTintList = ColorStateList.valueOf(color)
+                binding.inputSerialNumber.boxStrokeColor = color
+
+                with(binding.inputSerialNumber) {
+                    val editText = this.editText
+                    editText?.textSelectHandle?.setTint(color)
+                    editText?.setTextColor(color)
+
+
+                    val states = arrayOf(
+                        intArrayOf(android.R.attr.state_pressed),  // pressed
+                        intArrayOf(android.R.attr.state_focused),  // focused
+                        intArrayOf()                               // default
+                    )
+
+                    val colors = intArrayOf(
+                        color,        // pressed
+                        color,        // focused
+                        color         // default
+                    )
+
+                    this.cursorColor = ColorStateList(states, colors)
+                }
+            }
         }
     }
 

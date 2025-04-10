@@ -7,14 +7,15 @@ import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SharedPreferencesHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 
 class CardRepository(database: DRoom, context: Context) : BaseRepository(database, context) {
 
-    suspend fun getLangForCard(): String? {
-        return getRoomLanguage()
+     fun getLangForCard(context: Context): String {
+        return SharedPreferencesHelper.getUserLanguage(context)
     }
 
     suspend fun getCardData(): Result<CardWebModel> {

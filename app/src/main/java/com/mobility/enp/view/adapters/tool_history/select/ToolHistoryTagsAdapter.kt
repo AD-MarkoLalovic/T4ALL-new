@@ -9,8 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.ToolHistoryTagsAdapterBinding
+import com.mobility.enp.viewmodel.FranchiseViewModel
 
-class ToolHistoryTagsAdapter(private val listOfTags: ArrayList<Tag>, tagInterface: TagSend) :
+class ToolHistoryTagsAdapter(
+    private val listOfTags: ArrayList<Tag>,
+    tagInterface: TagSend,
+    private val franchiseModel: FranchiseViewModel
+) :
     RecyclerView.Adapter<ToolHistoryTagsAdapter.ToolHistoryTagsViewHolder>() {
 
     val tagSendInt = tagInterface
@@ -41,13 +46,51 @@ class ToolHistoryTagsAdapter(private val listOfTags: ArrayList<Tag>, tagInterfac
 
         private fun setCheckboxColors() {
             if (binding.checkbox.isChecked) {
-                binding.checkbox.buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(binding.root.context, R.color.figmaSplashScreenColor))
-                binding.regPlate.setTextColor(ContextCompat.getColor(binding.root.context, R.color.figmaSplashScreenColor))
-                binding.serialNumber.setTextColor(ContextCompat.getColor(binding.root.context, R.color.figmaSplashScreenColor))
+                val color = franchiseModel.franchiseModel.value?.franchisePrimaryColor
+                color?.let {
+                    binding.checkbox.buttonTintList = ColorStateList.valueOf(it)
+                    binding.regPlate.setTextColor(it)
+                    binding.serialNumber.setTextColor(it)
+                } ?: run {
+                    binding.checkbox.buttonTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            binding.root.context,
+                            R.color.figmaSplashScreenColor
+                        )
+                    )
+                    binding.regPlate.setTextColor(
+                        ContextCompat.getColor(
+                            binding.root.context,
+                            R.color.figmaSplashScreenColor
+                        )
+                    )
+                    binding.serialNumber.setTextColor(
+                        ContextCompat.getColor(
+                            binding.root.context,
+                            R.color.figmaSplashScreenColor
+                        )
+                    )
+                }
+
             } else {
-                binding.checkbox.buttonTintList = ColorStateList.valueOf(ContextCompat.getColor(binding.root.context, R.color.primary_light_dark))
-                binding.regPlate.setTextColor(ContextCompat.getColor(binding.root.context, R.color.primary_light_dark))
-                binding.serialNumber.setTextColor(ContextCompat.getColor(binding.root.context, R.color.primary_light_dark))
+                binding.checkbox.buttonTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.primary_light_dark
+                    )
+                )
+                binding.regPlate.setTextColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.primary_light_dark
+                    )
+                )
+                binding.serialNumber.setTextColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.primary_light_dark
+                    )
+                )
             }
         }
     }

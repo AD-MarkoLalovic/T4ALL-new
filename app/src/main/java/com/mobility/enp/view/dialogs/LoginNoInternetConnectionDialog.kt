@@ -9,9 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import com.mobility.enp.R
 import com.mobility.enp.databinding.GeneralDialogBinding
 import com.mobility.enp.util.setDimensionsPercent
+import com.mobility.enp.viewmodel.FranchiseViewModel
 
 class LoginNoInternetConnectionDialog : DialogFragment() {
 

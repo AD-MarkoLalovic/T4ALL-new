@@ -1,16 +1,19 @@
 package com.mobility.enp.view.adapters.home
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
+import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.databinding.CardFlagsPromotionHomeBinding
 
 class HomePromotionsAdapter(
     private var list: List<HomeCardsEntity>,
     private val onItemClicked: () -> Unit,
-    private val updateDeleteCard: (HomeCardsEntity) -> Unit
+    private val updateDeleteCard: (HomeCardsEntity) -> Unit,
+    private val franchiseModel: FranchiseModel?
 ) :
     RecyclerView.Adapter<HomePromotionsAdapter.HomeInvoicesAdapterViewHolder>() {
 
@@ -21,6 +24,12 @@ class HomePromotionsAdapter(
 
         fun bind(card: HomeCardsEntity) {
             binding.data = card
+
+
+            franchiseModel?.franchisePrimaryColor?.let {
+                binding.btnObjection.backgroundTintList =
+                    ColorStateList.valueOf(it)
+            }
 
             when (card.code) {
                 "RS" -> binding.backgroundImage.setImageResource(R.drawable.serbian_flag_home)

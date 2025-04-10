@@ -1,36 +1,37 @@
 package com.mobility.enp.view.dialogs
 
+import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.RadioButton
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.mobility.enp.R
 import com.mobility.enp.databinding.LanguageDialogLayoutBinding
-import com.mobility.enp.viewmodel.LanguageViewModel
-import kotlinx.coroutines.Dispatchers
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.core.graphics.drawable.toDrawable
+import com.mobility.enp.util.SharedPreferencesHelper
 
 class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) : DialogFragment() {
 
     private var _binding: LanguageDialogLayoutBinding? = null
     private val binding: LanguageDialogLayoutBinding get() = _binding!!
-    private val viewModel: LanguageViewModel by viewModels { LanguageViewModel.Factory }
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
-    private var previousLanguageCode: String? = null
+    private lateinit var previousLanguageCode: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = LanguageDialogLayoutBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -38,8 +39,10 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        observeViewModel()
-        viewModel.fetchAllowedLanguages()
+        previousLanguageCode = SharedPreferencesHelper.getUserLanguage(requireContext())
+
+        updateSelectedLanguage(previousLanguageCode)
+        setFranchise()
 
         binding.buttonCloseDialog.setOnClickListener { dismiss() }
 
@@ -57,40 +60,36 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
                 R.id.languageGreek -> "el"
                 else -> null
             }
-            languageCode?.let { viewModel.saveLanguage(it) }
-        }
 
+            languageCode?.let {
+                previousLanguageCode = it
 
-    }
-
-    private fun observeViewModel() {
-        viewModel.languages.observe(viewLifecycleOwner) { userLanguage ->
-            userLanguage?.let {
-                previousLanguageCode = it.userLanguage // Inicijalizujemo prethodni jezik
-                updateSelectedLanguage(it.userLanguage)
-            }
-        }
-
-
-        viewModel.selectedLanguage.observe(viewLifecycleOwner) { languageCode ->
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                if (languageCode != null && languageCode != previousLanguageCode) {
-                    previousLanguageCode = languageCode
+                lifecycleScope.launch {
                     delay(500L)
+                    onLanguageSelected(it, true)
                     dismiss()
-                    onLanguageSelected(languageCode, true)
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.language_changed),
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
             }
         }
-
     }
 
-    private fun updateSelectedLanguage(languageCode: String?) {
+    private fun setFranchise() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.buttonCloseDialog.backgroundTintList = ColorStateList.valueOf(color)
+
+                val parent = binding.radioGroup
+                for (i in 0 until parent.childCount) {
+                    val view = parent.getChildAt(i)
+                    if (view is RadioButton) {
+                        view.buttonTintList = franchiseModel.navHomeDrawable
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateSelectedLanguage(languageCode: String) {
         when (languageCode) {
             "cyr" -> binding.languageSerbian.isChecked = true
             "sr" -> binding.languageSerbianLatin.isChecked = true

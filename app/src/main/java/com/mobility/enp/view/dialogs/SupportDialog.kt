@@ -1,15 +1,14 @@
 package com.mobility.enp.view.dialogs
 
-import android.content.res.Resources
+import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
@@ -18,12 +17,15 @@ import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.databinding.DialogSupportBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.view.MainActivity
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.SupportViewModel
+import androidx.core.graphics.drawable.toDrawable
 
 class SupportDialog : DialogFragment() {
 
     private var _binding: DialogSupportBinding? = null
     private val binding: DialogSupportBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: SupportViewModel by viewModels()
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
 
@@ -31,7 +33,7 @@ class SupportDialog : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = DialogSupportBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -40,6 +42,7 @@ class SupportDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setObserversError()
+        setFranchiser()
 
         binding.bttSendSupportMessage.setOnClickListener {
             val enteredText = binding.enterSupportMessage.text.toString()
@@ -58,6 +61,37 @@ class SupportDialog : DialogFragment() {
 
         binding.supportDialogClose.setOnClickListener {
             dismiss()
+        }
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.bttSendSupportMessage.backgroundTintList = ColorStateList.valueOf(color)
+                binding.enterSupportMessage.setTextColor(ColorStateList.valueOf(color))
+
+                binding.supportDialogInput.apply {
+                    boxStrokeColor = color
+
+                    val editText = this.editText
+                    editText?.textSelectHandle?.setTint(color)
+                    editText?.setTextColor(color)
+
+                    val states = arrayOf(
+                        intArrayOf(android.R.attr.state_pressed),  // pressed
+                        intArrayOf(android.R.attr.state_focused),  // focused
+                        intArrayOf()                               // default
+                    )
+
+                    val colors = intArrayOf(
+                        color,        // pressed
+                        color,        // focused
+                        color         // default
+                    )
+
+                    cursorColor = ColorStateList(states, colors)
+                }
+            }
         }
     }
 

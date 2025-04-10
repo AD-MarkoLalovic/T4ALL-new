@@ -22,5 +22,7 @@ data class Data(
     val accessToken: String?,
     @SerializedName("token_type")
     @Expose
-    val tokenType: String?
+    val tokenType: String?,
+    @Expose
+    val portal_key: String?
 ) : Serializable

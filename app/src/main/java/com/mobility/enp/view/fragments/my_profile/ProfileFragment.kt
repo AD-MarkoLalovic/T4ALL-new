@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +26,7 @@ import com.mobility.enp.databinding.FragmentProfileBinding
 import com.mobility.enp.util.ImageRepository
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.ProfileImagePickerDialog
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.ProfileViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,6 +36,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
     private var _binding: FragmentProfileBinding? = null
     private val binding: FragmentProfileBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModelProfile: ProfileViewModel by viewModels()
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
 
@@ -57,6 +62,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         errorBody = MutableLiveData()
 
         setObserver()
+        setCurrentVersion()
 
         viewModelProfile.setRefundRequestVisibility()
 
@@ -69,7 +75,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 withContext(Dispatchers.Main) {
                     val image = ProfileImagePickerDialog(this@ProfileFragment, imageExists)
                     image.show(parentFragmentManager, "Profile Image")
-
                 }
             }
         }
@@ -91,17 +96,18 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         }
 
         binding.buttonSignOut.setOnClickListener {
-            context?.let {
-                lifecycleScope.launch {
-                    // added internet check if no internet just logout without token delete
+            viewLifecycleOwner.lifecycleScope.launch {
+                // added internet check if no internet just logout without token delete
 
-                    viewModelProfile.deleteFirebaseToken(errorBody)  // this deletes from server
-                    viewModelProfile.postLogoutUser(errorBody)
+                viewModelProfile.deleteFirebaseToken(errorBody)  // this deletes from server
+                viewModelProfile.postLogoutUser(errorBody)
 
-                    viewModelProfile.logout() // this deletes room local
+                viewModelProfile.logout() // this deletes room local
+                franchiseViewModel.deleteData() // this deletes stored object as it will persist on logout otherwise
 
-                    findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
-                }
+                (requireContext() as MainActivity).resetToDefault()
+
+                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
             }
         }
 
@@ -126,11 +132,38 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         }
     }
 
+    private fun setCurrentVersion() {
+        try {
+            val packageInfo =
+                requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
+            packageInfo.versionName.let { gradleVersionName ->  // use version code for other one
+
+                binding.versionCode.text = buildString {
+                    append(ContextCompat.getString(requireContext(), R.string.version))
+                    append(" ")
+                    append(gradleVersionName)
+                }
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+    }
+
     private fun setObserver() {
         viewModelProfile.displayName.observe(viewLifecycleOwner) { displayName ->
             binding.userName.text = displayName
             viewLifecycleOwner.lifecycleScope.launch {
                 imageRepository.getAndSetProfileImage(binding.imageProfile, displayName)
+            }
+        }
+
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { data ->
+            data?.let { model ->
+                model.franchiseProfileResource?.let {
+                    binding.rectangleProfilePicture.setImageResource(it)
+                }
+                binding.bttChangeProfilePicture.setImageResource(model.franchisePlusButton)
+                binding.imageProfile.setBackgroundResource(data.franchiseProfilePictureResource)
             }
         }
 
@@ -174,13 +207,22 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         }
 
         viewModelProfile.deletePic.observe(viewLifecycleOwner) { deleted ->
-            if (deleted) {
-                binding.imageProfile.setImageDrawable(
-                    AppCompatResources.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_account_home_screen
+            if (deleted) { // deleted profile picture should return svg of franchise
+                franchiseViewModel.franchiseModel.value?.let { data ->
+                    binding.imageProfile.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            requireContext(),
+                            data.franchiseProfilePictureResource
+                        )
                     )
-                )
+                } ?: run {
+                    binding.imageProfile.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            requireContext(),
+                            R.drawable.default_user_picture
+                        )
+                    )
+                }
             }
         }
 

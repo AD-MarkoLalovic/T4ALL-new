@@ -10,7 +10,7 @@
     <string name="passage_history">Ιστορικό διοδίων</string>
     <string name="search">Αναζήτηση</string>
     <string name="tag_serial_number">Σειριακός αριθμός ετικέτας</string>
-    <string name="complaint">Φόρμα παραπόνων</string>
+    <string name="complaint">Καταγγελία</string>
     <string name="refund_request">Αίτημα επιστροφής χρημάτων</string>
     <string name="forgot_your_password">Ξεχάσατε τον κωδικό σας;</string>
     <string name="enter_email_for_password_reset">Εισάγετε τη διεύθυνση email σας και θα σταλούν οδηγίες για την επαναφορά του κωδικού σας.</string>
@@ -65,8 +65,8 @@
     <string name="country">Χώρα</string>
     <string name="save_changes">Αποθήκευση αλλαγών</string>
     <string name="repeat_password">Επαναλάβετε τον κωδικό</string>
-    <string name="password_changed">Ο κωδικός πρόσβασης άλλαξε!</string>
-    <string name="you_will_be_asked_to_login_again">Θα σας ζητηθεί να συνδεθείτε ξανά.</string>
+    <string name="password_changed">Ο κωδικός πρόσβασης άλλαξε</string>
+    <string name="you_will_be_asked_to_login_again">Πρέπει να συνδεθείτε ξανά στον λογαριασμό σας.</string>
     <string name="email_address_validation_successful">Η επαλήθευση της διεύθυνσης email ήταν επιτυχής!</string>
     <string name="resend_it">Αποστολή ξανά.</string>
     <string name="address_and_number">Διεύθυνση και αριθμός</string>
@@ -94,7 +94,7 @@
     <string name="invoice_details">Λεπτομέρειες τιμολογίου</string>
     <string name="lorem_ipsum">Λόρεμ Ίψουμ</string>
     <string name="order_number">Αριθμός παραγγελίας</string>
-    <string name="credit_card_successful">Η πληρωμή με πιστωτική κάρτα ήταν επιτυχής</string>
+    <string name="credit_card_successful">Η πιστωτική κάρτα προστέθηκε με επιτυχία.</string>
     <string name="tag_confirmed">Η ετικέτα επιβεβαιώθηκε</string>
     <string name="name_and_surname">Όνομα και επώνυμο</string>
     <string name="tag">Ετικέτα</string>
@@ -146,7 +146,7 @@
     <string name="create_account">Δημιουργία λογαριασμού T4A</string>
     <string name="all_fields_are_mandatory">Όλα τα πεδία είναι υποχρεωτικά.</string>
     <string name="change_successfully_saved">Η αλλαγή αποθηκεύτηκε επιτυχώς.</string>
-    <string name="please_connect_to_the_internet">Παρακαλώ συνδεθείτε στο διαδίκτυο</string>
+    <string name="please_connect_to_the_internet">Παρακαλώ συνδεθείτε στο διαδίκτυο.</string>
     <string name="general_terms_and_conditions">Γενικοί Όροι και Προϋποθέσεις</string>
     <string name="privacy_policy">Πολιτική Απορρήτου</string>
     <string name="choose_country_and_payment">Επιλέξτε χώρα και τρόπο πληρωμής</string>
@@ -221,7 +221,7 @@
     <string name="no_connection_title">Πρόβλημα σύνδεσης</string>
     <string name="checking_for_connection">Έλεγχος σύνδεσης</string>
     <string name="connection_restored">Η σύνδεση αποκαταστάθηκε</string>
-    <string name="no_internet">Δεν έχετε σύνδεση στο διαδίκτυο.</string>
+    <string name="no_internet">Δεν υπάρχει σύνδεση στο διαδίκτυο.</string>
     <string name="offline_using_stored_data">Δεν είστε συνδεδεμένοι στο διαδίκτυο. Προβάλλονται αποθηκευμένα δεδομένα.</string>
     <string name="multiple_payment_cards_for_country">Μπορείτε να χρησιμοποιήσετε πολλές διαφορετικές κάρτες πληρωμής για μία χώρα.</string>
     <string name="tag_device_payment_method_north_macedonia">Εάν θέλετε να χρησιμοποιήσετε τη συσκευή TAG στους δρόμους της Βόρειας Μακεδονίας, παρακαλούμε να προσθέσετε μια έγκυρη κάρτα πληρωμής.</string>
@@ -259,7 +259,7 @@
     <string name="enter_amount">Εισάγετε το ποσό</string>
     <string name="enter_bank_account">Εισαγάγετε τον πλήρη αριθμό λογαριασμού Giro.</string>
     <string name="enter_name_bank">Το πεδίο Τράπεζα είναι υποχρεωτικό.</string>
-    <string name="download_timeout">Παρακαλώ περιμένετε 5 δευτερόλεπτα πριν από τη λήψη</string>
+    <string name="download_timeout">Παρακαλώ περιμένετε 5 δευτερόλεπτα πριν από τη νέα λήψη.</string>
     <string name="enter_content_of_complaint">Εισάγετε το περιεχόμενο της καταγγελίας</string>
     <string name="hint_enter_verification_code">Εισάγετε τον κωδικό επαλήθευσης</string>
     <string name="serbian_passage">Σερβία</string>
@@ -322,5 +322,25 @@
     <string name="cards_terms_text_full">Συμφωνώ με τους Γενικούς Όρους και Προϋποθέσεις και την Πολιτική Απορρήτου</string>
     <string name="card_terms_left_clickable">Γενικούς Όρους και Προϋποθέσεις</string>
     <string name="card_term_right_clickable">Πολιτική Απορρήτου</string>
+    <string name="version">Έκδοση:</string>
+    <string name="next">Dalje</string>
+    <string name="welcome_to_toll_for_all">Welcome to Toll For All</string>
+    <string name="what_is_toll_for_all_system">Šta je Toll For All sistem?</string>
+    <string name="toll_for_all_description">Toll For All je platforma koja omogućava integrisanu naplatu putarine u zemljama Evrope. Nema više čekanja na naplatnim rampama i promena valute. Sa Toll For All platformom stigla je nova era mobilnosti!</string>
+    <string name="toll_for_all_supported_countries">Države u kojima funkcioniše Toll For All sistem</string>
+    <string name="serbia_eng">Srbija</string>
+    <string name="macedonia_eng">Severna Makedonija</string>
+    <string name="montenegro_eng">Crna Gora</string>
+    <string name="advantages_of_the_toll_for_all_system">Prednosti Toll For All sistema</string>
+    <string name="with_a_one_tag_through_multiple_countries">"Sa jednim tagom kroz više država "</string>
+    <string name="payment_via_the_phone_bill">Plaćanje preko telefonskog računa</string>
+    <string name="payment_directly_from_the_user_s_account">Plaćanje direktno sa korisničkog naloga</string>
+    <string name="no_waiting_in_line">Bez čekanja u redu</string>
+    <string name="no_currency_exchange">Bez promene valuta</string>
+    <string name="permission_granted">Άδεια Εγκρίθηκε</string>
+    <string name="notification_title">Επιτρέψτε στο T4A να σας στέλνει ειδοποιήσεις</string>
+    <string name="notification_subtitle">Οι ειδοποιήσεις χρησιμοποιούνται για τη λήψη τιμολογίων και την εξαγωγή πινάκων στο ιστορικό διελεύσεων</string>
+    <string name="listing_of_passages_downloaded_successfully">Η λίστα διελεύσεων λήφθηκε με επιτυχία.</string>
+    <string name="field_bank_account_isrequired">Το πεδίο του τραπεζικού λογαριασμού πρέπει να περιέχει 13 ψηφία.</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.mobility.enp.view.dialogs
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -7,13 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import com.mobility.enp.R
 import com.mobility.enp.databinding.GeneralDialogBinding
 import com.mobility.enp.util.setDimensionsPercent
+import com.mobility.enp.viewmodel.FranchiseViewModel
 
 class NoInternetConnectionDialog : DialogFragment() {
 
     private var _binding: GeneralDialogBinding? = null
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val binding: GeneralDialogBinding get() = _binding!!
 
     override fun onCreateView(
@@ -26,11 +30,22 @@ class NoInternetConnectionDialog : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setFranchiser()
+
         binding.title.text = arguments?.getString(getString(R.string.title)) ?: ""
         binding.subTitle.text = arguments?.getString(getString(R.string.subtitle)) ?: ""
 
         binding.confirmButton.setOnClickListener {
             dismiss()
+        }
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let {
+                binding.confirmButton.backgroundTintList = ColorStateList.valueOf(it)
+            }
         }
     }
 
