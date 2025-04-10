@@ -44,8 +44,6 @@ object Util {
      */
     fun franchiseID(portalKey: String, context: Context): FranchiseModel? {
 
-        /*val map = mutableMapOf<String, FranchiseModel>()*/
-
         val telecomSerbiaAndMTellLogo = when (portalKey) {
             "ad7e2bb9-22a5-4184-9c9b-5c384a506cb3" -> R.drawable.telekom_logo
             "2d9da5de-9113-41e3-a8b4-09c2ccfec285", "84f46084-4038-4ff2-9a77-b756a454f49f" -> R.drawable.logo_mtel_ba_me
@@ -270,6 +268,75 @@ object Util {
                 R.drawable.plus_ic_pay_and_roll,
                 R.drawable.ic_close_pay_and_roll,
                 R.drawable.default_user_picture_pay_n_roll
+            )
+
+            "5fcb381c-176c-4d94-93bc-feb476c9d62a" -> FranchiseModel(
+                "5fcb381c-176c-4d94-93bc-feb476c9d62a",
+                "SBB Portal",
+                context.resources.getColor(R.color.franchiser_sbb, null),
+                ContextCompat.getDrawable(context, R.drawable.sbb_home),
+                R.drawable.sbb_profile,
+                ContextCompat.getDrawable(context, R.drawable.logo_sbb), true,
+                ContextCompat.getColorStateList(context, R.color.bottom_nav_color_sbb),
+                R.drawable.sbb_promotion_dot,
+                context.resources.getColor(R.color.franchiser_sbb_half_visibility, null),
+                R.drawable.toolbar_shared_back_sbb,
+                R.drawable.ic_arrow_down_sbb,
+                R.drawable.ic_arrow_up_sbb,
+                R.drawable.arrow_right_sbb,
+                R.drawable.loop_sbb,
+                R.drawable.ic_camera_sbb,
+                R.drawable.ic_language_home_screen_sbb,
+                R.drawable.calendar_today_sbb,
+                R.drawable.plus_ic_sbb,
+                R.drawable.ic_close_sbb,
+                R.drawable.default_user_picture_sbb
+            )
+
+            "86841eac-1d56-49fb-a1fb-219dae2b3681" -> FranchiseModel(
+                "86841eac-1d56-49fb-a1fb-219dae2b3681",
+                "POSTE SRBIJE",
+                context.resources.getColor(R.color.franchiser_serbian_post_office, null),
+                ContextCompat.getDrawable(context, R.drawable.serbian_post_office_home),
+                R.drawable.serbian_post_office_profile,
+                ContextCompat.getDrawable(context, R.drawable.logo_serbian_post_office), true,
+                ContextCompat.getColorStateList(context, R.color.bottom_nav_color_serbian_post_office),
+                R.drawable.serbian_post_office_promotion_dot,
+                context.resources.getColor(R.color.franchiser_serbian_post_office_half_visibility, null),
+                R.drawable.toolbar_shared_back_serbian_post_office,
+                R.drawable.ic_arrow_down_serbian_post_office,
+                R.drawable.ic_arrow_up_serbian_post_office,
+                R.drawable.arrow_right_serbian_post_office,
+                R.drawable.loop_serbian_post_office,
+                R.drawable.ic_camera_serbian_post_office,
+                R.drawable.ic_language_home_screen_serbian_post_office,
+                R.drawable.calendar_today_serbian_post_office,
+                R.drawable.plus_ic_serbian_post_office,
+                R.drawable.ic_close_serbian_post_office,
+                R.drawable.default_user_picture_posta_srbije
+            )
+
+            "0e16dfd9-b94f-4e1a-aaca-47733b312e79" -> FranchiseModel(
+                "0e16dfd9-b94f-4e1a-aaca-47733b312e79",
+                "Euro Petrol",
+                context.resources.getColor(R.color.franchiser_euro_petrol, null),
+                ContextCompat.getDrawable(context, R.drawable.euro_petrol_home),
+                R.drawable.euro_petrol_profile,
+                ContextCompat.getDrawable(context, R.drawable.logo_euro_petrol), true,
+                ContextCompat.getColorStateList(context, R.color.bottom_nav_color_euro_petrol),
+                R.drawable.euro_petrol_promotion_dot,
+                context.resources.getColor(R.color.franchiser_euro_petrol_half_visibility, null),
+                R.drawable.toolbar_shared_back_euro_petrol,
+                R.drawable.ic_arrow_down_euro_petrol,
+                R.drawable.ic_arrow_up_euro_petrol,
+                R.drawable.arrow_right_euro_petrol,
+                R.drawable.loop_euro_petrol,
+                R.drawable.ic_camera_euro_petrol,
+                R.drawable.ic_language_home_screen_euro_petrol,
+                R.drawable.calendar_today_euro_petrol,
+                R.drawable.plus_ic_euro_petrol,
+                R.drawable.ic_close_euro_petrol,
+                R.drawable.default_user_picture_euro_petrol
             )
 
             else -> null
