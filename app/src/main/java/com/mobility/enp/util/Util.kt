@@ -44,8 +44,6 @@ object Util {
      */
     fun franchiseID(portalKey: String, context: Context): FranchiseModel? {
 
-        /*val map = mutableMapOf<String, FranchiseModel>()*/
-
         val telecomSerbiaAndMTellLogo = when (portalKey) {
             "ad7e2bb9-22a5-4184-9c9b-5c384a506cb3" -> R.drawable.telekom_logo
             "2d9da5de-9113-41e3-a8b4-09c2ccfec285", "84f46084-4038-4ff2-9a77-b756a454f49f" -> R.drawable.logo_mtel_ba_me
