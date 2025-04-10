@@ -119,6 +119,10 @@ class HomeFragment : Fragment() {
                 binding.imageAccountHomeScreen.setBackgroundResource(data.franchiseProfilePictureResource)
                 binding.homeUserName.setTextColor(data.homePageWelcomeTextColor)
                 binding.tvWelcomeBack.setTextColor(data.homePageWelcomeTextColor)
+
+                if (data.franchiseId == "a2ac8612-4b25-43e3-8017-fcf8ad0da0c4") {
+                    (activity as MainActivity).modifyConstraints(true)
+                }
             }
         }
     }

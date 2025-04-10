@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -49,6 +50,25 @@ class MainActivity : AppCompatActivity() {
             franchiseModel?.let {
                 setFranchiserLogoVisible(it)
             }
+        }
+    }
+
+    fun modifyConstraints(modify: Boolean) {  // for s_blue otherwise icon wont align left due to size on vector or on high quality pngs
+        val constraintLayout = binding.toolbarShared.constraintBlock
+
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintLayout)
+
+        if (modify) {
+            constraintSet.constrainMaxWidth(
+                R.id.iconLogo,
+                resources.getDimensionPixelSize(R.dimen.dimens_40dp)
+            )
+        } else {
+            constraintSet.constrainMaxWidth(
+                R.id.iconLogo,
+                resources.getDimensionPixelSize(R.dimen.dimens_100dp)
+            )
         }
     }
 
