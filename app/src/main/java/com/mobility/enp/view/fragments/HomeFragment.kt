@@ -117,6 +117,8 @@ class HomeFragment : Fragment() {
                 binding.constraintLayoutInCard.background = data.franchiseHomeBackgroundLocation
                 binding.switchToPageBill.setBackgroundResource(data.rightArrowResource)
                 binding.imageAccountHomeScreen.setBackgroundResource(data.franchiseProfilePictureResource)
+                binding.homeUserName.setTextColor(data.homePageWelcomeTextColor)
+                binding.tvWelcomeBack.setTextColor(data.homePageWelcomeTextColor)
             }
         }
     }

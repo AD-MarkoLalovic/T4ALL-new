@@ -86,5 +86,5 @@
     <color name="sbb_logo_profile_color_inner">#DFE7F1</color>
     <color name="posta_srbije_logo_profile_color_inner">#DFE7F1</color>
     <color name="euro_petrol_logo_profile_color_inner">#DFE7F1</color>
-
+    <color name="amss_tehnomania_home_welcome_text_color">@android:color/holo_green_dark</color>
 </resources>
