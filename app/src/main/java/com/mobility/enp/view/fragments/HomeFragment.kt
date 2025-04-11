@@ -71,6 +71,7 @@ class HomeFragment : Fragment() {
         setupAdapters()
         setupClickListeners()
 
+        (activity as MainActivity).showNavBar()
         viewModel.fetchHomeData()
     }
 
@@ -119,7 +120,6 @@ class HomeFragment : Fragment() {
                 binding.imageAccountHomeScreen.setBackgroundResource(data.franchiseProfilePictureResource)
                 binding.homeUserName.setTextColor(data.homePageWelcomeTextColor)
                 binding.tvWelcomeBack.setTextColor(data.homePageWelcomeTextColor)
-
             }
         }
     }

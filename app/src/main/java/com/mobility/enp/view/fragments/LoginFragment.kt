@@ -240,47 +240,6 @@ class LoginFragment : Fragment() {
             }
         }
 
-
-
-        /*collectLatestLifecycleFlow(loginViewModel.userLogin) { result ->
-            when (result) {
-                is SubmitResult.Loading -> {
-                    binding.progbar.visibility = View.VISIBLE
-                }
-
-                is SubmitResult.Success -> {
-                    binding.progbar.visibility = View.GONE
-
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        loginViewModel.insertLoginToken(
-                            UserLoginResponseRoomTable(
-                                null,
-                                result.data.data?.accessToken,
-                                result.data.data?.tokenType,
-                                userName, userPassword, result.data.data?.portal_key
-                            )
-                        )
-
-                        loginViewModel.storeLastUserEmail(userName)
-
-                        loginViewModel.sendLanguage(requireContext())
-
-                        withContext(Dispatchers.Main) {
-                            findNavController().navigate(
-                                LoginFragmentDirections.actionGlobalHomeFragment()
-                            )
-                        }
-                    }
-                }
-
-                is SubmitResult.Empty -> {}
-                is SubmitResult.FailureNoConnection -> showNoInternetDialog()
-                is SubmitResult.FailureServerError -> showErrorMessage(getString(R.string.server_error_msg))
-                is SubmitResult.FailureApiError -> showErrorMessage(result.errorMessage)
-                is SubmitResult.InvalidApiToken -> { }
-            }
-        }*/
-
         collectLatestLifecycleFlow(loginViewModel.fcmToken) { result ->
             when (result) {
                 is SubmitResult.Loading -> {
@@ -322,14 +281,6 @@ class LoginFragment : Fragment() {
         MainActivity.showSnackMessage(
             getString(R.string.no_internet), binding
         )
-       /* val bundle = Bundle().apply {
-            putString(getString(R.string.title), getString(R.string.no_connection_title))
-            putString(
-                getString(R.string.subtitle),
-                getString(R.string.please_connect_to_the_internet)
-            )
-        }
-        findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)*/
     }
 
     companion object {

@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -42,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         setObservers()
         setExistingLanguage(this)
         messageLanguageChanged(this)
-
     }
 
     private fun setObservers() {
@@ -69,6 +67,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setFranchiserLogoVisible(franchiseModel: FranchiseModel?) {
         franchiseModel?.let { data ->
+            binding.bottomNavigation.visibility = View.INVISIBLE
+            binding.bottomNavigation.itemIconTintList = franchiseModel.navHomeDrawable
+
             binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
             binding.toolbarShared.franchiserFlavorText.text = franchiseModel.franchiseFlavorText
             binding.toolbarShared.iconLogo.setImageDrawable(data.franchiseLogoToolbar)
@@ -80,9 +81,12 @@ class MainActivity : AppCompatActivity() {
             } else {
                 binding.toolbarShared.constraintBlock.setBackgroundColor(getColor(R.color.white))
             }
-
-            binding.bottomNavigation.itemIconTintList = franchiseModel.navHomeDrawable
+            binding.bottomNavigation.visibility = View.VISIBLE
         }
+    }
+
+    fun showNavBar() {
+        binding.bottomNavigation.visibility = View.VISIBLE
     }
 
     private fun setupNavigation() {
@@ -94,8 +98,17 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             Log.d(TAG, "destination: $destination")
             when (destination.id) {
-                R.id.homeFragment, R.id.paymentAndPassageFragment, R.id.toolHistoryFragment, R.id.profileFragment, R.id.supportDialog, R.id.notificationDialog, R.id.deactivateAccountDialog, R.id.pdfViewDialog -> {
+
+                R.id.homeFragment -> {
+                    binding.toolbarShared.root.visibility = View.VISIBLE
+                    binding.toolbarShared.backArrow.visibility = View.GONE
+                    binding.toolbarShared.iconLogo.visibility = View.VISIBLE
+                    binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
+                }
+
+                R.id.paymentAndPassageFragment, R.id.toolHistoryFragment, R.id.profileFragment, R.id.supportDialog, R.id.notificationDialog, R.id.deactivateAccountDialog, R.id.pdfViewDialog -> {
                     // Ako je destinacija neki od ovih fragmenata, prikaži BottomNavigationView
+
                     binding.bottomNavigation.visibility = View.VISIBLE
                     binding.toolbarShared.root.visibility = View.VISIBLE
                     binding.toolbarShared.backArrow.visibility = View.GONE
