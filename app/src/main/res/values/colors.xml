@@ -87,4 +87,5 @@
     <color name="posta_srbije_logo_profile_color_inner">#DFE7F1</color>
     <color name="euro_petrol_logo_profile_color_inner">#DFE7F1</color>
     <color name="amss_tehnomania_home_welcome_text_color">#142233</color>
+    <color name="amss_tehnomania_home_flavor_text_color">#222426</color>
 </resources>

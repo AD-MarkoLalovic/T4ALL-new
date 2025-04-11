@@ -66,16 +66,18 @@ class SupportDialog : DialogFragment() {
 
     private fun setFranchiser() {
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
-            franchiseModel?.franchisePrimaryColor?.let { color ->
-                binding.bttSendSupportMessage.backgroundTintList = ColorStateList.valueOf(color)
-                binding.enterSupportMessage.setTextColor(ColorStateList.valueOf(color))
+            franchiseModel?.let { data ->
+                binding.bttSendSupportMessage.backgroundTintList = ColorStateList.valueOf(data.franchisePrimaryColor)
+                binding.enterSupportMessage.setTextColor(ColorStateList.valueOf(data.franchisePrimaryColor))
+
+                binding.supportDialogClose.setImageResource(data.franchiseCloseButton)
 
                 binding.supportDialogInput.apply {
-                    boxStrokeColor = color
+                    boxStrokeColor = data.franchisePrimaryColor
 
                     val editText = this.editText
-                    editText?.textSelectHandle?.setTint(color)
-                    editText?.setTextColor(color)
+                    editText?.textSelectHandle?.setTint(data.franchisePrimaryColor)
+                    editText?.setTextColor(data.franchisePrimaryColor)
 
                     val states = arrayOf(
                         intArrayOf(android.R.attr.state_pressed),  // pressed
@@ -84,9 +86,9 @@ class SupportDialog : DialogFragment() {
                     )
 
                     val colors = intArrayOf(
-                        color,        // pressed
-                        color,        // focused
-                        color         // default
+                        data.franchisePrimaryColor,        // pressed
+                        data.franchisePrimaryColor,        // focused
+                        data.franchisePrimaryColor         // default
                     )
 
                     cursorColor = ColorStateList(states, colors)
