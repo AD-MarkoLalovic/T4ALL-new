@@ -100,6 +100,7 @@ class MainActivity : AppCompatActivity() {
                     binding.toolbarShared.root.visibility = View.VISIBLE
                     binding.toolbarShared.backArrow.visibility = View.GONE
                     binding.toolbarShared.iconLogo.visibility = View.VISIBLE
+                    binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
                 }
 
                 R.id.basicInformationFragment, R.id.changePasswordFragment, R.id.invoicesFragment,
@@ -111,12 +112,14 @@ class MainActivity : AppCompatActivity() {
                     binding.toolbarShared.root.visibility = View.VISIBLE
                     binding.toolbarShared.backArrow.visibility = View.VISIBLE
                     binding.toolbarShared.iconLogo.visibility = View.GONE
+                    binding.toolbarShared.franchiserFlavorText.visibility = View.INVISIBLE
                 }
 
                 else -> {
                     // Ako je destinacija neki drugi fragment, sakrij i Toolbar i BottomNavigationView
                     binding.bottomNavigation.visibility = View.GONE
                     binding.toolbarShared.root.visibility = View.GONE
+                    binding.toolbarShared.franchiserFlavorText.visibility = View.GONE
                 }
             }
         }
