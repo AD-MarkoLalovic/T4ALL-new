@@ -164,6 +164,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 }
                 binding.bttChangeProfilePicture.setImageResource(model.franchisePlusButton)
                 binding.imageProfile.setBackgroundResource(data.franchiseProfilePictureResource)
+                binding.userName.setTextColor(data.homePageWelcomeTextColor)
             }
         }
 
