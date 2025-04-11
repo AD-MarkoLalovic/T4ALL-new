@@ -74,27 +74,6 @@ class LoginFragment : Fragment() {
                 val body = LoginBody(userName, userPassword)
                 loginViewModel.loginUser(body, requireContext())
 
-                /*if (Repository.isNetworkAvailable(requireContext())) {
-                    binding.progbar.visibility = View.VISIBLE
-                    loginViewModel.loginUser(body, requireContext())
-                } else {
-                    val bundle = Bundle().apply {
-                        putString(
-                            getString(R.string.title),
-                            getString(R.string.no_connection_title)
-                        )
-                        putString(
-                            getString(R.string.subtitle),
-                            getString(R.string.please_connect_to_the_internet)
-                        )
-                    }
-
-                    findNavController().navigate(
-                        R.id.action_global_loginNoInternetConnectionDialog,
-                        bundle
-                    )
-                }*/
-
             } else {
                 Toast.makeText(
                     requireContext(),
