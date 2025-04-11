@@ -71,10 +71,11 @@ class MainActivity : AppCompatActivity() {
             binding.bottomNavigation.itemIconTintList = franchiseModel.navHomeDrawable
 
             binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
-            binding.toolbarShared.franchiserFlavorText.text = franchiseModel.franchiseFlavorText
+            binding.toolbarShared.franchiserFlavorText.text = data.franchiseFlavorText
+            binding.toolbarShared.franchiserFlavorText.setTextColor(data.franchiseFlavorTextColor)
             binding.toolbarShared.iconLogo.setImageDrawable(data.franchiseLogoToolbar)
 
-            binding.toolbarShared.backArrow.setImageResource(franchiseModel.backButtonResource)
+            binding.toolbarShared.backArrow.setImageResource(data.backButtonResource)
 
             if (data.enableBackgroundColorOnToolBar) {
                 binding.toolbarShared.constraintBlock.setBackgroundColor(data.franchisePrimaryColor)
