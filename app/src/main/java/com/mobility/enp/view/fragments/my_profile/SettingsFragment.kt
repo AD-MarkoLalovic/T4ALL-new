@@ -187,6 +187,7 @@ class SettingsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         binding.notificationSwitch.isChecked = isPermissionGranted()
+        franchiseViewModel.getFranchiseModel(requireContext())
     }
 
     override fun onDestroyView() {

@@ -39,6 +39,7 @@
                 android:id="@+id/firstConstraintLayoutHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_4dp"
                 android:layout_marginHorizontal="@dimen/dimens_16dp">
 
                 <androidx.cardview.widget.CardView
@@ -61,7 +62,8 @@
                         android:id="@+id/constraintLayoutInCard"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/rect_a2">
+                        android:background="@drawable/rect_a2"
+                        >
 
                         <TextView
                             android:id="@+id/homeUserName"
@@ -115,7 +117,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingTop="@dimen/dimens_8dp"
+                    android:paddingTop="@dimen/dimens_22dp"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
