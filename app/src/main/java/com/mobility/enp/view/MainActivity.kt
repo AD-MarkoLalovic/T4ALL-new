@@ -24,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
+import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
 
@@ -49,6 +50,14 @@ class MainActivity : AppCompatActivity() {
                 setFranchiserLogoVisible(it)
             }
         }
+    }
+
+    fun settingsFragmentReset(){
+        binding.bottomNavigation.visibility = View.GONE
+        binding.toolbarShared.root.visibility = View.VISIBLE
+        binding.toolbarShared.backArrow.visibility = View.VISIBLE
+        binding.toolbarShared.iconLogo.visibility = View.GONE
+        binding.toolbarShared.franchiserFlavorText.visibility = View.INVISIBLE
     }
 
     fun resetToDefault() {
@@ -104,7 +113,15 @@ class MainActivity : AppCompatActivity() {
                     binding.toolbarShared.root.visibility = View.VISIBLE
                     binding.toolbarShared.backArrow.visibility = View.GONE
                     binding.toolbarShared.iconLogo.visibility = View.VISIBLE
-                    binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
+
+                    if (franchiseViewModel.franchiseModel.value == null){
+                        binding.toolbarShared.franchiserFlavorText.visibility = View.INVISIBLE
+                        binding.toolbarShared.iconLogo.setImageResource(R.drawable.ic_logo_home_screen)
+                        binding.toolbarShared.franchiserFlavorText.text = ""
+
+                    }else{
+                        binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
+                    }
                 }
 
                 R.id.paymentAndPassageFragment, R.id.toolHistoryFragment, R.id.profileFragment, R.id.supportDialog, R.id.notificationDialog, R.id.deactivateAccountDialog, R.id.pdfViewDialog -> {
