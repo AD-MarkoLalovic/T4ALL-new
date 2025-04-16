@@ -51,6 +51,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun settingsFragmentReset(){
+        binding.bottomNavigation.visibility = View.GONE
+        binding.toolbarShared.root.visibility = View.VISIBLE
+        binding.toolbarShared.backArrow.visibility = View.VISIBLE
+        binding.toolbarShared.iconLogo.visibility = View.GONE
+        binding.toolbarShared.franchiserFlavorText.visibility = View.INVISIBLE
+    }
+
     fun resetToDefault() {
         binding.toolbarShared.iconLogo.setImageResource(R.drawable.ic_logo_home_screen)
         binding.toolbarShared.franchiserFlavorText.text = ""
