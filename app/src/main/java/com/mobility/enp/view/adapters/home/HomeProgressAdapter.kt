@@ -2,32 +2,24 @@ package com.mobility.enp.view.adapters.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.databinding.CardProgressBarBinding
 
-class HomeProgressAdapter(val total: Int, val franchiseModel: FranchiseModel?) :
-    RecyclerView.Adapter<HomeProgressAdapter.HomeProgressAdapterViewHolder>() {
+class HomeProgressAdapter(val franchiseModel: FranchiseModel?) :
+    ListAdapter<Int, HomeProgressAdapter.HomeProgressAdapterViewHolder>(HomeProgressDiffCallback()) {
 
     var checkedPosition = 0
-
-    fun setCurrentDot(position: Int) {
-        if (position != checkedPosition && position != -1) {
-            val previousPosition = checkedPosition
-            checkedPosition = position
-            notifyItemChanged(previousPosition)
-            notifyItemChanged(checkedPosition)
-        }
-    }
-
 
     inner class HomeProgressAdapterViewHolder(val binding: CardProgressBarBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(currentPosition: Int) {
 
-            var drawable: Int = 0
+            var drawable = 0
 
             franchiseModel?.promotionsDot?.let {
                 drawable = if (checkedPosition == currentPosition) it else R.drawable.dot_unchecked
@@ -51,12 +43,28 @@ class HomeProgressAdapter(val total: Int, val franchiseModel: FranchiseModel?) :
         )
     }
 
-    override fun getItemCount(): Int {
-        return total
+    override fun onBindViewHolder(holder: HomeProgressAdapterViewHolder, position: Int) {
+        holder.bind(getItem(position))
     }
 
-    override fun onBindViewHolder(holder: HomeProgressAdapterViewHolder, position: Int) {
-        holder.bind(position)
+    class HomeProgressDiffCallback : DiffUtil.ItemCallback<Int>() {
+        override fun areItemsTheSame(oldItem: Int, newItem: Int): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: Int, newItem: Int): Boolean {
+            return oldItem == newItem
+        }
+
+    }
+
+    fun setCurrentDot(position: Int) {
+        if (position == -1 || position >= itemCount || position == checkedPosition) return
+
+        val previousPosition = checkedPosition
+        checkedPosition = position
+        notifyItemChanged(previousPosition)
+        notifyItemChanged(checkedPosition)
     }
 
 }

@@ -3,6 +3,8 @@ package com.mobility.enp.view.adapters.home
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.franchise.FranchiseModel
@@ -10,12 +12,12 @@ import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.databinding.CardFlagsPromotionHomeBinding
 
 class HomePromotionsAdapter(
-    private var list: List<HomeCardsEntity>,
     private val onItemClicked: () -> Unit,
-    private val updateDeleteCard: (HomeCardsEntity) -> Unit,
+    private val onDeleteClicked: (HomeCardsEntity) -> Unit,
     private val franchiseModel: FranchiseModel?
-) :
-    RecyclerView.Adapter<HomePromotionsAdapter.HomeInvoicesAdapterViewHolder>() {
+) : ListAdapter<HomeCardsEntity, HomePromotionsAdapter.HomeInvoicesAdapterViewHolder>(
+    HomePromotionsDiffCallback()
+) {
 
     inner class HomeInvoicesAdapterViewHolder(
         val binding: CardFlagsPromotionHomeBinding,
@@ -44,13 +46,8 @@ class HomePromotionsAdapter(
             binding.closeButton.setOnClickListener {
                 card.deletedByUser = true
                 card.time = System.currentTimeMillis()
-                updateDeleteCard(card)
+                onDeleteClicked(card)
 
-                val position = bindingAdapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    list = list.toMutableList().apply { removeAt(position) }
-                    notifyItemRemoved(position)
-                }
             }
 
             binding.executePendingBindings()
@@ -70,13 +67,22 @@ class HomePromotionsAdapter(
         )
     }
 
-    override fun getItemCount(): Int {
-        return list.size
+    override fun onBindViewHolder(holder: HomeInvoicesAdapterViewHolder, position: Int) {
+        holder.bind(getItem(position))
     }
 
-    override fun onBindViewHolder(holder: HomeInvoicesAdapterViewHolder, position: Int) {
-        val current = list[holder.bindingAdapterPosition]
-        holder.bind(current)
+    class HomePromotionsDiffCallback : DiffUtil.ItemCallback<HomeCardsEntity>() {
+        override fun areItemsTheSame(oldItem: HomeCardsEntity, newItem: HomeCardsEntity): Boolean {
+            return oldItem.code == newItem.code
+        }
+
+        override fun areContentsTheSame(
+            oldItem: HomeCardsEntity,
+            newItem: HomeCardsEntity
+        ): Boolean {
+            return oldItem == newItem
+        }
+
     }
 
 }
