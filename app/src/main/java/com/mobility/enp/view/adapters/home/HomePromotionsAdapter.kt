@@ -12,7 +12,7 @@ import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.databinding.CardFlagsPromotionHomeBinding
 
 class HomePromotionsAdapter(
-    private val onItemClicked: () -> Unit,
+    private val onItemClicked: (HomeCardsEntity) -> Unit,
     private val onDeleteClicked: (HomeCardsEntity) -> Unit,
     private val franchiseModel: FranchiseModel?
 ) : ListAdapter<HomeCardsEntity, HomePromotionsAdapter.HomeInvoicesAdapterViewHolder>(
@@ -40,7 +40,7 @@ class HomePromotionsAdapter(
             }
 
             binding.btnObjection.setOnClickListener {
-                onItemClicked()
+                onItemClicked(card)
             }
 
             binding.closeButton.setOnClickListener {

@@ -108,6 +108,11 @@ class CardsCountryAdapter(
         }
     }
 
+    fun getPositionByCountryCode(countryCode: String): Int {
+        return countries.indexOfFirst { it.code == countryCode }
+    }
+
+
     interface CountryListener {
         fun setCountryListener(country: String)
     }
