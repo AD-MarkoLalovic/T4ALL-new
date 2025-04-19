@@ -22,8 +22,6 @@ import com.mobility.enp.data.model.banks.response.BanksResponse
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
-import com.mobility.enp.data.model.home.cards.added_cards.response.AddedCardsResponse
-import com.mobility.enp.data.model.home.cards.response.HomeCardsResponse
 import com.mobility.enp.data.model.home.response.HomeResponse
 import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
@@ -230,13 +228,6 @@ interface ApiService {
     fun forgotPassword(
         @Body request: ForgotPasswordRequest
     ): Call<Unit>
-
-    //new home cards
-    @GET("/api/v1/countries")
-    suspend fun getAvailableCards(): Response<HomeCardsResponse>
-
-    @GET("/api/v1/cards")
-    suspend fun getHomeAddedCards(): Response<AddedCardsResponse>
 
     @FormUrlEncoded
     @POST("/api/v1/tags/found-tag")

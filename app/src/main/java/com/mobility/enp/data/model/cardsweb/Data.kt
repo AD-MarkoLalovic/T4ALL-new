@@ -33,5 +33,7 @@ data class Data(
     @SerializedName("showTabME")
     val showTabME: Boolean?,
     @SerializedName("showTabMK")
-    val showTabMK: Boolean?
+    val showTabMK: Boolean?,
+    @SerializedName("showTabRS")
+    val showTabRS: Boolean?
 )
