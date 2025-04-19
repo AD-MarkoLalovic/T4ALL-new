@@ -22,6 +22,7 @@ import androidx.lifecycle.lifecycleScope
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentSettingsBinding
 import com.mobility.enp.util.SharedPreferencesHelper
+import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.GeneralMessageDialogNotifications
 import com.mobility.enp.view.dialogs.LanguageDialog
 import com.mobility.enp.view.dialogs.NotificationsRequestDialog
@@ -140,6 +141,9 @@ class SettingsFragment : Fragment() {
 
     private fun setFranchise() {
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+
+            (activity as MainActivity).settingsFragmentReset()
+
             franchiseModel?.let {
                 binding.notificationSwitch.trackTintList = franchiseModel.navHomeDrawable
                 binding.languageIconInSettings.setImageResource(franchiseModel.languageIcon)
