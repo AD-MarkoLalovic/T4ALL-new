@@ -3,7 +3,6 @@ package com.mobility.enp.data.repository
 import android.content.Context
 import android.util.Log
 import com.mobility.enp.data.model.ProfileImage
-import com.mobility.enp.data.model.home.cards.added_cards.entity.AddedCardsEntity
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.data.model.home.response.Data
@@ -95,16 +94,18 @@ class HomeRepository(
     suspend fun getCardsFromServer(): Result<List<HomeCardsEntity>> {
         val userToken = getUserToken() ?: return Result.failure(NetworkError.NoConnection)
 
-        val localCards = getHomeCards()
+        val user = getUserForPromotion()
+        val localCards = getHomeCards(user)
         if (localCards.isNotEmpty()) {
             return Result.success(localCards)
         }
 
         return try {
-            val remoteData = apiService(userToken).getAvailableCards()
+            val lang = getLangKey()
+            val remoteData = apiService(userToken).getCreditCardsWeb(lang)
             if (remoteData.isSuccessful) {
                 remoteData.body()?.let { responseBody ->
-                    val cardsEntities = responseBody.data.toEntityList(context)
+                    val cardsEntities = responseBody.toEntityList(context, user)
                     saveHomeCards(cardsEntities)
 
                     Result.success(cardsEntities)
@@ -118,10 +119,13 @@ class HomeRepository(
         }
     }
 
-    suspend fun getHomeCards(): List<HomeCardsEntity> {
-        return database.homeCardsDao().getHomeCardsList()
+    suspend fun getHomeCards(user: String): List<HomeCardsEntity> {
+        return database.homeCardsDao().getHomeCardsList(user)
     }
 
+    suspend fun getUserForPromotion(): String {
+        return database.lastUserDao().getLastUser().email
+    }
 
     private suspend fun saveHomeCards(cards: List<HomeCardsEntity>) {
         database.homeCardsDao().insertHomeCards(cards)
@@ -129,35 +133,6 @@ class HomeRepository(
 
     suspend fun updateHomeCard(card: HomeCardsEntity) {
         database.homeCardsDao().updatePromotionCard(card)
-    }
-
-    suspend fun getAddedCardsFromServer(): Result<List<AddedCardsEntity>> {
-        val userToken = getUserToken() ?: return Result.failure(NetworkError.NoConnection)
-
-        return try {
-            val remoteData = apiService(userToken).getHomeAddedCards() // API koji vraća kartice koje je korisnik dodao
-            if (remoteData.isSuccessful) {
-                remoteData.body()?.let { responseBody ->
-                    val userAddedCards = responseBody.toEntity()
-                    saveHomeAddedCards(userAddedCards)
-
-                    Result.success(getLocalAddedCards())
-                } ?: Result.failure(NetworkError.ServerError)
-            } else {
-                Result.failure(NetworkError.ServerError)
-            }
-        } catch (e: Exception) {
-            Log.e("HomeRepository getUserAddedCards", "Greška pri preuzimanju korisnikovih kartica: ${e.message}", e)
-            Result.failure(NetworkError.ServerError)
-        }
-    }
-
-    private suspend fun saveHomeAddedCards(cards: List<AddedCardsEntity>) {
-        database.homeCardsDao().insertAddedCards(cards)
-    }
-
-    suspend fun getLocalAddedCards(): List<AddedCardsEntity> {
-        return database.homeCardsDao().getAddedCards()
     }
 
 }
