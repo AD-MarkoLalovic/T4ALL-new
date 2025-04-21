@@ -184,7 +184,15 @@ class BillsDetailsAdapter(
                                 }
 
                                 else -> {
-                                    spinnerInterface.requestNotificationFromUser()
+                                    spinnerInterface.requestNotificationFromUser(object :
+                                        UserPermission {
+                                        override fun onPermissionGranted() {
+                                            showNotification(binding, id, false)
+                                        }
+
+                                        override fun onPermissionDenied() {
+                                        }
+                                    })
                                 }
                             }
                         }
@@ -206,7 +214,15 @@ class BillsDetailsAdapter(
                                 }
 
                                 else -> {
-                                    spinnerInterface.requestNotificationFromUser()
+                                    spinnerInterface.requestNotificationFromUser(object :
+                                        UserPermission {
+                                        override fun onPermissionGranted() {
+                                            showNotification(binding, id, true)
+                                        }
+
+                                        override fun onPermissionDenied() {
+                                        }
+                                    })
                                 }
                             }
                         }
@@ -231,13 +247,6 @@ class BillsDetailsAdapter(
         if (canDownload) {
             spinnerInterface.onStartSpinner()
             countDownTimer.start()
-
-            /*val flashAnimation =
-                AnimationUtils.loadAnimation(
-                    binding.root.context,
-                    R.anim.icon_flash_animation
-                )
-            binding.downloadBillDetails.startAnimation(flashAnimation)*/
 
             val pdf = ".pdf"
             val downloadName = "$billId$pdf"
@@ -385,6 +394,11 @@ class BillsDetailsAdapter(
     interface DownloadBillsDetails {
         fun onOK(pdf: BillDownload?)
         fun onFailed()
+    }
+
+    interface UserPermission {
+        fun onPermissionGranted()
+        fun onPermissionDenied()
     }
 
 }

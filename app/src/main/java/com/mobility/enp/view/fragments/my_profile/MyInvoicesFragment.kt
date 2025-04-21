@@ -21,6 +21,7 @@ import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
 import com.mobility.enp.databinding.FragmentBillsBinding
 import com.mobility.enp.network.Repository
 import com.mobility.enp.view.MainActivity
+import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
 import com.mobility.enp.view.dialogs.NotificationsRequestDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
@@ -44,9 +45,12 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
                 // Permission is granted. You can proceed with sending notifications.
+                userPerm.onPermissionGranted()
                 sendNotification()
             }
         }
+
+    private lateinit var userPerm: BillsDetailsAdapter.UserPermission
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -235,7 +239,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         }
     }
 
-    override fun requestNotificationFromUser() {
+    override fun requestNotificationFromUser(userPermission: BillsDetailsAdapter.UserPermission) {
         lifecycleScope.launch {
             val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
             val generalMessageDialog = NotificationsRequestDialog(
@@ -243,10 +247,12 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                 getString(R.string.notification_subtitle),
                 object : NotificationsRequestDialog.OnButtonClick {
                     override fun onClickConfirmed() {
+                        userPerm = userPermission
                         requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
                     }
 
                     override fun onClickRejected() {
+                        userPermission.onPermissionDenied()
                     }
                 }
             )
