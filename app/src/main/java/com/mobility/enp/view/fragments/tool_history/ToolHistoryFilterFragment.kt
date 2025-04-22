@@ -35,7 +35,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-
 class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
     private var _binding: FragmentToolHistorySearchQueryBinding? = null
@@ -46,9 +45,11 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
                 // Permission is granted. You can proceed with sending notifications.
+                userPerm.onPermissionGranted()
                 sendNotification()
             }
         }
+    private lateinit var userPerm: UserPermission
 
     companion object {
         const val TAG = "ToolDetails"
@@ -285,22 +286,34 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
                     if (!csvTable.data.data?.csvContent.isNullOrEmpty()) {
                         val nameExtra = UUID.randomUUID().toString().substring(0, 8)
-                        vModel.processCsvData(csvTable.data, nameExtra,requireContext())
+                        vModel.processCsvData(csvTable.data, nameExtra, requireContext())
                         when {
                             ContextCompat.checkSelfPermission(
                                 requireContext(), Manifest.permission.POST_NOTIFICATIONS
                             ) == PackageManager.PERMISSION_GRANTED -> {
                                 csvTable.data.data?.csvContent?.let {
                                     vModel.saveBase64ToCSV(
-                                        it, nameExtra,requireContext()
+                                        it, nameExtra, requireContext()
                                     ) // <- converts csv to pdf saves locally and in room byte array
                                 }
                                 vModel.setCsvState()
                             }
 
                             else -> {
-                                showNotificationPermissionRationale()
-                                vModel.setCsvState()
+                                showNotificationPermissionRationale(object : UserPermission {
+                                    override fun onPermissionGranted() {
+                                        csvTable.data.data?.csvContent?.let {
+                                            vModel.saveBase64ToCSV(
+                                                it, nameExtra, requireContext()
+                                            )
+                                        }
+                                        vModel.setCsvState()
+                                    }
+
+                                    override fun onPermissionDenied() {
+                                        vModel.setCsvState()
+                                    }
+                                })
                             }
                         }
                     } else {
@@ -367,7 +380,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     }
 
 
-    private fun showNotificationPermissionRationale() {
+    private fun showNotificationPermissionRationale(userPermission: UserPermission) {
         lifecycleScope.launch {
             val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
             val generalMessageDialog = NotificationsRequestDialog(
@@ -375,10 +388,12 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                 getString(R.string.notification_subtitle),
                 object : NotificationsRequestDialog.OnButtonClick {
                     override fun onClickConfirmed() {
+                        userPerm = userPermission
                         requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
                     }
 
                     override fun onClickRejected() {
+                        userPermission.onPermissionDenied()
                     }
                 })
             generalMessageDialog.show(fragmentManager, "permDialog")
@@ -438,6 +453,11 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    interface UserPermission {
+        fun onPermissionGranted()
+        fun onPermissionDenied()
     }
 
 }
