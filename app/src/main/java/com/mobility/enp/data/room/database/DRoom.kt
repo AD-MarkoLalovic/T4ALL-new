@@ -18,7 +18,6 @@ import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.banks.entity.BanksEntity
-import com.mobility.enp.data.model.home.cards.added_cards.entity.AddedCardsEntity
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.entity.HomeEntity
 import com.mobility.enp.data.model.home.entity.InvoiceHomeEntity
@@ -49,8 +48,8 @@ import com.mobility.enp.data.room.notification.NotificationDao
 @Database(
     entities = [UserLoginResponseRoomTable::class, FcmToken::class, NotificationModel::class, IndexData::class, ToolHistoryListing::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
-        BasicInfoEntity::class, HomeEntity::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class, HomeCardsEntity::class, AddedCardsEntity::class],
-    version = 198,
+        BasicInfoEntity::class, HomeEntity::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class, HomeCardsEntity::class],
+    version = 202,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -117,8 +116,6 @@ abstract class DRoom : RoomDatabase() {
         tagsRefundRequest().deleteTagsRefundRequest()
         basicInfoDao().deleteBasicInfo()
         homeScreenDao().deleteHomeScreenData()
-        homeCardsDao().deleteAllCards()
-        homeCardsDao().deleteAddedCards()
     }
 
 }

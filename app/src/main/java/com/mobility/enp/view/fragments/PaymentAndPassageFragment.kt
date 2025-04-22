@@ -17,6 +17,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.mobility.enp.R
 import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.data.model.cards.response.CardsResponse
@@ -49,7 +50,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private lateinit var adapter: PaymentAndPassageAdapter
     private lateinit var cardsCountryAdapter: CardsCountryAdapter
     private var allCards: List<Card> = emptyList()
-    private var selectedCountry = "All"
+    private val args: PaymentAndPassageFragmentArgs by navArgs()
+    private var selectedCountry: String = "All"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -62,6 +64,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = viewLifecycleOwner
+
+        selectedCountry = args.countryCode ?: "All"
 
         setupAdapters()
         setObservers()
@@ -293,6 +297,13 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             withContext(Dispatchers.Main) {
                 cardsCountryAdapter.updateCountries(countryNameAndAdditionalField)
                 cardsCountryAdapter.setSelectedCountry(selectedCountry)
+
+                val position = cardsCountryAdapter.getPositionByCountryCode(selectedCountry)
+                if (position != -1) {
+                    binding.recyclerCardsCountry.scrollToPosition(position)
+                }
+
+
                 setClickableText()  // terms and conditions
             }
         }

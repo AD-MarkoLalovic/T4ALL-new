@@ -296,11 +296,17 @@
     <action
         android:id="@+id/action_global_invoicesFragment"
         app:destination="@id/invoicesFragment" />
+
     <fragment
         android:id="@+id/paymentAndPassageFragment"
         android:name="com.mobility.enp.view.fragments.PaymentAndPassageFragment"
         android:label="PaymentAndPassageFragment"
         tools:layout="@layout/fragment_payment_and_passage">
+        <argument
+            android:name="countryCode"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null"/>
         <action
             android:id="@+id/action_paymentAndPassageFragment_to_cardFragment"
             app:destination="@id/cardFragment" />
@@ -308,6 +314,7 @@
             android:id="@+id/action_paymentAndPassageFragment_to_pdfViewDialog"
             app:destination="@id/pdfViewDialog" />
     </fragment>
+
     <fragment
         android:id="@+id/cardFragment"
         android:name="com.mobility.enp.view.fragments.card.CardFragment"

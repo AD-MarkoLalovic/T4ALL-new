@@ -2,10 +2,8 @@ package com.mobility.enp.util
 
 import android.content.Context
 import com.mobility.enp.R
-import com.mobility.enp.data.model.home.cards.added_cards.entity.AddedCardsEntity
-import com.mobility.enp.data.model.home.cards.added_cards.response.CardsList
+import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
-import com.mobility.enp.data.model.home.cards.response.CardsHome
 import com.mobility.enp.data.model.home.entity.TollHistoryHomeEntity
 import com.mobility.enp.view.ui_models.home.HomeTollHistoryUI
 
@@ -25,38 +23,39 @@ fun TollHistoryHomeEntity.toUIModel(): HomeTollHistoryUI {
 /**
  * Konverzija responsa u entity za home card
  */
-fun CardsHome.toEntityList(context: Context): List<HomeCardsEntity> {
-    return results.map { result ->
-        HomeCardsEntity(
-            id = result.id,
-            code = result.code,
-            title = when (result.code) {
-                "RS" -> context.getString(R.string.serbian_passage)
-                "MK" -> context.getString(R.string.north_macedonian_passage)
-                "ME" -> context.getString(R.string.montenegro_passage)
-                else -> ""
-            },
-            description = when (result.code) {
-                "RS" -> context.getString(R.string.tag_device_payment_method_serbia)
-                "MK" -> context.getString(R.string.tag_device_payment_method_north_macedonia)
-                "ME" -> context.getString(R.string.tag_device_payment_method_montenegro)
-                else -> ""
-            }
-        )
-    }
-}
+fun CardWebModel.toEntityList(context: Context, user: String): List<HomeCardsEntity> {
+    val listCards = mutableListOf<HomeCardsEntity>()
 
-/**
- * Konverzija responsa za dodate kartice
- */
-fun CardsList.toEntityAddedCards(): AddedCardsEntity? {
-    return if (id != null && country?.code != null) {
-        AddedCardsEntity(
-            id = id,
-            countryCode = country.code
+    if (data?.showTabRS == true && data.cardsRS.isNullOrEmpty()) {
+        val srCard = HomeCardsEntity(
+            email = user,
+            code = "RS",
+            title = context.getString(R.string.serbian_passage),
+            description = context.getString(R.string.tag_device_payment_method_serbia),
+            additionEnabled = data.hasSerbianCard,
         )
-    } else {
-        null
+        listCards.add(srCard)
     }
-}
+    if (data?.showTabME == true && data.cardsME.isNullOrEmpty()) {
+        val meCard = HomeCardsEntity(
+            email = user,
+            code = "ME",
+            title = context.getString(R.string.montenegro_passage),
+            description = context.getString(R.string.tag_device_payment_method_montenegro),
+            additionEnabled = data.hasSerbianCard,
+        )
+        listCards.add(meCard)
+    }
+    if (data?.showTabMK == true && data.cardsMK.isNullOrEmpty()) {
+        val mkCard = HomeCardsEntity(
+            email = user,
+            code = "MK",
+            title = context.getString(R.string.north_macedonian_passage),
+            description = context.getString(R.string.tag_device_payment_method_north_macedonia),
+            additionEnabled = data.hasSerbianCard,
+        )
+        listCards.add(mkCard)
+    }
 
+    return listCards
+}

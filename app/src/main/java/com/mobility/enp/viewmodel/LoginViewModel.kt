@@ -188,7 +188,7 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
         }
     }
 
-    suspend fun storeLastUserEmail(email: String) {
+    private suspend fun storeLastUserEmail(email: String) {
         repository.storeLastUserEmail(email)
     }
 

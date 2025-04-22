@@ -38,8 +38,8 @@
                 android:id="@+id/firstConstraintLayoutHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginHorizontal="@dimen/dimens_100dp">
+                android:layout_marginHorizontal="@dimen/dimens_100dp"
+                android:layout_marginTop="4dp">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewAccountHomeScreen"
@@ -122,10 +122,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:visibility="gone"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:listitem="@layout/card_flags_promotion_home"
-                        tools:visibility="visible" />
+                        tools:listitem="@layout/card_flags_promotion_home" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/cyclerProgress"
@@ -134,11 +132,9 @@
                         android:layout_gravity="center_horizontal"
                         android:importantForAccessibility="no"
                         android:orientation="horizontal"
-                        android:visibility="gone"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:itemCount="5"
-                        tools:listitem="@layout/card_progress_bar"
-                        tools:visibility="visible" />
+                        tools:listitem="@layout/card_progress_bar" />
 
                     <TextView
                         android:id="@+id/tvTollMyInvoicesHomeScreen"
@@ -240,17 +236,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/test_franchise"
-            android:layout_width="@dimen/dimens_30dp"
-            android:layout_height="@dimen/dimens_50dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:backgroundTint="@color/black"
-            android:layout_margin="@dimen/dimens_10dp"
-            android:visibility="gone"
-            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

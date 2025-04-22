@@ -230,39 +230,64 @@ class HomeFragment : Fragment() {
             }
         }
 
-        homePromotionsAdapter = HomePromotionsAdapter(filteredList, onItemClicked = {
-            findNavController().navigate(R.id.action_homeFragment_to_paymentAndPassageFragment)
-        }, { delete ->
-            binding.progBar.visibility = View.VISIBLE
-            viewModel.updateDeleteHomeCard(delete)
-            binding.progBar.visibility = View.GONE
-        }, franchiseViewModel.franchiseModel.value)
+        homePromotionsAdapter = HomePromotionsAdapter(
+            onItemClicked = { card ->
+                if (card.additionEnabled == true) {
+                    val action = HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment(card.code)
+                    findNavController().navigate(action)
+                } else {
+                    val action = HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment("RS")
+                    findNavController().navigate(action)
+                }
+
+            },
+            onDeleteClicked = { card ->
+                binding.progBar.visibility = View.VISIBLE
+                viewModel.updateDeleteHomeCard(card)
+                val newList =
+                    homePromotionsAdapter.currentList.toMutableList().apply { remove(card) }
+                homePromotionsAdapter.submitList(newList)
+
+                adapterProgress.submitList(newList.indices.toList()) {
+                    if (newList.isNotEmpty()) {
+                        val newCheckedPosition = if (adapterProgress.checkedPosition >= newList.size) {
+                            newList.lastIndex
+                        } else {
+                            adapterProgress.checkedPosition
+                        }
+                        adapterProgress.setCurrentDot(newCheckedPosition)
+                    }
+                }
+
+
+
+
+                binding.progBar.visibility = View.GONE
+            }, franchiseViewModel.franchiseModel.value
+        )
+
+        adapterProgress = HomeProgressAdapter(franchiseViewModel.franchiseModel.value)
+        binding.cyclerPromotions.adapter = homePromotionsAdapter
+        binding.cyclerProgress.adapter = adapterProgress
+        binding.cyclerProgress.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        homePromotionsAdapter.submitList(filteredList)
+        adapterProgress.submitList(filteredList.indices.toList())
 
         if (filteredList.isNotEmpty()) {
-            adapterProgress =
-                HomeProgressAdapter(filteredList.size, franchiseViewModel.franchiseModel.value)
-
-            binding.cyclerPromotions.visibility = View.VISIBLE
-            binding.cyclerPromotions.adapter = homePromotionsAdapter
-
-            binding.cyclerProgress.visibility = View.VISIBLE
-            binding.cyclerProgress.adapter = adapterProgress
-            binding.cyclerProgress.layoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
             binding.cyclerPromotions.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     val currentCompletelyVisiblePosition =
                         (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
                     // Pozivam setCurrentDot samo kada se pozicija stvarno promeni
-                    if (currentCompletelyVisiblePosition != adapterProgress.checkedPosition) {
+                    if (currentCompletelyVisiblePosition != RecyclerView.NO_POSITION &&
+                        currentCompletelyVisiblePosition != adapterProgress.checkedPosition
+                    ) {
                         adapterProgress.setCurrentDot(currentCompletelyVisiblePosition)
                     }
                 }
             })
-        } else {
-            Log.d("HomeFragment", "Filtered list is empty, no items to display")
         }
     }
 
