@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun resetToDefault() {
-        binding.toolbarShared.iconLogo.setImageResource(R.drawable.ic_logo_home_screen)
+        binding.toolbarShared.iconLogo.setImageResource(R.drawable.ic_logo_home_screen_svg)
         binding.toolbarShared.franchiserFlavorText.text = ""
         binding.toolbarShared.constraintBlock.setBackgroundColor(
             ContextCompat.getColor(
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
 
                     if (franchiseViewModel.franchiseModel.value == null) {
                         binding.toolbarShared.franchiserFlavorText.visibility = View.INVISIBLE
-                        binding.toolbarShared.iconLogo.setImageResource(R.drawable.ic_logo_home_screen)
+                        binding.toolbarShared.iconLogo.setImageResource(R.drawable.ic_logo_home_screen_svg)
                         binding.toolbarShared.franchiserFlavorText.text = ""
 
                     } else {

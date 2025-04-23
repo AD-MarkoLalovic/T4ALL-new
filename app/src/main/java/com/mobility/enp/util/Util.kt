@@ -52,7 +52,7 @@ object Util {
             "60c2f558-6368-44c5-a520-fa2b56041869" -> R.drawable.mtel_mk_at_ch_de_tr_logo_svg
 
             "96371708-44d7-4438-b4f1-79f42bbac918" -> R.drawable.tehnocoop_logo_svg
-            else -> R.drawable.ic_logo_home_screen
+            else -> R.drawable.ic_logo_home_screen_svg
         }
 
         val franchise = when (portalKey) {
@@ -93,7 +93,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_s_blue, null),
                 ContextCompat.getDrawable(context, R.drawable.s_blue),
                 R.drawable.s_blue_profile,
-                ContextCompat.getDrawable(context, R.drawable.s_blue_logo), true,
+                ContextCompat.getDrawable(context, R.drawable.s_blue_logo_svg), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_s_blue),
                 R.drawable.promotions_dot_s_blue,
                 context.resources.getColor(R.color.franchiser_s_blue_half_visibility, null),
@@ -250,7 +250,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_e_box, null),
                 ContextCompat.getDrawable(context, R.drawable.e_box_home),
                 R.drawable.e_box_profile,
-                ContextCompat.getDrawable(context, R.drawable.e_box_vektor), true,
+                ContextCompat.getDrawable(context, R.drawable.e_box_logo_svg), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_e_box),
                 R.drawable.e_box_promotion_dot,
                 context.resources.getColor(R.color.franchiser_e_box_half_visibility, null),
@@ -301,7 +301,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_sbb, null),
                 ContextCompat.getDrawable(context, R.drawable.sbb_home),
                 R.drawable.sbb_profile,
-                ContextCompat.getDrawable(context, R.drawable.logo_sbb), true,
+                ContextCompat.getDrawable(context, R.drawable.sbb_logo_svg), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_sbb),
                 R.drawable.sbb_promotion_dot,
                 context.resources.getColor(R.color.franchiser_sbb_half_visibility, null),
