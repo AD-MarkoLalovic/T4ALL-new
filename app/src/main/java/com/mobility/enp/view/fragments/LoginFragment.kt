@@ -175,42 +175,47 @@ class LoginFragment : Fragment() {
     }
 
     private fun passwordVisibility() {
-        binding.passwordContainer.setEndIconOnClickListener {
-            if (binding.editPassword.inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-                // Sakrij lozinku
-                binding.editPassword.inputType =
-                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                binding.passwordContainer.endIconDrawable = ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_eye_invisible
-                ) // Precrtano oko
-                binding.editPassword.setTextAppearance(R.style.Paragraph)
-                binding.editPassword.setTextColor(
-                    ContextCompat.getColor(
+        _binding?.let { binding ->
+            binding.passwordContainer.setEndIconOnClickListener {
+                if (binding.editPassword.inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                    // Sakrij lozinku
+                    binding.editPassword.inputType =
+                        InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    binding.passwordContainer.endIconDrawable = ContextCompat.getDrawable(
                         requireContext(),
-                        R.color.figmaSplashScreenColor
+                        R.drawable.ic_eye_invisible
                     )
-                )
+                    // Precrtano oko
+                    binding.editPassword.setTextAppearance(R.style.Paragraph)
+                    binding.editPassword.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.figmaSplashScreenColor
+                        )
+                    )
 
-            } else {
-                // Prikaži lozinku
-                binding.editPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                binding.passwordContainer.endIconDrawable = ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_eye_visible
-                ) // Normalno oko
-                binding.editPassword.setTextAppearance(R.style.Paragraph)
-                binding.editPassword.setTextColor(
-                    ContextCompat.getColor(
+                } else {
+                    // Prikaži lozinku
+                    binding.editPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    binding.passwordContainer.endIconDrawable = ContextCompat.getDrawable(
                         requireContext(),
-                        R.color.figmaSplashScreenColor
+                        R.drawable.ic_eye_visible
                     )
-                )
+                    // Normalno oko
+                    binding.editPassword.setTextAppearance(R.style.Paragraph)
+                    binding.editPassword.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.figmaSplashScreenColor
+                        )
+                    )
+                }
+                // Postavi kursor na kraj teksta
+                binding.editPassword.setSelection(binding.editPassword.text?.length ?: 0)
             }
-            // Postavi kursor na kraj teksta
-            binding.editPassword.setSelection(binding.editPassword.text?.length ?: 0)
         }
     }
+
 
     private fun setObservers() {
 
@@ -219,10 +224,12 @@ class LoginFragment : Fragment() {
                 is LoginState.Loading -> {
                     binding.progbar.visibility = View.VISIBLE
                 }
+
                 is LoginState.Success -> {
                     binding.progbar.visibility = View.GONE
                     findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment())
                 }
+
                 is LoginState.Failure -> {
                     binding.progbar.visibility = View.GONE
                     when (state.error) {
@@ -230,12 +237,14 @@ class LoginFragment : Fragment() {
                         is NetworkError.NoConnection -> showNoInternetDialog()
                         is NetworkError.ServerError -> showErrorMessage(getString(R.string.server_error_msg))
                         is NetworkError.ApiError -> {
-                            val errorMessage = state.error.errorResponse.message ?: getString(R.string.server_error_msg)
+                            val errorMessage = state.error.errorResponse.message
+                                ?: getString(R.string.server_error_msg)
                             showErrorMessage(errorMessage)
                         }
                     }
                     loginViewModel.setIdleState()
                 }
+
                 is LoginState.Idle -> {}
             }
         }
