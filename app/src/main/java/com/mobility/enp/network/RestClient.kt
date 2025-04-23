@@ -76,7 +76,7 @@ class RestClient<T>(apiServiceClass: Class<T>, token: String?) {
                     requestBuilder
                         .addHeader("Cache-Control", "no-cache")
                         .addHeader("Connection", "keep-alive")
-                        .addHeader("X-Platform", "Android")
+                        //.addHeader("X-Platform", "Android") //omogucavanje distributera
                         .addHeader("Content-Type", "application/json")
                         .addHeader("Accept", "application/json")
 

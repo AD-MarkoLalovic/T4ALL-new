@@ -403,5 +403,7 @@
     <string name="notification_subtitle">Нотификације служе за преузимање рачуна и експортовање табела у историји пролазака</string>
     <string name="listing_of_passages_downloaded_successfully">Листинг пролазака је успешно преузет.</string>
     <string name="field_bank_account_isrequired">Поље жиро рачун треба да садржи 13 цифара.</string>
+    <string name="access_denied">Приступ одбијен</string>
+    <string name="only_t4all_users_access_denied">Тренутно није могуће да се улогују налози који нису T4All. Молимo вас да користите ВЕБ портал.</string>
 
 </resources>

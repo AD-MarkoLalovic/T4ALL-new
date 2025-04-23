@@ -1,7 +1,6 @@
 package com.mobility.enp.view.dialogs
 
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.mobility.enp.databinding.GeneralDialogBinding
 import com.mobility.enp.util.setDimensionsPercent
+import androidx.core.graphics.drawable.toDrawable
 
 class GeneralMessageDialog(
     private val title: String,
@@ -24,7 +24,7 @@ class GeneralMessageDialog(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = GeneralDialogBinding.inflate(inflater, container, false)
         return binding.root
     }

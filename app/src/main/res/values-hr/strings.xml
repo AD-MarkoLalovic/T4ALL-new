@@ -348,6 +348,8 @@
     <string name="notification_subtitle">Obavijesti služe za preuzimanje računa i eksportovanje tablica u povijesti prolazaka</string>
     <string name="listing_of_passages_downloaded_successfully">Listing prolazaka je uspješno preuzet.</string>
     <string name="field_bank_account_isrequired">Polje žiro račun treba sadržavati 13 znamenki.</string>
+    <string name="access_denied">Pristup odbijen</string>
+    <string name="only_t4all_users_access_denied">Trenutno nije moguće da se uloguju nalozi koji nisu T4All. Molimo vas da koristite WEB portal.</string>
 
 
 </resources>

@@ -23,6 +23,7 @@ import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
+import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.view.dialogs.LanguageDialog
 import com.mobility.enp.viewmodel.LoginState
 import com.mobility.enp.viewmodel.LoginViewModel
@@ -154,8 +155,6 @@ class LoginFragment : Fragment() {
 
                 }
         }
-
-
     }
 
     private fun setFcmToken() {
@@ -195,7 +194,8 @@ class LoginFragment : Fragment() {
 
                 } else {
                     // Prikaži lozinku
-                    safeBinding.editPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    safeBinding.editPassword.inputType =
+                        InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                     safeBinding.passwordContainer.endIconDrawable = ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.ic_eye_visible
@@ -235,9 +235,14 @@ class LoginFragment : Fragment() {
                         is NetworkError.NoConnection -> showNoInternetDialog()
                         is NetworkError.ServerError -> showErrorMessage(getString(R.string.server_error_msg))
                         is NetworkError.ApiError -> {
-                            val errorMessage = state.error.errorResponse.message
-                                ?: getString(R.string.server_error_msg)
-                            showErrorMessage(errorMessage)
+                            val statusCode = state.error.errorResponse.code
+                            if (statusCode == 403) {
+                                showPermissionDeniedDialog()
+                            } else {
+                                val errorMessage = state.error.errorResponse.message
+                                    ?: getString(R.string.server_error_msg)
+                                showErrorMessage(errorMessage)
+                            }
                         }
                     }
                     loginViewModel.setIdleState()
@@ -292,6 +297,15 @@ class LoginFragment : Fragment() {
 
     companion object {
         const val TAG = "loginFragment"
+    }
+
+    private fun showPermissionDeniedDialog() {
+        val dialog =
+            GeneralMessageDialog(
+                requireContext().getString(R.string.access_denied),
+                requireContext().getString(R.string.only_t4all_users_access_denied)
+            )
+        dialog.show(parentFragmentManager, "ShowPermissionDeniedDialog")
     }
 
     override fun onDestroyView() {

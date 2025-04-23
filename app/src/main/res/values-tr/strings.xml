@@ -353,5 +353,7 @@
     <string name="notification_subtitle">Bildirimler, faturaları indirmek ve geçiş geçmişindeki tabloları dışa aktarmak için kullanılır</string>
     <string name="listing_of_passages_downloaded_successfully">Geçiş listesi başarıyla indirildi.</string>
     <string name="field_bank_account_isrequired">Havale hesabı alanı 13 rakam içermelidir.</string>
+    <string name="access_denied">Erişim reddedildi</string>
+    <string name="only_t4all_users_access_denied">Şu anda T4All olmayan hesaplara giriş yapılamaz. Lütfen WEB portalını kullanın.</string>
 
 </resources>
