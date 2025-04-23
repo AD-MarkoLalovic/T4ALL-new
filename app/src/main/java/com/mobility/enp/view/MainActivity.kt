@@ -24,7 +24,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
-import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
 
@@ -52,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun settingsFragmentReset(){
+    fun settingsFragmentReset() {
         binding.bottomNavigation.visibility = View.GONE
         binding.toolbarShared.root.visibility = View.VISIBLE
         binding.toolbarShared.backArrow.visibility = View.VISIBLE
@@ -114,12 +113,12 @@ class MainActivity : AppCompatActivity() {
                     binding.toolbarShared.backArrow.visibility = View.GONE
                     binding.toolbarShared.iconLogo.visibility = View.VISIBLE
 
-                    if (franchiseViewModel.franchiseModel.value == null){
+                    if (franchiseViewModel.franchiseModel.value == null) {
                         binding.toolbarShared.franchiserFlavorText.visibility = View.INVISIBLE
                         binding.toolbarShared.iconLogo.setImageResource(R.drawable.ic_logo_home_screen)
                         binding.toolbarShared.franchiserFlavorText.text = ""
 
-                    }else{
+                    } else {
                         binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
                     }
                 }
@@ -139,6 +138,15 @@ class MainActivity : AppCompatActivity() {
                 R.id.settingsFragment, R.id.toolHistorySearchFragment, R.id.toolHistorySearchResultFragment,
                 R.id.termsAndPrivacyFragment, R.id.cardFragment, R.id.noInternetConnectionDialog, R.id.loginNoInternetConnectionDialog -> {
                     // Ako je destinacija neki od ovih fragmenata, prikaži Toolbar i sakrij BottomNavigationView
+
+                    if (franchiseViewModel.franchiseModel.value == null) {
+                        binding.toolbarShared.backArrow.setImageResource(R.drawable.toolbar_shared_back_arrow)
+                    } else {
+                        franchiseViewModel.franchiseModel.value?.backButtonResource?.let {
+                            binding.toolbarShared.backArrow.setImageResource(it)
+                        }
+                    }
+
                     binding.bottomNavigation.visibility = View.GONE
                     binding.toolbarShared.root.visibility = View.VISIBLE
                     binding.toolbarShared.backArrow.visibility = View.VISIBLE
