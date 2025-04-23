@@ -175,19 +175,18 @@ class LoginFragment : Fragment() {
     }
 
     private fun passwordVisibility() {
-        _binding?.let { binding ->
-            binding.passwordContainer.setEndIconOnClickListener {
-                if (binding.editPassword.inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+        binding.passwordContainer.setEndIconOnClickListener {
+            _binding?.let { safeBinding ->
+                if (safeBinding.editPassword.inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
                     // Sakrij lozinku
-                    binding.editPassword.inputType =
+                    safeBinding.editPassword.inputType =
                         InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                    binding.passwordContainer.endIconDrawable = ContextCompat.getDrawable(
+                    safeBinding.passwordContainer.endIconDrawable = ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.ic_eye_invisible
                     )
-                    // Precrtano oko
-                    binding.editPassword.setTextAppearance(R.style.Paragraph)
-                    binding.editPassword.setTextColor(
+                    safeBinding.editPassword.setTextAppearance(R.style.Paragraph)
+                    safeBinding.editPassword.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),
                             R.color.figmaSplashScreenColor
@@ -196,24 +195,23 @@ class LoginFragment : Fragment() {
 
                 } else {
                     // Prikaži lozinku
-                    binding.editPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                    binding.passwordContainer.endIconDrawable = ContextCompat.getDrawable(
+                    safeBinding.editPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    safeBinding.passwordContainer.endIconDrawable = ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.ic_eye_visible
                     )
-                    // Normalno oko
-                    binding.editPassword.setTextAppearance(R.style.Paragraph)
-                    binding.editPassword.setTextColor(
+                    safeBinding.editPassword.setTextAppearance(R.style.Paragraph)
+                    safeBinding.editPassword.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),
                             R.color.figmaSplashScreenColor
                         )
                     )
                 }
-                // Postavi kursor na kraj teksta
-                binding.editPassword.setSelection(binding.editPassword.text?.length ?: 0)
+                safeBinding.editPassword.setSelection(safeBinding.editPassword.text?.length ?: 0)
             }
         }
+
     }
 
 
