@@ -30,9 +30,6 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
 
-   /* private val _userLogin = MutableStateFlow<SubmitResult<UserResponse>>(SubmitResult.Empty)
-    val userLogin: StateFlow<SubmitResult<UserResponse>> get() = _userLogin*/
-
     private val _fcmResponse =
         MutableStateFlow<SubmitResult<HomePageFcmTokenResponse>>(SubmitResult.Empty)
     val fcmToken: StateFlow<SubmitResult<HomePageFcmTokenResponse>> get() = _fcmResponse
@@ -83,58 +80,6 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
     fun setIdleState() {
         _loginState.value = LoginState.Idle
     }
-
-
-    /*   fun loginUser(
-           loginBody: LoginBody,
-       ) {
-           viewModelScope.launch(Dispatchers.IO) {
-               _userLogin.value = SubmitResult.Loading
-               val result = repository.loginUser(loginBody)
-               if (result.isSuccess) {
-                   val data = result.getOrNull()
-                   if (data == null) {
-                       _userLogin.value = SubmitResult.Empty
-                   } else {
-                       _userLogin.value = SubmitResult.Success(data)
-                   }
-               } else {
-                   when (val error = result.exceptionOrNull()) {
-                       is NetworkError.ServerError -> {
-                           Log.d(TAG, "Error while fetching tag serial data")
-                           _userLogin.value = SubmitResult.FailureServerError
-                       }
-
-                       is NetworkError.NoConnection -> {
-                           _userLogin.value = SubmitResult.FailureNoConnection
-                       }
-
-                       is NetworkError.ApiError -> {
-                           when (error.errorResponse.code) {
-                               401, 405 -> {
-                                   Log.d(TOKEN, "invalid token detected login out user")
-                                   _userLogin.value =
-                                       SubmitResult.InvalidApiToken(
-                                           error.errorResponse.code ?: 0,
-                                           error.errorResponse.message ?: ""
-                                       )
-                               }
-
-                               else -> {
-                                   _userLogin.value =
-                                       SubmitResult.FailureApiError(
-                                           error.errorResponse.message ?: ""
-                                       )
-                                   Log.d(TAG, "api error ${error.errorResponse.message}")
-                               }
-                           }
-                       }
-
-                       else -> {}
-                   }
-               }
-           }
-       }*/
 
     private suspend fun insertLoginToken(
         userLoginResponseRoomTable: UserLoginResponseRoomTable,
