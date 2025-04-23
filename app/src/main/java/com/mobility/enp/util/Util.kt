@@ -357,7 +357,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_euro_petrol, null),
                 ContextCompat.getDrawable(context, R.drawable.euro_petrol_home),
                 R.drawable.euro_petrol_profile,
-                ContextCompat.getDrawable(context, R.drawable.euro_petrol_logo_svg), true,
+                ContextCompat.getDrawable(context, R.drawable.euro_petrol_logo_svg_new), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_euro_petrol),
                 R.drawable.euro_petrol_promotion_dot,
                 context.resources.getColor(R.color.franchiser_euro_petrol_half_visibility, null),
