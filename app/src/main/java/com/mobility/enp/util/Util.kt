@@ -276,7 +276,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_pay_and_roll, null),
                 ContextCompat.getDrawable(context, R.drawable.pay_and_roll_home),
                 R.drawable.pay_and_roll_profile,
-                ContextCompat.getDrawable(context, R.drawable.pay_n_roll_logo_svg), true,
+                ContextCompat.getDrawable(context, R.drawable.pay_n_roll_logo_svg_new), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_pay_and_roll),
                 R.drawable.pay_and_roll_promotion_dot,
                 context.resources.getColor(R.color.franchiser_pay_and_roll_half_visibility, null),
