@@ -313,7 +313,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_serbian_post_office, null),
                 ContextCompat.getDrawable(context, R.drawable.serbian_post_office_home),
                 R.drawable.serbian_post_office_profile,
-                ContextCompat.getDrawable(context, R.drawable.posta_srbije_logo_svg), true,
+                ContextCompat.getDrawable(context, R.drawable.posta_srbije_logo_svg), false,  // has no toolbar background
                 ContextCompat.getColorStateList(
                     context,
                     R.color.bottom_nav_color_serbian_post_office
