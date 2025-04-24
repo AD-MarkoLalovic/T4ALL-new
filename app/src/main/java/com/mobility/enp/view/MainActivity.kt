@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
                     binding.toolbarShared.iconLogo.visibility = View.VISIBLE
 
                     if (franchiseViewModel.franchiseModel.value == null) {
-                        binding.toolbarShared.franchiserFlavorText.visibility = View.INVISIBLE
+                        binding.toolbarShared.franchiserFlavorText.visibility = View.GONE
                         binding.toolbarShared.iconLogo.setImageResource(R.drawable.ic_logo_home_screen_svg)
                         binding.toolbarShared.franchiserFlavorText.text = ""
 
@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity() {
                     binding.toolbarShared.root.visibility = View.VISIBLE
                     binding.toolbarShared.backArrow.visibility = View.VISIBLE
                     binding.toolbarShared.iconLogo.visibility = View.GONE
-                    binding.toolbarShared.franchiserFlavorText.visibility = View.INVISIBLE
+                    binding.toolbarShared.franchiserFlavorText.visibility = View.GONE
                 }
 
                 else -> {
