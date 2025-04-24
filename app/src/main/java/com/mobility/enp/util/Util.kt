@@ -46,7 +46,7 @@ object Util {
         //#franchise grey color
         val telecomSerbiaAndMTellLogo = when (portalKey) {
             "ad7e2bb9-22a5-4184-9c9b-5c384a506cb3" -> R.drawable.telekom_srbija_new
-            "2d9da5de-9113-41e3-a8b4-09c2ccfec285", "84f46084-4038-4ff2-9a77-b756a454f49f" -> R.drawable.mtel_ba_me_logo_svg
+            "2d9da5de-9113-41e3-a8b4-09c2ccfec285", "84f46084-4038-4ff2-9a77-b756a454f49f" -> R.drawable.mtel_ba_me_logo_svg_new
             "4dcf082c-7232-47f8-b64f-3c27791364d6", "a577ddf8-1c08-4aa6-9d95-8ab2fd5c8b6c",
             "19334ec8-b056-486e-8faa-e42fe895d930", "263a2e3d-b544-480d-a604-0dd036c8d4ed",
             "60c2f558-6368-44c5-a520-fa2b56041869" -> R.drawable.mtel_mk_at_ch_de_tr_logo_svg
