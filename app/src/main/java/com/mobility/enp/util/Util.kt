@@ -65,7 +65,11 @@ object Util {
                 context.resources.getColor(R.color.franchiser_telekom_srbija_mtel, null),
                 ContextCompat.getDrawable(context, R.drawable.telekom_srbija),
                 R.drawable.telekom_srbija_profile,
-                ContextCompat.getDrawable(context, telecomSerbiaAndMTellLogo), false,
+                ContextCompat.getDrawable(context, telecomSerbiaAndMTellLogo),
+                when (portalKey) {
+                    "96371708-44d7-4438-b4f1-79f42bbac918" -> true
+                    else -> false
+                },
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_telekom),
                 R.drawable.promotions_dot_telekom,
                 context.resources.getColor(

@@ -62,7 +62,7 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
                             null,
                             response.data?.accessToken,
                             response.data?.tokenType,
-                            user.email, user.password, "84f46084-4038-4ff2-9a77-b756a454f49f"
+                            user.email, user.password, response.data?.portal_key
                         )
                     )
                     storeLastUserEmail(user.email!!)
