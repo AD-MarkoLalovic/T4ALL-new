@@ -351,6 +351,8 @@
     <string name="notification_subtitle">Известувањата служат за преземање фактури и експортовање на табели во историјата на премини</string>
     <string name="listing_of_passages_downloaded_successfully">Листингот на поминувања е успешно преземен.</string>
     <string name="field_bank_account_isrequired">Полето жиро сметка треба да содржи 13 цифри.</string>
+    <string name="access_denied">Пристапот е одбиен</string>
+    <string name="only_t4all_users_access_denied">Во моментов не е можно да се најават налози кои не се T4All. Ве молиме користете го WEB порталот.</string>
 
 
 </resources>

@@ -2,7 +2,6 @@ package com.mobility.enp.view.dialogs
 
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,7 @@ import com.mobility.enp.R
 import com.mobility.enp.databinding.GeneralDialogBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
+import androidx.core.graphics.drawable.toDrawable
 
 class NoInternetConnectionDialog : DialogFragment() {
 
@@ -23,7 +23,7 @@ class NoInternetConnectionDialog : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = GeneralDialogBinding.inflate(inflater, container, false)
         return binding.root
     }
