@@ -259,9 +259,6 @@ class HomeFragment : Fragment() {
                     }
                 }
 
-
-
-
                 binding.progBar.visibility = View.GONE
             }, franchiseViewModel.franchiseModel.value
         )
@@ -271,7 +268,10 @@ class HomeFragment : Fragment() {
         binding.cyclerProgress.adapter = adapterProgress
         binding.cyclerProgress.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        homePromotionsAdapter.submitList(filteredList)
+        val sortedList = filteredList.sortedWith(compareByDescending<HomeCardsEntity> {
+            it.code == "RS"
+        }.thenBy { it.code })
+        homePromotionsAdapter.submitList(sortedList)
         adapterProgress.submitList(filteredList.indices.toList())
 
         if (filteredList.isNotEmpty()) {

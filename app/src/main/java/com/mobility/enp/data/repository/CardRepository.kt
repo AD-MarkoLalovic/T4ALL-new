@@ -112,4 +112,12 @@ class CardRepository(database: DRoom, context: Context) : BaseRepository(databas
         return isNetworkAvailable()
     }
 
+    suspend fun addedPromotionCard(code: String){
+        val user = database.lastUserDao().getLastUser().email
+        if (code == "RS") {
+          database.homeCardsDao().enableAdditionForAllExceptRS(user)
+        }
+        database.homeCardsDao().cardAdded(user, code)
+    }
+
 }

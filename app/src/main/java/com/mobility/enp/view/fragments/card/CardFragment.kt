@@ -30,6 +30,8 @@ class CardFragment : Fragment() {
     private val binding: FragmentTosBinding get() = _binding!!
     private val viewModel: PaymentAndPassageViewModel by activityViewModels()
 
+    private var countryCode: String? = null
+
     companion object {
         const val TAG = "Headers"
     }
@@ -46,7 +48,7 @@ class CardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val args: CardFragmentArgs by navArgs()
-        val countryCode = args.countryCode ?: "RS"
+        countryCode = args.countryCode ?: "RS"
 
         val baseUrl = when {
             BuildConfig.FLAVOR.contains("stage") -> {
@@ -110,6 +112,10 @@ class CardFragment : Fragment() {
                             R.string.credit_card_successful,
                             Toast.LENGTH_SHORT
                         ).show()
+                    }
+
+                    countryCode?.let {
+                        viewModel.addCard(it)
                     }
 
                     viewLifecycleOwner.lifecycleScope.launch {

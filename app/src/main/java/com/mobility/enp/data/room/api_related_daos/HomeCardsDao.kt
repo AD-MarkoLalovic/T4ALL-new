@@ -10,7 +10,7 @@ import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 @Dao
 interface HomeCardsDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertHomeCards(cards: List<HomeCardsEntity>)
 
     @Update
@@ -18,5 +18,11 @@ interface HomeCardsDao {
 
     @Query("SELECT * FROM home_cards WHERE email = :userEmail")
     suspend fun getHomeCardsList(userEmail: String): List<HomeCardsEntity>
+
+    @Query("DELETE FROM home_cards WHERE email = :email AND code = :code")
+    suspend fun cardAdded(email: String, code: String)
+
+    @Query("UPDATE home_cards SET additionEnabled = 1 WHERE email = :email AND code != 'RS'")
+    suspend fun enableAdditionForAllExceptRS(email: String)
 
 }

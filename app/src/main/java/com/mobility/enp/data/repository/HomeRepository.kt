@@ -94,13 +94,14 @@ class HomeRepository(
     suspend fun getCardsFromServer(): Result<List<HomeCardsEntity>> {
         val userToken = getUserToken() ?: return Result.failure(NetworkError.NoConnection)
 
-        val user = getUserForPromotion()
-        val localCards = getHomeCards(user)
+
+        /*val localCards = getHomeCards(user)
         if (localCards.isNotEmpty()) {
             return Result.success(localCards)
-        }
+        }*/
 
         return try {
+            val user = getUserForPromotion()
             val lang = getLangKey()
             val remoteData = apiService(userToken).getCreditCardsWeb(lang)
             if (remoteData.isSuccessful) {
@@ -108,7 +109,7 @@ class HomeRepository(
                     val cardsEntities = responseBody.toEntityList(context, user)
                     saveHomeCards(cardsEntities)
 
-                    Result.success(cardsEntities)
+                    Result.success(getHomeCards(user))
                 } ?: Result.failure(NetworkError.ServerError)
             } else {
                 Result.failure(NetworkError.ServerError)

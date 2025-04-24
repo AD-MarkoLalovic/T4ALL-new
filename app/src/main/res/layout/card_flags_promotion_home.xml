@@ -25,6 +25,7 @@
                 android:id="@+id/backgroundImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:contentDescription="@null"
                 android:scaleType="centerCrop"
                 tools:src="@drawable/flag_home_macedonian" />
 
