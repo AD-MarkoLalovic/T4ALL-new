@@ -25,23 +25,6 @@ object Util {
     }
 
 
-    /**
-     * Retrieves the FranchiseModel associated with a given portal key.
-     *
-     * This function uses a predefined map to look up the corresponding FranchiseModel
-     * based on the provided portalKey. Each portalKey represents a unique franchise,
-     * such as "Telekom portal", "S-blue", "AMSS portal", or "Tehnomanija portal".
-     *
-     * @param portalKey The unique identifier (UUID) of the franchise portal.
-     *                  Examples include:
-     *                  - "ad7e2bb9-22a5-4184-9c9b-5c384a506cb3" (Telekom portal)
-     *                  - "a2ac8612-4b25-43e3-8017-fcf8ad0da0c4" (S-blue)
-     *                  - "9aa3e972-d84b-40df-b35d-d14a229c03e3" (AMSS portal)
-     *                  - "d47b35d1-bb44-4618-9b31-cf7e961595ec" (Tehnomanija portal)
-     * @param context The application context, used to access resources like colors and drawables.
-     * @return The FranchiseModel associated with the given portalKey, or null if no
-     *         matching key is found in the map.
-     */
     fun franchiseID(portalKey: String, context: Context): FranchiseModel? {
         //#franchise grey color
         val telecomSerbiaAndMTellLogo = when (portalKey) {
@@ -49,7 +32,7 @@ object Util {
             "2d9da5de-9113-41e3-a8b4-09c2ccfec285", "84f46084-4038-4ff2-9a77-b756a454f49f" -> R.drawable.mtel_ba_me_logo_svg_new
             "4dcf082c-7232-47f8-b64f-3c27791364d6", "a577ddf8-1c08-4aa6-9d95-8ab2fd5c8b6c",
             "19334ec8-b056-486e-8faa-e42fe895d930", "263a2e3d-b544-480d-a604-0dd036c8d4ed",
-            "60c2f558-6368-44c5-a520-fa2b56041869" -> R.drawable.mtel_mk_at_ch_de_tr_logo_svg
+            "60c2f558-6368-44c5-a520-fa2b56041869" -> R.drawable.mtel_mk_at_ch_de_tr_logo_svg_new
 
             "96371708-44d7-4438-b4f1-79f42bbac918" -> R.drawable.tehnocoop_logo_svg
             else -> R.drawable.ic_logo_home_screen_svg
@@ -66,7 +49,7 @@ object Util {
                 ContextCompat.getDrawable(context, R.drawable.telekom_srbija),
                 R.drawable.telekom_srbija_profile,
                 ContextCompat.getDrawable(context, telecomSerbiaAndMTellLogo),
-                when (portalKey) {
+                when (portalKey) {  // tehnocoop has background color on toolbar
                     "96371708-44d7-4438-b4f1-79f42bbac918" -> true
                     else -> false
                 },
