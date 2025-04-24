@@ -53,6 +53,7 @@ class PaymentAndPassageViewModel(
     val successfullyDeletedCard: StateFlow<SubmitResult<Boolean>> get() = _successfullyDeletedCard
 
 
+
     fun fetchCardFlow() {
         _getCardDataFlow.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
@@ -193,5 +194,12 @@ class PaymentAndPassageViewModel(
     fun isInternetAvailable(): Boolean {
         return repository.isNetAvailable()
     }
+
+    fun addCard(code: String) {
+        viewModelScope.launch {
+            repository.addedPromotionCard(code)
+        }
+    }
+
 
 }
