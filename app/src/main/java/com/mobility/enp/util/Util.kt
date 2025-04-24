@@ -25,34 +25,17 @@ object Util {
     }
 
 
-    /**
-     * Retrieves the FranchiseModel associated with a given portal key.
-     *
-     * This function uses a predefined map to look up the corresponding FranchiseModel
-     * based on the provided portalKey. Each portalKey represents a unique franchise,
-     * such as "Telekom portal", "S-blue", "AMSS portal", or "Tehnomanija portal".
-     *
-     * @param portalKey The unique identifier (UUID) of the franchise portal.
-     *                  Examples include:
-     *                  - "ad7e2bb9-22a5-4184-9c9b-5c384a506cb3" (Telekom portal)
-     *                  - "a2ac8612-4b25-43e3-8017-fcf8ad0da0c4" (S-blue)
-     *                  - "9aa3e972-d84b-40df-b35d-d14a229c03e3" (AMSS portal)
-     *                  - "d47b35d1-bb44-4618-9b31-cf7e961595ec" (Tehnomanija portal)
-     * @param context The application context, used to access resources like colors and drawables.
-     * @return The FranchiseModel associated with the given portalKey, or null if no
-     *         matching key is found in the map.
-     */
     fun franchiseID(portalKey: String, context: Context): FranchiseModel? {
         //#franchise grey color
         val telecomSerbiaAndMTellLogo = when (portalKey) {
-            "ad7e2bb9-22a5-4184-9c9b-5c384a506cb3" -> R.drawable.telekom_logo
-            "2d9da5de-9113-41e3-a8b4-09c2ccfec285", "84f46084-4038-4ff2-9a77-b756a454f49f" -> R.drawable.logo_mtel_ba_me
+            "ad7e2bb9-22a5-4184-9c9b-5c384a506cb3" -> R.drawable.telekom_srbija_new
+            "2d9da5de-9113-41e3-a8b4-09c2ccfec285", "84f46084-4038-4ff2-9a77-b756a454f49f" -> R.drawable.mtel_ba_me_logo_svg_new
             "4dcf082c-7232-47f8-b64f-3c27791364d6", "a577ddf8-1c08-4aa6-9d95-8ab2fd5c8b6c",
             "19334ec8-b056-486e-8faa-e42fe895d930", "263a2e3d-b544-480d-a604-0dd036c8d4ed",
-            "60c2f558-6368-44c5-a520-fa2b56041869" -> R.drawable.logo_mtel_mk_at_ch_de_tr
+            "60c2f558-6368-44c5-a520-fa2b56041869" -> R.drawable.mtel_mk_at_ch_de_tr_logo_svg_new
 
-            "96371708-44d7-4438-b4f1-79f42bbac918" -> R.drawable.technocoop_logo
-            else -> R.drawable.ic_logo_home_screen
+            "96371708-44d7-4438-b4f1-79f42bbac918" -> R.drawable.tehnocoop_logo_svg
+            else -> R.drawable.ic_logo_home_screen_svg
         }
 
         val franchise = when (portalKey) {
@@ -65,7 +48,11 @@ object Util {
                 context.resources.getColor(R.color.franchiser_telekom_srbija_mtel, null),
                 ContextCompat.getDrawable(context, R.drawable.telekom_srbija),
                 R.drawable.telekom_srbija_profile,
-                ContextCompat.getDrawable(context, telecomSerbiaAndMTellLogo), false,
+                ContextCompat.getDrawable(context, telecomSerbiaAndMTellLogo),
+                when (portalKey) {  // tehnocoop has background color on toolbar
+                    "96371708-44d7-4438-b4f1-79f42bbac918" -> true
+                    else -> false
+                },
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_telekom),
                 R.drawable.promotions_dot_telekom,
                 context.resources.getColor(
@@ -93,7 +80,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_s_blue, null),
                 ContextCompat.getDrawable(context, R.drawable.s_blue),
                 R.drawable.s_blue_profile,
-                ContextCompat.getDrawable(context, R.drawable.s_blue_logo), true,
+                ContextCompat.getDrawable(context, R.drawable.s_blue_logo_svg), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_s_blue),
                 R.drawable.promotions_dot_s_blue,
                 context.resources.getColor(R.color.franchiser_s_blue_half_visibility, null),
@@ -118,7 +105,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_amss, null),
                 ContextCompat.getDrawable(context, R.drawable.novi_amss),
                 R.drawable.novi_amss_profile,
-                ContextCompat.getDrawable(context, R.drawable.amss_vektor), true,
+                ContextCompat.getDrawable(context, R.drawable.amss_logo_svg), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_amss),
                 R.drawable.promotions_dot_amcc,
                 context.resources.getColor(R.color.franchiser_amss_half_visibility, null),
@@ -133,7 +120,10 @@ object Util {
                 R.drawable.plus_ic_amss,
                 R.drawable.ic_close_amss,
                 R.drawable.default_user_picture_amss,
-                ContextCompat.getColorStateList(context, R.color.amss_tehnomania_home_welcome_text_color),
+                ContextCompat.getColorStateList(
+                    context,
+                    R.color.amss_tehnomania_home_welcome_text_color
+                ),
                 ContextCompat.getColorStateList(context, R.color.flavor_text_amss_tehnomania)
 
             )
@@ -144,7 +134,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_tehnomania, null),
                 ContextCompat.getDrawable(context, R.drawable.tehnomanija),
                 R.drawable.tehnomanija_profile,
-                ContextCompat.getDrawable(context, R.drawable.tehnomanija_logo), true,
+                ContextCompat.getDrawable(context, R.drawable.tehnomania_logo_svg), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_tehnomania),
                 R.drawable.promotions_dot_tehnomania,
                 context.resources.getColor(R.color.franchiser_tehnomania_half_visibility, null),
@@ -159,7 +149,10 @@ object Util {
                 R.drawable.plus_ic_tehnomania,
                 R.drawable.ic_close_tehnomania,
                 R.drawable.default_user_picture_tehnomania,
-                ContextCompat.getColorStateList(context, R.color.amss_tehnomania_home_welcome_text_color),
+                ContextCompat.getColorStateList(
+                    context,
+                    R.color.amss_tehnomania_home_welcome_text_color
+                ),
                 ContextCompat.getColorStateList(context, R.color.flavor_text_amss_tehnomania)
             )
 
@@ -169,7 +162,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_enput, null),
                 ContextCompat.getDrawable(context, R.drawable.enput_home),
                 R.drawable.enput_profile,
-                ContextCompat.getDrawable(context, R.drawable.enput_logo_new), true,
+                ContextCompat.getDrawable(context, R.drawable.enput_logo_svg), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_enput),
                 R.drawable.enput_promotion_dot,
                 context.resources.getColor(R.color.franchiser_enput_half_color, null),
@@ -194,7 +187,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_tag_rafaelo, null),
                 ContextCompat.getDrawable(context, R.drawable.auto_tag_rafaelo_home),
                 R.drawable.auto_tag_rafaelo_profile,
-                ContextCompat.getDrawable(context, R.drawable.logo_auto_tag_rafaelo), true,
+                ContextCompat.getDrawable(context, R.drawable.rafaelo_logo_svg), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_auto_tag_rafaelo),
                 R.drawable.auto_tag_rafaelo_promotion_dot,
                 context.resources.getColor(R.color.franchiser_tag_rafaelo_half_visibility, null),
@@ -219,7 +212,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_free_trans, null),
                 ContextCompat.getDrawable(context, R.drawable.free_trans_home),
                 R.drawable.free_trans_profile,
-                ContextCompat.getDrawable(context, R.drawable.logo_free_trans), true,
+                ContextCompat.getDrawable(context, R.drawable.free_trans_logo_svg), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_free_trans),
                 R.drawable.free_trans_promotion_dot,
                 context.resources.getColor(R.color.franchiser_free_trans_half_visibility, null),
@@ -244,7 +237,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_e_box, null),
                 ContextCompat.getDrawable(context, R.drawable.e_box_home),
                 R.drawable.e_box_profile,
-                ContextCompat.getDrawable(context, R.drawable.e_box_vektor), true,
+                ContextCompat.getDrawable(context, R.drawable.e_box_logo_svg), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_e_box),
                 R.drawable.e_box_promotion_dot,
                 context.resources.getColor(R.color.franchiser_e_box_half_visibility, null),
@@ -270,7 +263,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_pay_and_roll, null),
                 ContextCompat.getDrawable(context, R.drawable.pay_and_roll_home),
                 R.drawable.pay_and_roll_profile,
-                ContextCompat.getDrawable(context, R.drawable.logo_pay_and_roll), true,
+                ContextCompat.getDrawable(context, R.drawable.pay_n_roll_logo_svg_new), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_pay_and_roll),
                 R.drawable.pay_and_roll_promotion_dot,
                 context.resources.getColor(R.color.franchiser_pay_and_roll_half_visibility, null),
@@ -295,7 +288,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_sbb, null),
                 ContextCompat.getDrawable(context, R.drawable.sbb_home),
                 R.drawable.sbb_profile,
-                ContextCompat.getDrawable(context, R.drawable.logo_sbb), true,
+                ContextCompat.getDrawable(context, R.drawable.sbb_logo_svg), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_sbb),
                 R.drawable.sbb_promotion_dot,
                 context.resources.getColor(R.color.franchiser_sbb_half_visibility, null),
@@ -320,10 +313,16 @@ object Util {
                 context.resources.getColor(R.color.franchiser_serbian_post_office, null),
                 ContextCompat.getDrawable(context, R.drawable.serbian_post_office_home),
                 R.drawable.serbian_post_office_profile,
-                ContextCompat.getDrawable(context, R.drawable.logo_serbian_post_office), true,
-                ContextCompat.getColorStateList(context, R.color.bottom_nav_color_serbian_post_office),
+                ContextCompat.getDrawable(context, R.drawable.posta_srbije_logo_svg), false,  // has no toolbar background
+                ContextCompat.getColorStateList(
+                    context,
+                    R.color.bottom_nav_color_serbian_post_office
+                ),
                 R.drawable.serbian_post_office_promotion_dot,
-                context.resources.getColor(R.color.franchiser_serbian_post_office_half_visibility, null),
+                context.resources.getColor(
+                    R.color.franchiser_serbian_post_office_half_visibility,
+                    null
+                ),
                 R.drawable.toolbar_shared_back_serbian_post_office,
                 R.drawable.ic_arrow_down_serbian_post_office,
                 R.drawable.ic_arrow_up_serbian_post_office,
@@ -345,7 +344,7 @@ object Util {
                 context.resources.getColor(R.color.franchiser_euro_petrol, null),
                 ContextCompat.getDrawable(context, R.drawable.euro_petrol_home),
                 R.drawable.euro_petrol_profile,
-                ContextCompat.getDrawable(context, R.drawable.logo_euro_petrol), true,
+                ContextCompat.getDrawable(context, R.drawable.euro_petrol_logo_svg_new), true,
                 ContextCompat.getColorStateList(context, R.color.bottom_nav_color_euro_petrol),
                 R.drawable.euro_petrol_promotion_dot,
                 context.resources.getColor(R.color.franchiser_euro_petrol_half_visibility, null),

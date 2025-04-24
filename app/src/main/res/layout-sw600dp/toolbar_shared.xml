@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintBlock"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="58dp"
     android:background="@color/white_smoke"
     android:elevation="@dimen/dimens_10dp"
     android:paddingHorizontal="@dimen/dimens_100dp"
-    android:paddingBottom="@dimen/dimens_5dp">
+    >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
@@ -22,26 +22,25 @@
 
     <ImageView
         android:id="@+id/backArrow"
-        android:layout_width="@dimen/dimens_54dp"
-        android:layout_height="@dimen/dimens_54dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimens_3dp"
+        android:background="@drawable/toolbar_shared_back_arrow"
         android:contentDescription="@null"
         android:elevation="@dimen/dimens_10dp"
-        android:background="@drawable/toolbar_shared_back_arrow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/toolBar"
         app:layout_constraintTop_toBottomOf="@id/franchiserFlavorText" />
 
     <ImageView
         android:id="@+id/iconLogo"
-        android:layout_width="@dimen/dimens_67dp"
-        android:layout_height="@dimen/dimens_32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:contentDescription="@null"
-        android:src="@drawable/ic_logo_home_screen"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/backArrow"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_max="@dimen/dimens_200dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/franchiserFlavorText"
+        tools:src="@drawable/ic_logo_home_screen_svg" />
 
     <TextView
         android:id="@+id/franchiserFlavorText"
@@ -49,24 +48,24 @@
         android:layout_height="wrap_content"
         android:text="@string/powered_by_toll4all"
         android:textColor="@color/franchiser_gray_color"
-        android:textSize="@dimen/dimens_10sp"
+        android:textSize="7sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/iconLogo"
         app:layout_constraintStart_toStartOf="@id/iconLogo"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"
+        android:layout_marginTop="@dimen/dimens_5dp"
         tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/iconNotification"
-        android:layout_width="@dimen/dimens_54dp"
-        android:layout_height="@dimen/dimens_54dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:clickable="true"
-        android:contentDescription="@null"
+        android:importantForAccessibility="no"
         android:src="@drawable/ic_notification_home_screen"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
