@@ -203,7 +203,7 @@ object Util {
                 R.drawable.ic_close_tag_rafaelo,
                 R.drawable.default_user_picture_rafaelo,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_default)
+                ContextCompat.getColorStateList(context, R.color.flavor_text_euro_petrol_rafaelo)
             )
 
             "183e7ccd-353d-4dd6-950c-8f033dd94620" -> FranchiseModel(
@@ -360,7 +360,7 @@ object Util {
                 R.drawable.ic_close_euro_petrol,
                 R.drawable.default_user_picture_euro_petrol,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_euro_petrol)
+                ContextCompat.getColorStateList(context, R.color.flavor_text_euro_petrol_rafaelo)
             )
 
             else -> null
