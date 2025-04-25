@@ -71,7 +71,13 @@ object Util {
                 R.drawable.ic_close_telekom,
                 R.drawable.default_user_picture_mtel,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_default)
+                when (portalKey) {  // tehnocoop has background color on toolbar
+                    "96371708-44d7-4438-b4f1-79f42bbac918" ->
+                        ContextCompat.getColorStateList(context, R.color.flavor_text_sbb_e_box_tehnocoop_color)
+
+                    else ->
+                        ContextCompat.getColorStateList(context, R.color.flavor_text_default)
+                }
             )
 
             "a2ac8612-4b25-43e3-8017-fcf8ad0da0c4" -> FranchiseModel(
@@ -178,7 +184,7 @@ object Util {
                 R.drawable.ic_close_enput,
                 R.drawable.default_user_picture_enput,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_default)
+                ContextCompat.getColorStateList(context, R.color.flavor_text_enput)
             )
 
             "ed232756-b001-42e7-a3aa-c6c43b9ce49f" -> FranchiseModel(
@@ -253,7 +259,10 @@ object Util {
                 R.drawable.ic_close_e_box,
                 R.drawable.default_user_picture_e_box,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_sbb_e_box_color)
+                ContextCompat.getColorStateList(
+                    context,
+                    R.color.flavor_text_sbb_e_box_tehnocoop_color
+                )
             )
 
             // TODO: Treba ubaciti odgovarajuci primaryKey i Id za Pay&Roll
@@ -304,7 +313,10 @@ object Util {
                 R.drawable.ic_close_sbb,
                 R.drawable.default_user_picture_sbb,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_sbb_e_box_color)
+                ContextCompat.getColorStateList(
+                    context,
+                    R.color.flavor_text_sbb_e_box_tehnocoop_color
+                )
             )
 
             "86841eac-1d56-49fb-a1fb-219dae2b3681" -> FranchiseModel(
@@ -313,7 +325,8 @@ object Util {
                 context.resources.getColor(R.color.franchiser_serbian_post_office, null),
                 ContextCompat.getDrawable(context, R.drawable.serbian_post_office_home),
                 R.drawable.serbian_post_office_profile,
-                ContextCompat.getDrawable(context, R.drawable.posta_srbije_logo_svg), false,  // has no toolbar background
+                ContextCompat.getDrawable(context, R.drawable.posta_srbije_logo_svg),
+                false,  // has no toolbar background
                 ContextCompat.getColorStateList(
                     context,
                     R.color.bottom_nav_color_serbian_post_office

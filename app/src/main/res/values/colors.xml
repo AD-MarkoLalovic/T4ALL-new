@@ -88,8 +88,9 @@
     <color name="euro_petrol_logo_profile_color_inner">#DFE7F1</color>
     <color name="amss_tehnomania_home_welcome_text_color">#142233</color>
     <color name="amss_tehnomania_home_flavor_text_color">#222426</color>
-    <color name="sbb_e_box_home_flavor_text_color">#DAE5F2</color>
+    <color name="sbb_e_box_tehno_coop_home_flavor_text_color">#DAE5F2</color>
     <color name="euro_petrol_rafaelo_home_flavor_text_color">#F5F7FA</color>
     <color name="amss_home_flavor_text_color">#142233</color>
+    <color name="enput_home_flavor_text_color">#C4C8CC</color>
 
 </resources>
