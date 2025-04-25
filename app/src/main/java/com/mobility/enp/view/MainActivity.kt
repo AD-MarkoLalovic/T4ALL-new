@@ -126,11 +126,19 @@ class MainActivity : AppCompatActivity() {
                 R.id.paymentAndPassageFragment, R.id.toolHistoryFragment, R.id.profileFragment, R.id.supportDialog, R.id.notificationDialog, R.id.deactivateAccountDialog, R.id.pdfViewDialog -> {
                     // Ako je destinacija neki od ovih fragmenata, prikaži BottomNavigationView
 
+                    if (franchiseViewModel.franchiseModel.value == null) {
+                        binding.toolbarShared.franchiserFlavorText.visibility = View.GONE
+                        binding.toolbarShared.iconLogo.setImageResource(R.drawable.ic_logo_home_screen_svg)
+                        binding.toolbarShared.franchiserFlavorText.text = ""
+
+                    } else {
+                        binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
+                    }
+
                     binding.bottomNavigation.visibility = View.VISIBLE
                     binding.toolbarShared.root.visibility = View.VISIBLE
                     binding.toolbarShared.backArrow.visibility = View.GONE
                     binding.toolbarShared.iconLogo.visibility = View.VISIBLE
-                    binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
                 }
 
                 R.id.basicInformationFragment, R.id.changePasswordFragment, R.id.invoicesFragment,
