@@ -253,7 +253,7 @@ object Util {
                 R.drawable.ic_close_e_box,
                 R.drawable.default_user_picture_e_box,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_default)
+                ContextCompat.getColorStateList(context, R.color.flavor_text_sbb_e_box_color)
             )
 
             // TODO: Treba ubaciti odgovarajuci primaryKey i Id za Pay&Roll
@@ -304,7 +304,7 @@ object Util {
                 R.drawable.ic_close_sbb,
                 R.drawable.default_user_picture_sbb,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_default)
+                ContextCompat.getColorStateList(context, R.color.flavor_text_sbb_e_box_color)
             )
 
             "86841eac-1d56-49fb-a1fb-219dae2b3681" -> FranchiseModel(
@@ -360,7 +360,7 @@ object Util {
                 R.drawable.ic_close_euro_petrol,
                 R.drawable.default_user_picture_euro_petrol,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_default)
+                ContextCompat.getColorStateList(context, R.color.flavor_text_euro_petrol)
             )
 
             else -> null
