@@ -73,7 +73,10 @@ object Util {
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
                 when (portalKey) {  // tehnocoop has background color on toolbar
                     "96371708-44d7-4438-b4f1-79f42bbac918" ->
-                        ContextCompat.getColorStateList(context, R.color.flavor_text_sbb_e_box_tehnocoop_color)
+                        ContextCompat.getColorStateList(
+                            context,
+                            R.color.flavor_text_sbb_e_box_tehnocoop_color
+                        )
 
                     else ->
                         ContextCompat.getColorStateList(context, R.color.flavor_text_default)
@@ -209,12 +212,15 @@ object Util {
                 R.drawable.ic_close_tag_rafaelo,
                 R.drawable.default_user_picture_rafaelo,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_euro_petrol_rafaelo)
+                ContextCompat.getColorStateList(
+                    context,
+                    R.color.flavor_text_euro_petrol_rafaelo_freetrans_pay_n_roll
+                )
             )
 
             "183e7ccd-353d-4dd6-950c-8f033dd94620" -> FranchiseModel(
                 "183e7ccd-353d-4dd6-950c-8f033dd94620",
-                "FREE TRANS 010",
+                "FREETRANS 010",
                 context.resources.getColor(R.color.franchiser_free_trans, null),
                 ContextCompat.getDrawable(context, R.drawable.free_trans_home),
                 R.drawable.free_trans_profile,
@@ -234,7 +240,10 @@ object Util {
                 R.drawable.ic_close_free_trans,
                 R.drawable.default_user_picture_free_trans,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_default)
+                ContextCompat.getColorStateList(
+                    context,
+                    R.color.flavor_text_euro_petrol_rafaelo_freetrans_pay_n_roll
+                )
             )
 
             "0768bada-5f65-4521-8b81-bb0eda51b806" -> FranchiseModel(
@@ -288,7 +297,10 @@ object Util {
                 R.drawable.ic_close_pay_and_roll,
                 R.drawable.default_user_picture_pay_n_roll,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_default)
+                ContextCompat.getColorStateList(
+                    context,
+                    R.color.flavor_text_euro_petrol_rafaelo_freetrans_pay_n_roll
+                )
             )
 
             "5fcb381c-176c-4d94-93bc-feb476c9d62a" -> FranchiseModel(
@@ -373,7 +385,10 @@ object Util {
                 R.drawable.ic_close_euro_petrol,
                 R.drawable.default_user_picture_euro_petrol,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_euro_petrol_rafaelo)
+                ContextCompat.getColorStateList(
+                    context,
+                    R.color.flavor_text_euro_petrol_rafaelo_freetrans_pay_n_roll
+                )
             )
 
             else -> null
