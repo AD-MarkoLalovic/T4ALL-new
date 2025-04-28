@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/euro_petrol_rafaelo_freetrans_pay_n_roll_home_flavor_text_color" />
+    <item android:color="@color/euro_petrol_rafaelo_freetrans_pay_n_roll_s_blue_home_flavor_text_color" />
 </selector>
