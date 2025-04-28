@@ -274,6 +274,9 @@ class HomeFragment : Fragment() {
         homePromotionsAdapter.submitList(sortedList)
         adapterProgress.submitList(filteredList.indices.toList())
 
+        binding.cyclerPromotions.scrollToPosition(0)
+        binding.cyclerProgress.scrollToPosition(0)
+
         if (filteredList.isNotEmpty()) {
             binding.cyclerPromotions.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
