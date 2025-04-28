@@ -105,7 +105,7 @@ object Util {
                 R.drawable.ic_close_s_blue,
                 R.drawable.default_user_picture_s_blue,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_default)
+                ContextCompat.getColorStateList(context, R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll)
             )
 
             "9aa3e972-d84b-40df-b35d-d14a229c03e3" -> FranchiseModel(
@@ -214,7 +214,7 @@ object Util {
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
                 ContextCompat.getColorStateList(
                     context,
-                    R.color.flavor_text_euro_petrol_rafaelo_freetrans_pay_n_roll
+                    R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
                 )
             )
 
@@ -242,7 +242,7 @@ object Util {
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
                 ContextCompat.getColorStateList(
                     context,
-                    R.color.flavor_text_euro_petrol_rafaelo_freetrans_pay_n_roll
+                    R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
                 )
             )
 
@@ -299,7 +299,7 @@ object Util {
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
                 ContextCompat.getColorStateList(
                     context,
-                    R.color.flavor_text_euro_petrol_rafaelo_freetrans_pay_n_roll
+                    R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
                 )
             )
 
@@ -387,7 +387,7 @@ object Util {
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
                 ContextCompat.getColorStateList(
                     context,
-                    R.color.flavor_text_euro_petrol_rafaelo_freetrans_pay_n_roll
+                    R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
                 )
             )
 
