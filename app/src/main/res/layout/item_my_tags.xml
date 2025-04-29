@@ -36,7 +36,6 @@
                     style="@style/SubtitlesRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{data.registrationPlate}"
                     android:textColor="@color/primary_light_darkest"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
