@@ -66,7 +66,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
         viewModelProfile.setRefundRequestVisibility()
 
-
         binding.bttChangeProfilePicture.setOnClickListener {
             // check for existing image in room
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
@@ -98,7 +97,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         binding.buttonSignOut.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 // added internet check if no internet just logout without token delete
-
                 viewModelProfile.deleteFirebaseToken(errorBody)  // this deletes from server
                 viewModelProfile.postLogoutUser(errorBody)
 
@@ -248,7 +246,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
     }
 
     override fun onImageSelected(imageBitmap: Bitmap?) {
-
         imageBitmap?.let { bitmap ->
             // Konfiguracija Glide opcija
             val glideOption = RequestOptions()

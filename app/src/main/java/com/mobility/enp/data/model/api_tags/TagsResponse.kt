@@ -11,7 +11,7 @@ data class TagsResponse(
 data class Tag(
     val id: String,
     val serialNumber: String,
-    val registrationPlate: String,
+    val registrationPlate: String?,
     val country: Country,
     val statuses: List<Status>,
     val category: Category,
