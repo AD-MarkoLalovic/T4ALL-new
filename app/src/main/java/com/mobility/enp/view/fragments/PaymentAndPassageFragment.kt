@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -205,6 +206,42 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 }
             }
 
+        }
+
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                val states = arrayOf(
+                    intArrayOf(android.R.attr.state_checked),  // When switch is ON
+                    intArrayOf(-android.R.attr.state_checked) // When switch is OFF
+                )
+
+                val colors = intArrayOf(
+                    color,  // ON color
+                    ContextCompat.getColor(
+                        requireContext(), R.color.primary_light_dark
+                    ) // OFF color
+                )
+
+                val colorStateList = ColorStateList(states, colors)
+                binding.termsConditionsCheckmark.buttonTintList = colorStateList
+            }?: run {
+                val states = arrayOf(
+                    intArrayOf(android.R.attr.state_checked),  // When switch is ON
+                    intArrayOf(-android.R.attr.state_checked) // When switch is OFF
+                )
+
+                val colors = intArrayOf(
+                    ContextCompat.getColor(
+                        requireContext(), R.color.figmaSplashScreenColor
+                    ),  // ON color
+                    ContextCompat.getColor(
+                        requireContext(), R.color.primary_light_dark
+                    ) // OFF color
+                )
+
+                val colorStateList = ColorStateList(states, colors)
+                binding.termsConditionsCheckmark.buttonTintList = colorStateList
+            }
         }
     }
 
