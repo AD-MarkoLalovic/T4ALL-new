@@ -3,222 +3,254 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/figmaIntroDarkColor"
+        android:fillViewport="true"
         tools:context=".view.fragments.intro.IntroScreenAdvantages">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineFirstIntro2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.60" />
-
-        <ImageView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_0dp"
-            android:contentDescription="@null"
-            android:scaleType="fitXY"
-            android:src="@drawable/intro_screen_third_picture_tablet"
-            app:layout_constraintBottom_toTopOf="@+id/guidelineFirstIntro2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/iv_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dimens_0dp"
-            android:layout_marginStart="@dimen/dimens_100dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/t4all"
-            app:layout_constraintBottom_toBottomOf="@id/btn_skip_page"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btn_skip_page" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineFirstIntro2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.60" />
 
-        <Button
-            android:id="@+id/btn_skip_page"
-            style="@style/MyOutlinedButtonSkip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimens_34dp"
-            android:layout_marginEnd="@dimen/dimens_100dp"
-            android:text="skip"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_0dp"
+                android:importantForAccessibility="no"
+                android:scaleType="fitXY"
+                android:src="@drawable/intro_screen_third_picture"
+                app:layout_constraintBottom_toTopOf="@+id/guidelineFirstIntro2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textViewWelcome"
-            style="@style/H1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/dimens_100dp"
-            android:layout_marginBottom="@dimen/dimens_45dp"
-            android:text="@string/advantages_of_the_toll_for_all_system"
-            app:layout_constraintBottom_toBottomOf="@+id/guidelineFirstIntro2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <View
-            android:id="@+id/midEclipse"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_3dp"
-            android:layout_marginHorizontal="@dimen/dimens_100dp"
-            android:layout_marginTop="@dimen/dimens_22dp"
-            android:background="@drawable/linear_gradient"
-            android:visibility="visible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewWelcome" />
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/cycler"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dimens_0dp"
-            android:layout_marginTop="@dimen/dimens_22dp"
-            android:layout_marginBottom="@dimen/dimens_15dp"
-            android:paddingHorizontal="@dimen/dimens_100dp"
-            app:layout_constraintBottom_toTopOf="@+id/progressBar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/midEclipse">
+            <ImageView
+                android:id="@+id/iv_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimens_0dp"
+                android:layout_marginStart="@dimen/dimens_100dp"
+                android:layout_marginTop="3dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/t4all"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/languageContainerAdvantages" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:id="@+id/languageContainerAdvantages"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="29dp"
+                android:layout_marginEnd="@dimen/dimens_100dp"
+                android:background="@drawable/spinner_intro_lang_background"
+                android:paddingHorizontal="@dimen/dimens_12dp"
+                android:paddingVertical="11dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/tx1IntroAdvantage"
-                    style="@style/Paragraph"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dimens_16dp"
-                    android:text="@string/with_a_one_tag_through_multiple_countries"
-                    android:textColor="@color/primary_light_lightest"
-                    app:layout_constraintEnd_toStartOf="@+id/check1IntroAdvantage"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/check1IntroAdvantage"
+                    android:id="@+id/tvSelectedLanguage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@null"
-                    android:src="@drawable/check"
-                    app:layout_constraintBottom_toBottomOf="@+id/tx1IntroAdvantage"
+                    android:layout_marginEnd="@dimen/dimens_4dp"
+                    android:clickable="true"
+                    android:drawablePadding="@dimen/dimens_2dp"
+                    android:focusable="true"
+                    android:fontFamily="@font/noto_sans_medium"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:drawableStartCompat="@drawable/arrow_down_spinner_intro"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tx1IntroAdvantage" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="SRP" />
 
-                <TextView
-                    android:id="@+id/tx2IntroAdvantage"
-                    style="@style/Paragraph"
+                <LinearLayout
+                    android:id="@+id/languageOptions"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_12dp"
-                    android:layout_marginEnd="@dimen/dimens_16dp"
-                    android:text="@string/payment_via_the_phone_bill"
-                    android:textColor="@color/primary_light_lightest"
-                    app:layout_constraintEnd_toStartOf="@+id/check2IntroAdvantage"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tx1IntroAdvantage" />
-
-                <ImageView
-                    android:id="@+id/check2IntroAdvantage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@null"
-                    android:src="@drawable/check"
-                    app:layout_constraintBottom_toBottomOf="@+id/tx2IntroAdvantage"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/dimens_4dp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tx2IntroAdvantage" />
-
-                <TextView
-                    android:id="@+id/tx3IntroAdvantage"
-                    style="@style/Paragraph"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_12dp"
-                    android:layout_marginEnd="@dimen/dimens_16dp"
-                    android:text="@string/payment_directly_from_the_user_s_account"
-                    android:textColor="@color/primary_light_lightest"
-                    app:layout_constraintEnd_toStartOf="@+id/check3IntroAdvantage"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tx2IntroAdvantage" />
+                    app:layout_constraintTop_toBottomOf="@id/tvSelectedLanguage"
+                    tools:visibility="gone">
 
-                <ImageView
-                    android:id="@+id/check3IntroAdvantage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@null"
-                    android:src="@drawable/check"
-                    app:layout_constraintBottom_toBottomOf="@+id/tx3IntroAdvantage"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tx3IntroAdvantage" />
+                    <TextView
+                        android:id="@+id/langTwo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/noto_sans_medium"
+                        android:textColor="@color/white_transparent"
+                        android:textSize="12sp"
+                        tools:text="СРП" />
 
-                <TextView
-                    android:id="@+id/tx4IntroAdvantage"
-                    style="@style/Paragraph"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_12dp"
-                    android:layout_marginEnd="@dimen/dimens_16dp"
-                    android:text="@string/no_waiting_in_line"
-                    android:textColor="@color/primary_light_lightest"
-                    app:layout_constraintEnd_toStartOf="@+id/check4IntroAdvantage"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tx3IntroAdvantage" />
-
-                <ImageView
-                    android:id="@+id/check4IntroAdvantage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@null"
-                    android:src="@drawable/check"
-                    app:layout_constraintBottom_toBottomOf="@+id/tx4IntroAdvantage"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tx4IntroAdvantage" />
-
-                <TextView
-                    android:id="@+id/tx5IntroAdvantage"
-                    style="@style/Paragraph"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_12dp"
-                    android:layout_marginEnd="@dimen/dimens_16dp"
-                    android:text="@string/no_currency_exchange"
-                    android:textColor="@color/primary_light_lightest"
-                    app:layout_constraintEnd_toStartOf="@+id/check5IntroAdvantage"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tx4IntroAdvantage" />
-
-                <ImageView
-                    android:id="@+id/check5IntroAdvantage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@null"
-                    android:src="@drawable/check"
-                    app:layout_constraintBottom_toBottomOf="@+id/tx5IntroAdvantage"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tx5IntroAdvantage" />
-
+                    <TextView
+                        android:id="@+id/langThree"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/noto_sans_medium"
+                        android:textColor="@color/white_transparent"
+                        android:textSize="12sp"
+                        tools:text="ENG" />
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_10dp"
-            android:layout_marginBottom="@dimen/dimens_16dp"
-            android:background="@color/figmaIntroDarkColor"
-            android:max="100"
-            android:progress="0"
-            android:progressBackgroundTint="@color/figmaIntroScreensGreyColor"
-            android:progressTint="@color/figmaSplashScreenColor"
-            android:progressTintMode="src_over"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            <TextView
+                android:id="@+id/textViewWelcome"
+                style="@style/H1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimens_100dp"
+                android:layout_marginBottom="@dimen/dimens_45dp"
+                android:text="@string/advantages_of_the_toll_for_all_system"
+                app:layout_constraintBottom_toBottomOf="@+id/guidelineFirstIntro2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <View
+                android:id="@+id/midEclipse"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_3dp"
+                android:layout_marginHorizontal="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_22dp"
+                android:background="@drawable/linear_gradient"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewWelcome" />
+
+            <TextView
+                android:id="@+id/tx1IntroAdvantage"
+                style="@style/SubtitlesMediumTablet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimens_100dp"
+                android:layout_marginTop="@dimen/dimens_25dp"
+                android:text="@string/with_a_one_tag_through_multiple_countries"
+                android:textColor="@color/primary_light_lightest"
+                app:layout_constraintEnd_toStartOf="@+id/check1IntroAdvantage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/midEclipse" />
+
+            <ImageView
+                android:id="@+id/check1IntroAdvantage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimens_16dp"
+                android:contentDescription="@null"
+                android:src="@drawable/check"
+                app:layout_constraintBottom_toBottomOf="@+id/tx1IntroAdvantage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tx1IntroAdvantage" />
+
+
+            <TextView
+                android:id="@+id/tx3IntroAdvantage"
+                style="@style/SubtitlesMediumTablet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimens_100dp"
+                android:layout_marginTop="@dimen/dimens_15dp"
+                android:text="@string/payment_directly_from_the_user_s_account"
+                android:textColor="@color/primary_light_lightest"
+                app:layout_constraintEnd_toStartOf="@+id/check3IntroAdvantage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tx1IntroAdvantage" />
+
+            <ImageView
+                android:id="@+id/check3IntroAdvantage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimens_16dp"
+                android:contentDescription="@null"
+                android:src="@drawable/check"
+                app:layout_constraintBottom_toBottomOf="@+id/tx3IntroAdvantage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tx3IntroAdvantage" />
+
+            <TextView
+                android:id="@+id/tx4IntroAdvantage"
+                style="@style/SubtitlesMediumTablet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimens_100dp"
+                android:layout_marginTop="@dimen/dimens_15dp"
+                android:text="@string/no_waiting_in_line"
+                android:textColor="@color/primary_light_lightest"
+                app:layout_constraintEnd_toStartOf="@+id/check4IntroAdvantage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tx3IntroAdvantage" />
+
+            <ImageView
+                android:id="@+id/check4IntroAdvantage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimens_16dp"
+                android:contentDescription="@null"
+                android:src="@drawable/check"
+                app:layout_constraintBottom_toBottomOf="@+id/tx4IntroAdvantage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tx4IntroAdvantage" />
+
+            <TextView
+                android:id="@+id/tx5IntroAdvantage"
+                style="@style/SubtitlesMediumTablet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimens_100dp"
+                android:layout_marginTop="@dimen/dimens_15dp"
+                android:text="@string/no_currency_exchange"
+                android:textColor="@color/primary_light_lightest"
+                app:layout_constraintEnd_toStartOf="@+id/check5IntroAdvantage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tx4IntroAdvantage" />
+
+            <ImageView
+                android:id="@+id/check5IntroAdvantage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimens_16dp"
+                android:contentDescription="@null"
+                android:src="@drawable/check"
+                app:layout_constraintBottom_toBottomOf="@+id/tx5IntroAdvantage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tx5IntroAdvantage" />
+
+            <TextView
+                android:id="@+id/buttonNextAdvantages"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:layout_marginEnd="@dimen/dimens_100dp"
+                android:layout_marginBottom="@dimen/dimens_22dp"
+                android:background="@drawable/spinner_intro_lang_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/noto_sans_medium"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/dimens_16dp"
+                android:paddingVertical="11dp"
+                android:text="@string/next"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimens_12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tx5IntroAdvantage"
+                app:layout_constraintVertical_bias="1.0" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>
