@@ -224,6 +224,23 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 val colorStateList = ColorStateList(states, colors)
                 binding.termsConditionsCheckmark.buttonTintList = colorStateList
+            }?: run {
+                val states = arrayOf(
+                    intArrayOf(android.R.attr.state_checked),  // When switch is ON
+                    intArrayOf(-android.R.attr.state_checked) // When switch is OFF
+                )
+
+                val colors = intArrayOf(
+                    ContextCompat.getColor(
+                        requireContext(), R.color.figmaSplashScreenColor
+                    ),  // ON color
+                    ContextCompat.getColor(
+                        requireContext(), R.color.primary_light_dark
+                    ) // OFF color
+                )
+
+                val colorStateList = ColorStateList(states, colors)
+                binding.termsConditionsCheckmark.buttonTintList = colorStateList
             }
         }
     }
