@@ -60,11 +60,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!BuildConfig.FLAVOR.contains("prod")) {
-            franchiseViewModel.getFranchiseModel(requireContext())
-        } else {
-            (activity as MainActivity).resetToDefault()
-        }
+        franchiseViewModel.getFranchiseModel(requireContext())  // removed check enabled for stage and prod now
 
         setupObservers()
         setupBinding()
