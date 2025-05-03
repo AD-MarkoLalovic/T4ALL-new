@@ -192,4 +192,22 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+
+    <style name="TelekomCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
+        <item name="materialCalendarHeaderLayout">@style/App.Material3.MaterialCalendar.HeaderLayout</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/franchiser_telekom_srbija_mtel</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="App.Material3.MaterialCalendar.HeaderLayout" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
+        <item name="android:background">@color/franchiser_telekom_srbija_mtel</item>
+    </style>
+
+    <style name="WhiteCalendarStyle" parent="Widget.Material3.MaterialCalendar">
+        <item name="android:background">@color/white</item>
+    </style>
+
 </resources>

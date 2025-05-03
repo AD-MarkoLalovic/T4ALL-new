@@ -27,5 +27,6 @@ data class FranchiseModel(
     val franchiseProfilePictureResource : Int,
     val homePageWelcomeTextColor : ColorStateList?,
     val franchiseFlavorTextColor : ColorStateList?,
+    val franchiseCalendarStyle : Int,
     val franchiseFlavorText: String = "Powered by Toll4All",
 )
