@@ -213,7 +213,7 @@
 
     <style name="S_Blue_CalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
-        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <item name="materialCalendarHeaderLayout">@style/S_Blue_Header</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/franchiser_s_blue</item>
         <item name="colorPrimaryVariant">@color/white</item>
@@ -227,7 +227,7 @@
 
     <style name="AMSSCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
-        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <item name="materialCalendarHeaderLayout">@style/AMSSHeader</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/franchiser_amss</item>
         <item name="colorPrimaryVariant">@color/white</item>
@@ -240,7 +240,7 @@
 
     <style name="TehnomaniaCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
-        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <item name="materialCalendarHeaderLayout">@style/TehnomaniaHeader</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/franchiser_tehnomania</item>
         <item name="colorPrimaryVariant">@color/white</item>
@@ -254,7 +254,7 @@
 
     <style name="EnputCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
-        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <item name="materialCalendarHeaderLayout">@style/EnputHeader</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/franchiser_enput</item>
         <item name="colorPrimaryVariant">@color/white</item>
@@ -268,7 +268,7 @@
 
     <style name="RafaeloCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
-        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <item name="materialCalendarHeaderLayout">@style/RafaeloHeader</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/franchiser_tag_rafaelo</item>
         <item name="colorPrimaryVariant">@color/white</item>
@@ -282,7 +282,7 @@
 
     <style name="FreeTransCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
-        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <item name="materialCalendarHeaderLayout">@style/FreeTransHeader</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/franchiser_free_trans</item>
         <item name="colorPrimaryVariant">@color/white</item>
@@ -296,7 +296,7 @@
 
     <style name="EboxCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
-        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <item name="materialCalendarHeaderLayout">@style/EboxHeader</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/franchiser_e_box</item>
         <item name="colorPrimaryVariant">@color/white</item>
@@ -310,7 +310,7 @@
 
     <style name="PayNRollCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
-        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <item name="materialCalendarHeaderLayout">@style/PayNRollHeader</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/franchiser_pay_and_roll</item>
         <item name="colorPrimaryVariant">@color/white</item>
@@ -324,7 +324,7 @@
 
     <style name="SbbCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
-        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <item name="materialCalendarHeaderLayout">@style/SbbHeader</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/franchiser_sbb</item>
         <item name="colorPrimaryVariant">@color/white</item>
@@ -338,7 +338,7 @@
 
     <style name="PostaSrbijeCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
-        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <item name="materialCalendarHeaderLayout">@style/PostaSrbijeHeader</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/franchiser_serbian_post_office</item>
         <item name="colorPrimaryVariant">@color/white</item>
@@ -351,7 +351,7 @@
 
     <style name="EuroPetrolCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
-        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <item name="materialCalendarHeaderLayout">@style/EuroPetrolHeader</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/franchiser_euro_petrol</item>
         <item name="colorPrimaryVariant">@color/white</item>
