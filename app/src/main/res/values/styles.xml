@@ -195,19 +195,171 @@
 
     <style name="TelekomCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
-        <item name="materialCalendarHeaderLayout">@style/App.Material3.MaterialCalendar.HeaderLayout</item>
+        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/franchiser_telekom_srbija_mtel</item>
         <item name="colorPrimaryVariant">@color/white</item>
         <item name="colorOnPrimary">@color/white</item>
     </style>
 
-    <style name="App.Material3.MaterialCalendar.HeaderLayout" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
+    <style name="TelekomHeader" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
         <item name="android:background">@color/franchiser_telekom_srbija_mtel</item>
     </style>
 
     <style name="WhiteCalendarStyle" parent="Widget.Material3.MaterialCalendar">
         <item name="android:background">@color/white</item>
+    </style>
+
+
+    <style name="S_Blue_CalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
+        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/franchiser_s_blue</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="S_Blue_Header" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
+        <item name="android:background">@color/franchiser_s_blue</item>
+    </style>
+
+
+    <style name="AMSSCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
+        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/franchiser_amss</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="AMSSHeader" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
+        <item name="android:background">@color/franchiser_amss</item>
+    </style>
+
+    <style name="TehnomaniaCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
+        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/franchiser_tehnomania</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="TehnomaniaHeader" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
+        <item name="android:background">@color/franchiser_tehnomania</item>
+    </style>
+
+
+    <style name="EnputCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
+        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/franchiser_enput</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="EnputHeader" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
+        <item name="android:background">@color/franchiser_enput</item>
+    </style>
+
+
+    <style name="RafaeloCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
+        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/franchiser_tag_rafaelo</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="RafaeloHeader" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
+        <item name="android:background">@color/franchiser_tag_rafaelo</item>
+    </style>
+
+
+    <style name="FreeTransCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
+        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/franchiser_free_trans</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="FreeTransHeader" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
+        <item name="android:background">@color/franchiser_free_trans</item>
+    </style>
+
+
+    <style name="EboxCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
+        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/franchiser_e_box</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="EboxHeader" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
+        <item name="android:background">@color/franchiser_e_box</item>
+    </style>
+
+
+    <style name="PayNRollCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
+        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/franchiser_pay_and_roll</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="PayNRollHeader" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
+        <item name="android:background">@color/franchiser_pay_and_roll</item>
+    </style>
+
+
+    <style name="SbbCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
+        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/franchiser_sbb</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="SbbHeader" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
+        <item name="android:background">@color/franchiser_sbb</item>
+    </style>
+
+
+    <style name="PostaSrbijeCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
+        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/franchiser_serbian_post_office</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="PostaSrbijeHeader" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
+        <item name="android:background">@color/franchiser_serbian_post_office</item>
+    </style>
+
+    <style name="EuroPetrolCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarStyle">@style/WhiteCalendarStyle</item>
+        <item name="materialCalendarHeaderLayout">@style/TelekomHeader</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/franchiser_euro_petrol</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+
+    <style name="EuroPetrolHeader" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
+        <item name="android:background">@color/franchiser_euro_petrol</item>
     </style>
 
 </resources>
