@@ -47,6 +47,7 @@ import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.csv_table.CsvModel
+import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.room.database.DRoom
@@ -813,7 +814,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     }
 
 
-    fun showDatePicker(fromDate: Boolean, context: Context) {
+    fun showDatePicker(fromDate: Boolean, context: Context, franchiseModel: FranchiseModel?) {
         viewModelScope.launch {
             val selectedDate: Long = if (fromDate) {
                 if (userSelectedCalendarStart != null) {
@@ -845,37 +846,73 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
             val constraintsBuilder = CalendarConstraints.Builder()
                 .setValidator(DateValidatorPointBackward.now())
 
-            val datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText(context.getString(R.string.select_date))
-                .setSelection(selectedDate)
-                .setCalendarConstraints(constraintsBuilder.build())
-                .setNegativeButtonText(context.getString(R.string.cancel))
-                .setPositiveButtonText(context.getString(R.string.confirm))
-                .build()
 
-            datePicker.addOnPositiveButtonClickListener {// time in long
-                try {
-                    val date: TimeSave = convertLongToDateString(it)
+            franchiseModel?.let { model ->
+                val datePicker = MaterialDatePicker.Builder.datePicker()
+                    .setTitleText(context.getString(R.string.select_date))
+                    .setSelection(selectedDate)
+                    .setCalendarConstraints(constraintsBuilder.build())
+                    .setNegativeButtonText(context.getString(R.string.cancel))
+                    .setPositiveButtonText(context.getString(R.string.confirm))
+                    .setTheme(model.franchiseCalendarStyle)
+                    .build()
 
-                    if (fromDate) {
-                        userSelectedCalendarStart = it
-                        startDate.postValue(date)
-                    } else {
-                        userSelectedCalendarEnd = it
-                        endDate.postValue(date)
+                datePicker.addOnPositiveButtonClickListener {// time in long
+                    try {
+                        val date: TimeSave = convertLongToDateString(it)
+
+                        if (fromDate) {
+                            userSelectedCalendarStart = it
+                            startDate.postValue(date)
+                        } else {
+                            userSelectedCalendarEnd = it
+                            endDate.postValue(date)
+                        }
+
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.please_enter_date_manually),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.please_enter_date_manually),
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
-            }
 
-            val fm = (context as AppCompatActivity).supportFragmentManager
-            datePicker.show(fm, "dateSelect")
+                val fm = (context as AppCompatActivity).supportFragmentManager
+                datePicker.show(fm, "dateSelect")
+            } ?: run {
+                val datePicker = MaterialDatePicker.Builder.datePicker()
+                    .setTitleText(context.getString(R.string.select_date))
+                    .setSelection(selectedDate)
+                    .setCalendarConstraints(constraintsBuilder.build())
+                    .setNegativeButtonText(context.getString(R.string.cancel))
+                    .setPositiveButtonText(context.getString(R.string.confirm))
+                    .build()
+
+                datePicker.addOnPositiveButtonClickListener {// time in long
+                    try {
+                        val date: TimeSave = convertLongToDateString(it)
+
+                        if (fromDate) {
+                            userSelectedCalendarStart = it
+                            startDate.postValue(date)
+                        } else {
+                            userSelectedCalendarEnd = it
+                            endDate.postValue(date)
+                        }
+
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.please_enter_date_manually),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                val fm = (context as AppCompatActivity).supportFragmentManager
+                datePicker.show(fm, "dateSelect")
+            }
         }
     }
 
