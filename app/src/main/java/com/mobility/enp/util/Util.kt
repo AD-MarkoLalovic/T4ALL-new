@@ -340,6 +340,7 @@ object Util {
                     context,
                     R.color.flavor_text_sbb_e_box_tehnocoop_color
                 ),
+
                 R.style.SbbCalendarTheme
             )
 
