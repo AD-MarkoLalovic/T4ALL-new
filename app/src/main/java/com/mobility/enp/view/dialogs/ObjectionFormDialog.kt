@@ -23,8 +23,8 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.databinding.DialogObjectionFormBinding
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.setDimensionsPercent
-import kotlinx.coroutines.launch
 import com.mobility.enp.viewmodel.FranchiseViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -137,11 +137,12 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
 
     private fun showDatePicker() {
         viewLifecycleOwner.lifecycleScope.launch {
-            val locale = when (val lang = SharedPreferencesHelper.getUserLanguage(requireContext())) {
-                "cyr" -> Locale("sr", "RS")
-                "sr", "cnr" -> Locale("sr_Latn", "RS", "Latn")
-                else -> Locale(lang)
-            }
+            val locale =
+                when (val lang = SharedPreferencesHelper.getUserLanguage(requireContext())) {
+                    "cyr" -> Locale("sr", "RS")
+                    "sr", "cnr" -> Locale("sr_Latn", "RS", "Latn")
+                    else -> Locale(lang)
+                }
 
             Locale.setDefault(locale)
             val config = requireContext().resources.configuration
@@ -151,28 +152,60 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
             val constraintsBuilder = CalendarConstraints.Builder()
                 .setValidator(DateValidatorPointBackward.now())
 
-            val datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText(requireContext().getString(R.string.select_date))
-                .setSelection(System.currentTimeMillis())
-                .setCalendarConstraints(constraintsBuilder.build())
-                .setNegativeButtonText(requireContext().getString(R.string.cancel))
-                .setPositiveButtonText(requireContext().getString(R.string.confirm))
-                .build()
+            franchiseViewModel.franchiseModel.value?.let { franchiseModel ->
+                val datePicker = MaterialDatePicker.Builder.datePicker()
+                    .setTitleText(requireContext().getString(R.string.select_date))
+                    .setSelection(System.currentTimeMillis())
+                    .setCalendarConstraints(constraintsBuilder.build())
+                    .setNegativeButtonText(requireContext().getString(R.string.cancel))
+                    .setPositiveButtonText(requireContext().getString(R.string.confirm))
+                    .setTheme(franchiseModel.franchiseCalendarStyle)   // style gets passed here
+                    .build()
 
-            datePicker.addOnPositiveButtonClickListener {
-                try {
-                    binding.complaintId.setText(convertLongToDateString(it))
-                } catch (e: Exception) {
-                    Log.e("ObjectionFormDialog", "fun showDatePicker", e)
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.please_enter_date_manually),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                datePicker.addOnPositiveButtonClickListener {
+                    try {
+                        binding.complaintId.setText(convertLongToDateString(it))
+                    } catch (e: Exception) {
+                        Log.e("ObjectionFormDialog", "fun showDatePicker", e)
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.please_enter_date_manually),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
-            }
 
-            datePicker.show((requireContext() as AppCompatActivity).supportFragmentManager, "DATE_PICKER")
+                datePicker.show(
+                    (requireContext() as AppCompatActivity).supportFragmentManager,
+                    "DATE_PICKER"
+                )
+            } ?: run {
+                val datePicker = MaterialDatePicker.Builder.datePicker()
+                    .setTitleText(requireContext().getString(R.string.select_date))
+                    .setSelection(System.currentTimeMillis())
+                    .setCalendarConstraints(constraintsBuilder.build())
+                    .setNegativeButtonText(requireContext().getString(R.string.cancel))
+                    .setPositiveButtonText(requireContext().getString(R.string.confirm))
+                    .build()
+
+                datePicker.addOnPositiveButtonClickListener {
+                    try {
+                        binding.complaintId.setText(convertLongToDateString(it))
+                    } catch (e: Exception) {
+                        Log.e("ObjectionFormDialog", "fun showDatePicker", e)
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.please_enter_date_manually),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                datePicker.show(
+                    (requireContext() as AppCompatActivity).supportFragmentManager,
+                    "DATE_PICKER"
+                )
+            }
         }
     }
 

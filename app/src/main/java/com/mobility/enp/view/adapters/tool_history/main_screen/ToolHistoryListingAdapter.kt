@@ -18,6 +18,7 @@ import com.mobility.enp.data.model.api_tool_history.listing.TotalAmount
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -26,7 +27,7 @@ class ToolHistoryListingAdapter(
     private val viewModel: UserPassViewModel,
     private val complaintInterface: ToolHistoryListingPassageAdapter.SendToFragment,
     val lifecycleOwner: LifecycleOwner,
-    val passageData: SavePassageData
+    val passageData: SavePassageData,
 ) : RecyclerView.Adapter<ToolHistoryListingAdapter.TagsViewHolder>() {
 
     private lateinit var context: Context

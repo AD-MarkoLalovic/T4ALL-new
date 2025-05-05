@@ -80,7 +80,8 @@ object Util {
 
                     else ->
                         ContextCompat.getColorStateList(context, R.color.flavor_text_default)
-                }
+                },
+                R.style.TelekomCalendarTheme
             )
 
             "a2ac8612-4b25-43e3-8017-fcf8ad0da0c4" -> FranchiseModel(
@@ -105,7 +106,11 @@ object Util {
                 R.drawable.ic_close_s_blue,
                 R.drawable.default_user_picture_s_blue,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll)
+                ContextCompat.getColorStateList(
+                    context,
+                    R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
+                ),
+                R.style.S_Blue_CalendarTheme
             )
 
             "9aa3e972-d84b-40df-b35d-d14a229c03e3" -> FranchiseModel(
@@ -133,8 +138,8 @@ object Util {
                     context,
                     R.color.amss_tehnomania_home_welcome_text_color
                 ),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_amss_tehnomania)
-
+                ContextCompat.getColorStateList(context, R.color.flavor_text_amss_tehnomania),
+                R.style.AMSSCalendarTheme
             )
 
             "d47b35d1-bb44-4618-9b31-cf7e961595ec" -> FranchiseModel(
@@ -162,7 +167,8 @@ object Util {
                     context,
                     R.color.amss_tehnomania_home_welcome_text_color
                 ),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_amss_tehnomania)
+                ContextCompat.getColorStateList(context, R.color.flavor_text_amss_tehnomania),
+                R.style.TehnomaniaCalendarTheme
             )
 
             "2263768e-e3a5-48f8-8e7a-545f6c141318" -> FranchiseModel(
@@ -187,7 +193,8 @@ object Util {
                 R.drawable.ic_close_enput,
                 R.drawable.default_user_picture_enput,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_enput)
+                ContextCompat.getColorStateList(context, R.color.flavor_text_enput),
+                R.style.EnputCalendarTheme
             )
 
             "ed232756-b001-42e7-a3aa-c6c43b9ce49f" -> FranchiseModel(
@@ -215,7 +222,8 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
-                )
+                ),
+                R.style.RafaeloCalendarTheme
             )
 
             "183e7ccd-353d-4dd6-950c-8f033dd94620" -> FranchiseModel(
@@ -243,7 +251,8 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
-                )
+                ),
+                R.style.FreeTransCalendarTheme
             )
 
             "0768bada-5f65-4521-8b81-bb0eda51b806" -> FranchiseModel(
@@ -271,7 +280,8 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_sbb_e_box_tehnocoop_color
-                )
+                ),
+                R.style.EboxCalendarTheme
             )
 
             // TODO: Treba ubaciti odgovarajuci primaryKey i Id za Pay&Roll
@@ -300,7 +310,8 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
-                )
+                ),
+                R.style.PayNRollCalendarTheme
             )
 
             "5fcb381c-176c-4d94-93bc-feb476c9d62a" -> FranchiseModel(
@@ -328,7 +339,8 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_sbb_e_box_tehnocoop_color
-                )
+                ),
+                R.style.SbbCalendarTheme
             )
 
             "86841eac-1d56-49fb-a1fb-219dae2b3681" -> FranchiseModel(
@@ -360,7 +372,8 @@ object Util {
                 R.drawable.ic_close_serbian_post_office,
                 R.drawable.default_user_picture_posta_srbije,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
-                ContextCompat.getColorStateList(context, R.color.flavor_text_default)
+                ContextCompat.getColorStateList(context, R.color.flavor_text_default),
+                R.style.PostaSrbijeCalendarTheme
             )
 
             "0e16dfd9-b94f-4e1a-aaca-47733b312e79" -> FranchiseModel(
@@ -388,7 +401,8 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
-                )
+                ),
+                R.style.EuroPetrolCalendarTheme
             )
 
             else -> null

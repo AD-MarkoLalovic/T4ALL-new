@@ -124,11 +124,11 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         }
 
         binding.txtDateLeft.setOnClickListener {
-            vModel.showDatePicker(true, requireContext())
+            vModel.showDatePicker(true, requireContext(), franchiseViewModel.franchiseModel.value)
         }
 
         binding.txtDateRight.setOnClickListener {
-            vModel.showDatePicker(false, requireContext())
+            vModel.showDatePicker(false, requireContext(), franchiseViewModel.franchiseModel.value)
         }
 
         setSelectedButton(binding.buttonAll)

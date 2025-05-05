@@ -23,15 +23,16 @@ import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.dialogs.ComplaintFormDialog
 import com.mobility.enp.view.dialogs.ComplaintFormDialogOld
 import com.mobility.enp.view.dialogs.ObjectionFormDialog
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class ToolHistoryListingPassageAdapter(
-    val data: ToolHistoryListing,
+    private val data: ToolHistoryListing,
     private val complaintInterface: SendToFragment,
-    val hideComplaintButton: Boolean,
-    val lifecycleOwner: LifecycleOwner,
-    val tagSerialNumber: String,
-    val countryCode: String
+    private val hideComplaintButton: Boolean,
+    private val lifecycleOwner: LifecycleOwner,
+    private val tagSerialNumber: String,
+    private val countryCode: String
 ) :
     RecyclerView.Adapter<ToolHistoryListingPassageAdapter.RelationViewHolder>() {
 
