@@ -1,6 +1,7 @@
 package com.mobility.enp.data.room.api_related_daos
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -24,5 +25,13 @@ interface HomeCardsDao {
 
     @Query("UPDATE home_cards SET additionEnabled = 1 WHERE email = :email AND code != 'RS'")
     suspend fun enableAdditionForAllExceptRS(email: String)
+
+    @Query("SELECT * FROM home_cards WHERE email = :email")
+    suspend fun getCardsByUser(email: String): List<HomeCardsEntity>
+
+    @Delete
+    suspend fun deleteCards(cards: List<HomeCardsEntity>)
+
+
 
 }
