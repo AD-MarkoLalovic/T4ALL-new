@@ -3,6 +3,7 @@ package com.mobility.enp.data.repository
 import android.content.Context
 import android.util.Log
 import com.mobility.enp.data.model.ProfileImage
+import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.data.model.home.response.Data
@@ -94,20 +95,13 @@ class HomeRepository(
     suspend fun getCardsFromServer(): Result<List<HomeCardsEntity>> {
         val userToken = getUserToken() ?: return Result.failure(NetworkError.NoConnection)
 
-
-        /*val localCards = getHomeCards(user)
-        if (localCards.isNotEmpty()) {
-            return Result.success(localCards)
-        }*/
-
         return try {
             val user = getUserForPromotion()
             val lang = getLangKey()
             val remoteData = apiService(userToken).getCreditCardsWeb(lang)
             if (remoteData.isSuccessful) {
                 remoteData.body()?.let { responseBody ->
-                    val cardsEntities = responseBody.toEntityList(context, user)
-                    saveHomeCards(cardsEntities)
+                    saveHomeCards(context, user, responseBody)
 
                     Result.success(getHomeCards(user))
                 } ?: Result.failure(NetworkError.ServerError)
@@ -120,16 +114,26 @@ class HomeRepository(
         }
     }
 
+    private suspend fun saveHomeCards(context: Context, user: String, model: CardWebModel) {
+        val newList = model.toEntityList(context, user)
+        val existingList = database.homeCardsDao().getCardsByUser(user)
+
+        val newCodes = newList.map { it.code }.toSet()
+
+        // Briši sve lokalne kartice koje su dodate preko web-a
+        val toDelete = existingList.filter { it.code !in newCodes }
+        database.homeCardsDao().deleteCards(toDelete)
+
+        // Dodaj nove kartice
+        database.homeCardsDao().insertHomeCards(newList)
+    }
+
     suspend fun getHomeCards(user: String): List<HomeCardsEntity> {
         return database.homeCardsDao().getHomeCardsList(user)
     }
 
     suspend fun getUserForPromotion(): String {
         return database.lastUserDao().getLastUser().email
-    }
-
-    private suspend fun saveHomeCards(cards: List<HomeCardsEntity>) {
-        database.homeCardsDao().insertHomeCards(cards)
     }
 
     suspend fun updateHomeCard(card: HomeCardsEntity) {
