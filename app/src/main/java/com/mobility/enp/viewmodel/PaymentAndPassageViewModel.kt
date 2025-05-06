@@ -53,7 +53,6 @@ class PaymentAndPassageViewModel(
     val successfullyDeletedCard: StateFlow<SubmitResult<Boolean>> get() = _successfullyDeletedCard
 
 
-
     fun fetchCardFlow() {
         _getCardDataFlow.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {

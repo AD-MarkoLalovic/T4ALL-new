@@ -63,9 +63,9 @@ interface ApiService {
     ): Response<HomePageFcmTokenResponse>
 
     @DELETE("/api/v1/firebase/{fcm_token}")
-    fun deleteFirebaseToken(
+    suspend fun deleteFirebaseToken(
         @Path(value = "fcm_token") token: String
-    ): Call<HomePageFcmTokenResponse>
+    ): Response<Any>
 
     @GET("/api/v1/personal-data")
     suspend fun getUserPersonalData(): BasicInfoResponse

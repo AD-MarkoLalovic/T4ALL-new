@@ -13,8 +13,13 @@ import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.network.Repository
+import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -30,6 +35,10 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
             }
         }
     }
+
+    private val _postDeleteFcmToken =
+        MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Empty)
+    val postDeleteFcmToken: StateFlow<SubmitResult<Boolean>> get() = _postDeleteFcmToken
 
     private val _userInfo = MutableLiveData<String?>()
     val userInfo: LiveData<String?> get() = _userInfo
@@ -94,13 +103,39 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
         }
     }
 
-    suspend fun deleteFirebaseToken(errorBody: MutableLiveData<ErrorBody>) {
-        val userToken = getUserToken()
+    suspend fun deleteFirebaseToken() {
+        _postDeleteFcmToken.value = SubmitResult.Loading
         val fcmToken = repository.getFcmData()
 
-        userToken?.let { token ->
-            fcmToken?.fcm_token?.let { fcmToken ->
-                Repository.deleteFirebaseToken(token, fcmToken, errorBody)
+        fcmToken?.fcm_token?.let { fcmToken ->
+            var result = repository.deleteFirebaseToken(fcmToken)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _postDeleteFcmToken.value = SubmitResult.Empty
+                } else {
+                    _postDeleteFcmToken.value =
+                        SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _postDeleteFcmToken.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _postDeleteFcmToken.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        _postDeleteFcmToken.value =
+                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                        Log.d(TAG, "api error ${error.errorResponse.message}")
+                    }
+
+                    else -> {}
+                }
             }
         }
 
