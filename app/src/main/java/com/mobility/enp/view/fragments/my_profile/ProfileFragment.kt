@@ -37,7 +37,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
     private var _binding: FragmentProfileBinding? = null
     private val binding: FragmentProfileBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
-    private val viewModelProfile: ProfileViewModel by viewModels()
+    private val viewModelProfile: ProfileViewModel by viewModels { ProfileViewModel.Factory }
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
 
     private val imageRepository: ImageRepository by lazy {
