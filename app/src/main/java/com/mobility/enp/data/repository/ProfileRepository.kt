@@ -50,7 +50,6 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
         return isNetworkAvailable()
     }
 
-
     suspend fun deleteFirebaseToken(fcmToken: String): Result<Boolean> {
         if (!isNetworkAvailable()) {
             return Result.failure(NetworkError.NoConnection)

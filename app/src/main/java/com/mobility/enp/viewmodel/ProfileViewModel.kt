@@ -120,7 +120,6 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
             } else {
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
-                        Log.d(TAG, "Error while fetching tag serial data")
                         _postDeleteFcmToken.value = SubmitResult.FailureServerError
                     }
 
@@ -131,7 +130,6 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
                     is NetworkError.ApiError -> {
                         _postDeleteFcmToken.value =
                             SubmitResult.FailureApiError(error.errorResponse.message ?: "")
-                        Log.d(TAG, "api error ${error.errorResponse.message}")
                     }
 
                     else -> {}
