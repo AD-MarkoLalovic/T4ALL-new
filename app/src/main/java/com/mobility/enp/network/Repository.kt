@@ -39,29 +39,6 @@ object Repository {
         return RestClient.create(ApiService::class.java, token).apiService
     }
 
-
-    //updated
-    fun deleteFirebaseToken(auth: String, fcmToken: String, errorBody: MutableLiveData<ErrorBody>) {
-        val call = apiService(auth).deleteFirebaseToken(fcmToken)
-        call.enqueue(object : Callback<HomePageFcmTokenResponse> {
-            override fun onResponse(
-                call: Call<HomePageFcmTokenResponse>, response: Response<HomePageFcmTokenResponse>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d(TAG, "fcmToken is deleted : ${response.isSuccessful}")
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<HomePageFcmTokenResponse>, t: Throwable) {
-                Log.d(TAG, "Fcm token onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
-    }
-
-
     // updated
     suspend fun getUserPersonalInfo(
         token: String?
