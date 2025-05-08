@@ -353,6 +353,7 @@
     <string name="field_bank_account_isrequired">Полето жиро сметка треба да содржи 13 цифри.</string>
     <string name="access_denied">Пристапот е одбиен</string>
     <string name="only_t4all_users_access_denied">Во моментов не е можно да се најават налози кои не се T4All. Ве молиме користете го WEB порталот.</string>
-
+    <string name="notification_login_title">Известување</string>
+    <string name="notification_login_subtitle">Апликацијата моментално е во бета фаза на развој.&#10;Некои функционалности сè уште се во изработка.&#10;Ви благодариме за разбирањето!</string>
 
 </resources>

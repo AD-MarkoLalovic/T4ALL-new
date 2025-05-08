@@ -346,4 +346,6 @@
     <string name="field_bank_account_isrequired">The bank account field must contain 13 digits.</string>
     <string name="access_denied">Access denied</string>
     <string name="only_t4all_users_access_denied">It is currently not possible to log in accounts that are not T4All. Please use the WEB portal.</string>
+    <string name="notification_login_title">Notification</string>
+    <string name="notification_login_subtitle">The app is currently in beta development phase.&#10;Some features are still being developed.&#10;Thank you for your understanding!</string>
 </resources>
