@@ -351,6 +351,6 @@
     <string name="access_denied">Pristup odbijen</string>
     <string name="only_t4all_users_access_denied">Trenutno nije moguće da se uloguju nalozi koji nisu T4All. Molimo vas da koristite WEB portal.</string>
     <string name="notification_login_title">Obavijest</string>
-    <string name="notification_login_subtitle">Aplikacija je trenutno u beta fazi razvoja.&#10;Neke funkcionalnosti su još u izradi.&#10;Hvala na razumijevanju!</string>
+    <string name="notification_login_subtitle">Aplikacija je trenutno u beta fazi razvoja. Neke funkcionalnosti su još u izradi. Hvala na razumijevanju!</string>
 
 </resources>

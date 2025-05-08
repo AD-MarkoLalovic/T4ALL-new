@@ -421,6 +421,11 @@
             app:argType="string"
             app:nullable="true" />
     </dialog>
+    <dialog
+        android:id="@+id/loginNotificationDialog"
+        android:name="com.mobility.enp.view.dialogs.LoginNotificationDialog"
+        tools:layout="@layout/login_notification_dialog"
+        android:label="LoginNotificationDialog" /><action android:id="@+id/action_global_loginNotificationDialog" app:destination="@id/loginNotificationDialog"/>
 
 
 </navigation>

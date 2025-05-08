@@ -366,5 +366,5 @@
     <string name="access_denied">Zugriff verweigert</string>
     <string name="only_t4all_users_access_denied">Es ist derzeit nicht möglich, sich mit Konten anzumelden, die nicht T4All sind. Bitte verwenden Sie das WEB-Portal</string>
     <string name="notification_login_title">Benachrichtigung</string>
-    <string name="notification_login_subtitle">Die App befindet sich derzeit in der Beta-Entwicklungsphase.&#10;Einige Funktionen werden noch entwickelt.&#10;Vielen Dank für Ihr Verständnis!</string>
+    <string name="notification_login_subtitle">Die App befindet sich derzeit in der Beta-Entwicklungsphase. Einige Funktionen werden noch entwickelt. Vielen Dank für Ihr Verständnis!</string>
 </resources>

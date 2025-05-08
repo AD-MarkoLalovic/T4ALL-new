@@ -44,13 +44,12 @@ class LoginNotificationDialog() : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.changeProfilePictureDialogClose.setOnClickListener {
+            dialog?.dismiss()
+        }
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
             franchiseModel?.let { model ->
-                model.franchisePrimaryColor.let { color ->
-                    binding.txChangeProfilePicture.setTextColor(color)
-                    binding.txContentDialogChangeProfilePicture.setTextColor(color)
-                }
                 binding.changeProfilePictureDialogClose.setImageResource(model.franchiseCloseButton)
             }
 
@@ -60,7 +59,7 @@ class LoginNotificationDialog() : DialogFragment() {
     override fun onStart() {
         super.onStart()
         setDimensionsPercent(95)
-        isCancelable = false
+        isCancelable = true
     }
 
     override fun onDestroyView() {
