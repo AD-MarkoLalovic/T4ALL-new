@@ -10,12 +10,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.network.Repository
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
-import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,6 +37,10 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
     private val _postDeleteFcmToken =
         MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Empty)
     val postDeleteFcmToken: StateFlow<SubmitResult<Boolean>> get() = _postDeleteFcmToken
+
+    private val _postLogoutUser =
+        MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Empty)
+    val postLogoutUser: StateFlow<SubmitResult<Boolean>> get() = _postLogoutUser
 
     private val _userInfo = MutableLiveData<String?>()
     val userInfo: LiveData<String?> get() = _userInfo
@@ -107,8 +109,8 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
         _postDeleteFcmToken.value = SubmitResult.Loading
         val fcmToken = repository.getFcmData()
 
-        fcmToken?.fcm_token?.let { fcmToken ->
-            var result = repository.deleteFirebaseToken(fcmToken)
+        fcmToken?.fcm_token?.let { token ->
+            var result = repository.deleteFirebaseToken(token)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -139,11 +141,37 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
 
     }
 
+
     suspend fun postLogoutUser(
-        errorBody: MutableLiveData<ErrorBody>
     ) {
-        val userToken = getUserToken()
-        Repository.logoutUser(userToken, errorBody)
+        _postLogoutUser.value = SubmitResult.Loading
+        val result = repository.logoutUser()
+        if (result.isSuccess) {
+            val data = result.getOrNull()
+            if (data == null) {
+                _postLogoutUser.value = SubmitResult.Empty
+            } else {
+                _postLogoutUser.value =
+                    SubmitResult.Success(data)
+            }
+        } else {
+            when (val error = result.exceptionOrNull()) {
+                is NetworkError.ServerError -> {
+                    _postLogoutUser.value = SubmitResult.FailureServerError
+                }
+
+                is NetworkError.NoConnection -> {
+                    _postLogoutUser.value = SubmitResult.FailureNoConnection
+                }
+
+                is NetworkError.ApiError -> {
+                    _postLogoutUser.value =
+                        SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                }
+
+                else -> {}
+            }
+        }
     }
 
     fun deleteProfilePicture() {

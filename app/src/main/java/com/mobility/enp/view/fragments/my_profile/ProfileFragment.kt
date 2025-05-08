@@ -7,13 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -22,7 +20,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.databinding.FragmentProfileBinding
 import com.mobility.enp.util.ImageRepository
 import com.mobility.enp.util.SubmitResult
@@ -41,7 +38,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
     private val binding: FragmentProfileBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModelProfile: ProfileViewModel by viewModels { ProfileViewModel.Factory }
-    private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
 
     private val imageRepository: ImageRepository by lazy {
         ImageRepository(requireContext())
@@ -61,8 +57,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        errorBody = MutableLiveData()
 
         setObserver()
         setCurrentVersion()
@@ -101,7 +95,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
             viewLifecycleOwner.lifecycleScope.launch {
                 // added internet check if no internet just logout without token delete
                 viewModelProfile.deleteFirebaseToken()  // this deletes from server
-                viewModelProfile.postLogoutUser(errorBody)
+                viewModelProfile.postLogoutUser()
 
                 viewModelProfile.logout() // this deletes room local
                 franchiseViewModel.deleteData() // this deletes stored object as it will persist on logout otherwise
@@ -183,6 +177,33 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
         }
 
+        collectLatestLifecycleFlow(viewModelProfile.postLogoutUser) { flow ->
+
+            when (flow) {
+                is SubmitResult.Success -> {
+                    logMessage("Server logged out user")
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    logMessage(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    logMessage(flow.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    logMessage(flow.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {
+                    SubmitResult.Empty
+                }
+            }
+
+        }
+
         viewModelProfile.displayName.observe(viewLifecycleOwner) { displayName ->
             binding.userName.text = displayName
             viewLifecycleOwner.lifecycleScope.launch {
@@ -198,19 +219,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 binding.bttChangeProfilePicture.setImageResource(model.franchisePlusButton)
                 binding.imageProfile.setBackgroundResource(data.franchiseProfilePictureResource)
                 binding.userName.setTextColor(data.homePageWelcomeTextColor)
-            }
-        }
-
-        errorBody.observe(viewLifecycleOwner) { errorBody ->
-            context?.let { context ->
-                Toast.makeText(
-                    context,
-                    errorBody.errorBody,
-                    Toast.LENGTH_SHORT
-                ).show()
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
-                }
             }
         }
 
