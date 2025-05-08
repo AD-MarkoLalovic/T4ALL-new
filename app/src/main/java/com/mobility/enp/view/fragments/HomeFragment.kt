@@ -66,8 +66,6 @@ class HomeFragment : Fragment() {
         setupAdapters()
         setupClickListeners()
 
-        findNavController().navigate(R.id.loginNotificationDialog)
-
         (activity as MainActivity).showNavBar()
 
         viewModel.fetchHomeData()
@@ -140,6 +138,13 @@ class HomeFragment : Fragment() {
                 binding.linearHomeContainer.visibility = View.VISIBLE
                 binding.cardViewAccountHomeScreen.visibility = View.VISIBLE
                 binding.imageAccountHomeScreen.visibility = View.VISIBLE
+
+                franchiseViewModel.getLoginDialogEnabled()?.let { bool ->
+                    if (bool) {
+                        franchiseViewModel.setEnableLoginDialog(false)
+                        findNavController().navigate(R.id.loginNotificationDialog)
+                    }
+                }
             }
 
             is SubmitResult.Empty -> {}

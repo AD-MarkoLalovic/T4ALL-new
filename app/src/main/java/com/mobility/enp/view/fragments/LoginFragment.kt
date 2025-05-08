@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,6 +26,7 @@ import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.view.dialogs.LanguageDialog
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.LoginState
 import com.mobility.enp.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
@@ -35,6 +37,7 @@ class LoginFragment : Fragment() {
     private val binding: FragmentLoginBinding get() = _binding!!
 
     private val loginViewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels() { FranchiseViewModel.Factory }
 
     private lateinit var userName: String
     private lateinit var userPassword: String
@@ -57,6 +60,8 @@ class LoginFragment : Fragment() {
         setObservers()
 
         passwordVisibility()
+
+        franchiseViewModel.setEnableLoginDialog(true)
 
         if (BuildConfig.DEBUG) {
             binding.editEmail.setText(BuildConfig.TEST_USERNAME)
