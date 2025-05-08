@@ -46,28 +46,6 @@ object Repository {
         return apiService(token).getUserPersonalData()
     }
 
-    fun logoutUser(
-        token: String?, errorBody: MutableLiveData<ErrorBody>
-    ) {
-        val call = apiService(token).postLogoutUser()
-        call.enqueue(object : Callback<HomePageFcmTokenResponse> {
-            override fun onResponse(
-                call: Call<HomePageFcmTokenResponse>, response: Response<HomePageFcmTokenResponse>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d(TAG, "user has been logged out : ${response.isSuccessful}")
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<HomePageFcmTokenResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
-    }
-
     //updated
     fun changePassword(
         request: ChangePasswordRequest,

@@ -48,8 +48,8 @@ interface ApiService {
     ): Response<UserResponse>
 
     @POST("/api/v1/logout")
-    fun postLogoutUser(
-    ): Call<HomePageFcmTokenResponse>
+    suspend fun postLogoutUser(
+    ): Response<HomePageFcmTokenResponse>
 
     //new api for home
     @GET("/api/v1/home")
