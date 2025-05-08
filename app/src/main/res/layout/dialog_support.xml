@@ -32,9 +32,7 @@
                 android:textColor="@color/primary_light_darkest"
                 android:layout_marginTop="@dimen/dimens_6dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/supportDialogClose"
-                app:layout_constraintBottom_toBottomOf="@+id/supportDialogClose"
-                />
+                app:layout_constraintTop_toBottomOf="@+id/supportDialogClose" />
 
             <TextView
                 android:id="@+id/txSupportDialogSubtitle"
