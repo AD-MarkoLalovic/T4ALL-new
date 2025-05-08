@@ -19,7 +19,6 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
-import com.mobility.enp.BuildConfig
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
@@ -68,6 +67,7 @@ class HomeFragment : Fragment() {
         setupClickListeners()
 
         (activity as MainActivity).showNavBar()
+
         viewModel.fetchHomeData()
     }
 
@@ -138,6 +138,13 @@ class HomeFragment : Fragment() {
                 binding.linearHomeContainer.visibility = View.VISIBLE
                 binding.cardViewAccountHomeScreen.visibility = View.VISIBLE
                 binding.imageAccountHomeScreen.visibility = View.VISIBLE
+
+                franchiseViewModel.getLoginDialogEnabled()?.let { bool ->
+                    if (bool) {
+                        franchiseViewModel.setEnableLoginDialog(false)
+                        findNavController().navigate(R.id.loginNotificationDialog)
+                    }
+                }
             }
 
             is SubmitResult.Empty -> {}
@@ -229,10 +236,12 @@ class HomeFragment : Fragment() {
         homePromotionsAdapter = HomePromotionsAdapter(
             onItemClicked = { card ->
                 if (card.additionEnabled == true) {
-                    val action = HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment(card.code)
+                    val action =
+                        HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment(card.code)
                     findNavController().navigate(action)
                 } else {
-                    val action = HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment("RS")
+                    val action =
+                        HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment("RS")
                     findNavController().navigate(action)
                 }
 
@@ -246,11 +255,12 @@ class HomeFragment : Fragment() {
 
                 adapterProgress.submitList(newList.indices.toList()) {
                     if (newList.isNotEmpty()) {
-                        val newCheckedPosition = if (adapterProgress.checkedPosition >= newList.size) {
-                            newList.lastIndex
-                        } else {
-                            adapterProgress.checkedPosition
-                        }
+                        val newCheckedPosition =
+                            if (adapterProgress.checkedPosition >= newList.size) {
+                                newList.lastIndex
+                            } else {
+                                adapterProgress.checkedPosition
+                            }
                         adapterProgress.setCurrentDot(newCheckedPosition)
                     }
                 }

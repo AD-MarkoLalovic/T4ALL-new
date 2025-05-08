@@ -344,5 +344,6 @@
     <string name="field_bank_account_isrequired">Το πεδίο του τραπεζικού λογαριασμού πρέπει να περιέχει 13 ψηφία.</string>
     <string name="access_denied">Πρόσβαση απορρίφθηκε</string>
     <string name="only_t4all_users_access_denied">Αυτή τη στιγμή δεν είναι δυνατή η σύνδεση λογαριασμών που δεν είναι T4All. Παρακαλούμε χρησιμοποιήστε την ΙΣΤΟΣΕΛΙΔΑ.</string>
-
+    <string name="notification_login_title">Ειδοποίηση</string>
+    <string name="notification_login_subtitle">Η εφαρμογή βρίσκεται επί του παρόντος σε φάση ανάπτυξης beta. Ορισμένες λειτουργίες είναι ακόμη υπό κατασκευή. Ευχαριστούμε για την κατανόησή σας!</string>
 </resources>

@@ -109,6 +109,7 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
                 val homeCardsEntity = homeCardsResult.getOrNull()
                 _homeCards.value = homeCardsEntity
             }
+
         }
     }
 
