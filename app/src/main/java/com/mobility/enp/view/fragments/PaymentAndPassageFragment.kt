@@ -319,8 +319,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 availableCountries.add("RS")
             }
 
-            availableCountries.add("HR")
-
             // Mapiranje kodova zemalja u string resurse
             val countryMapping = mapOf(
                 "All" to R.string.all_country,
