@@ -76,6 +76,27 @@
                     android:text="@string/text_add_card"
                     android:visibility="gone" />
 
+                <TextView
+                    android:id="@+id/txCroatiaText"
+                    style="@style/ParagraphMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_34dp"
+                    android:layout_marginBottom="28dp"
+                    android:text="@string/croatia_no_card_text"
+                    android:visibility="gone" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/txCroatiaWebLink"
+                    style="@style/ParagraphMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_34dp"
+                    android:layout_marginBottom="28dp"
+                    android:text="@string/croatia_register_link"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvCreditCard"
                     android:layout_width="match_parent"
@@ -94,8 +115,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/dimens_5dp"
                     android:visibility="gone"
-                    tools:visibility="visible"
-                    >
+                    tools:visibility="visible">
 
                     <CheckBox
                         android:id="@+id/termsConditionsCheckmark"
@@ -105,15 +125,15 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:layout_marginStart="@dimen/dimens_10dp"
                         android:id="@+id/tvTerms"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimens_10dp"
                         android:clickable="true"
                         android:focusable="true"
+                        android:textAlignment="textStart"
                         android:textColor="@color/black"
                         android:textSize="16sp"
-                        android:textAlignment="textStart"
                         app:layout_constraintBottom_toBottomOf="@id/termsConditionsCheckmark"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/termsConditionsCheckmark"
