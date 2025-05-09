@@ -224,7 +224,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 val colorStateList = ColorStateList(states, colors)
                 binding.termsConditionsCheckmark.buttonTintList = colorStateList
-            }?: run {
+            } ?: run {
                 val states = arrayOf(
                     intArrayOf(android.R.attr.state_checked),  // When switch is ON
                     intArrayOf(-android.R.attr.state_checked) // When switch is OFF
@@ -298,12 +298,15 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 availableCountries.add("RS")
             }
 
+            availableCountries.add("HR")
+
             // Mapiranje kodova zemalja u string resurse
             val countryMapping = mapOf(
                 "All" to R.string.all_country,
                 "RS" to R.string.serbia,
                 "MK" to R.string.macedonia,
-                "ME" to R.string.montenegro
+                "ME" to R.string.montenegro,
+                "HR" to R.string.croatia
             )
 
             // Filtrirajte zemlje koje postoje u availableCountries ili "All"
@@ -318,6 +321,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 val isClickable = when (code) {
                     "All" -> true
                     "RS" -> true // Srbija je uvek klikabilna
+                    "HR" -> true
                     else -> cardWebResponse.data?.hasSerbianCard
                 }
 
@@ -470,6 +474,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             "RS" -> {
                 selectedCountry = "RS"
                 binding.termsConditionsCheckmark.isChecked = false
+                binding.txCroatiaText.visibility = View.GONE
                 filterCardsByCountry("RS")
                 setBlockVisibility(false)
                 setCardVisibility(true)
@@ -482,6 +487,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
+                binding.txCroatiaText.visibility = View.GONE
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
@@ -491,15 +497,17 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
+                binding.txCroatiaText.visibility = View.GONE
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
             "HR" -> {
                 selectedCountry = "HR"
                 filterCardsByCountry("HR")
-                setBlockVisibility(true)
-                setCardVisibility(true)
+                setBlockVisibility(false)
+                setCardVisibility(false)
                 makeCardClickable(false)
+                binding.txCroatiaText.visibility = View.VISIBLE
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
@@ -508,6 +516,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setCardVisibility(false)
                 makeCardClickable(false)
                 selectedCountry = "All"
+                binding.txCroatiaText.visibility = View.GONE
                 adapter.updateListCards(allCards)
                 if (viewModel.getCardDataFlow.value != SubmitResult.Loading) {
                     binding.txNoCards.visibility =

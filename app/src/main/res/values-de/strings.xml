@@ -367,4 +367,5 @@
     <string name="only_t4all_users_access_denied">Es ist derzeit nicht möglich, sich mit Konten anzumelden, die nicht T4All sind. Bitte verwenden Sie das WEB-Portal</string>
     <string name="notification_login_title">Benachrichtigung</string>
     <string name="notification_login_subtitle">Die App befindet sich derzeit in der Beta-Entwicklungsphase. Einige Funktionen werden noch entwickelt. Vielen Dank für Ihr Verständnis!</string>
+    <string name="croatia_no_card_text">\tDie Registrierung von Tags für die Republik Kroatien ist derzeit nur über das Webportal möglich.</string>
 </resources>
