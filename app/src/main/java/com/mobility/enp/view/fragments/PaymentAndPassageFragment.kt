@@ -18,7 +18,9 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mobility.enp.R
@@ -76,6 +78,13 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         setListener()
 
         viewModel.fetchCardFlow()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                delay(2000)
+                binding.loadingCards.visibility = View.GONE
+            }
+        }
     }
 
 
@@ -706,9 +715,5 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         super.onResume()
         binding.termsConditionsCheckmark.isChecked = false
         setCountryListener(selectedCountry)
-        lifecycleScope.launch {
-            delay(2000)
-            binding.loadingCards.visibility = View.GONE
-        }
     }
 }
