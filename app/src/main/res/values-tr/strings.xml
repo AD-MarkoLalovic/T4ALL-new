@@ -358,4 +358,5 @@
     <string name="notification_login_title">Bildirim</string>
     <string name="notification_login_subtitle">Uygulama şu anda beta geliştirme aşamasındadır. Bazı özellikler hâlâ geliştirilmektedir. Anlayışınız için teşekkür ederiz!</string>
     <string name="croatia_no_card_text">\tHırvatistan Cumhuriyeti için etiket kaydı şu anda yalnızca web portalı üzerinden yapılabilmektedir.</string>
+    <string name="croatia_register_link">Kayıt olmak için buraya tıklayın</string>
 </resources>

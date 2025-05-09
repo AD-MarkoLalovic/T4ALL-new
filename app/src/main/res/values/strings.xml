@@ -408,5 +408,6 @@
     <string name="notification_login_title">Обавештење</string>
     <string name="notification_login_subtitle">Апликација је тренутно у бета фази развоја. Неке функционалности су још у изради. Хвала на разумевању!</string>
     <string name="croatia_no_card_text">Регистрација тагова за Републику Хрватску је тренутно могућа искључиво преко веб портала.</string>
+    <string name="croatia_register_link">Кликните овде за регистрацију</string>
 
 </resources>

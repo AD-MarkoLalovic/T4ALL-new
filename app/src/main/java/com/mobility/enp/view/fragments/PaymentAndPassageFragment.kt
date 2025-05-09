@@ -475,6 +475,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 selectedCountry = "RS"
                 binding.termsConditionsCheckmark.isChecked = false
                 binding.txCroatiaText.visibility = View.GONE
+                binding.txCroatiaWebLink.visibility = View.GONE
                 filterCardsByCountry("RS")
                 setBlockVisibility(false)
                 setCardVisibility(true)
@@ -488,6 +489,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setCardVisibility(true)
                 makeCardClickable(false)
                 binding.txCroatiaText.visibility = View.GONE
+                binding.txCroatiaWebLink.visibility = View.GONE
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
@@ -498,6 +500,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setCardVisibility(true)
                 makeCardClickable(false)
                 binding.txCroatiaText.visibility = View.GONE
+                binding.txCroatiaWebLink.visibility = View.GONE
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
@@ -507,7 +510,9 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(false)
                 setCardVisibility(false)
                 makeCardClickable(false)
+                binding.txNoCards.visibility = View.GONE
                 binding.txCroatiaText.visibility = View.VISIBLE
+                binding.txCroatiaWebLink.visibility = View.VISIBLE
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
@@ -517,6 +522,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 makeCardClickable(false)
                 selectedCountry = "All"
                 binding.txCroatiaText.visibility = View.GONE
+                binding.txCroatiaWebLink.visibility = View.GONE
                 adapter.updateListCards(allCards)
                 if (viewModel.getCardDataFlow.value != SubmitResult.Loading) {
                     binding.txNoCards.visibility =
