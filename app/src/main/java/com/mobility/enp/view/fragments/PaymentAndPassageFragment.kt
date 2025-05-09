@@ -232,6 +232,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 val colorStateList = ColorStateList(states, colors)
                 binding.termsConditionsCheckmark.buttonTintList = colorStateList
+                binding.txCroatiaWebLink.backgroundTintList =
+                    ColorStateList.valueOf(color)
             } ?: run {
                 val states = arrayOf(
                     intArrayOf(android.R.attr.state_checked),  // When switch is ON
@@ -249,6 +251,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 val colorStateList = ColorStateList(states, colors)
                 binding.termsConditionsCheckmark.buttonTintList = colorStateList
+                binding.txCroatiaWebLink.backgroundTintList =
+                    ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
             }
         }
     }
@@ -658,12 +662,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 franchiseModel?.franchisePrimaryColor?.let {
                     binding.bttAddCard.backgroundTintList =
                         ColorStateList.valueOf(it)
-                    binding.txCroatiaWebLink.backgroundTintList =
-                        ColorStateList.valueOf(it)
                 } ?: run {
                     binding.bttAddCard.backgroundTintList =
-                        ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
-                    binding.txCroatiaWebLink.backgroundTintList =
                         ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
                 }
             }
