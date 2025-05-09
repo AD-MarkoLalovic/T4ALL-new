@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.SpannableString
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -53,6 +55,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private var allCards: List<Card> = emptyList()
     private val args: PaymentAndPassageFragmentArgs by navArgs()
     private var selectedCountry: String = "All"
+    private var croatiaWebLink: String = "https://toll4all.com/login"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -209,6 +212,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+
+            franchiseModel?.franchiseCroatiaLoginLink?.let { link ->
+                croatiaWebLink = link
+            }
+
             franchiseModel?.franchisePrimaryColor?.let { color ->
                 val states = arrayOf(
                     intArrayOf(android.R.attr.state_checked),  // When switch is ON
@@ -373,6 +381,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun setListener() {
+        binding.txCroatiaWebLink.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, croatiaWebLink.toUri())
+            startActivity(intent)
+        }
         binding.termsConditionsCheckmark.setOnCheckedChangeListener { _, isChecked ->
             when (isChecked) {
                 true -> {
@@ -690,5 +702,9 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         super.onResume()
         binding.termsConditionsCheckmark.isChecked = false
         setCountryListener(selectedCountry)
+        lifecycleScope.launch {
+            delay(2000)
+            binding.loadingCards.visibility = View.GONE
+        }
     }
 }
