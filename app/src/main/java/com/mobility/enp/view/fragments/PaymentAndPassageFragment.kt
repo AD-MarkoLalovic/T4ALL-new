@@ -18,7 +18,9 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mobility.enp.R
@@ -76,6 +78,13 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         setListener()
 
         viewModel.fetchCardFlow()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                delay(2000)
+                binding.loadingCards.visibility = View.GONE
+            }
+        }
     }
 
 
@@ -232,6 +241,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 val colorStateList = ColorStateList(states, colors)
                 binding.termsConditionsCheckmark.buttonTintList = colorStateList
+                binding.txCroatiaWebLink.backgroundTintList =
+                    ColorStateList.valueOf(color)
             } ?: run {
                 val states = arrayOf(
                     intArrayOf(android.R.attr.state_checked),  // When switch is ON
@@ -249,6 +260,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 val colorStateList = ColorStateList(states, colors)
                 binding.termsConditionsCheckmark.buttonTintList = colorStateList
+                binding.txCroatiaWebLink.backgroundTintList =
+                    ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
             }
         }
     }
@@ -305,8 +318,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             if (cardWebResponse.data?.isFranchiser == false) {  // if serbia is not a franshizer then it gets shown
                 availableCountries.add("RS")
             }
-
-            availableCountries.add("HR")
 
             // Mapiranje kodova zemalja u string resurse
             val countryMapping = mapOf(
@@ -658,12 +669,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 franchiseModel?.franchisePrimaryColor?.let {
                     binding.bttAddCard.backgroundTintList =
                         ColorStateList.valueOf(it)
-                    binding.txCroatiaWebLink.backgroundTintList =
-                        ColorStateList.valueOf(it)
                 } ?: run {
                     binding.bttAddCard.backgroundTintList =
-                        ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
-                    binding.txCroatiaWebLink.backgroundTintList =
                         ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
                 }
             }
@@ -706,9 +713,5 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         super.onResume()
         binding.termsConditionsCheckmark.isChecked = false
         setCountryListener(selectedCountry)
-        lifecycleScope.launch {
-            delay(2000)
-            binding.loadingCards.visibility = View.GONE
-        }
     }
 }
