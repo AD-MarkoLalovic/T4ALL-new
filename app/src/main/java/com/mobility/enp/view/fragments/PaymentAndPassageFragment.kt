@@ -658,8 +658,12 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 franchiseModel?.franchisePrimaryColor?.let {
                     binding.bttAddCard.backgroundTintList =
                         ColorStateList.valueOf(it)
+                    binding.txCroatiaWebLink.backgroundTintList =
+                        ColorStateList.valueOf(it)
                 } ?: run {
                     binding.bttAddCard.backgroundTintList =
+                        ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
+                    binding.txCroatiaWebLink.backgroundTintList =
                         ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
                 }
             }
