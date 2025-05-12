@@ -348,7 +348,7 @@
     <string name="only_t4all_users_access_denied">Trenutno nije moguće da se uloguju nalozi koji nisu T4All. Molimo vas da koristite WEB portal.</string>
     <string name="notification_login_title">Obavještenje</string>
     <string name="notification_login_subtitle">Aplikacija je trenutno u beta fazi razvoja. Neke funkcionalnosti su još u izradi. Hvala na razumijevanju!</string>
-    <string name="croatia_no_card_text">Registracija tagova za Republiku Hrvatsku trenutno je moguća isključivo putem web portala.</string>
-    <string name="croatia_register_link">Kliknite ovdje za registraciju</string>
+    <string name="tag_registration_instruction_hr">Za registraciju tagova u Hrvatskoj potrebno je da odaberete koje tagove želite da registrujete i da kliknete na dugme „Registracija“.</string>
+    <string name="notes_serbian_tag_in_croatia">"Napomene za korištenje srpskog TAG uređaja u Republici Hrvatskoj  "</string>
 
 </resources>

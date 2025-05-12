@@ -357,6 +357,6 @@
     <string name="only_t4all_users_access_denied">Şu anda T4All olmayan hesaplara giriş yapılamaz. Lütfen WEB portalını kullanın.</string>
     <string name="notification_login_title">Bildirim</string>
     <string name="notification_login_subtitle">Uygulama şu anda beta geliştirme aşamasındadır. Bazı özellikler hâlâ geliştirilmektedir. Anlayışınız için teşekkür ederiz!</string>
-    <string name="croatia_no_card_text">Hırvatistan Cumhuriyeti için etiket kaydı şu anda yalnızca web portalı üzerinden yapılabilmektedir.</string>
-    <string name="croatia_register_link">Kayıt olmak için buraya tıklayın</string>
+    <string name="tag_registration_instruction_hr">"Hırvatistan'da etiketleri kaydetmek için, kaydetmek istediğiniz etiketleri seçip “Kayıt” düğmesine tıklamanız gerekmektedir.  "</string>
+    <string name="notes_serbian_tag_in_croatia">"Hırvatistan Cumhuriyeti'nde Sırp TAG cihazının kullanımıyla ilgili notlar  "</string>
 </resources>
