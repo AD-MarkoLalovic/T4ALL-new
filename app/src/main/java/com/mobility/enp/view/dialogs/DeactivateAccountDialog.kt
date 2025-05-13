@@ -115,16 +115,6 @@ class DeactivateAccountDialog : DialogFragment() {
         }
     }
 
-
-    private fun openSuccessDialog() {
-        val generalDialog =
-            GeneralMessageDialog(
-                requireContext().getString(R.string.support_successful_mail),
-                requireContext().getString(R.string.support_successful_massage)
-            )
-        generalDialog.show(childFragmentManager, "GeneralDialogSupport")
-    }
-
     private fun setObserversError() {
         collectLatestLifecycleFlow(viewModel.deactivateAccount) { flow ->
             when (flow) {
@@ -135,8 +125,7 @@ class DeactivateAccountDialog : DialogFragment() {
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
                     dialog?.dismiss()
-                    openSuccessDialog()
-                    Log.d(TAG, "deactivation response: ${flow.data}")
+                    franchiseViewModel.postOpenDialog(true)
                 }
 
                 is SubmitResult.FailureServerError -> {
