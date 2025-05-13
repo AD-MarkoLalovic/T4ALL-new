@@ -89,6 +89,7 @@ class SupportViewModel(private val repository: ProfileRepository) : ViewModel() 
     ) {
         if (repository.isNetworkAvail()) {
             viewModelScope.launch(Dispatchers.IO) {
+                _deactivateAccount.value = SubmitResult.Loading
                 val result = repository.postDeactivateAccount(pair)
 
                 if (result.isSuccess) {

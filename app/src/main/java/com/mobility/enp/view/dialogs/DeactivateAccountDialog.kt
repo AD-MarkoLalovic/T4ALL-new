@@ -58,7 +58,6 @@ class DeactivateAccountDialog : DialogFragment() {
             val email = binding.enterEmailAccount.text.toString().trim()
             if (enteredText.isNotEmpty() && email.isNotEmpty()) {
                 if (Util.isValidEmail(email)) {
-                    binding.progBar.visibility = View.VISIBLE
                     viewModel.sendDeactivationRequest(pair = Pair(email, enteredText))
                 } else {
                     val toastContext = requireContext()
@@ -129,11 +128,15 @@ class DeactivateAccountDialog : DialogFragment() {
     private fun setObserversError() {
         collectLatestLifecycleFlow(viewModel.deactivateAccount) { flow ->
             when (flow) {
+                is SubmitResult.Loading ->{
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
-                    Log.d(TAG, "deactivation response: ${flow.data}")
                     dialog?.dismiss()
                     openSuccessDialog()
+                    Log.d(TAG, "deactivation response: ${flow.data}")
                 }
 
                 is SubmitResult.FailureServerError -> {
@@ -142,6 +145,7 @@ class DeactivateAccountDialog : DialogFragment() {
 
                 is SubmitResult.FailureApiError -> {
                     logMessage(flow.errorMessage)
+                    Toast.makeText(requireContext(), flow.errorMessage, Toast.LENGTH_SHORT).show()
                 }
 
                 is SubmitResult.InvalidApiToken -> {
@@ -178,6 +182,7 @@ class DeactivateAccountDialog : DialogFragment() {
     }
 
     private fun logMessage(message: String) {
+        binding.progBar.visibility = View.GONE
         Log.d(ProfileFragment.Companion.TAG, "deactivateAccountMsg: $message")
     }
 

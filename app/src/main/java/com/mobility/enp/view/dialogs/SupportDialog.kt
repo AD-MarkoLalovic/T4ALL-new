@@ -12,10 +12,8 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.databinding.DialogSupportBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
@@ -31,7 +29,6 @@ class SupportDialog : DialogFragment() {
     private val binding: DialogSupportBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: SupportViewModel by viewModels { SupportViewModel.Factory }
-    private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -140,20 +137,6 @@ class SupportDialog : DialogFragment() {
     }
 
     private fun setObserversError() {
-        errorBody = MutableLiveData()
-        errorBody.observe(viewLifecycleOwner) { errorBody ->
-            context?.let { context ->
-                Toast.makeText(
-                    context,
-                    errorBody.errorBody,
-                    Toast.LENGTH_SHORT
-                ).show()
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
-                }
-            }
-        }
-
         viewModel.checkNetSendSupport.observe(viewLifecycleOwner) { hasInternet ->
             if (hasInternet != null && !hasInternet) {
 
