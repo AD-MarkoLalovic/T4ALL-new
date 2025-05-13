@@ -22,6 +22,14 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
     private val _franchiseModel: MutableLiveData<FranchiseModel?> = MutableLiveData()
     val franchiseModel: LiveData<FranchiseModel?> get() = _franchiseModel
 
+    private val _openSuccessDialog: MutableLiveData<Boolean?> = MutableLiveData()
+    val openSuccessDialog : LiveData<Boolean?> get() = _openSuccessDialog
+
+
+    fun postOpenDialog(bool: Boolean?){
+        _openSuccessDialog.value = bool
+    }
+
     private var enableLoginDialog: Boolean = false
 
     private var isDialogShown = false

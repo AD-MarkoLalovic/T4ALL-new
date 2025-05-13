@@ -19,9 +19,12 @@ import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.databinding.DeactivateDialogBinding
+import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.Util
+import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.view.MainActivity
+import com.mobility.enp.view.fragments.my_profile.ProfileFragment
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.SupportViewModel
 
@@ -30,8 +33,7 @@ class DeactivateAccountDialog : DialogFragment() {
     private var _binding: DeactivateDialogBinding? = null
     private val binding: DeactivateDialogBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
-    private val viewModel: SupportViewModel by viewModels()
-    private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
+    private val viewModel: SupportViewModel by viewModels{ SupportViewModel.Factory }
 
     companion object {
         const val TAG = "DEACTIVATE_ACCOUNT_DIALOG"
@@ -56,8 +58,7 @@ class DeactivateAccountDialog : DialogFragment() {
             val email = binding.enterEmailAccount.text.toString().trim()
             if (enteredText.isNotEmpty() && email.isNotEmpty()) {
                 if (Util.isValidEmail(email)) {
-                    binding.progBar.visibility = View.VISIBLE
-                    viewModel.sendDeactivationRequest(pair = Pair(email, enteredText), errorBody)
+                    viewModel.sendDeactivationRequest(pair = Pair(email, enteredText))
                 } else {
                     val toastContext = requireContext()
                     Toast.makeText(
@@ -114,37 +115,38 @@ class DeactivateAccountDialog : DialogFragment() {
         }
     }
 
-
-    private fun openSuccessDialog() {
-        val generalDialog =
-            GeneralMessageDialog(
-                requireContext().getString(R.string.support_successful_mail),
-                requireContext().getString(R.string.support_successful_massage)
-            )
-        generalDialog.show(childFragmentManager, "GeneralDialogSupport")
-    }
-
     private fun setObserversError() {
-        errorBody = MutableLiveData()
-        errorBody.observe(viewLifecycleOwner) { errorBody ->
-            binding.progBar.visibility = View.GONE
-            context?.let { context ->
-                Toast.makeText(
-                    context, errorBody.errorBody, Toast.LENGTH_SHORT
-                ).show()
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
+        collectLatestLifecycleFlow(viewModel.deactivateAccount) { flow ->
+            when (flow) {
+                is SubmitResult.Loading ->{
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.progBar.visibility = View.GONE
+                    dialog?.dismiss()
+                    franchiseViewModel.postOpenDialog(true)
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    logMessage(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    logMessage(flow.errorMessage)
+                    Toast.makeText(requireContext(), flow.errorMessage, Toast.LENGTH_SHORT).show()
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    logMessage(flow.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {
+                    SubmitResult.Empty
                 }
             }
-        }
 
-        viewModel.deactivateAccount.observe(viewLifecycleOwner) { response ->
-            response.let {
-                binding.progBar.visibility = View.GONE
-                Log.d(TAG, "deactivation response: $response")
-                dialog?.dismiss()
-                openSuccessDialog()
-            }
         }
 
         viewModel.checkNetSendSupport.observe(viewLifecycleOwner) { hasInternet ->
@@ -166,6 +168,11 @@ class DeactivateAccountDialog : DialogFragment() {
 
             }
         }
+    }
+
+    private fun logMessage(message: String) {
+        binding.progBar.visibility = View.GONE
+        Log.d(ProfileFragment.Companion.TAG, "deactivateAccountMsg: $message")
     }
 
     override fun onStart() {

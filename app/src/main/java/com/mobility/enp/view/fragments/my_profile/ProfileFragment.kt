@@ -25,6 +25,7 @@ import com.mobility.enp.util.ImageRepository
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
+import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.view.dialogs.ProfileImagePickerDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.ProfileViewModel
@@ -202,6 +203,18 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 }
             }
 
+        }
+
+        franchiseViewModel.openSuccessDialog.observe(viewLifecycleOwner) { showDialog ->
+            if (showDialog != null && showDialog) {
+                franchiseViewModel.postOpenDialog(null)
+                val generalDialog =
+                    GeneralMessageDialog(
+                        requireContext().getString(R.string.support_successful_mail),
+                        requireContext().getString(R.string.support_successful_massage)
+                    )
+                generalDialog.show(childFragmentManager, "GeneralDialogSupport")
+            }
         }
 
         viewModelProfile.displayName.observe(viewLifecycleOwner) { displayName ->

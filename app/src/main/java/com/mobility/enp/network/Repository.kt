@@ -66,25 +66,7 @@ object Repository {
         })
     }
 
-    // skipped
-    fun sendSupportMessage(
-        request: SupportRequest, token: String?, errorBody: MutableLiveData<ErrorBody>
-    ) {
 
-        val call = apiService(token).sendContactMessage(request)
-        call.enqueue(object : Callback<Unit> {
-
-            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                if (!response.isSuccessful) {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<Unit>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-        })
-    }
 
     suspend fun getInvoices(
         data: MutableLiveData<MyInvoicesResponse>,
@@ -454,27 +436,6 @@ object Repository {
         customerSupport: CustomerSupport
     ): Response<Unit> {
         return apiService("").sendCustomerSupport(customerSupport)
-    }
-
-    suspend fun postDeactivateAccount(
-        pair: Pair<String, String>,
-        errorBody: MutableLiveData<ErrorBody>,
-        data: MutableLiveData<DeactivateAccountModel>,
-        token: String?,
-        application: Application
-    ) {
-        try {
-            val lang = getUserLanguage(application)
-            val response =
-                apiService(token).deactivateAccount(lang, pair.first, pair.second, "127.0.0.1")
-            if (response.isSuccessful) {
-                data.postValue(response.body())
-            } else {
-                errorBody.postValue(getMessageFromErrorBody(response))
-            }
-        } catch (e: HttpException) {
-            Log.d(TAG, "getUserCards: ${e.cause} \n ${e.message}")
-        }
     }
 
     suspend fun sendLanguageKey(token: String?, context: Context) {
