@@ -66,25 +66,7 @@ object Repository {
         })
     }
 
-    // skipped
-    fun sendSupportMessage(
-        request: SupportRequest, token: String?, errorBody: MutableLiveData<ErrorBody>
-    ) {
 
-        val call = apiService(token).sendContactMessage(request)
-        call.enqueue(object : Callback<Unit> {
-
-            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                if (!response.isSuccessful) {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<Unit>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-        })
-    }
 
     suspend fun getInvoices(
         data: MutableLiveData<MyInvoicesResponse>,

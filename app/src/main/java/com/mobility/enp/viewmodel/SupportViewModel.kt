@@ -15,7 +15,11 @@ import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.network.Repository
+import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SubmitResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SupportViewModel(private val repository: ProfileRepository) : ViewModel() {
@@ -24,7 +28,7 @@ class SupportViewModel(private val repository: ProfileRepository) : ViewModel() 
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val myRepository = (this[APPLICATION_KEY] as MyApplication).profileRepository
-                ProfileViewModel(
+                SupportViewModel(
                     repository = myRepository
                 )
             }
@@ -32,8 +36,9 @@ class SupportViewModel(private val repository: ProfileRepository) : ViewModel() 
     }
 
 
-    private val _supportMessageSentLiveData = MutableLiveData<Boolean>()
-    val supportMessageSentLiveData: LiveData<Boolean>
+    private val _supportMessageSentLiveData =
+        MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Empty)
+    val supportMessageSentLiveData: StateFlow<SubmitResult<Boolean>>
         get() = _supportMessageSentLiveData
 
     private val _checkNetSendSupport = MutableLiveData<Boolean>()
@@ -43,19 +48,36 @@ class SupportViewModel(private val repository: ProfileRepository) : ViewModel() 
     val deactivateAccount: LiveData<DeactivateAccountModel> get() = _deactivateAccount
 
 
-    fun sendSupportMessage(message: String, error: MutableLiveData<ErrorBody>) {
+    fun sendSupportMessage(message: String) {
         if (repository.isNetworkAvail()) {
+            _supportMessageSentLiveData.value = SubmitResult.Loading
             viewModelScope.launch {
-                try {
-                    val userToken = repository.userToken()
-                    userToken.let { token ->
-                        val sendMessage = SupportRequest(message)
-                        Repository.sendSupportMessage(sendMessage, token, error)
-                        _supportMessageSentLiveData.postValue(true)
+                val result = repository.sendSupportMessage(SupportRequest(message))
+                if (result.isSuccess) {
+                    val data = result.getOrNull()
+                    if (data == null) {
+                        _supportMessageSentLiveData.value = SubmitResult.Empty
+                    } else {
+                        _supportMessageSentLiveData.value =
+                            SubmitResult.Success(data)
                     }
+                } else {
+                    when (val error = result.exceptionOrNull()) {
+                        is NetworkError.ServerError -> {
+                            _supportMessageSentLiveData.value = SubmitResult.FailureServerError
+                        }
 
-                } catch (e: Exception) {
-                    _supportMessageSentLiveData.postValue(false)
+                        is NetworkError.NoConnection -> {
+                            _supportMessageSentLiveData.value = SubmitResult.FailureNoConnection
+                        }
+
+                        is NetworkError.ApiError -> {
+                            _supportMessageSentLiveData.value =
+                                SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                        }
+
+                        else -> {}
+                    }
                 }
             }
         } else {
@@ -63,7 +85,11 @@ class SupportViewModel(private val repository: ProfileRepository) : ViewModel() 
         }
     }
 
-    fun sendDeactivationRequest(pair: Pair<String, String>, error: MutableLiveData<ErrorBody>,context: Context) {
+    fun sendDeactivationRequest(
+        pair: Pair<String, String>,
+        error: MutableLiveData<ErrorBody>,
+        context: Context
+    ) {
         if (repository.isNetworkAvail()) {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
@@ -75,7 +101,7 @@ class SupportViewModel(private val repository: ProfileRepository) : ViewModel() 
                     }
 
                 } catch (e: Exception) {
-                    _supportMessageSentLiveData.postValue(false)
+//                    _supportMessageSentLiveData.postValue(false)
                 }
             }
         } else {

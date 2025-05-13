@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
+import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
@@ -70,7 +71,7 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
                     } ?: Result.failure(NetworkError.ServerError)
                 }
             } catch (e: Exception) {
-                Log.d(TAG, "getIndexData: ${e.message} ${e.cause}")
+                Log.d(TAG, "error: ${e.message} ${e.cause}")
                 Result.failure(NetworkError.ServerError)
             }
         }
@@ -98,12 +99,61 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
                     } ?: Result.failure(NetworkError.ServerError)
                 }
             } catch (e: Exception) {
-                Log.d(TAG, "getIndexData: ${e.message} ${e.cause}")
+                Log.d(TAG, "error: ${e.message} ${e.cause}")
                 Result.failure(NetworkError.ServerError)
             }
         }
 
         return Result.failure(NetworkError.ServerError)
     }
+
+    suspend fun sendSupportMessage(request: SupportRequest): Result<Boolean> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken()
+        userToken?.let { token ->
+            return try {
+                val response = apiService(token).sendContactMessage(request)
+                if (response.isSuccessful) {
+                    response.body()?.let { _ ->
+                        Result.success(true)
+                    } ?: Result.failure(NetworkError.ServerError)
+                } else {
+                    response.errorBody()?.let { errorBody ->
+                        val errorResponse = parseErrorResponse(response.code(), errorBody)
+                        Result.failure(NetworkError.ApiError(errorResponse))
+                    } ?: Result.failure(NetworkError.ServerError)
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "error: ${e.message} ${e.cause}")
+                Result.failure(NetworkError.ServerError)
+            }
+        }
+
+        return Result.failure(NetworkError.ServerError)
+    }
+
+
+    //// skipped
+    //    fun sendSupportMessage(
+    //        request: SupportRequest, token: String?, errorBody: MutableLiveData<ErrorBody>
+    //    ) {
+    //
+    //        val call = apiService(token).sendContactMessage(request)
+    //        call.enqueue(object : Callback<Unit> {
+    //
+    //            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+    //                if (!response.isSuccessful) {
+    //                    errorBody.postValue(getMessageFromErrorBody(response))
+    //                }
+    //            }
+    //
+    //            override fun onFailure(call: Call<Unit>, t: Throwable) {
+    //                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
+    //            }
+    //        })
+    //    }
 
 }

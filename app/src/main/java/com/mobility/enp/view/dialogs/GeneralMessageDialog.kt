@@ -1,5 +1,6 @@
 package com.mobility.enp.view.dialogs
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +10,9 @@ import androidx.fragment.app.DialogFragment
 import com.mobility.enp.databinding.GeneralDialogBinding
 import com.mobility.enp.util.setDimensionsPercent
 import androidx.core.graphics.drawable.toDrawable
+import androidx.fragment.app.activityViewModels
+import com.mobility.enp.viewmodel.FranchiseViewModel
+import kotlin.getValue
 
 class GeneralMessageDialog(
     private val title: String,
@@ -17,6 +21,7 @@ class GeneralMessageDialog(
 
     private var _binding: GeneralDialogBinding? = null
     private val binding: GeneralDialogBinding get() = _binding!!
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
 
     override fun onCreateView(
@@ -33,6 +38,13 @@ class GeneralMessageDialog(
         super.onViewCreated(view, savedInstanceState)
         binding.title.text = title
         binding.subTitle.text = subtitle
+
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.confirmButton.backgroundTintList = ColorStateList.valueOf(color)
+            }
+        }
+
         binding.confirmButton.setOnClickListener {
             dismiss()
         }
