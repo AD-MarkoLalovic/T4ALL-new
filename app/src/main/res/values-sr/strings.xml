@@ -359,4 +359,5 @@
     <string name="notification_login_subtitle">Aplikacija je trenutno u beta fazi razvoja. Neke funkcionalnosti su još u izradi. Hvala na razumevanju!</string>
     <string name="tag_registration_instruction_hr">Za registraciju tagova u Hrvatskoj potrebno je da odaberete koje tagove želite da registrujete i da kliknete na dugme „Registracija“.</string>
     <string name="notes_serbian_tag_in_croatia">"Napomene za korišćenje srpskog TAG-a u Republici Hrvatskoj  "</string>
+    <string name="activation_successful_enp_tag_device">"Uspešno ste izvršili aktivaciju ENP/TAG uređaja.  "</string>
 </resources>

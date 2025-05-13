@@ -359,4 +359,5 @@
     <string name="notification_login_subtitle">Uygulama şu anda beta geliştirme aşamasındadır. Bazı özellikler hâlâ geliştirilmektedir. Anlayışınız için teşekkür ederiz!</string>
     <string name="tag_registration_instruction_hr">"Hırvatistan'da etiketleri kaydetmek için, kaydetmek istediğiniz etiketleri seçip “Kayıt” düğmesine tıklamanız gerekmektedir.  "</string>
     <string name="notes_serbian_tag_in_croatia">"Hırvatistan Cumhuriyeti'nde Sırp TAG cihazının kullanımıyla ilgili notlar  "</string>
+    <string name="activation_successful_enp_tag_device">"OGS cihazı aktive edildi.  "</string>
 </resources>

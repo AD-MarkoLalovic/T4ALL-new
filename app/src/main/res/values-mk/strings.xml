@@ -357,5 +357,6 @@
     <string name="notification_login_subtitle">Апликацијата моментално е во бета фаза на развој. Некои функционалности сè уште се во изработка. Ви благодариме за разбирањето!</string>
     <string name="tag_registration_instruction_hr">За регистрација на тагови во Хрватска, потребно е да изберете кои тагови сакате да ги регистрирате и да кликнете на копчето „Регистрација“.</string>
     <string name="notes_serbian_tag_in_croatia">"Напомени за користење на српскиот ТАГ уред во Република Хрватска  "</string>
+    <string name="activation_successful_enp_tag_device">"Активацијата на ЕНП/ТАГ уредот е успешна.  "</string>
 
 </resources>

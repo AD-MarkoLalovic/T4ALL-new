@@ -350,4 +350,5 @@
     <string name="notification_login_subtitle">The app is currently in beta development phase. Some features are still being developed. Thank you for your understanding!</string>
     <string name="tag_registration_instruction_hr">To register tags in Croatia, you need to select the tags you want to register and click the “Register” button.</string>
     <string name="notes_serbian_tag_in_croatia">"Notes on using the Serbian TAG device in the Republic of Croatia  "</string>
+    <string name="activation_successful_enp_tag_device">"You have successfully activated the ENP/TAG device.  "</string>
 </resources>
