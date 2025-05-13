@@ -19,9 +19,12 @@ import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.databinding.DeactivateDialogBinding
+import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.Util
+import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.view.MainActivity
+import com.mobility.enp.view.fragments.my_profile.ProfileFragment
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.SupportViewModel
 
@@ -31,7 +34,6 @@ class DeactivateAccountDialog : DialogFragment() {
     private val binding: DeactivateDialogBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: SupportViewModel by viewModels{ SupportViewModel.Factory }
-    private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
 
     companion object {
         const val TAG = "DEACTIVATE_ACCOUNT_DIALOG"
@@ -57,7 +59,7 @@ class DeactivateAccountDialog : DialogFragment() {
             if (enteredText.isNotEmpty() && email.isNotEmpty()) {
                 if (Util.isValidEmail(email)) {
                     binding.progBar.visibility = View.VISIBLE
-                    viewModel.sendDeactivationRequest(pair = Pair(email, enteredText), errorBody,requireContext())
+                    viewModel.sendDeactivationRequest(pair = Pair(email, enteredText))
                 } else {
                     val toastContext = requireContext()
                     Toast.makeText(
@@ -125,26 +127,33 @@ class DeactivateAccountDialog : DialogFragment() {
     }
 
     private fun setObserversError() {
-        errorBody = MutableLiveData()
-        errorBody.observe(viewLifecycleOwner) { errorBody ->
-            binding.progBar.visibility = View.GONE
-            context?.let { context ->
-                Toast.makeText(
-                    context, errorBody.errorBody, Toast.LENGTH_SHORT
-                ).show()
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
+        collectLatestLifecycleFlow(viewModel.deactivateAccount) { flow ->
+            when (flow) {
+                is SubmitResult.Success -> {
+                    binding.progBar.visibility = View.GONE
+                    Log.d(TAG, "deactivation response: ${flow.data}")
+                    dialog?.dismiss()
+                    openSuccessDialog()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    logMessage(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    logMessage(flow.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    logMessage(flow.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {
+                    SubmitResult.Empty
                 }
             }
-        }
 
-        viewModel.deactivateAccount.observe(viewLifecycleOwner) { response ->
-            response.let {
-                binding.progBar.visibility = View.GONE
-                Log.d(TAG, "deactivation response: $response")
-                dialog?.dismiss()
-                openSuccessDialog()
-            }
         }
 
         viewModel.checkNetSendSupport.observe(viewLifecycleOwner) { hasInternet ->
@@ -166,6 +175,10 @@ class DeactivateAccountDialog : DialogFragment() {
 
             }
         }
+    }
+
+    private fun logMessage(message: String) {
+        Log.d(ProfileFragment.Companion.TAG, "deactivateAccountMsg: $message")
     }
 
     override fun onStart() {

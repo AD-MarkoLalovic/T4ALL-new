@@ -175,7 +175,7 @@ class SupportDialog : DialogFragment() {
     }
 
     private fun logMessage(message: String) {
-        Log.d(TAG, "logFcmMessage: $message")
+        Log.d(TAG, "sendSupportMsg: $message")
     }
 
     override fun onStart() {

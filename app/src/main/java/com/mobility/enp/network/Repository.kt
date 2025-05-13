@@ -438,27 +438,6 @@ object Repository {
         return apiService("").sendCustomerSupport(customerSupport)
     }
 
-    suspend fun postDeactivateAccount(
-        pair: Pair<String, String>,
-        errorBody: MutableLiveData<ErrorBody>,
-        data: MutableLiveData<DeactivateAccountModel>,
-        token: String?,
-        context: Context
-    ) {
-        try {
-            val lang = getUserLanguage(context)
-            val response =
-                apiService(token).deactivateAccount(lang, pair.first, pair.second, "127.0.0.1")
-            if (response.isSuccessful) {
-                data.postValue(response.body())
-            } else {
-                errorBody.postValue(getMessageFromErrorBody(response))
-            }
-        } catch (e: HttpException) {
-            Log.d(TAG, "getUserCards: ${e.cause} \n ${e.message}")
-        }
-    }
-
     suspend fun sendLanguageKey(token: String?, context: Context) {
         val language = getUserLanguage(context)
         apiService(token).changeLanguage(language)
