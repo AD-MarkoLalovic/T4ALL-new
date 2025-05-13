@@ -19,6 +19,7 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.banks.response.BanksResponse
+import com.mobility.enp.data.model.cards.tags_for_croatia.TagsListResponse
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
@@ -237,6 +238,12 @@ interface ApiService {
 
     @GET("/api/v1/cards/web")
     suspend fun getCreditCardsWeb(@Query("lang") language: String): Response<CardWebModel>
+
+    @GET("/api/v1/tags")
+    suspend fun getTagsForCroatia(
+        @Query("filter[status]") status: Int,
+        @Query("filter[country]") country: String
+    ): Response<TagsListResponse>
 
     @FormUrlEncoded
     @POST("/api/v1/delete-account-request")
