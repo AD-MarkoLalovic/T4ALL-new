@@ -1,22 +1,36 @@
 package com.mobility.enp.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
-import com.mobility.enp.data.room.database.DRoom
+import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.network.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class SupportViewModel(application: Application) : AndroidViewModel(application) {
+class SupportViewModel(private val repository: ProfileRepository) : ViewModel() {
 
-    private val database: DRoom = DRoom.getRoomInstance(application)
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val myRepository = (this[APPLICATION_KEY] as MyApplication).profileRepository
+                ProfileViewModel(
+                    repository = myRepository
+                )
+            }
+        }
+    }
+
 
     private val _supportMessageSentLiveData = MutableLiveData<Boolean>()
     val supportMessageSentLiveData: LiveData<Boolean>
@@ -28,21 +42,12 @@ class SupportViewModel(application: Application) : AndroidViewModel(application)
     private val _deactivateAccount = MutableLiveData<DeactivateAccountModel>()
     val deactivateAccount: LiveData<DeactivateAccountModel> get() = _deactivateAccount
 
-    private suspend fun getUserToken(): String? {
-        return withContext(Dispatchers.IO) {
-            database.loginDao().fetchAllowedUsers().accessToken
-        }
-    }
-
-    private fun isNetworkAvailable(): Boolean {
-        return Repository.isNetworkAvailable(getApplication())
-    }
 
     fun sendSupportMessage(message: String, error: MutableLiveData<ErrorBody>) {
-        if (isNetworkAvailable()) {
+        if (repository.isNetworkAvail()) {
             viewModelScope.launch {
                 try {
-                    val userToken = getUserToken()
+                    val userToken = repository.userToken()
                     userToken.let { token ->
                         val sendMessage = SupportRequest(message)
                         Repository.sendSupportMessage(sendMessage, token, error)
@@ -58,14 +63,14 @@ class SupportViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun sendDeactivationRequest(pair: Pair<String, String>, error: MutableLiveData<ErrorBody>) {
-        if (isNetworkAvailable()) {
+    fun sendDeactivationRequest(pair: Pair<String, String>, error: MutableLiveData<ErrorBody>,context: Context) {
+        if (repository.isNetworkAvail()) {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val userToken = getUserToken()
+                    val userToken = repository.userToken()
                     userToken.let {
                         Repository.postDeactivateAccount(
-                            pair, error, _deactivateAccount, it, getApplication()
+                            pair, error, _deactivateAccount, it, context
                         )
                     }
 

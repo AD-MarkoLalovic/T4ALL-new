@@ -30,7 +30,7 @@ class DeactivateAccountDialog : DialogFragment() {
     private var _binding: DeactivateDialogBinding? = null
     private val binding: DeactivateDialogBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
-    private val viewModel: SupportViewModel by viewModels()
+    private val viewModel: SupportViewModel by viewModels{ SupportViewModel.Factory }
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
 
     companion object {
@@ -57,7 +57,7 @@ class DeactivateAccountDialog : DialogFragment() {
             if (enteredText.isNotEmpty() && email.isNotEmpty()) {
                 if (Util.isValidEmail(email)) {
                     binding.progBar.visibility = View.VISIBLE
-                    viewModel.sendDeactivationRequest(pair = Pair(email, enteredText), errorBody)
+                    viewModel.sendDeactivationRequest(pair = Pair(email, enteredText), errorBody,requireContext())
                 } else {
                     val toastContext = requireContext()
                     Toast.makeText(

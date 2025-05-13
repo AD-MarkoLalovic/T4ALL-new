@@ -26,7 +26,7 @@ class SupportDialog : DialogFragment() {
     private var _binding: DialogSupportBinding? = null
     private val binding: DialogSupportBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
-    private val viewModel: SupportViewModel by viewModels()
+    private val viewModel: SupportViewModel by viewModels{ SupportViewModel.Factory }
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
 
     override fun onCreateView(

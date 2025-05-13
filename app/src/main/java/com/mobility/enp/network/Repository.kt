@@ -461,10 +461,10 @@ object Repository {
         errorBody: MutableLiveData<ErrorBody>,
         data: MutableLiveData<DeactivateAccountModel>,
         token: String?,
-        application: Application
+        context: Context
     ) {
         try {
-            val lang = getUserLanguage(application)
+            val lang = getUserLanguage(context)
             val response =
                 apiService(token).deactivateAccount(lang, pair.first, pair.second, "127.0.0.1")
             if (response.isSuccessful) {
