@@ -310,6 +310,38 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 is SubmitResultFold.Idle -> {}
             }
         }
+
+        collectLatestLifecycleFlow(viewModel.registrationHr) { result ->
+            when (result) {
+                is SubmitResultFold.Loading -> {
+                    binding.loadingCards.visibility = View.VISIBLE
+                }
+                is SubmitResultFold.Success -> {
+                    binding.loadingCards.visibility = View.GONE
+                    val url = result.data
+                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                    startActivity(intent)
+                }
+                is SubmitResultFold.Failure -> {
+                    when (result.error) {
+                        is NetworkError.NoConnection -> {
+                            binding.loadingCards.visibility = View.GONE
+                            showNoConnectionState()
+                        }
+                        is NetworkError.ServerError -> {
+                            binding.loadingCards.visibility = View.GONE
+                            showError(getString(R.string.server_error_msg))
+                        }
+                        is NetworkError.ApiError -> {
+                            binding.loadingCards.visibility = View.GONE
+                            showError(result.error.errorResponse.message ?: "")
+                        }
+                    }
+                }
+
+                is SubmitResultFold.Idle -> {}
+            }
+        }
     }
 
     private fun setupAdapters() {
@@ -319,8 +351,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         cardsCountryAdapter = CardsCountryAdapter(arrayListOf(), this)
         binding.recyclerCardsCountry.adapter = cardsCountryAdapter
 
-        tagsForCroatiaAdapter = TagsForCroatiaAdapter { tag ->
-            viewModel.onCheckChanged(tag)
+        tagsForCroatiaAdapter = TagsForCroatiaAdapter { serialNumbers ->
+            viewModel.onCheckChanged(serialNumbers)
         }
         binding.rvTagsForCroatia?.adapter = tagsForCroatiaAdapter
     }
@@ -444,8 +476,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
     private fun setListener() {
         binding.txCroatiaWebLink.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, croatiaWebLink.toUri())
-            startActivity(intent)
+            viewModel.registrationTagsForHr()
+
+            /*val intent = Intent(Intent.ACTION_VIEW, croatiaWebLink.toUri())
+            startActivity(intent)*/
         }
         binding.termsConditionsCheckmark.setOnCheckedChangeListener { _, isChecked ->
             when (isChecked) {

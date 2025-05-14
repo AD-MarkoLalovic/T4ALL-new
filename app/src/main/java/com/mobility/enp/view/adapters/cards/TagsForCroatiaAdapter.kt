@@ -5,12 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
 import com.mobility.enp.databinding.ItemTagForCroatiaBinding
 import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 
 class TagsForCroatiaAdapter(
-    private val onCheckChange: (TagsForCroatiaUI) -> Unit
+    private val onCheckChange: (SerialNumberRequest) -> Unit
 ) : ListAdapter<TagsForCroatiaUI, TagsForCroatiaAdapter.TagsViewHolder>(TagsForCroatiaDiffCallback()) {
+
+    private val serialNumbers = mutableListOf<String>()
 
     inner class TagsViewHolder(private val binding: ItemTagForCroatiaBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(tag: TagsForCroatiaUI) {
@@ -21,8 +24,13 @@ class TagsForCroatiaAdapter(
             binding.checkBox.isChecked = tag.selected
 
             binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
-                val updateTag = tag.copy(selected = isChecked)
-                onCheckChange(updateTag)
+                if (isChecked) {
+                    serialNumbers.add(tag.serialNumberUI)
+                } else {
+                    serialNumbers.remove(tag.serialNumberUI)
+                }
+
+                onCheckChange(SerialNumberRequest(serialNumbers))
             }
         }
     }

@@ -115,13 +115,12 @@
 
                 <Button
                     android:id="@+id/txCroatiaWebLink"
-                    style="@style/ParagraphMedium"
+                    style="@style/MyButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_34dp"
                     android:layout_marginBottom="28dp"
                     android:text="@string/registration"
-                    android:textColor="@color/white"
                     android:visibility="gone"
                     tools:visibility="visible"/>
 

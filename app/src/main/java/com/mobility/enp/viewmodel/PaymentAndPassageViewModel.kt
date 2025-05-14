@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
+import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
 import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.cards.response.Country
@@ -45,8 +46,10 @@ class PaymentAndPassageViewModel(
     private val _tagsList = MutableStateFlow<SubmitResultFold<List<TagsForCroatiaUI>>>(SubmitResultFold.Idle)
     val tagsList: StateFlow<SubmitResultFold<List<TagsForCroatiaUI>>> get() = _tagsList
 
-    private val selectedTags = mutableListOf<TagsForCroatiaUI>()
+    private val _registrationHr = MutableStateFlow<SubmitResultFold<String>>(SubmitResultFold.Idle)
+    val registrationHr: StateFlow<SubmitResultFold<String>> get() = _registrationHr
 
+    private var selectedSerialNumbers: SerialNumberRequest = SerialNumberRequest(emptyList())
 
     fun fetchCardFlow() {
         _getCardDataFlow.value = SubmitResult.Loading
@@ -212,13 +215,26 @@ class PaymentAndPassageViewModel(
         }
     }
 
-    fun onCheckChanged(tags: TagsForCroatiaUI) {
-        selectedTags.removeAll {it.serialNumberUI == tags.serialNumberUI}
+    fun onCheckChanged(serialNumbers: SerialNumberRequest) {
+        selectedSerialNumbers = serialNumbers
+    }
 
-        if (tags.selected) {
-            selectedTags.add(tags)
+    fun registrationTagsForHr() {
+        viewModelScope.launch {
+            _registrationHr.value = SubmitResultFold.Loading
+
+            val result = repository.registrationCroatia(selectedSerialNumbers)
+            result.fold(
+                onSuccess = { url ->
+                    _registrationHr.value = SubmitResultFold.Success(url)
+                },
+                onFailure = { error ->
+                    _registrationHr.value = SubmitResultFold.Failure(error)
+                }
+            )
         }
     }
+
 
     fun clearTagsList() {
         _tagsList.value = SubmitResultFold.Idle

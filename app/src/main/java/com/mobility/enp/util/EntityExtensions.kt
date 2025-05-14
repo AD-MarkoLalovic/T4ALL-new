@@ -2,6 +2,7 @@ package com.mobility.enp.util
 
 import android.content.Context
 import com.mobility.enp.R
+import com.mobility.enp.data.model.cards.registration_croatia.RegistrationResponse
 import com.mobility.enp.data.model.cards.tags_for_croatia.Tag
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
@@ -69,4 +70,8 @@ fun List<Tag>.toTagsForCroatiaUIList(): List<TagsForCroatiaUI> {
             registrationPlateUI = tag.registrationPlate
         )
     }
+}
+
+fun RegistrationResponse.getRedirectWithToken(): String {
+    return "${this.data.redirectUrl}/${this.data.token}"
 }
