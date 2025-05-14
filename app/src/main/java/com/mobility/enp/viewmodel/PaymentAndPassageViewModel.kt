@@ -17,6 +17,8 @@ import com.mobility.enp.data.model.cardsweb.CardsWebUnified
 import com.mobility.enp.data.repository.CardRepository
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.SubmitResultFold
+import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,18 +28,6 @@ import kotlinx.coroutines.launch
 class PaymentAndPassageViewModel(
     private val repository: CardRepository
 ) : ViewModel() {
-
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val myRepository = (this[APPLICATION_KEY] as MyApplication).repositoryCard
-                PaymentAndPassageViewModel(
-                    repository = myRepository
-                )
-            }
-        }
-    }
 
     private val _getCardDataFlow =
         MutableStateFlow<SubmitResult<CardWebModel>>(SubmitResult.Loading)
@@ -51,6 +41,11 @@ class PaymentAndPassageViewModel(
     private val _successfullyDeletedCard =
         MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Loading)
     val successfullyDeletedCard: StateFlow<SubmitResult<Boolean>> get() = _successfullyDeletedCard
+
+    private val _tagsList = MutableStateFlow<SubmitResultFold<List<TagsForCroatiaUI>>>(SubmitResultFold.Idle)
+    val tagsList: StateFlow<SubmitResultFold<List<TagsForCroatiaUI>>> get() = _tagsList
+
+    private val selectedTags = mutableListOf<TagsForCroatiaUI>()
 
 
     fun fetchCardFlow() {
@@ -197,6 +192,47 @@ class PaymentAndPassageViewModel(
     fun addCard(code: String) {
         viewModelScope.launch {
             repository.addedPromotionCard(code)
+        }
+    }
+
+    fun fetchTagsForCroatia() {
+        viewModelScope.launch {
+            _tagsList.value = SubmitResultFold.Loading
+
+            val result = repository.tagsForCroatia()
+
+            result.fold(
+                onSuccess = { data ->
+                    _tagsList.value = SubmitResultFold.Success(data)
+                },
+                onFailure = { error ->
+                    _tagsList.value = SubmitResultFold.Failure(error)
+                }
+            )
+        }
+    }
+
+    fun onCheckChanged(tags: TagsForCroatiaUI) {
+        selectedTags.removeAll {it.serialNumberUI == tags.serialNumberUI}
+
+        if (tags.selected) {
+            selectedTags.add(tags)
+        }
+    }
+
+    fun clearTagsList() {
+        _tagsList.value = SubmitResultFold.Idle
+    }
+
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val myRepository = (this[APPLICATION_KEY] as MyApplication).repositoryCard
+                PaymentAndPassageViewModel(
+                    repository = myRepository
+                )
+            }
         }
     }
 

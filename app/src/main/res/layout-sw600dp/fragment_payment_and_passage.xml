@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_34dp"
                     android:layout_marginBottom="28dp"
-                    android:text="@string/croatia_no_card_text"
+                    android:text="Регистрација тагова за Републику Хрватску је тренутно могућа искључиво преко веб портала."
                     android:visibility="gone" />
 
                 <com.google.android.material.button.MaterialButton
@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_34dp"
                     android:layout_marginBottom="28dp"
-                    android:text="@string/croatia_register_link"
+                    android:text="@string/registration"
                     android:textColor="@color/white"
                     android:visibility="gone" />
 
