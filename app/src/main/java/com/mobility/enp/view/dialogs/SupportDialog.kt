@@ -3,31 +3,32 @@ package com.mobility.enp.view.dialogs
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.databinding.DialogSupportBinding
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.view.MainActivity
+import com.mobility.enp.view.fragments.my_profile.ProfileFragment.Companion.TAG
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.SupportViewModel
-import androidx.core.graphics.drawable.toDrawable
 
 class SupportDialog : DialogFragment() {
 
     private var _binding: DialogSupportBinding? = null
     private val binding: DialogSupportBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
-    private val viewModel: SupportViewModel by viewModels()
-    private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
+    private val viewModel: SupportViewModel by viewModels { SupportViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +48,7 @@ class SupportDialog : DialogFragment() {
         binding.bttSendSupportMessage.setOnClickListener {
             val enteredText = binding.enterSupportMessage.text.toString()
             if (enteredText.isNotEmpty()) {
-                viewModel.sendSupportMessage(enteredText, errorBody)
+                viewModel.sendSupportMessage(enteredText)
             } else {
                 val toastContext = requireContext()
                 Toast.makeText(
@@ -65,9 +66,10 @@ class SupportDialog : DialogFragment() {
     }
 
     private fun setFranchiser() {
-        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
             franchiseModel?.let { data ->
-                binding.bttSendSupportMessage.backgroundTintList = ColorStateList.valueOf(data.franchisePrimaryColor)
+                binding.bttSendSupportMessage.backgroundTintList =
+                    ColorStateList.valueOf(data.franchisePrimaryColor)
                 binding.enterSupportMessage.setTextColor(ColorStateList.valueOf(data.franchisePrimaryColor))
 
                 binding.supportDialogClose.setImageResource(data.franchiseCloseButton)
@@ -98,11 +100,31 @@ class SupportDialog : DialogFragment() {
     }
 
     private fun observeSupportMessageSentStatus() {
-        viewModel.supportMessageSentLiveData.observe(viewLifecycleOwner) { sent ->
-            if (sent) {
-                openSuccessfulMailDialog()
-                dismiss()
+        collectLatestLifecycleFlow(viewModel.supportMessageSentLiveData) { flow ->
+            when (flow) {
+                is SubmitResult.Success -> {
+                    openSuccessfulMailDialog()
+                    dismiss()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    logMessage(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    logMessage(flow.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    logMessage(flow.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {
+                    SubmitResult.Empty
+                }
             }
+
         }
     }
 
@@ -115,20 +137,6 @@ class SupportDialog : DialogFragment() {
     }
 
     private fun setObserversError() {
-        errorBody = MutableLiveData()
-        errorBody.observe(viewLifecycleOwner) { errorBody ->
-            context?.let { context ->
-                Toast.makeText(
-                    context,
-                    errorBody.errorBody,
-                    Toast.LENGTH_SHORT
-                ).show()
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
-                }
-            }
-        }
-
         viewModel.checkNetSendSupport.observe(viewLifecycleOwner) { hasInternet ->
             if (hasInternet != null && !hasInternet) {
 
@@ -147,6 +155,10 @@ class SupportDialog : DialogFragment() {
 
             }
         }
+    }
+
+    private fun logMessage(message: String) {
+        Log.d(TAG, "sendSupportMsg: $message")
     }
 
     override fun onStart() {

@@ -84,7 +84,7 @@ interface ApiService {
     fun changePassword(@Body request: ChangePasswordRequest): Call<Unit>
 
     @POST("/api/v1/contact")
-    fun sendContactMessage(@Body request: SupportRequest): Call<Unit>
+    suspend fun sendContactMessage(@Body request: SupportRequest): Response<Unit>
 
     @GET("/api/v1/history/tags")
     suspend fun getToolHistoryIndexN(): Response<IndexData>
