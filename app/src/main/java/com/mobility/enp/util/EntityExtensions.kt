@@ -2,9 +2,12 @@ package com.mobility.enp.util
 
 import android.content.Context
 import com.mobility.enp.R
+import com.mobility.enp.data.model.cards.registration_croatia.RegistrationResponse
+import com.mobility.enp.data.model.cards.tags_for_croatia.Tag
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.entity.TollHistoryHomeEntity
+import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 import com.mobility.enp.view.ui_models.home.HomeTollHistoryUI
 
 fun TollHistoryHomeEntity.toUIModel(): HomeTollHistoryUI {
@@ -58,4 +61,17 @@ fun CardWebModel.toEntityList(context: Context, user: String): List<HomeCardsEnt
     }
 
     return listCards
+}
+
+fun List<Tag>.toTagsForCroatiaUIList(): List<TagsForCroatiaUI> {
+    return this.map { tag ->
+        TagsForCroatiaUI(
+            serialNumberUI = tag.serialNumber,
+            registrationPlateUI = tag.registrationPlate
+        )
+    }
+}
+
+fun RegistrationResponse.getRedirectWithToken(): String {
+    return "${this.data.redirectUrl}/${this.data.token}"
 }
