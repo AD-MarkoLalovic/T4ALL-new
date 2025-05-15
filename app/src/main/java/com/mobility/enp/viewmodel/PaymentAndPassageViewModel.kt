@@ -238,6 +238,7 @@ class PaymentAndPassageViewModel(
 
     fun clearTagsList() {
         _tagsList.value = SubmitResultFold.Idle
+        _registrationHr.value = SubmitResultFold.Idle
     }
 
 
