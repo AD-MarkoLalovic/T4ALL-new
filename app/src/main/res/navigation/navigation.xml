@@ -51,11 +51,6 @@
             app:popUpTo="@+id/splashScreenFragment"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_splashScreenFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/splashScreenFragment"
-            app:popUpToInclusive="true" />
-        <action
             android:id="@+id/action_splashScreenFragment_to_introScreenAbout"
             app:destination="@id/introScreenAbout"
             app:popUpTo="@id/splashScreenFragment"
@@ -247,6 +242,11 @@
     <action
         android:id="@+id/action_global_homeFragment"
         app:destination="@id/homeFragment" />
+    <action
+        android:id="@+id/action_global_homeFragmentFromSplash"
+        app:destination="@id/homeFragment"
+        app:popUpTo="@id/splashScreenFragment"
+        app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.mobility.enp.view.fragments.my_profile.ProfileFragment"
