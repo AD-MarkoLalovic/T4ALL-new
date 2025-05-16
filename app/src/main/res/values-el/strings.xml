@@ -348,4 +348,6 @@
     <string name="notification_login_subtitle">Η εφαρμογή βρίσκεται επί του παρόντος σε φάση ανάπτυξης beta. Ορισμένες λειτουργίες είναι ακόμη υπό κατασκευή. Ευχαριστούμε για την κατανόησή σας!</string>
     <string name="croatia_no_card_text">Η εγγραφή ετικετών για τη Δημοκρατία της Κροατίας είναι προς το παρόν δυνατή μόνο μέσω της διαδικτυακής πύλης.</string>
     <string name="croatia_register_link">Κάντε κλικ εδώ για εγγραφή</string>
+    <string name="pdf_dialog_title_error">Πρόβλημα εξαγωγής PDF</string>
+    <string name="pdf_dialog_subtitle_error">Δεν είναι δυνατή η φόρτωση των δεδομένων PDF, δοκιμάστε ξανά.</string>
 </resources>

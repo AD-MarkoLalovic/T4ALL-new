@@ -354,5 +354,7 @@
     <string name="notification_login_subtitle">Aplikacija je trenutno u beta fazi razvoja. Neke funkcionalnosti su još u izradi. Hvala na razumijevanju!</string>
     <string name="croatia_no_card_text">Registracija tagova za Republiku Hrvatsku trenutačno je moguća isključivo putem web portala.</string>
     <string name="croatia_register_link">Kliknite ovdje za registraciju</string>
+    <string name="pdf_dialog_title_error">Problem s izvozom PDF-a</string>
+    <string name="pdf_dialog_subtitle_error">Ne mogu učitati PDF podatke, pokušajte ponovno.</string>
 
 </resources>

@@ -350,4 +350,6 @@
     <string name="notification_login_subtitle">The app is currently in beta development phase. Some features are still being developed. Thank you for your understanding!</string>
     <string name="croatia_no_card_text">Tag registration for the Republic of Croatia is currently only possible via the web portal.</string>
     <string name="croatia_register_link">Click here to register</string>
+    <string name="pdf_dialog_title_error">PDF export issue</string>
+    <string name="pdf_dialog_subtitle_error">Can\'t load PDF data, please try again.</string>
 </resources>
