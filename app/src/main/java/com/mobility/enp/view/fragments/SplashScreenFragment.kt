@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -47,7 +48,13 @@ class SplashScreenFragment : Fragment() {
             findNavController().navigate(R.id.action_splashScreenFragment_to_introScreenAbout)
         } else {
             if (token != null) {
-                findNavController().navigate(R.id.action_splashScreenFragment_to_homeFragment)
+                try {
+                    findNavController().navigate(R.id.action_global_homeFragmentFromSplash)
+                } catch (e: IllegalArgumentException) {
+                    Toast.makeText(requireContext(), "Redirecting to Login", Toast.LENGTH_SHORT)
+                        .show()
+                    findNavController().navigate(R.id.action_splashScreenFragment_to_loginFragment)
+                }
             } else {
                 findNavController().navigate(R.id.action_splashScreenFragment_to_loginFragment)
             }

@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.mobility.enp.R
 import com.mobility.enp.databinding.ActivityPdfViewBinding
+import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
 import kotlinx.coroutines.launch
 
@@ -33,6 +34,15 @@ class PdfViewActivity : AppCompatActivity() {
     private fun loadPdf() {
         viewModel.pdfData.observe(this) { byteArray ->
             binding.pdfView.fromBytes(byteArray).load()
+        }
+        viewModel.openDialogForNoPdfData.observe(this) { openDialog ->
+            if (openDialog) {
+                val generalDialog = GeneralMessageDialog(
+                    getString(R.string.pdf_dialog_title_error),
+                    getString(R.string.pdf_dialog_subtitle_error)
+                )
+                generalDialog.show(supportFragmentManager, "PdfDialog")
+            }
         }
     }
 }

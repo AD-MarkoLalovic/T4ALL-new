@@ -355,5 +355,7 @@
     <string name="tag_registration_instruction_hr">Za registraciju tagova u Hrvatskoj potrebno je odabrati koje tagove želite registrirati i kliknuti na gumb „Registracija“.</string>
     <string name="notes_serbian_tag_in_croatia">"Napomene za korištenje srpskog TAG uređaja u Republici Hrvatskoj  "</string>
     <string name="activation_successful_enp_tag_device">"Uspešno ste izvršili aktivaciju ENP/TAG uređaja.  "</string>
+    <string name="pdf_dialog_title_error">Problem s izvozom PDF-a</string>
+    <string name="pdf_dialog_subtitle_error">Ne mogu učitati PDF podatke, pokušajte ponovno.</string>
 
 </resources>

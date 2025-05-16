@@ -358,5 +358,7 @@
     <string name="tag_registration_instruction_hr">За регистрација на тагови во Хрватска, потребно е да изберете кои тагови сакате да ги регистрирате и да кликнете на копчето „Регистрација“.</string>
     <string name="notes_serbian_tag_in_croatia">"Напомени за користење на српскиот ТАГ уред во Република Хрватска  "</string>
     <string name="activation_successful_enp_tag_device">"Активацијата на ЕНП/ТАГ уредот е успешна.  "</string>
+    <string name="pdf_dialog_title_error">Проблем со извезување на PDF</string>
+    <string name="pdf_dialog_subtitle_error">Не може да се вчитаат PDF податоците, обидете се повторно.</string>
 
 </resources>

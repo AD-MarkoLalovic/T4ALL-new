@@ -360,4 +360,6 @@
     <string name="tag_registration_instruction_hr">"Hırvatistan'da etiketleri kaydetmek için, kaydetmek istediğiniz etiketleri seçip “Kayıt” düğmesine tıklamanız gerekmektedir.  "</string>
     <string name="notes_serbian_tag_in_croatia">"Hırvatistan Cumhuriyeti'nde Sırp TAG cihazının kullanımıyla ilgili notlar  "</string>
     <string name="activation_successful_enp_tag_device">"OGS cihazı aktive edildi.  "</string>
+    <string name="pdf_dialog_title_error">PDF dışa aktarma sorunu</string>
+    <string name="pdf_dialog_subtitle_error">PDF verileri yüklenemiyor, lütfen tekrar deneyin.</string>
 </resources>
