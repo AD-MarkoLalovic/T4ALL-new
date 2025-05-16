@@ -367,8 +367,9 @@
     <string name="only_t4all_users_access_denied">Es ist derzeit nicht möglich, sich mit Konten anzumelden, die nicht T4All sind. Bitte verwenden Sie das WEB-Portal</string>
     <string name="notification_login_title">Benachrichtigung</string>
     <string name="notification_login_subtitle">Die App befindet sich derzeit in der Beta-Entwicklungsphase. Einige Funktionen werden noch entwickelt. Vielen Dank für Ihr Verständnis!</string>
-    <string name="croatia_no_card_text">Die Registrierung von Tags für die Republik Kroatien ist derzeit nur über das Webportal möglich.</string>
-    <string name="croatia_register_link">Klicken Sie hier, um sich zu registrieren</string>
+    <string name="tag_registration_instruction_hr">Um Tags in Kroatien zu registrieren, wählen Sie bitte die Tags aus, die Sie registrieren möchten, und klicken Sie auf die Schaltfläche „Registrierung“.</string>
+    <string name="notes_serbian_tag_in_croatia">"Hinweise zur Verwendung des serbischen TAG-Geräts in der Republik Kroatien  "</string>
+    <string name="activation_successful_enp_tag_device">"Sie haben Ihr ENP/TAG-Gerät erfolgreich aktiviert.  "</string>
     <string name="pdf_dialog_title_error">Problem beim PDF-Export</string>
     <string name="pdf_dialog_subtitle_error">PDF-Daten konnten nicht geladen werden. Bitte versuchen Sie es erneut.</string>
 </resources>
