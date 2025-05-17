@@ -388,32 +388,6 @@ object Repository {
         }
     }
 
-    fun postForgotPassword(
-        email: ForgotPasswordRequest,
-        errorBody: MutableLiveData<ErrorBody>,
-        result: MutableLiveData<Boolean>
-    ) {
-        val call = apiService("").forgotPassword(email)
-
-        call.enqueue(object : Callback<Unit> {
-
-            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                if (response.isSuccessful) {
-                    result.postValue(true)
-                } else {
-                    result.postValue(false)
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<Unit>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-                result.postValue(false)
-            }
-
-        })
-    }
-
     suspend fun postFoundLostTag(
         token: String,
         serialNumber: String,

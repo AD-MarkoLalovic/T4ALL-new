@@ -228,9 +228,9 @@ interface ApiService {
     ): Response<Unit>
 
     @POST("/api/v1/forgot-password")
-    fun forgotPassword(
+    suspend fun forgotPassword(
         @Body request: ForgotPasswordRequest
-    ): Call<Unit>
+    ): Response<Unit>
 
     @FormUrlEncoded
     @POST("/api/v1/tags/found-tag")
