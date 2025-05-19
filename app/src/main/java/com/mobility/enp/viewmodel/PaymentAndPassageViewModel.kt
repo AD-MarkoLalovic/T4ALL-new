@@ -43,7 +43,8 @@ class PaymentAndPassageViewModel(
         MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Loading)
     val successfullyDeletedCard: StateFlow<SubmitResult<Boolean>> get() = _successfullyDeletedCard
 
-    private val _tagsList = MutableStateFlow<SubmitResultFold<List<TagsForCroatiaUI>>>(SubmitResultFold.Idle)
+    private val _tagsList =
+        MutableStateFlow<SubmitResultFold<List<TagsForCroatiaUI>>>(SubmitResultFold.Idle)
     val tagsList: StateFlow<SubmitResultFold<List<TagsForCroatiaUI>>> get() = _tagsList
 
     private val _registrationHr = MutableStateFlow<SubmitResultFold<String>>(SubmitResultFold.Idle)
@@ -240,7 +241,6 @@ class PaymentAndPassageViewModel(
         _tagsList.value = SubmitResultFold.Idle
         _registrationHr.value = SubmitResultFold.Idle
     }
-
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

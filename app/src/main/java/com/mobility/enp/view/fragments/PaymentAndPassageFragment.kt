@@ -1,6 +1,5 @@
 package com.mobility.enp.view.fragments
 
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.SpannableString
@@ -14,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -280,9 +278,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     binding.loadingCards.visibility = View.GONE
                     if (result.data.isEmpty()) {
                         visibleCroatianComponents(true)
-                        binding.txCroatiaText.text = getString(R.string.activation_successful_enp_tag_device)
+                        binding.txCroatiaText.text =
+                            getString(R.string.activation_successful_enp_tag_device)
                     } else {
-                        binding.txCroatiaText.text = getString(R.string.tag_registration_instruction_hr)
+                        binding.txCroatiaText.text =
+                            getString(R.string.tag_registration_instruction_hr)
                         visibleCroatianComponents(true)
                         tagsForCroatiaAdapter.submitList(result.data)
                     }
@@ -297,16 +297,19 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                             binding.loadingCards.visibility = View.GONE
                             showNoConnectionState()
                         }
+
                         is NetworkError.ServerError -> {
                             binding.loadingCards.visibility = View.GONE
                             showError(getString(R.string.server_error_msg))
                         }
+
                         is NetworkError.ApiError -> {
                             binding.loadingCards.visibility = View.GONE
                             showError(result.error.errorResponse.message ?: "")
                         }
                     }
                 }
+
                 is SubmitResultFold.Idle -> {}
             }
         }
@@ -316,22 +319,31 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 is SubmitResultFold.Loading -> {
                     binding.loadingCards.visibility = View.VISIBLE
                 }
+
                 is SubmitResultFold.Success -> {
                     binding.loadingCards.visibility = View.GONE
                     val url = result.data
-                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-                    startActivity(intent)
+//                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+//                    startActivity(intent)
+                    val action =
+                        PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToHacPortalWebFragment(
+                            url
+                        )
+                    findNavController().navigate(action)
                 }
+
                 is SubmitResultFold.Failure -> {
                     when (result.error) {
                         is NetworkError.NoConnection -> {
                             binding.loadingCards.visibility = View.GONE
                             showNoConnectionState()
                         }
+
                         is NetworkError.ServerError -> {
                             binding.loadingCards.visibility = View.GONE
                             showError(getString(R.string.server_error_msg))
                         }
+
                         is NetworkError.ApiError -> {
                             binding.loadingCards.visibility = View.GONE
                             showError(result.error.errorResponse.message ?: "")
