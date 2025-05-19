@@ -304,15 +304,18 @@
         tools:layout="@layout/fragment_payment_and_passage">
         <argument
             android:name="countryCode"
+            android:defaultValue="@null"
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue="@null"/>
+            app:nullable="true" />
         <action
             android:id="@+id/action_paymentAndPassageFragment_to_cardFragment"
             app:destination="@id/cardFragment" />
         <action
             android:id="@+id/action_paymentAndPassageFragment_to_pdfViewDialog"
             app:destination="@id/pdfViewDialog" />
+        <action
+            android:id="@+id/action_paymentAndPassageFragment_to_hacPortalWebFragment"
+            app:destination="@id/hacPortalWebFragment" />
     </fragment>
 
     <fragment
@@ -424,8 +427,20 @@
     <dialog
         android:id="@+id/loginNotificationDialog"
         android:name="com.mobility.enp.view.dialogs.LoginNotificationDialog"
-        tools:layout="@layout/login_notification_dialog"
-        android:label="LoginNotificationDialog" /><action android:id="@+id/action_global_loginNotificationDialog" app:destination="@id/loginNotificationDialog"/>
+        android:label="LoginNotificationDialog"
+        tools:layout="@layout/login_notification_dialog" />
+    <action
+        android:id="@+id/action_global_loginNotificationDialog"
+        app:destination="@id/loginNotificationDialog" />
+    <fragment
+        android:id="@+id/hacPortalWebFragment"
+        android:name="com.mobility.enp.view.fragments.card.HacPortalWebFragment"
+        android:label="HacPortalWebFragment">
+
+        <argument
+            android:name="url"
+            app:argType="string"/>
+    </fragment>
 
 
 </navigation>
