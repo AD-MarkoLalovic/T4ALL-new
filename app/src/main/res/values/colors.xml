@@ -91,4 +91,6 @@
     <color name="amss_home_flavor_text_color">#142233</color>
     <color name="enput_home_flavor_text_color">#C4C8CC</color>
 
+    <color name="background_notes_serbian_tag_in_croatia">#cff4fc</color>
+
 </resources>

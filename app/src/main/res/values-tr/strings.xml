@@ -355,5 +355,11 @@
     <string name="field_bank_account_isrequired">Havale hesabı alanı 13 rakam içermelidir.</string>
     <string name="access_denied">Erişim reddedildi</string>
     <string name="only_t4all_users_access_denied">Şu anda T4All olmayan hesaplara giriş yapılamaz. Lütfen WEB portalını kullanın.</string>
-
+    <string name="notification_login_title">Bildirim</string>
+    <string name="notification_login_subtitle">Uygulama şu anda beta geliştirme aşamasındadır. Bazı özellikler hâlâ geliştirilmektedir. Anlayışınız için teşekkür ederiz!</string>
+    <string name="tag_registration_instruction_hr">"Hırvatistan'da etiketleri kaydetmek için, kaydetmek istediğiniz etiketleri seçip “Kayıt” düğmesine tıklamanız gerekmektedir.  "</string>
+    <string name="notes_serbian_tag_in_croatia">"Hırvatistan Cumhuriyeti'nde Sırp TAG cihazının kullanımıyla ilgili notlar  "</string>
+    <string name="activation_successful_enp_tag_device">"OGS cihazı aktive edildi.  "</string>
+    <string name="pdf_dialog_title_error">PDF dışa aktarma sorunu</string>
+    <string name="pdf_dialog_subtitle_error">PDF verileri yüklenemiyor, lütfen tekrar deneyin.</string>
 </resources>

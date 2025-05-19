@@ -22,7 +22,25 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
     private val _franchiseModel: MutableLiveData<FranchiseModel?> = MutableLiveData()
     val franchiseModel: LiveData<FranchiseModel?> get() = _franchiseModel
 
+    private val _openSuccessDialog: MutableLiveData<Boolean?> = MutableLiveData()
+    val openSuccessDialog : LiveData<Boolean?> get() = _openSuccessDialog
+
+
+    fun postOpenDialog(bool: Boolean?){
+        _openSuccessDialog.value = bool
+    }
+
+    private var enableLoginDialog: Boolean = false
+
     private var isDialogShown = false
+
+    fun getLoginDialogEnabled(): Boolean? {
+        return enableLoginDialog
+    }
+
+    fun setEnableLoginDialog(enabled: Boolean) {
+        this.enableLoginDialog = enabled
+    }
 
     fun getDialogStatus(): Boolean {
         return isDialogShown
@@ -41,7 +59,7 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
         viewModelScope.launch(Dispatchers.IO) {
             repository.getPortalKey()?.let {
                 val franchiseModel = Util.franchiseID(it, context)
-                withContext (Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     _franchiseModel.value = franchiseModel
                 }
             }

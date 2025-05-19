@@ -19,6 +19,9 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.banks.response.BanksResponse
+import com.mobility.enp.data.model.cards.registration_croatia.RegistrationResponse
+import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
+import com.mobility.enp.data.model.cards.tags_for_croatia.TagsListResponse
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
@@ -48,8 +51,8 @@ interface ApiService {
     ): Response<UserResponse>
 
     @POST("/api/v1/logout")
-    fun postLogoutUser(
-    ): Call<HomePageFcmTokenResponse>
+    suspend fun postLogoutUser(
+    ): Response<HomePageFcmTokenResponse>
 
     //new api for home
     @GET("/api/v1/home")
@@ -63,9 +66,9 @@ interface ApiService {
     ): Response<HomePageFcmTokenResponse>
 
     @DELETE("/api/v1/firebase/{fcm_token}")
-    fun deleteFirebaseToken(
+    suspend fun deleteFirebaseToken(
         @Path(value = "fcm_token") token: String
-    ): Call<HomePageFcmTokenResponse>
+    ): Response<Any>
 
     @GET("/api/v1/personal-data")
     suspend fun getUserPersonalData(): BasicInfoResponse
@@ -83,7 +86,7 @@ interface ApiService {
     fun changePassword(@Body request: ChangePasswordRequest): Call<Unit>
 
     @POST("/api/v1/contact")
-    fun sendContactMessage(@Body request: SupportRequest): Call<Unit>
+    suspend fun sendContactMessage(@Body request: SupportRequest): Response<Unit>
 
     @GET("/api/v1/history/tags")
     suspend fun getToolHistoryIndexN(): Response<IndexData>
@@ -225,9 +228,9 @@ interface ApiService {
     ): Response<Unit>
 
     @POST("/api/v1/forgot-password")
-    fun forgotPassword(
+    suspend fun forgotPassword(
         @Body request: ForgotPasswordRequest
-    ): Call<Unit>
+    ): Response<Unit>
 
     @FormUrlEncoded
     @POST("/api/v1/tags/found-tag")
@@ -237,6 +240,17 @@ interface ApiService {
 
     @GET("/api/v1/cards/web")
     suspend fun getCreditCardsWeb(@Query("lang") language: String): Response<CardWebModel>
+
+    @GET("/api/v1/tags")
+    suspend fun getTagsForCroatia(
+        @Query("filter[status]") status: Int,
+        @Query("filter[country]") country: String
+    ): Response<TagsListResponse>
+
+    @POST("api/v1/process-form/register-hr")
+    suspend fun postRegistrationCroatia(
+        @Body body: SerialNumberRequest
+    ): Response<RegistrationResponse>
 
     @FormUrlEncoded
     @POST("/api/v1/delete-account-request")

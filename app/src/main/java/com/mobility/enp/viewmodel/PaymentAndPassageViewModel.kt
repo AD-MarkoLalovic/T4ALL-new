@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
+import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
 import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.cards.response.Country
@@ -17,6 +18,8 @@ import com.mobility.enp.data.model.cardsweb.CardsWebUnified
 import com.mobility.enp.data.repository.CardRepository
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.SubmitResultFold
+import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,18 +29,6 @@ import kotlinx.coroutines.launch
 class PaymentAndPassageViewModel(
     private val repository: CardRepository
 ) : ViewModel() {
-
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val myRepository = (this[APPLICATION_KEY] as MyApplication).repositoryCard
-                PaymentAndPassageViewModel(
-                    repository = myRepository
-                )
-            }
-        }
-    }
 
     private val _getCardDataFlow =
         MutableStateFlow<SubmitResult<CardWebModel>>(SubmitResult.Loading)
@@ -52,7 +43,14 @@ class PaymentAndPassageViewModel(
         MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Loading)
     val successfullyDeletedCard: StateFlow<SubmitResult<Boolean>> get() = _successfullyDeletedCard
 
+    private val _tagsList =
+        MutableStateFlow<SubmitResultFold<List<TagsForCroatiaUI>>>(SubmitResultFold.Idle)
+    val tagsList: StateFlow<SubmitResultFold<List<TagsForCroatiaUI>>> get() = _tagsList
 
+    private val _registrationHr = MutableStateFlow<SubmitResultFold<String>>(SubmitResultFold.Idle)
+    val registrationHr: StateFlow<SubmitResultFold<String>> get() = _registrationHr
+
+    private var selectedSerialNumbers: SerialNumberRequest = SerialNumberRequest(emptyList())
 
     fun fetchCardFlow() {
         _getCardDataFlow.value = SubmitResult.Loading
@@ -198,6 +196,60 @@ class PaymentAndPassageViewModel(
     fun addCard(code: String) {
         viewModelScope.launch {
             repository.addedPromotionCard(code)
+        }
+    }
+
+    fun fetchTagsForCroatia() {
+        viewModelScope.launch {
+            _tagsList.value = SubmitResultFold.Loading
+
+            val result = repository.tagsForCroatia()
+
+            result.fold(
+                onSuccess = { data ->
+                    _tagsList.value = SubmitResultFold.Success(data)
+                },
+                onFailure = { error ->
+                    _tagsList.value = SubmitResultFold.Failure(error)
+                }
+            )
+        }
+    }
+
+    fun onCheckChanged(serialNumbers: SerialNumberRequest) {
+        selectedSerialNumbers = serialNumbers
+    }
+
+    fun registrationTagsForHr() {
+        viewModelScope.launch {
+            _registrationHr.value = SubmitResultFold.Loading
+
+            val result = repository.registrationCroatia(selectedSerialNumbers)
+            result.fold(
+                onSuccess = { url ->
+                    _registrationHr.value = SubmitResultFold.Success(url)
+                },
+                onFailure = { error ->
+                    _registrationHr.value = SubmitResultFold.Failure(error)
+                }
+            )
+        }
+    }
+
+
+    fun clearTagsList() {
+        _tagsList.value = SubmitResultFold.Idle
+        _registrationHr.value = SubmitResultFold.Idle
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val myRepository = (this[APPLICATION_KEY] as MyApplication).repositoryCard
+                PaymentAndPassageViewModel(
+                    repository = myRepository
+                )
+            }
         }
     }
 

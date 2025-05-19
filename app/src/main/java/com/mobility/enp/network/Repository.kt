@@ -39,56 +39,11 @@ object Repository {
         return RestClient.create(ApiService::class.java, token).apiService
     }
 
-
-    //updated
-    fun deleteFirebaseToken(auth: String, fcmToken: String, errorBody: MutableLiveData<ErrorBody>) {
-        val call = apiService(auth).deleteFirebaseToken(fcmToken)
-        call.enqueue(object : Callback<HomePageFcmTokenResponse> {
-            override fun onResponse(
-                call: Call<HomePageFcmTokenResponse>, response: Response<HomePageFcmTokenResponse>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d(TAG, "fcmToken is deleted : ${response.isSuccessful}")
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<HomePageFcmTokenResponse>, t: Throwable) {
-                Log.d(TAG, "Fcm token onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
-    }
-
-
     // updated
     suspend fun getUserPersonalInfo(
         token: String?
     ): BasicInfoResponse {
         return apiService(token).getUserPersonalData()
-    }
-
-    fun logoutUser(
-        token: String?, errorBody: MutableLiveData<ErrorBody>
-    ) {
-        val call = apiService(token).postLogoutUser()
-        call.enqueue(object : Callback<HomePageFcmTokenResponse> {
-            override fun onResponse(
-                call: Call<HomePageFcmTokenResponse>, response: Response<HomePageFcmTokenResponse>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d(TAG, "user has been logged out : ${response.isSuccessful}")
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<HomePageFcmTokenResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
     }
 
     //updated
@@ -111,25 +66,7 @@ object Repository {
         })
     }
 
-    // skipped
-    fun sendSupportMessage(
-        request: SupportRequest, token: String?, errorBody: MutableLiveData<ErrorBody>
-    ) {
 
-        val call = apiService(token).sendContactMessage(request)
-        call.enqueue(object : Callback<Unit> {
-
-            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                if (!response.isSuccessful) {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<Unit>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-        })
-    }
 
     suspend fun getInvoices(
         data: MutableLiveData<MyInvoicesResponse>,
@@ -451,32 +388,6 @@ object Repository {
         }
     }
 
-    fun postForgotPassword(
-        email: ForgotPasswordRequest,
-        errorBody: MutableLiveData<ErrorBody>,
-        result: MutableLiveData<Boolean>
-    ) {
-        val call = apiService("").forgotPassword(email)
-
-        call.enqueue(object : Callback<Unit> {
-
-            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                if (response.isSuccessful) {
-                    result.postValue(true)
-                } else {
-                    result.postValue(false)
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<Unit>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-                result.postValue(false)
-            }
-
-        })
-    }
-
     suspend fun postFoundLostTag(
         token: String,
         serialNumber: String,
@@ -499,27 +410,6 @@ object Repository {
         customerSupport: CustomerSupport
     ): Response<Unit> {
         return apiService("").sendCustomerSupport(customerSupport)
-    }
-
-    suspend fun postDeactivateAccount(
-        pair: Pair<String, String>,
-        errorBody: MutableLiveData<ErrorBody>,
-        data: MutableLiveData<DeactivateAccountModel>,
-        token: String?,
-        application: Application
-    ) {
-        try {
-            val lang = getUserLanguage(application)
-            val response =
-                apiService(token).deactivateAccount(lang, pair.first, pair.second, "127.0.0.1")
-            if (response.isSuccessful) {
-                data.postValue(response.body())
-            } else {
-                errorBody.postValue(getMessageFromErrorBody(response))
-            }
-        } catch (e: HttpException) {
-            Log.d(TAG, "getUserCards: ${e.cause} \n ${e.message}")
-        }
     }
 
     suspend fun sendLanguageKey(token: String?, context: Context) {

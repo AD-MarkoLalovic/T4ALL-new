@@ -405,5 +405,12 @@
     <string name="field_bank_account_isrequired">Поље жиро рачун треба да садржи 13 цифара.</string>
     <string name="access_denied">Приступ одбијен</string>
     <string name="only_t4all_users_access_denied">Тренутно није могуће да се улогују налози који нису T4All. Молимo вас да користите ВЕБ портал.</string>
+    <string name="notification_login_title">Обавештење</string>
+    <string name="notification_login_subtitle">Апликација је тренутно у бета фази развоја. Неке функционалности су још у изради. Хвала на разумевању!</string>
+    <string name="tag_registration_instruction_hr">За регистрацију тагова у Хрватској потребно је да одаберете које тагове желите да региструјете и да кликнете на дугме „Регистрација“.</string>
+    <string name="notes_serbian_tag_in_croatia">Напомене за коришћење српског ТАГ-а у Републици Хрватској</string>
+    <string name="activation_successful_enp_tag_device">Успешно сте извршили активацију ЕНП/ТАГ уређаја.</string>
+    <string name="pdf_dialog_title_error">Проблем са извозом PDF-а</string>
+    <string name="pdf_dialog_subtitle_error">Не могу да учитам PDF податке, молим покушајте поново.</string>
 
 </resources>

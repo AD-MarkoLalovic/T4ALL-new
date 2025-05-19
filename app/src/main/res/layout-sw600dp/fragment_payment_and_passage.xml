@@ -76,6 +76,27 @@
                     android:text="@string/text_add_card"
                     android:visibility="gone" />
 
+                <TextView
+                    android:id="@+id/txCroatiaText"
+                    style="@style/ParagraphMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_34dp"
+                    android:layout_marginBottom="28dp"
+                    android:text="Регистрација тагова за Републику Хрватску је тренутно могућа искључиво преко веб портала."
+                    android:visibility="gone" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/txCroatiaWebLink"
+                    style="@style/ParagraphMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_34dp"
+                    android:layout_marginBottom="28dp"
+                    android:text="@string/registration"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvCreditCard"
                     android:layout_width="match_parent"

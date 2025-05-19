@@ -16,7 +16,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mobility.enp.R
@@ -25,11 +27,14 @@ import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.cards.response.Country
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.databinding.FragmentPaymentAndPassageBinding
+import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.CardsCountryAdapter
 import com.mobility.enp.view.adapters.PaymentAndPassageAdapter
+import com.mobility.enp.view.adapters.cards.TagsForCroatiaAdapter
 import com.mobility.enp.view.dialogs.ConfirmRemovalCardDialog
 import com.mobility.enp.view.dialogs.LostTagDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
@@ -50,9 +55,12 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private val viewModel: PaymentAndPassageViewModel by activityViewModels { PaymentAndPassageViewModel.Factory }
     private lateinit var adapter: PaymentAndPassageAdapter
     private lateinit var cardsCountryAdapter: CardsCountryAdapter
+    private lateinit var tagsForCroatiaAdapter: TagsForCroatiaAdapter
+
     private var allCards: List<Card> = emptyList()
     private val args: PaymentAndPassageFragmentArgs by navArgs()
     private var selectedCountry: String = "All"
+    private var croatiaWebLink: String = "https://toll4all.com/login"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -73,6 +81,13 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         setListener()
 
         viewModel.fetchCardFlow()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                delay(2000)
+                binding.loadingCards.visibility = View.GONE
+            }
+        }
     }
 
 
@@ -209,6 +224,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+
+            franchiseModel?.franchiseCroatiaLoginLink?.let { link ->
+                croatiaWebLink = link
+            }
+
             franchiseModel?.franchisePrimaryColor?.let { color ->
                 val states = arrayOf(
                     intArrayOf(android.R.attr.state_checked),  // When switch is ON
@@ -224,7 +244,9 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 val colorStateList = ColorStateList(states, colors)
                 binding.termsConditionsCheckmark.buttonTintList = colorStateList
-            }?: run {
+                binding.txCroatiaWebLink.backgroundTintList =
+                    ColorStateList.valueOf(color)
+            } ?: run {
                 val states = arrayOf(
                     intArrayOf(android.R.attr.state_checked),  // When switch is ON
                     intArrayOf(-android.R.attr.state_checked) // When switch is OFF
@@ -241,6 +263,95 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 val colorStateList = ColorStateList(states, colors)
                 binding.termsConditionsCheckmark.buttonTintList = colorStateList
+                binding.txCroatiaWebLink.backgroundTintList =
+                    ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
+            }
+        }
+
+        collectLatestLifecycleFlow(viewModel.tagsList) { result ->
+            when (result) {
+                is SubmitResultFold.Loading -> {
+                    binding.loadingCards.visibility = View.VISIBLE
+                }
+
+                is SubmitResultFold.Success -> {
+                    binding.loadingCards.visibility = View.GONE
+                    if (result.data.isEmpty()) {
+                        visibleCroatianComponents(true)
+                        binding.txCroatiaText.text =
+                            getString(R.string.activation_successful_enp_tag_device)
+                    } else {
+                        binding.txCroatiaText.text =
+                            getString(R.string.tag_registration_instruction_hr)
+                        visibleCroatianComponents(true)
+                        tagsForCroatiaAdapter.submitList(result.data)
+                    }
+
+                }
+
+                is SubmitResultFold.Failure -> {
+                    binding.loadingCards.visibility = View.GONE
+
+                    when (result.error) {
+                        is NetworkError.NoConnection -> {
+                            binding.loadingCards.visibility = View.GONE
+                            showNoConnectionState()
+                        }
+
+                        is NetworkError.ServerError -> {
+                            binding.loadingCards.visibility = View.GONE
+                            showError(getString(R.string.server_error_msg))
+                        }
+
+                        is NetworkError.ApiError -> {
+                            binding.loadingCards.visibility = View.GONE
+                            showError(result.error.errorResponse.message ?: "")
+                        }
+                    }
+                }
+
+                is SubmitResultFold.Idle -> {}
+            }
+        }
+
+        collectLatestLifecycleFlow(viewModel.registrationHr) { result ->
+            when (result) {
+                is SubmitResultFold.Loading -> {
+                    binding.loadingCards.visibility = View.VISIBLE
+                }
+
+                is SubmitResultFold.Success -> {
+                    binding.loadingCards.visibility = View.GONE
+                    val url = result.data
+//                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+//                    startActivity(intent)
+                    val action =
+                        PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToHacPortalWebFragment(
+                            url
+                        )
+                    findNavController().navigate(action)
+                }
+
+                is SubmitResultFold.Failure -> {
+                    when (result.error) {
+                        is NetworkError.NoConnection -> {
+                            binding.loadingCards.visibility = View.GONE
+                            showNoConnectionState()
+                        }
+
+                        is NetworkError.ServerError -> {
+                            binding.loadingCards.visibility = View.GONE
+                            showError(getString(R.string.server_error_msg))
+                        }
+
+                        is NetworkError.ApiError -> {
+                            binding.loadingCards.visibility = View.GONE
+                            showError(result.error.errorResponse.message ?: "")
+                        }
+                    }
+                }
+
+                is SubmitResultFold.Idle -> {}
             }
         }
     }
@@ -251,6 +362,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         cardsCountryAdapter = CardsCountryAdapter(arrayListOf(), this)
         binding.recyclerCardsCountry.adapter = cardsCountryAdapter
+
+        tagsForCroatiaAdapter = TagsForCroatiaAdapter { serialNumbers ->
+            viewModel.onCheckChanged(serialNumbers)
+        }
+        binding.rvTagsForCroatia?.adapter = tagsForCroatiaAdapter
     }
 
 
@@ -303,7 +419,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 "All" to R.string.all_country,
                 "RS" to R.string.serbia,
                 "MK" to R.string.macedonia,
-                "ME" to R.string.montenegro
+                "ME" to R.string.montenegro,
+                "HR" to R.string.croatia
             )
 
             // Filtrirajte zemlje koje postoje u availableCountries ili "All"
@@ -318,6 +435,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 val isClickable = when (code) {
                     "All" -> true
                     "RS" -> true // Srbija je uvek klikabilna
+                    "HR" -> true
                     else -> cardWebResponse.data?.hasSerbianCard
                 }
 
@@ -369,6 +487,12 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun setListener() {
+        binding.txCroatiaWebLink.setOnClickListener {
+            viewModel.registrationTagsForHr()
+
+            /*val intent = Intent(Intent.ACTION_VIEW, croatiaWebLink.toUri())
+            startActivity(intent)*/
+        }
         binding.termsConditionsCheckmark.setOnCheckedChangeListener { _, isChecked ->
             when (isChecked) {
                 true -> {
@@ -470,9 +594,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             "RS" -> {
                 selectedCountry = "RS"
                 binding.termsConditionsCheckmark.isChecked = false
+                visibleCroatianComponents(false)
                 filterCardsByCountry("RS")
                 setBlockVisibility(false)
                 setCardVisibility(true)
+                binding.rvCreditCard.visibility = View.VISIBLE
                 makeCardClickable(true)
             }
 
@@ -482,6 +608,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
+                visibleCroatianComponents(false)
+                binding.rvCreditCard.visibility = View.VISIBLE
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
@@ -491,16 +619,21 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
+                visibleCroatianComponents(false)
+                binding.rvCreditCard.visibility = View.VISIBLE
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
             "HR" -> {
                 selectedCountry = "HR"
-                filterCardsByCountry("HR")
-                setBlockVisibility(true)
-                setCardVisibility(true)
+                //filterCardsByCountry("HR")
+                setBlockVisibility(false)
+                setCardVisibility(false)
                 makeCardClickable(false)
+                binding.txNoCards.visibility = View.GONE
                 binding.termsConditionsCheckmark.isChecked = false
+                binding.rvCreditCard.visibility = View.GONE
+                viewModel.fetchTagsForCroatia()
             }
 
             else -> {
@@ -508,6 +641,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setCardVisibility(false)
                 makeCardClickable(false)
                 selectedCountry = "All"
+                binding.txCroatiaText.visibility = View.GONE
+                binding.txCroatiaCardsNote?.visibility = View.GONE
+                binding.rvTagsForCroatia?.visibility = View.GONE
+                binding.txCroatiaWebLink.visibility = View.GONE
                 adapter.updateListCards(allCards)
                 if (viewModel.getCardDataFlow.value != SubmitResult.Loading) {
                     binding.txNoCards.visibility =
@@ -666,8 +803,23 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         MainActivity.showSnackMessage(getString(R.string.no_internet), mainBinding)
     }
 
+    private fun visibleCroatianComponents(visible: Boolean) {
+        if (visible) {
+            binding.txCroatiaText.visibility = View.VISIBLE
+            binding.txCroatiaCardsNote?.visibility = View.VISIBLE
+            binding.rvTagsForCroatia?.visibility = View.VISIBLE
+            binding.txCroatiaWebLink.visibility = View.VISIBLE
+        } else {
+            binding.txCroatiaText.visibility = View.GONE
+            binding.txCroatiaCardsNote?.visibility = View.GONE
+            binding.rvTagsForCroatia?.visibility = View.GONE
+            binding.txCroatiaWebLink.visibility = View.GONE
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        viewModel.clearTagsList()
         _binding = null
     }
 
@@ -675,5 +827,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         super.onResume()
         binding.termsConditionsCheckmark.isChecked = false
         setCountryListener(selectedCountry)
+
     }
 }

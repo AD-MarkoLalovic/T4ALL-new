@@ -1,22 +1,46 @@
 package com.mobility.enp.viewmodel
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import com.mobility.enp.data.model.ErrorBody
-import com.mobility.enp.data.room.database.DRoom
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.mobility.enp.MyApplication
+import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.network.Repository
+import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SubmitResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ProfileViewModel(application: Application) : AndroidViewModel(application) {
+class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() {
 
-    private val database: DRoom = DRoom.getRoomInstance(application)
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val myRepository = (this[APPLICATION_KEY] as MyApplication).profileRepository
+                ProfileViewModel(
+                    repository = myRepository
+                )
+            }
+        }
+    }
+
+    private val _postDeleteFcmToken =
+        MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Empty)
+    val postDeleteFcmToken: StateFlow<SubmitResult<Boolean>> get() = _postDeleteFcmToken
+
+    private val _postLogoutUser =
+        MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Empty)
+    val postLogoutUser: StateFlow<SubmitResult<Boolean>> get() = _postLogoutUser
 
     private val _userInfo = MutableLiveData<String?>()
     val userInfo: LiveData<String?> get() = _userInfo
@@ -41,15 +65,13 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     private suspend fun getUserToken(): String? {
         return withContext(Dispatchers.IO) {
-            database.loginDao().fetchAllowedUsers().accessToken
+            repository.userToken()
         }
     }
 
     fun logout() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                database.clearAllData()
-            }
+            repository.deleteDatabase()
         }
     }
 
@@ -83,36 +105,84 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    suspend fun deleteFirebaseToken(errorBody: MutableLiveData<ErrorBody>) {
-        val userToken = getUserToken()
-        val fcmToken = withContext(Dispatchers.IO) {
-            database.fcmToken().getTableData()
-        }
+    suspend fun deleteFirebaseToken() {
+        _postDeleteFcmToken.value = SubmitResult.Loading
+        val fcmToken = repository.getFcmData()
 
-        userToken?.let { token ->
-            fcmToken.fcm_token?.let { fcmToken ->
-                Repository.deleteFirebaseToken(token, fcmToken, errorBody)
+        fcmToken?.fcm_token?.let { token ->
+            var result = repository.deleteFirebaseToken(token)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _postDeleteFcmToken.value = SubmitResult.Empty
+                } else {
+                    _postDeleteFcmToken.value =
+                        SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        _postDeleteFcmToken.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _postDeleteFcmToken.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        _postDeleteFcmToken.value =
+                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                    }
+
+                    else -> {}
+                }
             }
         }
 
     }
 
+
     suspend fun postLogoutUser(
-        errorBody: MutableLiveData<ErrorBody>
     ) {
-        val userToken = getUserToken()
-        Repository.logoutUser(userToken, errorBody)
+        _postLogoutUser.value = SubmitResult.Loading
+        val result = repository.logoutUser()
+        if (result.isSuccess) {
+            val data = result.getOrNull()
+            if (data == null) {
+                _postLogoutUser.value = SubmitResult.Empty
+            } else {
+                _postLogoutUser.value =
+                    SubmitResult.Success(data)
+            }
+        } else {
+            when (val error = result.exceptionOrNull()) {
+                is NetworkError.ServerError -> {
+                    _postLogoutUser.value = SubmitResult.FailureServerError
+                }
+
+                is NetworkError.NoConnection -> {
+                    _postLogoutUser.value = SubmitResult.FailureNoConnection
+                }
+
+                is NetworkError.ApiError -> {
+                    _postLogoutUser.value =
+                        SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                }
+
+                else -> {}
+            }
+        }
     }
 
     fun deleteProfilePicture() {
         viewModelScope.launch(Dispatchers.IO) {
-            database.profileImageDao().deleteAll()
+            repository.deleteProfilePicture()
             _deletePic.postValue(true)
         }
     }
 
     suspend fun checkStoredImageData(): Boolean {
-        val list = database.profileImageDao().selectAll()
+        val list = repository.getStoredImage() ?: emptyList()
         return list.isNotEmpty()
     }
 
@@ -129,7 +199,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                         }
 
                         val userLanguage = async {
-                            Repository.getUserLanguage(getApplication())
+                            repository.getLanguageKey()
                         }
 
                         val code = countryCode.await()
@@ -156,7 +226,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun isNetworkAvailable(): Boolean {
-        return Repository.isNetworkAvailable(getApplication())
+        return repository.isNetworkAvail()
     }
 
 }
