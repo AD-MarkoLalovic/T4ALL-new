@@ -349,4 +349,6 @@
     <string name="tag_registration_instruction_hr">Για να καταχωρήσετε ετικέτες στην Κροατία, πρέπει να επιλέξετε ποιες ετικέτες θέλετε να καταχωρήσετε και να κάνετε κλικ στο κουμπί «Εγγραφή».</string>
     <string name="notes_serbian_tag_in_croatia">"Σημειώσεις για τη χρήση της σερβικής συσκευής TAG στη Δημοκρατία της Κροατίας  "</string>
     <string name="activation_successful_enp_tag_device">"Uspešno ste izvršili aktivaciju ENP/TAG uređaja.  "</string>
+    <string name="pdf_dialog_title_error">Πρόβλημα εξαγωγής PDF</string>
+    <string name="pdf_dialog_subtitle_error">Δεν είναι δυνατή η φόρτωση των δεδομένων PDF, δοκιμάστε ξανά.</string>
 </resources>

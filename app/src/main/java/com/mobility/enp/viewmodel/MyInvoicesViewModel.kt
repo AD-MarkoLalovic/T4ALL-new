@@ -60,6 +60,9 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
     private val _savedPdfData = MutableLiveData<ByteArray>()
     val pdfData: LiveData<ByteArray> get() = _savedPdfData
 
+    private val _openDialogForNoPdfData = MutableLiveData<Boolean>()
+    val openDialogForNoPdfData: LiveData<Boolean> get() = _openDialogForNoPdfData
+
     private val _checkNetMyInvoices = MutableLiveData<Boolean>()
     val checkNetMyInvoices: LiveData<Boolean> get() = _checkNetMyInvoices
 
@@ -143,7 +146,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
                 val userToken = getUserToken()
                 userToken?.let { token ->
                     Repository.getBillsDetails(
-                        data, token, yearMonth, currency, perPage, error,getApplication()
+                        data, token, yearMonth, currency, perPage, error, getApplication()
                     )
                 }
             }
@@ -164,7 +167,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
                 val userToken = getUserToken()
                 userToken?.let { token ->
                     Repository.getBillsDetailsPaging(
-                        data, token, yearMonth, currency, page, perPage, error,getApplication()
+                        data, token, yearMonth, currency, page, perPage, error, getApplication()
                     )
                 }
             }
@@ -210,7 +213,12 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    fun savePdfToDrive(base64EncodedData: String, fileName: String, context: Context, isListingOfPassages: Boolean) {
+    fun savePdfToDrive(
+        base64EncodedData: String,
+        fileName: String,
+        context: Context,
+        isListingOfPassages: Boolean
+    ) {
         val decodedData = Base64.decode(base64EncodedData, Base64.DEFAULT)
 
         // Postavljanje poruke u zavisnosti od tipa fajla
@@ -311,8 +319,12 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     suspend fun loadPdf() {
-        val data: ByteArray = fetchPdf().data
-        _savedPdfData.postValue(data)
+        val data: ByteArray? = fetchPdf().data
+        if (data != null && data.isNotEmpty()) {
+            _savedPdfData.postValue(data)
+        }else{
+            _openDialogForNoPdfData.postValue(true)
+        }
     }
 
     private suspend fun fetchPdf(): PdfTable {
