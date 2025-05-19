@@ -2,15 +2,16 @@ package com.mobility.enp.data.repository
 
 import android.content.Context
 import android.util.Log
+import com.mobility.enp.R
 import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
 import com.mobility.enp.data.model.api_room_models.FcmToken
-import com.mobility.enp.R
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
+import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
+import com.mobility.enp.data.model.registration.RegistrationCountry
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
 import com.mobility.enp.data.room.LastUser
-import com.mobility.enp.data.model.registration.RegistrationCountry
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import kotlinx.coroutines.Dispatchers
@@ -50,6 +51,10 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
         return withContext(Dispatchers.IO) {
             getLangKey()
         }
+    }
+
+    fun netStateAvailable(): Boolean {
+        return isNetworkAvailable()
     }
 
     suspend fun insertLoginToken(userLoginResponseRoomTable: UserLoginResponseRoomTable) {
@@ -115,6 +120,32 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
             }
         } catch (e: Exception) {
             Log.d(TAG, "getIndexData: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
+
+    suspend fun postForgotPassword(
+        email: ForgotPasswordRequest,
+    ): Result<Boolean> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        return try {
+            val response = apiService("").forgotPassword(email)
+
+            if (response.isSuccessful) {
+                response.body()?.let { _ ->
+                    Result.success(true)
+                } ?: Result.failure(NetworkError.ServerError)
+            } else {
+                response.errorBody()?.let { errorBody ->
+                    val errorResponse = parseErrorResponse(response.code(), errorBody)
+                    Result.failure(NetworkError.ApiError(errorResponse))
+                } ?: Result.failure(NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
             Result.failure(NetworkError.ServerError)
         }
     }
