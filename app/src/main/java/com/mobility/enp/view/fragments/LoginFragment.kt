@@ -23,6 +23,7 @@ import com.mobility.enp.databinding.FragmentLoginBinding
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
@@ -230,6 +231,13 @@ class LoginFragment : Fragment() {
                 }
 
                 is LoginState.Success -> {
+
+                    val portalKey = state.portalKey
+                    if (portalKey != null && portalKey.isNotEmpty()){
+                        (activity as MainActivity).logoFix(portalKey)
+                        franchiseViewModel.getFranchiseModelFromLogin(portalKey,requireContext())
+                    }
+
                     binding.progbar.visibility = View.GONE
 
                     val options = NavOptions.Builder()

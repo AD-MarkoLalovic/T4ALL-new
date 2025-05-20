@@ -18,6 +18,7 @@ import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.databinding.ActivityMainBinding
 import com.mobility.enp.util.SharedPreferencesHelper
+import com.mobility.enp.util.Util
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,6 +52,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun logoFix(portalKey: String){
+        val franchiseModel = Util.franchiseID(portalKey, this)
+        franchiseModel?.franchiseLogoToolbar?.let {
+            binding.toolbarShared.iconLogo.setImageDrawable(it)
+        }
+    }
+
     fun settingsFragmentReset() {
         binding.bottomNavigation.visibility = View.GONE
         binding.toolbarShared.root.visibility = View.VISIBLE
@@ -60,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun resetToDefault() {
-        binding.toolbarShared.iconLogo.setImageResource(R.drawable.ic_logo_home_screen_svg)
+        binding.toolbarShared.iconLogo.setImageResource(R.drawable.null_svg)
         binding.toolbarShared.franchiserFlavorText.text = ""
         binding.toolbarShared.constraintBlock.setBackgroundColor(
             ContextCompat.getColor(

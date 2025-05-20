@@ -65,7 +65,10 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
             }
         }
     }
-
+    fun getFranchiseModelFromLogin(portalKey: String, context: Context){
+        val franchiseModel = Util.franchiseID(portalKey, context)
+        _franchiseModel.value = franchiseModel
+    }
 
     companion object {
 
