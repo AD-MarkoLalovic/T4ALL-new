@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.messaging.FirebaseMessaging
 import com.mobility.enp.BuildConfig
@@ -230,7 +231,14 @@ class LoginFragment : Fragment() {
 
                 is LoginState.Success -> {
                     binding.progbar.visibility = View.GONE
-                    findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment())
+
+                    val options = NavOptions.Builder()
+                        .setPopUpTo(R.id.loginFragment, true)
+                        .setEnterAnim(R.anim.slide_in_right)
+                        .setExitAnim(R.anim.slide_out_left)
+                        .build()
+
+                    findNavController().navigate(R.id.homeFragment,null,options)
                 }
 
                 is LoginState.Failure -> {
