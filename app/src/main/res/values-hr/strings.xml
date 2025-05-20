@@ -357,5 +357,6 @@
     <string name="activation_successful_enp_tag_device">"Uspešno ste izvršili aktivaciju ENP/TAG uređaja.  "</string>
     <string name="pdf_dialog_title_error">Problem s izvozom PDF-a</string>
     <string name="pdf_dialog_subtitle_error">Ne mogu učitati PDF podatke, pokušajte ponovno.</string>
+    <string name="registration_instructions_croatian_tags">Upute za registraciju srpske oznake</string>
 
 </resources>

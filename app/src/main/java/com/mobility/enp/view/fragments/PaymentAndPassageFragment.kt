@@ -244,7 +244,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 val colorStateList = ColorStateList(states, colors)
                 binding.termsConditionsCheckmark.buttonTintList = colorStateList
-                binding.txCroatiaWebLink.backgroundTintList =
+                binding.bttRegTagForCroatia.backgroundTintList =
                     ColorStateList.valueOf(color)
             } ?: run {
                 val states = arrayOf(
@@ -263,7 +263,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 val colorStateList = ColorStateList(states, colors)
                 binding.termsConditionsCheckmark.buttonTintList = colorStateList
-                binding.txCroatiaWebLink.backgroundTintList =
+                binding.bttRegTagForCroatia.backgroundTintList =
                     ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
             }
         }
@@ -487,8 +487,13 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun setListener() {
-        binding.txCroatiaWebLink.setOnClickListener {
-            viewModel.registrationTagsForHr()
+        binding.bttRegTagForCroatia.setOnClickListener {
+            val action =
+                PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToHacPortalWebFragment(
+                    "https://test.toll4all.com/assets/docs/Uputstvo-za-registraciju-srpskog-taga-za-Hrvatsku.pdf"
+                )
+            findNavController().navigate(action)
+            //viewModel.registrationTagsForHr()
 
             /*val intent = Intent(Intent.ACTION_VIEW, croatiaWebLink.toUri())
             startActivity(intent)*/
@@ -644,7 +649,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 binding.txCroatiaText.visibility = View.GONE
                 binding.txCroatiaCardsNote?.visibility = View.GONE
                 binding.rvTagsForCroatia?.visibility = View.GONE
-                binding.txCroatiaWebLink.visibility = View.GONE
+                binding.bttRegTagForCroatia.visibility = View.GONE
                 adapter.updateListCards(allCards)
                 if (viewModel.getCardDataFlow.value != SubmitResult.Loading) {
                     binding.txNoCards.visibility =
@@ -808,12 +813,14 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             binding.txCroatiaText.visibility = View.VISIBLE
             binding.txCroatiaCardsNote?.visibility = View.VISIBLE
             binding.rvTagsForCroatia?.visibility = View.VISIBLE
-            binding.txCroatiaWebLink.visibility = View.VISIBLE
+            binding.bttRegTagForCroatia.visibility = View.VISIBLE
+            binding.txCroatiaCardsPdf?.visibility = View.VISIBLE
         } else {
             binding.txCroatiaText.visibility = View.GONE
             binding.txCroatiaCardsNote?.visibility = View.GONE
             binding.rvTagsForCroatia?.visibility = View.GONE
-            binding.txCroatiaWebLink.visibility = View.GONE
+            binding.bttRegTagForCroatia.visibility = View.GONE
+            binding.txCroatiaCardsPdf?.visibility = View.GONE
         }
     }
 
