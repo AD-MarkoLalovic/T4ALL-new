@@ -8,16 +8,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.databinding.DeactivateDialogBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.Util
@@ -33,7 +30,7 @@ class DeactivateAccountDialog : DialogFragment() {
     private var _binding: DeactivateDialogBinding? = null
     private val binding: DeactivateDialogBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
-    private val viewModel: SupportViewModel by viewModels{ SupportViewModel.Factory }
+    private val viewModel: SupportViewModel by viewModels { SupportViewModel.Factory }
 
     companion object {
         const val TAG = "DEACTIVATE_ACCOUNT_DIALOG"
@@ -83,8 +80,12 @@ class DeactivateAccountDialog : DialogFragment() {
     }
 
     private fun setFranchise() {
-        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
-            franchiseModel?.franchisePrimaryColor?.let { color ->
+        franchiseViewModel.franchiseModel.value?.let { franchiseModel ->
+            franchiseModel.franchiseCloseButton.let { closeButton ->
+                binding.deactivateAccountDialogClose.setBackgroundResource(franchiseModel.franchiseCloseButton)
+            }
+
+            franchiseModel.franchisePrimaryColor.let { color ->
                 binding.bttSendSupportMessage.backgroundTintList = ColorStateList.valueOf(color)
                 val parent = binding.constraintLayout
 
@@ -112,13 +113,13 @@ class DeactivateAccountDialog : DialogFragment() {
                     }
                 }
             }
-        }
+        } ?: binding.deactivateAccountDialogClose.setBackgroundResource(R.drawable.ic_close)
     }
 
     private fun setObserversError() {
         collectLatestLifecycleFlow(viewModel.deactivateAccount) { flow ->
             when (flow) {
-                is SubmitResult.Loading ->{
+                is SubmitResult.Loading -> {
                     binding.progBar.visibility = View.VISIBLE
                 }
 
