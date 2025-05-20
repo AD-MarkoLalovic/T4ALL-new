@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.messaging.FirebaseMessaging
 import com.mobility.enp.BuildConfig
@@ -22,6 +23,7 @@ import com.mobility.enp.databinding.FragmentLoginBinding
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
@@ -229,8 +231,22 @@ class LoginFragment : Fragment() {
                 }
 
                 is LoginState.Success -> {
+
+                    val portalKey = state.portalKey
+                    if (portalKey != null && portalKey.isNotEmpty()){
+                        (activity as MainActivity).logoFix(portalKey)
+                        franchiseViewModel.getFranchiseModelFromLogin(portalKey,requireContext())
+                    }
+
                     binding.progbar.visibility = View.GONE
-                    findNavController().navigate(LoginFragmentDirections.actionGlobalHomeFragment())
+
+                    val options = NavOptions.Builder()
+                        .setPopUpTo(R.id.loginFragment, true)
+                        .setEnterAnim(R.anim.slide_in_right)
+                        .setExitAnim(R.anim.slide_out_left)
+                        .build()
+
+                    findNavController().navigate(R.id.homeFragment,null,options)
                 }
 
                 is LoginState.Failure -> {

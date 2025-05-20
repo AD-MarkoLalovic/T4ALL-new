@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
@@ -103,7 +104,13 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
                 (requireContext() as MainActivity).resetToDefault()
 
-                findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
+                val options = NavOptions.Builder()
+                    .setPopUpTo(R.id.navigation, true)
+                    .setEnterAnim(R.anim.slide_in_left)
+                    .setExitAnim(R.anim.slide_out_right)
+                    .build()
+
+                findNavController().navigate(R.id.loginFragment,null,options)
             }
         }
 
