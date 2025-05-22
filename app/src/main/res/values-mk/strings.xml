@@ -360,5 +360,6 @@
     <string name="activation_successful_enp_tag_device">"Активацијата на ЕНП/ТАГ уредот е успешна.  "</string>
     <string name="pdf_dialog_title_error">Проблем со извезување на PDF</string>
     <string name="pdf_dialog_subtitle_error">Не може да се вчитаат PDF податоците, обидете се повторно.</string>
+    <string name="registration_instructions_croatian_tags">Упатство за регистрација на српска ознака</string>
 
 </resources>

@@ -412,5 +412,6 @@
     <string name="activation_successful_enp_tag_device">Успешно сте извршили активацију ЕНП/ТАГ уређаја.</string>
     <string name="pdf_dialog_title_error">Проблем са извозом PDF-а</string>
     <string name="pdf_dialog_subtitle_error">Не могу да учитам PDF податке, молим покушајте поново.</string>
+    <string name="registration_instructions_croatian_tags">Упутство за регистрацију српског тагa</string>
 
 </resources>

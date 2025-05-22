@@ -2,9 +2,11 @@ package com.mobility.enp.view.adapters.cards
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mobility.enp.R
 import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
 import com.mobility.enp.databinding.ItemTagForCroatiaBinding
 import com.mobility.enp.view.ui_models.TagsForCroatiaUI
@@ -25,8 +27,16 @@ class TagsForCroatiaAdapter(
 
             binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
+                    val color = ContextCompat.getColor(binding.root.context, R.color.figmaSplashScreenColor)
+                    binding.serialNumberTextView.setTextColor(color)
+                    binding.registrationPlateTextView.setTextColor(color)
+
                     serialNumbers.add(tag.serialNumberUI)
                 } else {
+                    val color = ContextCompat.getColor(binding.root.context, R.color.primary_light_dark)
+                    binding.serialNumberTextView.setTextColor(color)
+                    binding.registrationPlateTextView.setTextColor(color)
+
                     serialNumbers.remove(tag.serialNumberUI)
                 }
 

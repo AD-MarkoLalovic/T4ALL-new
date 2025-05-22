@@ -372,4 +372,5 @@
     <string name="activation_successful_enp_tag_device">"Sie haben Ihr ENP/TAG-Gerät erfolgreich aktiviert.  "</string>
     <string name="pdf_dialog_title_error">Problem beim PDF-Export</string>
     <string name="pdf_dialog_subtitle_error">PDF-Daten konnten nicht geladen werden. Bitte versuchen Sie es erneut.</string>
+    <string name="registration_instructions_croatian_tags">Anleitung zur Registrierung des serbischen Tags</string>
 </resources>
