@@ -414,6 +414,5 @@
     <string name="pdf_dialog_subtitle_error">Не могу да учитам PDF податке, молим покушајте поново.</string>
     <string name="registration_instructions_croatian_tags">Упутство за регистрацију српског тагa</string>
     <string name="error_loading_instructions">Грешка при учитавању упутства</string>
-    <!-- TODO: Remove or change this placeholder text -->
 
 </resources>
