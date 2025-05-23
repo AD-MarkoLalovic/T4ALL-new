@@ -20,6 +20,7 @@ import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.result.HistoryContentPagingAdapter
 import com.mobility.enp.view.adapters.tool_history.result.HistoryResultAdapter
@@ -33,7 +34,6 @@ import kotlinx.coroutines.launch
 class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendToFragment {
 
     private lateinit var binding: FragmentToolHistorySearchResultBinding
-    private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
 
@@ -61,10 +61,6 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
         setObservers()
         setAdapter()
         setFranchise()
-
-        binding.btnReset.setOnClickListener {
-            findNavController().navigate(ToolHistoryResultFragmentDirections.actionToolHistorySearchResultFragmentToToolHistoryFragment())
-        }
     }
 
     private fun setFranchise() {
@@ -89,39 +85,57 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
     }
 
     private fun setObservers() {
-        errorBody = MutableLiveData()
-        errorBody.observe(viewLifecycleOwner) { errorBody ->
-            binding.progBar.visibility = View.GONE
-            Toast.makeText(
-                context,
-                errorBody.errorBody,
-                Toast.LENGTH_SHORT
-            ).show()
-            if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
-            }
-        }
-        vModel.complaintResponseFiltered.observe(viewLifecycleOwner) { lostTag ->
-            lostTag?.let {
-                setAdapter()
-                binding.progBar.visibility = View.GONE
+        collectLatestLifecycleFlow(vModel.complaintObjectionStateFiltered) { serverResponse ->
+            when (serverResponse) {
+                is SubmitResult.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.progBar.visibility = View.GONE
+                    setAdapter()
+                    vModel.getIndexData()
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(serverResponse.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(serverResponse.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {
+                    SubmitResult.Empty
+                }
             }
         }
 
+
+        binding.btnReset.setOnClickListener {
+            findNavController().navigate(ToolHistoryResultFragmentDirections.actionToolHistorySearchResultFragmentToToolHistoryFragment())
+        }
     }
 
     override fun sendComplaintData(complaintBody: ComplaintBody) {
         binding.progBar.visibility = View.VISIBLE
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            vModel.postComplaintFiltered(complaintBody, errorBody)
-        }
+        vModel.postComplaintFiltered(complaintBody)
     }
 
     override fun sendObjectionData(objectionBody: ObjectionBody) {
         binding.progBar.visibility = View.VISIBLE
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            vModel.postObjectionFiltered(objectionBody, errorBody)
-        }
+        vModel.postObjectionFiltered(objectionBody)
     }
 
     override fun sendDataFill(
@@ -150,5 +164,19 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
 
     override fun stopSpinner() {
         binding.progBar.visibility = View.GONE
+    }
+
+    private fun showNoConnectionState() {
+        binding.progBar.visibility = View.GONE
+        noInternetMessage()
+    }
+
+    private fun noInternetMessage() {
+        val mainBinding = (activity as MainActivity).binding
+        MainActivity.showSnackMessage(getString(R.string.no_internet), mainBinding)
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }

@@ -51,7 +51,6 @@ import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.room.database.DRoom
-import com.mobility.enp.network.Repository
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.CHANNEL_ID
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.NOTIFICATION_ID
 import com.mobility.enp.util.NetworkError
@@ -101,6 +100,10 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     private val _complaintObjectionState =
         MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Loading)
     val complaintObjectionState: StateFlow<SubmitResult<LostTagResponse>> get() = _complaintObjectionState
+
+    private val _complaintObjectionStateFiltered =
+        MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Loading)
+    val complaintObjectionStateFiltered: StateFlow<SubmitResult<LostTagResponse>> get() = _complaintObjectionStateFiltered
 
     fun setStateIndex(indexData: IndexData) { // from room
         _baseTagDataState.value = SubmitResult.Success(indexData)
@@ -227,6 +230,118 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
                             else -> {
                                 _baseTagDataState.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(
+                                    "UserPassViewModel",
+                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                                )
+                            }
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
+
+
+    fun postComplaintFiltered(complaintBody: ComplaintBody) {
+        _complaintObjectionStateFiltered.value = SubmitResult.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.postComplaint(complaintBody)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _complaintObjectionStateFiltered.value = SubmitResult.Empty
+                } else {
+                    _complaintObjectionStateFiltered.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _complaintObjectionStateFiltered.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _complaintObjectionStateFiltered.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN UserPassViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                _complaintObjectionStateFiltered.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _complaintObjectionStateFiltered.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(
+                                    "UserPassViewModel",
+                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                                )
+                            }
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
+
+
+    fun postObjectionFiltered(objectionBody: ObjectionBody) {
+        _complaintObjectionStateFiltered.value = SubmitResult.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.postObjection(objectionBody)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _complaintObjectionStateFiltered.value = SubmitResult.Empty
+                } else {
+                    _complaintObjectionStateFiltered.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _complaintObjectionStateFiltered.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _complaintObjectionStateFiltered.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN UserPassViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                _complaintObjectionStateFiltered.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _complaintObjectionStateFiltered.value =
                                     SubmitResult.FailureApiError(
                                         error.errorResponse.message ?: ""
                                     )
@@ -729,24 +844,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     suspend fun insertPassageData(toolHistoryListing: ToolHistoryListing) {
         database.toolListingDao()?.insertData(toolHistoryListing)
-    }
-
-    suspend fun postComplaintFiltered(
-        complaintBody: ComplaintBody,
-        errorBody: MutableLiveData<ErrorBody>,
-    ) {
-        database.loginDao()?.fetchAllowedUsers()?.accessToken.let {
-            Repository.postComplaint(it, errorBody, complaintBody, _complaintResponseFiltered)
-        }
-    }
-
-    suspend fun postObjectionFiltered(
-        objectionBody: ObjectionBody,
-        errorBody: MutableLiveData<ErrorBody>,
-    ) {
-        database.loginDao()?.fetchAllowedUsers()?.accessToken.let {
-            Repository.postObjection(it, errorBody, objectionBody, _complaintResponseFiltered)
-        }
     }
 
     fun getToolHistoryTransitResultPagination(
