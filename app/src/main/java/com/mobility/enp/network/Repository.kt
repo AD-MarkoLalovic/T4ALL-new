@@ -7,28 +7,21 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mobility.enp.data.model.ErrorBody
-import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
-import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.api_tags.LostTagResponse
 import com.mobility.enp.data.model.api_tags.PostLostTag
 import com.mobility.enp.data.model.api_tags.TagsResponse
-import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
-import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
-import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
 import com.mobility.enp.data.model.login.CustomerSupport
-import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
-import retrofit2.HttpException
 import retrofit2.Response
 
 object Repository {
@@ -65,7 +58,6 @@ object Repository {
             }
         })
     }
-
 
 
     suspend fun getInvoices(
@@ -279,57 +271,6 @@ object Repository {
     ): Response<BillDownload> {
 
         return apiService(token).getPdfListingPasses(billId)
-    }
-
-
-    fun postComplaint(
-        token: String?,
-        errorBody: MutableLiveData<ErrorBody>,
-        complaintBody: ComplaintBody,
-        data: MutableLiveData<LostTagResponse>
-    ) {
-        val call = apiService(token).postComplaint(complaintBody)
-        call.enqueue(object : Callback<LostTagResponse> {
-            override fun onResponse(
-                call: Call<LostTagResponse>, response: Response<LostTagResponse>
-            ) {
-                if (response.isSuccessful) {
-                    data.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<LostTagResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
-    }
-
-    fun postObjection(
-        token: String?,
-        errorBody: MutableLiveData<ErrorBody>,
-        objectionBody: ObjectionBody,
-        data: MutableLiveData<LostTagResponse>
-    ) {
-        val call = apiService(token).postObjection(objectionBody)
-        call.enqueue(object : Callback<LostTagResponse> {
-            override fun onResponse(
-                call: Call<LostTagResponse>, response: Response<LostTagResponse>
-            ) {
-                if (response.isSuccessful) {
-                    data.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<LostTagResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
     }
 
     suspend fun postAddTag(

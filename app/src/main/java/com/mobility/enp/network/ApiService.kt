@@ -176,9 +176,9 @@ interface ApiService {
     ): Call<LostTagResponse>
 
     @POST("/api/v1/history/complaint")
-    fun postComplaint(
+    suspend fun postComplaint(
         @Body complaintBody: ComplaintBody
-    ): Call<LostTagResponse>
+    ): Response<LostTagResponse>
 
     @POST("/api/v1/history/objection")
     fun postObjection(
