@@ -98,11 +98,11 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     }
 
     private val _complaintObjectionState =
-        MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Loading)
+        MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Empty)
     val complaintObjectionState: StateFlow<SubmitResult<LostTagResponse>> get() = _complaintObjectionState
 
     private val _complaintObjectionStateFiltered =
-        MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Loading)
+        MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Empty)
     val complaintObjectionStateFiltered: StateFlow<SubmitResult<LostTagResponse>> get() = _complaintObjectionStateFiltered
 
     fun setStateIndex(indexData: IndexData) { // from room
