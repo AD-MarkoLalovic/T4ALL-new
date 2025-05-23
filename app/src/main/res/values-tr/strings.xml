@@ -363,4 +363,5 @@
     <string name="pdf_dialog_title_error">PDF dışa aktarma sorunu</string>
     <string name="pdf_dialog_subtitle_error">PDF verileri yüklenemiyor, lütfen tekrar deneyin.</string>
     <string name="registration_instructions_croatian_tags">Sırp etiketi kaydı için talimatlar</string>
+    <string name="error_loading_instructions">"Talimatlar yüklenirken hata oluştu  "</string>
 </resources>

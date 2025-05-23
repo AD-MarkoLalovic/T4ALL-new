@@ -354,5 +354,6 @@
     <string name="pdf_dialog_title_error">Problem pri izvozu PDF-a</string>
     <string name="pdf_dialog_subtitle_error">Ne mogu učitati PDF podatke, pokušajte ponovo.</string>
     <string name="registration_instructions_croatian_tags">Uputstvo za registraciju srpskog taga</string>
+    <string name="error_loading_instructions">"Greška pri učitavanju uputstva  "</string>
 
 </resources>
