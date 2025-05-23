@@ -354,4 +354,5 @@
     <string name="pdf_dialog_title_error">PDF export issue</string>
     <string name="pdf_dialog_subtitle_error">Can\'t load PDF data, please try again.</string>
     <string name="registration_instructions_croatian_tags">Instructions for registering the Serbian tag</string>
+    <string name="error_loading_instructions">"Error loading the instructions  "</string>
 </resources>

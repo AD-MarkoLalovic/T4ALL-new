@@ -476,8 +476,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
     private fun filterCardsByCountry(country: String) {
         val filteredCards = allCards.filter { it.country?.code == country }
-        if (filteredCards.isEmpty()) {
+        if (filteredCards.isEmpty() && (country != "HR")) {
             binding.txNoCards.visibility = View.VISIBLE
+            binding.rvCreditCard.visibility = View.GONE
+        } else if (country != "HR") {
+            binding.txNoCards.visibility = View.GONE
             binding.rvCreditCard.visibility = View.GONE
         } else {
             adapter.updateListCards(filteredCards)
@@ -522,6 +525,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         setFragmentResultListener("htmlDialogDismissed") { _, _ ->
             binding.loadingCards.visibility = View.GONE
+        }
+
+        binding.txCroatiaCardsPdf?.setOnClickListener {
+            val action = PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewerFragment()
+            findNavController().navigate(action)
         }
     }
 
@@ -595,6 +603,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     override fun setCountryListener(country: String) {
+        Log.d("MARKO", "setCountryListener: $country")
         when (country) {
             "RS" -> {
                 selectedCountry = "RS"

@@ -361,5 +361,6 @@
     <string name="pdf_dialog_title_error">Проблем со извезување на PDF</string>
     <string name="pdf_dialog_subtitle_error">Не може да се вчитаат PDF податоците, обидете се повторно.</string>
     <string name="registration_instructions_croatian_tags">Упатство за регистрација на српска ознака</string>
+    <string name="error_loading_instructions">"Грешка при вчитување на упатството  "</string>
 
 </resources>

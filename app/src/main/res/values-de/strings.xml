@@ -373,4 +373,5 @@
     <string name="pdf_dialog_title_error">Problem beim PDF-Export</string>
     <string name="pdf_dialog_subtitle_error">PDF-Daten konnten nicht geladen werden. Bitte versuchen Sie es erneut.</string>
     <string name="registration_instructions_croatian_tags">Anleitung zur Registrierung des serbischen Tags</string>
+    <string name="error_loading_instructions">"Fehler beim Laden der Anleitung  "</string>
 </resources>
