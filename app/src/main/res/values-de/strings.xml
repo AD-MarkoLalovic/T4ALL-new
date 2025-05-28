@@ -374,4 +374,16 @@
     <string name="pdf_dialog_subtitle_error">PDF-Daten konnten nicht geladen werden. Bitte versuchen Sie es erneut.</string>
     <string name="registration_instructions_croatian_tags">Anleitung zur Registrierung des serbischen Tags</string>
     <string name="error_loading_instructions">"Fehler beim Laden der Anleitung  "</string>
+    <string name="general_provisions">"Allgemeine Bestimmungen "</string>
+    <string name="click_registration_info">Durch Klicken auf die Schaltfläche \"Registracija\" werden Sie auf das WEB-Portal der Hrvatske autoceste weitergeleitet. Die Registrierung des TAG-Geräts, das Hinzufügen einer Zahlungskarte, die Mautzahlung und Reklamationen liegen in der Verantwortung der Gesellschaft Hrvatske autoceste d.o.o. Zagreb (HAC). Anfragen/Beschwerden können telefonisch unter +385 1 6504 899 oder per E-Mail an info-naplata@hac.hr gesendet werden.</string>
+    <string name="tag_registration_plate_notice">Bei der Registrierung des TAG-Geräts auf dem HAC-Portal geben Sie das tatsächliche Kennzeichen des Fahrzeugs ein, in dem Sie das TAG-Gerät verwenden werden.</string>
+    <string name="tag_usage_croatia">"Verwendung des serbischen TAG-Geräts in Kroatien "</string>
+    <string name="tag_usage_info_hr">"Das serbische TAG-Gerät kann in der Republik Kroatien ausschließlich auf Autobahnabschnitten verwendet werden, die von der Firma Hrvatske autoceste d.o.o. Zagreb betrieben werden:  "</string>
+    <string name="highway_a1">Autobahn A1:</string>
+    <string name="highway_a3">Autobahn A3:</string>
+    <string name="highway_a4">Autobahn A4:</string>
+    <string name="highway_a5">Autobahn A5:</string>
+    <string name="highway_a6">Autobahn A6:</string>
+    <string name="highway_a7">Autobahn A7:</string>
+    <string name="highway_a11">Autobahn A11:</string>
 </resources>
