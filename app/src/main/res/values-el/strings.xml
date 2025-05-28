@@ -353,4 +353,16 @@
     <string name="pdf_dialog_subtitle_error">Δεν είναι δυνατή η φόρτωση των δεδομένων PDF, δοκιμάστε ξανά.</string>
     <string name="registration_instructions_croatian_tags">Οδηγίες για την εγγραφή της σερβικής ετικέτας</string>
     <string name="error_loading_instructions">"Σφάλμα κατά τη φόρτωση των οδηγιών  "</string>
+    <string name="general_provisions">"Γενικές διατάξεις "</string>
+    <string name="click_registration_info">Κάνοντας κλικ στο κουμπί \"Registracija\", θα μεταφερθείτε στο διαδικτυακό portal των Κροατικών αυτοκινητοδρόμων. Η εγγραφή της TAG συσκευής, η προσθήκη κάρτας πληρωμής, η χρέωση διοδίων και οι καταγγελίες εμπίπτουν στην αρμοδιότητα της εταιρείας Hrvatske autoceste d.o.o. Ζάγκρεμπ (HAC). Ερωτήσεις/παράπονα μπορούν να υποβληθούν τηλεφωνικά στο +385 1 6504 899 ή μέσω email στο info-naplata@hac.hr</string>
+    <string name="tag_registration_plate_notice">"Κατά την εγγραφή της συσκευής TAG στην πύλη της HAC, εισάγετε τον πραγματικό αριθμό κυκλοφορίας του οχήματος στο οποίο θα χρησιμοποιήσετε τη συσκευή.  "</string>
+    <string name="tag_usage_croatia">"Χρήση της σερβικής TAG συσκευής στην Κροατία "</string>
+    <string name="tag_usage_info_hr">"Η σερβική συσκευή TAG μπορεί να χρησιμοποιηθεί στη Δημοκρατία της Κροατίας μόνο στα τμήματα του αυτοκινητοδρόμου που διαχειρίζεται η εταιρεία Hrvatske autoceste d.o.o. Ζάγκρεμπ:  "</string>
+    <string name="highway_a1">Αυτοκινητόδρομος A1:</string>
+    <string name="highway_a3">Αυτοκινητόδρομος A3:</string>
+    <string name="highway_a4">Αυτοκινητόδρομος A4:</string>
+    <string name="highway_a5">Αυτοκινητόδρομος A5:</string>
+    <string name="highway_a6">Αυτοκινητόδρομος A6:</string>
+    <string name="highway_a7">Αυτοκινητόδρομος A7:</string>
+    <string name="highway_a11">Αυτοκινητόδρομος A11:</string>
 </resources>

@@ -37,6 +37,7 @@ import com.mobility.enp.view.adapters.PaymentAndPassageAdapter
 import com.mobility.enp.view.adapters.cards.TagsForCroatiaAdapter
 import com.mobility.enp.view.dialogs.ConfirmRemovalCardDialog
 import com.mobility.enp.view.dialogs.LostTagDialog
+import com.mobility.enp.view.dialogs.SerbianTagInCroatiaDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
 import kotlinx.coroutines.Dispatchers
@@ -500,6 +501,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
             /*val intent = Intent(Intent.ACTION_VIEW, croatiaWebLink.toUri())
             startActivity(intent)*/
+        }
+
+        binding.txCroatiaCardsNote?.setOnClickListener {
+            SerbianTagInCroatiaDialog().show(parentFragmentManager, "SerbianTagInCroatia")
         }
         binding.termsConditionsCheckmark.setOnCheckedChangeListener { _, isChecked ->
             when (isChecked) {
