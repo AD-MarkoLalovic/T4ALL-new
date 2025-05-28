@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_dialog_borders"
+    android:backgroundTint="@color/primary_light_lightest">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/dimens_16dp"
+        android:paddingTop="@dimen/dimens_14dp"
+        android:paddingBottom="@dimen/dimens_22dp">
+
+        <TextView
+            android:id="@+id/txNotes"
+            style="@style/H3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_4dp"
+            android:layout_marginEnd="@dimen/dimens_8dp"
+            android:text="@string/notes_serbian_tag_in_croatia"
+            app:layout_constraintEnd_toStartOf="@+id/noteClose"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/noteClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txGeneralPrevision"
+            style="@style/ParagraphMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_16dp"
+            android:text="@string/general_provisions"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txNotes" />
+
+        <TextView
+            android:id="@+id/txClickRegistration"
+            style="@style/Paragraph"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_8dp"
+            android:autoLink="all"
+            android:linksClickable="true"
+            android:text="@string/click_registration_info"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txGeneralPrevision" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardTagUsageCroatia"
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_16dp"
+            android:backgroundTint="@color/transparent"
+            app:cardCornerRadius="@dimen/dimens_22dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txClickRegistration"
+            app:strokeColor="@color/primary_light_light"
+            app:strokeWidth="@dimen/dimens_1dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="@dimen/dimens_22dp"
+                android:paddingVertical="@dimen/dimens_22dp">
+
+                <TextView
+                    android:id="@+id/txTagUsageCroatia"
+                    style="@style/H3"
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tag_usage_croatia"
+                    android:textColor="@color/primary_light_dark"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txTagUsageInfoHr"
+                    style="@style/Paragraph"
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_12dp"
+                    android:text="@string/tag_usage_info_hr"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txTagUsageCroatia" />
+
+                <View
+                    android:id="@+id/line1NoteHr"
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="@dimen/dimens_1dp"
+                    android:layout_marginTop="@dimen/dimens_20dp"
+                    android:background="@color/primary_light_light"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txTagUsageInfoHr" />
+
+                <TextView
+                    android:id="@+id/highwayA1"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_20dp"
+                    android:text="@string/highway_a1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/line1NoteHr" />
+
+                <TextView
+                    android:id="@+id/routeZagrebSplitDubrovnik"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_3dp"
+                    android:text="@string/route_zagreb_split_dubrovnik"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/highwayA1"
+                    app:layout_constraintTop_toTopOf="@+id/highwayA1" />
+
+                <TextView
+                    android:id="@+id/highwayA3"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_4dp"
+                    android:text="@string/highway_a3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/routeZagrebSplitDubrovnik" />
+
+                <TextView
+                    android:id="@+id/routesZagrebLipBre"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_3dp"
+                    android:text="@string/routes_zagreb_istok_lipovac_and_bregana"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/highwayA3"
+                    app:layout_constraintTop_toTopOf="@+id/highwayA3" />
+
+                <TextView
+                    android:id="@+id/highwayA4"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_4dp"
+                    android:text="@string/highway_a4"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/routesZagrebLipBre" />
+
+                <TextView
+                    android:id="@+id/routeZagrebHelena"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_3dp"
+                    android:text="@string/route_zagreb_sveta_helena_gorican"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/highwayA4"
+                    app:layout_constraintTop_toTopOf="@+id/highwayA4" />
+
+                <TextView
+                    android:id="@+id/highwayA5"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_4dp"
+                    android:text="@string/highway_a5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/routeZagrebHelena" />
+
+                <TextView
+                    android:id="@+id/routeWightManOsSvi"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_3dp"
+                    android:text="@string/route_beli_manastir_osijek_svilaj"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/highwayA5"
+                    app:layout_constraintTop_toTopOf="@+id/highwayA5" />
+
+                <TextView
+                    android:id="@+id/highwayA6"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_4dp"
+                    android:text="@string/highway_a6"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/routeWightManOsSvi" />
+
+                <TextView
+                    android:id="@+id/routeZagrebRijeka"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_3dp"
+                    android:text="@string/route_zagreb_rijeka"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/highwayA6"
+                    app:layout_constraintTop_toTopOf="@+id/highwayA6" />
+
+                <TextView
+                    android:id="@+id/highwayA7"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_4dp"
+                    android:text="@string/highway_a7"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/routeZagrebRijeka" />
+
+                <TextView
+                    android:id="@+id/routeRupa"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_3dp"
+                    android:text="@string/route_rupa"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/highwayA7"
+                    app:layout_constraintTop_toTopOf="@+id/highwayA7" />
+
+                <TextView
+                    android:id="@+id/highwayA11"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_4dp"
+                    android:text="@string/highway_a11"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/routeRupa" />
+
+                <TextView
+                    android:id="@+id/routeZagrebSisak"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_3dp"
+                    android:text="@string/route_zagreb_sisak"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/highwayA11"
+                    app:layout_constraintTop_toTopOf="@+id/highwayA11" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/tagRegistrationPlateNotice"
+            style="@style/SubtitlesRegular"
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_16dp"
+            android:text="@string/tag_registration_plate_notice"
+            android:textColor="@color/figmaSplashScreenColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardTagUsageCroatia" />
+
+        <Button
+            android:id="@+id/bttCloseNote"
+            style="@style/MyButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:text="@string/button_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tagRegistrationPlateNotice" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
