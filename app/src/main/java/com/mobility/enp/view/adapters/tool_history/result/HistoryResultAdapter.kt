@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
@@ -19,8 +18,6 @@ import com.mobility.enp.data.model.api_tool_history.listing.TotalAmount
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
-import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.adapters.tool_history.main_screen.TotalCostPassageAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,8 +61,8 @@ class HistoryResultAdapter(
 
                     if (!toolHistoryListing.data.sum.isNullOrEmpty()) {
                         val total = toolHistoryListing.data.sum[0].total
-                        binding.cyclerTotalPrice.adapter =
-                            TotalCostPassageAdapter(total as ArrayList<TotalAmount>)
+//                        binding.cyclerTotalPrice.adapter =  todo
+//                            TotalCostPassageAdapter(total as ArrayList<TotalAmount>)
                         binding.cyclerTotalPrice.layoutManager =
                             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
@@ -120,7 +117,10 @@ class HistoryResultAdapter(
                     }
 
                     is SubmitResult.InvalidApiToken -> {
-                        complaintInterface.invalidToken(serverResponse.errorMessage,serverResponse.errorCode)
+                        complaintInterface.invalidToken(
+                            serverResponse.errorMessage,
+                            serverResponse.errorCode
+                        )
                     }
 
                     else -> {
@@ -188,7 +188,7 @@ class HistoryResultAdapter(
     }
 
     private fun logError(string: String) {
-        Log.d(ToolHistoryListingAdapter.TAG, "showError: $string")
+        Log.d(TAG, "showError: $string")
     }
 
     interface PassageDataInterface {

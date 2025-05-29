@@ -18,6 +18,7 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.FragmentPassageHistoryBinding
 import com.mobility.enp.network.Repository
 import com.mobility.enp.util.SubmitResult
@@ -290,10 +291,10 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         binding.progBar.visibility = View.GONE
     }
 
-    override fun psgData(toolHistoryListing: ToolHistoryListing) {
+    override fun psgData(toolHistoryListing: V2HistoryTagResponse) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                vModel.insertPassageData(toolHistoryListing)
+//                vModel.insertPassageData(toolHistoryListing) todo
             }
         }
     }

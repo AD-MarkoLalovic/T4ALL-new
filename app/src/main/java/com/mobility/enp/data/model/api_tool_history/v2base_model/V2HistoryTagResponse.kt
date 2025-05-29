@@ -12,5 +12,6 @@ data class V2HistoryTagResponse(
     val `data`: Data?,
     @SerializedName("message")
     @Expose
-    val message: String?
+    val message: String?,
+    var serial: String,
 )

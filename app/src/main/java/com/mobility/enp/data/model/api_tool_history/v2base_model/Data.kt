@@ -18,7 +18,7 @@ data class Data(
     val records: Records?,
     @SerializedName("sumTags")
     @Expose
-    val sumTags: List<SumTag?>?,
+    val sumTags: List<SumTag>,
     @SerializedName("tags")
     @Expose
     val tags: List<Tag?>?

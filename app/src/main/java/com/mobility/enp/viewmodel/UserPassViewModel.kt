@@ -46,6 +46,7 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.franchise.FranchiseModel
@@ -152,7 +153,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
      * @param IndexData -> data containing serials of tags
      * @param CardWebModel -> data containing which country buttons can be shown for user
      */
-    fun getBaseData() {
+    fun getBaseData() {   // same for main page and for filter fragment for base data
         _baseTagDataState.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -427,7 +428,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
-    fun getToolHistoryTransitResult(
+    fun getToolHistoryTransitResult(  // third final fragment adapter method
         flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
         tagSerialNumber: String,
         currentPage: Int,
@@ -540,15 +541,19 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
+
+    /**
+     * this function fills the initial 10 passages in tool history once we have tag serial data
+     */
     fun getToolHistoryTransit(
-        flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
+        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
         tagSerialNumber: String,
         currentPage: Int
     ) {
         flow.value = SubmitResult.Loading
 
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getTagFill(tagSerialNumber, currentPage, itemsPerPage)
+            val result = repository.getAdapterPassageData(tagSerialNumber, currentPage, itemsPerPage)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -592,7 +597,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 }
             }
         }
-
     }
 
 
@@ -657,7 +661,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.fetchPassageDataBySerial(tagSerialNumber)?.let {
-                dataInterface.onOk(it)
+//                dataInterface.onOk(it) todo
             }
         }
     }

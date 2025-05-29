@@ -18,6 +18,7 @@ import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.banks.response.BanksResponse
 import com.mobility.enp.data.model.cards.registration_croatia.RegistrationResponse
 import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
@@ -103,6 +104,20 @@ interface ApiService {
         @Query("perPage") perPage: String, // items per page
         @Query("lang") language: String
     ): Response<ToolHistoryListing>
+
+
+    /**
+     * possible filter
+     * Allowed filter(s) are `date_from, date_to, serial_number, currency, country`."
+     * example filter["country"] without ""
+     */
+    @GET("/api/v2/history")
+    suspend fun getToolHistoryTransitV2(
+        @Query("filter[serial_number]") serialNumbers: String,
+        @Query("page") page: String, // current page
+        @Query("perPage") perPage: String, // fixed
+        @Query("lang") language: String
+    ): Response<V2HistoryTagResponse>
 
     @GET("/api/v1/history/transit")
     suspend fun getToolHistoryTransitResultFragmentNew(
