@@ -29,7 +29,6 @@ class ChangePasswordDialog(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = GeneralDialogBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -57,6 +56,7 @@ class ChangePasswordDialog(
 
     override fun onStart() {
         super.onStart()
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         setDimensionsPercent(95)
         isCancelable = false
     }
