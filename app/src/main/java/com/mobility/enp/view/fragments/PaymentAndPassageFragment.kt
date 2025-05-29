@@ -324,8 +324,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 is SubmitResultFold.Success -> {
                     binding.loadingCards.visibility = View.GONE
                     val url = result.data
-//                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-//                    startActivity(intent)
+
                     val action =
                         PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToHacPortalWebFragment(
                             url
@@ -367,16 +366,16 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         tagsForCroatiaAdapter = TagsForCroatiaAdapter { serialNumbers ->
             viewModel.onCheckChanged(serialNumbers)
         }
-        binding.rvTagsForCroatia?.adapter = tagsForCroatiaAdapter
+        binding.rvTagsForCroatia.adapter = tagsForCroatiaAdapter
     }
 
 
     private fun processCardResponse(cardWebResponse: CardWebModel) {
         val paymentAndPassage: CardsResponse = viewModel.objectTransformer(cardWebResponse)
 
-        paymentAndPassage.let { it ->
+        paymentAndPassage.let {
             val sortedCards =
-                it.data?.sortedWith(compareByDescending<Card> { card -> card.defaultCard })
+                it.data?.sortedWith(compareByDescending { card -> card.defaultCard })
 
             allCards = sortedCards ?: emptyList()
 
@@ -492,18 +491,13 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
     private fun setListener() {
         binding.bttRegTagForCroatia.setOnClickListener {
-            val action =
-                PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToHacPortalWebFragment(
-                    "https://test.toll4all.com/assets/docs/Uputstvo-za-registraciju-srpskog-taga-za-Hrvatsku.pdf"
-                )
-            findNavController().navigate(action)
-            //viewModel.registrationTagsForHr()
+            viewModel.registrationTagsForHr()
 
             /*val intent = Intent(Intent.ACTION_VIEW, croatiaWebLink.toUri())
             startActivity(intent)*/
         }
 
-        binding.txCroatiaCardsNote?.setOnClickListener {
+        binding.txCroatiaCardsNote.setOnClickListener {
             SerbianTagInCroatiaDialog().show(parentFragmentManager, "SerbianTagInCroatia")
         }
         binding.termsConditionsCheckmark.setOnCheckedChangeListener { _, isChecked ->
@@ -532,7 +526,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             binding.loadingCards.visibility = View.GONE
         }
 
-        binding.txCroatiaCardsPdf?.setOnClickListener {
+        binding.txCroatiaCardsPdf.setOnClickListener {
             val action = PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewerFragment()
             findNavController().navigate(action)
         }
@@ -661,8 +655,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 makeCardClickable(false)
                 selectedCountry = "All"
                 binding.txCroatiaText.visibility = View.GONE
-                binding.txCroatiaCardsNote?.visibility = View.GONE
-                binding.rvTagsForCroatia?.visibility = View.GONE
+                binding.txCroatiaCardsNote.visibility = View.GONE
+                binding.rvTagsForCroatia.visibility = View.GONE
                 binding.bttRegTagForCroatia.visibility = View.GONE
                 adapter.updateListCards(allCards)
                 if (viewModel.getCardDataFlow.value != SubmitResult.Loading) {
@@ -825,16 +819,16 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private fun visibleCroatianComponents(visible: Boolean) {
         if (visible) {
             binding.txCroatiaText.visibility = View.VISIBLE
-            binding.txCroatiaCardsNote?.visibility = View.VISIBLE
-            binding.rvTagsForCroatia?.visibility = View.VISIBLE
+            binding.txCroatiaCardsNote.visibility = View.VISIBLE
+            binding.rvTagsForCroatia.visibility = View.VISIBLE
             binding.bttRegTagForCroatia.visibility = View.VISIBLE
-            binding.txCroatiaCardsPdf?.visibility = View.VISIBLE
+            binding.txCroatiaCardsPdf.visibility = View.VISIBLE
         } else {
             binding.txCroatiaText.visibility = View.GONE
-            binding.txCroatiaCardsNote?.visibility = View.GONE
-            binding.rvTagsForCroatia?.visibility = View.GONE
+            binding.txCroatiaCardsNote.visibility = View.GONE
+            binding.rvTagsForCroatia.visibility = View.GONE
             binding.bttRegTagForCroatia.visibility = View.GONE
-            binding.txCroatiaCardsPdf?.visibility = View.GONE
+            binding.txCroatiaCardsPdf.visibility = View.GONE
         }
     }
 
