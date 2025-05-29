@@ -138,18 +138,18 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             vModel.selectedCurrency = ""
         }
 
-        binding.buttonRSD.setOnClickListener {
-            setSelectedButton(binding.buttonRSD)
+        binding.buttonMontenegro.setOnClickListener {
+            setSelectedButton(binding.buttonMontenegro)
             vModel.selectedCurrency = getString(R.string.rsd)
         }
 
-        binding.buttonEUR.setOnClickListener {
-            setSelectedButton(binding.buttonEUR)
+        binding.buttonSerbia.setOnClickListener {
+            setSelectedButton(binding.buttonSerbia)
             vModel.selectedCurrency = getString(R.string.eur)
         }
 
-        binding.buttonMKD.setOnClickListener {
-            setSelectedButton(binding.buttonMKD)
+        binding.buttonCroatia.setOnClickListener {
+            setSelectedButton(binding.buttonCroatia)
             vModel.selectedCurrency = getString(R.string.mkd)
         }
 
@@ -208,9 +208,9 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
     private fun setSelectedButton(selectedButton: View) = with(binding) {
         buttonAll.isSelected = false
-        buttonEUR.isSelected = false
-        buttonRSD.isSelected = false
-        buttonMKD.isSelected = false
+        buttonSerbia.isSelected = false
+        buttonMontenegro.isSelected = false
+        buttonCroatia.isSelected = false
 
         selectedButton.isSelected = true
     }

@@ -150,7 +150,7 @@
                         android:textColor="@color/text_color_selector" />
 
                     <TextView
-                        android:id="@+id/buttonEUR"
+                        android:id="@+id/buttonSerbia"
                         style="@style/CaptionMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
@@ -158,11 +158,11 @@
                         android:background="@drawable/currency_selector"
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/eur"
+                        android:text="@string/serbia"
                         android:textColor="@color/text_color_selector" />
 
                     <TextView
-                        android:id="@+id/buttonRSD"
+                        android:id="@+id/buttonMontenegro"
                         style="@style/CaptionMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
@@ -170,11 +170,11 @@
                         android:background="@drawable/currency_selector"
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/rsd"
+                        android:text="@string/montenegro"
                         android:textColor="@color/text_color_selector" />
 
                     <TextView
-                        android:id="@+id/buttonMKD"
+                        android:id="@+id/buttonCroatia"
                         style="@style/CaptionMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
@@ -182,7 +182,7 @@
                         android:background="@drawable/currency_selector"
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/mkd"
+                        android:text="@string/croatia"
                         android:textColor="@color/text_color_selector" />
 
                 </LinearLayout>
