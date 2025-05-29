@@ -75,7 +75,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         binding.progBar.visibility = View.VISIBLE
 
         if (vModel.internetAvailable()) {
-            vModel.getIndexData()
+            vModel.getBaseData()
         } else {
             checkInternet()
         }
@@ -221,7 +221,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
             binding.progBar.visibility = View.GONE
 
-            vModel.getIndexData()
+            vModel.getBaseData()
         }
     }
 
@@ -247,7 +247,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
-                    setIndexData(tagIndex.data)
+                    setIndexData(tagIndex.data.first)
                 }
 
                 is SubmitResult.FailureNoConnection -> {

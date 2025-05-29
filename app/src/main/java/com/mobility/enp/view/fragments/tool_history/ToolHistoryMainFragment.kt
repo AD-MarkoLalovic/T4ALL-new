@@ -66,7 +66,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
         setObservers()
 
-        vModel.getIndexData()
+        vModel.getBaseData()
 
         binding.loopIcon.setOnClickListener {
             if (Repository.isNetworkAvailable(requireContext())) {
@@ -86,7 +86,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             binding.progBar.visibility = View.GONE
             binding.loopIcon.isEnabled = true
 
-            vModel.getIndexData()
+            vModel.getBaseData()
         }
     }
 
@@ -105,7 +105,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 }
 
                 is SubmitResult.Success -> {
-                    setIndexData(tagIndex.data)
+                    setIndexData(tagIndex.data.first)
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -141,7 +141,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
-                    vModel.getIndexData()
+                    vModel.getBaseData()
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -191,7 +191,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                     )
 
                     indexData?.let { iData ->
-                        vModel.setStateIndex(iData)
+//                        vModel.setStateIndex(iData)  todo
                     }
                 } else {
                     val bundle = Bundle().apply {

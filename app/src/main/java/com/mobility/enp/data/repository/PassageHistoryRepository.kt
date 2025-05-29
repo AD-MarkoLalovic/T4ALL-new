@@ -7,7 +7,11 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
+import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
+import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
+import com.mobility.enp.data.model.home.relation.HomeWithDetails
+import com.mobility.enp.data.model.home.response.HomeResponse
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
@@ -49,6 +53,27 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
         return Result.failure(NetworkError.ServerError)
     }
+
+
+    suspend fun getCardsFromServer(): Result<CardWebModel> {
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.NoConnection)
+
+        return try {
+            val lang = getLangKey()
+            val remoteData = apiService(userToken).getCreditCardsWeb(lang)
+            if (remoteData.isSuccessful) {
+                remoteData.body()?.let { responseBody ->
+                    Result.success(responseBody)
+                } ?: Result.failure(NetworkError.ServerError)
+            } else {
+                Result.failure(NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.e("HomeRepository getCards", "Greška pri preuzimanju kartica: ${e.message}", e)
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
 
     suspend fun getTagFill(
         tagSerialNumber: String,

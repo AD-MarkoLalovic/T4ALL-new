@@ -8,12 +8,10 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.Tag
@@ -94,7 +92,7 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
                     setAdapter()
-                    vModel.getIndexData()
+                    vModel.getBaseData()
                 }
 
                 is SubmitResult.FailureNoConnection -> {
