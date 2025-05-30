@@ -136,22 +136,22 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
         binding.buttonSerbia.setOnClickListener {
             setSelectedButton(binding.buttonSerbia)
-            vModel.selectedCurrency = getString(R.string.serbia_rs)
+            vModel.selectedCountry = getString(R.string.serbia_rs)
         }
 
         binding.buttonMontenegro.setOnClickListener {
             setSelectedButton(binding.buttonMontenegro)
-            vModel.selectedCurrency = getString(R.string.montenegro_me)
+            vModel.selectedCountry = getString(R.string.montenegro_me)
         }
 
         binding.northMacedonia.setOnClickListener {
             setSelectedButton(binding.northMacedonia)
-            vModel.selectedCurrency = getString(R.string.northmacedonia_mk)
+            vModel.selectedCountry = getString(R.string.northmacedonia_mk)
         }
 
         binding.buttonCroatia.setOnClickListener {
             setSelectedButton(binding.buttonCroatia)
-            vModel.selectedCurrency = getString(R.string.croatia_hr)
+            vModel.selectedCountry = getString(R.string.croatia_hr)
         }
 
         binding.exportBlock.setOnClickListener {

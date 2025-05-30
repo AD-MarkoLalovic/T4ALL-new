@@ -145,6 +145,45 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
     }
 
+
+    suspend fun getAdapterPassageDataCountryFilter(
+        tagSerialNumber: String,
+        country: String,
+        page: Int,
+        perPage: Int,
+    ): Result<V2HistoryTagResponse> {
+
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken()
+
+        userToken?.let { token ->
+            return try {
+                val response = apiService(token).getToolHistoryTransitV2Country(
+                    tagSerialNumber,country, page.toString(), perPage.toString(), getLangKey()
+                )
+                if (response.isSuccessful) {
+                    response.body()?.let { indexData ->
+                        Result.success(indexData)
+                    } ?: Result.failure(NetworkError.ServerError)
+                } else {
+                    response.errorBody()?.let { errorBody ->
+                        val errorResponse = parseErrorResponse(response.code(), errorBody)
+                        Result.failure(NetworkError.ApiError(errorResponse))
+                    } ?: Result.failure(NetworkError.ServerError)
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "getIndexData: ${e.message} ${e.cause}")
+                Result.failure(NetworkError.ServerError)
+            }
+        }
+
+        return Result.failure(NetworkError.ServerError)
+
+    }
+
     suspend fun getToolHistoryTransitResult(
         tagSerialNumber: String,
         currentPage: String,

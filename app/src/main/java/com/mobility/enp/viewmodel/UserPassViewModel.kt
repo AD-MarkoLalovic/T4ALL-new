@@ -115,16 +115,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     private val _errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     val errorBody: LiveData<ErrorBody> get() = _errorBody
 
-    private var countryCode: String? = null
-
-
-    fun setCountryCode(countryCode: String) {
-        this.countryCode = countryCode
-    }
-
-    fun getCountryCode(): String {
-        return countryCode ?: ""
-    }
 
     var startDate = MutableLiveData<TimeSave>()
     var endDate = MutableLiveData<TimeSave>()
@@ -134,13 +124,15 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     var allTagsSelected = false
 
-    var selectedCurrency = ""
+    var selectedCountry: String = ""
 
-    fun nullDates() {
+    fun nullData() {
         startDate.value = TimeSave(null, null)
         endDate.value = TimeSave(null, null)
         userSelectedCalendarStart = null
         userSelectedCalendarEnd = null
+        indexData = null
+        selectedCountry = ""
     }
 
 
@@ -444,7 +436,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 itemsPerPage,
                 dateFrom,
                 dateTo,
-                selectedCurrency
+                selectedCountry
             )
 
             if (result.isSuccess) {
@@ -553,7 +545,66 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         flow.value = SubmitResult.Loading
 
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getAdapterPassageData(tagSerialNumber, currentPage, itemsPerPage)
+            var result = repository.getAdapterPassageData(tagSerialNumber, currentPage, itemsPerPage)
+            if (!selectedCountry.isEmpty()){
+                result = repository.getAdapterPassageDataCountryFilter(tagSerialNumber,selectedCountry, currentPage, itemsPerPage)
+            }
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    flow.value = SubmitResult.Empty
+                } else {
+                    flow.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _baseTagDataState.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(TOKEN, "invalid token detected login out user")
+                                _baseTagDataState.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code ?: 0,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _baseTagDataState.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(TAG, "api error ${error.errorResponse.message}")
+                            }
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
+
+
+
+    fun getToolHistoryTransitResultFragment(
+        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
+        tagSerialNumber: String,
+        currentPage: Int
+    ) {
+        flow.value = SubmitResult.Loading
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.getAdapterPassageDataCountryFilter(tagSerialNumber,selectedCountry, currentPage, itemsPerPage)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -849,6 +900,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     var tagSerials: ArrayList<Tag> = ArrayList()
     var selectedTags: ArrayList<Tag> = ArrayList()
+    var indexData: IndexData? = null
 
     private val database = DRoom.getRoomInstance(repository.fetchContext())
 
@@ -879,7 +931,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 itemsPerPage,
                 dateFrom ?: "",
                 dateTo ?: "",
-                selectedCurrency
+                selectedCountry
             )
             val body = result.getOrNull()
             body?.let { data ->
@@ -1072,7 +1124,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                                 tagSerial,
                                 dateStartApi,
                                 dateEndApi,
-                                selectedCurrency
+                                selectedCountry
                             )
 
                             val body = result.getOrNull()

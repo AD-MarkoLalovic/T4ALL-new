@@ -119,6 +119,16 @@ interface ApiService {
         @Query("lang") language: String
     ): Response<V2HistoryTagResponse>
 
+    @GET("/api/v2/history")
+    suspend fun getToolHistoryTransitV2Country(
+        @Query("filter[serial_number]") serialNumbers: String,
+        @Query("filter[country]") country: String,
+        @Query("page") page: String, // current page
+        @Query("perPage") perPage: String, // fixed
+        @Query("lang") language: String
+    ): Response<V2HistoryTagResponse>
+
+
     @GET("/api/v1/history/transit")
     suspend fun getToolHistoryTransitResultFragmentNew(
         @Query("filter[serial_numbers]") serialNumbers: String,  // can be multiple but then send them as 18150144618,18150144612 string

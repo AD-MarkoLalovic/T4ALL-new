@@ -17,7 +17,6 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.FragmentPassageHistoryBinding
 import com.mobility.enp.network.Repository
@@ -61,7 +60,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        vModel.nullDates()
+        vModel.nullData()
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
 
@@ -248,7 +247,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
     private fun setIndexData(indexData: IndexData) {
         Log.d(TAG, "setIndexData: $indexData")
-        vModel.setCountryCode(indexData.data?.customer?.country ?: "")
 
         binding.loopIcon.isEnabled = true
 
@@ -259,6 +257,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         }
 
         vModel.tagSerials = indexData.data?.tags as ArrayList<Tag>
+        vModel.indexData = indexData  // filter fragment need some data from here saving here to reduce api calls
 
         val toolHistoryListingAdapter =
             ToolHistoryListingAdapter(indexData, vModel, this, this, this)

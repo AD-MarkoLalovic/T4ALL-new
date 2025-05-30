@@ -41,7 +41,6 @@ class ToolHistoryListingPassageAdapter(
 
     private var currentPage = data.data?.records?.pagination?.currentPage ?: 1
     private val lastPage = data.data?.records?.pagination?.lastPage ?: 1
-    private val totalItems = data.data?.records?.pagination?.total ?: 1
 
     private var relation: ArrayList<Item> =
         data.data?.records?.items as ArrayList<Item>
