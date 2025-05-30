@@ -25,7 +25,6 @@ import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.dialogs.ComplaintFormDialog
 import com.mobility.enp.view.dialogs.ComplaintFormDialogOld
 import com.mobility.enp.view.dialogs.ObjectionFormDialog
-import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class ToolHistoryListingPassageAdapter(
@@ -62,6 +61,28 @@ class ToolHistoryListingPassageAdapter(
             binding.viewShade.background = null
             binding.toolHistoryStatus.setOnClickListener {
                 Log.d(TAG, "relation status: $relation")
+            }
+
+            when (relation.bill.countryCode) {
+                "RS" -> {
+                    binding.tagBillCountry.text = "SRB"
+                }
+
+                "ME" -> {
+                    binding.tagBillCountry.text = "MNE"
+                }
+
+                "MK" -> {
+                    binding.tagBillCountry.text = "MKD"
+                }
+
+                "HR" -> {
+                    binding.tagBillCountry.text = "HRV"
+                }
+
+                else -> {
+                    binding.tagBillCountry.text = ""
+                }
             }
 
             binding.btnComplaint.setOnClickListener {

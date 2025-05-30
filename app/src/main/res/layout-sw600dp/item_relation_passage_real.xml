@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="relation"
             type="com.mobility.enp.data.model.api_tool_history.v2base_model.Item" />
@@ -36,6 +38,7 @@
 
             <TextView
                 android:id="@+id/carInvoiceNumber"
+                style="@style/CaptionRegularTablet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/txtAccountNumber"
@@ -46,7 +49,6 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:scrollHorizontally="true"
-                style="@style/CaptionRegularTablet"
                 android:text="@{relation.bill.billFinal}"
                 android:textSize="@dimen/dimens_14sp"
                 tools:text="62458/2024-web" />
@@ -64,6 +66,7 @@
 
             <TextView
                 android:id="@+id/carTagNumber"
+                style="@style/CaptionRegularTablet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@id/txtAccountNumber"
@@ -77,26 +80,43 @@
                 android:text='@{relation.amount}'
                 android:textSize="@dimen/dimens_14sp"
                 android:textStyle="bold"
-                style="@style/CaptionRegularTablet"
                 tools:text="1000,00" />
 
             <TextView
                 android:id="@+id/carTagCurrency"
+                style="@style/CaptionRegularTablet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/carInvoiceNumber"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="@dimen/dimens_17dp"
                 android:layout_marginEnd="@dimen/dimens_15dp"
-                android:layout_marginBottom="@dimen/dimens_17dp"
                 android:layout_toStartOf="@id/toolHistoryStatus"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
                 android:scrollHorizontally="true"
                 android:text='@{relation.currency}'
-                android:textSize="@dimen/dimens_14sp"
-                style="@style/CaptionRegularTablet"
+                android:textSize="@dimen/dimens_8sp"
                 android:textStyle="bold"
                 tools:text="RSD" />
+
+            <TextView
+                android:id="@+id/tagBillCountry"
+                style="@style/CaptionRegularTablet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/carTagCurrency"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:layout_marginEnd="@dimen/dimens_15dp"
+                android:layout_toStartOf="@id/toolHistoryStatus"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text='@{relation.currency}'
+                android:textSize="@dimen/dimens_8sp"
+                android:textStyle="bold"
+                tools:text="SRB" />
         </RelativeLayout>
 
         <RelativeLayout

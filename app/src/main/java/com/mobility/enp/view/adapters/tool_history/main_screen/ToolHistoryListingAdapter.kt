@@ -63,7 +63,10 @@ class ToolHistoryListingAdapter(
 
                     if (!toolHistoryListing.data?.sumTags.isNullOrEmpty()) {
 
-                        // total tag price adapter
+                        /**
+                         * this adapter is used for presenting the total cost of tag
+                         * @param takes in a List<SumTag> of costs
+                         */
                         binding.cyclerTotalPrice.adapter =
                             TotalCostPassageAdapter(toolHistoryListing.data?.sumTags)
                         binding.cyclerTotalPrice.layoutManager =
@@ -72,17 +75,18 @@ class ToolHistoryListingAdapter(
                         binding.position = position
 
 
-
-                        //individual passage adapter
-//
-//                        binding.cycler.adapter = ToolHistoryListingPassageAdapter(
-//                            toolHistoryListing,
-//                            complaintInterface,
-//                            false,
-//                            lifecycleOwner,
-//                            itemSerialNumber, countryCode
-//                        )
-//                        binding.cycler.layoutManager = LinearLayoutManager(context)
+                        /**
+                         * this adapter is used for presenting individual passages for 1 tag serial
+                         * @param takes in V2HistoryTagResponse model from 1 tag
+                         */
+                        binding.cycler.adapter = ToolHistoryListingPassageAdapter(
+                            toolHistoryListing,
+                            complaintInterface,
+                            false,
+                            lifecycleOwner,
+                            itemSerialNumber, countryCode
+                        )
+                        binding.cycler.layoutManager = LinearLayoutManager(context)
 
                         binding.executePendingBindings()
 
