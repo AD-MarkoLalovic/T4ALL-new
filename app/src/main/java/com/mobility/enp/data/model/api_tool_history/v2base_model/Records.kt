@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose
 data class Records(
     @SerializedName("items")
     @Expose
-    val items: List<Item?>?,
+    val items: List<Item>,
     @SerializedName("pagination")
     @Expose
     val pagination: Pagination?

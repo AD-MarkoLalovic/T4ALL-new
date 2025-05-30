@@ -24,5 +24,5 @@ data class Bill(
     val id: String?,
     @SerializedName("paid")
     @Expose
-    val paid: String?
+    val paid: String
 )

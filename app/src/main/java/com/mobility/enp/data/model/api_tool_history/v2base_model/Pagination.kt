@@ -9,23 +9,23 @@ import com.google.gson.annotations.Expose
 data class Pagination(
     @SerializedName("current_page")
     @Expose
-    val currentPage: Int?,
+    val currentPage: Int,
     @SerializedName("first_page")
     @Expose
-    val firstPage: Int?,
+    val firstPage: Int,
     @SerializedName("last_page")
     @Expose
-    val lastPage: Int?,
+    val lastPage: Int,
     @SerializedName("next_page")
     @Expose
-    val nextPage: Int?,
+    val nextPage: Int,
     @SerializedName("per_page")
     @Expose
-    val perPage: Int?,
+    val perPage: Int,
     @SerializedName("prev_page")
     @Expose
-    val prevPage: Int?,
+    val prevPage: Int,
     @SerializedName("total")
     @Expose
-    val total: Int?
+    val total: Int
 )

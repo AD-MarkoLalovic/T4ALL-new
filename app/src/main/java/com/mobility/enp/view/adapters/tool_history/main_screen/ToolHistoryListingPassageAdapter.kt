@@ -16,6 +16,8 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.listing.InvoiceRelation
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
+import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.ItemRelationPassageRealBinding
 import com.mobility.enp.network.Repository
 import com.mobility.enp.util.SubmitResult
@@ -27,7 +29,7 @@ import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class ToolHistoryListingPassageAdapter(
-    private val data: ToolHistoryListing,
+    private val data: V2HistoryTagResponse,
     private val complaintInterface: SendToFragment,
     private val hideComplaintButton: Boolean,
     private val lifecycleOwner: LifecycleOwner,
@@ -38,12 +40,12 @@ class ToolHistoryListingPassageAdapter(
 
     private lateinit var context: Context
 
-    private var currentPage = data.data.currentPage
-    private val lastPage = data.data.lastPage
-    private val totalItems = data.data.total
+    private var currentPage = data.data?.records?.pagination?.currentPage ?: 1
+    private val lastPage = data.data?.records?.pagination?.lastPage ?: 1
+    private val totalItems = data.data?.records?.pagination?.total ?: 1
 
-    private var relation: ArrayList<InvoiceRelation> =
-        data.data.items[0].transitItems as ArrayList<InvoiceRelation>
+    private var relation: ArrayList<Item> =
+        data.data?.records?.items as ArrayList<Item>
 
     companion object {
         const val TAG = "PassageAdapter"
@@ -55,10 +57,7 @@ class ToolHistoryListingPassageAdapter(
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(relation: InvoiceRelation, complaintInterface: SendToFragment) {
-            if (!relation.entryToll.contains("-")) {
-                relation.entryToll += " -"
-            }
+        fun bind(relation: Item, complaintInterface: SendToFragment) {
             binding.relation = relation
             binding.viewShade.background = null
             binding.toolHistoryStatus.setOnClickListener {
@@ -73,7 +72,7 @@ class ToolHistoryListingPassageAdapter(
 
                     val complaintFormDialog = ComplaintFormDialog({ complaintBody ->
                         complaintInterface.sendComplaintData(complaintBody)
-                    }, relation.itemId)
+                    }, relation.id)
 
                     complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
                 } else if (countryCode.isNotEmpty() && countryCode != "RS") {
@@ -81,7 +80,7 @@ class ToolHistoryListingPassageAdapter(
 
                     val complaintFormDialog = ComplaintFormDialogOld({ complaintBody ->
                         complaintInterface.sendComplaintData(complaintBody)
-                    }, relation.itemId)
+                    }, relation.id)
 
                     complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
                 } else {
@@ -138,7 +137,7 @@ class ToolHistoryListingPassageAdapter(
                 binding.btnComplaint.visibility = View.VISIBLE
             }
 
-            when (relation.status.value) {
+            when (relation.bill.paid.toInt()) {
                 1 -> {
                     binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_green)
                     binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_green)
@@ -188,7 +187,7 @@ class ToolHistoryListingPassageAdapter(
         val currentItem = relation[holder.bindingAdapterPosition]
         holder.bind(currentItem, complaintInterface)
         if (Repository.isNetworkAvailable(context)) {
-            performDataFill(currentItem, holder.bindingAdapterPosition)
+//            performDataFill(currentItem, holder.bindingAdapterPosition) todo
         }
     }
 
@@ -213,7 +212,7 @@ class ToolHistoryListingPassageAdapter(
                             currentPage = it.data.currentPage
 
                             for (item: InvoiceRelation in it.data.items[0].transitItems) {
-                                relation.add(item)
+//                                relation.add(item) todo
                                 notifyItemChanged(relation.size - 1)
                                 Log.d(TAG, "dataInserted: $item")
                             }

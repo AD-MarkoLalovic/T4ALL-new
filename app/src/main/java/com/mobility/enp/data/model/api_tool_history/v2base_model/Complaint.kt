@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose
 data class Complaint(
     @SerializedName("id")
     @Expose
-    val id: Int?,
+    val id: Int,
     @SerializedName("objections")
     @Expose
     val objections: List<Objection?>?
