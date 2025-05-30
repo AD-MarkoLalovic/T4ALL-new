@@ -490,11 +490,15 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
             var result =
                 repository.getAdapterPassageData(tagSerialNumber, currentPage, itemsPerPage)
             if (!selectedCountry.isEmpty()) {
+
+                val dateFrom = startDate.value?.formattedTime
+                val dateTo = endDate.value?.formattedTime
+
                 result = repository.getAdapterPassageDataCountryFilter(
                     tagSerialNumber,
                     selectedCountry,
                     currentPage,
-                    itemsPerPage
+                    itemsPerPage, dateFrom ?: "", dateTo ?: ""
                 )
             }
             if (result.isSuccess) {
@@ -551,11 +555,17 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         flow.value = SubmitResult.Loading
 
         viewModelScope.launch(Dispatchers.IO) {
+
+            val dateFrom = startDate.value?.formattedTime
+            val dateTo = endDate.value?.formattedTime
+
             val result = repository.getAdapterPassageDataCountryFilter(
                 tagSerialNumber,
                 selectedCountry,
                 currentPage,
-                itemsPerPage
+                itemsPerPage,
+                dateFrom ?: "",
+                dateTo ?: ""
             )
             if (result.isSuccess) {
                 val data = result.getOrNull()

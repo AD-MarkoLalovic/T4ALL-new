@@ -72,6 +72,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         setFranchiser()
 
         vModel.selectedTags.clear()
+        vModel.selectedCountry = getString(R.string.serbia_rs)
 
         binding.progBar.visibility = View.VISIBLE
 

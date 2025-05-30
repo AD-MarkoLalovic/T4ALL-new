@@ -116,7 +116,9 @@ interface ApiService {
         @Query("filter[country]") country: String,
         @Query("page") page: String, // current page
         @Query("perPage") perPage: String, // fixed
-        @Query("lang") language: String
+        @Query("lang") language: String,
+        @Query("filter[date_from]") dateFrom: String,
+        @Query("filter[date_to]") dateTo: String
     ): Response<V2HistoryTagResponse>
 
     @GET("/api/v1/bills")
