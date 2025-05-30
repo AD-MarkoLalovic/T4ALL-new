@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
+import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.databinding.FragmentToolHistorySearchQueryBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
@@ -226,7 +227,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     }
 
     private fun setObservers() {
-
         vModel.errorBody.observe(viewLifecycleOwner) { errorBody ->
             binding.progBar.visibility = View.GONE
             context?.let { context ->
@@ -248,6 +248,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
                     setIndexData(tagIndex.data.first)
+                    setVisibleCountries(tagIndex.data.second)
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -448,6 +449,23 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     override fun onTagRemove(tag: Tag) {
         vModel.selectedTags.remove(tag)
         Log.d(TAG, "onSendTag: ${vModel.selectedTags}")
+    }
+
+    private fun setVisibleCountries(cardWebModel: CardWebModel) {
+        cardWebModel.data?.let { model ->
+            if (model.showTabHR) {
+                binding.buttonCroatia.visibility = View.VISIBLE
+            }
+            if (model.showTabRS) {
+                binding.buttonSerbia.visibility = View.VISIBLE
+            }
+            if (model.showTabME) {
+                binding.buttonMontenegro.visibility = View.VISIBLE
+            }
+            if (model.showTabMK) {
+                binding.northMacedonia.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onDestroyView() {

@@ -29,11 +29,11 @@ data class Data(
     @SerializedName("showSubscriptionNotification")
     val showSubscriptionNotification: ShowSubscriptionNotification?,
     @SerializedName("showTabHR")
-    val showTabHR: Boolean?,
+    val showTabHR: Boolean,
     @SerializedName("showTabME")
-    val showTabME: Boolean?,
+    val showTabME: Boolean,
     @SerializedName("showTabMK")
-    val showTabMK: Boolean?,
+    val showTabMK: Boolean,
     @SerializedName("showTabRS")
-    val showTabRS: Boolean?
+    val showTabRS: Boolean
 )
