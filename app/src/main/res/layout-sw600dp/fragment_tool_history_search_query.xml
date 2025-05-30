@@ -138,40 +138,43 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/buttonAll"
-                        style="@style/CaptionMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:layout_marginEnd="@dimen/dimens_12dp"
-                        android:background="@drawable/currency_selector"
-                        android:gravity="center"
-                        android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/all"
-                        android:textColor="@color/text_color_selector" />
-
-                    <TextView
                         android:id="@+id/buttonSerbia"
                         style="@style/CaptionMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
-                        android:layout_marginEnd="@dimen/dimens_12dp"
+                        android:layout_marginEnd="@dimen/dimens_6dp"
                         android:background="@drawable/currency_selector"
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/dimens_16dp"
                         android:text="@string/serbia"
                         android:textColor="@color/text_color_selector" />
 
+
                     <TextView
                         android:id="@+id/buttonMontenegro"
                         style="@style/CaptionMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
-                        android:layout_marginEnd="@dimen/dimens_12dp"
+                        android:layout_marginEnd="@dimen/dimens_6dp"
                         android:background="@drawable/currency_selector"
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/dimens_16dp"
                         android:text="@string/montenegro"
                         android:textColor="@color/text_color_selector" />
+
+
+                    <TextView
+                        android:id="@+id/northMacedonia"
+                        style="@style/CaptionMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="@dimen/dimens_6dp"
+                        android:background="@drawable/currency_selector"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/dimens_16dp"
+                        android:text="@string/north_macedonian_passage"
+                        android:textColor="@color/text_color_selector" />
+
 
                     <TextView
                         android:id="@+id/buttonCroatia"

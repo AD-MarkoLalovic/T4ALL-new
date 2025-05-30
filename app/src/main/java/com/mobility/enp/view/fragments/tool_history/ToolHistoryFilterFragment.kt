@@ -131,26 +131,26 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             vModel.showDatePicker(false, requireContext(), franchiseViewModel.franchiseModel.value)
         }
 
-        setSelectedButton(binding.buttonAll)
+        setSelectedButton(binding.buttonSerbia)
 
-        binding.buttonAll.setOnClickListener {
-            setSelectedButton(binding.buttonAll)
-            vModel.selectedCurrency = ""
+        binding.buttonSerbia.setOnClickListener {
+            setSelectedButton(binding.buttonSerbia)
+            vModel.selectedCurrency = getString(R.string.serbia_rs)
         }
 
         binding.buttonMontenegro.setOnClickListener {
             setSelectedButton(binding.buttonMontenegro)
-            vModel.selectedCurrency = getString(R.string.rsd)
+            vModel.selectedCurrency = getString(R.string.montenegro_me)
         }
 
-        binding.buttonSerbia.setOnClickListener {
-            setSelectedButton(binding.buttonSerbia)
-            vModel.selectedCurrency = getString(R.string.eur)
+        binding.northMacedonia.setOnClickListener {
+            setSelectedButton(binding.northMacedonia)
+            vModel.selectedCurrency = getString(R.string.northmacedonia_mk)
         }
 
         binding.buttonCroatia.setOnClickListener {
             setSelectedButton(binding.buttonCroatia)
-            vModel.selectedCurrency = getString(R.string.mkd)
+            vModel.selectedCurrency = getString(R.string.croatia_hr)
         }
 
         binding.exportBlock.setOnClickListener {
@@ -207,7 +207,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     }
 
     private fun setSelectedButton(selectedButton: View) = with(binding) {
-        buttonAll.isSelected = false
+        northMacedonia.isSelected = false
         buttonSerbia.isSelected = false
         buttonMontenegro.isSelected = false
         buttonCroatia.isSelected = false
