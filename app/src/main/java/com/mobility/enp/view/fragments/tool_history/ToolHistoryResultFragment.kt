@@ -20,8 +20,8 @@ import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingAdapter
-import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingPassageAdapter
+import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
+import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapter
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers

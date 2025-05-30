@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.result
+package com.mobility.enp.view.adapters.tool_history.main_and_filter_screen
 
 import android.content.Context
 import android.util.Log
@@ -12,23 +12,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.TagUtilCycler
-import com.mobility.enp.data.model.api_tool_history.index.Tag
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
-import com.mobility.enp.data.model.api_tool_history.listing.TotalAmount
+import com.mobility.enp.data.model.api_tool_history.index.IndexData
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
-import com.mobility.enp.view.adapters.tool_history.main_screen.TotalCostPassageAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class HistoryResultAdapter(
-    val tags: List<Tag>,
-    val viewModel: UserPassViewModel,
-    private val complaintInterface: HistoryContentPagingAdapter.SendToFragment,
-    val lifecycleOwner: LifecycleOwner, val countryCode: String
-) :
-    RecyclerView.Adapter<HistoryResultAdapter.TagsViewHolder>() {
+class ToolHistoryListingAdapter(
+    private val toolHistoryIndex: IndexData,
+    private val viewModel: UserPassViewModel,
+    private val complaintInterface: ToolHistoryListingPassageAdapter.SendToFragment,
+    val lifecycleOwner: LifecycleOwner,
+    val passageData: SavePassageData,
+) : RecyclerView.Adapter<ToolHistoryListingAdapter.TagsViewHolder>() {
 
     private lateinit var context: Context
 
@@ -38,74 +36,82 @@ class HistoryResultAdapter(
 
     inner class TagsViewHolder(
         val binding: ToolHistoryIndexCardBinding
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
+
 
         fun bind(
             toolHistoryIndex: TagUtilCycler,
             position: Int,
-            viewModel: UserPassViewModel,
-            context: Context,
-            holder: TagsViewHolder,
-            complaintInterface: HistoryContentPagingAdapter.SendToFragment
+            holder: TagsViewHolder, countryCode: String
         ) {
             // perform initial data fill // for sub adapter
+            binding.data = toolHistoryIndex
+
             holder.binding.progbar.visibility = View.VISIBLE
             binding.noPassage.visibility = View.GONE
 
-            val initDataTransfer = object : PassageDataInterface {
-                override fun onOk(toolHistoryListing: ToolHistoryListing) {
-                    Log.d(TAG, "OnOk : $toolHistoryListing")
+            val itemSerialNumber = toolHistoryIndex.serialNumber
+
+            val contentInterface = object : PassageDataInterface {
+
+                override fun onOk(toolHistoryListing: V2HistoryTagResponse) {
+                    toolHistoryListing.serial = itemSerialNumber
+
+                    passageData.psgData(toolHistoryListing)
 
                     holder.binding.progbar.visibility = View.GONE
 
-                    if (!toolHistoryListing.data.sum.isNullOrEmpty()) {
-                        val total = toolHistoryListing.data.sum[0].total
-//                        binding.cyclerTotalPrice.adapter =  todo
-//                            TotalCostPassageAdapter(total as ArrayList<TotalAmount>)
+                    if (!toolHistoryListing.data?.sumTags.isNullOrEmpty()) {
+
+                        /**
+                         * this adapter is used for presenting the total cost of tag
+                         * @param takes in a List<SumTag> of costs
+                         */
+                        binding.cyclerTotalPrice.adapter =
+                            TotalCostPassageAdapter(toolHistoryListing.data?.sumTags)
                         binding.cyclerTotalPrice.layoutManager =
                             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-                        binding.data = toolHistoryIndex
                         binding.position = position
 
-                        binding.cycler.adapter = HistoryContentPagingAdapter(
+
+                        /**
+                         * this adapter is used for presenting individual passages for 1 tag serial
+                         * @param takes in V2HistoryTagResponse model from 1 tag
+                         */
+                        binding.cycler.adapter = ToolHistoryListingPassageAdapter(
                             toolHistoryListing,
                             complaintInterface,
+                            false,
                             lifecycleOwner,
-                            toolHistoryIndex.serialNumber,
-                            countryCode
+                            itemSerialNumber, countryCode
                         )
                         binding.cycler.layoutManager = LinearLayoutManager(context)
 
                         binding.executePendingBindings()
+
+
                     } else {
                         binding.noPassage.visibility = View.VISIBLE
-                        binding.tagSerialNumber.visibility = View.VISIBLE
-                        binding.tagSerialNumber.text = toolHistoryIndex.serialNumber
                     }
                 }
 
                 override fun onFailed(boolean: Boolean, cause: String) {
                     holder.binding.progbar.visibility = View.GONE
                     Toast.makeText(
-                        context,
-                        "failed to set sub adapter with data",
-                        Toast.LENGTH_SHORT
+                        context, "failed to set sub adapter with data", Toast.LENGTH_SHORT
                     ).show()
                 }
             }
 
-            val dateFrom = viewModel.startDate.value?.formattedTime?.replace("/", ".") ?: ""
-            val dateTo = viewModel.endDate.value?.formattedTime?.replace("/", ".") ?: ""
 
             val indexListing =
-                MutableStateFlow<SubmitResult<ToolHistoryListing>>(SubmitResult.Loading)
+                MutableStateFlow<SubmitResult<V2HistoryTagResponse>>(SubmitResult.Loading)
 
             collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
                 when (serverResponse) {
                     is SubmitResult.Success -> {
-                        initDataTransfer.onOk(serverResponse.data)
+                        contentInterface.onOk(serverResponse.data)
                     }
 
                     is SubmitResult.FailureServerError -> {
@@ -116,13 +122,6 @@ class HistoryResultAdapter(
                         logError(context.resources.getString(R.string.api_call_error))
                     }
 
-                    is SubmitResult.InvalidApiToken -> {
-                        complaintInterface.invalidToken(
-                            serverResponse.errorMessage,
-                            serverResponse.errorCode
-                        )
-                    }
-
                     else -> {
                         SubmitResult.Empty
                     }
@@ -131,12 +130,9 @@ class HistoryResultAdapter(
 
 
             if (viewModel.internetAvailable()) {
-                viewModel.getToolHistoryTransitResult(
-                    indexListing,
-                    toolHistoryIndex.serialNumber, 1, dateFrom, dateTo
-                )
+                viewModel.getToolHistoryTransit(indexListing, toolHistoryIndex.serialNumber, 1)
             } else {
-                viewModel.fetchStoredData(initDataTransfer, toolHistoryIndex.serialNumber)
+                viewModel.fetchStoredData(contentInterface, toolHistoryIndex.serialNumber)
             }
 
             binding.executePendingBindings()
@@ -147,21 +143,25 @@ class HistoryResultAdapter(
         context = parent.context
         return TagsViewHolder(
             ToolHistoryIndexCardBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
+                LayoutInflater.from(parent.context), parent, false
             )
         )
     }
 
-    override fun getItemCount(): Int = tags.size
+    private fun logError(string: String) {
+        Log.d(TAG, "showError: $string")
+    }
+
+    override fun getItemCount(): Int = toolHistoryIndex.data?.tags?.size ?: 0
 
     override fun onBindViewHolder(holder: TagsViewHolder, position: Int) {
-        val currentTag = tags[holder.bindingAdapterPosition]
+        val currentTag = toolHistoryIndex.data?.tags!![holder.bindingAdapterPosition]
+
         val tagUtilCycler = TagUtilCycler("", "")
+
         try {
-            tagUtilCycler.serialNumber = currentTag.serialNumber ?: "no api data"
-            tagUtilCycler.registrationPlate = currentTag.registrationPlate ?: "no api data"
+            tagUtilCycler.serialNumber = currentTag?.serialNumber ?: "no api data"
+            tagUtilCycler.registrationPlate = currentTag?.registrationPlate ?: "no api data"
         } catch (e: NullPointerException) {
             Log.d(TAG, "issueDetected: $tagUtilCycler")
         }
@@ -180,19 +180,18 @@ class HistoryResultAdapter(
         holder.bind(
             tagUtilCycler,
             holder.bindingAdapterPosition,
-            viewModel,
-            context,
             holder,
-            complaintInterface
+            toolHistoryIndex.data?.customer?.country ?: ""
         )
     }
 
-    private fun logError(string: String) {
-        Log.d(TAG, "showError: $string")
-    }
-
     interface PassageDataInterface {
-        fun onOk(toolHistoryListing: ToolHistoryListing)
+        fun onOk(toolHistoryListing: V2HistoryTagResponse)
         fun onFailed(boolean: Boolean, cause: String)
     }
+
+    interface SavePassageData {
+        fun psgData(toolHistoryListing: V2HistoryTagResponse)
+    }
+
 }

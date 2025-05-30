@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.main_screen
+package com.mobility.enp.view.adapters.tool_history.main_and_filter_screen
 
 import android.content.Context
 import android.content.res.Configuration
@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
-import com.mobility.enp.data.model.api_tool_history.listing.InvoiceRelation
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.ItemRelationPassageRealBinding
