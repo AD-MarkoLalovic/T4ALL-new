@@ -151,6 +151,8 @@ class ToolHistoryListingPassageAdapter(
                     binding.btnObjection.text = buttonText
                 }
 
+                binding.executePendingBindings()
+
             } else {
                 binding.complaintId.visibility = View.GONE
                 binding.container.visibility = View.GONE
@@ -212,11 +214,7 @@ class ToolHistoryListingPassageAdapter(
         }
     }
 
-    private fun performDataFill(currentItem: InvoiceRelation, bindingAdapterPosition: Int) {
-        Log.d(
-            TAG,
-            "onBindViewHolder: adapter pos $bindingAdapterPosition arrayTotal ${relation.size - 1} totalItems $totalItems"
-        )
+    private fun performDataFill(currentItem: Item, bindingAdapterPosition: Int) {
         if (relation[relation.size - 1] == currentItem && lastPage > currentPage) {
             val indexListing =
                 MutableStateFlow<SubmitResult<ToolHistoryListing>>(SubmitResult.Loading)

@@ -52,7 +52,7 @@ class HistoryContentPagingAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(relation: InvoiceRelation, complaintInterface: SendToFragment) {
-            binding.relation = relation
+//            binding.relation = relation todo
             binding.viewShade.background = null
             binding.toolHistoryStatus.setOnClickListener {
                 Log.d(TAG, "relation status: $relation")
