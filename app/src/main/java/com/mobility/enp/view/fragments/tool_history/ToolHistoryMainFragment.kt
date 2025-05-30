@@ -278,12 +278,12 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
     override fun sendDataFill(
         nextPage: Int,
-        flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
+        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
         tagSerialNumber: String
     ) {
         binding.progBar.visibility = View.VISIBLE
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            vModel.getToolHistoryTransitPaginationUpdate(flow, tagSerialNumber, nextPage)
+            vModel.getToolHistoryTransit(flow, tagSerialNumber, nextPage)
         }
     }
 

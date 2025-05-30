@@ -210,14 +210,14 @@ class ToolHistoryListingPassageAdapter(
         val currentItem = relation[holder.bindingAdapterPosition]
         holder.bind(currentItem, complaintInterface)
         if (Repository.isNetworkAvailable(context)) {
-//            performDataFill(currentItem, holder.bindingAdapterPosition) todo
+            performDataFill(currentItem, holder.bindingAdapterPosition) // paggination
         }
     }
 
     private fun performDataFill(currentItem: Item, bindingAdapterPosition: Int) {
         if (relation[relation.size - 1] == currentItem && lastPage > currentPage) {
             val indexListing =
-                MutableStateFlow<SubmitResult<ToolHistoryListing>>(SubmitResult.Loading)
+                MutableStateFlow<SubmitResult<V2HistoryTagResponse>>(SubmitResult.Loading)
 
             collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
                 complaintInterface.stopSpinner()
@@ -226,12 +226,12 @@ class ToolHistoryListingPassageAdapter(
                         serverResponse.data.let {
                             Log.d(
                                 TAG,
-                                "performDataFill: ${it.data.currentPage} ${it.data.lastPage}"
+                                "performDataFill: ${it.data?.records?.pagination?.currentPage} ${it.data?.records?.pagination?.lastPage}"
                             )
-                            currentPage = it.data.currentPage
+                            currentPage = it.data?.records?.pagination?.currentPage ?: 1
 
-                            for (item: InvoiceRelation in it.data.items[0].transitItems) {
-//                                relation.add(item) todo
+                            for (item: Item in it.data?.records?.items ?: emptyList()) {
+                                relation.add(item)
                                 notifyItemChanged(relation.size - 1)
                                 Log.d(TAG, "dataInserted: $item")
                             }
@@ -246,7 +246,7 @@ class ToolHistoryListingPassageAdapter(
 
             complaintInterface.sendDataFill(currentPage + 1, indexListing, tagSerialNumber)
         } else if (lastPage == currentPage && relation[relation.size - 1] == currentItem) {
-            //last item - toast msg removed
+            Log.d(TAG, "performDataFill: no more passage data for tag ${data.serial}")
         }
     }
 
@@ -255,7 +255,7 @@ class ToolHistoryListingPassageAdapter(
         fun sendObjectionData(objectionBody: ObjectionBody)
         fun sendDataFill(
             nextPage: Int,
-            flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
+            flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
             tagSerialNumber: String
         )
 

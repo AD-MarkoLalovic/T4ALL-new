@@ -599,62 +599,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
-
-    fun getToolHistoryTransitPaginationUpdate(
-        flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
-        tagSerialNumber: String,
-        currentPage: Int
-    ) {
-        flow.value = SubmitResult.Loading
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getTagFill(tagSerialNumber, currentPage, itemsPerPage)
-            if (result.isSuccess) {
-                val data = result.getOrNull()
-                if (data == null) {
-                    flow.value = SubmitResult.Empty
-                } else {
-                    flow.value = SubmitResult.Success(data)
-                }
-            } else {
-                when (val error = result.exceptionOrNull()) {
-                    is NetworkError.ServerError -> {
-                        Log.d(TAG, "Error while fetching tag serial data")
-                        _baseTagDataState.value = SubmitResult.FailureServerError
-                    }
-
-                    is NetworkError.NoConnection -> {
-                        _baseTagDataState.value = SubmitResult.FailureNoConnection
-                    }
-
-                    is NetworkError.ApiError -> {
-                        when (error.errorResponse.code) {
-                            401, 405 -> {
-                                Log.d(TOKEN, "invalid token detected login out user")
-                                _baseTagDataState.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code ?: 0,
-                                        error.errorResponse.message ?: ""
-                                    )
-                            }
-
-                            else -> {
-                                _baseTagDataState.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
-                                Log.d(TAG, "api error ${error.errorResponse.message}")
-                            }
-                        }
-                    }
-
-                    else -> {}
-                }
-            }
-        }
-
-    }
-
     fun fetchStoredData(
         dataInterface: ToolHistoryListingAdapter.PassageDataInterface,
         tagSerialNumber: String
