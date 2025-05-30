@@ -6,11 +6,8 @@
 
         <variable
             name="relation"
-            type="com.mobility.enp.data.model.api_tool_history.listing.InvoiceRelation" />
+            type="com.mobility.enp.data.model.api_tool_history.v2base_model.Item" />
 
-        <variable
-            name="tagSerial"
-            type="String" />
     </data>
 
     <RelativeLayout
@@ -51,7 +48,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:scrollHorizontally="true"
-                android:text="@{relation.invoiceNumber}"
+                android:text="@{relation.bill.billFinal}"
                 android:textSize="@dimen/dimens_14sp"
                 tools:text="62458/2024-web" />
 
@@ -114,8 +111,8 @@
                 style="@style/MyOutlinedButtonStyle"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@id/passageEntryTime"
-                android:layout_alignBottom="@+id/passageExitTime"
+                android:layout_alignTop="@id/passageEntryDate"
+                android:layout_alignBottom="@+id/passageExitDate"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="@dimen/dimens_10dp"
                 android:text="@string/complaint"
@@ -127,8 +124,8 @@
                 android:id="@+id/container"
                 android:layout_width="@dimen/dimens_120dp"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@id/passageEntryTime"
-                android:layout_alignBottom="@+id/passageExitTime"
+                android:layout_alignTop="@id/passageEntryDate"
+                android:layout_alignBottom="@+id/passageExitDate"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="@dimen/dimens_10dp"
                 android:visibility="gone"
@@ -182,7 +179,7 @@
                 android:ellipsize="end"
                 android:maxLines="3"
                 android:scrollHorizontally="true"
-                android:text="@{relation.entryToll + ' ' + relation.exitToll}"
+                android:text="@{relation.tollPlaza}"
                 tools:text="Beograd - Novi Sad" />
 
             <TextView
@@ -205,19 +202,6 @@
                 tools:text="Br reklamacije #1234" />
 
             <TextView
-                android:id="@+id/passageEntryTime"
-                style="@style/CaptionRegular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/passageRelation"
-                android:layout_marginTop="@dimen/dimens_5dp"
-                android:layout_marginEnd="@dimen/dimens_10dp"
-                android:layout_toEndOf="@id/passageEntryDate"
-                android:text='@{relation.entryTime}'
-                android:textColor="@color/figmaIntroEclipseColorInactive"
-                tools:text="10:11" />
-
-            <TextView
                 android:id="@+id/passageEntryDate"
                 style="@style/CaptionRegular"
                 android:layout_width="wrap_content"
@@ -226,33 +210,21 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="@dimen/dimens_5dp"
                 android:layout_marginEnd="@dimen/dimens_10dp"
-                android:text='@{relation.entryDate}'
+                android:text='@{relation.checkInDate}'
                 android:textColor="@color/figmaIntroEclipseColorInactive"
-                tools:text="14.07.2023." />
-
-            <TextView
-                android:id="@+id/passageExitTime"
-                style="@style/CaptionRegular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/passageEntryTime"
-                android:layout_marginEnd="@dimen/dimens_10dp"
-                android:layout_toEndOf="@id/passageExitDate"
-                android:text='@{relation.exitTime}'
-                android:textColor="@color/figmaIntroEclipseColorInactive"
-                tools:text="10:20" />
+                tools:text="2024-10-15 16:02:02" />
 
             <TextView
                 android:id="@+id/passageExitDate"
                 style="@style/CaptionRegular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/passageEntryTime"
+                android:layout_below="@id/passageEntryDate"
                 android:layout_alignParentStart="true"
                 android:layout_marginEnd="@dimen/dimens_10dp"
-                android:text='@{relation.exitDate}'
+                android:text='@{relation.checkOutDate}'
                 android:textColor="@color/figmaIntroEclipseColorInactive"
-                tools:text="15.07.2023." />
+                tools:text="2024-10-15 17:09:10" />
 
             <View
                 android:id="@+id/center"

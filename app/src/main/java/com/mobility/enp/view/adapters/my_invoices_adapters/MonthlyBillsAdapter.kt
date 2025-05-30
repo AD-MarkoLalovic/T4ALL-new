@@ -18,7 +18,6 @@ import com.mobility.enp.data.model.api_my_invoices.Month
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.databinding.ItemBillBinding
-import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingPassageAdapter
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
 
 //First ADAPTER
@@ -276,7 +275,7 @@ class MonthlyBillsAdapter(
 
     private fun checkDataFill(position: Int, currentBill: Month) {
         Log.d(
-            ToolHistoryListingPassageAdapter.TAG,
+            TAG,
             "onBindViewHolder: adapter pos $position arrayTotal ${monthlyBillsArray.size - 1} totalItems ${data.total}"
         )
         if (monthlyBillsArray[monthlyBillsArray.size - 1] == currentBill && lastPage > currentPage) {
@@ -316,6 +315,7 @@ class MonthlyBillsAdapter(
             data: MutableLiveData<BillsDetailsResponse>,
             availableCurrencies: String
         )
+
         fun requestNotificationFromUser(userPermission: BillsDetailsAdapter.UserPermission)
     }
 
