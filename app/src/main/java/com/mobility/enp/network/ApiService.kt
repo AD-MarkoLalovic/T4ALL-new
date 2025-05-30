@@ -97,15 +97,6 @@ interface ApiService {
         @Path("card_id") cardId: String
     ): Response<Unit>
 
-    @GET("/api/v1/history/transit")
-    suspend fun getToolHistoryTransitNew(
-        @Query("filter[serial_numbers]") serialNumbers: String,  // can be multiple but then send them as 18150144618,18150144612 string
-        @Query("page") page: String, // current page
-        @Query("perPage") perPage: String, // items per page
-        @Query("lang") language: String
-    ): Response<ToolHistoryListing>
-
-
     /**
      * possible filter
      * Allowed filter(s) are `date_from, date_to, serial_number, currency, country`."
@@ -127,18 +118,6 @@ interface ApiService {
         @Query("perPage") perPage: String, // fixed
         @Query("lang") language: String
     ): Response<V2HistoryTagResponse>
-
-
-    @GET("/api/v1/history/transit")
-    suspend fun getToolHistoryTransitResultFragmentNew(
-        @Query("filter[serial_numbers]") serialNumbers: String,  // can be multiple but then send them as 18150144618,18150144612 string
-        @Query("page") page: String, // current page
-        @Query("perPage") perPage: String, // items per page
-        @Query("filter[date_from]") dateFrom: String,  // format to send dd.MM.yyyy
-        @Query("filter[date_to]") dateTo: String,
-        @Query("lang") language: String,
-        @Query("filter[currency]") currency: String
-    ): Response<ToolHistoryListing>
 
     @GET("/api/v1/bills")
     fun getInvoicesIndex(
