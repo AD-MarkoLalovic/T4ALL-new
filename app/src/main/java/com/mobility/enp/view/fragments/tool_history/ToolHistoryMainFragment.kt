@@ -17,14 +17,14 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.FragmentPassageHistoryBinding
 import com.mobility.enp.network.Repository
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingAdapter
-import com.mobility.enp.view.adapters.tool_history.main_screen.ToolHistoryListingPassageAdapter
+import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
+import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapter
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -60,13 +60,13 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        vModel.nullDates()
+        vModel.nullData()
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
 
         setObservers()
 
-        vModel.getIndexData()
+        vModel.getBaseData()
 
         binding.loopIcon.setOnClickListener {
             if (Repository.isNetworkAvailable(requireContext())) {
@@ -86,7 +86,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             binding.progBar.visibility = View.GONE
             binding.loopIcon.isEnabled = true
 
-            vModel.getIndexData()
+            vModel.getBaseData()
         }
     }
 
@@ -105,7 +105,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 }
 
                 is SubmitResult.Success -> {
-                    setIndexData(tagIndex.data)
+                    setIndexData(tagIndex.data.first)
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -141,7 +141,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
-                    vModel.getIndexData()
+                    vModel.getBaseData()
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -191,7 +191,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                     )
 
                     indexData?.let { iData ->
-                        vModel.setStateIndex(iData)
+//                        vModel.setStateIndex(iData)  todo
                     }
                 } else {
                     val bundle = Bundle().apply {
@@ -247,7 +247,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
     private fun setIndexData(indexData: IndexData) {
         Log.d(TAG, "setIndexData: $indexData")
-        vModel.setCountryCode(indexData.data?.customer?.country ?: "")
 
         binding.loopIcon.isEnabled = true
 
@@ -258,6 +257,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         }
 
         vModel.tagSerials = indexData.data?.tags as ArrayList<Tag>
+        vModel.indexData = indexData  // filter fragment need some data from here saving here to reduce api calls
 
         val toolHistoryListingAdapter =
             ToolHistoryListingAdapter(indexData, vModel, this, this, this)
@@ -277,12 +277,12 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
     override fun sendDataFill(
         nextPage: Int,
-        flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
+        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
         tagSerialNumber: String
     ) {
         binding.progBar.visibility = View.VISIBLE
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            vModel.getToolHistoryTransitPaginationUpdate(flow, tagSerialNumber, nextPage)
+            vModel.getToolHistoryTransit(flow, tagSerialNumber, nextPage)
         }
     }
 
@@ -290,10 +290,10 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         binding.progBar.visibility = View.GONE
     }
 
-    override fun psgData(toolHistoryListing: ToolHistoryListing) {
+    override fun psgData(toolHistoryListing: V2HistoryTagResponse) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-                vModel.insertPassageData(toolHistoryListing)
+//                vModel.insertPassageData(toolHistoryListing) todo
             }
         }
     }

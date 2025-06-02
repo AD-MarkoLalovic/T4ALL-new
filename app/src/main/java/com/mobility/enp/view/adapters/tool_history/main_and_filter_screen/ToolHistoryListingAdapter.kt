@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.main_screen
+package com.mobility.enp.view.adapters.tool_history.main_and_filter_screen
 
 import android.content.Context
 import android.util.Log
@@ -13,12 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.TagUtilCycler
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
-import com.mobility.enp.data.model.api_tool_history.listing.TotalAmount
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
-import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -56,21 +54,31 @@ class ToolHistoryListingAdapter(
 
             val contentInterface = object : PassageDataInterface {
 
-                override fun onOk(toolHistoryListing: ToolHistoryListing) {
+                override fun onOk(toolHistoryListing: V2HistoryTagResponse) {
                     toolHistoryListing.serial = itemSerialNumber
+
                     passageData.psgData(toolHistoryListing)
 
                     holder.binding.progbar.visibility = View.GONE
 
-                    if (toolHistoryListing.data.sum.isNotEmpty()) {
-                        val total = toolHistoryListing.data.sum[0].total
+                    if (!toolHistoryListing.data?.sumTags.isNullOrEmpty()) {
+
+                        /**
+                         * this adapter is used for presenting the total cost of tag
+                         * @param takes in a List<SumTag> of costs
+                         */
                         binding.cyclerTotalPrice.adapter =
-                            TotalCostPassageAdapter(total as ArrayList<TotalAmount>)
+                            TotalCostPassageAdapter(toolHistoryListing.data?.sumTags)
                         binding.cyclerTotalPrice.layoutManager =
                             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
                         binding.position = position
 
+
+                        /**
+                         * this adapter is used for presenting individual passages for 1 tag serial
+                         * @param takes in V2HistoryTagResponse model from 1 tag
+                         */
                         binding.cycler.adapter = ToolHistoryListingPassageAdapter(
                             toolHistoryListing,
                             complaintInterface,
@@ -81,6 +89,8 @@ class ToolHistoryListingAdapter(
                         binding.cycler.layoutManager = LinearLayoutManager(context)
 
                         binding.executePendingBindings()
+
+
                     } else {
                         binding.noPassage.visibility = View.VISIBLE
                     }
@@ -96,7 +106,7 @@ class ToolHistoryListingAdapter(
 
 
             val indexListing =
-                MutableStateFlow<SubmitResult<ToolHistoryListing>>(SubmitResult.Loading)
+                MutableStateFlow<SubmitResult<V2HistoryTagResponse>>(SubmitResult.Loading)
 
             collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
                 when (serverResponse) {
@@ -176,12 +186,12 @@ class ToolHistoryListingAdapter(
     }
 
     interface PassageDataInterface {
-        fun onOk(toolHistoryListing: ToolHistoryListing)
+        fun onOk(toolHistoryListing: V2HistoryTagResponse)
         fun onFailed(boolean: Boolean, cause: String)
     }
 
     interface SavePassageData {
-        fun psgData(toolHistoryListing: ToolHistoryListing)
+        fun psgData(toolHistoryListing: V2HistoryTagResponse)
     }
 
 }

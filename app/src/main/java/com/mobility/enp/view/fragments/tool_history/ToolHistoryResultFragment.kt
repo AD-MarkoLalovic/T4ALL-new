@@ -8,30 +8,30 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.Tag
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.adapters.tool_history.result.HistoryContentPagingAdapter
-import com.mobility.enp.view.adapters.tool_history.result.HistoryResultAdapter
+import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
+import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapter
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
-class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendToFragment {
+class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.SendToFragment,
+    ToolHistoryListingAdapter.SavePassageData {
 
     private lateinit var binding: FragmentToolHistorySearchResultBinding
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
@@ -79,9 +79,15 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
             vModel.selectedTags
         }
 
-        binding.cycler.adapter =
-            HistoryResultAdapter(listOfTags, vModel, this, this, vModel.getCountryCode())
-        binding.cycler.layoutManager = LinearLayoutManager(context)
+        val indexData = vModel.indexData
+        indexData?.data?.tags = listOfTags  // sets selected tags to object for reuse
+
+        indexData?.let { data ->
+            val toolHistoryListingAdapter =
+                ToolHistoryListingAdapter(data, vModel, this, this, this)
+            binding.cycler.adapter = toolHistoryListingAdapter
+            binding.cycler.layoutManager = LinearLayoutManager(context)
+        }
     }
 
     private fun setObservers() {
@@ -94,7 +100,7 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
                     setAdapter()
-                    vModel.getIndexData()
+                    vModel.getBaseData()
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -138,24 +144,24 @@ class ToolHistoryResultFragment : Fragment(), HistoryContentPagingAdapter.SendTo
         vModel.postObjectionFiltered(objectionBody)
     }
 
+
+    override fun psgData(toolHistoryListing: V2HistoryTagResponse) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+//                vModel.insertPassageData(toolHistoryListing) todo
+            }
+        }
+    }
+
     override fun sendDataFill(
         nextPage: Int,
-        flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
+        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
         tagSerialNumber: String
     ) {
         binding.progBar.visibility = View.VISIBLE
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            vModel.getToolHistoryTransitResultPagination(
-                flow,
-                tagSerialNumber,
-                nextPage
-            )
+            vModel.getToolHistoryTransitResultFragment(flow, tagSerialNumber, nextPage)
         }
-    }
-
-    override fun invalidToken(errorMessage: String, errorCode: Int) {
-        showMessage(errorMessage ?: "")
-        MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
     }
 
     private fun showMessage(message: String) {
