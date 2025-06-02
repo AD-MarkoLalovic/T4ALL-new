@@ -365,4 +365,5 @@
     <string name="highway_a6">Αυτοκινητόδρομος A6:</string>
     <string name="highway_a7">Αυτοκινητόδρομος A7:</string>
     <string name="highway_a11">Αυτοκινητόδρομος A11:</string>
+    <string name="check_status_on_hac_portal">Ελέγξτε την κατάσταση στην πύλη HAC</string>
 </resources>

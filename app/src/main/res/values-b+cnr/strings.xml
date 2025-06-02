@@ -366,4 +366,5 @@
     <string name="highway_a7">Autoput A7:</string>
     <string name="highway_a11">Autoput A11:</string>
     <string name="tag_usage_croatia">"Korišćenje srpskog TAG uređaja u Hrvatskoj "</string>
+    <string name="check_status_on_hac_portal">Provjerite status na HAC portalu</string>
 </resources>

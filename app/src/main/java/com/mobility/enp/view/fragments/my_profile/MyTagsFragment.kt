@@ -36,7 +36,7 @@ import kotlinx.coroutines.withContext
 class MyTagsFragment : Fragment(), AdapterTagFilterType.OnClick, MyTagsAdapter.OnClickContent {
 
     private var _binding: FragmentTagsBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentTagsBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: MyTagsViewModel by viewModels()
 

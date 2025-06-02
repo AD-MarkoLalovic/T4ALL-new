@@ -438,5 +438,6 @@
     <string name="route_rupa" translatable="false">Rupa</string>
     <string name="route_zagreb_sisak" translatable="false">Zagreb – Sisak</string>
     <string name="tag_registration_plate_notice">Приликом регистрације ТАГ уређаја на ХАЦ порталу уносите стварну регистарску ознаку возила у коме ћете користити ТАГ уређај.</string>
+    <string name="check_status_on_hac_portal">Проверите статус на ХАЦ порталу</string>
 
 </resources>
