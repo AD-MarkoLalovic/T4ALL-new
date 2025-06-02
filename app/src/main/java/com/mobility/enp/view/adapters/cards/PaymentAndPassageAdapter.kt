@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters
+package com.mobility.enp.view.adapters.cards
 
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan

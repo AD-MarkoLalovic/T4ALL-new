@@ -9,15 +9,21 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentHacPortalWebBinding
+import com.mobility.enp.viewmodel.FranchiseViewModel
 
 class HacPortalWebFragment : Fragment() {
 
     private var _binding: FragmentHacPortalWebBinding? = null
     private val binding: FragmentHacPortalWebBinding get() = _binding!!
+
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
     private var url: String = "about:blank"
 
@@ -44,6 +50,15 @@ class HacPortalWebFragment : Fragment() {
                 findNavController().popBackStack()
             }
         }
+
+        franchiseViewModel.franchiseModel.value?.let { model ->
+            binding.webViewBack.setImageResource(model.backButtonResource)
+        } ?: binding.webViewBack.setImageDrawable(
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.toolbar_shared_back_arrow
+            )
+        )
 
     }
 

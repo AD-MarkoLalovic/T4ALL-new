@@ -358,9 +358,13 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         cardsCountryAdapter = CardsCountryAdapter(arrayListOf(), this)
         binding.recyclerCardsCountry.adapter = cardsCountryAdapter
 
-        tagsForCroatiaAdapter = TagsForCroatiaAdapter { serialNumbers ->
-            viewModel.onCheckChanged(serialNumbers)
-        }
+
+        val franchiseColor = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
+        tagsForCroatiaAdapter = TagsForCroatiaAdapter(
+            { serialNumbers -> viewModel.onCheckChanged(serialNumbers) },
+            franchiseColor
+        )
+
         binding.rvTagsForCroatia.adapter = tagsForCroatiaAdapter
     }
 

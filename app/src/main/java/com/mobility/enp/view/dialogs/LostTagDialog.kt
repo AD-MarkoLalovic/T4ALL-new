@@ -1,10 +1,7 @@
 package com.mobility.enp.view.dialogs
 
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.graphics.Color
-import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +12,7 @@ import com.mobility.enp.databinding.DialogLostTagBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlin.getValue
+import androidx.core.graphics.drawable.toDrawable
 
 class LostTagDialog : DialogFragment {
 
@@ -43,7 +41,7 @@ class LostTagDialog : DialogFragment {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = DialogLostTagBinding.inflate(inflater, container, false)
 
         return binding.root

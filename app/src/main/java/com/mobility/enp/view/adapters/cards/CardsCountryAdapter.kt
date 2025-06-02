@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters
+package com.mobility.enp.view.adapters.cards
 
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
