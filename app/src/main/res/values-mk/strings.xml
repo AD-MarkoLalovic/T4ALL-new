@@ -374,5 +374,6 @@
     <string name="highway_a6">Автопат A6:</string>
     <string name="highway_a7">Автопат A7:</string>
     <string name="highway_a11">Автопат A11:</string>
+    <string name="check_status_on_hac_portal">Проверете го статусот на HAC порталот</string>
 
 </resources>

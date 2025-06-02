@@ -16,17 +16,32 @@ class AdapterCountryStatuses(val status: List<Status>) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(status: Status) {
-            binding.data = status
 
             // Postavljanje zastave
             val flagResId = when (status.country.value) {
                 "MK" -> R.drawable.macedonia_flag
                 "RS" -> R.drawable.serbia_flag
                 "ME" -> R.drawable.montenegro_flag
+                "HR" -> R.drawable.croatia_flag
                 else -> null
             }
 
             binding.flagIcon.setImageResource(flagResId ?: 0)
+
+            // Ako je zemlja HR, primeni poseban stil i preskoči ostale statuse
+            if (status.country.value == "HR") {
+                val customTextColor = ContextCompat.getColor(binding.root.context, R.color.tag_active)
+                val customBackground = ContextCompat.getColor(binding.root.context, R.color.figmaToolHistoryPaidBackground)
+
+                binding.countryStatus.text = binding.root.context.getString(R.string.check_status_on_hac_portal)
+                binding.countryStatus.setTextColor(customTextColor)
+                binding.root.backgroundTintList = ColorStateList.valueOf(customBackground)
+
+                binding.executePendingBindings()
+                return
+            }
+
+            binding.countryStatus.text = status.status.text
 
             // Postavljanje boje i pozadine
             setStatusAppearance(status)
