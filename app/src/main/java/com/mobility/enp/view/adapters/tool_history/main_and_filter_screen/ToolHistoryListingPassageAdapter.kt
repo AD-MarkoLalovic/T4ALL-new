@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.result
+package com.mobility.enp.view.adapters.tool_history.main_and_filter_screen
 
 import android.content.Context
 import android.content.res.Configuration
@@ -14,9 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
-import com.mobility.enp.data.model.api_tool_history.listing.InvoiceRelation
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
+import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.ItemRelationPassageRealBinding
+import com.mobility.enp.network.Repository
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.dialogs.ComplaintFormDialog
@@ -24,22 +25,23 @@ import com.mobility.enp.view.dialogs.ComplaintFormDialogOld
 import com.mobility.enp.view.dialogs.ObjectionFormDialog
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class HistoryContentPagingAdapter(
-    val data: ToolHistoryListing,
+class ToolHistoryListingPassageAdapter(
+    private val data: V2HistoryTagResponse,
     private val complaintInterface: SendToFragment,
-    val lifecycleOwner: LifecycleOwner,
-    val tagSerialNumber: String, val countryCode: String
+    private val hideComplaintButton: Boolean,
+    private val lifecycleOwner: LifecycleOwner,
+    private val tagSerialNumber: String,
+    private val countryCode: String
 ) :
-    RecyclerView.Adapter<HistoryContentPagingAdapter.RelationViewHolder>() {
+    RecyclerView.Adapter<ToolHistoryListingPassageAdapter.RelationViewHolder>() {
 
     private lateinit var context: Context
 
-    private var currentPage = data.data.currentPage
-    private val lastPage = data.data.lastPage
-    private val totalItems = data.data.total
+    private var currentPage = data.data?.records?.pagination?.currentPage ?: 1
+    private val lastPage = data.data?.records?.pagination?.lastPage ?: 1
 
-    private var relation: ArrayList<InvoiceRelation> =
-        data.data.items[0].transitItems as ArrayList<InvoiceRelation>
+    private var relation: ArrayList<Item> =
+        data.data?.records?.items as ArrayList<Item>
 
     companion object {
         const val TAG = "PassageAdapter"
@@ -51,21 +53,44 @@ class HistoryContentPagingAdapter(
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(relation: InvoiceRelation, complaintInterface: SendToFragment) {
+        fun bind(relation: Item, complaintInterface: SendToFragment) {
             binding.relation = relation
             binding.viewShade.background = null
             binding.toolHistoryStatus.setOnClickListener {
                 Log.d(TAG, "relation status: $relation")
             }
 
+            when (relation.bill.countryCode) {
+                "RS" -> {
+                    binding.tagBillCountry.text = "SRB"
+                }
+
+                "ME" -> {
+                    binding.tagBillCountry.text = "MNE"
+                }
+
+                "MK" -> {
+                    binding.tagBillCountry.text = "MKD"
+                }
+
+                "HR" -> {
+                    binding.tagBillCountry.text = "HRV"
+                }
+
+                else -> {
+                    binding.tagBillCountry.text = ""
+                }
+            }
+
             binding.btnComplaint.setOnClickListener {
+
                 if (countryCode.isNotEmpty() && countryCode == "RS") {
 
                     val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
                     val complaintFormDialog = ComplaintFormDialog({ complaintBody ->
                         complaintInterface.sendComplaintData(complaintBody)
-                    }, relation.itemId)
+                    }, relation.id)
 
                     complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
                 } else if (countryCode.isNotEmpty() && countryCode != "RS") {
@@ -73,7 +98,7 @@ class HistoryContentPagingAdapter(
 
                     val complaintFormDialog = ComplaintFormDialogOld({ complaintBody ->
                         complaintInterface.sendComplaintData(complaintBody)
-                    }, relation.itemId)
+                    }, relation.id)
 
                     complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
                 } else {
@@ -99,6 +124,7 @@ class HistoryContentPagingAdapter(
                 val text = context.getString(R.string.br_registration)
                 binding.complaintId.text = buildString {
                     append(text)
+                    append(" ")
                     append(relation.complaint.id)
                 }
 
@@ -122,6 +148,8 @@ class HistoryContentPagingAdapter(
                     binding.btnObjection.text = buttonText
                 }
 
+                binding.executePendingBindings()
+
             } else {
                 binding.complaintId.visibility = View.GONE
                 binding.container.visibility = View.GONE
@@ -129,7 +157,7 @@ class HistoryContentPagingAdapter(
                 binding.btnComplaint.visibility = View.VISIBLE
             }
 
-            when (relation.status.value) {
+            when (relation.bill.paid.toInt()) {
                 1 -> {
                     binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_green)
                     binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_green)
@@ -154,6 +182,13 @@ class HistoryContentPagingAdapter(
                     }
                 }
             }
+
+            if (hideComplaintButton) {
+                binding.btnComplaint.visibility = View.GONE
+                binding.complaintId.visibility = View.GONE
+                binding.container.visibility = View.GONE
+            }
+
             binding.executePendingBindings()
         }
     }
@@ -171,27 +206,28 @@ class HistoryContentPagingAdapter(
     override fun onBindViewHolder(holder: RelationViewHolder, position: Int) {
         val currentItem = relation[holder.bindingAdapterPosition]
         holder.bind(currentItem, complaintInterface)
-        performDataFill(currentItem, holder.bindingAdapterPosition)
+        if (Repository.isNetworkAvailable(context)) {
+            performDataFill(currentItem, holder.bindingAdapterPosition) // paggination
+        }
     }
 
-    private fun performDataFill(currentItem: InvoiceRelation, bindingAdapterPosition: Int) {
-        Log.d(
-            TAG,
-            "onBindViewHolder: adapter pos $bindingAdapterPosition arrayTotal ${relation.size - 1} totalItems $totalItems"
-        )
+    private fun performDataFill(currentItem: Item, bindingAdapterPosition: Int) {
         if (relation[relation.size - 1] == currentItem && lastPage > currentPage) {
             val indexListing =
-                MutableStateFlow<SubmitResult<ToolHistoryListing>>(SubmitResult.Loading)
+                MutableStateFlow<SubmitResult<V2HistoryTagResponse>>(SubmitResult.Loading)
 
             collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
                 complaintInterface.stopSpinner()
                 when (serverResponse) {
                     is SubmitResult.Success -> {
                         serverResponse.data.let {
-                            Log.d(TAG, "performDataFill: ${it.data.currentPage} ${it.data.lastPage}")
-                            currentPage = it.data.currentPage
+                            Log.d(
+                                TAG,
+                                "performDataFill: ${it.data?.records?.pagination?.currentPage} ${it.data?.records?.pagination?.lastPage}"
+                            )
+                            currentPage = it.data?.records?.pagination?.currentPage ?: 1
 
-                            for (item: InvoiceRelation in it.data.items[0].transitItems) {
+                            for (item: Item in it.data?.records?.items ?: emptyList()) {
                                 relation.add(item)
                                 notifyItemChanged(relation.size - 1)
                                 Log.d(TAG, "dataInserted: $item")
@@ -207,7 +243,7 @@ class HistoryContentPagingAdapter(
 
             complaintInterface.sendDataFill(currentPage + 1, indexListing, tagSerialNumber)
         } else if (lastPage == currentPage && relation[relation.size - 1] == currentItem) {
-            //last item - toast msg removed
+            Log.d(TAG, "performDataFill: no more passage data for tag ${data.serial}")
         }
     }
 
@@ -216,10 +252,9 @@ class HistoryContentPagingAdapter(
         fun sendObjectionData(objectionBody: ObjectionBody)
         fun sendDataFill(
             nextPage: Int,
-            flow: MutableStateFlow<SubmitResult<ToolHistoryListing>>,
+            flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
             tagSerialNumber: String
         )
-        fun invalidToken(errorMessage :String, errorCode:Int)
 
         fun stopSpinner()
     }
@@ -229,5 +264,4 @@ class HistoryContentPagingAdapter(
         val smallestScreenWidthDp: Int = config.smallestScreenWidthDp
         return smallestScreenWidthDp >= 600 // min layout with for tablet
     }
-
 }

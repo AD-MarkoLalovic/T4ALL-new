@@ -8,8 +8,8 @@
 
         <variable
             name="data"
-            type="com.mobility.enp.data.model.api_tool_history.listing.TotalAmount" />
-    </data>
+            type="com.mobility.enp.data.model.api_tool_history.v2base_model.SumTag" />
+  </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"

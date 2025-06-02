@@ -299,8 +299,10 @@
     <string name="welcome_to_toll_for_all">Добро дошли у Toll For All</string>
     <string name="what_is_toll_for_all_system">Шта је Toll For All систем?</string>
     <string name="croatia_eng" translatable="false">Croatia</string>
-    <string name="eur" translatable="false">EUR</string>
-    <string name="rsd" translatable="false">RSD</string>
+    <string name="serbia_rs" translatable="false">RS</string>
+    <string name="montenegro_me" translatable="false">ME</string>
+    <string name="northmacedonia_mk" translatable="false">MK</string>
+    <string name="croatia_hr" translatable="false">HR</string>
     <string name="mkd" translatable="false">MKD</string>
     <string name="value">Валута</string>
     <string name="found_tag">Пронађен Таг</string>

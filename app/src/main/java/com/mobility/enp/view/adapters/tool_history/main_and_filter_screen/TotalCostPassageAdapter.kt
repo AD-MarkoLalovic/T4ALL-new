@@ -1,18 +1,18 @@
-package com.mobility.enp.view.adapters.tool_history.main_screen
+package com.mobility.enp.view.adapters.tool_history.main_and_filter_screen
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mobility.enp.data.model.api_tool_history.listing.TotalAmount
+import com.mobility.enp.data.model.api_tool_history.v2base_model.SumTag
 import com.mobility.enp.databinding.PassageHistoryTotalPriceBinding
 
-class TotalCostPassageAdapter(private val countries: ArrayList<TotalAmount>) :
+class TotalCostPassageAdapter(private val countries: List<SumTag>?) :
     RecyclerView.Adapter<TotalCostPassageAdapter.CountryAdapterViewHolder>() {
 
 
     class CountryAdapterViewHolder(val binding: PassageHistoryTotalPriceBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: TotalAmount) {
+        fun bind(data: SumTag?) {
 
             binding.data = data
             binding.executePendingBindings()
@@ -30,11 +30,11 @@ class TotalCostPassageAdapter(private val countries: ArrayList<TotalAmount>) :
     }
 
     override fun getItemCount(): Int {
-        return countries.size
+        return countries?.size ?: 0
     }
 
     override fun onBindViewHolder(holder: CountryAdapterViewHolder, position: Int) {
-        val current = countries[position]
+        val current = countries?.get(position)
 
         holder.bind(current)
     }
