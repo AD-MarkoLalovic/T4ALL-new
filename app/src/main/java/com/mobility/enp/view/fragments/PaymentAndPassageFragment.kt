@@ -32,8 +32,8 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.adapters.CardsCountryAdapter
-import com.mobility.enp.view.adapters.PaymentAndPassageAdapter
+import com.mobility.enp.view.adapters.cards.CardsCountryAdapter
+import com.mobility.enp.view.adapters.cards.PaymentAndPassageAdapter
 import com.mobility.enp.view.adapters.cards.TagsForCroatiaAdapter
 import com.mobility.enp.view.dialogs.ConfirmRemovalCardDialog
 import com.mobility.enp.view.dialogs.LostTagDialog
@@ -61,7 +61,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private var allCards: List<Card> = emptyList()
     private val args: PaymentAndPassageFragmentArgs by navArgs()
     private var selectedCountry: String = "All"
-    private var croatiaWebLink: String = "https://toll4all.com/login"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -226,10 +225,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
 
-            franchiseModel?.franchiseCroatiaLoginLink?.let { link ->
-                croatiaWebLink = link
-            }
-
             franchiseModel?.franchisePrimaryColor?.let { color ->
                 val states = arrayOf(
                     intArrayOf(android.R.attr.state_checked),  // When switch is ON
@@ -363,9 +358,13 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         cardsCountryAdapter = CardsCountryAdapter(arrayListOf(), this)
         binding.recyclerCardsCountry.adapter = cardsCountryAdapter
 
-        tagsForCroatiaAdapter = TagsForCroatiaAdapter { serialNumbers ->
-            viewModel.onCheckChanged(serialNumbers)
-        }
+
+        val franchiseColor = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
+        tagsForCroatiaAdapter = TagsForCroatiaAdapter(
+            { serialNumbers -> viewModel.onCheckChanged(serialNumbers) },
+            franchiseColor
+        )
+
         binding.rvTagsForCroatia.adapter = tagsForCroatiaAdapter
     }
 

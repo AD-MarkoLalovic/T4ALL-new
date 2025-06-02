@@ -5,13 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentPdfViewerBinding
+import com.mobility.enp.viewmodel.FranchiseViewModel
 
 class PdfViewerFragment : Fragment() {
 
     private var _binding: FragmentPdfViewerBinding? = null
     private val binding: FragmentPdfViewerBinding get() = _binding!!
+
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,6 +32,15 @@ class PdfViewerFragment : Fragment() {
 
         binding.pdfViewerProgressBar.visibility = View.VISIBLE
         binding.pdfViewerErrorMessage.visibility = View.GONE
+
+        franchiseViewModel.franchiseModel.value?.let { model ->
+            binding.pdfViewerBack.setImageResource(model.backButtonResource)
+        } ?: binding.pdfViewerBack.setImageDrawable(
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.toolbar_shared_back_arrow
+            )
+        )
 
         binding.pdfView.fromAsset("Uputstvo-za-registraciju-srpskog-taga-za-Hrvatsku.pdf")
             .enableSwipe(true)
