@@ -44,7 +44,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/languageContainerAdvantages"
-                android:layout_width="70dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="29dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
@@ -119,6 +119,7 @@
                 android:text="@string/advantages_of_the_toll_for_all_system"
                 app:layout_constraintBottom_toBottomOf="@+id/guidelineFirstIntro2"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="start"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <View
@@ -231,9 +232,9 @@
 
             <TextView
                 android:id="@+id/buttonNextAdvantages"
-                android:layout_width="70dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_22dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
                 android:layout_marginBottom="@dimen/dimens_22dp"
                 android:background="@drawable/spinner_intro_lang_background"
@@ -241,7 +242,7 @@
                 android:focusable="true"
                 android:fontFamily="@font/noto_sans_medium"
                 android:gravity="center"
-                android:paddingHorizontal="@dimen/dimens_16dp"
+                android:paddingHorizontal="@dimen/dimens_22dp"
                 android:paddingVertical="11dp"
                 android:text="@string/next"
                 android:textColor="@color/white"

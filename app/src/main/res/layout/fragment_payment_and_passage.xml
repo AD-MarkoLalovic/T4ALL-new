@@ -78,26 +78,44 @@
 
                 <TextView
                     android:id="@+id/txCroatiaCardsNote"
-                    style="@style/Paragraph"
+                    style="@style/SubtitlesRegular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_24dp"
+                    android:layout_marginTop="@dimen/dimens_32dp"
                     android:background="@drawable/background_croatia_cards_note"
                     android:clickable="true"
-                    android:drawablePadding="@dimen/dimens_8dp"
-                    android:padding="@dimen/dimens_8dp"
+                    android:drawablePadding="@dimen/dimens_16dp"
                     android:text="@string/notes_serbian_tag_in_croatia"
+                    android:textColor="@color/primary_light_darkest"
+                    android:visibility="gone"
+                    app:drawableStartCompat="@drawable/ic_info"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/txCroatiaCardsPdf"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_9dp"
+                    android:background="@drawable/background_croatia_cards_note"
+                    android:clickable="true"
+                    android:drawablePadding="@dimen/dimens_16dp"
+                    android:text="@string/registration_instructions_croatian_tags"
+                    android:textColor="@color/primary_light_darkest"
                     android:visibility="gone"
                     app:drawableStartCompat="@drawable/ic_info"
                     tools:visibility="visible" />
 
                 <TextView
                     android:id="@+id/txCroatiaText"
-                    style="@style/ParagraphMedium"
+                    style="@style/SubtitlesRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_24dp"
+                    android:layout_marginTop="@dimen/dimens_32dp"
+                    android:lineSpacingExtra="2sp"
+                    android:layout_marginEnd="@dimen/dimens_4dp"
                     android:text="@string/tag_registration_instruction_hr"
+                    android:textColor="@color/primary_light_darkest"
                     android:visibility="gone"
                     tools:visibility="visible" />
 
@@ -109,20 +127,19 @@
                     android:orientation="vertical"
                     android:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:visibility="visible"
                     tools:itemCount="5"
-                    tools:listitem="@layout/item_tag_for_croatia"/>
+                    tools:listitem="@layout/item_tag_for_croatia"
+                    tools:visibility="visible" />
 
                 <Button
-                    android:id="@+id/txCroatiaWebLink"
+                    android:id="@+id/bttRegTagForCroatia"
                     style="@style/MyButtonStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_34dp"
-                    android:layout_marginBottom="28dp"
+                    android:layout_marginTop="21dp"
                     android:text="@string/registration"
                     android:visibility="gone"
-                    tools:visibility="visible"/>
+                    tools:visibility="visible" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvCreditCard"
@@ -133,8 +150,8 @@
                     android:orientation="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:itemCount="2"
-                    tools:visibility="gone"
-                    tools:listitem="@layout/item_payment_and_passages" />
+                    tools:listitem="@layout/item_payment_and_passages"
+                    tools:visibility="gone" />
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout

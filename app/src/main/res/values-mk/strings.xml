@@ -360,5 +360,20 @@
     <string name="activation_successful_enp_tag_device">"Активацијата на ЕНП/ТАГ уредот е успешна.  "</string>
     <string name="pdf_dialog_title_error">Проблем со извезување на PDF</string>
     <string name="pdf_dialog_subtitle_error">Не може да се вчитаат PDF податоците, обидете се повторно.</string>
+    <string name="registration_instructions_croatian_tags">Упатство за регистрација на српска ознака</string>
+    <string name="error_loading_instructions">"Грешка при вчитување на упатството  "</string>
+    <string name="general_provisions">"Општи одредби "</string>
+    <string name="click_registration_info">Со кликнување на копчето \"Регистрација\" ќе бидете пренасочени кон ВЕБ порталот на Хрватски автопати. Регистрацијата на ТАГ уредот, додавање на платежна картичка, наплата на патарини и рекламации се во надлежност на компанијата Hrvatske autoceste d.o.o. Загреб (HAC). Прашања/рекламации можете да испратите на телефон +385 1 6504 899 или преку е-пошта: info-naplata@hac.hr</string>
+    <string name="tag_registration_plate_notice">"При регистрација на ТАГ уредот на порталот на ХАЦ внесете ја точната регистарска табличка на возилото во кое ќе го користите уредот.  "</string>
+    <string name="tag_usage_croatia">"Користење на српскиот ТАГ уред во Хрватска "</string>
+    <string name="tag_usage_info_hr">Српскиот ТАГ уред може да се користи во Република Хрватска исклучиво на автопатските делници кои се под надлежност на компанијата Hrvatske autoceste d.o.o. Загреб:</string>
+    <string name="highway_a1">Автопат A1:</string>
+    <string name="highway_a3">Автопат A3:</string>
+    <string name="highway_a4">Автопат A4:</string>
+    <string name="highway_a5">Автопат A5:</string>
+    <string name="highway_a6">Автопат A6:</string>
+    <string name="highway_a7">Автопат A7:</string>
+    <string name="highway_a11">Автопат A11:</string>
+    <string name="check_status_on_hac_portal">Проверете го статусот на HAC порталот</string>
 
 </resources>

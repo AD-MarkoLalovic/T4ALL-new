@@ -5,7 +5,7 @@
     android:id="@+id/constraintBlock"
     android:layout_width="match_parent"
     android:layout_height="58dp"
-    android:background="@color/white_smoke"
+    android:background="@color/white"
     android:elevation="@dimen/dimens_10dp"
     android:paddingHorizontal="@dimen/dimens_16dp"
     >
@@ -40,7 +40,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/franchiserFlavorText"
-        tools:src="@drawable/ic_logo_home_screen_svg" />
+        tools:background="@drawable/ic_logo_home_screen_svg" />
 
     <TextView
         android:id="@+id/franchiserFlavorText"

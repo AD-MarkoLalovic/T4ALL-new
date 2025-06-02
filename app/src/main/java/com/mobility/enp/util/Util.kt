@@ -81,20 +81,7 @@ object Util {
                     else ->
                         ContextCompat.getColorStateList(context, R.color.flavor_text_default)
                 },
-                R.style.TelekomCalendarTheme, when (portalKey) {
-                    "ad7e2bb9-22a5-4184-9c9b-5c384a506cb3" -> "https://mts-rs.com" // telekom portal
-                    "a577ddf8-1c08-4aa6-9d95-8ab2fd5c8b6c" -> "https://mtel-at.com"
-                    "263a2e3d-b544-480d-a604-0dd036c8d4ed" -> "https://mtel-de.com"
-                    "19334ec8-b056-486e-8faa-e42fe895d930" -> "https://mtel-ch.com"
-                    "4dcf082c-7232-47f8-b64f-3c27791364d6" -> "https://mtel-mk.com"
-                    "84f46084-4038-4ff2-9a77-b756a454f49f" -> "https://mtel-cg.com"
-                    "2d9da5de-9113-41e3-a8b4-09c2ccfec285" -> "https://mtelba.com"
-                    "60c2f558-6368-44c5-a520-fa2b56041869" -> "https://mtel-tr.com"
-                    "96371708-44d7-4438-b4f1-79f42bbac918" -> "https://enp.tehnocoop.co.rs"
-                    else -> {
-                        "https://mts-rs.com"
-                    }
-                }
+                R.style.TelekomCalendarTheme
             )
 
             "a2ac8612-4b25-43e3-8017-fcf8ad0da0c4" -> FranchiseModel(
@@ -123,7 +110,7 @@ object Util {
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
                 ),
-                R.style.S_Blue_CalendarTheme, "https://enp.s-blue.us"
+                R.style.S_Blue_CalendarTheme
             )
 
             "9aa3e972-d84b-40df-b35d-d14a229c03e3" -> FranchiseModel(
@@ -152,7 +139,7 @@ object Util {
                     R.color.amss_tehnomania_home_welcome_text_color
                 ),
                 ContextCompat.getColorStateList(context, R.color.flavor_text_amss_tehnomania),
-                R.style.AMSSCalendarTheme, "https://enp.amss.org.rs"
+                R.style.AMSSCalendarTheme
             )
 
             "d47b35d1-bb44-4618-9b31-cf7e961595ec" -> FranchiseModel(
@@ -181,7 +168,7 @@ object Util {
                     R.color.amss_tehnomania_home_welcome_text_color
                 ),
                 ContextCompat.getColorStateList(context, R.color.flavor_text_amss_tehnomania),
-                R.style.TehnomaniaCalendarTheme, "https://enp.tehnomanija.rs"
+                R.style.TehnomaniaCalendarTheme
             )
 
             "2263768e-e3a5-48f8-8e7a-545f6c141318" -> FranchiseModel(
@@ -207,7 +194,7 @@ object Util {
                 R.drawable.default_user_picture_enput,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
                 ContextCompat.getColorStateList(context, R.color.flavor_text_enput),
-                R.style.EnputCalendarTheme, "https://enp.enput.rs"
+                R.style.EnputCalendarTheme
             )
 
             "ed232756-b001-42e7-a3aa-c6c43b9ce49f" -> FranchiseModel(
@@ -236,7 +223,7 @@ object Util {
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
                 ),
-                R.style.RafaeloCalendarTheme, "https://enp.autotagrafaelo.com"
+                R.style.RafaeloCalendarTheme
             )
 
             "183e7ccd-353d-4dd6-950c-8f033dd94620" -> FranchiseModel(
@@ -265,7 +252,7 @@ object Util {
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
                 ),
-                R.style.FreeTransCalendarTheme, "https://enp.freetrans.pro"
+                R.style.FreeTransCalendarTheme
             )
 
             "0768bada-5f65-4521-8b81-bb0eda51b806" -> FranchiseModel(
@@ -294,7 +281,7 @@ object Util {
                     context,
                     R.color.flavor_text_sbb_e_box_tehnocoop_color
                 ),
-                R.style.EboxCalendarTheme, "https://enp.e-boxlogistic.net"
+                R.style.EboxCalendarTheme
             )
 
             // TODO: Treba ubaciti odgovarajuci primaryKey i Id za Pay&Roll
@@ -324,7 +311,7 @@ object Util {
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
                 ),
-                R.style.PayNRollCalendarTheme, "https://google.com" // not provided
+                R.style.PayNRollCalendarTheme
             )
 
             "5fcb381c-176c-4d94-93bc-feb476c9d62a" -> FranchiseModel(
@@ -354,7 +341,7 @@ object Util {
                     R.color.flavor_text_sbb_e_box_tehnocoop_color
                 ),
 
-                R.style.SbbCalendarTheme, "https://enp.sbb.rs"
+                R.style.SbbCalendarTheme
             )
 
             "86841eac-1d56-49fb-a1fb-219dae2b3681" -> FranchiseModel(
@@ -387,7 +374,7 @@ object Util {
                 R.drawable.default_user_picture_posta_srbije,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
                 ContextCompat.getColorStateList(context, R.color.flavor_text_default),
-                R.style.PostaSrbijeCalendarTheme, "https://enp.posta.rs"
+                R.style.PostaSrbijeCalendarTheme
             )
 
             "0e16dfd9-b94f-4e1a-aaca-47733b312e79" -> FranchiseModel(
@@ -416,7 +403,7 @@ object Util {
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
                 ),
-                R.style.EuroPetrolCalendarTheme, "https://enp.euro-petrol.com"
+                R.style.EuroPetrolCalendarTheme
             )
 
             else -> null

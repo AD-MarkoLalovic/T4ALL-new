@@ -299,8 +299,10 @@
     <string name="welcome_to_toll_for_all">Добро дошли у Toll For All</string>
     <string name="what_is_toll_for_all_system">Шта је Toll For All систем?</string>
     <string name="croatia_eng" translatable="false">Croatia</string>
-    <string name="eur" translatable="false">EUR</string>
-    <string name="rsd" translatable="false">RSD</string>
+    <string name="serbia_rs" translatable="false">RS</string>
+    <string name="montenegro_me" translatable="false">ME</string>
+    <string name="northmacedonia_mk" translatable="false">MK</string>
+    <string name="croatia_hr" translatable="false">HR</string>
     <string name="mkd" translatable="false">MKD</string>
     <string name="value">Валута</string>
     <string name="found_tag">Пронађен Таг</string>
@@ -412,5 +414,30 @@
     <string name="activation_successful_enp_tag_device">Успешно сте извршили активацију ЕНП/ТАГ уређаја.</string>
     <string name="pdf_dialog_title_error">Проблем са извозом PDF-а</string>
     <string name="pdf_dialog_subtitle_error">Не могу да учитам PDF податке, молим покушајте поново.</string>
+    <string name="registration_instructions_croatian_tags">Упутство за регистрацију српског тагa</string>
+    <string name="error_loading_instructions">Грешка при учитавању упутства</string>
+    <string name="general_provisions">Опште одредбе</string>
+    <string name="click_registration_info">Кликом на дугме "Регистрација" бићете преусмерени на ВЕБ портал
+        Хрватских аутопутева. Регистрација ТАГ уређаја, додавање платне картице, наплата пролазака и
+        рекламације су у надлежности компаније Хрватске аутопутеве д.о.о. Загреб (ХАЦ). Приговор/питања/рекламације
+        можете упутити на телефон +385 1 6504 899 или на е-маил: info-naplata@hac.hr</string>
+    <string name="tag_usage_croatia">Коришћење српског ТАГ уређаја у Хрватској</string>
+    <string name="tag_usage_info_hr">Српски ТАГ уређај у Републици Хрватској можете користити искључиво на деоницама аутопутева које су у надлежности компаније Hrvatske autoceste d.o.o. Загреб:</string>
+    <string name="highway_a1">Аутопут A1:</string>
+    <string name="highway_a3">Аутопут A3:</string>
+    <string name="highway_a4">Аутопут A4:</string>
+    <string name="highway_a5">Аутопут A5:</string>
+    <string name="highway_a6">Аутопут A6:</string>
+    <string name="highway_a7">Аутопут A7:</string>
+    <string name="highway_a11">Аутопут A11:</string>
+    <string name="route_zagreb_split_dubrovnik" translatable="false">Zagreb - Split - Dubrovnik</string>
+    <string name="routes_zagreb_istok_lipovac_and_bregana" translatable="false">Zagreb istok - Lipovac i Zagreb - Bregana</string>
+    <string name="route_zagreb_sveta_helena_gorican" translatable="false">Zagreb Sveta Helena - Goričan</string>
+    <string name="route_beli_manastir_osijek_svilaj" translatable="false">Beli Manastir - Osijek - Svilaj</string>
+    <string name="route_zagreb_rijeka" translatable="false">Zagreb – Rijeka</string>
+    <string name="route_rupa" translatable="false">Rupa</string>
+    <string name="route_zagreb_sisak" translatable="false">Zagreb – Sisak</string>
+    <string name="tag_registration_plate_notice">Приликом регистрације ТАГ уређаја на ХАЦ порталу уносите стварну регистарску ознаку возила у коме ћете користити ТАГ уређај.</string>
+    <string name="check_status_on_hac_portal">Проверите статус на ХАЦ порталу</string>
 
 </resources>

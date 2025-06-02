@@ -68,7 +68,7 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
                     storeLastUserEmail(user.email!!)
                     sendLanguage(context)
 
-                    _loginState.value = LoginState.Success(response)
+                    _loginState.value = LoginState.Success(response,response.data?.portal_key)
                 },
                 onFailure = { error ->
                     _loginState.value = LoginState.Failure(error)
@@ -184,6 +184,6 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
 sealed class LoginState {
     object Idle : LoginState()
     object Loading : LoginState()
-    data class Success(val userResponse: UserResponse) : LoginState()
+    data class Success(val userResponse: UserResponse,val portalKey: String?) : LoginState()
     data class Failure(val error: Throwable) : LoginState()
 }

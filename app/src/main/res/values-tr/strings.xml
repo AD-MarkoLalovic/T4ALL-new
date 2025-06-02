@@ -362,4 +362,19 @@
     <string name="activation_successful_enp_tag_device">"OGS cihazı aktive edildi.  "</string>
     <string name="pdf_dialog_title_error">PDF dışa aktarma sorunu</string>
     <string name="pdf_dialog_subtitle_error">PDF verileri yüklenemiyor, lütfen tekrar deneyin.</string>
+    <string name="registration_instructions_croatian_tags">Sırp etiketi kaydı için talimatlar</string>
+    <string name="error_loading_instructions">"Talimatlar yüklenirken hata oluştu  "</string>
+    <string name="general_provisions">"Genel Hükümler "</string>
+    <string name="click_registration_info">\"Kayıt\" butonuna tıkladığınızda Hırvat Otoyolları’nın WEB portalına yönlendirileceksiniz. TAG cihazı kaydı, ödeme kartı ekleme, geçiş ücretlerinin tahsili ve şikâyetler Hrvatske autoceste d.o.o. Zagreb (HAC) şirketinin sorumluluğundadır. Soru/şikayetlerinizi +385 1 6504 899 numaralı telefona veya info-naplata@hac.hr e-posta adresine iletebilirsiniz.</string>
+    <string name="tag_registration_plate_notice">"HAC portalında TAG cihazını kaydederken, cihazı kullanacağınız aracın gerçek plaka numarasını giriniz.  "</string>
+    <string name="tag_usage_info_hr">"Sırp TAG cihazı, Hırvatistan Cumhuriyeti’nde yalnızca Hrvatske autoceste d.o.o. Zagreb şirketinin sorumluluğundaki otoyol kesimlerinde kullanılabilir:  "</string>
+    <string name="highway_a1">Otoyol A1:</string>
+    <string name="highway_a3">Otoyol A3:</string>
+    <string name="highway_a4">Otoyol A4:</string>
+    <string name="highway_a5">Otoyol A5:</string>
+    <string name="highway_a6">Otoyol A6:</string>
+    <string name="highway_a7">Otoyol A7:</string>
+    <string name="highway_a11">Otoyol A11:</string>
+    <string name="tag_usage_croatia">"Hırvatistan’da Sırp TAG cihazının kullanımı "</string>
+    <string name="check_status_on_hac_portal">Durumu HAC portalında kontrol edin</string>
 </resources>

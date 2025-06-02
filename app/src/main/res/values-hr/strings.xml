@@ -357,5 +357,20 @@
     <string name="activation_successful_enp_tag_device">"Uspešno ste izvršili aktivaciju ENP/TAG uređaja.  "</string>
     <string name="pdf_dialog_title_error">Problem s izvozom PDF-a</string>
     <string name="pdf_dialog_subtitle_error">Ne mogu učitati PDF podatke, pokušajte ponovno.</string>
+    <string name="registration_instructions_croatian_tags">Upute za registraciju srpske oznake</string>
+    <string name="error_loading_instructions">"Greška pri učitavanju uputa  "</string>
+    <string name="general_provisions">"Оpšte odredbe "</string>
+    <string name="click_registration_info">Klikom na dugme Registracija bićete preusmereni na WEB portal Hrvatskih autocesta. Registracija TAG uređaja, dodavanje platne kartice, naplata prolazaka i reklamacije su u nadležnosti kompanije Hrvatske autoceste d.o.o. Zagreb (HAC). Prigovor/pitanja/reklamacije možete uputiti na telefon +385 1 6504 899 ili na e-mail: info-naplata@hac.hr</string>
+    <string name="tag_registration_plate_notice">"Prilikom registracije TAG uređaja na HAC portalu unosite stvarnu registarsku oznaku vozila u kome ćete koristiti TAG uređaj.  "</string>
+    <string name="tag_usage_croatia">"Korišćenje srpskog TAG uređaja u Hrvatskoj "</string>
+    <string name="tag_usage_info_hr">"Srpski TAG uređaj u Republici Hrvatskoj možete korisiti isključivo na deonicama autoputeva koje su u nadležnosti kompanije Hrvatske autoceste d.o.o Zagreb:  "</string>
+    <string name="highway_a1">Autocesta A1:</string>
+    <string name="highway_a3">Autocesta A3:</string>
+    <string name="highway_a4">Autocesta A4:</string>
+    <string name="highway_a5">Autocesta A5:</string>
+    <string name="highway_a6">Autocesta A6:</string>
+    <string name="highway_a7">Autocesta A7:</string>
+    <string name="highway_a11">Autocesta A11:</string>
+    <string name="check_status_on_hac_portal">Provjerite status na HAC portalu</string>
 
 </resources>

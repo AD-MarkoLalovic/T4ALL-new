@@ -18,6 +18,7 @@ import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.banks.response.BanksResponse
 import com.mobility.enp.data.model.cards.registration_croatia.RegistrationResponse
 import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
@@ -96,24 +97,29 @@ interface ApiService {
         @Path("card_id") cardId: String
     ): Response<Unit>
 
-    @GET("/api/v1/history/transit")
-    suspend fun getToolHistoryTransitNew(
-        @Query("filter[serial_numbers]") serialNumbers: String,  // can be multiple but then send them as 18150144618,18150144612 string
+    /**
+     * possible filter
+     * Allowed filter(s) are `date_from, date_to, serial_number, currency, country`."
+     * example filter["country"] without ""
+     */
+    @GET("/api/v2/history")
+    suspend fun getToolHistoryTransitV2(
+        @Query("filter[serial_number]") serialNumbers: String,
         @Query("page") page: String, // current page
-        @Query("perPage") perPage: String, // items per page
+        @Query("perPage") perPage: String, // fixed
         @Query("lang") language: String
-    ): Response<ToolHistoryListing>
+    ): Response<V2HistoryTagResponse>
 
-    @GET("/api/v1/history/transit")
-    suspend fun getToolHistoryTransitResultFragmentNew(
-        @Query("filter[serial_numbers]") serialNumbers: String,  // can be multiple but then send them as 18150144618,18150144612 string
+    @GET("/api/v2/history")
+    suspend fun getToolHistoryTransitV2Country(
+        @Query("filter[serial_number]") serialNumbers: String,
+        @Query("filter[country]") country: String,
         @Query("page") page: String, // current page
-        @Query("perPage") perPage: String, // items per page
-        @Query("filter[date_from]") dateFrom: String,  // format to send dd.MM.yyyy
-        @Query("filter[date_to]") dateTo: String,
+        @Query("perPage") perPage: String, // fixed
         @Query("lang") language: String,
-        @Query("filter[currency]") currency: String
-    ): Response<ToolHistoryListing>
+        @Query("filter[date_from]") dateFrom: String,
+        @Query("filter[date_to]") dateTo: String
+    ): Response<V2HistoryTagResponse>
 
     @GET("/api/v1/bills")
     fun getInvoicesIndex(
@@ -176,9 +182,9 @@ interface ApiService {
     ): Call<LostTagResponse>
 
     @POST("/api/v1/history/complaint")
-    fun postComplaint(
+    suspend fun postComplaint(
         @Body complaintBody: ComplaintBody
-    ): Call<LostTagResponse>
+    ): Response<LostTagResponse>
 
     @POST("/api/v1/history/objection")
     fun postObjection(

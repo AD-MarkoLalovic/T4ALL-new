@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
+import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.databinding.FragmentToolHistorySearchQueryBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
@@ -71,11 +72,12 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         setFranchiser()
 
         vModel.selectedTags.clear()
+        vModel.selectedCountry = getString(R.string.serbia_rs)
 
         binding.progBar.visibility = View.VISIBLE
 
         if (vModel.internetAvailable()) {
-            vModel.getIndexData()
+            vModel.getBaseData()
         } else {
             checkInternet()
         }
@@ -131,26 +133,26 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             vModel.showDatePicker(false, requireContext(), franchiseViewModel.franchiseModel.value)
         }
 
-        setSelectedButton(binding.buttonAll)
+        setSelectedButton(binding.buttonSerbia)
 
-        binding.buttonAll.setOnClickListener {
-            setSelectedButton(binding.buttonAll)
-            vModel.selectedCurrency = ""
+        binding.buttonSerbia.setOnClickListener {
+            setSelectedButton(binding.buttonSerbia)
+            vModel.selectedCountry = getString(R.string.serbia_rs)
         }
 
-        binding.buttonRSD.setOnClickListener {
-            setSelectedButton(binding.buttonRSD)
-            vModel.selectedCurrency = getString(R.string.rsd)
+        binding.buttonMontenegro.setOnClickListener {
+            setSelectedButton(binding.buttonMontenegro)
+            vModel.selectedCountry = getString(R.string.montenegro_me)
         }
 
-        binding.buttonEUR.setOnClickListener {
-            setSelectedButton(binding.buttonEUR)
-            vModel.selectedCurrency = getString(R.string.eur)
+        binding.northMacedonia.setOnClickListener {
+            setSelectedButton(binding.northMacedonia)
+            vModel.selectedCountry = getString(R.string.northmacedonia_mk)
         }
 
-        binding.buttonMKD.setOnClickListener {
-            setSelectedButton(binding.buttonMKD)
-            vModel.selectedCurrency = getString(R.string.mkd)
+        binding.buttonCroatia.setOnClickListener {
+            setSelectedButton(binding.buttonCroatia)
+            vModel.selectedCountry = getString(R.string.croatia_hr)
         }
 
         binding.exportBlock.setOnClickListener {
@@ -207,10 +209,10 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     }
 
     private fun setSelectedButton(selectedButton: View) = with(binding) {
-        buttonAll.isSelected = false
-        buttonEUR.isSelected = false
-        buttonRSD.isSelected = false
-        buttonMKD.isSelected = false
+        northMacedonia.isSelected = false
+        buttonSerbia.isSelected = false
+        buttonMontenegro.isSelected = false
+        buttonCroatia.isSelected = false
 
         selectedButton.isSelected = true
     }
@@ -221,12 +223,11 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
             binding.progBar.visibility = View.GONE
 
-            vModel.getIndexData()
+            vModel.getBaseData()
         }
     }
 
     private fun setObservers() {
-
         vModel.errorBody.observe(viewLifecycleOwner) { errorBody ->
             binding.progBar.visibility = View.GONE
             context?.let { context ->
@@ -247,7 +248,8 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
-                    setIndexData(tagIndex.data)
+                    setIndexData(tagIndex.data.first)
+                    setVisibleCountries(tagIndex.data.second)
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -448,6 +450,23 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     override fun onTagRemove(tag: Tag) {
         vModel.selectedTags.remove(tag)
         Log.d(TAG, "onSendTag: ${vModel.selectedTags}")
+    }
+
+    private fun setVisibleCountries(cardWebModel: CardWebModel) {
+        cardWebModel.data?.let { model ->
+            if (model.showTabHR) {
+                binding.buttonCroatia.visibility = View.VISIBLE
+            }
+            if (model.showTabRS) {
+                binding.buttonSerbia.visibility = View.VISIBLE
+            }
+            if (model.showTabME) {
+                binding.buttonMontenegro.visibility = View.VISIBLE
+            }
+            if (model.showTabMK) {
+                binding.northMacedonia.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onDestroyView() {

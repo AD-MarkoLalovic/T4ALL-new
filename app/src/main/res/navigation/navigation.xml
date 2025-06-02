@@ -316,6 +316,9 @@
         <action
             android:id="@+id/action_paymentAndPassageFragment_to_hacPortalWebFragment"
             app:destination="@id/hacPortalWebFragment" />
+        <action
+            android:id="@+id/action_paymentAndPassageFragment_to_pdfViewerFragment"
+            app:destination="@id/pdfViewerFragment" />
     </fragment>
 
     <fragment
@@ -440,6 +443,14 @@
         <argument
             android:name="url"
             app:argType="string"/>
+    </fragment>
+    <fragment
+        android:id="@+id/pdfViewerFragment"
+        android:name="com.mobility.enp.view.fragments.card.PdfViewerFragment"
+        android:label="PdfViewerFragment" >
+        <action
+            android:id="@+id/action_pdfViewerFragment_to_paymentAndPassageFragment"
+            app:destination="@id/paymentAndPassageFragment" />
     </fragment>
 
 

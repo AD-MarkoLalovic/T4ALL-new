@@ -32,11 +32,12 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.adapters.CardsCountryAdapter
-import com.mobility.enp.view.adapters.PaymentAndPassageAdapter
+import com.mobility.enp.view.adapters.cards.CardsCountryAdapter
+import com.mobility.enp.view.adapters.cards.PaymentAndPassageAdapter
 import com.mobility.enp.view.adapters.cards.TagsForCroatiaAdapter
 import com.mobility.enp.view.dialogs.ConfirmRemovalCardDialog
 import com.mobility.enp.view.dialogs.LostTagDialog
+import com.mobility.enp.view.dialogs.SerbianTagInCroatiaDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
 import kotlinx.coroutines.Dispatchers
@@ -60,7 +61,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private var allCards: List<Card> = emptyList()
     private val args: PaymentAndPassageFragmentArgs by navArgs()
     private var selectedCountry: String = "All"
-    private var croatiaWebLink: String = "https://toll4all.com/login"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -225,10 +225,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
 
-            franchiseModel?.franchiseCroatiaLoginLink?.let { link ->
-                croatiaWebLink = link
-            }
-
             franchiseModel?.franchisePrimaryColor?.let { color ->
                 val states = arrayOf(
                     intArrayOf(android.R.attr.state_checked),  // When switch is ON
@@ -244,7 +240,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 val colorStateList = ColorStateList(states, colors)
                 binding.termsConditionsCheckmark.buttonTintList = colorStateList
-                binding.txCroatiaWebLink.backgroundTintList =
+                binding.bttRegTagForCroatia.backgroundTintList =
                     ColorStateList.valueOf(color)
             } ?: run {
                 val states = arrayOf(
@@ -263,7 +259,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 val colorStateList = ColorStateList(states, colors)
                 binding.termsConditionsCheckmark.buttonTintList = colorStateList
-                binding.txCroatiaWebLink.backgroundTintList =
+                binding.bttRegTagForCroatia.backgroundTintList =
                     ColorStateList.valueOf(requireContext().getColor(R.color.figmaSplashScreenColor))
             }
         }
@@ -323,8 +319,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 is SubmitResultFold.Success -> {
                     binding.loadingCards.visibility = View.GONE
                     val url = result.data
-//                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-//                    startActivity(intent)
+
                     val action =
                         PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToHacPortalWebFragment(
                             url
@@ -363,19 +358,23 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         cardsCountryAdapter = CardsCountryAdapter(arrayListOf(), this)
         binding.recyclerCardsCountry.adapter = cardsCountryAdapter
 
-        tagsForCroatiaAdapter = TagsForCroatiaAdapter { serialNumbers ->
-            viewModel.onCheckChanged(serialNumbers)
-        }
-        binding.rvTagsForCroatia?.adapter = tagsForCroatiaAdapter
+
+        val franchiseColor = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
+        tagsForCroatiaAdapter = TagsForCroatiaAdapter(
+            { serialNumbers -> viewModel.onCheckChanged(serialNumbers) },
+            franchiseColor
+        )
+
+        binding.rvTagsForCroatia.adapter = tagsForCroatiaAdapter
     }
 
 
     private fun processCardResponse(cardWebResponse: CardWebModel) {
         val paymentAndPassage: CardsResponse = viewModel.objectTransformer(cardWebResponse)
 
-        paymentAndPassage.let { it ->
+        paymentAndPassage.let {
             val sortedCards =
-                it.data?.sortedWith(compareByDescending<Card> { card -> card.defaultCard })
+                it.data?.sortedWith(compareByDescending { card -> card.defaultCard })
 
             allCards = sortedCards ?: emptyList()
 
@@ -476,8 +475,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
     private fun filterCardsByCountry(country: String) {
         val filteredCards = allCards.filter { it.country?.code == country }
-        if (filteredCards.isEmpty()) {
+        if (filteredCards.isEmpty() && (country != "HR")) {
             binding.txNoCards.visibility = View.VISIBLE
+            binding.rvCreditCard.visibility = View.GONE
+        } else if (country != "HR") {
+            binding.txNoCards.visibility = View.GONE
             binding.rvCreditCard.visibility = View.GONE
         } else {
             adapter.updateListCards(filteredCards)
@@ -487,11 +489,15 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     private fun setListener() {
-        binding.txCroatiaWebLink.setOnClickListener {
+        binding.bttRegTagForCroatia.setOnClickListener {
             viewModel.registrationTagsForHr()
 
             /*val intent = Intent(Intent.ACTION_VIEW, croatiaWebLink.toUri())
             startActivity(intent)*/
+        }
+
+        binding.txCroatiaCardsNote.setOnClickListener {
+            SerbianTagInCroatiaDialog().show(parentFragmentManager, "SerbianTagInCroatia")
         }
         binding.termsConditionsCheckmark.setOnCheckedChangeListener { _, isChecked ->
             when (isChecked) {
@@ -517,6 +523,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         setFragmentResultListener("htmlDialogDismissed") { _, _ ->
             binding.loadingCards.visibility = View.GONE
+        }
+
+        binding.txCroatiaCardsPdf.setOnClickListener {
+            val action = PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewerFragment()
+            findNavController().navigate(action)
         }
     }
 
@@ -590,6 +601,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     override fun setCountryListener(country: String) {
+        Log.d("MARKO", "setCountryListener: $country")
         when (country) {
             "RS" -> {
                 selectedCountry = "RS"
@@ -642,9 +654,9 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 makeCardClickable(false)
                 selectedCountry = "All"
                 binding.txCroatiaText.visibility = View.GONE
-                binding.txCroatiaCardsNote?.visibility = View.GONE
-                binding.rvTagsForCroatia?.visibility = View.GONE
-                binding.txCroatiaWebLink.visibility = View.GONE
+                binding.txCroatiaCardsNote.visibility = View.GONE
+                binding.rvTagsForCroatia.visibility = View.GONE
+                binding.bttRegTagForCroatia.visibility = View.GONE
                 adapter.updateListCards(allCards)
                 if (viewModel.getCardDataFlow.value != SubmitResult.Loading) {
                     binding.txNoCards.visibility =
@@ -806,14 +818,16 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private fun visibleCroatianComponents(visible: Boolean) {
         if (visible) {
             binding.txCroatiaText.visibility = View.VISIBLE
-            binding.txCroatiaCardsNote?.visibility = View.VISIBLE
-            binding.rvTagsForCroatia?.visibility = View.VISIBLE
-            binding.txCroatiaWebLink.visibility = View.VISIBLE
+            binding.txCroatiaCardsNote.visibility = View.VISIBLE
+            binding.rvTagsForCroatia.visibility = View.VISIBLE
+            binding.bttRegTagForCroatia.visibility = View.VISIBLE
+            binding.txCroatiaCardsPdf.visibility = View.VISIBLE
         } else {
             binding.txCroatiaText.visibility = View.GONE
-            binding.txCroatiaCardsNote?.visibility = View.GONE
-            binding.rvTagsForCroatia?.visibility = View.GONE
-            binding.txCroatiaWebLink.visibility = View.GONE
+            binding.txCroatiaCardsNote.visibility = View.GONE
+            binding.rvTagsForCroatia.visibility = View.GONE
+            binding.bttRegTagForCroatia.visibility = View.GONE
+            binding.txCroatiaCardsPdf.visibility = View.GONE
         }
     }
 
