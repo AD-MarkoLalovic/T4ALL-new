@@ -215,9 +215,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimens_16dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
-                android:text="@string/croatia_eng"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:text="@string/croatia"
                 android:textColor="@color/primary_dark_lightest"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintEnd_toStartOf="@+id/flagCroatiaIntro"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txMontenegroIntroRegions" />
@@ -225,10 +226,11 @@
             <ImageView
                 android:id="@+id/flagCroatiaIntro"
                 android:layout_width="22dp"
-                android:layout_height="15.4dp"
+                android:layout_height="16dp"
                 android:contentDescription="@null"
                 android:src="@drawable/croatia_flag"
-                android:visibility="gone"
+                android:visibility="visible"
+                android:layout_marginEnd="@dimen/dimens_16dp"
                 app:layout_constraintBottom_toBottomOf="@id/txCroatiaIntroRegions"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/txCroatiaIntroRegions" />
