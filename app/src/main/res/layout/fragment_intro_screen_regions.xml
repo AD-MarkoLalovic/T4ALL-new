@@ -216,7 +216,7 @@
                 android:layout_marginTop="@dimen/dimens_16dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
                 android:layout_marginStart="@dimen/dimens_16dp"
-                android:text="@string/croatia_eng"
+                android:text="@string/croatia"
                 android:textColor="@color/primary_dark_lightest"
                 android:visibility="visible"
                 app:layout_constraintEnd_toStartOf="@+id/flagCroatiaIntro"
