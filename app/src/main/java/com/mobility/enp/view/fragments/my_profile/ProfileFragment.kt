@@ -299,9 +299,8 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         }
 
         viewModelProfile.showRefundCard.observe(viewLifecycleOwner) { shouldShow ->
-            if (shouldShow) {
+            if (shouldShow || franchiseViewModel.franchiseModel.value != null) {
                 binding.buttonRefundRequest.visibility = View.VISIBLE
-
             } else {
                 binding.buttonRefundRequest.visibility = View.GONE
             }

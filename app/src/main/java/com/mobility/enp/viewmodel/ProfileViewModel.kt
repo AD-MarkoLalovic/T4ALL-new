@@ -90,7 +90,7 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
 
                         // Postavljanje vrednosti za _showRefundCard
                         _showRefundCard.value =
-                            ((userCountry == "RS" || userType == 3) && isFranchiser == false)
+                            ((userCountry == "RS" || userType == 3) && !isFranchiser)
                     }
                 } catch (e: Exception) {
                     Log.e("ProfileViewModel", "Error fetching user data", e)
