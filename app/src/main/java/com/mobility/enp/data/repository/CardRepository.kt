@@ -146,7 +146,7 @@ class CardRepository(database: DRoom, context: Context) : BaseRepository(databas
                     } ?: Result.failure(NetworkError.ServerError)
                 }
             } catch (e: Exception) {
-                Log.d(TAG, "getIndexData: ${e.message} ${e.cause}")
+                Log.d("CardRepository", "tagsForCroatia: ${e.message} ${e.cause}")
                 Result.failure(NetworkError.ServerError)
             }
         }

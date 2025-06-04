@@ -31,6 +31,7 @@ import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
+import com.mobility.enp.data.model.my_tags.response.MyTagsResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -159,6 +160,14 @@ interface ApiService {
         @Query("perPage") perPage: String,
         @Query(value = "lang") language: String
     ): Call<TagsResponse>
+
+    @GET("/api/v1/tags")
+    suspend fun getUserTagsNew(
+        @Query("page") page: Int,
+        @Query("perPage") perPage: Int,
+        @Query("lang") language: String
+    ): Response<MyTagsResponse>
+
 
     //endregion
 

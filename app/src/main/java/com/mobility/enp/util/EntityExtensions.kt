@@ -7,8 +7,11 @@ import com.mobility.enp.data.model.cards.tags_for_croatia.Tag
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.entity.TollHistoryHomeEntity
+import com.mobility.enp.data.model.my_tags.response.MyTagsList
 import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 import com.mobility.enp.view.ui_models.home.HomeTollHistoryUI
+import com.mobility.enp.view.ui_models.my_tags.TagStatusUiModel
+import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 
 fun TollHistoryHomeEntity.toUIModel(): HomeTollHistoryUI {
     return HomeTollHistoryUI(
@@ -68,6 +71,26 @@ fun List<Tag>.toTagsForCroatiaUIList(): List<TagsForCroatiaUI> {
         TagsForCroatiaUI(
             serialNumberUI = tag.serialNumber,
             registrationPlateUI = tag.registrationPlate
+        )
+    }
+}
+
+fun List<MyTagsList>.toTagUiModel(): List<TagUiModel> {
+    return this.map { tag ->
+        TagUiModel(
+            serialNumber = tag.serialNumber,
+            registrationPlate = tag.registrationPlate,
+            countryCode = tag.country?.value,
+            statuses = tag.statuses.map {
+                TagStatusUiModel(
+                    statusesCountry = it.country?.text,
+                    statusText = it.status?.text,
+                    statusValue = it.status?.value
+                )
+            },
+            showButtonFoundTag = tag.showButtonFoundTag,
+            showButtonLostTag = tag.showButtonLostTag,
+            category = tag.category?.value
         )
     }
 }
