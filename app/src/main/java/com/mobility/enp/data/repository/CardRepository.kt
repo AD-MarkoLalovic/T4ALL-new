@@ -3,7 +3,6 @@ package com.mobility.enp.data.repository
 import android.content.Context
 import android.util.Log
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
-import com.mobility.enp.data.model.cards.registration_croatia.RegistrationResponse
 import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
