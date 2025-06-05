@@ -6,7 +6,6 @@ import com.mobility.enp.data.model.api_tags.LostTagResponse
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
@@ -54,7 +53,12 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
 
     suspend fun getCardsFromServer(): Result<CardWebModel> {
-        val userToken = getUserToken() ?: return Result.failure(NetworkError.NoConnection)
+
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken()
 
         return try {
             val lang = getLangKey()

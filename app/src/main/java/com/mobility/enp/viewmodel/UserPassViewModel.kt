@@ -106,9 +106,9 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Empty)
     val complaintObjectionStateFiltered: StateFlow<SubmitResult<LostTagResponse>> get() = _complaintObjectionStateFiltered
 
-//    fun setStateIndex(indexData: IndexData) { // from room
-//        _baseTagDataState.value = SubmitResult.Success(indexData)
-//    }
+    fun setStateIndex(indexData: IndexData) { // from room
+        _baseTagDataState.value = SubmitResult.Success(Pair(indexData, CardWebModel(null, null)))
+    }
 
     private val _errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     val errorBody: LiveData<ErrorBody> get() = _errorBody
@@ -616,7 +616,9 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.fetchPassageDataBySerialNew(tagSerialNumber)?.let {
-                dataInterface.onOk(it)
+                withContext (Dispatchers.Main) {
+                    dataInterface.onOk(it)
+                }
             }
         }
     }
