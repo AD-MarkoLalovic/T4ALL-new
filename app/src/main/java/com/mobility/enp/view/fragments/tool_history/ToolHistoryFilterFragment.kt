@@ -133,7 +133,11 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             vModel.showDatePicker(false, requireContext(), franchiseViewModel.franchiseModel.value)
         }
 
-        setSelectedButton(binding.buttonSerbia)
+        setSelectedButton(binding.buttonAll)
+
+        binding.buttonAll.setOnClickListener {
+            vModel.selectedCountry = ""
+        }
 
         binding.buttonSerbia.setOnClickListener {
             setSelectedButton(binding.buttonSerbia)
@@ -213,6 +217,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         buttonSerbia.isSelected = false
         buttonMontenegro.isSelected = false
         buttonCroatia.isSelected = false
+        buttonAll.isSelected = false
 
         selectedButton.isSelected = true
     }
@@ -454,6 +459,9 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
     private fun setVisibleCountries(cardWebModel: CardWebModel) {
         cardWebModel.data?.let { model ->
+
+            binding.buttonAll.visibility = View.VISIBLE
+
             if (model.showTabHR) {
                 binding.buttonCroatia.visibility = View.VISIBLE
             }
