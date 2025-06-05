@@ -52,7 +52,6 @@ import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.repository.PassageHistoryRepository
-import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.CHANNEL_ID
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.NOTIFICATION_ID
 import com.mobility.enp.util.NetworkError
@@ -849,16 +848,12 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     var selectedTags: ArrayList<Tag> = ArrayList()
     var indexData: IndexData? = null
 
-    private val database = DRoom.getRoomInstance(repository.fetchContext())
-
-
     suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
-        database.toolHistoryDao()?.deleteData()
-        database.toolHistoryDao()?.insertData(indexData)
+        repository.insertRoomTagBaseData(indexData)
     }
 
     suspend fun insertPassageData(toolHistoryListing: ToolHistoryListing) {
-        database.toolListingDao()?.insertData(toolHistoryListing)
+        insertPassageData(toolHistoryListing)
     }
 
     fun showDatePicker(fromDate: Boolean, context: Context, franchiseModel: FranchiseModel?) {
@@ -1090,9 +1085,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     }
 
     suspend fun fetchCsvData(): ByteArray? {
-        return withContext(Dispatchers.IO) {
-            database.csvTableDao().fetchData().data
-        }
+        return repository.fetchedStoredCsvData()
     }
 
     fun internetAvailable(): Boolean {

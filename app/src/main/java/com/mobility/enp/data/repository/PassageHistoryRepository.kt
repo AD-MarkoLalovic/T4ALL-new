@@ -72,6 +72,21 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         }
     }
 
+    suspend fun insertRoomTagBaseData(indexData: IndexData){
+        database.toolHistoryDao().deleteData()
+        database.toolHistoryDao().insertData(indexData)
+    }
+
+    suspend fun insertPassageDataAdapter(data : ToolHistoryListing){
+        database.toolListingDao().insertData(data)
+    }
+
+    suspend fun fetchedStoredCsvData(): ByteArray? {
+        return withContext (Dispatchers.IO) {
+            database.csvTableDao().fetchData().data
+        }
+    }
+
     suspend fun getAdapterPassageData(
         tagSerialNumber: String,
         page: Int,
