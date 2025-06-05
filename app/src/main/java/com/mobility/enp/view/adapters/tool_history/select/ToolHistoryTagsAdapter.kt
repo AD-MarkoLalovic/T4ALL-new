@@ -3,9 +3,11 @@ package com.mobility.enp.view.adapters.tool_history.select
 import android.content.Context
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Visibility
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.ToolHistoryTagsAdapterBinding
@@ -26,7 +28,10 @@ class ToolHistoryTagsAdapter(
 
         fun bind(tag: Tag) {
             if (tag.registrationPlate.isNullOrEmpty()) { // ignore recommendation android studio is wrong here
-                tag.registrationPlate = "null"
+                tag.registrationPlate = tag.serialNumber
+                binding.serialNumber.visibility = View.INVISIBLE
+            }else{
+                binding.serialNumber.visibility = View.VISIBLE
             }
 
             binding.data = tag
