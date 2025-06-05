@@ -293,7 +293,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     override fun psgData(toolHistoryListing: V2HistoryTagResponse) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-//                vModel.insertPassageData(toolHistoryListing) todo
+                vModel.insertPassageData(toolHistoryListing)
             }
         }
     }

@@ -72,17 +72,17 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         }
     }
 
-    suspend fun insertRoomTagBaseData(indexData: IndexData){
+    suspend fun insertRoomTagBaseData(indexData: IndexData) {
         database.toolHistoryDao().deleteData()
         database.toolHistoryDao().insertData(indexData)
     }
 
-    suspend fun insertPassageDataAdapter(data : ToolHistoryListing){
-        database.toolListingDao().insertData(data)
+    suspend fun insertPassageDataAdapter(data: V2HistoryTagResponse) {
+        database.v2ToolHistoryDao().insertData(data)
     }
 
     suspend fun fetchedStoredCsvData(): ByteArray? {
-        return withContext (Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             database.csvTableDao().fetchData().data
         }
     }
@@ -129,7 +129,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         tagSerialNumber: String,
         country: String,
         page: Int,
-        perPage: Int,dateFrom: String,dateTo: String
+        perPage: Int, dateFrom: String, dateTo: String
     ): Result<V2HistoryTagResponse> {
 
         if (!isNetworkAvailable()) {
@@ -142,7 +142,13 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
             return try {
                 Log.d(TAG, "getAdapterPassageDataCountryFilter: $dateFrom $dateTo")
                 val response = apiService(token).getToolHistoryTransitV2Country(
-                    tagSerialNumber, country, page.toString(), perPage.toString(), getLangKey(),dateFrom,dateTo
+                    tagSerialNumber,
+                    country,
+                    page.toString(),
+                    perPage.toString(),
+                    getLangKey(),
+                    dateFrom,
+                    dateTo
                 )
                 if (response.isSuccessful) {
                     response.body()?.let { indexData ->
@@ -284,9 +290,9 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         return isNetworkAvailable()
     }
 
-    suspend fun fetchPassageDataBySerial(serial: String): ToolHistoryListing? {
+    suspend fun fetchPassageDataBySerialNew(serial: String): V2HistoryTagResponse? {
         return withContext(Dispatchers.IO) {
-            database.toolListingDao().fetchPassageBySerial(serial)
+            database.v2ToolHistoryDao().fetchPassageBySerial(serial)
         }
     }
 

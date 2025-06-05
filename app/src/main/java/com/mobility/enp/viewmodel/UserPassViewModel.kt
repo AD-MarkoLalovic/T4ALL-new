@@ -45,7 +45,6 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
@@ -616,8 +615,8 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         tagSerialNumber: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.fetchPassageDataBySerial(tagSerialNumber)?.let {
-//                dataInterface.onOk(it) todo
+            repository.fetchPassageDataBySerialNew(tagSerialNumber)?.let {
+                dataInterface.onOk(it)
             }
         }
     }
@@ -852,8 +851,8 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         repository.insertRoomTagBaseData(indexData)
     }
 
-    suspend fun insertPassageData(toolHistoryListing: ToolHistoryListing) {
-        insertPassageData(toolHistoryListing)
+    suspend fun insertPassageData(toolHistoryListing: V2HistoryTagResponse) {
+        repository.insertPassageDataAdapter(toolHistoryListing)
     }
 
     fun showDatePicker(fromDate: Boolean, context: Context, franchiseModel: FranchiseModel?) {
