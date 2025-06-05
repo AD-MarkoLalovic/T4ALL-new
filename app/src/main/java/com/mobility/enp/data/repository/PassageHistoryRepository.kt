@@ -6,7 +6,6 @@ import com.mobility.enp.data.model.api_tags.LostTagResponse
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
@@ -54,7 +53,12 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
 
     suspend fun getCardsFromServer(): Result<CardWebModel> {
-        val userToken = getUserToken() ?: return Result.failure(NetworkError.NoConnection)
+
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken()
 
         return try {
             val lang = getLangKey()
@@ -69,6 +73,21 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         } catch (e: Exception) {
             Log.e("HomeRepository getCards", "Greška pri preuzimanju kartica: ${e.message}", e)
             Result.failure(NetworkError.ServerError)
+        }
+    }
+
+    suspend fun insertRoomTagBaseData(indexData: IndexData) {
+        database.toolHistoryDao().deleteData()
+        database.toolHistoryDao().insertData(indexData)
+    }
+
+    suspend fun insertPassageDataAdapter(data: V2HistoryTagResponse) {
+        database.v2ToolHistoryDao().insertData(data)
+    }
+
+    suspend fun fetchedStoredCsvData(): ByteArray? {
+        return withContext(Dispatchers.IO) {
+            database.csvTableDao().fetchData().data
         }
     }
 
@@ -114,7 +133,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         tagSerialNumber: String,
         country: String,
         page: Int,
-        perPage: Int,dateFrom: String,dateTo: String
+        perPage: Int, dateFrom: String, dateTo: String
     ): Result<V2HistoryTagResponse> {
 
         if (!isNetworkAvailable()) {
@@ -127,7 +146,13 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
             return try {
                 Log.d(TAG, "getAdapterPassageDataCountryFilter: $dateFrom $dateTo")
                 val response = apiService(token).getToolHistoryTransitV2Country(
-                    tagSerialNumber, country, page.toString(), perPage.toString(), getLangKey(),dateFrom,dateTo
+                    tagSerialNumber,
+                    country,
+                    page.toString(),
+                    perPage.toString(),
+                    getLangKey(),
+                    dateFrom,
+                    dateTo
                 )
                 if (response.isSuccessful) {
                     response.body()?.let { indexData ->
@@ -269,9 +294,9 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         return isNetworkAvailable()
     }
 
-    suspend fun fetchPassageDataBySerial(serial: String): ToolHistoryListing? {
+    suspend fun fetchPassageDataBySerialNew(serial: String): V2HistoryTagResponse? {
         return withContext(Dispatchers.IO) {
-            database.toolListingDao().fetchPassageBySerial(serial)
+            database.v2ToolHistoryDao().fetchPassageBySerial(serial)
         }
     }
 

@@ -17,6 +17,7 @@ import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.banks.entity.BanksEntity
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.entity.HomeEntity
@@ -43,13 +44,14 @@ import com.mobility.enp.data.room.api_related_daos.MyInvoicesDao
 import com.mobility.enp.data.room.api_related_daos.ProfileImageDao
 import com.mobility.enp.data.room.api_related_daos.RefundRequestDao
 import com.mobility.enp.data.room.api_related_daos.TagsRefundRequestDao
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.notification.NotificationDao
 
 @Database(
     entities = [UserLoginResponseRoomTable::class, FcmToken::class, NotificationModel::class, IndexData::class, ToolHistoryListing::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
-        BasicInfoEntity::class, HomeEntity::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class, HomeCardsEntity::class],
-    version = 202,
+        BasicInfoEntity::class, HomeEntity::class, V2HistoryTagResponse::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class, HomeCardsEntity::class],
+    version = 205,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -72,6 +74,7 @@ abstract class DRoom : RoomDatabase() {
     abstract fun basicInfoDao(): BasicInfoDao
     abstract fun homeScreenDao(): HomeScreenDao
     abstract fun homeCardsDao(): HomeCardsDao
+    abstract fun v2ToolHistoryDao(): ToolHistoryV2Dao
 
 
     companion object {
@@ -116,6 +119,7 @@ abstract class DRoom : RoomDatabase() {
         tagsRefundRequest().deleteTagsRefundRequest()
         basicInfoDao().deleteBasicInfo()
         homeScreenDao().deleteHomeScreenData()
+        v2ToolHistoryDao().deleteData()
     }
 
 }
