@@ -7,6 +7,7 @@ import com.google.gson.Strictness
 import com.google.gson.reflect.TypeToken
 import com.mobility.enp.data.model.api_my_invoices.DataMonthly
 import com.mobility.enp.data.model.api_tool_history.listing.InvoiceData
+import com.mobility.enp.data.model.api_tool_history.v2base_model.Data
 
 @TypeConverters
 class Converters {
@@ -78,6 +79,18 @@ class Converters {
             val type = object : TypeToken<List<Int>>() {}.type
             return gson.fromJson(jsonString, type)
         }
+    }
+
+    @TypeConverter
+    fun fromData(data: Data?): String? {
+        return gson.toJson(data)
+    }
+
+    @TypeConverter
+    fun toData(dataString: String?): Data? {
+        if (dataString.isNullOrEmpty()) return null
+        val type = object : TypeToken<Data>() {}.type
+        return gson.fromJson(dataString, type)
     }
 
 }

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,11 +28,9 @@ import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.SendToFragment,
@@ -43,8 +40,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     private val binding: FragmentPassageHistoryBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
-
-    private lateinit var isInternetAvailable: MutableLiveData<Boolean>
 
     companion object {
         const val TAG = "ToolHist"
@@ -80,21 +75,21 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     }
 
     private fun triggerUpdate() {
-        CoroutineScope(Dispatchers.Main).launch {
-            val bindingMain = (activity as MainActivity).binding
-            MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
-            binding.progBar.visibility = View.GONE
-            binding.loopIcon.isEnabled = true
+        val bindingMain = (activity as MainActivity).binding
 
-            vModel.getBaseData()
-        }
+        MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
+
+        binding.progBar.visibility = View.GONE
+        binding.loopIcon.isEnabled = true
+
+        vModel.getBaseData()
     }
 
     private fun setObservers() {
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
             franchiseModel?.franchisePrimaryColor?.let { color ->
-               binding.loopIcon.setBackgroundResource(franchiseModel.loopIcon)
+                binding.loopIcon.setBackgroundResource(franchiseModel.loopIcon)
             }
         }
 
@@ -110,6 +105,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
                 is SubmitResult.FailureNoConnection -> {
                     showNoConnectionState()
+                    runSavedDataCheck()
                 }
 
                 is SubmitResult.FailureServerError -> {
@@ -169,69 +165,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             }
         }
 
-        isInternetAvailable = MutableLiveData()
-        isInternetAvailable.observe(viewLifecycleOwner) { hasInternet ->
-            if (hasInternet != null && !hasInternet) {
-                binding.loopIcon.isEnabled = false
-
-                var indexData: IndexData? = null
-
-                runBlocking {
-                    val diff = CoroutineScope(Dispatchers.IO).async {
-                        indexData = vModel.fetchIndexData()   // room
-                    }
-
-                    diff.await()
-                }
-
-                if (indexData != null) {
-                    val bindingMain = (activity as MainActivity).binding
-                    MainActivity.showSnackMessage(
-                        getString(R.string.offline_using_stored_data), bindingMain
-                    )
-
-                    indexData?.let { iData ->
-//                        vModel.setStateIndex(iData)  todo
-                    }
-                } else {
-                    val bundle = Bundle().apply {
-                        putString(
-                            getString(R.string.title), getString(R.string.no_connection_title)
-                        )
-                        putString(
-                            getString(R.string.subtitle),
-                            getString(R.string.please_connect_to_the_internet)
-                        )
-                    }
-
-                    findNavController().navigate(
-                        R.id.action_global_noInternetConnectionDialog, bundle
-                    )
-
-                    val binding = (activity as MainActivity).binding
-                    MainActivity.showSnackMessage(
-                        getString(R.string.checking_for_connection), binding
-                    )
-
-                }
-
-                viewLifecycleOwner.lifecycleScope.launch {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        context?.let {
-                            while (true) {
-                                if (Repository.isNetworkAvailable(it)) {
-                                    triggerUpdate()
-                                    break
-                                } else {
-                                    delay(1000L)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         vModel.errorBody.observe(viewLifecycleOwner) { errorBody ->   // need to check this // removed in future task
             binding.progBar.visibility = View.GONE
             context?.let { context ->
@@ -240,6 +173,56 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 ).show()
                 if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
                     MainActivity.logoutOnInvalidToken(context, findNavController())
+                }
+            }
+        }
+    }
+
+    private fun runSavedDataCheck() {
+        binding.loopIcon.isEnabled = false
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            val indexData = vModel.fetchIndexData()   // room
+
+            indexData?.let { data ->
+
+                val bindingMain = (activity as MainActivity).binding
+
+                MainActivity.showSnackMessage(
+                    getString(R.string.offline_using_stored_data), bindingMain
+                )
+
+                vModel.setStateIndex(data)
+
+            } ?: run {
+                val bundle = Bundle().apply {
+                    putString(
+                        getString(R.string.title), getString(R.string.no_connection_title)
+                    )
+                    putString(
+                        getString(R.string.subtitle),
+                        getString(R.string.please_connect_to_the_internet)
+                    )
+                }
+
+                findNavController().navigate(
+                    R.id.action_global_noInternetConnectionDialog, bundle
+                )
+
+                val binding = (activity as MainActivity).binding
+                MainActivity.showSnackMessage(
+                    getString(R.string.checking_for_connection), binding
+                )
+            }
+
+            withContext(Dispatchers.IO) {
+                while (true) {
+                    if (vModel.internetAvailable()) {
+                        triggerUpdate()
+                        break
+                    } else {
+                        delay(1000L)
+                    }
                 }
             }
         }
@@ -257,7 +240,8 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         }
 
         vModel.tagSerials = indexData.data?.tags as ArrayList<Tag>
-        vModel.indexData = indexData  // filter fragment need some data from here saving here to reduce api calls
+        vModel.indexData =
+            indexData  // filter fragment need some data from here saving here to reduce api calls
 
         val toolHistoryListingAdapter =
             ToolHistoryListingAdapter(indexData, vModel, this, this, this)
@@ -293,7 +277,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     override fun psgData(toolHistoryListing: V2HistoryTagResponse) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
-//                vModel.insertPassageData(toolHistoryListing) todo
+                vModel.insertPassageData(toolHistoryListing)
             }
         }
     }

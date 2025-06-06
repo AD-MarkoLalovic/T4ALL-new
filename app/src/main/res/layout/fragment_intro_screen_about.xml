@@ -49,7 +49,7 @@
                 android:layout_marginTop="29dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
                 android:background="@drawable/spinner_intro_lang_background"
-                android:paddingHorizontal="@dimen/dimens_12dp"
+                android:paddingHorizontal="@dimen/dimens_14dp"
                 android:paddingVertical="11dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
