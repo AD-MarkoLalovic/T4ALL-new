@@ -66,7 +66,7 @@ android {
             versionNameSuffix = "-stage"
             multiDexEnabled = true
             buildConfigField("String", "API_URL", "\"https://mobileapitest.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+20257@gmail.com\"")
+            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+20266@gmail.com\"")
             buildConfigField("String", "TEST_PASSWORD", "\"demodemo\"")
         }
         create("prod") {

@@ -56,6 +56,8 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         super.onViewCreated(view, savedInstanceState)
 
         vModel.nullData()
+        vModel.setCsvState()
+
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
 

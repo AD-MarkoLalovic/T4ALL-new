@@ -351,9 +351,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
 
-                else -> {
-                    SubmitResult.Empty
-                }
+                is SubmitResult.Empty -> {}
             }
         }
     }
