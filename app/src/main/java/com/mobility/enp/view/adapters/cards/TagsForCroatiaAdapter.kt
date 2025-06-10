@@ -11,7 +11,6 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
 import com.mobility.enp.databinding.ItemTagForCroatiaBinding
 import com.mobility.enp.view.ui_models.TagsForCroatiaUI
-import com.mobility.enp.viewmodel.FranchiseViewModel
 
 class TagsForCroatiaAdapter(
     private val onCheckChange: (SerialNumberRequest) -> Unit,

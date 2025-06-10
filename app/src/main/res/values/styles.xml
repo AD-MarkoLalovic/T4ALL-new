@@ -44,7 +44,7 @@
         <item name="backgroundTint">@color/figmaIntroEclipseColorInactive</item>
         <item name="fontFamily">@font/noto_sans_bold</item>
         <item name="android:textSize">@dimen/dimens_12sp</item>
-        <item name="android:paddingHorizontal">@dimen/dimens_22dp</item>
+        <item name="android:paddingHorizontal">@dimen/dimens_16dp</item>
         <item name="android:paddingVertical">@dimen/dimens_9dp</item>
         <item name="android:textColor">@color/primary_light_darkest</item>
         <item name="android:textAlignment">center</item>

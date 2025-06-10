@@ -6,7 +6,7 @@ data class MyTagsList(
     val id: String?,
     val registrationPlate: String?,
     val roming: Boolean?,
-    val serialNumber: String?,
+    val serialNumber: String,
     val showButtonFoundTag: Boolean?,
     val showButtonLostTag: Boolean?,
     val statuses: List<Statuse>
