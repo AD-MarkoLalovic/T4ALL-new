@@ -1,6 +1,5 @@
 package com.mobility.enp.view.adapters.my_tags
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
