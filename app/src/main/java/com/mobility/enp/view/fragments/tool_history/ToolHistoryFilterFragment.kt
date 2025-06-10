@@ -72,7 +72,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         setFranchiser()
 
         vModel.selectedTags.clear()
-        vModel.selectedCountry = getString(R.string.serbia_rs)
+        vModel.selectedCountry = ""
 
         binding.progBar.visibility = View.VISIBLE
 
@@ -136,6 +136,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         setSelectedButton(binding.buttonAll)
 
         binding.buttonAll.setOnClickListener {
+            setSelectedButton(binding.buttonAll)
             vModel.selectedCountry = ""
         }
 
@@ -351,9 +352,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
 
-                else -> {
-                    SubmitResult.Empty
-                }
+                is SubmitResult.Empty -> {}
             }
         }
     }
