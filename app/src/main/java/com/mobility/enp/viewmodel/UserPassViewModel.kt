@@ -616,7 +616,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.fetchPassageDataBySerialNew(tagSerialNumber)?.let {
-                withContext (Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     dataInterface.onOk(it)
                 }
             }
@@ -968,18 +968,17 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     fun getCsvData(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            _csvTable.value = SubmitResult.Loading
             if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
                 if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
-                    _csvTable.value =
-                        SubmitResult.FailureApiError(
-                            ContextCompat.getString(
-                                context,
-                                R.string.end_date_check
-                            )
-                        )
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.end_date_check),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    _csvTable.value = SubmitResult.Empty
                 } else {
                     try {
+                        _csvTable.value = SubmitResult.Loading
                         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
                         val dateStart = Date(userSelectedCalendarStart ?: 0)
