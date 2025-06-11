@@ -37,7 +37,6 @@ class AdapterCountryStatuses(val status: List<Status>) :
                 binding.countryStatus.setTextColor(customTextColor)
                 binding.root.backgroundTintList = ColorStateList.valueOf(customBackground)
 
-                binding.executePendingBindings()
                 return
             }
 
@@ -46,7 +45,6 @@ class AdapterCountryStatuses(val status: List<Status>) :
             // Postavljanje boje i pozadine
             setStatusAppearance(status)
 
-            binding.executePendingBindings()
         }
 
         private fun setStatusAppearance(status: Status) {
@@ -96,5 +94,7 @@ class AdapterCountryStatuses(val status: List<Status>) :
     override fun onBindViewHolder(p0: AdapterCountryStatusesViewHolder, p1: Int) {
         p0.bind(status[p0.bindingAdapterPosition])
     }
+
+
 
 }

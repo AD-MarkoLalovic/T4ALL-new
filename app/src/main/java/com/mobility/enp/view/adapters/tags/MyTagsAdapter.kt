@@ -30,7 +30,7 @@ class MyTagsAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(tag: Tag, tagInterface: OnClickContent) {
-            binding.data = tag
+            //binding.data = tag
 
             if (!tag.showButtonLostTag) {
                 binding.buttonLostTag.visibility = View.GONE

@@ -83,7 +83,7 @@ fun List<MyTagsList>.toTagUiModel(): List<TagUiModel> {
             countryCode = tag.country?.value,
             statuses = tag.statuses.map {
                 TagStatusUiModel(
-                    statusesCountry = it.country?.text,
+                    statusesCountry = it.country?.value,
                     statusText = it.status?.text,
                     statusValue = it.status?.value
                 )
