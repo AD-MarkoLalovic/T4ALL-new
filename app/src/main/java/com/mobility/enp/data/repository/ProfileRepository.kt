@@ -9,6 +9,8 @@ import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.toTagUiModel
+import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -167,5 +169,31 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
 
         return Result.failure(NetworkError.ServerError)
     }
+
+    suspend fun getMyTags(): Result<List<TagUiModel>> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val lang = getLangKey()
+            val response = apiService(userToken).getUserTagsNew(1, 1000, lang)
+
+            if (response.isSuccessful) {
+                val tags = response.body()?.data?.tags?.toTagUiModel().orEmpty()
+                Result.success(tags)
+            } else {
+                val errorResponse = response.errorBody()?.let { parseErrorResponse(response.code(), it) }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) } ?: NetworkError.ServerError)
+            }
+
+        } catch (e: Exception) {
+            Log.d("MyTags", "ProfileRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
 
 }

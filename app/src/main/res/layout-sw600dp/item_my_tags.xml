@@ -7,7 +7,7 @@
 
         <variable
             name="data"
-            type="com.mobility.enp.data.model.api_tags.Tag" />
+            type="com.mobility.enp.view.ui_models.my_tags.TagUiModel" />
 
     </data>
 
@@ -36,7 +36,6 @@
                     style="@style/SubtitlesRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{data.registrationPlate}"
                     android:textColor="@color/primary_light_darkest"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -77,10 +76,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimens_16dp"
-                    android:text='@{data.category.value + " "}'
+                    android:text='@{String.valueOf(data.category) + " "}'
+                    app:layout_constraintBottom_toBottomOf="@+id/txCategory"
                     app:layout_constraintStart_toEndOf="@+id/txCategory"
                     app:layout_constraintTop_toTopOf="@+id/txCategory"
-                    app:layout_constraintBottom_toBottomOf="@+id/txCategory"
                     tools:text="1" />
 
                 <Button
@@ -108,29 +107,27 @@
                     style="@style/CaptionRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/dimens_10dp"
                     android:layout_marginTop="@dimen/dimens_10dp"
                     android:text="@string/status"
+                    app:layout_constraintBottom_toBottomOf="@id/cyclerTagStatuses"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/cyclerTagStatuses"
-                    app:layout_constraintBottom_toBottomOf="@id/cyclerTagStatuses"
-                    android:layout_marginVertical="@dimen/dimens_10dp"
                     tools:text="@string/status" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/cyclerTagStatuses"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimens_5dp"
+                    android:layout_marginStart="@dimen/dimens_16dp"
+                    android:layout_marginTop="@dimen/dimens_30dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/txCountry"
                     app:layout_constraintTop_toBottomOf="@id/txCategory"
-                    android:layout_marginTop="@dimen/dimens_30dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
                     app:spanCount="2"
-                    tools:itemCount="3"
-                    android:orientation="horizontal"
-                    tools:layout_height="@dimen/dimens_150dp"
-                    android:elevation="@dimen/dimens_10dp"
+                    tools:itemCount="6"
                     tools:listitem="@layout/card_cycler_tag_statuses" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

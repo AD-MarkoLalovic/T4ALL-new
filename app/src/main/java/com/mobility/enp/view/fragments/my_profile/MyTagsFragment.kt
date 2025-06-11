@@ -1,6 +1,6 @@
 package com.mobility.enp.view.fragments.my_profile
 
-import android.content.res.ColorStateList
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,37 +8,38 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_tags.PostLostTag
-import com.mobility.enp.data.model.api_tags.TagFilterData
-import com.mobility.enp.data.model.api_tags.TagStatus
-import com.mobility.enp.data.model.api_tags.TagsResponse
 import com.mobility.enp.databinding.FragmentTagsBinding
-import com.mobility.enp.network.Repository
+import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SubmitResultFold
+import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.adapters.tags.AdapterTagFilterType
-import com.mobility.enp.view.adapters.tags.MyTagsAdapter
-import com.mobility.enp.view.dialogs.LostTagDialog
+import com.mobility.enp.view.adapters.my_tags.MyTagsListAdapter
+import com.mobility.enp.view.adapters.my_tags.MyTagsStatusFilterAdapter
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyTagsViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class MyTagsFragment : Fragment(), AdapterTagFilterType.OnClick, MyTagsAdapter.OnClickContent {
+class MyTagsFragment : Fragment() {
 
     private var _binding: FragmentTagsBinding? = null
     private val binding: FragmentTagsBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
-    private val viewModel: MyTagsViewModel by viewModels()
+    private val viewModel: MyTagsViewModel by viewModels { MyTagsViewModel.factory }
+
+    private lateinit var statusFilterAdapter: MyTagsStatusFilterAdapter
+    private lateinit var tagsListAdapter: MyTagsListAdapter
+
+    private var statusListInitialized = false
+    private lateinit var textWatcher: TextWatcher
 
     companion object {
         const val TAG = "TAGS_FRAGMENT"
@@ -54,288 +55,155 @@ class MyTagsFragment : Fragment(), AdapterTagFilterType.OnClick, MyTagsAdapter.O
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setObservers()
-        setListeners()
-        setFranchiser()
+        setAdapters()
+        setupTextWatcher()
+        binding.editSerialNumberMyTags.addTextChangedListener(textWatcher)
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            binding.progbar.visibility = View.VISIBLE
-            viewModel.getTagsApiData(requireContext())
-        }
-
-        binding.buttonAddTag.setOnClickListener {
-            findNavController().navigate(R.id.action_myTagsFragment2_to_addTagFragment)
-        }
+        observeMyTags()
+        viewModel.fetchMyTags()
     }
 
-    private fun setFranchiser() {
-        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
-            franchiseModel?.franchisePrimaryColor?.let { color ->
-                binding.buttonAddTag.backgroundTintList = ColorStateList.valueOf(color)
-                binding.inputSerialNumber.boxStrokeColor = color
-
-                with(binding.inputSerialNumber) {
-                    val editText = this.editText
-                    editText?.textSelectHandle?.setTint(color)
-                    editText?.setTextColor(color)
-
-
-                    val states = arrayOf(
-                        intArrayOf(android.R.attr.state_pressed),  // pressed
-                        intArrayOf(android.R.attr.state_focused),  // focused
-                        intArrayOf()                               // default
-                    )
-
-                    val colors = intArrayOf(
-                        color,        // pressed
-                        color,        // focused
-                        color         // default
-                    )
-
-                    this.cursorColor = ColorStateList(states, colors)
+    private fun observeMyTags() {
+        collectLatestLifecycleFlow(viewModel.myTags) { result ->
+            when (result) {
+                is SubmitResultFold.Loading -> {
+                    binding.progbar.visibility = View.VISIBLE
                 }
+
+                is SubmitResultFold.Success -> {
+                    binding.progbar.visibility = View.GONE
+
+                    val myTags = result.data
+
+                    if (myTags.isEmpty()) {
+                        binding.textNoMyTags.visibility = View.VISIBLE
+                        binding.myTagsContainer.visibility = View.GONE
+
+                    } else {
+                        binding.textNoMyTags.visibility = View.GONE
+                        binding.myTagsContainer.visibility = View.VISIBLE
+
+                        if (!statusListInitialized) {
+                            val statusList =
+                                listOf(requireContext().getString(R.string.all_status_tags)) + myTags.flatMap { it.statuses }
+                                    .mapNotNull { it.statusText }
+                                    .distinct()
+                            statusFilterAdapter.submitList(statusList)
+                            statusListInitialized = true
+                        }
+                        tagsListAdapter.submitList(myTags)
+                    }
+                }
+
+                is SubmitResultFold.Failure -> {
+                    handleError(result.error)
+                }
+
+                is SubmitResultFold.Idle -> {}
             }
         }
     }
 
-    private fun setListeners() {
-        binding.editSerialNumberMyTags.addTextChangedListener(object : TextWatcher {
+    private fun setupTextWatcher() {
+        textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.d(TAG, "before method : ${viewModel.tagApiData.value}")
+                val query = s.toString().lowercase()
+                Log.d("MARKO", "onTextChanged: $query")
+                statusFilterAdapter.clearStatus()
 
-                val data = viewModel.newFilterLogic(s.toString())
-
-                Log.d(TAG, "after method : ${viewModel.tagApiData.value}")
-
-                data?.let { filteredBySerial ->
-                    try {
-                        (binding.cyclerTagTypes.adapter as AdapterTagFilterType).triggerClearByPosition(
-                            -1
-                        )
-
-                        if (filteredBySerial.data.tags.isEmpty()) {
-                            context?.let {
-                                Toast.makeText(
-                                    it,
-                                    getString(R.string.tags_with_serial_not_found),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-
-                        if (filteredBySerial.data.tags.size == viewModel.tagApiData.value?.data?.tags?.size) {
-                            (binding.cyclerTagTypes.adapter as AdapterTagFilterType).triggerClearByPosition(
-                                0
-                            )
-                        }
-
-                        (binding.cyclerContent.adapter as MyTagsAdapter).updateListTags(
-                            filteredBySerial
-                        )
-                    } catch (e: Exception) {
-                        Log.d(TAG, "onTextChanged: ${e.message}")
-                    }
+                // Filtriramo listu tagova na osnovu unosa u editText
+                val result = viewModel.allTags.filter { tag ->
+                    tag.serialNumber.lowercase().contains(query)
                 }
+
+                tagsListAdapter.submitList(result)
             }
 
             override fun afterTextChanged(s: Editable?) {}
-        })
+        }
+    }
+
+    private fun setAdapters() {
+        statusFilterAdapter = MyTagsStatusFilterAdapter { selectedStatus ->
+
+            //uklanjam tekst sa editText polja, sklanjam mu fokus i uklanjam tastaturu
+            binding.editSerialNumberMyTags.apply {
+                removeTextChangedListener(textWatcher)
+                setText("")
+                clearFocus()
+                addTextChangedListener(textWatcher)
+            }
+            val imm =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(binding.editSerialNumberMyTags.windowToken, 0)
+
+            viewModel.filterTagsByStatus(selectedStatus)
+        }
+        binding.cyclerTagTypes.adapter = statusFilterAdapter
+
+        tagsListAdapter = MyTagsListAdapter()
+        binding.cyclerContent.adapter = tagsListAdapter
+    }
+
+    private fun handleError(error: Throwable) {
+        when (error) {
+            is NetworkError.ServerError -> {
+                binding.progbar.visibility = View.GONE
+                showToastMessage(getString(R.string.server_error_msg))
+            }
+
+            is NetworkError.ApiError -> {
+                binding.progbar.visibility = View.GONE
+                showToastMessage(
+                    error.errorResponse.message ?: getString(R.string.server_error_msg)
+                )
+            }
+
+            is NetworkError.NoConnection -> {
+                noInternetMessage()
+            }
+        }
+    }
+
+    private fun noInternetMessage() {
+        binding.progbar.visibility = View.VISIBLE
+        binding.buttonAddTag.isEnabled = false
+
+        val bundle = Bundle().apply {
+            putString(getString(R.string.title), getString(R.string.no_connection_title))
+            putString(
+                getString(R.string.subtitle),
+                getString(R.string.please_connect_to_the_internet)
+            )
+        }
+
+        findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            while (!viewModel.internetChecked()) {
+                delay(500L)
+            }
+            triggerUpdate()
+        }
     }
 
     private fun triggerUpdate() {
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-            val bindingMain = (activity as MainActivity).binding
-            MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
-            binding.progbar.visibility = View.GONE
-            binding.buttonAddTag.isEnabled = true
+        binding.progbar.visibility = View.GONE
 
-            withContext(Dispatchers.IO) {
-                context?.let { context ->
-                    viewModel.getTagsApiData(context)
-                }
-            }
-        }
+        val bindingMain = (activity as MainActivity).binding
+        MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
+
+        binding.buttonAddTag.isEnabled = true
+
+        viewModel.fetchMyTags()
     }
 
-    private fun setObservers() {
-        viewModel.isInternetAvailable.observe(viewLifecycleOwner) { hasInternet ->
-            if (hasInternet != null && !hasInternet) {
-                binding.buttonAddTag.isEnabled = false
-
-                val bundle = Bundle().apply {
-                    putString(getString(R.string.title), getString(R.string.no_connection_title))
-                    putString(
-                        getString(R.string.subtitle),
-                        getString(R.string.please_connect_to_the_internet)
-                    )
-                }
-
-                findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
-
-                val binding = (activity as MainActivity).binding
-                MainActivity.showSnackMessage(getString(R.string.checking_for_connection), binding)
-
-                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                    while (!Repository.isNetworkAvailable(requireContext())) {
-                        delay(1000L)
-                    }
-                    triggerUpdate()
-                }
-            }
-        }
-
-        viewModel.lostTag.observe(viewLifecycleOwner) {
-            Log.d(TAG, "setObservers: $it")
-            if (it != null) {
-                binding.progbar.visibility = View.VISIBLE
-
-                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                    delay(5000)  // server delay
-                    viewModel.getTagsApiData(requireContext())
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.reported_lost_tag_successfully),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
-        }
-
-        viewModel.foundTag.observe(viewLifecycleOwner) {
-            it?.let {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    delay(5000)
-                    viewModel.getTagsApiData(requireContext())
-
-                    withContext(Dispatchers.Main) {
-                        binding.progbar.visibility = View.GONE
-
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.reported_found_tag_successfully),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
-        }
-
-        viewModel.tagApiData.observe(viewLifecycleOwner) { data ->
-            Log.d(TAG, "tag: $data")
-            if (data != null) {
-                val list = data.data.tags.flatMap { tag ->
-                    tag.statuses.map { status ->
-                        TagStatus(
-                            tag.id,
-                            tag.serialNumber,
-                            tag.registrationPlate,
-                            tag.country,
-                            tag.category,
-                            status,
-                            tag.showButtonLostTag,
-                            tag.showButtonFoundTag
-                        )
-                    }
-                }
-
-                viewModel.allTagsFiltered = list
-
-                if (list.isEmpty()) {
-                    binding.textNoMyTags.visibility = View.VISIBLE
-                    binding.myTagsContainer.visibility = View.GONE
-                } else {
-                    binding.textNoMyTags.visibility = View.GONE
-                    binding.myTagsContainer.visibility = View.VISIBLE
-                }
-
-                binding.progbar.visibility = View.GONE
-                setTagFilters()
-                setTagAdapterContent(data)
-            }
-        }
-
-        viewModel.errorBody.observe(viewLifecycleOwner) { errorBody ->
-            context?.let { context ->
-                Toast.makeText(
-                    context, errorBody.errorBody, Toast.LENGTH_SHORT
-                ).show()
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
-                }
-            }
-        }
+    private fun showToastMessage(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun setTagFilters() {
-        binding.cyclerTagTypes.adapter = AdapterTagFilterType(
-            ArrayList(viewModel.allTagsFiltered), requireContext()
-        )
-        (binding.cyclerTagTypes.adapter as AdapterTagFilterType).setInterface(this)
-        binding.cyclerTagTypes.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-    }
-
-    private fun setTagAdapterContent(data: TagsResponse) {
-        binding.cyclerContent.adapter = MyTagsAdapter(data)
-        binding.cyclerContent.layoutManager = LinearLayoutManager(requireContext())
-        (binding.cyclerContent.adapter as MyTagsAdapter).setInterface(this)
-    }
-
-    override fun send(filterType: TagFilterData) {
-        Log.d(TAG, "send: $filterType")
-        binding.editSerialNumberMyTags.setText("")
-
-        val data = viewModel.newFilterLogic(filterType.tagValue)
-
-        data?.let {
-            (binding.cyclerContent.adapter as MyTagsAdapter).updateListTags(it)
-        }
-    }
-
-    override fun sendClickedPosition(position: Int) {
-        (binding.cyclerTagTypes.adapter as AdapterTagFilterType).triggerClearByPosition(position)
-    }
-
-    override fun reportLostTag(tagSerial: String?) {
-        val lostTagDialog = LostTagDialog(
-            requireContext().getString(R.string.confirm_lost_tag),
-            requireContext().getString(R.string.dialog_lost_tag_message),
-            object : LostTagDialog.OnButtonClickInLostTag {
-                override fun onClickConfirmed() {
-                    tagSerial?.let { serial ->
-                        val body = PostLostTag(serial)
-                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                            viewModel.postLostTag(body)
-                        }
-                    }
-                }
-            })
-        lostTagDialog.show(childFragmentManager, "LostTagDialog")
-    }
-
-    override fun reportFoundTag(tagSerial: String?) {
-        val lostTagDialog = LostTagDialog(
-            requireContext().getString(R.string.confirm_found_tag),
-            requireContext().getString(R.string.report_found_tag),
-            object : LostTagDialog.OnButtonClickInLostTag {
-                override fun onClickConfirmed() {
-                    tagSerial?.let { serial ->
-                        val body = PostLostTag(serial)
-
-                        binding.progbar.visibility = View.VISIBLE
-
-                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                            viewModel.postFoundTag(body)
-                        }
-                    }
-                }
-            })
-        lostTagDialog.show(childFragmentManager, "FoundTagDialog")
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

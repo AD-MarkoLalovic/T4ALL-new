@@ -3,7 +3,6 @@ package com.mobility.enp.data.repository
 import android.content.Context
 import android.util.Log
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
-import com.mobility.enp.data.model.cards.registration_croatia.RegistrationResponse
 import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
@@ -146,7 +145,7 @@ class CardRepository(database: DRoom, context: Context) : BaseRepository(databas
                     } ?: Result.failure(NetworkError.ServerError)
                 }
             } catch (e: Exception) {
-                Log.d(TAG, "getIndexData: ${e.message} ${e.cause}")
+                Log.d("CardRepository", "tagsForCroatia: ${e.message} ${e.cause}")
                 Result.failure(NetworkError.ServerError)
             }
         }
