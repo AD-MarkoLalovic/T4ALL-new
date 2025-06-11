@@ -45,14 +45,12 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.repository.PassageHistoryRepository
-import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.CHANNEL_ID
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.NOTIFICATION_ID
 import com.mobility.enp.util.NetworkError
@@ -108,9 +106,9 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Empty)
     val complaintObjectionStateFiltered: StateFlow<SubmitResult<LostTagResponse>> get() = _complaintObjectionStateFiltered
 
-//    fun setStateIndex(indexData: IndexData) { // from room
-//        _baseTagDataState.value = SubmitResult.Success(indexData)
-//    }
+    fun setStateIndex(indexData: IndexData) { // from room
+        _baseTagDataState.value = SubmitResult.Success(Pair(indexData, CardWebModel(null, null)))
+    }
 
     private val _errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     val errorBody: LiveData<ErrorBody> get() = _errorBody
@@ -617,8 +615,10 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         tagSerialNumber: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.fetchPassageDataBySerial(tagSerialNumber)?.let {
-//                dataInterface.onOk(it) todo
+            repository.fetchPassageDataBySerialNew(tagSerialNumber)?.let {
+                withContext (Dispatchers.Main) {
+                    dataInterface.onOk(it)
+                }
             }
         }
     }
@@ -849,16 +849,12 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     var selectedTags: ArrayList<Tag> = ArrayList()
     var indexData: IndexData? = null
 
-    private val database = DRoom.getRoomInstance(repository.fetchContext())
-
-
     suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
-        database.toolHistoryDao()?.deleteData()
-        database.toolHistoryDao()?.insertData(indexData)
+        repository.insertRoomTagBaseData(indexData)
     }
 
-    suspend fun insertPassageData(toolHistoryListing: ToolHistoryListing) {
-        database.toolListingDao()?.insertData(toolHistoryListing)
+    suspend fun insertPassageData(toolHistoryListing: V2HistoryTagResponse) {
+        repository.insertPassageDataAdapter(toolHistoryListing)
     }
 
     fun showDatePicker(fromDate: Boolean, context: Context, franchiseModel: FranchiseModel?) {
@@ -1090,9 +1086,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     }
 
     suspend fun fetchCsvData(): ByteArray? {
-        return withContext(Dispatchers.IO) {
-            database.csvTableDao().fetchData().data
-        }
+        return repository.fetchedStoredCsvData()
     }
 
     fun internetAvailable(): Boolean {
