@@ -372,5 +372,6 @@
     <string name="highway_a7">Autocesta A7:</string>
     <string name="highway_a11">Autocesta A11:</string>
     <string name="check_status_on_hac_portal">Provjerite status na HAC portalu</string>
+    <string name="link_login_to_hac">Prijavi se na HAC portal</string>
 
 </resources>

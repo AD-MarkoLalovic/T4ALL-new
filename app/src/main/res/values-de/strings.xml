@@ -387,4 +387,5 @@
     <string name="highway_a7">Autobahn A7:</string>
     <string name="highway_a11">Autobahn A11:</string>
     <string name="check_status_on_hac_portal">Status auf dem HAC-Portal überprüfen</string>
+    <string name="link_login_to_hac">Melden Sie sich beim HAC-Portal an</string>
 </resources>

@@ -442,12 +442,15 @@
 
         <argument
             android:name="url"
-            app:argType="string"/>
+            app:argType="string" />
+        <action
+            android:id="@+id/action_hacPortalWebFragment_to_paymentAndPassageFragment"
+            app:destination="@id/paymentAndPassageFragment" />
     </fragment>
     <fragment
         android:id="@+id/pdfViewerFragment"
         android:name="com.mobility.enp.view.fragments.card.PdfViewerFragment"
-        android:label="PdfViewerFragment" >
+        android:label="PdfViewerFragment">
         <action
             android:id="@+id/action_pdfViewerFragment_to_paymentAndPassageFragment"
             app:destination="@id/paymentAndPassageFragment" />

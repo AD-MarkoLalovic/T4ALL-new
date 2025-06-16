@@ -249,7 +249,6 @@ interface ApiService {
 
     @GET("/api/v1/tags")
     suspend fun getTagsForCroatia(
-        @Query("filter[status]") status: Int,
         @Query("filter[country]") country: String
     ): Response<TagsListResponse>
 
