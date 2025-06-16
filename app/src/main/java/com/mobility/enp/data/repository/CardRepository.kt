@@ -132,7 +132,7 @@ class CardRepository(database: DRoom, context: Context) : BaseRepository(databas
         val userToken = getUserToken()
         userToken?.let { token ->
             return try {
-                val response = apiService(token).getTagsForCroatia(status = 11, country = "HR")
+                val response = apiService(token).getTagsForCroatia(country = "HR")
                 if (response.isSuccessful) {
                     response.body()?.let { data ->
                         val tagsList = data.data.tags.toTagsForCroatiaUIList()

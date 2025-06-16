@@ -377,4 +377,5 @@
     <string name="highway_a11">Otoyol A11:</string>
     <string name="tag_usage_croatia">"Hırvatistan’da Sırp TAG cihazının kullanımı "</string>
     <string name="check_status_on_hac_portal">Durumu HAC portalında kontrol edin</string>
+    <string name="link_login_to_hac">HAC portalına giriş yapın</string>
 </resources>

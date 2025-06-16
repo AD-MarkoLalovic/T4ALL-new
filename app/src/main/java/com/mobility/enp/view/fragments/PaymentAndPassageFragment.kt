@@ -1,6 +1,7 @@
 package com.mobility.enp.view.fragments
 
 import android.content.res.ColorStateList
+import android.graphics.Paint
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -61,6 +62,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private var allCards: List<Card> = emptyList()
     private val args: PaymentAndPassageFragmentArgs by navArgs()
     private var selectedCountry: String = "All"
+    private var showLoginToHac = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -76,9 +78,9 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         selectedCountry = args.countryCode ?: "All"
 
+        setListener()
         setupAdapters()
         setObservers()
-        setListener()
 
         viewModel.fetchCardFlow()
 
@@ -105,6 +107,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     binding.recyclerCardsCountry.visibility = View.VISIBLE
                     binding.loadingCards.visibility = View.GONE
 
+                    showLoginToHac = cardWeb.data.data?.hacPortalUrl != null
+
                     processCardResponse(cardWeb.data)
                     updateAdapter(cardWeb.data)
                 }
@@ -129,9 +133,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
 
-                else -> {
-                    SubmitResult.Empty
-                }
+                is SubmitResult.Empty -> {}
             }
         }
 
@@ -172,9 +174,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
 
-                else -> {
-                    SubmitResult.Empty
-                }
+                is SubmitResult.Empty -> {}
             }
         }
 
@@ -216,9 +216,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
 
-                else -> {
-                    SubmitResult.Empty
-                }
+                is SubmitResult.Empty -> {}
             }
 
         }
@@ -272,15 +270,28 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 is SubmitResultFold.Success -> {
                     binding.loadingCards.visibility = View.GONE
-                    if (result.data.isEmpty()) {
-                        visibleCroatianComponents(true)
-                        binding.txCroatiaText.text =
-                            getString(R.string.activation_successful_enp_tag_device)
-                    } else {
+
+                    val tagsList = result.data.filter { it.status == 11 }
+                    if (tagsList.isNotEmpty()) {
                         binding.txCroatiaText.text =
                             getString(R.string.tag_registration_instruction_hr)
                         visibleCroatianComponents(true)
+                        binding.bttRegTagForCroatia.visibility = View.VISIBLE
+
                         tagsForCroatiaAdapter.submitList(result.data)
+                    } else {
+                        visibleCroatianComponents(true)
+                        binding.bttRegTagForCroatia.visibility = View.GONE
+                        binding.txCroatiaText.text =
+                            getString(R.string.activation_successful_enp_tag_device)
+                    }
+
+                    if (showLoginToHac) {
+                        binding.loginToHac.paintFlags =
+                            binding.loginToHac.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                        binding.loginToHac.visibility = View.VISIBLE
+                    } else {
+                        binding.loginToHac.visibility = View.GONE
                     }
 
                 }
@@ -367,7 +378,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         binding.rvTagsForCroatia.adapter = tagsForCroatiaAdapter
     }
-
 
     private fun processCardResponse(cardWebResponse: CardWebModel) {
         val paymentAndPassage: CardsResponse = viewModel.objectTransformer(cardWebResponse)
@@ -478,9 +488,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         if (filteredCards.isEmpty() && (country != "HR")) {
             binding.txNoCards.visibility = View.VISIBLE
             binding.rvCreditCard.visibility = View.GONE
-        } else if (country != "HR") {
-            binding.txNoCards.visibility = View.GONE
-            binding.rvCreditCard.visibility = View.GONE
         } else {
             adapter.updateListCards(filteredCards)
             binding.txNoCards.visibility = View.GONE
@@ -511,6 +518,14 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             }
         }
 
+        binding.loginToHac.setOnClickListener {
+            val action =
+                PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToHacPortalWebFragment(
+                    " https://prodaja.hac.hr/Account/Login?selectedTab=v-pills-buyEnc"
+                )
+            findNavController().navigate(action)
+        }
+
         binding.bttAddCard.setOnClickListener {
             if (selectedCountry != "All" && selectedCountry.isNotEmpty()) {
                 val action =
@@ -526,7 +541,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
 
         binding.txCroatiaCardsPdf.setOnClickListener {
-            val action = PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewerFragment()
+            val action =
+                PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewerFragment()
             findNavController().navigate(action)
         }
     }
@@ -601,12 +617,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     override fun setCountryListener(country: String) {
-        Log.d("MARKO", "setCountryListener: $country")
         when (country) {
             "RS" -> {
                 selectedCountry = "RS"
-                binding.termsConditionsCheckmark.isChecked = false
                 visibleCroatianComponents(false)
+                binding.termsConditionsCheckmark.isChecked = false
                 filterCardsByCountry("RS")
                 setBlockVisibility(false)
                 setCardVisibility(true)
@@ -616,29 +631,28 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
             "MK" -> {
                 selectedCountry = "MK"
+                visibleCroatianComponents(false)
                 filterCardsByCountry("MK")
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
-                visibleCroatianComponents(false)
                 binding.rvCreditCard.visibility = View.VISIBLE
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
             "ME" -> {
                 selectedCountry = "ME"
+                visibleCroatianComponents(false)
                 filterCardsByCountry("ME")
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
-                visibleCroatianComponents(false)
                 binding.rvCreditCard.visibility = View.VISIBLE
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
             "HR" -> {
                 selectedCountry = "HR"
-                //filterCardsByCountry("HR")
                 setBlockVisibility(false)
                 setCardVisibility(false)
                 makeCardClickable(false)
@@ -651,6 +665,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             else -> {
                 setBlockVisibility(false)
                 setCardVisibility(false)
+                visibleCroatianComponents(false)
                 makeCardClickable(false)
                 selectedCountry = "All"
                 binding.txCroatiaText.visibility = View.GONE
@@ -822,12 +837,14 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             binding.rvTagsForCroatia.visibility = View.VISIBLE
             binding.bttRegTagForCroatia.visibility = View.VISIBLE
             binding.txCroatiaCardsPdf.visibility = View.VISIBLE
+            binding.loginToHac.visibility = View.VISIBLE
         } else {
             binding.txCroatiaText.visibility = View.GONE
             binding.txCroatiaCardsNote.visibility = View.GONE
             binding.rvTagsForCroatia.visibility = View.GONE
             binding.bttRegTagForCroatia.visibility = View.GONE
             binding.txCroatiaCardsPdf.visibility = View.GONE
+            binding.loginToHac.visibility = View.GONE
         }
     }
 
