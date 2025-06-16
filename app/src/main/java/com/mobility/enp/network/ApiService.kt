@@ -14,7 +14,6 @@ import com.mobility.enp.data.model.api_my_profile.refund_request.tags.response.T
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_tags.LostTagResponse
 import com.mobility.enp.data.model.api_tags.TagsResponse
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
@@ -179,16 +178,6 @@ interface ApiService {
         @Field("verificationCode") verificationCode: String,
         @Field("serialNumber") serialNumber: String,
         @Query(value = "lang") languageKey: String
-    ): Call<LostTagResponse>
-
-    @POST("/api/v1/history/complaint")
-    suspend fun postComplaint(
-        @Body complaintBody: ComplaintBody
-    ): Response<LostTagResponse>
-
-    @POST("/api/v1/history/objection")
-    fun postObjection(
-        @Body objectionBody: ObjectionBody
     ): Call<LostTagResponse>
 
     @POST("/api/v1/history/complaint")
