@@ -107,11 +107,21 @@
                     tools:visibility="visible" />
 
                 <TextView
+                    android:id="@+id/loginToHac"
+                    style="@style/Paragraph"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:layout_marginTop="@dimen/dimens_22dp"
+                    android:textColor="@color/figmaSplashScreenColor"
+                    tools:text="Пријави се на HAC портал"/>
+
+                <TextView
                     android:id="@+id/txCroatiaText"
                     style="@style/SubtitlesRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_32dp"
+                    android:layout_marginTop="@dimen/dimens_22dp"
                     android:lineSpacingExtra="2sp"
                     android:layout_marginEnd="@dimen/dimens_4dp"
                     android:text="@string/tag_registration_instruction_hr"

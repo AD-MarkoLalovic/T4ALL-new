@@ -1,6 +1,7 @@
 package com.mobility.enp.view
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -40,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         setupNavigation()
         setListeners()
         setObservers()
-        setExistingLanguage(this)
         messageLanguageChanged(this)
     }
 
@@ -210,23 +210,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setExistingLanguage(context: Context) {
-        val lang = when (val userLanguage = SharedPreferencesHelper.getUserLanguage(context)) {
+    override fun attachBaseContext(newBase: Context) {
+        val locale = when (val userLanguage = SharedPreferencesHelper.getUserLanguage(newBase)) {
             "cyr" -> Locale("sr_Cyrl", "RS")
             "sr", "cnr" -> Locale("sr", "RS")
             else -> Locale(userLanguage)
         }
 
-        Locale.setDefault(lang)
+        val config = Configuration()
+        Locale.setDefault(locale)
+        config.setLocale(locale)
 
-        val configuration = resources.configuration
-        configuration.setLocale(lang)
-
-        context.resources.updateConfiguration(
-            configuration,
-            context.resources.displayMetrics
-        )
-
+        val localizedContext = newBase.createConfigurationContext(config)
+        super.attachBaseContext(localizedContext)
     }
 
     private fun messageLanguageChanged(context: Context) {

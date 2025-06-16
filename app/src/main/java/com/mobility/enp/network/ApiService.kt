@@ -14,7 +14,6 @@ import com.mobility.enp.data.model.api_my_profile.refund_request.tags.response.T
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_tags.LostTagResponse
 import com.mobility.enp.data.model.api_tags.TagsResponse
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
@@ -182,16 +181,6 @@ interface ApiService {
     ): Call<LostTagResponse>
 
     @POST("/api/v1/history/complaint")
-    suspend fun postComplaint(
-        @Body complaintBody: ComplaintBody
-    ): Response<LostTagResponse>
-
-    @POST("/api/v1/history/objection")
-    fun postObjection(
-        @Body objectionBody: ObjectionBody
-    ): Call<LostTagResponse>
-
-    @POST("/api/v1/history/complaint")
     suspend fun postComplaintN(
         @Body complaintBody: ComplaintBody
     ): Response<LostTagResponse>
@@ -249,7 +238,6 @@ interface ApiService {
 
     @GET("/api/v1/tags")
     suspend fun getTagsForCroatia(
-        @Query("filter[status]") status: Int,
         @Query("filter[country]") country: String
     ): Response<TagsListResponse>
 

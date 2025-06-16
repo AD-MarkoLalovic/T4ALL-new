@@ -47,7 +47,8 @@ class HacPortalWebFragment : Fragment() {
             if (binding.webViewHac.canGoBack()) {
                 binding.webViewHac.goBack()
             } else {
-                findNavController().popBackStack()
+                val action = HacPortalWebFragmentDirections.actionHacPortalWebFragmentToPaymentAndPassageFragment("HR")
+                findNavController().navigate(action)
             }
         }
 

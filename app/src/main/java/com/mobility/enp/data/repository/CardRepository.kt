@@ -3,7 +3,6 @@ package com.mobility.enp.data.repository
 import android.content.Context
 import android.util.Log
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
-import com.mobility.enp.data.model.cards.registration_croatia.RegistrationResponse
 import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
@@ -133,7 +132,7 @@ class CardRepository(database: DRoom, context: Context) : BaseRepository(databas
         val userToken = getUserToken()
         userToken?.let { token ->
             return try {
-                val response = apiService(token).getTagsForCroatia(status = 11, country = "HR")
+                val response = apiService(token).getTagsForCroatia(country = "HR")
                 if (response.isSuccessful) {
                     response.body()?.let { data ->
                         val tagsList = data.data.tags.toTagsForCroatiaUIList()

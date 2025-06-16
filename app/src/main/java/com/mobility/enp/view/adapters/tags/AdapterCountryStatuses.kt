@@ -29,7 +29,7 @@ class AdapterCountryStatuses(val status: List<Status>) :
             binding.flagIcon.setImageResource(flagResId ?: 0)
 
             // Ako je zemlja HR, primeni poseban stil i preskoči ostale statuse
-            if (status.country.value == "HR") {
+           /* if (status.country.value == "HR") {
                 val customTextColor = ContextCompat.getColor(binding.root.context, R.color.tag_active)
                 val customBackground = ContextCompat.getColor(binding.root.context, R.color.figmaToolHistoryPaidBackground)
 
@@ -39,7 +39,7 @@ class AdapterCountryStatuses(val status: List<Status>) :
 
                 binding.executePendingBindings()
                 return
-            }
+            }*/
 
             binding.countryStatus.text = status.status.text
 
