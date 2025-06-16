@@ -368,4 +368,5 @@
     <string name="highway_a7">Highway A7:</string>
     <string name="highway_a11">Highway A11:</string>
     <string name="check_status_on_hac_portal">Check status on the HAC portal</string>
+    <string name="link_login_to_hac">Log in to the HAC portal</string>
 </resources>

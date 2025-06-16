@@ -240,6 +240,9 @@ class PaymentAndPassageViewModel(
     fun clearTagsList() {
         _tagsList.value = SubmitResultFold.Idle
         _registrationHr.value = SubmitResultFold.Idle
+        _getCardDataFlow.value = SubmitResult.Empty
+        _successfullyChangedPrimaryCard.value = SubmitResult.Empty
+        _successfullyDeletedCard.value = SubmitResult.Empty
     }
 
     companion object {

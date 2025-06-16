@@ -35,5 +35,6 @@ data class Data(
     @SerializedName("showTabMK")
     val showTabMK: Boolean,
     @SerializedName("showTabRS")
-    val showTabRS: Boolean
+    val showTabRS: Boolean,
+    val hacPortalUrl: String?
 )

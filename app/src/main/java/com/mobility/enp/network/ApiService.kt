@@ -190,16 +190,6 @@ interface ApiService {
     ): Call<LostTagResponse>
 
     @POST("/api/v1/history/complaint")
-    suspend fun postComplaint(
-        @Body complaintBody: ComplaintBody
-    ): Response<LostTagResponse>
-
-    @POST("/api/v1/history/objection")
-    fun postObjection(
-        @Body objectionBody: ObjectionBody
-    ): Call<LostTagResponse>
-
-    @POST("/api/v1/history/complaint")
     suspend fun postComplaintN(
         @Body complaintBody: ComplaintBody
     ): Response<LostTagResponse>
@@ -257,7 +247,6 @@ interface ApiService {
 
     @GET("/api/v1/tags")
     suspend fun getTagsForCroatia(
-        @Query("filter[status]") status: Int,
         @Query("filter[country]") country: String
     ): Response<TagsListResponse>
 

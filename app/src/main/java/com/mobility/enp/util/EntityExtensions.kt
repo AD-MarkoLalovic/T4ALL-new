@@ -68,12 +68,19 @@ fun CardWebModel.toEntityList(context: Context, user: String): List<HomeCardsEnt
 
 fun List<Tag>.toTagsForCroatiaUIList(): List<TagsForCroatiaUI> {
     return this.map { tag ->
+        val statusValueForCroatia = tag.statuses
+            ?.firstOrNull { it.country?.value == "HR" }
+            ?.status
+            ?.value
+
         TagsForCroatiaUI(
             serialNumberUI = tag.serialNumber,
-            registrationPlateUI = tag.registrationPlate
+            registrationPlateUI = tag.registrationPlate,
+            status = statusValueForCroatia
         )
     }
 }
+
 
 fun List<MyTagsList>.toTagUiModel(): List<TagUiModel> {
     return this.map { tag ->
