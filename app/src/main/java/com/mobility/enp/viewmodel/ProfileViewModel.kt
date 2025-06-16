@@ -80,18 +80,21 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
             _isLoading.value = true
             viewModelScope.launch {
                 try {
-                    val token = getUserToken()
-                    token?.let {
-                        val userInfo = Repository.getUserPersonalInfo(it)
-                        _displayName.value = userInfo.data.displayName
-                        val userCountry = userInfo.data.country.code
-                        val userType = userInfo.data.customerType.type
-                        val isFranchiser = userInfo.data.isFranchiser
+                    val result = repository.getBasicUserInformation()
+                    result.fold(onSuccess = { body ->
+                        _displayName.value = body.data.displayName
+                        val userCountry = body.data.country.code
+                        val userType = body.data.customerType.type
+                        val isFranchiser = body.data.isFranchiser
 
                         // Postavljanje vrednosti za _showRefundCard
+
                         _showRefundCard.value =
                             ((userCountry == "RS" || userType == 3) && !isFranchiser)
-                    }
+                    }, onFailure = {
+                        _showRefundCard.value = false
+                        _isLoading.value = false
+                    })
                 } catch (e: Exception) {
                     Log.e("ProfileViewModel", "Error fetching user data", e)
                     _showRefundCard.value = false
