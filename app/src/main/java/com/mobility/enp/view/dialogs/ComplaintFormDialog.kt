@@ -1,7 +1,10 @@
 package com.mobility.enp.view.dialogs
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.StateListDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +14,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
@@ -68,6 +72,8 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
             franchiseModel?.franchisePrimaryColor?.let { color ->
                 binding.buttonConfirmComplaint.backgroundTintList = ColorStateList.valueOf(color)
+
+                binding.etSecondTagPicker.background = createModifiedDrawable(color)
 
                 val parent = binding.constraintLayout
 
@@ -369,6 +375,22 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
         }
 
         enableAccountInputs()
+    }
+
+    fun createModifiedDrawable(@ColorInt newColor: Int): StateListDrawable {
+        val selectedShape = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            setColor(Color.WHITE)
+            setStroke(3, newColor)
+            cornerRadii = floatArrayOf(0f, 0f, 84f, 84f, 84f, 84f, 0f, 0f) // top-right, bottom-right
+        }
+
+        val unselectedDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_right_spinner_unselected)
+
+        return StateListDrawable().apply {
+            addState(intArrayOf(android.R.attr.state_focused), selectedShape)
+            addState(intArrayOf(-android.R.attr.state_focused), unselectedDrawable)
+        }
     }
 
     private fun enableAccountInputs() = with(binding) {    // why ?
