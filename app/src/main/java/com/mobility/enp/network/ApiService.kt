@@ -183,11 +183,11 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("/api/v1/tags/add-tag")
-    fun postAddTag(
-        @Field("verificationCode") verificationCode: String,
+    suspend fun postAddTag(
         @Field("serialNumber") serialNumber: String,
+        @Field("verificationCode") verificationCode: String,
         @Query(value = "lang") languageKey: String
-    ): Call<LostTagResponse>
+    ): Response<Unit>
 
     @POST("/api/v1/history/complaint")
     suspend fun postComplaintN(

@@ -273,36 +273,6 @@ object Repository {
         return apiService(token).getPdfListingPasses(billId)
     }
 
-    suspend fun postAddTag(
-        token: String?,
-        serialNumber: String,
-        verificationCode: String,
-        errorBody: MutableLiveData<ErrorBody>,
-        data: MutableLiveData<LostTagResponse>,
-        application: Application
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        val call = apiService(token).postAddTag(verificationCode, serialNumber, lang)
-        call.enqueue(object : Callback<LostTagResponse> {
-            override fun onResponse(
-                call: Call<LostTagResponse>, response: Response<LostTagResponse>
-            ) {
-                if (response.isSuccessful) {
-                    data.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<LostTagResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
-    }
-
     fun postPayBill(
         token: String?,
         billId: String?,

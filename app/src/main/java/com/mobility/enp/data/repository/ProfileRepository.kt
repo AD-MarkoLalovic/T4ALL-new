@@ -226,5 +226,33 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
         }
     }
 
+    suspend fun addTag(serialNumber: String, verificationCode: String): Result<Unit> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val lang = getLangKey()
+            val response = apiService(userToken).postAddTag(
+                serialNumber = serialNumber,
+                verificationCode = verificationCode,
+                lang
+            )
+
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                val errorResponse =
+                    response.errorBody()?.let { parseErrorResponse(response.code(), it) }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.d("AddTag", "ProfileRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
 
 }
