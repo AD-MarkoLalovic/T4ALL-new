@@ -30,23 +30,6 @@ class MyTagsCountryStatusesAdapter :
 
             binding.flagIcon.setImageResource(flagResId ?: 0)
 
-            // Ako je zemlja HR, primeni poseban stil i preskoči ostale statuse
-            if (status.statusesCountry == "HR") {
-                val customTextColor =
-                    ContextCompat.getColor(binding.root.context, R.color.tag_active)
-                val customBackground = ContextCompat.getColor(
-                    binding.root.context,
-                    R.color.figmaToolHistoryPaidBackground
-                )
-
-                binding.countryStatus.text =
-                    binding.root.context.getString(R.string.check_status_on_hac_portal)
-                binding.countryStatus.setTextColor(customTextColor)
-                binding.root.backgroundTintList = ColorStateList.valueOf(customBackground)
-
-                return
-            }
-
             binding.countryStatus.text = status.statusText
 
             // Postavljanje boje i pozadine

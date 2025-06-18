@@ -1,6 +1,7 @@
 package com.mobility.enp.view.fragments.my_profile
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -55,12 +56,21 @@ class MyTagsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setAdapters()
+        setFranchiser()
         setupTextWatcher()
+        setListener()
+        setAdapters()
+        observeMyTags()
+
+        viewModel.fetchMyTags()
+    }
+
+    private fun setListener() {
         binding.editSerialNumberMyTags.addTextChangedListener(textWatcher)
 
-        observeMyTags()
-        viewModel.fetchMyTags()
+        binding.buttonAddTag.setOnClickListener {
+            findNavController().navigate(R.id.action_myTagsFragment2_to_addTagFragment)
+        }
     }
 
     private fun observeMyTags() {
@@ -186,6 +196,36 @@ class MyTagsFragment : Fragment() {
                 delay(500L)
             }
             triggerUpdate()
+        }
+    }
+
+    private fun setFranchiser() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.buttonAddTag.backgroundTintList = ColorStateList.valueOf(color)
+                binding.inputSerialNumber.boxStrokeColor = color
+
+                with(binding.inputSerialNumber) {
+                    val editText = this.editText
+                    editText?.textSelectHandle?.setTint(color)
+                    editText?.setTextColor(color)
+
+
+                    val states = arrayOf(
+                        intArrayOf(android.R.attr.state_pressed),  // pressed
+                        intArrayOf(android.R.attr.state_focused),  // focused
+                        intArrayOf()                               // default
+                    )
+
+                    val colors = intArrayOf(
+                        color,        // pressed
+                        color,        // focused
+                        color         // default
+                    )
+
+                    this.cursorColor = ColorStateList(states, colors)
+                }
+            }
         }
     }
 
