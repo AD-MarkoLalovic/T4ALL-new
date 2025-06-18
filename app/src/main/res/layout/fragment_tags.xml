@@ -132,13 +132,14 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/cyclerContent"
                 android:layout_width="@dimen/dimens_0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dimens_0dp"
                 android:layout_marginTop="@dimen/dimens_26dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cyclerTagTypes"
-                tools:itemCount="2"
+                tools:itemCount="4"
                 tools:listitem="@layout/item_my_tags" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
