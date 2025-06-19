@@ -54,6 +54,9 @@ class ToolHistoryListingPassageAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(relation: Item, complaintInterface: SendToFragment) {
+
+            binding.objectionsNumber.text = ""
+
             binding.relation = relation
             binding.viewShade.background = null
             binding.toolHistoryStatus.setOnClickListener {
