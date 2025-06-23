@@ -481,6 +481,11 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         _binding = null
     }
 
+    override fun onResume() {
+        super.onResume()
+        vModel.selectedTags.clear()
+    }
+
     interface UserPermission {
         fun onPermissionGranted()
         fun onPermissionDenied()
