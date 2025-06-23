@@ -369,5 +369,7 @@
     <string name="highway_a11">Autoput A11:</string>
     <string name="check_status_on_hac_portal">Status provjeriti na HAC portalu</string>
     <string name="link_login_to_hac">Ulogj se na HAC portal</string>
+    <string name="facebook_text">Pratite nas na Facebooku i saznajte prvi sve novosti o pogodnostima T4A sistema.</string>
+    <string name="instagram_text">Pratite nas na Instagramu i saznajte prvi sve novosti o pogodnostima T4A sistema.</string>
 
 </resources>

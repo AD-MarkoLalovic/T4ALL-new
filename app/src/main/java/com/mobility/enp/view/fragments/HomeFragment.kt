@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
@@ -250,7 +251,9 @@ class HomeFragment : Fragment() {
                             openFacebookPage()
                         }
 
-                        "instagram" -> {}
+                        "instagram" -> {
+                            openInstagramProfile()
+                        }
                     }
                 } else {
                     val action =
@@ -322,12 +325,30 @@ class HomeFragment : Fragment() {
     fun openFacebookPage() {
         val facebookUrl = "https://www.facebook.com/toll4all/"
         val intent = try {
-            requireContext().packageManager.getPackageInfo("com.facebook.katana", 0)
-            Intent(Intent.ACTION_VIEW, "fb://facewebmodal/f?href=$facebookUrl".toUri())
+            Intent(Intent.ACTION_VIEW, "fb://facewebmodal/f?href=$facebookUrl".toUri()).apply {
+                setPackage("com.facebook.katana")
+            }
         } catch (e: Exception) {
             Intent(Intent.ACTION_VIEW, facebookUrl.toUri())
         }
         requireContext().startActivity(intent)
+    }
+
+    fun openInstagramProfile() {
+        val username = "tollforall"  // instagram username
+        val uri = "http://instagram.com/_u/$username".toUri()
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            setPackage("com.instagram.android")
+        }
+
+        try {
+            requireContext().startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            // Instagram app not installed  open browser
+            requireContext().startActivity(
+                Intent(Intent.ACTION_VIEW, "https://instagram.com/$username".toUri())
+            )
+        }
     }
 
 }

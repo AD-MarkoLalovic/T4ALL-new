@@ -367,4 +367,6 @@
     <string name="highway_a11">Αυτοκινητόδρομος A11:</string>
     <string name="check_status_on_hac_portal">Ελέγξτε την κατάσταση στην πύλη HAC</string>
     <string name="link_login_to_hac">Συνδεθείτε στο HAC portal</string>
+    <string name="facebook_text">Ακολουθήστε μας στο Facebook και μάθετε πρώτοι όλα τα νέα για τα προνόμια του συστήματος T4A.</string>
+    <string name="instagram_text">Ακολουθήστε μας στο Instagram και μάθετε πρώτοι όλα τα νέα για τα προνόμια του συστήματος T4A.</string>
 </resources>
