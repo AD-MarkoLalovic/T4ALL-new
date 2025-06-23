@@ -1,5 +1,6 @@
 package com.mobility.enp.view.fragments
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -242,9 +244,15 @@ class HomeFragment : Fragment() {
                         )
                     findNavController().navigate(action)
                 } else if (card.isSocialNetworks == true) {
-                    Toast.makeText(requireContext(), card.description, Toast.LENGTH_SHORT).show()
-                }
-                else {
+
+                    when (card.code) {
+                        "facebook" -> {
+                            openFacebookPage()
+                        }
+
+                        "instagram" -> {}
+                    }
+                } else {
                     val action =
                         HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment("RS")
                     findNavController().navigate(action)
@@ -308,6 +316,18 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+
+    fun openFacebookPage() {
+        val facebookUrl = "https://www.facebook.com/toll4all/"
+        val intent = try {
+            requireContext().packageManager.getPackageInfo("com.facebook.katana", 0)
+            Intent(Intent.ACTION_VIEW, "fb://facewebmodal/f?href=$facebookUrl".toUri())
+        } catch (e: Exception) {
+            Intent(Intent.ACTION_VIEW, facebookUrl.toUri())
+        }
+        requireContext().startActivity(intent)
     }
 
 }
