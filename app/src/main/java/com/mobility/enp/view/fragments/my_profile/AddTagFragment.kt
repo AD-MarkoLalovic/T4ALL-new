@@ -6,39 +6,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
-import com.mobility.enp.data.model.api_tags.LostTagResponse
 import com.mobility.enp.databinding.FragmentAddTagBinding
-import com.mobility.enp.network.Repository
+import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SubmitResultFold
+import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.dialogs.GeneralMessageAddTag
 import com.mobility.enp.viewmodel.AddTagViewModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
 
 class AddTagFragment : Fragment() {
 
-    private lateinit var binding: FragmentAddTagBinding
+    private var _binding: FragmentAddTagBinding? = null
+    private val binding: FragmentAddTagBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
-    private val viewModel: AddTagViewModel by viewModels()
-
-    private var data: MutableLiveData<LostTagResponse> = MutableLiveData()
-    private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
-
-    val TAG = "AddTagFragment"
+    private val viewModel: AddTagViewModel by viewModels { AddTagViewModel.factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAddTagBinding.inflate(inflater, container, false)
+        _binding = FragmentAddTagBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -49,36 +41,18 @@ class AddTagFragment : Fragment() {
         setFranchiser()
 
         binding.bttConfirmAddTag.setOnClickListener {
-            if (Repository.isNetworkAvailable(requireContext())) {
-                if (binding.serialNumber.text.toString().trim()
-                        .isNotEmpty() || binding.verificationCode.text.toString().trim()
-                        .isNotEmpty()
-                ) {
-                    val serial = binding.serialNumber.text.toString().trim()
-                    val verification = binding.verificationCode.text.toString().trim()
+            val serial = binding.serialNumber.text.toString().trim()
+            val verification = binding.verificationCode.text.toString().trim()
 
-
-                    binding.progBar.visibility = View.VISIBLE
-                    viewModel.addTagForUser(serial, verification, data, errorBody)
-                    binding.bttConfirmAddTag.isEnabled = false
-                } else {
-                    Toast.makeText(
-                        context,
-                        R.string.please_enter_all_required_data,
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
+            if (serial.isNotEmpty() && verification.isNotEmpty()
+            ) {
+                viewModel.addNewTag(serial, verification)
             } else {
-                val bundle = Bundle().apply {
-                    putString(getString(R.string.title), getString(R.string.no_connection_title))
-                    putString(
-                        getString(R.string.subtitle),
-                        getString(R.string.please_connect_to_the_internet)
-                    )
-                }
-
-                findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
+                Toast.makeText(
+                    requireContext(),
+                    R.string.please_enter_all_required_data,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
         }
@@ -120,41 +94,56 @@ class AddTagFragment : Fragment() {
     }
 
     private fun setObservers() {
-        data = MutableLiveData()
-        errorBody = MutableLiveData()
+        collectLatestLifecycleFlow(viewModel.addTag) { result ->
+            when (result) {
+                is SubmitResultFold.Failure -> {
+                    handleError(result.error)
+                }
 
+                SubmitResultFold.Idle -> {}
+                SubmitResultFold.Loading -> {
+                    binding.progBarAddTag.visibility = View.VISIBLE
+                }
 
-        data.observe(viewLifecycleOwner) {
-            binding.progBar.visibility = View.GONE
-            binding.bttConfirmAddTag.isEnabled = true
-            if (it != null) {
-                val fragManager = (context as AppCompatActivity).supportFragmentManager
+                is SubmitResultFold.Success<*> -> {
 
-                val diag = GeneralMessageAddTag(object : GeneralMessageAddTag.OnButtonClick {
-                    override fun onClickConfirmed() {
-                        findNavController().popBackStack()
-                    }
-                })
-
-                diag.isCancelable = false
-                diag.show(fragManager, "DialogAddTag")
-            }
-        }
-        errorBody.observe(viewLifecycleOwner) { errorBody ->
-            binding.progBar.visibility = View.GONE
-            binding.bttConfirmAddTag.isEnabled = true
-
-            context?.let { context ->
-                Toast.makeText(
-                    context,
-                    errorBody.errorBody,
-                    Toast.LENGTH_SHORT
-                ).show()
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
                 }
             }
         }
+    }
+
+    private fun handleError(error: Throwable) {
+        when (error) {
+            is NetworkError.ServerError -> {
+                binding.progBarAddTag.visibility = View.GONE
+                showToastMessage(getString(R.string.server_error_msg))
+            }
+
+            is NetworkError.ApiError -> {
+                binding.progBarAddTag.visibility = View.GONE
+                showToastMessage(
+                    error.errorResponse.message ?: getString(R.string.server_error_msg)
+                )
+            }
+
+            is NetworkError.NoConnection -> {
+                noInternetMessage()
+            }
+        }
+    }
+
+    private fun showToastMessage(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun noInternetMessage() {
+        val mainBinding = (activity as MainActivity).binding
+        MainActivity.showSnackMessage(getString(R.string.no_internet), mainBinding)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }
