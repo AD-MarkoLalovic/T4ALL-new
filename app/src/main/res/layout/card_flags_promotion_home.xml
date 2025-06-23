@@ -58,17 +58,36 @@
                 android:textColor="@color/white"
                 tools:text="@string/lorem" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnObjection"
-                style="@style/MyButtonStyleSmall"
-                android:layout_width="wrap_content"
+
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="bottom"
-                android:layout_marginStart="@dimen/dimens_20dp"
-                android:layout_marginBottom="@dimen/dimens_10dp"
-                android:text="@string/add_card_home"
-                android:textSize="@dimen/dimens_10sp" />
+                android:layout_gravity="bottom">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnObjection"
+                    style="@style/MyButtonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimens_45dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="@dimen/dimens_20dp"
+                    android:layout_marginBottom="@dimen/dimens_10dp"
+                    android:text="@string/add_card_home"
+                    android:textSize="@dimen/dimens_10sp" />
+
+                <ImageView
+                    android:id="@+id/btnSocialNetworks"
+                    android:layout_width="@dimen/dimens_50dp"
+                    android:layout_height="45dp"
+                    android:layout_marginStart="@dimen/dimens_5dp"
+                    android:layout_marginBottom="@dimen/dimens_10dp"
+                    android:layout_toEndOf="@id/btnObjection"
+                    android:background="@drawable/arrow_background_social_networks"
+                    android:contentDescription="@string/facebook"
+                    android:textSize="@dimen/dimens_10sp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </RelativeLayout>
 
             <ImageView
                 android:id="@+id/closeButton"
@@ -76,6 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_margin="@dimen/dimens_10dp"
+                android:contentDescription="@string/button_close"
                 android:elevation="@dimen/dimens_10dp"
                 android:src="@drawable/close_button" />
 

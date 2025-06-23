@@ -2,6 +2,7 @@ package com.mobility.enp.view.adapters.home
 
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
@@ -46,6 +47,7 @@ class HomePromotionsAdapter(
                         binding.root.context,
                         R.drawable.facebook_vector
                     )
+                    binding.btnSocialNetworks.visibility = View.VISIBLE
                 }
 
                 "instagram" -> {
@@ -55,10 +57,13 @@ class HomePromotionsAdapter(
                         binding.root.context,
                         R.drawable.instagram_vector
                     )
+                    binding.btnSocialNetworks.visibility = View.VISIBLE
+
                 }
 
                 else -> {
                     binding.btnObjection.icon = null
+                    binding.btnSocialNetworks.visibility = View.GONE
                 }
 
             }
@@ -72,6 +77,10 @@ class HomePromotionsAdapter(
                 card.time = System.currentTimeMillis()
                 onDeleteClicked(card)
 
+            }
+
+            binding.btnSocialNetworks.setOnClickListener {
+                onItemClicked(card)
             }
 
             binding.executePendingBindings()
