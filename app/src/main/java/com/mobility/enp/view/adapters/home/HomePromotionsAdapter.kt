@@ -3,6 +3,7 @@ package com.mobility.enp.view.adapters.home
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -37,6 +38,29 @@ class HomePromotionsAdapter(
                 "RS" -> binding.backgroundImage.setImageResource(R.drawable.serbian_flag_home)
                 "MK" -> binding.backgroundImage.setImageResource(R.drawable.flag_home_macedonian)
                 "ME" -> binding.backgroundImage.setImageResource(R.drawable.flag_home_crna_gora)
+
+                "facebook" -> {
+                    binding.backgroundImage.setImageResource(R.drawable.flag_home_crna_gora)
+                    binding.btnObjection.text = binding.root.context.getString(R.string.facebook)
+                    binding.btnObjection.icon = AppCompatResources.getDrawable(
+                        binding.root.context,
+                        R.drawable.facebook_vector
+                    )
+                }
+
+                "instagram" -> {
+                    binding.backgroundImage.setImageResource(R.drawable.flag_home_crna_gora)
+                    binding.btnObjection.text = binding.root.context.getString(R.string.instagram)
+                    binding.btnObjection.icon = AppCompatResources.getDrawable(
+                        binding.root.context,
+                        R.drawable.instagram_vector
+                    )
+                }
+
+                else -> {
+                    binding.btnObjection.icon = null
+                }
+
             }
 
             binding.btnObjection.setOnClickListener {

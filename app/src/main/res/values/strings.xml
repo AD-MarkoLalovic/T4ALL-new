@@ -440,5 +440,9 @@
     <string name="tag_registration_plate_notice">Приликом регистрације ТАГ уређаја на ХАЦ порталу уносите стварну регистарску ознаку возила у коме ћете користити ТАГ уређај.</string>
     <string name="check_status_on_hac_portal">Проверите статус на ХАЦ порталу</string>
     <string name="link_login_to_hac">Пријави се на HAC портал</string>
-
+    <string name="facebook_text">Pratite nas na Fejsbuku i saznajte prvi sve novosti o pogodnostima T4A sistema.</string>
+    <string name="instagram_text">Pratite nas na Instagramu i saznajte prvi sve novosti o pogodnostima T4A sistema.</string>
+    <string name="socialNetworksTitle" translatable="false">TOLL4ALL</string>
+    <string name="facebook" translatable="false">Facebook</string>
+    <string name="instagram" translatable="false">Instagram</string>
 </resources>

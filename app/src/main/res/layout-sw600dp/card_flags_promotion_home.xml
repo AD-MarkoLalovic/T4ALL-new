@@ -58,7 +58,7 @@
                 android:textColor="@color/white"
                 tools:text="@string/lorem" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnObjection"
                 style="@style/MyButtonStyleSmall"
                 android:layout_width="wrap_content"

@@ -39,6 +39,7 @@ fun CardWebModel.toEntityList(context: Context, user: String): List<HomeCardsEnt
         )
         listCards.add(srCard)
     }
+
     if (data?.showTabME == true && data.cardsME.isNullOrEmpty()) {
         val meCard = HomeCardsEntity(
             email = user,
@@ -49,6 +50,7 @@ fun CardWebModel.toEntityList(context: Context, user: String): List<HomeCardsEnt
         )
         listCards.add(meCard)
     }
+
     if (data?.showTabMK == true && data.cardsMK.isNullOrEmpty()) {
         val mkCard = HomeCardsEntity(
             email = user,
@@ -59,6 +61,30 @@ fun CardWebModel.toEntityList(context: Context, user: String): List<HomeCardsEnt
         )
         listCards.add(mkCard)
     }
+
+    // added 2 general objects for social networks
+
+    val facebookCard = HomeCardsEntity(
+        email = user,
+        code = "facebook",
+        title = context.getString(R.string.socialNetworksTitle),
+        description = context.getString(R.string.facebook_text),
+        additionEnabled = false,
+        isSocialNetworks = true
+    )
+
+    listCards.add(facebookCard)
+
+    val instagramCard = HomeCardsEntity(
+        email = user,
+        code = "instagram",
+        title = context.getString(R.string.socialNetworksTitle),
+        description = context.getString(R.string.instagram_text),
+        additionEnabled = false,
+        isSocialNetworks = true
+    )
+
+    listCards.add(instagramCard)
 
     return listCards
 }
