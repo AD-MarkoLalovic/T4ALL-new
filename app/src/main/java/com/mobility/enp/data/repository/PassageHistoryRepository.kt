@@ -182,7 +182,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         tagSerial: String,
         dateStartApi: String,
         dateEndApi: String,
-        selectedCurrency: String,
+        country: String,
 
         ): Result<CsvModel> {
         if (!isNetworkAvailable()) {
@@ -193,7 +193,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         userToken?.let {
             return try {
                 val response = apiService(it).getCsvData(
-                    tagSerial, getLangKey(), dateStartApi, dateEndApi, selectedCurrency
+                    tagSerial, getLangKey(), dateStartApi, dateEndApi, country
                 )
 
                 if (response.isSuccessful) {
