@@ -275,7 +275,7 @@ interface ApiService {
         @Query(value = "locale") locale: String,
         @Query(value = "date_from") dateFrom: String,
         @Query(value = "date_to") dateTo: String,
-        @Query(value = "currency") currency: String
+        @Query(value = "country") country: String
     ): Response<CsvModel>
 
     @GET("/api/v1/banks")
