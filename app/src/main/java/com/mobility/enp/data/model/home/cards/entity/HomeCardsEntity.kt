@@ -13,5 +13,6 @@ data class HomeCardsEntity(
     var description: String,
     val additionEnabled: Boolean?,
     var deletedByUser: Boolean = false,
-    var time: Long = System.currentTimeMillis()
+    var time: Long = System.currentTimeMillis(),
+    val isSocialNetworks : Boolean = false
 )

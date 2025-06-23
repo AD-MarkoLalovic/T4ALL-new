@@ -376,5 +376,7 @@
     <string name="highway_a11">Автопат A11:</string>
     <string name="check_status_on_hac_portal">Проверете го статусот на HAC порталот</string>
     <string name="link_login_to_hac">Најави се на HAC портал</string>
+    <string name="facebook_text">Следете нè на Фејсбук и дознајте први сè за придобивките од T4A системот.</string>
+    <string name="instagram_text">Следете нè на Инстаграм и дознајте први сè за придобивките од T4A системот.</string>
 
 </resources>

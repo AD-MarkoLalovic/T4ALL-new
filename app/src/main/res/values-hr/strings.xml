@@ -373,5 +373,7 @@
     <string name="highway_a11">Autocesta A11:</string>
     <string name="check_status_on_hac_portal">Provjerite status na HAC portalu</string>
     <string name="link_login_to_hac">Prijavi se na HAC portal</string>
+    <string name="facebook_text">Pratite nas na Facebooku i budite prvi koji će saznati sve novosti o pogodnostima T4A sustava.</string>
+    <string name="instagram_text">Pratite nas na Instagramu i budite prvi koji će saznati sve novosti o pogodnostima T4A sustava.</string>
 
 </resources>

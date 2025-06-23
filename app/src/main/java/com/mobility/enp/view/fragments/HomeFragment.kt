@@ -1,5 +1,7 @@
 package com.mobility.enp.view.fragments
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -237,8 +240,21 @@ class HomeFragment : Fragment() {
             onItemClicked = { card ->
                 if (card.additionEnabled == true) {
                     val action =
-                        HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment(card.code)
+                        HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment(
+                            card.code
+                        )
                     findNavController().navigate(action)
+                } else if (card.isSocialNetworks == true) {
+
+                    when (card.code) {
+                        "facebook" -> {
+                            openFacebookPage()
+                        }
+
+                        "instagram" -> {
+                            openInstagramProfile()
+                        }
+                    }
                 } else {
                     val action =
                         HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment("RS")
@@ -277,6 +293,18 @@ class HomeFragment : Fragment() {
         val sortedList = filteredList.sortedWith(compareByDescending<HomeCardsEntity> {
             it.code == "RS"
         }.thenBy { it.code })
+
+        // fixes promotion card description not translating because its hardcoded in room and not correct when language is changed
+        for (entity : HomeCardsEntity in sortedList ){
+            when(entity.code){
+                "RS" -> {entity.description  = requireContext().getString(R.string.tag_device_payment_method_serbia)}
+                "ME" -> {entity.description  = requireContext().getString(R.string.tag_device_payment_method_montenegro)}
+                "MK" -> {entity.description  = requireContext().getString(R.string.tag_device_payment_method_north_macedonia)}
+                "facebook" -> {entity.description  = requireContext().getString(R.string.facebook_text)}
+                "instagram" -> {entity.description  = requireContext().getString(R.string.instagram_text)}
+            }
+        }
+
         homePromotionsAdapter.submitList(sortedList)
         adapterProgress.submitList(filteredList.indices.toList())
 
@@ -303,6 +331,36 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+
+    fun openFacebookPage() {
+        val facebookUrl = "https://www.facebook.com/toll4all/"
+        val intent = try {
+            Intent(Intent.ACTION_VIEW, "fb://facewebmodal/f?href=$facebookUrl".toUri()).apply {
+                setPackage("com.facebook.katana")
+            }
+        } catch (e: Exception) {
+            Intent(Intent.ACTION_VIEW, facebookUrl.toUri())
+        }
+        requireContext().startActivity(intent)
+    }
+
+    fun openInstagramProfile() {
+        val username = "tollforall"  // instagram username
+        val uri = "http://instagram.com/_u/$username".toUri()
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            setPackage("com.instagram.android")
+        }
+
+        try {
+            requireContext().startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            // Instagram app not installed  open browser
+            requireContext().startActivity(
+                Intent(Intent.ACTION_VIEW, "https://instagram.com/$username".toUri())
+            )
+        }
     }
 
 }
