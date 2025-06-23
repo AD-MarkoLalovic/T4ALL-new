@@ -237,9 +237,14 @@ class HomeFragment : Fragment() {
             onItemClicked = { card ->
                 if (card.additionEnabled == true) {
                     val action =
-                        HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment(card.code)
+                        HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment(
+                            card.code
+                        )
                     findNavController().navigate(action)
-                } else {
+                } else if (card.isSocialNetworks == true) {
+                    Toast.makeText(requireContext(), card.description, Toast.LENGTH_SHORT).show()
+                }
+                else {
                     val action =
                         HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment("RS")
                     findNavController().navigate(action)
