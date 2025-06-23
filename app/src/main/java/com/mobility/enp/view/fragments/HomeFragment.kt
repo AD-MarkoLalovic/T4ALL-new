@@ -293,6 +293,18 @@ class HomeFragment : Fragment() {
         val sortedList = filteredList.sortedWith(compareByDescending<HomeCardsEntity> {
             it.code == "RS"
         }.thenBy { it.code })
+
+        // fixes promotion card description not translating because its hardcoded in room and not correct when language is changed
+        for (entity : HomeCardsEntity in sortedList ){
+            when(entity.code){
+                "RS" -> {entity.description  = requireContext().getString(R.string.tag_device_payment_method_serbia)}
+                "ME" -> {entity.description  = requireContext().getString(R.string.tag_device_payment_method_montenegro)}
+                "MK" -> {entity.description  = requireContext().getString(R.string.tag_device_payment_method_north_macedonia)}
+                "facebook" -> {entity.description  = requireContext().getString(R.string.facebook_text)}
+                "instagram" -> {entity.description  = requireContext().getString(R.string.instagram_text)}
+            }
+        }
+
         homePromotionsAdapter.submitList(sortedList)
         adapterProgress.submitList(filteredList.indices.toList())
 
