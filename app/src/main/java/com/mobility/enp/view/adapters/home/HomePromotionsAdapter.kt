@@ -41,7 +41,7 @@ class HomePromotionsAdapter(
                 "ME" -> binding.backgroundImage.setImageResource(R.drawable.flag_home_crna_gora)
 
                 "facebook" -> {
-                    binding.backgroundImage.setImageResource(R.drawable.flag_home_crna_gora)
+                    binding.backgroundImage.setImageResource(R.drawable.facebook_back_image)
                     binding.btnObjection.text = binding.root.context.getString(R.string.facebook)
                     binding.btnObjection.icon = AppCompatResources.getDrawable(
                         binding.root.context,
@@ -51,7 +51,7 @@ class HomePromotionsAdapter(
                 }
 
                 "instagram" -> {
-                    binding.backgroundImage.setImageResource(R.drawable.flag_home_crna_gora)
+                    binding.backgroundImage.setImageResource(R.drawable.instagram_back_image)
                     binding.btnObjection.text = binding.root.context.getString(R.string.instagram)
                     binding.btnObjection.icon = AppCompatResources.getDrawable(
                         binding.root.context,
