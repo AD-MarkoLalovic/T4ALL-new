@@ -47,6 +47,7 @@ class HomePromotionsAdapter(
                         binding.root.context,
                         R.drawable.facebook_vector
                     )
+                    binding.btnObjection.iconSize = 30
                     binding.btnSocialNetworks.visibility = View.VISIBLE
                 }
 

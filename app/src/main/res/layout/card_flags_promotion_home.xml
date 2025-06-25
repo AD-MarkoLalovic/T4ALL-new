@@ -79,7 +79,6 @@
                     android:id="@+id/btnSocialNetworks"
                     android:layout_width="@dimen/dimens_50dp"
                     android:layout_height="45dp"
-                    android:layout_marginStart="@dimen/dimens_5dp"
                     android:layout_marginBottom="@dimen/dimens_10dp"
                     android:layout_toEndOf="@id/btnObjection"
                     android:background="@drawable/arrow_background_social_networks"
