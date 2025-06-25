@@ -295,13 +295,30 @@ class HomeFragment : Fragment() {
         }.thenBy { it.code })
 
         // fixes promotion card description not translating because its hardcoded in room and not correct when language is changed
-        for (entity : HomeCardsEntity in sortedList ){
-            when(entity.code){
-                "RS" -> {entity.description  = requireContext().getString(R.string.tag_device_payment_method_serbia)}
-                "ME" -> {entity.description  = requireContext().getString(R.string.tag_device_payment_method_montenegro)}
-                "MK" -> {entity.description  = requireContext().getString(R.string.tag_device_payment_method_north_macedonia)}
-                "facebook" -> {entity.description  = requireContext().getString(R.string.facebook_text)}
-                "instagram" -> {entity.description  = requireContext().getString(R.string.instagram_text)}
+        for (entity: HomeCardsEntity in sortedList) {
+            when (entity.code) {
+                "RS" -> {
+                    entity.description =
+                        requireContext().getString(R.string.tag_device_payment_method_serbia)
+                }
+
+                "ME" -> {
+                    entity.description =
+                        requireContext().getString(R.string.tag_device_payment_method_montenegro)
+                }
+
+                "MK" -> {
+                    entity.description =
+                        requireContext().getString(R.string.tag_device_payment_method_north_macedonia)
+                }
+
+                "facebook" -> {
+                    entity.description = requireContext().getString(R.string.facebook_text)
+                }
+
+                "instagram" -> {
+                    entity.description = requireContext().getString(R.string.instagram_text)
+                }
             }
         }
 
@@ -336,14 +353,20 @@ class HomeFragment : Fragment() {
 
     fun openFacebookPage() {
         val facebookUrl = "https://www.facebook.com/toll4all/"
-        val intent = try {
-            Intent(Intent.ACTION_VIEW, "fb://facewebmodal/f?href=$facebookUrl".toUri()).apply {
-                setPackage("com.facebook.katana")
-            }
-        } catch (e: Exception) {
-            Intent(Intent.ACTION_VIEW, facebookUrl.toUri())
+
+        val uri = "fb://facewebmodal/f?href=$facebookUrl".toUri()
+
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            setPackage("com.facebook.katana")
         }
-        requireContext().startActivity(intent)
+
+        try {
+            requireContext().startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            requireContext().startActivity(
+                Intent(Intent.ACTION_VIEW, facebookUrl.toUri())
+            )
+        }
     }
 
     fun openInstagramProfile() {
