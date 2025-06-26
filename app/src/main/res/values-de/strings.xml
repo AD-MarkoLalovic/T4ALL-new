@@ -388,5 +388,7 @@
     <string name="highway_a11">Autobahn A11:</string>
     <string name="check_status_on_hac_portal">Status auf dem HAC-Portal überprüfen</string>
     <string name="link_login_to_hac">Melden Sie sich beim HAC-Portal an</string>
+    <string name="facebook_text">Folgen Sie uns auf Facebook und erfahren Sie als Erste(r) alle Neuigkeiten zu den Vorteilen des T4A-Systems.</string>
+    <string name="instagram_text">Folgen Sie uns auf Instagram und erfahren Sie als Erste(r) alle Neuigkeiten zu den Vorteilen des T4A-Systems.</string>
     <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
 </resources>

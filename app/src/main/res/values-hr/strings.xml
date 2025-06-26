@@ -307,7 +307,7 @@
     <string name="price">Cijena</string>
     <string name="please_select_dates">Molimo odaberite datume</string>
     <string name="formatting_error">Greška u formatu</string>
-    <string name="please_select_one_tag">Izvoz povijesti prolaza moguć je samo za jednu OZNAKU ili za sve OZNAKE</string>
+    <string name="please_select_one_tag">Izvoz povijesti prolaza moguć je samo za jednu TAG ili za sve TAG-ove</string>
     <string name="case_number_info">Broj predmeta odnosi se na broj pod kojim je zavedena Vaša reklamacija i koji se
         nalazi u odgovoru koji ste dobili od nas. Prigovori sa pogrešnim ili nepostojećim brojem neće biti uvaženi.</string>
     <string name="server_error_msg">Greška na poslužitelju</string>
@@ -373,6 +373,8 @@
     <string name="highway_a11">Autocesta A11:</string>
     <string name="check_status_on_hac_portal">Provjerite status na HAC portalu</string>
     <string name="link_login_to_hac">Prijavi se na HAC portal</string>
+    <string name="facebook_text">Pratite nas na Facebooku i budite prvi koji će saznati sve novosti o pogodnostima T4A sustava.</string>
+    <string name="instagram_text">Pratite nas na Instagramu i budite prvi koji će saznati sve novosti o pogodnostima T4A sustava.</string>
     <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
 
 </resources>

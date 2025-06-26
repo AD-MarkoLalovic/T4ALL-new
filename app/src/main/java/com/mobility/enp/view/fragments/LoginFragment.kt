@@ -80,7 +80,7 @@ class LoginFragment : Fragment() {
             if (userName.isNotEmpty() && userPassword.isNotEmpty()) {
 
                 val body = LoginBody(userName, userPassword)
-                loginViewModel.loginUser(body, requireContext())
+                loginViewModel.loginUser(body)
 
             } else {
                 Toast.makeText(

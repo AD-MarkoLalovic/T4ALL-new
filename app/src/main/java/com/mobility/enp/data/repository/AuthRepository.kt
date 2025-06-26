@@ -150,6 +150,36 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
         }
     }
 
+    suspend fun sendLangKey(): Result<Unit> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken()
+
+        userToken?.let { token ->
+            return try {
+                val sendKeyResponse = apiService(token).changeLanguage(getLangKey())
+                if (sendKeyResponse.isSuccessful) {
+                    sendKeyResponse.body()?.let { response ->
+                        Result.success(response)
+                    } ?: Result.failure(NetworkError.ServerError)
+                } else {
+                    sendKeyResponse.errorBody()?.let { errorBody ->
+                        val apiErrorResponse = parseErrorResponse(sendKeyResponse.code(), errorBody)
+                        Result.failure(NetworkError.ApiError(apiErrorResponse))
+                    } ?: Result.failure(NetworkError.ServerError)
+                }
+            } catch (e: Exception) {
+                Log.e("LANG_KEY", "unexpected error: ${e.message}", e)
+                Result.failure(NetworkError.ServerError)
+            }
+        }
+
+        return Result.failure(NetworkError.ServerError)
+    }
+
+
     suspend fun getToken(): UserLoginResponseRoomTable? {
         return withContext(Dispatchers.IO) {
             database.loginDao().fetchAllowedUsers()

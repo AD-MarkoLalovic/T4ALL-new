@@ -355,7 +355,7 @@
     <string name="price">Цена</string>
     <string name="please_select_dates">Изаберите датуме</string>
     <string name="formatting_error">Грешка у формату</string>
-    <string name="please_select_one_tag">Извоз историје пролаза могућ је само за једну ОЗНАКУ или за све ОЗНАКЕ</string>
+    <string name="please_select_one_tag">Извоз историје пролаза могућ је само за једну TAG или за све TAGs</string>
     <string name="mm_dd_yyyy" translatable="false">dd/mm/yyyy</string>
     <string name="case_number_info">Број предмета односи се на број под којим је заведена Ваша рекламација и који се налази у одговору који сте добили од нас. Приговори са погрешним или непостојећим бројем неће бити уважени.
 </string>
@@ -440,6 +440,11 @@
     <string name="tag_registration_plate_notice">Приликом регистрације ТАГ уређаја на ХАЦ порталу уносите стварну регистарску ознаку возила у коме ћете користити ТАГ уређај.</string>
     <string name="check_status_on_hac_portal">Проверите статус на ХАЦ порталу</string>
     <string name="link_login_to_hac">Пријави се на HAC портал</string>
+    <string name="facebook_text">Пратите нас на Фејсбуку и сазнајте први све новости о погодностима Т4А система.</string>
+    <string name="instagram_text">Пратите нас на Инстаграму и сазнајте први све новости о погодностима Т4А система.</string>
+    <string name="socialNetworksTitle" translatable="false">TOLL4ALL</string>
+    <string name="facebook" translatable="false">Facebook</string>
+    <string name="instagram" translatable="false">Instagram</string>
     <string name="jp_putevi_srbije">ЈП Путеви Србије</string>
 
 </resources>

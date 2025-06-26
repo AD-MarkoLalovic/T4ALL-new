@@ -378,5 +378,7 @@
     <string name="tag_usage_croatia">"Hırvatistan’da Sırp TAG cihazının kullanımı "</string>
     <string name="check_status_on_hac_portal">Durumu HAC portalında kontrol edin</string>
     <string name="link_login_to_hac">HAC portalına giriş yapın</string>
+    <string name="facebook_text">Bizi Facebook’ta takip edin ve T4A sisteminin avantajları hakkında tüm yenilikleri ilk siz öğrenin.</string>
+    <string name="instagram_text">Bizi Instagram’da takip edin ve T4A sisteminin avantajları hakkında tüm yenilikleri ilk siz öğrenin.</string>
     <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
 </resources>
