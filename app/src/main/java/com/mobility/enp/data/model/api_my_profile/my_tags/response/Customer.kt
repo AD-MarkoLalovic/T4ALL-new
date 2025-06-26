@@ -1,0 +1,33 @@
+package com.mobility.enp.data.model.api_my_profile.my_tags.response
+
+data class Customer(
+    val address: String?,
+    val city: String?,
+    val company_name: String?,
+    val company_name_invoice: Any?,
+    val contract_number: Int?,
+    val country: String?,
+    val created_at: String?,
+    val created_by_api_user: Any?,
+    val cro_id: String?,
+    val customer_type: Int?,
+    val discount: Int?,
+    val discount_secondary: Int?,
+    val display_name: String?,
+    val email: String?,
+    val first_name: String?,
+    val franchiser_id: Any?,
+    val id: Int?,
+    val jbkjs: Any?,
+    val jmbg: Any?,
+    val last_name: String?,
+    val mb: String?,
+    val note: Any?,
+    val payment_channel: Int?,
+    val phone: String?,
+    val pib: String?,
+    val postal_code: String?,
+    val tag_country: String?,
+    val updated_at: String?,
+    val user_id: Int?
+)

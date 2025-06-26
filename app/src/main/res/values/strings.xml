@@ -440,5 +440,6 @@
     <string name="tag_registration_plate_notice">Приликом регистрације ТАГ уређаја на ХАЦ порталу уносите стварну регистарску ознаку возила у коме ћете користити ТАГ уређај.</string>
     <string name="check_status_on_hac_portal">Проверите статус на ХАЦ порталу</string>
     <string name="link_login_to_hac">Пријави се на HAC портал</string>
+    <string name="jp_putevi_srbije">ЈП Путеви Србије</string>
 
 </resources>

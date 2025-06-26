@@ -208,10 +208,10 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
 
         return try {
             val lang = getLangKey()
-            val response = apiService(userToken).getUserTagsNew(1, 1000, lang)
+            val response = apiService(userToken).getUserTagsNew(1, 2000, lang)
 
             if (response.isSuccessful) {
-                val tags = response.body()?.data?.tags?.toTagUiModel().orEmpty()
+                val tags = response.body()?.data?.tags?.items?.toTagUiModel().orEmpty()
                 Result.success(tags)
             } else {
                 val errorResponse =

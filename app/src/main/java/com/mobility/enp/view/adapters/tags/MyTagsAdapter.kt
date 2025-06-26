@@ -63,7 +63,7 @@ class MyTagsAdapter(
 
             val adapterCountryStatus =
                 AdapterCountryStatuses(tag.statuses) // set country Status adapter
-            binding.cyclerTagStatuses.adapter = adapterCountryStatus
+            //binding.cyclerTagStatuses.adapter = adapterCountryStatus
 
             binding.executePendingBindings()
         }

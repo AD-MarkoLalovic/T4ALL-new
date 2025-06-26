@@ -8,6 +8,7 @@ import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
+import com.mobility.enp.data.model.api_my_profile.my_tags.response.MyTagsResponse
 import com.mobility.enp.data.model.api_my_profile.refund_request.SendRefundRequest
 import com.mobility.enp.data.model.api_my_profile.refund_request.response.RefundRequestsResponse
 import com.mobility.enp.data.model.api_my_profile.refund_request.tags.response.TagsResponseRefundRequest
@@ -30,7 +31,6 @@ import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
-import com.mobility.enp.data.model.my_tags.response.MyTagsResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -160,7 +160,7 @@ interface ApiService {
         @Query(value = "lang") language: String
     ): Call<TagsResponse>
 
-    @GET("/api/v1/tags")
+    @GET("/api/v2/tags")
     suspend fun getUserTagsNew(
         @Query("page") page: Int,
         @Query("perPage") perPage: Int,

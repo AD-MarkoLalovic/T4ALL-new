@@ -39,17 +39,17 @@ class MyTagsCountryStatusesAdapter :
 
         }
 
-        private fun setStatusAppearance(status: Int) {
+        private fun setStatusAppearance(status: String) {
             val (textColor, backgroundTint) = when (status) {
-                5, 6, 8, 10, 12 -> Pair(
+                "5", "6", "8", "10", "12" -> Pair(
                     R.color.figmaColorObjection,
                     R.color.figmaToolHistoryUnpaidBackground
                 )
 
-                4 -> Pair(R.color.tag_active, R.color.figmaToolHistoryPaidBackground)
-                9 -> Pair(R.color.dark_orange, R.color.soft_peach)
-                1, 11 -> Pair(R.color.primary_light_dark, R.color.primary_light_light)
-                13 -> {
+                "4" -> Pair(R.color.tag_active, R.color.figmaToolHistoryPaidBackground)
+                "9" -> Pair(R.color.dark_orange, R.color.soft_peach)
+                "1", "11" -> Pair(R.color.primary_light_dark, R.color.primary_light_light)
+                "13" -> {
                     binding.root.background = ContextCompat.getDrawable(
                         binding.root.context,
                         R.drawable.border_tag_state_deactivated

@@ -373,5 +373,6 @@
     <string name="highway_a11">Autocesta A11:</string>
     <string name="check_status_on_hac_portal">Provjerite status na HAC portalu</string>
     <string name="link_login_to_hac">Prijavi se na HAC portal</string>
+    <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
 
 </resources>

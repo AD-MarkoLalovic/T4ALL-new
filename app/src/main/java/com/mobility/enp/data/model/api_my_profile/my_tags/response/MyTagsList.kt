@@ -1,13 +1,17 @@
-package com.mobility.enp.data.model.my_tags.response
+package com.mobility.enp.data.model.api_my_profile.my_tags.response
 
 data class MyTagsList(
     val category: Category?,
     val country: Country?,
+    val countryStr: String?,
+    val customer: Customer?,
+    val franchiser: Franchiser?,
     val id: String?,
     val registrationPlate: String?,
-    val roming: Boolean?,
+    val roaming: Any?,
     val serialNumber: String,
     val showButtonFoundTag: Boolean?,
     val showButtonLostTag: Boolean?,
-    val statuses: List<Statuse>
+    val state: Int?,
+    val statuses: List<Statuse>?
 )

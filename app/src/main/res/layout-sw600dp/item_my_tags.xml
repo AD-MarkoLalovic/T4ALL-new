@@ -42,10 +42,10 @@
                     tools:text="BG1234UL" />
 
                 <TextView
+                    android:id="@+id/txTagSerialNumber"
                     style="@style/SubtitlesRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{data.serialNumber}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="CE040130628219221" />

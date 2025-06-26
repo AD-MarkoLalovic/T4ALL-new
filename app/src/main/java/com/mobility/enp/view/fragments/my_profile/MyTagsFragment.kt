@@ -5,7 +5,6 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,14 +15,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentTagsBinding
 import com.mobility.enp.util.NetworkError
-import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.my_tags.MyTagsListAdapter
 import com.mobility.enp.view.adapters.my_tags.MyTagsStatusFilterAdapter
+import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyTagsViewModel
 import kotlinx.coroutines.delay
@@ -37,14 +37,11 @@ class MyTagsFragment : Fragment() {
     private val viewModel: MyTagsViewModel by viewModels { MyTagsViewModel.factory }
 
     private lateinit var statusFilterAdapter: MyTagsStatusFilterAdapter
+    private lateinit var allowedCountriesAdapter: MyTagsStatusFilterAdapter
     private lateinit var tagsListAdapter: MyTagsListAdapter
 
-    private var statusListInitialized = false
     private lateinit var textWatcher: TextWatcher
-
-    companion object {
-        const val TAG = "TAGS_FRAGMENT"
-    }
+    private lateinit var allStatusText: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -66,6 +63,7 @@ class MyTagsFragment : Fragment() {
     }
 
     private fun setListener() {
+        allStatusText = requireContext().getString(R.string.all_status_tags)
         binding.editSerialNumberMyTags.addTextChangedListener(textWatcher)
 
         binding.buttonAddTag.setOnClickListener {
@@ -76,12 +74,13 @@ class MyTagsFragment : Fragment() {
     private fun observeMyTags() {
         collectLatestLifecycleFlow(viewModel.myTags) { result ->
             when (result) {
-                is SubmitResultFold.Loading -> {
+                is MyTagsViewModel.SubmitResultMyTags.Loading -> {
                     binding.progbar.visibility = View.VISIBLE
                 }
 
-                is SubmitResultFold.Success -> {
+                is MyTagsViewModel.SubmitResultMyTags.Success -> {
                     binding.progbar.visibility = View.GONE
+                    binding.buttonAddTag.isEnabled = true
 
                     val myTags = result.data
 
@@ -92,26 +91,62 @@ class MyTagsFragment : Fragment() {
                     } else {
                         binding.textNoMyTags.visibility = View.GONE
                         binding.myTagsContainer.visibility = View.VISIBLE
+                        viewModel.setAllStatusLabel(allStatusText)
 
-                        if (!statusListInitialized) {
-                            val statusList =
-                                listOf(requireContext().getString(R.string.all_status_tags)) + myTags.flatMap { it.statuses }
-                                    .mapNotNull { it.statusText }
-                                    .distinct()
-                            statusFilterAdapter.submitList(statusList)
-                            statusListInitialized = true
+                        val statusList =
+                            listOf(requireContext().getString(R.string.all_status_tags)) + myTags.flatMap { it.statuses }
+                                .mapNotNull { it.statusText }
+                                .distinct()
+                        statusFilterAdapter.submitList(statusList) {
+                            statusFilterAdapter.selectedStatus = 0
                         }
-                        tagsListAdapter.submitList(myTags)
+
+                        val countryList = myTags.flatMap { it.statuses }
+                            .mapNotNull { it.statusesCountry }
+                            .distinct()
+                            .reversed()
+                            .map { code ->
+                                when (code) {
+                                    "RS" -> "SRB"
+                                    "MK" -> "MKD"
+                                    "ME" -> "MNE"
+                                    "HR" -> "HRV"
+                                    else -> code
+                                }
+                            }
+
+                        allowedCountriesAdapter.submitList(countryList) {
+                            allowedCountriesAdapter.selectedStatus = 0
+                        }
+
+                        tagsListAdapter.setItems(myTags)
+
                     }
                 }
 
-                is SubmitResultFold.Failure -> {
+                is MyTagsViewModel.SubmitResultMyTags.Failure -> {
                     handleError(result.error)
                 }
 
-                is SubmitResultFold.Idle -> {}
+                is MyTagsViewModel.SubmitResultMyTags.Idle -> {}
+
+                is MyTagsViewModel.SubmitResultMyTags.Filtered -> {
+                    updateTagsList(result.data)
+                }
             }
         }
+    }
+
+    private fun updateTagsList(tags: List<TagUiModel>) {
+        if (tags.isEmpty()) {
+            binding.textNoFilteredTags?.visibility = View.VISIBLE
+            binding.cyclerContent.visibility = View.GONE
+        } else {
+            binding.textNoFilteredTags?.visibility = View.GONE
+            binding.cyclerContent.visibility = View.VISIBLE
+        }
+
+        tagsListAdapter.setItems(tags)
     }
 
     private fun setupTextWatcher() {
@@ -120,15 +155,15 @@ class MyTagsFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString().lowercase()
-                Log.d("MARKO", "onTextChanged: $query")
                 statusFilterAdapter.clearStatus()
+                allowedCountriesAdapter.clearStatus()
 
                 // Filtriramo listu tagova na osnovu unosa u editText
                 val result = viewModel.allTags.filter { tag ->
                     tag.serialNumber.lowercase().contains(query)
                 }
 
-                tagsListAdapter.submitList(result)
+                updateTagsList(result)
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -136,25 +171,41 @@ class MyTagsFragment : Fragment() {
     }
 
     private fun setAdapters() {
-        statusFilterAdapter = MyTagsStatusFilterAdapter { selectedStatus ->
+        tagsListAdapter = MyTagsListAdapter()
+        binding.cyclerContent.adapter = tagsListAdapter
 
-            //uklanjam tekst sa editText polja, sklanjam mu fokus i uklanjam tastaturu
-            binding.editSerialNumberMyTags.apply {
-                removeTextChangedListener(textWatcher)
-                setText("")
-                clearFocus()
-                addTextChangedListener(textWatcher)
+        tagsListAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                updateRecyclerViewHeight(binding.cyclerContent)
             }
-            val imm =
-                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(binding.editSerialNumberMyTags.windowToken, 0)
+        })
 
-            viewModel.filterTagsByStatus(selectedStatus)
+        statusFilterAdapter = MyTagsStatusFilterAdapter { selectedStatus ->
+            clearSearchFieldFocusAndKeyboard()
+            viewModel.setStatusFilter(selectedStatus)
         }
         binding.cyclerTagTypes.adapter = statusFilterAdapter
 
-        tagsListAdapter = MyTagsListAdapter()
-        binding.cyclerContent.adapter = tagsListAdapter
+        allowedCountriesAdapter = MyTagsStatusFilterAdapter { selectedCountry ->
+            clearSearchFieldFocusAndKeyboard()
+            tagsListAdapter.selectedCountry = selectedCountry
+            viewModel.setCountryFilter(selectedCountry)
+        }
+        binding.rvAllowedCountries?.adapter = allowedCountriesAdapter
+
+    }
+
+    private fun clearSearchFieldFocusAndKeyboard() {
+        //uklanjam tekst sa editText polja, sklanjam mu fokus i uklanjam tastaturu
+        binding.editSerialNumberMyTags.apply {
+            removeTextChangedListener(textWatcher)
+            setText("")
+            clearFocus()
+            addTextChangedListener(textWatcher)
+        }
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.editSerialNumberMyTags.windowToken, 0)
     }
 
     private fun handleError(error: Throwable) {
@@ -210,7 +261,6 @@ class MyTagsFragment : Fragment() {
                     editText?.textSelectHandle?.setTint(color)
                     editText?.setTextColor(color)
 
-
                     val states = arrayOf(
                         intArrayOf(android.R.attr.state_pressed),  // pressed
                         intArrayOf(android.R.attr.state_focused),  // focused
@@ -230,6 +280,8 @@ class MyTagsFragment : Fragment() {
     }
 
     private fun triggerUpdate() {
+        if (!isAdded || _binding == null) return
+
         binding.progbar.visibility = View.GONE
 
         val bindingMain = (activity as MainActivity).binding
@@ -244,6 +296,19 @@ class MyTagsFragment : Fragment() {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
+    fun updateRecyclerViewHeight(recyclerView: RecyclerView) {
+        val adapter = recyclerView.adapter ?: return
+
+        val params = recyclerView.layoutParams
+        if (adapter.itemCount == 1) {
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        } else {
+            params.height = resources.getDimension(R.dimen.dimens_500dp).toInt()
+        }
+
+        recyclerView.layoutParams = params
+
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
