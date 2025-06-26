@@ -304,7 +304,7 @@
     <string name="price">Cijena</string>
     <string name="please_select_dates">Molimo odaberite datume</string>
     <string name="formatting_error">Greška u formatu</string>
-    <string name="please_select_one_tag">Izvoz istorije prolaza je moguć samo za jednu OZNAKU ili za sve OZNAKE</string>
+    <string name="please_select_one_tag">Izvoz istorije prolaza je moguć samo za jednu TAG ili za sve TAG-ove</string>
     <string name="case_number_info">Broj predmeta odnosi se na broj pod kojim je zavedena Vaša reklamacija i koji se nalazi u odgovoru koji ste dobili od nas. Prigovori sa pogrešnim ili nepostojećim brojem neće biti uvaženi.</string>
     <string name="server_error_msg">Greška na serveru</string>
     <string name="hint_select_bank">Izaberite banku</string>

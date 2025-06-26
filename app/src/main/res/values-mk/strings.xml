@@ -310,7 +310,7 @@
     <string name="price">Цена</string>
     <string name="please_select_dates">Ве молиме изберете датуми</string>
     <string name="formatting_error">Грешка во форматот</string>
-    <string name="please_select_one_tag">Извоз на историјата на премин е можен само за една ОЗНАКА или за сите ОЗНАКИ</string>
+    <string name="please_select_one_tag">Извоз на историјата на премин е можен само за една TAG или за сите TAGs</string>
     <string name="case_number_info">Бројот на предметот се однесува на бројот под кој е поднесена вашата рекламација
         и кој се наоѓа во одговорот што сте го добиле од нас. Приговорите со погрешен или непостоечки број нема да бидат прифатени.</string>
     <string name="server_error_msg">Грешка на серверот</string>
