@@ -46,7 +46,7 @@ class UserRepository(
         val userToken = getUserToken()
         userToken?.let { token ->
 
-             try {
+            try {
                 val remoteData = apiService(token).getUserData()
                 if (remoteData.isSuccessful) {
                     remoteData.body()?.let { responseBody ->
@@ -56,18 +56,18 @@ class UserRepository(
                         if (localData != null) {
                             return Result.success(localData)
                         } else {
-                           return Result.failure(NetworkError.ServerError)
+                            return Result.failure(NetworkError.ServerError)
                         }
                     } ?: return Result.failure(NetworkError.ServerError)
                 } else {
                     remoteData.errorBody()?.let { errorBody ->
-                        val apiErrorResponse = parseErrorResponse(remoteData.code(),errorBody)
+                        val apiErrorResponse = parseErrorResponse(remoteData.code(), errorBody)
                         return Result.failure(NetworkError.ApiError(apiErrorResponse))
                     } ?: return Result.failure(NetworkError.ServerError)
                 }
             } catch (e: Exception) {
                 Log.e("BasicInfo", "Neočekivana greška: ${e.message}", e)
-                 return Result.failure(NetworkError.ServerError)
+                return Result.failure(NetworkError.ServerError)
             }
         }
         return Result.failure(NetworkError.ServerError)
@@ -104,7 +104,7 @@ class UserRepository(
 
                 } else {
                     response.errorBody()?.let { errorBody ->
-                        val apiErrorResponse = parseErrorResponse(response.code(),errorBody)
+                        val apiErrorResponse = parseErrorResponse(response.code(), errorBody)
                         return Result.failure(NetworkError.ApiError(apiErrorResponse))
                     } ?: return Result.failure(NetworkError.ServerError)
                 }
@@ -140,7 +140,7 @@ class UserRepository(
                     } ?: Result.failure(NetworkError.ServerError)
                 } else {
                     remoteData.errorBody()?.let { errorBody ->
-                        val apiErrorResponse = parseErrorResponse(remoteData.code(),errorBody)
+                        val apiErrorResponse = parseErrorResponse(remoteData.code(), errorBody)
                         Result.failure(NetworkError.ApiError(apiErrorResponse))
                     } ?: Result.failure(NetworkError.ServerError)
                 }
@@ -182,7 +182,7 @@ class UserRepository(
                     } ?: Result.failure(NetworkError.ServerError) // Ako telo odgovora nije validno
                 } else {
                     response.errorBody()?.let { errorBody ->
-                        val apiErrorResponse = parseErrorResponse(response.code(),errorBody)
+                        val apiErrorResponse = parseErrorResponse(response.code(), errorBody)
                         Result.failure(NetworkError.ApiError(apiErrorResponse))
                     } ?: Result.failure(NetworkError.ServerError)
                 }
@@ -222,7 +222,7 @@ class UserRepository(
                     Result.success(Unit)
                 } else {
                     response.errorBody()?.let { errorBody ->
-                        val apiErrorResponse = parseErrorResponse(response.code(),errorBody)
+                        val apiErrorResponse = parseErrorResponse(response.code(), errorBody)
                         Result.failure(NetworkError.ApiError(apiErrorResponse))
                     } ?: Result.failure(NetworkError.ServerError)
                 }
@@ -256,7 +256,7 @@ class UserRepository(
                     } ?: Result.failure(NetworkError.ServerError)
                 } else {
                     remoteBanks.errorBody()?.let { errorBody ->
-                        val apiErrorResponse = parseErrorResponse(remoteBanks.code(),errorBody)
+                        val apiErrorResponse = parseErrorResponse(remoteBanks.code(), errorBody)
                         Result.failure(NetworkError.ApiError(apiErrorResponse))
                     } ?: Result.failure(NetworkError.ServerError)
                 }
@@ -282,12 +282,34 @@ class UserRepository(
      * Send language
      */
 
-    suspend fun sendLangKey() {
+    suspend fun sendLangKey(): Result<Unit> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
         val userToken = getUserToken()
 
         userToken?.let { token ->
-            apiService(token).changeLanguage(getLangKey())
+            return try {
+                val sendKeyResponse = apiService(token).changeLanguage(getLangKey())
+                if (sendKeyResponse.isSuccessful) {
+                    sendKeyResponse.body()?.let { response ->
+                        Result.success(response)
+                    } ?: Result.failure(NetworkError.ServerError)
+                } else {
+                    sendKeyResponse.errorBody()?.let { errorBody ->
+                        val apiErrorResponse = parseErrorResponse(sendKeyResponse.code(), errorBody)
+                        Result.failure(NetworkError.ApiError(apiErrorResponse))
+                    } ?: Result.failure(NetworkError.ServerError)
+                }
+            } catch (e: Exception) {
+                Log.e("LANG_KEY", "unexpected error: ${e.message}", e)
+                Result.failure(NetworkError.ServerError)
+            }
         }
+
+        return Result.failure(NetworkError.ServerError)
     }
+
 
 }

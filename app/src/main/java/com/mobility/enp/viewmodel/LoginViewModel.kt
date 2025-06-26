@@ -1,6 +1,5 @@
 package com.mobility.enp.viewmodel
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,7 +16,6 @@ import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
 import com.mobility.enp.data.repository.AuthRepository
 import com.mobility.enp.data.room.LastUser
-import com.mobility.enp.network.Repository
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
@@ -49,7 +47,7 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
         }
     }
 
-    fun loginUser(user: LoginBody, context: Context) {
+    fun loginUser(user: LoginBody) {
         viewModelScope.launch {
             _loginState.value = LoginState.Loading
 
@@ -66,9 +64,9 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
                         )
                     )
                     storeLastUserEmail(user.email!!)
-                    sendLanguage(context)
+                    sendLanguage()
 
-                    _loginState.value = LoginState.Success(response,response.data?.portal_key)
+                    _loginState.value = LoginState.Success(response, response.data?.portal_key)
                 },
                 onFailure = { error ->
                     _loginState.value = LoginState.Failure(error)
@@ -152,19 +150,17 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
         return "RS/$lang"
     }
 
-    private fun sendLanguage(context: Context) {
+    private fun sendLanguage() {
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val token = getUserToken()
-                token?.let {
-                    Repository.sendLanguageKey(it.accessToken, context)
-                    Log.d("LoginViewModel", "Language send successfully")
-                } ?: run {
-                    Log.e("LoginViewModel", "Token is null")
+            val result = repository.sendLangKey()
+            result.fold(
+                onSuccess = {
+                    Log.d(TAG, "language change was sent")
+                },
+                onFailure = { error ->
+                    Log.d(TAG, "sendLanguage error occurred : $error")
                 }
-            } catch (e: Exception) {
-                Log.e("LoginViewModel", "Error sending language: ${e.message}", e)
-            }
+            )
         }
     }
 
@@ -184,6 +180,6 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
 sealed class LoginState {
     object Idle : LoginState()
     object Loading : LoginState()
-    data class Success(val userResponse: UserResponse,val portalKey: String?) : LoginState()
+    data class Success(val userResponse: UserResponse, val portalKey: String?) : LoginState()
     data class Failure(val error: Throwable) : LoginState()
 }

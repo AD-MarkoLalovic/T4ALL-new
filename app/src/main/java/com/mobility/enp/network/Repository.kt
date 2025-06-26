@@ -323,11 +323,6 @@ object Repository {
         return apiService("").sendCustomerSupport(customerSupport)
     }
 
-    suspend fun sendLanguageKey(token: String?, context: Context) {
-        val language = getUserLanguage(context)
-        apiService(token).changeLanguage(language)
-    }
-
     fun getUserLanguage(context: Context): String {
 
         val languageCode = SharedPreferencesHelper.getUserLanguage(context)

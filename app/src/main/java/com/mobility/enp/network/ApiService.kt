@@ -282,5 +282,5 @@ interface ApiService {
     suspend fun getBanks(): Response<BanksResponse>
 
     @PUT("api/v1/personal-data/change-language")
-    suspend fun changeLanguage(@Query("language") languageCode: String)
+    suspend fun changeLanguage(@Query("language") languageCode: String) : Response<Unit>
 }
