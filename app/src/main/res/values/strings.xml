@@ -355,7 +355,7 @@
     <string name="price">Цена</string>
     <string name="please_select_dates">Изаберите датуме</string>
     <string name="formatting_error">Грешка у формату</string>
-    <string name="please_select_one_tag">Извоз историје пролаза могућ је само за једну ОЗНАКУ или за све ОЗНАКЕ</string>
+    <string name="please_select_one_tag">Извоз историје пролаза могућ је само за једну TAG или за све TAGs</string>
     <string name="mm_dd_yyyy" translatable="false">dd/mm/yyyy</string>
     <string name="case_number_info">Број предмета односи се на број под којим је заведена Ваша рекламација и који се налази у одговору који сте добили од нас. Приговори са погрешним или непостојећим бројем неће бити уважени.
 </string>
