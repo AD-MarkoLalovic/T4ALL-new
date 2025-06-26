@@ -2,12 +2,12 @@ package com.mobility.enp.util
 
 import android.content.Context
 import com.mobility.enp.R
+import com.mobility.enp.data.model.api_my_profile.my_tags.response.MyTagsList
 import com.mobility.enp.data.model.cards.registration_croatia.RegistrationResponse
 import com.mobility.enp.data.model.cards.tags_for_croatia.Tag
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.entity.TollHistoryHomeEntity
-import com.mobility.enp.data.model.my_tags.response.MyTagsList
 import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 import com.mobility.enp.view.ui_models.home.HomeTollHistoryUI
 import com.mobility.enp.view.ui_models.my_tags.TagStatusUiModel
@@ -114,16 +114,18 @@ fun List<MyTagsList>.toTagUiModel(): List<TagUiModel> {
             serialNumber = tag.serialNumber,
             registrationPlate = tag.registrationPlate,
             countryCode = tag.country?.value,
-            statuses = tag.statuses.map {
+            countryName = tag.country?.text,
+            statuses = tag.statuses?.map {
                 TagStatusUiModel(
                     statusesCountry = it.country?.value,
                     statusText = it.status?.text,
                     statusValue = it.status?.value
                 )
-            },
+            } ?: emptyList(),
             showButtonFoundTag = tag.showButtonFoundTag,
             showButtonLostTag = tag.showButtonLostTag,
-            category = tag.category?.value
+            category = tag.category?.value,
+            franchiser = tag.franchiser?.company_name
         )
     }
 }

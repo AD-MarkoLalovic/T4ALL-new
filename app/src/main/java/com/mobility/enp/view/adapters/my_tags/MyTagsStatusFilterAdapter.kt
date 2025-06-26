@@ -10,11 +10,10 @@ import com.mobility.enp.R
 import com.mobility.enp.databinding.ItemTagStatusBinding
 
 class MyTagsStatusFilterAdapter (
-    private var onStatusSelected: (String) -> Unit
+    private var onSelected: (String) -> Unit
 ) :
     ListAdapter<String, MyTagsStatusFilterAdapter.StatusTagViewHolder>(DIFF_CALLBACK) {
-
-    private var selectedStatus = 0
+        var selectedStatus = 0
 
     inner class StatusTagViewHolder(private val binding: ItemTagStatusBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -37,7 +36,7 @@ class MyTagsStatusFilterAdapter (
                     notifyItemChanged(oldPosition)
                     notifyItemChanged(selectedStatus)
 
-                    onStatusSelected(status)
+                    onSelected(status)
                 }
             }
 
@@ -67,7 +66,7 @@ class MyTagsStatusFilterAdapter (
 
     fun clearStatus() {
         val oldPosition = selectedStatus
-        selectedStatus = 500
+        selectedStatus = 5000
         notifyItemChanged(oldPosition)
     }
 

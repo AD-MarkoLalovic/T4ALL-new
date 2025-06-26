@@ -445,4 +445,6 @@
     <string name="socialNetworksTitle" translatable="false">TOLL4ALL</string>
     <string name="facebook" translatable="false">Facebook</string>
     <string name="instagram" translatable="false">Instagram</string>
+    <string name="jp_putevi_srbije">ЈП Путеви Србије</string>
+
 </resources>

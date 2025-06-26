@@ -8,7 +8,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.repository.ProfileRepository
-import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,45 +16,94 @@ import kotlinx.coroutines.launch
 class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
 
     private val _myTags =
-        MutableStateFlow<SubmitResultFold<List<TagUiModel>>>(SubmitResultFold.Idle)
-    val myTags: StateFlow<SubmitResultFold<List<TagUiModel>>> get() = _myTags
+        MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Idle)
+    val myTags: StateFlow<SubmitResultMyTags<List<TagUiModel>>> get() = _myTags
 
     var allTags: List<TagUiModel> = emptyList()
+    private var selectedStatus: String = ""
+    private var selectedCountry: String = "RS"
+    private var allStatusLabel: String = ""
+
+    fun setStatusFilter(statusKey: String) {
+        selectedStatus = statusKey
+        applyCombinedFilter()
+    }
+
+    fun setCountryFilter(countryCode: String) {
+        when (countryCode) {
+            "SRB" -> {
+                selectedCountry = "RS"
+                applyCombinedFilter()
+            }
+
+            "MKD" -> {
+                selectedCountry = "MK"
+                applyCombinedFilter()
+            }
+
+            "MNE" -> {
+                selectedCountry = "ME"
+                applyCombinedFilter()
+            }
+
+            "HRV" -> {
+                selectedCountry = "HR"
+                applyCombinedFilter()
+            }
+
+        }
+
+    }
+
+    fun setAllStatusLabel(label: String) {
+        allStatusLabel = label
+        selectedStatus = label
+    }
+
+    private fun applyCombinedFilter() {
+        val filtered = allTags.filter { tag ->
+            val statusForCountry = tag.statuses.firstOrNull {
+                it.statusesCountry == selectedCountry
+            }
+
+            val matchesCountry = statusForCountry != null
+
+            val matchesStatus =
+                selectedStatus == allStatusLabel || statusForCountry?.statusText == selectedStatus
+
+            matchesCountry && matchesStatus
+        }
+        _myTags.value = SubmitResultMyTags.Filtered(filtered)
+    }
 
     fun fetchMyTags() {
         viewModelScope.launch {
-            _myTags.value = SubmitResultFold.Loading
+            _myTags.value = SubmitResultMyTags.Loading
 
             val result = repository.getMyTags()
             result.fold(
                 onSuccess = { tags ->
                     allTags = tags
-                    _myTags.value = SubmitResultFold.Success(tags)
+                    _myTags.value = SubmitResultMyTags.Success(tags)
                 },
                 onFailure = { error ->
-                    _myTags.value = SubmitResultFold.Failure(error)
+                    _myTags.value = SubmitResultMyTags.Failure(error)
 
                 }
             )
         }
     }
 
-    fun filterTagsByStatus(statusKey: String) {
-        val filtered = allTags.filter { tag ->
-            tag.statuses.any { status ->
-                status.statusText == statusKey
-            }
-        }
-
-        _myTags.value = if (filtered.isEmpty()) {
-            SubmitResultFold.Success(allTags)
-        } else {
-            SubmitResultFold.Success(filtered)
-        }
-    }
-
     fun internetChecked(): Boolean {
         return repository.isNetworkAvail()
+    }
+
+    sealed class SubmitResultMyTags<out T> {
+        data class Success<T>(val data: T) : SubmitResultMyTags<T>()
+        data class Filtered<T>(val data: T) : SubmitResultMyTags<T>()
+        object Loading : SubmitResultMyTags<Nothing>()
+        data class Failure(val error: Throwable) : SubmitResultMyTags<Nothing>()
+        object Idle : SubmitResultMyTags<Nothing>()
     }
 
     companion object {
