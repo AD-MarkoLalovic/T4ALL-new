@@ -258,10 +258,13 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
             net?.let {
                 if (!it) {
                     val binding = (activity as MainActivity).binding
+
                     MainActivity.showSnackMessage(
                         getString(R.string.no_internet),
                         binding
                     )
+
+                    showNoInternetDialog()
 
                     viewModelProfile.resetCheckNet()
                 }
@@ -327,6 +330,17 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 imageRepository.saveImageToStorage(bitmap, binding.userName.text.toString())
             }
         }
+    }
+
+    private fun showNoInternetDialog() {
+        val bundle = Bundle().apply {
+            putString(getString(R.string.title), getString(R.string.no_connection_title))
+            putString(
+                getString(R.string.subtitle),
+                getString(R.string.please_connect_to_the_internet)
+            )
+        }
+        findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
     }
 
     private fun logMessage(message: String) {
