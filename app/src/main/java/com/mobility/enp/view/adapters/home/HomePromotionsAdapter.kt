@@ -1,10 +1,12 @@
 package com.mobility.enp.view.adapters.home
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +35,10 @@ class HomePromotionsAdapter(
             franchiseModel?.franchisePrimaryColor?.let {
                 binding.btnObjection.backgroundTintList =
                     ColorStateList.valueOf(it)
+            }
+
+            franchiseModel?.franchiseSocialNetworkArrow?.let { arrow ->
+                binding.btnSocialNetworks.background = ContextCompat.getDrawable(binding.root.context,arrow)
             }
 
             when (card.code) {

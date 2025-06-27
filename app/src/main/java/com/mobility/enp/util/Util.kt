@@ -80,7 +80,7 @@ object Util {
 
                     else ->
                         ContextCompat.getColorStateList(context, R.color.flavor_text_default)
-                },
+                },R.drawable.arrow_background_social_networks_telekom,
                 R.style.TelekomCalendarTheme
             )
 
@@ -109,7 +109,7 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
-                ),
+                ),R.drawable.arrow_background_social_networks_s_blue,
                 R.style.S_Blue_CalendarTheme
             )
 
@@ -139,6 +139,7 @@ object Util {
                     R.color.amss_tehnomania_home_welcome_text_color
                 ),
                 ContextCompat.getColorStateList(context, R.color.flavor_text_amss_tehnomania),
+                R.drawable.arrow_background_social_networks_amss,
                 R.style.AMSSCalendarTheme
             )
 
@@ -168,6 +169,7 @@ object Util {
                     R.color.amss_tehnomania_home_welcome_text_color
                 ),
                 ContextCompat.getColorStateList(context, R.color.flavor_text_amss_tehnomania),
+                R.drawable.arrow_background_social_networks_tehnomania,
                 R.style.TehnomaniaCalendarTheme
             )
 
@@ -194,6 +196,7 @@ object Util {
                 R.drawable.default_user_picture_enput,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
                 ContextCompat.getColorStateList(context, R.color.flavor_text_enput),
+                R.drawable.arrow_background_social_networks_enput,
                 R.style.EnputCalendarTheme
             )
 
@@ -222,7 +225,7 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
-                ),
+                ),R.drawable.arrow_background_social_networks_rafaelo,
                 R.style.RafaeloCalendarTheme
             )
 
@@ -251,7 +254,7 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
-                ),
+                ),R.drawable.arrow_background_social_networks_freetrans,
                 R.style.FreeTransCalendarTheme
             )
 
@@ -280,7 +283,7 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_sbb_e_box_tehnocoop_color
-                ),
+                ),R.drawable.arrow_background_social_networks_e_box,
                 R.style.EboxCalendarTheme
             )
 
@@ -310,7 +313,7 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
-                ),
+                ),R.drawable.arrow_background_social_networks_pay_n_roll,
                 R.style.PayNRollCalendarTheme
             )
 
@@ -339,7 +342,7 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_sbb_e_box_tehnocoop_color
-                ),
+                ),R.drawable.arrow_background_social_networks_sbb,
 
                 R.style.SbbCalendarTheme
             )
@@ -374,6 +377,7 @@ object Util {
                 R.drawable.default_user_picture_posta_srbije,
                 ContextCompat.getColorStateList(context, R.color.home_page_text_default),
                 ContextCompat.getColorStateList(context, R.color.flavor_text_default),
+                R.drawable.arrow_background_social_networks_posta_srbije,
                 R.style.PostaSrbijeCalendarTheme
             )
 
@@ -402,7 +406,7 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
-                ),
+                ),R.drawable.arrow_background_social_networks_euro_pertol,
                 R.style.EuroPetrolCalendarTheme
             )
 
