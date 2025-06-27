@@ -625,7 +625,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 filterCardsByCountry("RS")
                 setBlockVisibility(false)
                 setCardVisibility(true)
-                binding.rvCreditCard.visibility = View.VISIBLE
                 makeCardClickable(true)
             }
 
@@ -636,7 +635,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
-                binding.rvCreditCard.visibility = View.VISIBLE
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
@@ -647,7 +645,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
-                binding.rvCreditCard.visibility = View.VISIBLE
                 binding.termsConditionsCheckmark.isChecked = false
             }
 
