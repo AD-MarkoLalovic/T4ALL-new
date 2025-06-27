@@ -45,9 +45,8 @@ class HomePromotionsAdapter(
                     binding.btnObjection.text = binding.root.context.getString(R.string.facebook)
                     binding.btnObjection.icon = AppCompatResources.getDrawable(
                         binding.root.context,
-                        R.drawable.facebook_vector
+                        R.drawable.facebook_inset
                     )
-                    binding.btnObjection.iconSize = 30
                     binding.btnSocialNetworks.visibility = View.VISIBLE
                 }
 
