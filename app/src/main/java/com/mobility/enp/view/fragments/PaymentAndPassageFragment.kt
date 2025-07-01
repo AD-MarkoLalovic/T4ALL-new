@@ -625,8 +625,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 filterCardsByCountry("RS")
                 setBlockVisibility(false)
                 setCardVisibility(true)
-                binding.rvCreditCard.visibility = View.VISIBLE
                 makeCardClickable(true)
+                binding.bttRegTagForCroatia.visibility = View.GONE
             }
 
             "MK" -> {
@@ -636,8 +636,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
-                binding.rvCreditCard.visibility = View.VISIBLE
                 binding.termsConditionsCheckmark.isChecked = false
+                binding.bttRegTagForCroatia.visibility = View.GONE
             }
 
             "ME" -> {
@@ -647,8 +647,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setBlockVisibility(true)
                 setCardVisibility(true)
                 makeCardClickable(false)
-                binding.rvCreditCard.visibility = View.VISIBLE
                 binding.termsConditionsCheckmark.isChecked = false
+                binding.bttRegTagForCroatia.visibility = View.GONE
             }
 
             "HR" -> {
@@ -835,14 +835,12 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             binding.txCroatiaText.visibility = View.VISIBLE
             binding.txCroatiaCardsNote.visibility = View.VISIBLE
             binding.rvTagsForCroatia.visibility = View.VISIBLE
-            binding.bttRegTagForCroatia.visibility = View.VISIBLE
             binding.txCroatiaCardsPdf.visibility = View.VISIBLE
             binding.loginToHac.visibility = View.VISIBLE
         } else {
             binding.txCroatiaText.visibility = View.GONE
             binding.txCroatiaCardsNote.visibility = View.GONE
             binding.rvTagsForCroatia.visibility = View.GONE
-            binding.bttRegTagForCroatia.visibility = View.GONE
             binding.txCroatiaCardsPdf.visibility = View.GONE
             binding.loginToHac.visibility = View.GONE
         }
