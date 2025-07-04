@@ -28,6 +28,7 @@ import com.mobility.enp.view.dialogs.LostTagDialog
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyTagsViewModel
+import com.mobility.enp.viewmodel.ReportType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -138,7 +139,7 @@ class MyTagsFragment : Fragment() {
             }
         }
 
-        collectLatestLifecycleFlow(viewModel.reportLostTag) { result ->
+        collectLatestLifecycleFlow(viewModel.reportTag) { result ->
             when (result) {
                 is SubmitResultFold.Failure -> {
                     handleError(result.error)
@@ -147,7 +148,13 @@ class MyTagsFragment : Fragment() {
                 SubmitResultFold.Idle -> {}
                 SubmitResultFold.Loading -> binding.progbar.visibility = View.VISIBLE
                 is SubmitResultFold.Success<*> -> {
-                    showToastMessage(getString(R.string.reported_lost_tag_successfully))
+                    val type = result.reportType
+                    val message = when (type) {
+                        ReportType.LOST -> getString(R.string.reported_lost_tag_successfully)
+                        ReportType.FOUND -> getString(R.string.reported_found_tag_successfully)
+                        else -> ""
+                    }
+                    showToastMessage(message)
                     viewModel.fetchMyTags()
                 }
             }
@@ -197,6 +204,15 @@ class MyTagsFragment : Fragment() {
                         viewModel.reportLostTag(serialNumber)
                     }
                 ).show(parentFragmentManager, "LostTagDialog")
+            },
+            onFoundClicked = { serialNumber ->
+                LostTagDialog.newInstance(
+                    title = requireContext().getString(R.string.confirm_found_tag),
+                    subtitle = requireContext().getString(R.string.report_found_tag),
+                    onButtonClick = {
+                        viewModel.reportFoundTag(serialNumber)
+                    }
+                ).show(parentFragmentManager, "FoundTagDialog")
             }
         )
         binding.cyclerContent.adapter = tagsListAdapter

@@ -14,14 +14,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+enum class ReportType {
+    LOST, FOUND
+}
+
 class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
 
     private val _myTags =
         MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Idle)
     val myTags: StateFlow<SubmitResultMyTags<List<TagUiModel>>> get() = _myTags
 
-    private val _reportLostTag = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
-    val reportLostTag: StateFlow<SubmitResultFold<Unit>> get() = _reportLostTag
+    private val _reportTag = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
+    val reportTag: StateFlow<SubmitResultFold<Unit>> get() = _reportTag
 
     var allTags: List<TagUiModel> = emptyList()
     private var selectedStatus: String = ""
@@ -102,17 +106,32 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
 
     fun reportLostTag(serialNumber: String) {
         viewModelScope.launch {
-            _reportLostTag.value = SubmitResultFold.Loading
+            _reportTag.value = SubmitResultFold.Loading
 
             val result = repository.reportLostTag(serialNumber)
             result.fold(
                 onSuccess = {
-                    _reportLostTag.value = SubmitResultFold.Success(Unit)
+                    _reportTag.value = SubmitResultFold.Success(Unit, ReportType.LOST)
                 },
                 onFailure = { error ->
-                    _reportLostTag.value = SubmitResultFold.Failure(error)
+                    _reportTag.value = SubmitResultFold.Failure(error)
                 }
+            )
+        }
+    }
 
+    fun reportFoundTag(serialNumber: String) {
+        viewModelScope.launch {
+            _reportTag.value = SubmitResultFold.Loading
+
+            val result = repository.reportFoundTag(serialNumber)
+            result.fold(
+                onSuccess = {
+                   _reportTag.value = SubmitResultFold.Success(Unit, ReportType.FOUND)
+                },
+                onFailure = { error ->
+                    _reportTag.value = SubmitResultFold.Failure(error)
+                }
             )
         }
     }

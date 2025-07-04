@@ -232,7 +232,7 @@ interface ApiService {
     @POST("/api/v1/tags/found-tag")
     suspend fun postFoundTag(
         @Field("serialNumber") serialNumber: String
-    ): Response<LostTagResponse>
+    ): Response<Unit>
 
     @GET("/api/v1/cards/web")
     suspend fun getCreditCardsWeb(@Query("lang") language: String): Response<CardWebModel>

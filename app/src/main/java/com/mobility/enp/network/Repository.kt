@@ -245,24 +245,6 @@ object Repository {
         }
     }
 
-    suspend fun postFoundLostTag(
-        token: String,
-        serialNumber: String,
-        errorBody: MutableLiveData<ErrorBody>,
-        data: MutableLiveData<LostTagResponse>
-    ) {
-        try {
-            val response = apiService(token).postFoundTag(serialNumber)
-            if (response.isSuccessful) {
-                data.postValue(response.body())
-            } else {
-                errorBody.postValue(getMessageFromErrorBody(response))
-            }
-        } catch (e: Exception) {
-            Log.d(TAG, "getUserCountries: ${e.cause} \n ${e.message}")
-        }
-    }
-
     suspend fun sendCustomerSupport(
         customerSupport: CustomerSupport
     ): Response<Unit> {

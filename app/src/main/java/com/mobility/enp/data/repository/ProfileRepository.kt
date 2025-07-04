@@ -265,13 +265,35 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
                 Result.success(Unit)
             } else {
                 val errorResponse = response.errorBody()?.let {
-                    parseErrorResponse(response.code(), it)
+                    parseErrorResponse(errorCode = response.code(), errorBody = it)
                 }
                 Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
                     ?: NetworkError.ServerError)
             }
         } catch (e: Exception) {
             Log.d("LostTag", "ProfileRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
+    suspend fun reportFoundTag(serialNumber: String): Result<Unit> {
+        if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val response = apiService(userToken).postFoundTag(serialNumber = serialNumber)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                val errorResponse = response.errorBody()?.let {
+                    parseErrorResponse(errorCode = response.code(), errorBody = it)
+                }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.d("FoundTag", "ProfileRepository: ${e.message} ${e.cause}")
             Result.failure(NetworkError.ServerError)
         }
     }
