@@ -177,9 +177,9 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("/api/v1/tags/lost-tag")
-    fun postLostTag(
+    suspend fun postLostTag(
         @Field("serialNumber") serialNumber: String
-    ): Call<LostTagResponse>
+    ): Response<Unit>
 
     @FormUrlEncoded
     @POST("/api/v1/tags/add-tag")

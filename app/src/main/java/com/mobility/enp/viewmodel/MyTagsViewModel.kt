@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.repository.ProfileRepository
+import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +19,9 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
     private val _myTags =
         MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Idle)
     val myTags: StateFlow<SubmitResultMyTags<List<TagUiModel>>> get() = _myTags
+
+    private val _reportLostTag = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
+    val reportLostTag: StateFlow<SubmitResultFold<Unit>> get() = _reportLostTag
 
     var allTags: List<TagUiModel> = emptyList()
     private var selectedStatus: String = ""
@@ -50,9 +54,7 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
                 selectedCountry = "HR"
                 applyCombinedFilter()
             }
-
         }
-
     }
 
     fun setAllStatusLabel(label: String) {
@@ -96,6 +98,23 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
 
     fun internetChecked(): Boolean {
         return repository.isNetworkAvail()
+    }
+
+    fun reportLostTag(serialNumber: String) {
+        viewModelScope.launch {
+            _reportLostTag.value = SubmitResultFold.Loading
+
+            val result = repository.reportLostTag(serialNumber)
+            result.fold(
+                onSuccess = {
+                    _reportLostTag.value = SubmitResultFold.Success(Unit)
+                },
+                onFailure = { error ->
+                    _reportLostTag.value = SubmitResultFold.Failure(error)
+                }
+
+            )
+        }
     }
 
     sealed class SubmitResultMyTags<out T> {

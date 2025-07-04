@@ -165,7 +165,7 @@
     <string name="card_successfully_deleted">Kartica uspešno obrisana</string>
     <string name="card_not_deleted">Kartica nije obrisana</string>
     <string name="tags_with_serial_not_found">Tag sa ovim serijskim brojom nisu nadjena</string>
-    <string name="reported_lost_tag_successfully">Успешно сте пријавили изгубљен таг.</string>
+    <string name="reported_lost_tag_successfully">Uspešno ste prijavili izgubljen tag.</string>
     <string name="blocked_lost_tag">Blokiran - Izgubljen tag</string>
     <string name="object_of_complaint">Predmet prigovora:</string>
     <string name="subject_date">Datum predmeta:</string>

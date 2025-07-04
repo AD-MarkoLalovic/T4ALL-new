@@ -14,26 +14,31 @@ import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlin.getValue
 import androidx.core.graphics.drawable.toDrawable
 
-class LostTagDialog : DialogFragment {
+class LostTagDialog : DialogFragment() {
 
     private var _binding: DialogLostTagBinding? = null
     private val binding: DialogLostTagBinding get() = _binding!!
 
-    private lateinit var title: String
-    private lateinit var subtitle: String
-    private lateinit var onButtonClickInLostTag: OnButtonClickInLostTag
+    private var onButtonClick: (() -> Unit)? = null
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
-    constructor() : super()
+    companion object {
+        private const val ARG_TITLE = "ARG_TITLE"
+        private const val ARG_SUBTITLE = "ARG_SUBTITLE"
 
-    constructor(
-        title: String,
-        subtitle: String,
-        onButtonClickInLostTag: OnButtonClickInLostTag
-    ) : super() {
-        this.title = title
-        this.subtitle = subtitle
-        this.onButtonClickInLostTag = onButtonClickInLostTag
+        fun newInstance(
+            title: String,
+            subtitle: String,
+            onButtonClick: () -> Unit
+        ): LostTagDialog {
+            val dialog = LostTagDialog()
+            dialog.arguments = Bundle().apply {
+                putString(ARG_TITLE, title)
+                putString(ARG_SUBTITLE, subtitle)
+            }
+            dialog.onButtonClick = onButtonClick
+            return dialog
+        }
     }
 
     override fun onCreateView(
@@ -50,6 +55,9 @@ class LostTagDialog : DialogFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val title = requireArguments().getString(ARG_TITLE).orEmpty()
+        val subtitle = requireArguments().getString(ARG_SUBTITLE).orEmpty()
+
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
             franchiseModel?.franchisePrimaryColor?.let { color ->
                 binding.buttonConfirmLostTag.backgroundTintList = ColorStateList.valueOf(color)
@@ -60,19 +68,13 @@ class LostTagDialog : DialogFragment {
         binding.subtitleLostTag.text = subtitle
 
         binding.buttonConfirmLostTag.setOnClickListener {
-
-            onButtonClickInLostTag.onClickConfirmed()
+            onButtonClick?.invoke()
             dismiss()
         }
 
         binding.bttCancelLostTag.setOnClickListener {
             dismiss()
         }
-
-    }
-
-    interface OnButtonClickInLostTag {
-        fun onClickConfirmed()
 
     }
 

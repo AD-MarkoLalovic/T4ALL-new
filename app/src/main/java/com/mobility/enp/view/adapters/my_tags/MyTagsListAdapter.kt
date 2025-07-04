@@ -11,7 +11,9 @@ import com.mobility.enp.databinding.ItemMyTagsBinding
 import com.mobility.enp.view.ui_models.my_tags.TagStatusUiModel
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 
-class MyTagsListAdapter :
+class MyTagsListAdapter(
+    private val onLostClicked: (String) -> Unit
+) :
     RecyclerView.Adapter<MyTagsListAdapter.MyTagViewHolder>() {
 
     private val tags = mutableListOf<TagUiModel>()
@@ -59,6 +61,10 @@ class MyTagsListAdapter :
             }
 
             setStatusAppearance(selectedCountry, tag.statuses)
+
+            binding.buttonLostTag.setOnClickListener {
+                onLostClicked(tag.serialNumber)
+            }
 
         }
 
