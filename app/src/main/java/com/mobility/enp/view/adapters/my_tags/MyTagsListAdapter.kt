@@ -12,7 +12,8 @@ import com.mobility.enp.view.ui_models.my_tags.TagStatusUiModel
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 
 class MyTagsListAdapter(
-    private val onLostClicked: (String) -> Unit
+    private val onLostClicked: (String) -> Unit,
+    private val onFoundClicked: (String) -> Unit
 ) :
     RecyclerView.Adapter<MyTagsListAdapter.MyTagViewHolder>() {
 
@@ -64,6 +65,10 @@ class MyTagsListAdapter(
 
             binding.buttonLostTag.setOnClickListener {
                 onLostClicked(tag.serialNumber)
+            }
+
+            binding.buttonFoundTag.setOnClickListener {
+                onFoundClicked(tag.serialNumber)
             }
 
         }

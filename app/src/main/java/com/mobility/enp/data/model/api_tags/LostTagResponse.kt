@@ -15,7 +15,3 @@ data class Dat(
     val message: String
 )
 
-@Keep
-data class Errors(
-    val serialNumber: List<String>
-)

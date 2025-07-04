@@ -12,8 +12,6 @@ import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
-import com.mobility.enp.data.model.api_tags.LostTagResponse
-import com.mobility.enp.data.model.api_tags.TagsResponse
 import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
@@ -242,24 +240,6 @@ object Repository {
                     Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
                 }
             })
-        }
-    }
-
-    suspend fun postFoundLostTag(
-        token: String,
-        serialNumber: String,
-        errorBody: MutableLiveData<ErrorBody>,
-        data: MutableLiveData<LostTagResponse>
-    ) {
-        try {
-            val response = apiService(token).postFoundTag(serialNumber)
-            if (response.isSuccessful) {
-                data.postValue(response.body())
-            } else {
-                errorBody.postValue(getMessageFromErrorBody(response))
-            }
-        } catch (e: Exception) {
-            Log.d(TAG, "getUserCountries: ${e.cause} \n ${e.message}")
         }
     }
 
