@@ -13,7 +13,6 @@ import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.api_tags.LostTagResponse
-import com.mobility.enp.data.model.api_tags.PostLostTag
 import com.mobility.enp.data.model.api_tags.TagsResponse
 import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.util.SharedPreferencesHelper
@@ -121,59 +120,6 @@ object Repository {
 
             })
 
-    }
-
-    suspend fun getTags(
-        token: String?,
-        page: Int,
-        perPage: Int,
-        errorBody: MutableLiveData<ErrorBody>,
-        data: MutableLiveData<TagsResponse>,
-        application: Context
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        val call = apiService(token).getUserTags(page.toString(), perPage.toString(), lang)
-        call.enqueue(object : Callback<TagsResponse> {
-            override fun onResponse(call: Call<TagsResponse>, response: Response<TagsResponse>) {
-                if (response.isSuccessful) {
-                    data.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<TagsResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-        })
-
-    }
-
-    fun postLostTag(
-        token: String?,
-        body: PostLostTag,
-        errorBody: MutableLiveData<ErrorBody>,
-        mutableLiveData: MutableLiveData<LostTagResponse>
-    ) {
-        val call = apiService(token).postLostTag(body.serialNumber)
-        call.enqueue(object : Callback<LostTagResponse> {
-            override fun onResponse(
-                call: Call<LostTagResponse>, response: Response<LostTagResponse>
-            ) {
-                if (response.isSuccessful) {
-                    mutableLiveData.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<LostTagResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
     }
 
     suspend fun getBillsDetails(

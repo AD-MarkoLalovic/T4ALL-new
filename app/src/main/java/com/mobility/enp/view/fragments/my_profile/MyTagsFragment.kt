@@ -19,10 +19,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentTagsBinding
 import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.my_tags.MyTagsListAdapter
 import com.mobility.enp.view.adapters.my_tags.MyTagsStatusFilterAdapter
+import com.mobility.enp.view.dialogs.LostTagDialog
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyTagsViewModel
@@ -135,6 +137,21 @@ class MyTagsFragment : Fragment() {
                 }
             }
         }
+
+        collectLatestLifecycleFlow(viewModel.reportLostTag) { result ->
+            when (result) {
+                is SubmitResultFold.Failure -> {
+                    handleError(result.error)
+                }
+
+                SubmitResultFold.Idle -> {}
+                SubmitResultFold.Loading -> binding.progbar.visibility = View.VISIBLE
+                is SubmitResultFold.Success<*> -> {
+                    showToastMessage(getString(R.string.reported_lost_tag_successfully))
+                    viewModel.fetchMyTags()
+                }
+            }
+        }
     }
 
     private fun updateTagsList(tags: List<TagUiModel>) {
@@ -171,7 +188,17 @@ class MyTagsFragment : Fragment() {
     }
 
     private fun setAdapters() {
-        tagsListAdapter = MyTagsListAdapter()
+        tagsListAdapter = MyTagsListAdapter(
+            onLostClicked = { serialNumber ->
+                LostTagDialog.newInstance(
+                    title = requireContext().getString(R.string.confirm_lost_tag),
+                    subtitle = requireContext().getString(R.string.dialog_lost_tag_message),
+                    onButtonClick = {
+                        viewModel.reportLostTag(serialNumber)
+                    }
+                ).show(parentFragmentManager, "LostTagDialog")
+            }
+        )
         binding.cyclerContent.adapter = tagsListAdapter
 
         tagsListAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
