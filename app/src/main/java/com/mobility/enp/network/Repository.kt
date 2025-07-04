@@ -12,8 +12,6 @@ import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
-import com.mobility.enp.data.model.api_tags.LostTagResponse
-import com.mobility.enp.data.model.api_tags.TagsResponse
 import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
