@@ -122,34 +122,6 @@ object Repository {
 
     }
 
-    suspend fun getTags(
-        token: String?,
-        page: Int,
-        perPage: Int,
-        errorBody: MutableLiveData<ErrorBody>,
-        data: MutableLiveData<TagsResponse>,
-        application: Context
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        val call = apiService(token).getUserTags(page.toString(), perPage.toString(), lang)
-        call.enqueue(object : Callback<TagsResponse> {
-            override fun onResponse(call: Call<TagsResponse>, response: Response<TagsResponse>) {
-                if (response.isSuccessful) {
-                    data.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<TagsResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-        })
-
-    }
-
     suspend fun getBillsDetails(
         data: MonthlyBillsAdapter.FetchBillsDetails,
         token: String?,

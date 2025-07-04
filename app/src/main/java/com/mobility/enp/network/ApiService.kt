@@ -14,7 +14,6 @@ import com.mobility.enp.data.model.api_my_profile.refund_request.response.Refund
 import com.mobility.enp.data.model.api_my_profile.refund_request.tags.response.TagsResponseRefundRequest
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_tags.LostTagResponse
-import com.mobility.enp.data.model.api_tags.TagsResponse
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
@@ -152,13 +151,6 @@ interface ApiService {
         @Query("perPage") perPage: Int,
         @Query(value = "lang") language: String
     ): Call<BillsDetailsResponse>
-
-    @GET("/api/v1/tags")
-    fun getUserTags(
-        @Query("page") page: String,
-        @Query("perPage") perPage: String,
-        @Query(value = "lang") language: String
-    ): Call<TagsResponse>
 
     @GET("/api/v2/tags")
     suspend fun getUserTagsNew(
