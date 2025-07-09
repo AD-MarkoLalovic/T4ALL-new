@@ -31,7 +31,7 @@ class MyTagsListAdapter(
         fun bind(tag: TagUiModel) = with(binding) {
             txTagSerialNumber.text = tag.serialNumber
 
-            franchiserTag?.text =
+            franchiserTag.text =
                 tag.franchiser ?: root.context.getString(R.string.jp_putevi_srbije)
 
             txtCategoryVal.text = tag.category.toString()
@@ -100,7 +100,7 @@ class MyTagsListAdapter(
 
                     else -> null
                 }
-                flagIcon?.setImageResource(flagResId ?: 0)
+                flagIcon.setImageResource(flagResId ?: 0)
 
                 // Pronalazak statusa
                 val status = statuses.firstOrNull {
@@ -108,20 +108,20 @@ class MyTagsListAdapter(
                 }
 
                 // Postavljanje teksta
-                countryStatus?.text = status?.statusText ?: ""
+                countryStatus.text = status?.statusText ?: ""
 
                 // Stilizacija na osnovu statusValue
                 val statusValue = status?.statusValue
                 val context = root.context
                 when (statusValue) {
                     "5", "6", "8", "10", "12" -> {
-                        countryStatus?.setTextColor(
+                        countryStatus.setTextColor(
                             ContextCompat.getColor(
                                 context,
                                 R.color.figmaColorObjection
                             )
                         )
-                        tagsStatus?.backgroundTintList = ColorStateList.valueOf(
+                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 context,
                                 R.color.figmaToolHistoryUnpaidBackground
@@ -130,13 +130,13 @@ class MyTagsListAdapter(
                     }
 
                     "4" -> {
-                        countryStatus?.setTextColor(
+                        countryStatus.setTextColor(
                             ContextCompat.getColor(
                                 context,
                                 R.color.tag_active
                             )
                         )
-                        tagsStatus?.backgroundTintList = ColorStateList.valueOf(
+                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 context,
                                 R.color.figmaToolHistoryPaidBackground
@@ -145,13 +145,13 @@ class MyTagsListAdapter(
                     }
 
                     "9" -> {
-                        countryStatus?.setTextColor(
+                        countryStatus.setTextColor(
                             ContextCompat.getColor(
                                 context,
                                 R.color.dark_orange
                             )
                         )
-                        tagsStatus?.backgroundTintList = ColorStateList.valueOf(
+                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 context,
                                 R.color.soft_peach
@@ -160,13 +160,13 @@ class MyTagsListAdapter(
                     }
 
                     "1", "11" -> {
-                        countryStatus?.setTextColor(
+                        countryStatus.setTextColor(
                             ContextCompat.getColor(
                                 context,
                                 R.color.primary_light_dark
                             )
                         )
-                        tagsStatus?.backgroundTintList = ColorStateList.valueOf(
+                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 context,
                                 R.color.primary_light_light
@@ -175,7 +175,7 @@ class MyTagsListAdapter(
                     }
 
                     "13" -> {
-                        tagsStatus?.background = ContextCompat.getDrawable(
+                        tagsStatus.background = ContextCompat.getDrawable(
                             context,
                             R.drawable.border_tag_state_deactivated
                         )
@@ -183,13 +183,13 @@ class MyTagsListAdapter(
                     }
 
                     else -> {
-                        countryStatus?.setTextColor(
+                        countryStatus.setTextColor(
                             ContextCompat.getColor(
                                 context,
                                 android.R.color.transparent
                             )
                         )
-                        tagsStatus?.backgroundTintList = ColorStateList.valueOf(
+                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 context,
                                 android.R.color.transparent

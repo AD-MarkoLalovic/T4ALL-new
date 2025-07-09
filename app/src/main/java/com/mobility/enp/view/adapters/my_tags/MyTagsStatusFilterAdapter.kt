@@ -46,7 +46,7 @@ class MyTagsStatusFilterAdapter (
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): MyTagsStatusFilterAdapter.StatusTagViewHolder {
+    ): StatusTagViewHolder {
         return StatusTagViewHolder(
             ItemTagStatusBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -57,7 +57,7 @@ class MyTagsStatusFilterAdapter (
     }
 
     override fun onBindViewHolder(
-        holder: MyTagsStatusFilterAdapter.StatusTagViewHolder,
+        holder: StatusTagViewHolder,
         position: Int
     ) {
         val status = getItem(position)

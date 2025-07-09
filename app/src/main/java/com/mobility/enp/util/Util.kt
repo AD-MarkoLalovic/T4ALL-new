@@ -416,4 +416,8 @@ object Util {
         return franchise
     }
 
+    fun Context.isTablet(): Boolean {
+        return resources.configuration.smallestScreenWidthDp >= 600
+    }
+
 }

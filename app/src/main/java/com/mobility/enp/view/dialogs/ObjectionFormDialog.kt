@@ -22,6 +22,7 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.databinding.DialogObjectionFormBinding
 import com.mobility.enp.util.SharedPreferencesHelper
+import com.mobility.enp.util.Util.isTablet
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.launch
@@ -43,7 +44,6 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = DialogObjectionFormBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -245,8 +245,14 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
 
     override fun onStart() {
         super.onStart()
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         isCancelable = false
-        setDimensionsPercent(95, 80)
+
+        if (requireContext().isTablet()) {
+            setDimensionsPercent(95)
+        } else {
+            setDimensionsPercent(95, 80)
+        }
     }
 
     override fun onDestroyView() {

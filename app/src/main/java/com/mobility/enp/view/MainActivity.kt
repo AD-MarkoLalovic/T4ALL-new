@@ -216,9 +216,9 @@ class MainActivity : AppCompatActivity() {
             "sr", "cnr" -> Locale("sr", "RS")
             else -> Locale(userLanguage)
         }
-
-        val config = Configuration()
         Locale.setDefault(locale)
+
+        val config = Configuration(newBase.resources.configuration)
         config.setLocale(locale)
 
         val localizedContext = newBase.createConfigurationContext(config)
