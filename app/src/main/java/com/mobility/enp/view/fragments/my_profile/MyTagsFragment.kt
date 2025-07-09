@@ -20,7 +20,6 @@ import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentTagsBinding
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResultFold
-import com.mobility.enp.util.Util
 import com.mobility.enp.util.Util.isTablet
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
