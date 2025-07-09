@@ -47,7 +47,7 @@
     <string name="bank" translatable="true">Банка</string>
     <string name="send" translatable="true">Пошаљи </string>
     <string name="registration_text" translatable="true">Регистрација ЕНП/ТАГ уређаја СРБИЈА</string>
-    <string name="tags_registration_hint" translatable="true">\nМолимо вас да унесете регистарску ознаку.
+    <string name="tags_registration_hint" translatable="true">Молимо вас да унесете регистарску ознаку.
         \nВерификациони код је регистрација.\nСва поља су обавезна</string>
     <string name="serial_number" translatable="true">Серијски број</string>
     <string name="verification_code" translatable="true">Верификациони код</string>

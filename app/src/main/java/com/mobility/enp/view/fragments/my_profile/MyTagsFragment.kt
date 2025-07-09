@@ -20,6 +20,8 @@ import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentTagsBinding
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResultFold
+import com.mobility.enp.util.Util
+import com.mobility.enp.util.Util.isTablet
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.my_tags.MyTagsListAdapter
@@ -163,10 +165,10 @@ class MyTagsFragment : Fragment() {
 
     private fun updateTagsList(tags: List<TagUiModel>) {
         if (tags.isEmpty()) {
-            binding.textNoFilteredTags?.visibility = View.VISIBLE
+            binding.textNoFilteredTags.visibility = View.VISIBLE
             binding.cyclerContent.visibility = View.GONE
         } else {
-            binding.textNoFilteredTags?.visibility = View.GONE
+            binding.textNoFilteredTags.visibility = View.GONE
             binding.cyclerContent.visibility = View.VISIBLE
         }
 
@@ -234,7 +236,7 @@ class MyTagsFragment : Fragment() {
             tagsListAdapter.selectedCountry = selectedCountry
             viewModel.setCountryFilter(selectedCountry)
         }
-        binding.rvAllowedCountries?.adapter = allowedCountriesAdapter
+        binding.rvAllowedCountries.adapter = allowedCountriesAdapter
 
     }
 
@@ -340,18 +342,20 @@ class MyTagsFragment : Fragment() {
     }
 
     fun updateRecyclerViewHeight(recyclerView: RecyclerView) {
+        if (requireContext().isTablet()) return
+
         val adapter = recyclerView.adapter ?: return
 
         val params = recyclerView.layoutParams
-        if (adapter.itemCount == 1) {
-            params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        params.height = if (adapter.itemCount == 1) {
+            ViewGroup.LayoutParams.WRAP_CONTENT
         } else {
-            params.height = resources.getDimension(R.dimen.dimens_500dp).toInt()
+            resources.getDimension(R.dimen.dimens_500dp).toInt()
         }
 
         recyclerView.layoutParams = params
-
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

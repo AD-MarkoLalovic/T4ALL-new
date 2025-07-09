@@ -10,6 +10,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.mobility.enp.databinding.SerbianTagInCroatiaDialogBinding
+import com.mobility.enp.util.Util.isTablet
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
 
@@ -59,7 +60,12 @@ class SerbianTagInCroatiaDialog : DialogFragment() {
     override fun onStart() {
         super.onStart()
         dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
-        setDimensionsPercent(95, 80)
+        if (requireContext().isTablet()) {
+            setDimensionsPercent(95)
+        } else {
+            setDimensionsPercent(95, 80)
+        }
+
     }
 
     override fun onDestroyView() {
