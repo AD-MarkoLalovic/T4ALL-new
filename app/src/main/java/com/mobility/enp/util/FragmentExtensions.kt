@@ -1,7 +1,9 @@
 package com.mobility.enp.util
 
 import android.content.res.Resources
+import android.os.Message
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -27,4 +29,8 @@ fun DialogFragment.setDimensionsPercent(widthPercent: Int, heightPercent: Int? =
     } ?: ViewGroup.LayoutParams.WRAP_CONTENT
 
     dialog?.window?.setLayout(width, height)
+}
+
+fun Fragment.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {
+    Toast.makeText(requireContext(), message, duration).show()
 }

@@ -4,7 +4,7 @@ import androidx.annotation.Keep
 
 @Keep
 data class ChangePasswordRequest(
-    val oldPassword: String?,
-    val newPassword: String?,
-    val newPasswordConfirmation: String?
+    val oldPassword: String,
+    val newPassword: String,
+    val newPasswordConfirmation: String
 )

@@ -24,39 +24,38 @@ class HomeRepository(
      * Home Screen Data GET
      */
     suspend fun getHomeDataFromServer(): Result<HomeWithDetails> {
-        if (!isNetworkAvailable()) {
-            return Result.failure(NetworkError.NoConnection)
-        }
+        if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
 
-        val userToken = getUserToken()
-        userToken?.let { token ->
-            try {
-                val lang = getLangKey()
-                val remoteData = apiService(token).geHomeScreenData(lang)
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
 
-                if (remoteData.isSuccessful) {
-                    remoteData.body()?.let { responseBody ->
-                        saveAllHomeData(responseBody.data)
+        return try {
+            val lang = getLangKey()
+            val remoteData = apiService(userToken).geHomeScreenData(lang)
 
-                        val localData = getLocalAllHomeData()
-                        return if (localData != null) {
-                            Result.success(localData)
-                        } else {
-                            Result.failure(NetworkError.ServerError)
-                        }
-                    } ?: return Result.failure(NetworkError.ServerError)
-                } else {
-                    remoteData.errorBody()?.let { errorBody ->
-                        val apiErrorResponse = parseErrorResponse(remoteData.code(), errorBody)
-                        return Result.failure(NetworkError.ApiError(apiErrorResponse))
-                    } ?: return Result.failure(NetworkError.ServerError)
+            if (remoteData.isSuccessful) {
+                remoteData.body()?.let { responseBody ->
+                    saveAllHomeData(responseBody.data)
+
+                    val localData = getLocalAllHomeData()
+                    if (localData != null) {
+                        Result.success(localData)
+                    } else {
+                        Result.failure(NetworkError.ServerError)
+                    }
+                } ?: Result.failure(NetworkError.ServerError)
+            } else {
+                val errorResponse = remoteData.errorBody()?.let {
+                    parseErrorResponse(errorCode = remoteData.code(), errorBody = it)
                 }
-            } catch (e: Exception) {
-                return Result.failure(NetworkError.ServerError)
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
             }
+        } catch (e: Exception) {
+            Log.d("getHomeDataFromServer", "HomeRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
         }
 
-        return Result.failure(NetworkError.ServerError)
+
     }
 
 

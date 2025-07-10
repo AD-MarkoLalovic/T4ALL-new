@@ -150,7 +150,6 @@
     <string name="password_error_message">Yeni şifre alanı en az 8 karakter içermelidir.</string>
     <string name="enter_old_password_message">Eski şifre alanı zorunludur.</string>
     <string name="incorrect_old_password_message">Eski şifre yanlış girildi.</string>
-    <string name="password_change_failed">Parola değişikliği başarısız oldu.</string>
     <string name="repeat_the_new_password">Yeni şifreyi tekrarlayın.</string>
     <string name="enter_support_message">Mesaj metnini girin.</string>
     <string name="create_account">T4A hesabı oluştur</string>

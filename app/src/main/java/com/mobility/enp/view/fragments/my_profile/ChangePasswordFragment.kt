@@ -6,37 +6,39 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
+import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.databinding.FragmentChangePasswordBinding
+import com.mobility.enp.util.FragmentResultKeys
+import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SubmitResultFold
+import com.mobility.enp.util.collectLatestLifecycleFlow
+import com.mobility.enp.util.toast
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.ChangePasswordDialog
 import com.mobility.enp.viewmodel.ChangePasswordViewModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 class ChangePasswordFragment : Fragment() {
 
-    private lateinit var binding: FragmentChangePasswordBinding
-    private val viewModel: ChangePasswordViewModel by viewModels()
-    private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
+    private var _binding: FragmentChangePasswordBinding? = null
+    private val binding: FragmentChangePasswordBinding get() = _binding!!
+    private val viewModel: ChangePasswordViewModel by viewModels { ChangePasswordViewModel.factory }
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
+
+    private var currentPassword: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentChangePasswordBinding.inflate(inflater, container, false)
+        _binding = FragmentChangePasswordBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -44,6 +46,7 @@ class ChangePasswordFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setObservers()
+        setupLostTagDialogResultListener()
         setFranchiser()
 
         binding.btChangePassword.setOnClickListener {
@@ -143,7 +146,6 @@ class ChangePasswordFragment : Fragment() {
             }
         }
 
-        observeChangePasswordStatus()
 
     }
 
@@ -183,122 +185,136 @@ class ChangePasswordFragment : Fragment() {
     }
 
     private fun setObservers() {
-        errorBody = MutableLiveData()
-        errorBody.observe(viewLifecycleOwner) { errorBody ->
-            context?.let { context ->
-                Toast.makeText(
-                    context,
-                    errorBody.errorBody,
-                    Toast.LENGTH_SHORT
-                ).show()
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
-                }
-            }
+        collectLatestLifecycleFlow(viewModel.userPass) { pass ->
+            currentPassword = pass
         }
 
-        viewModel.checkNetChangePass.observe(viewLifecycleOwner) { hasInternet ->
-            if (hasInternet != null && !hasInternet) {
-
-                val bundle = Bundle().apply {
-                    putString(getString(R.string.title), getString(R.string.no_connection_title))
-                    putString(
-                        getString(R.string.subtitle),
-                        getString(R.string.please_connect_to_the_internet)
-                    )
-                }
-
-                findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
-
-                val binding = (activity as MainActivity).binding
-                MainActivity.showSnackMessage(getString(R.string.checking_for_connection), binding)
-
+        collectLatestLifecycleFlow(viewModel.changePassword) { resultFold ->
+            when (resultFold) {
+                is SubmitResultFold.Failure -> handleError(resultFold.error)
+                SubmitResultFold.Idle -> {}
+                SubmitResultFold.Loading -> binding.progressBarChangePass.visibility = View.VISIBLE
+                is SubmitResultFold.Success<*> -> showDialogChangePassword()
             }
         }
     }
 
     private fun validatePassword(oldPassword: String, newPassword: String, repeatPassword: String) {
-        lifecycleScope.launch {
-            // Provera da li je polje za staru lozinku prazno ili neispravno
-            if (oldPassword.isEmpty() || !isOldPasswordCorrect(oldPassword)) {
-                binding.enterOldPasswordLayout.apply {
-                    error = if (oldPassword.isEmpty()) {
-                        getString(R.string.enter_old_password_message)
-                    } else {
-                        getString(R.string.incorrect_old_password_message)
-                    }
-                    isErrorEnabled = true // Podesavanje errorEnabled na true
-                    errorIconDrawable = null // Uklanjanje ikone greške
+        // Provera da li je polje za staru lozinku prazno ili neispravno
+        if (oldPassword.isEmpty() || !isOldPasswordCorrect(oldPassword)) {
+            binding.enterOldPasswordLayout.apply {
+                error = if (oldPassword.isEmpty()) {
+                    getString(R.string.enter_old_password_message)
+                } else {
+                    getString(R.string.incorrect_old_password_message)
+                }
+                isErrorEnabled = true // Podesavanje errorEnabled na true
+                errorIconDrawable = null // Uklanjanje ikone greške
+            }
+        } else {
+            binding.enterOldPasswordLayout.error = null
+            binding.enterOldPasswordLayout.isErrorEnabled = false // Ponistenje errora
+
+            // Provera dužine nove lozinke
+            if (newPassword.length < 8) {
+                binding.enterNewPasswordLayout.apply {
+                    error = getString(R.string.password_error_message)
+                    isErrorEnabled = true
+                    errorIconDrawable = null
                 }
             } else {
-                binding.enterOldPasswordLayout.error = null
-                binding.enterOldPasswordLayout.isErrorEnabled = false // Ponistenje errora
+                binding.enterNewPasswordLayout.error = null
+                binding.enterNewPasswordLayout.isErrorEnabled = false
 
-                // Provera dužine nove lozinke
-                if (newPassword.length < 8) {
-                    binding.enterNewPasswordLayout.apply {
-                        error = getString(R.string.password_error_message)
+                // Provera da li se ponovljena lozinka podudara sa novom lozinkom ili da li je prazno polje
+                if (newPassword != repeatPassword || repeatPassword.isEmpty()) {
+                    binding.enterRepeatPasswordLayout.apply {
+                        error = if (repeatPassword.isEmpty()) {
+                            getString(R.string.repeat_the_new_password)
+                        } else {
+                            getString(R.string.password_repeat_error_message)
+                        }
                         isErrorEnabled = true
                         errorIconDrawable = null
                     }
                 } else {
-                    binding.enterNewPasswordLayout.error = null
-                    binding.enterNewPasswordLayout.isErrorEnabled = false
+                    binding.enterRepeatPasswordLayout.error = null
+                    binding.enterRepeatPasswordLayout.isErrorEnabled =
+                        false // Ponistenje errora
 
-                    // Provera da li se ponovljena lozinka podudara sa novom lozinkom ili da li je prazno polje
-                    if (newPassword != repeatPassword || repeatPassword.isEmpty()) {
-                        binding.enterRepeatPasswordLayout.apply {
-                            error = if (repeatPassword.isEmpty()) {
-                                getString(R.string.repeat_the_new_password)
-                            } else {
-                                getString(R.string.password_repeat_error_message)
-                            }
-                            isErrorEnabled = true
-                            errorIconDrawable = null
-                        }
-                    } else {
-                        binding.enterRepeatPasswordLayout.error = null
-                        binding.enterRepeatPasswordLayout.isErrorEnabled =
-                            false // Ponistenje errora
-
-                        // Ako je sve validno, promeni lozinku
-                        viewModel.changePassword(oldPassword, newPassword, errorBody)
-                    }
+                    // Ako je sve validno, promeni lozinku
+                    viewModel.passwordChange(
+                        ChangePasswordRequest(
+                            oldPassword = oldPassword,
+                            newPassword = newPassword,
+                            newPasswordConfirmation = repeatPassword
+                        )
+                    )
                 }
             }
         }
+
     }
 
-    private suspend fun isOldPasswordCorrect(oldPassword: String): Boolean {
-        return lifecycleScope.async {
-            val currentPassword = viewModel.getUserPassword()
-            currentPassword == oldPassword
-        }.await()
+    private fun isOldPasswordCorrect(oldPassword: String): Boolean {
+        return currentPassword == oldPassword
     }
 
-    private fun observeChangePasswordStatus() {
-        viewModel.changePasswordStatusLiveData.observe(viewLifecycleOwner) { success ->
-            if (success) {
-                showDialogChangePassword()
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.password_change_failed),
-                    Toast.LENGTH_SHORT
-                ).show()
+    private fun handleError(error: Throwable) {
+        when (error) {
+            is NetworkError.ServerError -> {
+                binding.progressBarChangePass.visibility = View.GONE
+                toast(getString(R.string.server_error_msg))
+            }
+
+            is NetworkError.ApiError -> {
+                binding.progressBarChangePass.visibility = View.GONE
+                toast(
+                    error.errorResponse.message ?: getString(R.string.server_error_msg)
+                )
+            }
+
+            is NetworkError.NoConnection -> {
+                noInternetMessage()
+            }
+        }
+        viewModel.resetChangePasswordState()
+    }
+
+    private fun noInternetMessage() {
+        val bundle = Bundle().apply {
+            putString(getString(R.string.title), getString(R.string.no_connection_title))
+            putString(
+                getString(R.string.subtitle),
+                getString(R.string.please_connect_to_the_internet)
+            )
+        }
+
+        findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
+    }
+
+    private fun setupLostTagDialogResultListener() {
+        childFragmentManager.setFragmentResultListener(
+            FragmentResultKeys.CHANGE_PASS_RESULT,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val confirmed = bundle.getBoolean(FragmentResultKeys.CHANGE_PASS_CONFIRMED, false)
+            if (confirmed) {
+                MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
             }
         }
     }
 
     private fun showDialogChangePassword() {
-        val dialog = ChangePasswordDialog(
-            getString(R.string.password_changed),
-            getString(R.string.you_will_be_asked_to_login_again)
-        ) {
-            MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
-        }
-        dialog.isCancelable = false
-        dialog.show(childFragmentManager, "ChangePasswordFragment")
+        ChangePasswordDialog.newInstance(
+            title = requireContext().getString(R.string.password_changed),
+            subtitle = requireContext().getString(R.string.you_will_be_asked_to_login_again)
+        ).show(childFragmentManager, "ChangePasswordFragment")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 
