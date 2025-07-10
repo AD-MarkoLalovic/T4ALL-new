@@ -217,7 +217,8 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
         val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
 
         return try {
-            val response = apiService(userToken).putChangePassword(body)
+            val lang = getLangKey()
+            val response = apiService(userToken).putChangePassword(body, lang)
             if (response.isSuccessful) {
                 Result.success(Unit)
             } else {

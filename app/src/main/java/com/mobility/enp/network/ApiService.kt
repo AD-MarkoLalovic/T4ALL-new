@@ -84,7 +84,8 @@ interface ApiService {
 
     @PUT("/api/v1/personal-data/change-password")
     suspend fun putChangePassword(
-        @Body request: ChangePasswordRequest
+        @Body request: ChangePasswordRequest,
+        @Query("lang") language: String
     ): Response<Unit>
 
     @POST("/api/v1/contact")
