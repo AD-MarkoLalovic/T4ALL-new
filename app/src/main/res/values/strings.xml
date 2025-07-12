@@ -164,7 +164,6 @@
     <string name="password_error_message" translatable="true">Поље нова лозинка мора садржати најмање 8 карактера.</string>
     <string name="enter_old_password_message" translatable="true">Поље стара лозинка је обавезно.</string>
     <string name="incorrect_old_password_message" translatable="true">Погрешно унета стара шифра.</string>
-    <string name="password_change_failed" translatable="true">Промена лозинке није успела.</string>
     <string name="repeat_the_new_password" translatable="true">Поново унесите нову лозинку</string>
     <string name="enter_support_message" translatable="true">Унесите текст поруке.</string>
     <string name="create_account" translatable="true">Креирајте Т4А налог</string>

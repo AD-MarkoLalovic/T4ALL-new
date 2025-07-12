@@ -83,7 +83,10 @@ interface ApiService {
     ): Response<BasicInfoResponse>
 
     @PUT("/api/v1/personal-data/change-password")
-    fun changePassword(@Body request: ChangePasswordRequest): Call<Unit>
+    suspend fun putChangePassword(
+        @Body request: ChangePasswordRequest,
+        @Query("lang") language: String
+    ): Response<Unit>
 
     @POST("/api/v1/contact")
     suspend fun sendContactMessage(@Body request: SupportRequest): Response<Unit>

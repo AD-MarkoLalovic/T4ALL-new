@@ -148,7 +148,6 @@
     <string name="password_error_message">Polje nova lozinka mora sadržati najmanje 8 karaktera.</string>
     <string name="enter_old_password_message">Polje stara lozinka je obavezno.</string>
     <string name="incorrect_old_password_message">Pogrešno uneta stara šifra.</string>
-    <string name="password_change_failed">Promena lozinke nije uspela.</string>
     <string name="repeat_the_new_password">Ponovo unesite novu lozinku</string>
     <string name="enter_support_message">Unesite tekst poruke.</string>
     <string name="create_account">Kreirajte T4A nalog</string>

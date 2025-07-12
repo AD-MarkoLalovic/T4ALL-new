@@ -1,71 +1,55 @@
 package com.mobility.enp.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import com.mobility.enp.data.model.ErrorBody
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
-import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
-import com.mobility.enp.data.room.database.DRoom
-import com.mobility.enp.network.Repository
-import kotlinx.coroutines.Dispatchers
+import com.mobility.enp.data.repository.AuthRepository
+import com.mobility.enp.util.SubmitResultFold
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class ChangePasswordViewModel(application: Application) : AndroidViewModel(application) {
+class ChangePasswordViewModel(private val repo: AuthRepository) : ViewModel() {
 
-    private val database: DRoom = DRoom.getRoomInstance(application)
+    val userPass: Flow<String> = repo.userPassword()
 
-    private val _changePasswordStatusLiveData = MutableLiveData<Boolean>()
-    val changePasswordStatusLiveData: LiveData<Boolean> get() = _changePasswordStatusLiveData
+    private val _changePassword = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
+    val changePassword: StateFlow<SubmitResultFold<Unit>> get() = _changePassword
 
-    private val _checkNetChangePass = MutableLiveData<Boolean>()
-    val checkNetChangePass: LiveData<Boolean> get() = _checkNetChangePass
+    fun passwordChange(body: ChangePasswordRequest) {
+        viewModelScope.launch {
+            _changePassword.value = SubmitResultFold.Loading
 
-
-    private suspend fun getUserToken(): UserLoginResponseRoomTable {
-        return withContext(Dispatchers.IO) {
-            database.loginDao().fetchAllowedUsers()
+            val result = repo.passwordChange(body)
+            result.fold(
+                onSuccess = {
+                    _changePassword.value = SubmitResultFold.Success(Unit)
+                },
+                onFailure = { error ->
+                    _changePassword.value = SubmitResultFold.Failure(error)
+                }
+            )
         }
     }
 
-    private fun isNetworkAvailable(): Boolean {
-        return Repository.isNetworkAvailable(getApplication())
+    fun resetChangePasswordState() {
+        _changePassword.value = SubmitResultFold.Idle
     }
 
-    suspend fun getUserPassword(): String? {
-        val user = database.loginDao().fetchAllowedUsers()
-        return user.password
-    }
-
-    fun changePassword(
-        oldPassword: String,
-        newPassword: String,
-        errorBody: MutableLiveData<ErrorBody>
-    ) {
-        if (isNetworkAvailable()) {
-            viewModelScope.launch {
-                if (oldPassword.isBlank() || newPassword.isBlank()) {
-                    _changePasswordStatusLiveData.postValue(false)
-                } else {
-                    val userToken = getUserToken()
-                    userToken.let { token ->
-                        val changePasswordRequest = ChangePasswordRequest(
-                            oldPassword, newPassword, newPassword
-                        )
-                        Repository.changePassword(
-                            changePasswordRequest,
-                            token.accessToken,
-                            errorBody
-                        )
-                        _changePasswordStatusLiveData.postValue(true)
-                    }
-                }
+    companion object {
+        val factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val myRepo = (this[APPLICATION_KEY] as MyApplication).repositoryAuth
+                ChangePasswordViewModel(repo = myRepo)
             }
-        } else {
-            _checkNetChangePass.postValue(false)
         }
     }
 
