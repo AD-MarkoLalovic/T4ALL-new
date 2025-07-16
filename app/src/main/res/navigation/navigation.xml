@@ -289,9 +289,6 @@
         android:name="com.mobility.enp.view.fragments.my_profile.MyInvoicesFragment"
         android:label="InvoicesFragment"
         tools:layout="@layout/fragment_bills">
-        <action
-            android:id="@+id/action_invoicesFragment_to_profileFragment2"
-            app:destination="@id/profileFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_invoicesFragment"

@@ -43,6 +43,114 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewHeader" />
 
+
+            <TextView
+                android:id="@+id/valueTitle"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimens_100dp"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:text="@string/country"
+                android:textColor="@color/primary_dark_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/firstLineMyInvoices" />
+
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimens_100dp"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:scrollbars="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/valueTitle">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/buttonAll"
+                        style="@style/CaptionMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimens_40dp"
+                        android:layout_marginEnd="@dimen/dimens_6dp"
+                        android:background="@drawable/currency_selector"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/dimens_16dp"
+                        android:text="@string/all"
+                        android:textColor="@color/text_color_selector"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+
+                    <TextView
+                        android:id="@+id/buttonSerbia"
+                        style="@style/CaptionMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimens_40dp"
+                        android:layout_marginEnd="@dimen/dimens_6dp"
+                        android:background="@drawable/currency_selector"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/dimens_16dp"
+                        android:text="@string/serbia"
+                        android:textColor="@color/text_color_selector"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+
+                    <TextView
+                        android:id="@+id/buttonMontenegro"
+                        style="@style/CaptionMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimens_40dp"
+                        android:layout_marginEnd="@dimen/dimens_6dp"
+                        android:background="@drawable/currency_selector"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/dimens_16dp"
+                        android:text="@string/montenegro"
+                        android:textColor="@color/text_color_selector"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+
+                    <TextView
+                        android:id="@+id/northMacedonia"
+                        style="@style/CaptionMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimens_40dp"
+                        android:layout_marginEnd="@dimen/dimens_6dp"
+                        android:background="@drawable/currency_selector"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/dimens_16dp"
+                        android:text="@string/north_macedonian_passage"
+                        android:textColor="@color/text_color_selector"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+
+                    <TextView
+                        android:id="@+id/buttonCroatia"
+                        style="@style/CaptionMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimens_40dp"
+                        android:layout_marginEnd="@dimen/dimens_6dp"
+                        android:background="@drawable/currency_selector"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/dimens_16dp"
+                        android:text="@string/croatia"
+                        android:textColor="@color/text_color_selector"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
             <TextView
                 android:id="@+id/textNoBills"
                 style="@style/Paragraph"
@@ -52,9 +160,9 @@
                 android:layout_marginTop="@dimen/dimens_32dp"
                 android:text="@string/previous_invoices"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewHeader" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewBills"
@@ -66,7 +174,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/firstLineMyInvoices"
+                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
                 tools:itemCount="3"
                 tools:listitem="@layout/item_bill"
                 tools:visibility="visible" />
