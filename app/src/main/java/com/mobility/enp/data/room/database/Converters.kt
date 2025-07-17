@@ -83,7 +83,8 @@ class Converters {
 
     @TypeConverter
     fun fromData(data: Data?): String? {
-        return gson.toJson(data)
+        val safeCopy = data?.deepImmutableCopy()
+        return gson.toJson(safeCopy)
     }
 
     @TypeConverter

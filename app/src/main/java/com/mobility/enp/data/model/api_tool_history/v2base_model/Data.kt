@@ -22,4 +22,14 @@ data class Data(
     @SerializedName("tags")
     @Expose
     val tags: List<Tag?>?
-)
+){
+    fun deepImmutableCopy(): Data {
+        return Data(
+            allowedCountries = allowedCountries?.map { it },
+            customer = customer,
+            records = records,
+            sumTags = sumTags.map { it },
+            tags = tags?.map { it }
+        )
+    }
+}
