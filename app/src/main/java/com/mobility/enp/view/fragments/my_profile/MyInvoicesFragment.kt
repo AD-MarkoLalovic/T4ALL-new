@@ -232,6 +232,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             adapterMonthly.resetAdapter()
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("")
+            viewModel.fetchMonthlyInvoices(errorBody)
         }
 
         binding.buttonCroatia.setOnClickListener {
