@@ -91,8 +91,35 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             }
         }
 
-        viewModel.monthlyInvoicesList.observe(viewLifecycleOwner) { months ->
-            months?.let {
+        viewModel.monthlyInvoicesList.observe(viewLifecycleOwner) { response ->
+            response?.let {
+
+                response.data?.allowedCountries?.let { allowedCountry ->
+                    binding.buttonAll.visibility = View.VISIBLE
+
+                    setSelectedButton(binding.buttonAll)
+
+                    for (country in allowedCountry) {
+                        when (country.value) {
+                            "RS" -> {
+                                binding.buttonSerbia.visibility = View.VISIBLE
+                            }
+
+                            "ME" -> {
+                                binding.buttonMontenegro.visibility = View.VISIBLE
+                            }
+
+                            "MK" -> {
+                                binding.northMacedonia.visibility = View.VISIBLE
+                            }
+
+                            "HR" -> {
+                                binding.buttonCroatia.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+                }
+
                 if (it.data!!.months.isEmpty()) {
                     binding.textNoBills.visibility = View.VISIBLE
                 } else {
@@ -199,6 +226,27 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                 binding.invoicesLoadingView.visibility = View.GONE
             }
         }
+
+        binding.buttonAll.setOnClickListener {
+            setSelectedButton(it)
+        }
+
+        binding.buttonCroatia.setOnClickListener {
+            setSelectedButton(it)
+        }
+
+        binding.northMacedonia.setOnClickListener {
+            setSelectedButton(it)
+        }
+
+        binding.buttonMontenegro.setOnClickListener {
+            setSelectedButton(it)
+        }
+
+        binding.buttonSerbia.setOnClickListener {
+            setSelectedButton(it)
+        }
+
     }
 
     private fun setObserversError() {
@@ -258,6 +306,17 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             )
             generalMessageDialog.show(fragmentManager, "permDialog")
         }
+    }
+
+
+    private fun setSelectedButton(selectedButton: View) = with(binding) {
+        northMacedonia.isSelected = false
+        buttonSerbia.isSelected = false
+        buttonMontenegro.isSelected = false
+        buttonCroatia.isSelected = false
+        buttonAll.isSelected = false
+
+        selectedButton.isSelected = true
     }
 
     override fun onMontYearSelected(montYear: String) {
