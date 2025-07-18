@@ -69,7 +69,9 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
         setObserversError()
 
+        setSelectedButton(binding.buttonAll)
         viewModel.fetchMonthlyInvoices(errorBody)
+
         setListener()
 
         observeViewModel()
@@ -97,8 +99,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
                 response.data?.allowedCountries?.let { allowedCountry ->
                     binding.buttonAll.visibility = View.VISIBLE
-
-                    setSelectedButton(binding.buttonAll)
 
                     for (country in allowedCountry) {
                         when (country.value) {
@@ -239,6 +239,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             adapterMonthly.resetAdapter()
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("HR")
+            viewModel.fetchMonthlyInvoices(errorBody)
         }
 
         binding.northMacedonia.setOnClickListener {
@@ -246,6 +247,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             adapterMonthly.resetAdapter()
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("MK")
+            viewModel.fetchMonthlyInvoices(errorBody)
         }
 
         binding.buttonMontenegro.setOnClickListener {
@@ -253,6 +255,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             adapterMonthly.resetAdapter()
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("ME")
+            viewModel.fetchMonthlyInvoices(errorBody)
         }
 
         binding.buttonSerbia.setOnClickListener {
@@ -260,6 +263,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             adapterMonthly.resetAdapter()
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("RS")
+            viewModel.fetchMonthlyInvoices(errorBody)
         }
 
     }
