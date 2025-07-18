@@ -424,14 +424,6 @@
             app:argType="string"
             app:nullable="true" />
     </dialog>
-    <dialog
-        android:id="@+id/loginNotificationDialog"
-        android:name="com.mobility.enp.view.dialogs.LoginNotificationDialog"
-        android:label="LoginNotificationDialog"
-        tools:layout="@layout/login_notification_dialog" />
-    <action
-        android:id="@+id/action_global_loginNotificationDialog"
-        app:destination="@id/loginNotificationDialog" />
     <fragment
         android:id="@+id/hacPortalWebFragment"
         android:name="com.mobility.enp.view.fragments.card.HacPortalWebFragment"

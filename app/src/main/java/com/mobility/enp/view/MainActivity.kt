@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "destination: $destination")
             when (destination.id) {
 
-                R.id.homeFragment,R.id.loginNotificationDialog -> {
+                R.id.homeFragment -> {
                     binding.toolbarShared.root.visibility = View.VISIBLE
                     binding.toolbarShared.backArrow.visibility = View.GONE
                     binding.toolbarShared.iconLogo.visibility = View.VISIBLE
