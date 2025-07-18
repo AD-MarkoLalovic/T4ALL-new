@@ -63,8 +63,6 @@ class LoginFragment : Fragment() {
 
         passwordVisibility()
 
-        franchiseViewModel.setEnableLoginDialog(true)
-
         if (BuildConfig.DEBUG) {
             binding.editEmail.setText(BuildConfig.TEST_USERNAME)
             binding.editPassword.setText(BuildConfig.TEST_PASSWORD)

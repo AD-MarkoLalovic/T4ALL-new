@@ -343,8 +343,6 @@
     <string name="field_bank_account_isrequired">Το πεδίο του τραπεζικού λογαριασμού πρέπει να περιέχει 13 ψηφία.</string>
     <string name="access_denied">Πρόσβαση απορρίφθηκε</string>
     <string name="only_t4all_users_access_denied">Αυτή τη στιγμή δεν είναι δυνατή η σύνδεση λογαριασμών που δεν είναι T4All. Παρακαλούμε χρησιμοποιήστε την ΙΣΤΟΣΕΛΙΔΑ.</string>
-    <string name="notification_login_title">Ειδοποίηση</string>
-    <string name="notification_login_subtitle">Η εφαρμογή βρίσκεται επί του παρόντος σε φάση ανάπτυξης beta. Ορισμένες λειτουργίες είναι ακόμη υπό κατασκευή. Ευχαριστούμε για την κατανόησή σας!</string>
     <string name="tag_registration_instruction_hr">Για να καταχωρήσετε ετικέτες στην Κροατία, πρέπει να επιλέξετε ποιες ετικέτες θέλετε να καταχωρήσετε και να κάνετε κλικ στο κουμπί «Εγγραφή».</string>
     <string name="notes_serbian_tag_in_croatia">"Σημειώσεις για τη χρήση της σερβικής συσκευής TAG στη Δημοκρατία της Κροατίας  "</string>
     <string name="activation_successful_enp_tag_device">"Έχετε ενεργοποιήσει επιτυχώς τη συσκευή ENP/TAG."</string>
