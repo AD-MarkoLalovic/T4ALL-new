@@ -244,7 +244,6 @@
     <string name="tag_device_payment_method_north_macedonia">Wenn Sie Ihr TAG-Gerät auf den Straßen Nordmazedoniens verwenden möchten, fügen Sie bitte eine gültige Zahlungskarte hinzu.</string>
     <string name="tag_device_payment_method_serbia">Wenn Sie Ihr TAG-Gerät auf den Straßen Serbiens verwenden möchten, fügen Sie bitte eine gültige Zahlungskarte hinzu.</string>
     <string name="tag_device_payment_method_montenegro">Wenn Sie Ihr TAG-Gerät auf den Straßen Montenegros verwenden möchten, fügen Sie bitte eine gültige Zahlungskarte hinzu.</string>
-    <string name="previous_invoices">Ihre Rechnungen werden hier angezeigt.</string>
     <string name="text_no_refund_tags">Sie haben keine Tags, für die Sie eine Rückerstattung beantragen können.</string>
     <string name="text_no_my_tags">Sie haben derzeit keine hinzugefügten Tags. Bitte fügen Sie Ihren Tag hinzu</string>
     <string name="no_invoices">Ihre Rechnungen werden hier angezeigt.</string>
