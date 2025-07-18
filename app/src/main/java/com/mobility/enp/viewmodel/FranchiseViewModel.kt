@@ -30,17 +30,7 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
         _openSuccessDialog.value = bool
     }
 
-    private var enableLoginDialog: Boolean = false
-
     private var isDialogShown = false
-
-    fun getLoginDialogEnabled(): Boolean? {
-        return enableLoginDialog
-    }
-
-    fun setEnableLoginDialog(enabled: Boolean) {
-        this.enableLoginDialog = enabled
-    }
 
     fun getDialogStatus(): Boolean {
         return isDialogShown

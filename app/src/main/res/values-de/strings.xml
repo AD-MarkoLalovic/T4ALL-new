@@ -364,8 +364,6 @@
     <string name="field_bank_account_isrequired">Das Feld „Girokonto“ muss 13 Ziffern enthalten.</string>
     <string name="access_denied">Zugriff verweigert</string>
     <string name="only_t4all_users_access_denied">Es ist derzeit nicht möglich, sich mit Konten anzumelden, die nicht T4All sind. Bitte verwenden Sie das WEB-Portal</string>
-    <string name="notification_login_title">Benachrichtigung</string>
-    <string name="notification_login_subtitle">Die App befindet sich derzeit in der Beta-Entwicklungsphase. Einige Funktionen werden noch entwickelt. Vielen Dank für Ihr Verständnis!</string>
     <string name="tag_registration_instruction_hr">Um Tags in Kroatien zu registrieren, wählen Sie bitte die Tags aus, die Sie registrieren möchten, und klicken Sie auf die Schaltfläche „Registrierung“.</string>
     <string name="notes_serbian_tag_in_croatia">"Hinweise zur Verwendung des serbischen TAG-Geräts in der Republik Kroatien  "</string>
     <string name="activation_successful_enp_tag_device">"Sie haben Ihr ENP/TAG-Gerät erfolgreich aktiviert.  "</string>
