@@ -3,7 +3,7 @@ package com.mobility.enp.network
 import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
-import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
+import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
@@ -277,5 +277,5 @@ interface ApiService {
     suspend fun getBanks(): Response<BanksResponse>
 
     @PUT("api/v1/personal-data/change-language")
-    suspend fun changeLanguage(@Query("language") languageCode: String) : Response<Unit>
+    suspend fun changeLanguage(@Query("language") languageCode: String): Response<Unit>
 }

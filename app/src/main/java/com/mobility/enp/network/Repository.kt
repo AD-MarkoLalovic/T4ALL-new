@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
-import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
+import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.util.SharedPreferencesHelper

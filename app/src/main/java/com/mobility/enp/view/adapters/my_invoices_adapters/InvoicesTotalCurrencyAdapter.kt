@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_my_invoices.TotalCurrency
+import com.mobility.enp.data.model.api_my_invoices.refactor.TotalCurrency
 import com.mobility.enp.databinding.ItemTotalCurrencyBinding
 
 class InvoicesTotalCurrencyAdapter(val totalCurrency: List<TotalCurrency> = arrayListOf()) :

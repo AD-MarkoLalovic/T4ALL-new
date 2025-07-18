@@ -25,7 +25,7 @@ import androidx.lifecycle.viewModelScope
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
-import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
+import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.pdf_table.PdfTable
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.network.Repository
@@ -322,7 +322,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
         val data: ByteArray? = fetchPdf().data
         if (data != null && data.isNotEmpty()) {
             _savedPdfData.postValue(data)
-        }else{
+        } else {
             _openDialogForNoPdfData.postValue(true)
         }
     }

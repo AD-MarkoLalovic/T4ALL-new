@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
-import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
+import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.databinding.FragmentBillsBinding
 import com.mobility.enp.network.Repository
 import com.mobility.enp.view.MainActivity
@@ -93,14 +93,14 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
         viewModel.monthlyInvoicesList.observe(viewLifecycleOwner) { months ->
             months?.let {
-                if (it.data.months.isEmpty()) {
+                if (it.data!!.months.isEmpty()) {
                     binding.textNoBills.visibility = View.VISIBLE
                 } else {
                     binding.textNoBills.visibility = View.GONE
                     binding.recyclerViewBills.visibility = View.VISIBLE
                     binding.recyclerViewBills.adapter =
                         MonthlyBillsAdapter(
-                            it.data,
+                            it.data!!,
                             viewModel,
                             errorBody,
                             this,
