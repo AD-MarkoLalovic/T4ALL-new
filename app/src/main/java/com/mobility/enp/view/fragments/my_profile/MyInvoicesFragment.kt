@@ -39,6 +39,8 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: MyInvoicesViewModel by viewModels()
 
+    private lateinit var adapterMonthly: MonthlyBillsAdapter
+
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     private var month = ""
     private val requestPermissionLauncher =
@@ -125,7 +127,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                 } else {
                     binding.textNoBills.visibility = View.GONE
                     binding.recyclerViewBills.visibility = View.VISIBLE
-                    binding.recyclerViewBills.adapter =
+                    adapterMonthly =
                         MonthlyBillsAdapter(
                             it.data!!,
                             viewModel,
@@ -135,6 +137,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                             this,
                             franchiseViewModel.franchiseModel.value
                         )
+                    binding.recyclerViewBills.adapter = adapterMonthly
                     binding.recyclerViewBills.layoutManager = LinearLayoutManager(requireContext())
 
                     viewModel.setLocalData(it)
@@ -229,22 +232,32 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
         binding.buttonAll.setOnClickListener {
             setSelectedButton(it)
+            adapterMonthly.resetAdapter()
+            binding.invoicesLoadingView.visibility = View.VISIBLE
         }
 
         binding.buttonCroatia.setOnClickListener {
             setSelectedButton(it)
+            adapterMonthly.resetAdapter()
+            binding.invoicesLoadingView.visibility = View.VISIBLE
         }
 
         binding.northMacedonia.setOnClickListener {
             setSelectedButton(it)
+            adapterMonthly.resetAdapter()
+            binding.invoicesLoadingView.visibility = View.VISIBLE
         }
 
         binding.buttonMontenegro.setOnClickListener {
             setSelectedButton(it)
+            adapterMonthly.resetAdapter()
+            binding.invoicesLoadingView.visibility = View.VISIBLE
         }
 
         binding.buttonSerbia.setOnClickListener {
             setSelectedButton(it)
+            adapterMonthly.resetAdapter()
+            binding.invoicesLoadingView.visibility = View.VISIBLE
         }
 
     }

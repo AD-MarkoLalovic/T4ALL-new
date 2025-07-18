@@ -36,9 +36,17 @@ class MonthlyBillsAdapter(
     private val spinnerInt = spinnerInterface
 
     private var currentPage = data.currentPage
-    private val lastPage = data.lastPage
+    private var lastPage = data.lastPage
 
     private val itemStateMap: MutableMap<Int, Boolean> = mutableMapOf()
+
+    fun resetAdapter() {
+        monthlyBillsArray.clear()
+        currentPage = 0
+        lastPage = 0
+        itemStateMap.clear()
+        notifyDataSetChanged()
+    }
 
     companion object {
         const val TAG = "MonthlyBillsAdapter"
