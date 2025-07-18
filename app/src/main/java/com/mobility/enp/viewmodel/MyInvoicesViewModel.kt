@@ -66,6 +66,12 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
     private val _checkNetMyInvoices = MutableLiveData<Boolean>()
     val checkNetMyInvoices: LiveData<Boolean> get() = _checkNetMyInvoices
 
+    private var selectedCountry: String = ""
+
+    fun setSelectedCountry(country: String) {
+        this.selectedCountry = country
+    }
+
     private suspend fun getUserToken(): String? {
         return withContext(Dispatchers.IO) {
             database.loginDao().fetchAllowedUsers().accessToken

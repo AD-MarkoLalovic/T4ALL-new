@@ -124,27 +124,11 @@ interface ApiService {
     ): Response<V2HistoryTagResponse>
 
     @GET("/api/v1/bills")
-    fun getInvoicesIndex(
-        @Query(value = "lang") language: String,
-        @Query("perPage") perPage: Int // items per page
-    ): Call<MyInvoicesResponse>
-
-    @GET("/api/v1/bills")
     fun getInvoicesIndexPaging(
         @Query(value = "lang") language: String,
         @Query("page") page: Int, // current page
         @Query("perPage") perPage: Int // items per page
     ): Call<MyInvoicesResponse>
-
-    @GET("/api/v1/bills/month")
-    fun getBillsByMonth(
-        @Query("filter[yearMonth]") yearMonth: String,
-        @Query("filter[currency]") currency: String,
-        //@Query("page") page: Int, // current page
-        @Query("perPage") perPage: Int,
-        @Query(value = "lang") language: String
-
-    ): Call<BillsDetailsResponse>
 
     @GET("/api/v1/bills/month")
     fun getBillsByMonthPaging(
@@ -161,7 +145,6 @@ interface ApiService {
         @Query("perPage") perPage: Int,
         @Query("lang") language: String
     ): Response<MyTagsResponse>
-
 
     //endregion
 
