@@ -235,7 +235,6 @@
     <string name="tag_device_payment_method_montenegro">Ако сакате да го користите вашиот уред TAG на патиштата во Црна Гора, ве молиме додадете валидна платежна картичка</string>
     <string name="text_no_refund_tags">Немате тагови за кои можете да поднесете барање за враќање на средствата.</string>
     <string name="text_no_my_tags">Моментално немате додадено тагови. Ве молиме додадете го вашиот таг.</string>
-    <string name="no_invoices">Вашите фактури ќе бидат прикажани тука.</string>
     <string name="no_tool_history">Вашите поминувања ќе бидат прикажани тука.</string>
     <string name="enter_old_password">Внесете стара лозинка</string>
     <string name="enter_new_password">Внесете нова лозинка</string>
@@ -375,5 +374,6 @@
     <string name="facebook_text">Следете нè на Фејсбук и дознајте први сè за придобивките од T4A системот.</string>
     <string name="instagram_text">Следете нè на Инстаграм и дознајте први сè за придобивките од T4A системот.</string>
     <string name="jp_putevi_srbije">ЈП Путеви Србије</string>
+    <string name="no_invoices">Нема сметки за избраната земја</string>
 
 </resources>
