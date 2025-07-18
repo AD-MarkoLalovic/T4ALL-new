@@ -45,7 +45,7 @@ object Repository {
 
         val lang = getUserLanguage(application)
 
-        apiService(token).getInvoicesIndexPaging(lang, 1, perPage)
+        apiService(token).getInvoicesPerMonth(lang, 1, perPage)
             .enqueue(object : Callback<MyInvoicesResponse> {
 
                 override fun onResponse(
@@ -77,7 +77,7 @@ object Repository {
 
         val lang = getUserLanguage(application)
 
-        apiService(token).getInvoicesIndexPaging(lang, page, perPage)
+        apiService(token).getInvoicesPerMonth(lang, page, perPage)
             .enqueue(object : Callback<MyInvoicesResponse> {
 
                 override fun onResponse(
@@ -109,7 +109,7 @@ object Repository {
 
         val lang = getUserLanguage(application)
 
-        apiService(token).getBillsByMonthPaging(yearMonth, currency, 1, perPage, lang)
+        apiService(token).getInvoicesMonthlyDetails(yearMonth, currency, 1, perPage, lang)
             .enqueue(object : Callback<BillsDetailsResponse> {
 
                 override fun onResponse(
@@ -143,7 +143,7 @@ object Repository {
 
         val lang = getUserLanguage(application)
 
-        apiService(token).getBillsByMonthPaging(yearMonth, currency, page, perPage, lang)
+        apiService(token).getInvoicesMonthlyDetails(yearMonth, currency, page, perPage, lang)
             .enqueue(object : Callback<BillsDetailsResponse> {
 
                 override fun onResponse(
