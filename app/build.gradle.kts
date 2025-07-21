@@ -28,12 +28,12 @@ android {
     }
 
     namespace = "com.mobility.enp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.mobility.enp"
         minSdk = 29
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 167
         versionName = "1.4.4"
 
