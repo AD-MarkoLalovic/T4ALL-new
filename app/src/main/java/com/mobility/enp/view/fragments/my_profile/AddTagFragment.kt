@@ -9,13 +9,16 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentAddTagBinding
+import com.mobility.enp.util.FragmentResultKeys
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
+import com.mobility.enp.view.dialogs.ChangePasswordDialog
 import com.mobility.enp.viewmodel.AddTagViewModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
 
@@ -106,10 +109,33 @@ class AddTagFragment : Fragment() {
                 }
 
                 is SubmitResultFold.Success<*> -> {
-
+                    setupChangePasswordResultListener()
+                    showSuccessAddedTagDialog()
                 }
             }
         }
+    }
+
+    private fun setupChangePasswordResultListener() {
+        childFragmentManager.setFragmentResultListener(
+            FragmentResultKeys.SUCCESS_ADDED_TAG,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val confirmed = bundle.getBoolean(FragmentResultKeys.ADDED_TAG_CONFIRMED, false)
+            if (confirmed) {
+                val action = AddTagFragmentDirections.actionAddTagFragmentToMyTagsFragment2()
+                findNavController().navigate(action)
+            }
+        }
+    }
+
+    private fun showSuccessAddedTagDialog() {
+        ChangePasswordDialog.newInstance(
+            title = requireContext().getString(R.string.add_tag),
+            subtitle = requireContext().getString(R.string.tag_added_successfully),
+            resultKey = FragmentResultKeys.SUCCESS_ADDED_TAG,
+            resultValueKey = FragmentResultKeys.ADDED_TAG_CONFIRMED
+        ).show(childFragmentManager, "SuccessAddedTagDialog")
     }
 
     private fun handleError(error: Throwable) {

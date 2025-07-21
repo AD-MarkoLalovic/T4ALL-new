@@ -308,7 +308,9 @@ class ChangePasswordFragment : Fragment() {
     private fun showDialogChangePassword() {
         ChangePasswordDialog.newInstance(
             title = requireContext().getString(R.string.password_changed),
-            subtitle = requireContext().getString(R.string.you_will_be_asked_to_login_again)
+            subtitle = requireContext().getString(R.string.you_will_be_asked_to_login_again),
+            resultKey = FragmentResultKeys.CHANGE_PASS_RESULT,
+            resultValueKey = FragmentResultKeys.CHANGE_PASS_CONFIRMED
         ).show(childFragmentManager, "ChangePasswordFragment")
     }
 
