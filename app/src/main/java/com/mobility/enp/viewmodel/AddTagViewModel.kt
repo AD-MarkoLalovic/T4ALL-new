@@ -37,6 +37,11 @@ class AddTagViewModel(private var repository: ProfileRepository) : ViewModel() {
         }
     }
 
+    fun resetAddTagState() {
+        _addTag.value = SubmitResultFold.Idle
+    }
+
+
     companion object {
         val factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

@@ -111,6 +111,8 @@ class AddTagFragment : Fragment() {
                 is SubmitResultFold.Success<*> -> {
                     setupChangePasswordResultListener()
                     showSuccessAddedTagDialog()
+                    clearInputFields()
+                    viewModel.resetAddTagState()
                 }
             }
         }
@@ -166,6 +168,12 @@ class AddTagFragment : Fragment() {
         val mainBinding = (activity as MainActivity).binding
         MainActivity.showSnackMessage(getString(R.string.no_internet), mainBinding)
     }
+
+    private fun clearInputFields() {
+        binding.serialNumber.setText("")
+        binding.verificationCode.setText("")
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
