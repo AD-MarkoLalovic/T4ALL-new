@@ -85,7 +85,6 @@ class MyTagsFragment : Fragment() {
                 is MyTagsViewModel.SubmitResultMyTags.Success -> {
                     binding.progbar.visibility = View.GONE
                     binding.buttonAddTag.isEnabled = true
-
                     val myTags = result.data
 
                     if (myTags.isEmpty()) {
@@ -124,7 +123,6 @@ class MyTagsFragment : Fragment() {
                         }
 
                         tagsListAdapter.setItems(myTags)
-
                     }
                 }
 
@@ -179,6 +177,7 @@ class MyTagsFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!binding.editSerialNumberMyTags.isFocused) return
                 val query = s.toString().lowercase()
                 statusFilterAdapter.clearStatus()
                 allowedCountriesAdapter.clearStatus()
@@ -354,7 +353,6 @@ class MyTagsFragment : Fragment() {
 
         recyclerView.layoutParams = params
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
