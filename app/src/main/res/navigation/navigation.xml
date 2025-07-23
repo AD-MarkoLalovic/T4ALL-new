@@ -216,7 +216,9 @@
         tools:layout="@layout/fragment_add_tag">
         <action
             android:id="@+id/action_addTagFragment_to_myTagsFragment2"
-            app:destination="@id/myTagsFragment2" />
+            app:destination="@id/myTagsFragment2"
+            app:popUpTo="@id/myTagsFragment2"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <action
