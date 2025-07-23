@@ -1,25 +1,56 @@
 package com.mobility.enp.data.model.api_my_profile.my_tags.response
 
+import com.google.gson.annotations.SerializedName
+
 data class Franchiser(
     val address: String?,
-    val brand_name: String?,
+
+    @SerializedName("brand_name")
+    val brandName: String?,
+
     val city: String?,
-    val commission_interest: Int?,
-    val company_name: String?,
-    val contract_number: String?,
+
+    @SerializedName("commission_interest")
+    val commissionInterest: Int?,
+
+    @SerializedName("company_name")
+    val companyName: String?,
+
+    @SerializedName("contract_number")
+    val contractNumber: String?,
+
     val country: String?,
-    val created_at: String?,
-    val display_name: String?,
+
+    @SerializedName("created_at")
+    val createdAt: String?,
+
+    @SerializedName("display_name")
+    val displayName: String?,
+
     val email: String?,
     val id: String?,
     val jbkjs: Any?,
-    val logo_path: Any?,
+
+    @SerializedName("logo_path")
+    val logoPath: Any?,
+
     val mb: String?,
-    val parent_id: Any?,
+
+    @SerializedName("parent_id")
+    val parentId: Any?,
+
     val phone: String?,
     val pib: String?,
-    val postal_code: Any?,
-    val status_active: Int?,
-    val updated_at: String?,
-    val user_id: Int?
+
+    @SerializedName("postal_code")
+    val postalCode: Any?,
+
+    @SerializedName("status_active")
+    val statusActive: Int?,
+
+    @SerializedName("updated_at")
+    val updatedAt: String?,
+
+    @SerializedName("user_id")
+    val userId: Int?
 )

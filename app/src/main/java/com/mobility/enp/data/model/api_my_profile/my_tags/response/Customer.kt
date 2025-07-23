@@ -1,33 +1,76 @@
 package com.mobility.enp.data.model.api_my_profile.my_tags.response
 
+import com.google.gson.annotations.SerializedName
+
 data class Customer(
     val address: String?,
     val city: String?,
-    val company_name: String?,
-    val company_name_invoice: Any?,
-    val contract_number: Int?,
+
+    @SerializedName("company_name")
+    val companyName: String?,
+
+    @SerializedName("company_name_invoice")
+    val companyNameInvoice: Any?,
+
+    @SerializedName("contract_number")
+    val contractNumber: Long?,
+
     val country: String?,
-    val created_at: String?,
-    val created_by_api_user: Any?,
-    val cro_id: String?,
-    val customer_type: Int?,
+
+    @SerializedName("created_at")
+    val createdAt: String?,
+
+    @SerializedName("created_by_api_user")
+    val createdByApiUser: Any?,
+
+    @SerializedName("cro_id")
+    val croId: String?,
+
+    @SerializedName("customer_type")
+    val customerType: Int?,
+
     val discount: Int?,
-    val discount_secondary: Int?,
-    val display_name: String?,
+
+    @SerializedName("discount_secondary")
+    val discountSecondary: Int?,
+
+    @SerializedName("display_name")
+    val displayName: String?,
+
     val email: String?,
-    val first_name: String?,
-    val franchiser_id: Any?,
+
+    @SerializedName("first_name")
+    val firstName: String?,
+
+    @SerializedName("franchiser_id")
+    val franchiserId: Any?,
+
     val id: Int?,
+
     val jbkjs: Any?,
     val jmbg: Any?,
-    val last_name: String?,
+
+    @SerializedName("last_name")
+    val lastName: String?,
+
     val mb: String?,
     val note: Any?,
-    val payment_channel: Int?,
+
+    @SerializedName("payment_channel")
+    val paymentChannel: Int?,
+
     val phone: String?,
     val pib: String?,
-    val postal_code: String?,
-    val tag_country: String?,
-    val updated_at: String?,
-    val user_id: Int?
+
+    @SerializedName("postal_code")
+    val postalCode: String?,
+
+    @SerializedName("tag_country")
+    val tagCountry: String?,
+
+    @SerializedName("updated_at")
+    val updatedAt: String?,
+
+    @SerializedName("user_id")
+    val userId: Int?
 )
