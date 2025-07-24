@@ -3,7 +3,7 @@ package com.mobility.enp.data.room.api_related_daos
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
-import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
+import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 
 @Dao
 interface MyInvoicesDao {

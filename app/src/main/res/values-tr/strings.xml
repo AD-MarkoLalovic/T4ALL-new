@@ -236,10 +236,8 @@
     <string name="tag_device_payment_method_north_macedonia">TAG cihazınızı Kuzey Makedonya\'daki yollarda kullanmak istiyorsanız, lütfen geçerli bir ödeme kartı ekleyin.</string>
     <string name="tag_device_payment_method_serbia">TAG cihazınızı Sırbistan\'daki yollarda kullanmak istiyorsanız, lütfen geçerli bir ödeme kartı ekleyin.</string>
     <string name="tag_device_payment_method_montenegro">TAG cihazınızı Karadağ\'daki yollarda kullanmak istiyorsanız, lütfen geçerli bir ödeme kartı ekleyin.</string>
-    <string name="previous_invoices">Faturalarınız burada gösterilecek.</string>
     <string name="text_no_refund_tags">İade talebinde bulunabileceğiniz etiketiniz yok.</string>
     <string name="text_no_my_tags">Şu anda eklenmiş etiketiniz yok. Lütfen etiketinizi ekleyin.</string>
-    <string name="no_invoices">Faturalarınız burada gösterilecek.</string>
     <string name="no_tool_history">Geçişleriniz burada gösterilecek.</string>
     <string name="enter_old_password">Eski şifreyi girin</string>
     <string name="enter_new_password">Yeni şifreyi girin</string>
@@ -378,4 +376,5 @@
     <string name="facebook_text">Bizi Facebook’ta takip edin ve T4A sisteminin avantajları hakkında tüm yenilikleri ilk siz öğrenin.</string>
     <string name="instagram_text">Bizi Instagram’da takip edin ve T4A sisteminin avantajları hakkında tüm yenilikleri ilk siz öğrenin.</string>
     <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
+    <string name="no_invoices">Seçilen ülke için fatura bulunmamaktadır</string>
 </resources>

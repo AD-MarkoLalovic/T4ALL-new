@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
-import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
+import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.util.SharedPreferencesHelper
@@ -40,12 +40,13 @@ object Repository {
         token: String?,
         errorBody: MutableLiveData<ErrorBody>,
         application: Application,
-        perPage: Int
+        perPage: Int,
+        selectedCountry: String
     ) {
 
         val lang = getUserLanguage(application)
 
-        apiService(token).getInvoicesIndex(lang, perPage)
+        apiService(token).getInvoicesPerMonth(lang, 1, perPage, selectedCountry)
             .enqueue(object : Callback<MyInvoicesResponse> {
 
                 override fun onResponse(
@@ -72,12 +73,13 @@ object Repository {
         errorBody: MutableLiveData<ErrorBody>,
         application: Application,
         page: Int,
-        perPage: Int
+        perPage: Int,
+        selectedCountry: String
     ) {
 
         val lang = getUserLanguage(application)
 
-        apiService(token).getInvoicesIndexPaging(lang, page, perPage)
+        apiService(token).getInvoicesPerMonth(lang, page, perPage, selectedCountry)
             .enqueue(object : Callback<MyInvoicesResponse> {
 
                 override fun onResponse(
@@ -104,12 +106,20 @@ object Repository {
         yearMonth: String,
         currency: String,
         perPage: Int,
-        errorBody: MutableLiveData<ErrorBody>, application: Context
+        errorBody: MutableLiveData<ErrorBody>, application: Context,
+        selectedCountry: String
     ) {
 
         val lang = getUserLanguage(application)
 
-        apiService(token).getBillsByMonth(yearMonth, currency, perPage, lang)
+        apiService(token).getInvoicesMonthlyDetails(
+            yearMonth,
+            currency,
+            1,
+            perPage,
+            lang,
+            selectedCountry
+        )
             .enqueue(object : Callback<BillsDetailsResponse> {
 
                 override fun onResponse(
@@ -138,12 +148,20 @@ object Repository {
         currency: String,
         page: Int,
         perPage: Int,
-        errorBody: MutableLiveData<ErrorBody>, application: Context
+        errorBody: MutableLiveData<ErrorBody>, application: Context,
+        selectedCountry: String
     ) {
 
         val lang = getUserLanguage(application)
 
-        apiService(token).getBillsByMonthPaging(yearMonth, currency, page, perPage, lang)
+        apiService(token).getInvoicesMonthlyDetails(
+            yearMonth,
+            currency,
+            page,
+            perPage,
+            lang,
+            selectedCountry
+        )
             .enqueue(object : Callback<BillsDetailsResponse> {
 
                 override fun onResponse(
