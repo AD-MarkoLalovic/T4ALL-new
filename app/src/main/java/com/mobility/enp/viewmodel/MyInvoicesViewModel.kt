@@ -25,7 +25,7 @@ import androidx.lifecycle.viewModelScope
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
-import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
+import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.pdf_table.PdfTable
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.network.Repository
@@ -66,6 +66,12 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
     private val _checkNetMyInvoices = MutableLiveData<Boolean>()
     val checkNetMyInvoices: LiveData<Boolean> get() = _checkNetMyInvoices
 
+    private var selectedCountry: String = ""
+
+    fun setSelectedCountry(country: String) {
+        this.selectedCountry = country
+    }
+
     private suspend fun getUserToken(): String? {
         return withContext(Dispatchers.IO) {
             database.loginDao().fetchAllowedUsers().accessToken
@@ -84,7 +90,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
                     val userToken = getUserToken()
                     userToken?.let { token ->
                         Repository.getInvoices(
-                            _monthlyInvoicesList, token, errorBody, getApplication(), perPage
+                            _monthlyInvoicesList, token, errorBody, getApplication(), perPage,selectedCountry
                         )
                     }
                 }
@@ -126,7 +132,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
                 val userToken = getUserToken()
                 userToken?.let { token ->
                     Repository.getInvoicesPaging(
-                        data, token, errorBody, getApplication(), nextPage, perPage
+                        data, token, errorBody, getApplication(), nextPage, perPage,selectedCountry
                     )
                 }
             }
@@ -146,7 +152,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
                 val userToken = getUserToken()
                 userToken?.let { token ->
                     Repository.getBillsDetails(
-                        data, token, yearMonth, currency, perPage, error, getApplication()
+                        data, token, yearMonth, currency, perPage, error, getApplication(),selectedCountry
                     )
                 }
             }
@@ -167,7 +173,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
                 val userToken = getUserToken()
                 userToken?.let { token ->
                     Repository.getBillsDetailsPaging(
-                        data, token, yearMonth, currency, page, perPage, error, getApplication()
+                        data, token, yearMonth, currency, page, perPage, error, getApplication(),selectedCountry
                     )
                 }
             }
@@ -322,7 +328,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
         val data: ByteArray? = fetchPdf().data
         if (data != null && data.isNotEmpty()) {
             _savedPdfData.postValue(data)
-        }else{
+        } else {
             _openDialogForNoPdfData.postValue(true)
         }
     }

@@ -5,7 +5,6 @@ import androidx.room.TypeConverters
 import com.google.gson.GsonBuilder
 import com.google.gson.Strictness
 import com.google.gson.reflect.TypeToken
-import com.mobility.enp.data.model.api_my_invoices.DataMonthly
 import com.mobility.enp.data.model.api_tool_history.listing.InvoiceData
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Data
 
@@ -52,7 +51,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromDataMonthlyBills(data: DataMonthly?): String? {
+    fun fromDataMonthlyBills(data: com.mobility.enp.data.model.api_my_invoices.refactor.Data?): String? {
         synchronized(this) {
             val safeData = data?.copy()
             return gson.toJson(safeData)
@@ -60,9 +59,12 @@ class Converters {
     }
 
     @TypeConverter
-    fun toDataMonthlyBills(jsonString: String?): DataMonthly? {
+    fun toDataMonthlyBills(jsonString: String?): com.mobility.enp.data.model.api_my_invoices.refactor.Data? {
         synchronized(this) {
-            return gson.fromJson(jsonString, DataMonthly::class.java)
+            return gson.fromJson(
+                jsonString,
+                com.mobility.enp.data.model.api_my_invoices.refactor.Data::class.java
+            )
         }
     }
 
@@ -83,7 +85,8 @@ class Converters {
 
     @TypeConverter
     fun fromData(data: Data?): String? {
-        return gson.toJson(data)
+        val safeCopy = data?.deepImmutableCopy()
+        return gson.toJson(safeCopy)
     }
 
     @TypeConverter

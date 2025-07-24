@@ -256,10 +256,8 @@
     <string name="tag_device_payment_method_north_macedonia">Уколико желите да Ваш ТАГ уређај користите на путевима у Северној Македонији, молимо Вас да додате валидну платну картицу.</string>
     <string name="tag_device_payment_method_serbia">Уколико желите да Ваш ТАГ уређај користите на путевима у Србији, молимо вас да додате важећу платну картицу.</string>
     <string name="tag_device_payment_method_montenegro">Уколико желите да Ваш ТАГ уређај користите на путевима у Црној Гори молимо Вас да додате валидну платну картицу</string>
-    <string name="previous_invoices">Ваше фактуре ће бити приказане овде.</string>
     <string name="text_no_refund_tags">Немате тагове за које можете да поднесете захтев за повраћај средстава.</string>
     <string name="text_no_my_tags">Тренутно немате додатих тагова. Молимо ваc додајте таг.</string>
-    <string name="no_invoices">Ваше фактуре ће бити приказане овде.</string>
     <string name="no_tool_history">Ваши проласци ће бити приказани овде.</string>
     <string name="enter_old_password">Унесите стару шифру</string>
     <string name="enter_new_password">Унесите нову шифру</string>
@@ -443,5 +441,6 @@
     <string name="facebook" translatable="false">Facebook</string>
     <string name="instagram" translatable="false">Instagram</string>
     <string name="jp_putevi_srbije">ЈП Путеви Србије</string>
+    <string name="no_invoices">Нема рачуна за изабрану земљу</string>
 
 </resources>

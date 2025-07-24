@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
-import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
+import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.databinding.FragmentBillsBinding
 import com.mobility.enp.network.Repository
 import com.mobility.enp.view.MainActivity
@@ -38,6 +38,8 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     private val binding: FragmentBillsBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: MyInvoicesViewModel by viewModels()
+
+    private lateinit var adapterMonthly: MonthlyBillsAdapter
 
     private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     private var month = ""
@@ -67,11 +69,14 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
         setObserversError()
 
+        setSelectedButton(binding.buttonAll)
+        setButtonsEnabled(true)
+
         viewModel.fetchMonthlyInvoices(errorBody)
+
         setListener()
 
         observeViewModel()
-
     }
 
     private fun observeViewModel() {
@@ -91,24 +96,52 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             }
         }
 
-        viewModel.monthlyInvoicesList.observe(viewLifecycleOwner) { months ->
-            months?.let {
-                if (it.data.months.isEmpty()) {
+        viewModel.monthlyInvoicesList.observe(viewLifecycleOwner) { response ->
+            response?.let {
+
+                response.data?.allowedCountries?.let { allowedCountry ->
+                    binding.buttonAll.visibility = View.VISIBLE
+
+                    for (country in allowedCountry) {
+                        when (country.value) {
+                            "RS" -> {
+                                binding.buttonSerbia.visibility = View.VISIBLE
+                            }
+
+                            "ME" -> {
+                                binding.buttonMontenegro.visibility = View.VISIBLE
+                            }
+
+                            "MK" -> {
+                                binding.northMacedonia.visibility = View.VISIBLE
+                            }
+
+                            "HR" -> {
+                                binding.buttonCroatia.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+                }
+
+                if (it.data!!.months.isEmpty()) {
                     binding.textNoBills.visibility = View.VISIBLE
+                    setButtonsEnabled(true)
                 } else {
                     binding.textNoBills.visibility = View.GONE
                     binding.recyclerViewBills.visibility = View.VISIBLE
-                    binding.recyclerViewBills.adapter =
-                        MonthlyBillsAdapter(
-                            it.data,
-                            viewModel,
-                            errorBody,
-                            this,
-                            this,
-                            this,
-                            franchiseViewModel.franchiseModel.value
-                        )
+                    adapterMonthly = MonthlyBillsAdapter(
+                        it.data!!,
+                        viewModel,
+                        errorBody,
+                        this,
+                        this,
+                        this,
+                        franchiseViewModel.franchiseModel.value
+                    )
+                    binding.recyclerViewBills.adapter = adapterMonthly
                     binding.recyclerViewBills.layoutManager = LinearLayoutManager(requireContext())
+
+                    setButtonsEnabled(true)
 
                     viewModel.setLocalData(it)
                 }
@@ -165,8 +198,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         val bundle = Bundle().apply {
             putString(getString(R.string.title), getString(R.string.no_connection_title))
             putString(
-                getString(R.string.subtitle),
-                getString(R.string.please_connect_to_the_internet)
+                getString(R.string.subtitle), getString(R.string.please_connect_to_the_internet)
             )
         }
 
@@ -199,17 +231,74 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                 binding.invoicesLoadingView.visibility = View.GONE
             }
         }
+
+        binding.buttonAll.setOnClickListener {
+            setSelectedButton(it)
+            adapterMonthly.resetAdapter()
+            binding.invoicesLoadingView.visibility = View.VISIBLE
+            viewModel.setSelectedCountry("")
+            setButtonsEnabled(false)
+            viewModel.fetchMonthlyInvoices(errorBody)
+        }
+
+        binding.buttonCroatia.setOnClickListener {
+            setSelectedButton(it)
+            adapterMonthly.resetAdapter()
+            binding.invoicesLoadingView.visibility = View.VISIBLE
+            viewModel.setSelectedCountry("HR")
+            setButtonsEnabled(false)
+            viewModel.fetchMonthlyInvoices(errorBody)
+        }
+
+        binding.northMacedonia.setOnClickListener {
+            setSelectedButton(it)
+            adapterMonthly.resetAdapter()
+            binding.invoicesLoadingView.visibility = View.VISIBLE
+            viewModel.setSelectedCountry("MK")
+            setButtonsEnabled(false)
+            viewModel.fetchMonthlyInvoices(errorBody)
+        }
+
+        binding.buttonMontenegro.setOnClickListener {
+            setSelectedButton(it)
+            adapterMonthly.resetAdapter()
+            binding.invoicesLoadingView.visibility = View.VISIBLE
+            viewModel.setSelectedCountry("ME")
+            setButtonsEnabled(false)
+            viewModel.fetchMonthlyInvoices(errorBody)
+        }
+
+        binding.buttonSerbia.setOnClickListener {
+            setSelectedButton(it)
+            adapterMonthly.resetAdapter()
+            binding.invoicesLoadingView.visibility = View.VISIBLE
+            viewModel.setSelectedCountry("RS")
+            setButtonsEnabled(false)
+            viewModel.fetchMonthlyInvoices(errorBody)
+        }
+
     }
 
     private fun setObserversError() {
         errorBody = MutableLiveData()
         errorBody.observe(viewLifecycleOwner) { errorBody ->
+
+            setButtonsEnabled(true)
+
             context?.let { context ->
                 if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
                     MainActivity.logoutOnInvalidToken(context, findNavController())
                 }
             }
         }
+    }
+
+    private fun setButtonsEnabled(enabled: Boolean) { // to prevent button spam until data is fetched from api
+        binding.buttonAll.isEnabled = enabled
+        binding.buttonCroatia.isEnabled = enabled
+        binding.buttonMontenegro.isEnabled = enabled
+        binding.northMacedonia.isEnabled = enabled
+        binding.buttonSerbia.isEnabled = enabled
     }
 
     override fun onStartSpinner() {
@@ -254,10 +343,20 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                     override fun onClickRejected() {
                         userPermission.onPermissionDenied()
                     }
-                }
-            )
+                })
             generalMessageDialog.show(fragmentManager, "permDialog")
         }
+    }
+
+
+    private fun setSelectedButton(selectedButton: View) = with(binding) {
+        northMacedonia.isSelected = false
+        buttonSerbia.isSelected = false
+        buttonMontenegro.isSelected = false
+        buttonCroatia.isSelected = false
+        buttonAll.isSelected = false
+
+        selectedButton.isSelected = true
     }
 
     override fun onMontYearSelected(montYear: String) {

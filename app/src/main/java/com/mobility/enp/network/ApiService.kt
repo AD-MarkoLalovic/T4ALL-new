@@ -3,7 +3,7 @@ package com.mobility.enp.network
 import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
-import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
+import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
@@ -124,35 +124,21 @@ interface ApiService {
     ): Response<V2HistoryTagResponse>
 
     @GET("/api/v1/bills")
-    fun getInvoicesIndex(
-        @Query(value = "lang") language: String,
-        @Query("perPage") perPage: Int // items per page
-    ): Call<MyInvoicesResponse>
-
-    @GET("/api/v1/bills")
-    fun getInvoicesIndexPaging(
+    fun getInvoicesPerMonth(
         @Query(value = "lang") language: String,
         @Query("page") page: Int, // current page
-        @Query("perPage") perPage: Int // items per page
+        @Query("perPage") perPage: Int, // items per page
+        @Query("filter[country]") country : String
     ): Call<MyInvoicesResponse>
 
     @GET("/api/v1/bills/month")
-    fun getBillsByMonth(
-        @Query("filter[yearMonth]") yearMonth: String,
-        @Query("filter[currency]") currency: String,
-        //@Query("page") page: Int, // current page
-        @Query("perPage") perPage: Int,
-        @Query(value = "lang") language: String
-
-    ): Call<BillsDetailsResponse>
-
-    @GET("/api/v1/bills/month")
-    fun getBillsByMonthPaging(
+    fun getInvoicesMonthlyDetails(
         @Query("filter[yearMonth]") yearMonth: String,
         @Query("filter[currency]") currency: String,
         @Query("page") page: Int, // current page
         @Query("perPage") perPage: Int,
-        @Query(value = "lang") language: String
+        @Query(value = "lang") language: String,
+        @Query("filter[country]") country : String
     ): Call<BillsDetailsResponse>
 
     @GET("/api/v2/tags")
@@ -161,7 +147,6 @@ interface ApiService {
         @Query("perPage") perPage: Int,
         @Query("lang") language: String
     ): Response<MyTagsResponse>
-
 
     //endregion
 
@@ -277,5 +262,5 @@ interface ApiService {
     suspend fun getBanks(): Response<BanksResponse>
 
     @PUT("api/v1/personal-data/change-language")
-    suspend fun changeLanguage(@Query("language") languageCode: String) : Response<Unit>
+    suspend fun changeLanguage(@Query("language") languageCode: String): Response<Unit>
 }

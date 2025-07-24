@@ -226,10 +226,8 @@
     <string name="tag_device_payment_method_north_macedonia">If you want to use your TAG device on the roads in North Macedonia, please add a valid payment card.</string>
     <string name="tag_device_payment_method_serbia">If you want to use your TAG device on the roads in Serbia, please add a valid payment card.</string>
     <string name="tag_device_payment_method_montenegro">If you want to use your TAG device on the roads in Montenegro, please add a valid payment card</string>
-    <string name="previous_invoices">Your invoices will be displayed here.</string>
     <string name="text_no_refund_tags">You do not have tags for which you can request a refund.</string>
     <string name="text_no_my_tags">You currently have no added tags. Please add your tag.</string>
-    <string name="no_invoices">Your invoices will be displayed here.</string>
     <string name="no_tool_history">Your passes will be displayed here.</string>
     <string name="enter_old_password">Enter old password</string>
     <string name="enter_new_password">Enter new password</string>
@@ -369,4 +367,5 @@
     <string name="facebook_text">Follow us on Facebook and be the first to learn all the news about T4A benefits.</string>
     <string name="instagram_text">Follow us on Instagram and be the first to learn all the news about T4A benefits.</string>
     <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
+    <string name="no_invoices">No bills for selected country available</string>
 </resources>

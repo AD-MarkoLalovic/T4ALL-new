@@ -225,10 +225,8 @@
     <string name="tag_device_payment_method_north_macedonia">Ukoliko želite da Vaš TAG uređaj koristite na putevima u Sjevernoj Makedoniji, molimo vas da dodate važeću platnu karticu.</string>
     <string name="tag_device_payment_method_serbia">Ukoliko želite da Vaš TAG uređaj koristite na putevima u Srbiji, molimo vas da dodate važeću platnu karticu.</string>
     <string name="tag_device_payment_method_montenegro">Ukoliko želite da Vaš TAG uređaj koristite na putevima u Crnoj Gori, molimo vas da dodate važeću platnu karticu.</string>
-    <string name="previous_invoices">Vaše fakture će biti prikazane ovdje.</string>
     <string name="text_no_refund_tags">Nemate tagove za koje možete podnijeti zahtjev za povrat sredstava.</string>
     <string name="text_no_my_tags">Trenutno nemate dodatih oznaka. Molimo dodajte vašu oznaku.</string>
-    <string name="no_invoices">Vaše fakture će biti prikazane ovdje.</string>
     <string name="no_tool_history">Vaši prolazi će biti prikazani ovdje.</string>
     <string name="enter_old_password">Unesite staru šifru</string>
     <string name="enter_new_password">Unesite novu šifru</string>
@@ -368,4 +366,5 @@
     <string name="facebook_text">Pratite nas na Fejsbuku i saznajte prvi sve novosti o pogodnostima T4A sistema.</string>
     <string name="instagram_text">Pratite nas na Instagramu i saznajte prvi sve novosti o pogodnostima T4A sistema.</string>
     <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
+    <string name="no_invoices">Nema računa za izabranu državu</string>
 </resources>

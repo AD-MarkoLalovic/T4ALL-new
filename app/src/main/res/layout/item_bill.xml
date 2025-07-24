@@ -7,7 +7,7 @@
 
         <variable
             name="monthly"
-            type="com.mobility.enp.data.model.api_my_invoices.Month" />
+            type="com.mobility.enp.data.model.api_my_invoices.refactor.Month" />
 
         <variable
             name="viewModel"

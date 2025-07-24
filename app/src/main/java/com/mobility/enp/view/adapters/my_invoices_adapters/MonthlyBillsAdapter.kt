@@ -13,16 +13,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
-import com.mobility.enp.data.model.api_my_invoices.DataMonthly
-import com.mobility.enp.data.model.api_my_invoices.Month
-import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
+import com.mobility.enp.data.model.api_my_invoices.refactor.Data
+import com.mobility.enp.data.model.api_my_invoices.refactor.Month
+import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.databinding.ItemBillBinding
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
 
 //First ADAPTER
 class MonthlyBillsAdapter(
-    private val data: DataMonthly,
+    private val data: Data,
     private var viewModel: MyInvoicesViewModel,
     private val errorBody: MutableLiveData<ErrorBody>,
     private val spinnerInterface: TriggerSpinner,
@@ -36,9 +36,17 @@ class MonthlyBillsAdapter(
     private val spinnerInt = spinnerInterface
 
     private var currentPage = data.currentPage
-    private val lastPage = data.lastPage
+    private var lastPage = data.lastPage
 
     private val itemStateMap: MutableMap<Int, Boolean> = mutableMapOf()
+
+    fun resetAdapter() {
+        monthlyBillsArray.clear()
+        currentPage = 0
+        lastPage = 0
+        itemStateMap.clear()
+        notifyDataSetChanged()
+    }
 
     companion object {
         const val TAG = "MonthlyBillsAdapter"
@@ -284,9 +292,9 @@ class MonthlyBillsAdapter(
             data.observe(lifecycleOwner) { dataResponse ->
                 spinnerInterface.onStopSpinner()
                 dataResponse?.let {
-                    currentPage = it.data.currentPage
+                    currentPage = it.data?.currentPage ?: 0
 
-                    for (month: Month in it.data.months) {
+                    for (month: Month in it.data!!.months) {
                         monthlyBillsArray.add(month)
                         notifyItemChanged(monthlyBillsArray.size - 1)
                     }
