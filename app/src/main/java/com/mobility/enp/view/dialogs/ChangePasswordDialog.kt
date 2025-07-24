@@ -16,7 +16,6 @@ import kotlin.getValue
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
-import com.mobility.enp.util.FragmentResultKeys
 
 class ChangePasswordDialog() : DialogFragment() {
 
@@ -27,15 +26,22 @@ class ChangePasswordDialog() : DialogFragment() {
     companion object {
         private const val ARG_TITLE = "ARG_TITLE"
         private const val ARG_SUBTITLE = "ARG_SUBTITLE"
+        private const val ARG_RESULT_KEY = "ARG_RESULT_KEY"
+        private const val ARG_RESULT_VALUE_KEY = "ARG_RESULT_VALUE_KEY"
+
 
         fun newInstance(
             title: String,
-            subtitle: String
+            subtitle: String,
+            resultKey: String,
+            resultValueKey: String
         ): ChangePasswordDialog {
             return ChangePasswordDialog().apply {
                 arguments = Bundle().apply {
                     putString(ARG_TITLE, title)
                     putString(ARG_SUBTITLE, subtitle)
+                    putString(ARG_RESULT_KEY, resultKey)
+                    putString(ARG_RESULT_VALUE_KEY, resultValueKey)
                 }
             }
         }
@@ -62,14 +68,17 @@ class ChangePasswordDialog() : DialogFragment() {
         setFranchiser()
         val title = requireArguments().getString(ARG_TITLE)
         val subtitle = requireArguments().getString(ARG_SUBTITLE)
+        val resultKey = requireArguments().getString(ARG_RESULT_KEY)!!
+        val resultValueKey = requireArguments().getString(ARG_RESULT_VALUE_KEY)!!
+
 
         binding.title.text = title
         binding.subTitle.text = subtitle
 
         binding.confirmButton.setOnClickListener {
             setFragmentResult(
-                FragmentResultKeys.CHANGE_PASS_RESULT,
-                bundleOf(FragmentResultKeys.CHANGE_PASS_CONFIRMED to true)
+                resultKey,
+                bundleOf(resultValueKey to true)
             )
             dismiss()
         }
