@@ -23,6 +23,7 @@ import com.mobility.enp.network.Repository
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
+import com.mobility.enp.view.adapters.refund_request_adapters.RefundRequestsCreatedAdapter
 import com.mobility.enp.view.dialogs.NotificationsRequestDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
@@ -234,7 +235,9 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
         binding.buttonAll.setOnClickListener {
             setSelectedButton(it)
-            adapterMonthly.resetAdapter()
+            if (::adapterMonthly.isInitialized) {
+                adapterMonthly.resetAdapter()
+            }
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("")
             setButtonsEnabled(false)
@@ -243,7 +246,9 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
         binding.buttonCroatia.setOnClickListener {
             setSelectedButton(it)
-            adapterMonthly.resetAdapter()
+            if (::adapterMonthly.isInitialized) {
+                adapterMonthly.resetAdapter()
+            }
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("HR")
             setButtonsEnabled(false)
@@ -252,7 +257,9 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
         binding.northMacedonia.setOnClickListener {
             setSelectedButton(it)
-            adapterMonthly.resetAdapter()
+            if (::adapterMonthly.isInitialized) {
+                adapterMonthly.resetAdapter()
+            }
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("MK")
             setButtonsEnabled(false)
@@ -261,7 +268,9 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
         binding.buttonMontenegro.setOnClickListener {
             setSelectedButton(it)
-            adapterMonthly.resetAdapter()
+            if (::adapterMonthly.isInitialized) {
+                adapterMonthly.resetAdapter()
+            }
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("ME")
             setButtonsEnabled(false)
@@ -270,7 +279,9 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
         binding.buttonSerbia.setOnClickListener {
             setSelectedButton(it)
-            adapterMonthly.resetAdapter()
+            if (::adapterMonthly.isInitialized) {
+                adapterMonthly.resetAdapter()
+            }
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("RS")
             setButtonsEnabled(false)
