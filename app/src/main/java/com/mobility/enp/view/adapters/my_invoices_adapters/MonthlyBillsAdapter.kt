@@ -1,5 +1,6 @@
 package com.mobility.enp.view.adapters.my_invoices_adapters
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -18,7 +19,11 @@ import com.mobility.enp.data.model.api_my_invoices.refactor.Month
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.databinding.ItemBillBinding
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestFlow
+import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 //First ADAPTER
 class MonthlyBillsAdapter(
@@ -108,53 +113,86 @@ class MonthlyBillsAdapter(
                     if (viewModel.isNetworkAvailable()) {
                         montYearListener.onMontYearSelected(montYear)
 
-                        viewModel.fetchBillDetailsNew(object : FetchBillsDetails {
-                            override fun onOK(bill: BillsDetailsResponse) {
-                                bill.data.let {
-                                    val billsDetailsAdapter = BillsDetailsAdapter(
-                                        it,
-                                        viewModel,
-                                        error,
-                                        lifecycleOwner,
-                                        spinnerInt,
-                                        availableCurrency.toString()
-                                    )
-                                    binding.recyclerViewMonthlyBills.adapter = billsDetailsAdapter
-                                    billsDetailsAdapter.submitList(it)
+                        val billDetailsFlow =
+                            MutableStateFlow<SubmitResult<BillsDetailsResponse>>(SubmitResult.Loading)
 
-                                    if (it.bills.isNotEmpty()) {
-                                        val heightInDp: Int = when (it.bills.size) {
-                                            1 -> binding.root.context.resources.getDimensionPixelSize(
-                                                R.dimen.recycler_view_one_item
-                                            )
+                        collectLatestFlow(lifecycleOwner, billDetailsFlow) { serverResponse ->
+                            when (serverResponse) {
+                                is SubmitResult.Success -> {
+                                    spinnerInterface.onStopSpinner()
 
-                                            2 -> binding.root.context.resources.getDimensionPixelSize(
-                                                R.dimen.recycler_view_two_items
-                                            )
+                                    serverResponse.data.let { data ->
 
-                                            3 -> binding.root.context.resources.getDimensionPixelSize(
-                                                R.dimen.recycler_view_three_items
-                                            )
+                                        val billsDetailsAdapter = BillsDetailsAdapter(
+                                            data.data,
+                                            viewModel,
+                                            error,
+                                            lifecycleOwner,
+                                            spinnerInt,
+                                            availableCurrency.toString()
+                                        )
+                                        binding.recyclerViewMonthlyBills.adapter =
+                                            billsDetailsAdapter
+                                        billsDetailsAdapter.submitList(data.data)
 
-                                            else -> binding.root.context.resources.getDimensionPixelSize(
-                                                R.dimen.recycler_view_more_items
-                                            )
+                                        if (data.data
+                                                .bills.isNotEmpty()
+                                        ) {
+                                            val heightInDp: Int = when (data.data.bills.size) {
+                                                1 -> binding.root.context.resources.getDimensionPixelSize(
+                                                    R.dimen.recycler_view_one_item
+                                                )
+
+                                                2 -> binding.root.context.resources.getDimensionPixelSize(
+                                                    R.dimen.recycler_view_two_items
+                                                )
+
+                                                3 -> binding.root.context.resources.getDimensionPixelSize(
+                                                    R.dimen.recycler_view_three_items
+                                                )
+
+                                                else -> binding.root.context.resources.getDimensionPixelSize(
+                                                    R.dimen.recycler_view_more_items
+                                                )
+                                            }
+                                            binding.scrollView.layoutParams.height = heightInDp
+                                            binding.scrollView.requestLayout()
+
+                                            binding.recyclerViewMonthlyBills.visibility =
+                                                View.VISIBLE
+                                            binding.scrollView.visibility = View.VISIBLE
                                         }
-                                        binding.scrollView.layoutParams.height = heightInDp
-                                        binding.scrollView.requestLayout()
+                                        spinnerInt.onStopSpinner()
 
-                                        binding.recyclerViewMonthlyBills.visibility = View.VISIBLE
-                                        binding.scrollView.visibility = View.VISIBLE
                                     }
-                                    spinnerInt.onStopSpinner()
+
+                                }
+
+                                is SubmitResult.FailureServerError -> {
+                                    spinnerInterface.onStopSpinner()
+                                    logError(binding.root.context.resources.getString(R.string.server_error_msg))
+                                }
+
+                                is SubmitResult.FailureApiError -> {
+                                    spinnerInterface.onStopSpinner()
+                                    logError(binding.root.context.resources.getString(R.string.api_call_error))
+                                }
+
+                                else -> {
+                                    spinnerInterface.onStopSpinner()
+                                    SubmitResult.Empty
                                 }
                             }
+                            binding.executePendingBindings()
+                        }
 
-                            override fun onFailed() {
-                                spinnerInt.onStopSpinner()
-                            }
-                        }, montYear, availableCurrency.toString(), error)
 
+                        spinnerInterface.onStartSpinner()
+                        viewModel.fetchBillDetailsNew(
+                            billDetailsFlow,
+                            montYear,
+                            availableCurrency.toString()
+                        )
 
                         franchiserResource?.let { data ->
                             binding.arrowDown.setImageDrawable(
@@ -278,49 +316,68 @@ class MonthlyBillsAdapter(
         holder.bind(
             currentBill, viewModel, errorBody, spinnerInt, montYearListener
         )
-        checkDataFill(holder.bindingAdapterPosition, currentBill)
+        checkDataFill(holder.bindingAdapterPosition, currentBill, holder.binding.root.context)
     }
 
-    private fun checkDataFill(position: Int, currentBill: Month) {
+    private fun checkDataFill(position: Int, currentBill: Month, context: Context) {
         Log.d(
             TAG,
             "onBindViewHolder: adapter pos $position arrayTotal ${monthlyBillsArray.size - 1} totalItems ${data.total}"
         )
         if (monthlyBillsArray[monthlyBillsArray.size - 1] == currentBill && lastPage > currentPage) {
-            val data: MutableLiveData<MyInvoicesResponse> = MutableLiveData()
 
-            data.observe(lifecycleOwner) { dataResponse ->
-                spinnerInterface.onStopSpinner()
-                dataResponse?.let {
-                    currentPage = it.data?.currentPage ?: 0
+            val paginationUpdate =
+                MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Loading)
 
-                    for (month: Month in it.data!!.months) {
-                        monthlyBillsArray.add(month)
-                        notifyItemChanged(monthlyBillsArray.size - 1)
+            collectLatestFlow(lifecycleOwner, paginationUpdate) { serverResponse ->
+                when (serverResponse) {
+                    is SubmitResult.Success -> {
+                        spinnerInterface.onStopSpinner()
+                        serverResponse?.let { response ->
+                            currentPage = response.data.data?.currentPage ?: 0
+
+                            for (month: Month in response.data.data!!.months) {
+                                monthlyBillsArray.add(month)
+                                notifyItemChanged(monthlyBillsArray.size - 1)
+                            }
+                        }
                     }
 
-                    data.removeObservers(lifecycleOwner)
+                    is SubmitResult.FailureServerError -> {
+                        spinnerInterface.onStopSpinner()
+                        logError(context.resources.getString(R.string.server_error_msg))
+                    }
+
+                    is SubmitResult.FailureApiError -> {
+                        spinnerInterface.onStopSpinner()
+                        logError(context.resources.getString(R.string.api_call_error))
+                    }
+
+                    else -> {
+                        spinnerInterface.onStopSpinner()
+                        SubmitResult.Empty
+                    }
                 }
             }
+
             spinnerInterface.onStartSpinner()
-            spinnerInterface.pagingUpdate(currentPage + 1, data)
+            spinnerInterface.pagingUpdate(currentPage + 1, paginationUpdate)
         }
+    }
+
+    private fun logError(string: String) {
+        Log.d(ToolHistoryListingAdapter.Companion.TAG, "showError: $string")
     }
 
     override fun getItemCount() = monthlyBillsArray.size
 
-    interface FetchBillsDetails {
-        fun onOK(bill: BillsDetailsResponse)
-        fun onFailed()
-    }
-
     interface TriggerSpinner {
         fun onStartSpinner()
         fun onStopSpinner()
-        fun pagingUpdate(nextPage: Int, data: MutableLiveData<MyInvoicesResponse>)
+        fun pagingUpdate(nextPage: Int, flow: MutableStateFlow<SubmitResult<MyInvoicesResponse>>)
         fun pagingUpdateBill(
             nextPage: Int,
-            data: MutableLiveData<BillsDetailsResponse>,
+            flow: MutableStateFlow<SubmitResult<BillsDetailsResponse>>,
             availableCurrencies: String
         )
 
