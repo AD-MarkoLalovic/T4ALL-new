@@ -43,50 +43,50 @@ class IntroScreenAdvantages : Fragment() {
 
         when (savedLanguage) {
             "cyr" -> {
-                binding.tvSelectedLanguage?.text = getString(R.string.srp_cyr)
-                binding.langTwo?.text = getString(R.string.srp)
-                binding.langThree?.text = getString(R.string.eng)
+                binding.tvSelectedLanguage.text = getString(R.string.srp_cyr)
+                binding.langTwo.text = getString(R.string.srp)
+                binding.langThree.text = getString(R.string.eng)
             }
 
             "sr" -> {
-                binding.tvSelectedLanguage?.text = getString(R.string.srp)
-                binding.langTwo?.text = getString(R.string.srp_cyr)
-                binding.langThree?.text = getString(R.string.eng)
+                binding.tvSelectedLanguage.text = getString(R.string.srp)
+                binding.langTwo.text = getString(R.string.srp_cyr)
+                binding.langThree.text = getString(R.string.eng)
             }
 
             "en" -> {
-                binding.tvSelectedLanguage?.text = getString(R.string.eng)
-                binding.langTwo?.text = getString(R.string.srp)
-                binding.langThree?.text = getString(R.string.srp_cyr)
+                binding.tvSelectedLanguage.text = getString(R.string.eng)
+                binding.langTwo.text = getString(R.string.srp)
+                binding.langThree.text = getString(R.string.srp_cyr)
             }
         }
 
 
         val languageOptions: LinearLayout? = binding.languageOptions
 
-        binding.tvSelectedLanguage?.setOnClickListener {
+        binding.tvSelectedLanguage.setOnClickListener {
             toggleDropdown(languageOptions!!)
         }
 
-        binding.langTwo?.setOnClickListener {
+        binding.langTwo.setOnClickListener {
             toggleDropdown(languageOptions!!)
-            when (binding.langTwo?.text) {
+            when (binding.langTwo.text) {
                 "SRP" -> setLanguage("sr")
                 "СРП" -> setLanguage("cyr")
                 "ENG" -> setLanguage("en")
             }
         }
 
-        binding.langThree?.setOnClickListener {
+        binding.langThree.setOnClickListener {
             toggleDropdown(languageOptions!!)
-            when (binding.langThree?.text) {
+            when (binding.langThree.text) {
                 "SRP" -> setLanguage("sr")
                 "СРП" -> setLanguage("cyr")
                 "ENG" -> setLanguage("en")
             }
         }
 
-        binding.buttonNextAdvantages?.setOnClickListener {
+        binding.buttonNextAdvantages.setOnClickListener {
             findNavController().navigate(R.id.action_introScreenAdvantages_to_loginFragment)
         }
 
