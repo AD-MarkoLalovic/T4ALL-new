@@ -151,6 +151,8 @@ dependencies {
     ksp(libs.compiler)
 
     //Moshi biblioteka
-    implementation(libs.moshi)  // Glavna Moshi biblioteka
-    implementation(libs.moshi.kotlin)  // Podrška za Kotlin
+    implementation(libs.moshi)              // Glavna Moshi biblioteka za JSON parsiranje
+    implementation(libs.moshi.kotlin)       // Kotlin ekstenzije i podrška za Kotlin specifične tipove
+    ksp(libs.moshi.kotlin.codegen)          // KSP codegen za automatsko generisanje adaptera bez refleksije
+
 }
