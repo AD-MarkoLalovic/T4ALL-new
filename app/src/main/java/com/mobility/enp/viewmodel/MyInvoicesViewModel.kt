@@ -301,32 +301,67 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         }
     }
 
-    fun fetchBillDetailsPaging(
-        data: MutableLiveData<BillsDetailsResponse>,
+
+    fun fetchBillDetailsNewPaging(
+        flow: MutableStateFlow<SubmitResult<BillsDetailsResponse>>,
         yearMonth: String,
         currency: String,
-        page: Int,
-        error: MutableLiveData<ErrorBody>, context: Context
+        page: Int
     ) {
-        if (isNetworkAvailable()) {
-            viewModelScope.launch {
-                val userToken = getUserToken()
-                userToken?.let { token ->
-                    Repository.getBillsDetailsPaging(
-                        data,
-                        token,
-                        yearMonth,
-                        currency,
-                        page,
-                        perPage,
-                        error,
-                        context,
-                        selectedCountry
-                    )
+        viewModelScope.launch(Dispatchers.IO) {
+            val result =
+                repository.getBillDetailsPaging(yearMonth, currency, perPage, selectedCountry, page)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    flow.value = SubmitResult.Empty
+                } else {
+                    flow.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(
+                            UserPassViewModel.Companion.TAG,
+                            "Error while fetching bill paging detals"
+                        )
+                        flow.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        flow.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN UserPassViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                flow.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                flow.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(
+                                    "UserPassViewModel",
+                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                                )
+                            }
+                        }
+                    }
+
+                    else -> {}
                 }
             }
-        } else {
-            _checkNetMyInvoices.postValue(false)
         }
     }
 

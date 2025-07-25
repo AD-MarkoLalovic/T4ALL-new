@@ -17,7 +17,6 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.FragmentBillsBinding
 import com.mobility.enp.network.Repository
 import com.mobility.enp.util.SubmitResult
@@ -271,6 +270,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
     private fun setListener() {
         binding.buttonAll.setOnClickListener {
+            binding.textNoBills.visibility = View.GONE
             setSelectedButton(it)
             if (::adapterMonthly.isInitialized) {
                 adapterMonthly.resetAdapter()
@@ -282,6 +282,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         }
 
         binding.buttonCroatia.setOnClickListener {
+            binding.textNoBills.visibility = View.GONE
             setSelectedButton(it)
             if (::adapterMonthly.isInitialized) {
                 adapterMonthly.resetAdapter()
@@ -293,6 +294,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         }
 
         binding.northMacedonia.setOnClickListener {
+            binding.textNoBills.visibility = View.GONE
             setSelectedButton(it)
             if (::adapterMonthly.isInitialized) {
                 adapterMonthly.resetAdapter()
@@ -304,6 +306,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         }
 
         binding.buttonMontenegro.setOnClickListener {
+            binding.textNoBills.visibility = View.GONE
             setSelectedButton(it)
             if (::adapterMonthly.isInitialized) {
                 adapterMonthly.resetAdapter()
@@ -315,6 +318,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         }
 
         binding.buttonSerbia.setOnClickListener {
+            binding.textNoBills.visibility = View.GONE
             setSelectedButton(it)
             if (::adapterMonthly.isInitialized) {
                 adapterMonthly.resetAdapter()
@@ -363,25 +367,28 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     }
 
 
-    override fun pagingUpdate(nextPage: Int, flow: MutableStateFlow<SubmitResult<MyInvoicesResponse>>) {
+    override fun pagingUpdate(
+        nextPage: Int,
+        flow: MutableStateFlow<SubmitResult<MyInvoicesResponse>>
+    ) {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             viewModel.fetchMonthlyInvoicesPaging(
-                nextPage,flow
+                nextPage, flow
             )
         }
     }
 
     override fun pagingUpdateBill(
-        nextPage: Int, data: MutableLiveData<BillsDetailsResponse>, availableCurrencies: String
+        nextPage: Int,
+        flow: MutableStateFlow<SubmitResult<BillsDetailsResponse>>,
+        availableCurrencies: String
     ) {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.fetchBillDetailsPaging(
-                data,
+            viewModel.fetchBillDetailsNewPaging(
+                flow,
                 month,
                 availableCurrencies,
-                nextPage,
-                errorBody,
-                requireContext()
+                nextPage
             )
         }
     }

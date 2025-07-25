@@ -131,11 +131,13 @@ class MonthlyBillsAdapter(
                                             spinnerInt,
                                             availableCurrency.toString()
                                         )
-                                        binding.recyclerViewMonthlyBills.adapter = billsDetailsAdapter
+                                        binding.recyclerViewMonthlyBills.adapter =
+                                            billsDetailsAdapter
                                         billsDetailsAdapter.submitList(data.data)
 
                                         if (data.data
-                                            .bills.isNotEmpty()) {
+                                                .bills.isNotEmpty()
+                                        ) {
                                             val heightInDp: Int = when (data.data.bills.size) {
                                                 1 -> binding.root.context.resources.getDimensionPixelSize(
                                                     R.dimen.recycler_view_one_item
@@ -156,7 +158,8 @@ class MonthlyBillsAdapter(
                                             binding.scrollView.layoutParams.height = heightInDp
                                             binding.scrollView.requestLayout()
 
-                                            binding.recyclerViewMonthlyBills.visibility = View.VISIBLE
+                                            binding.recyclerViewMonthlyBills.visibility =
+                                                View.VISIBLE
                                             binding.scrollView.visibility = View.VISIBLE
                                         }
                                         spinnerInt.onStopSpinner()
@@ -185,7 +188,11 @@ class MonthlyBillsAdapter(
 
 
                         spinnerInterface.onStartSpinner()
-                        viewModel.fetchBillDetailsNew(billDetailsFlow,montYear,availableCurrency.toString())
+                        viewModel.fetchBillDetailsNew(
+                            billDetailsFlow,
+                            montYear,
+                            availableCurrency.toString()
+                        )
 
                         franchiserResource?.let { data ->
                             binding.arrowDown.setImageDrawable(
@@ -364,18 +371,13 @@ class MonthlyBillsAdapter(
 
     override fun getItemCount() = monthlyBillsArray.size
 
-    interface FetchBillsDetails {
-        fun onOK(bill: BillsDetailsResponse)
-        fun onFailed()
-    }
-
     interface TriggerSpinner {
         fun onStartSpinner()
         fun onStopSpinner()
         fun pagingUpdate(nextPage: Int, flow: MutableStateFlow<SubmitResult<MyInvoicesResponse>>)
         fun pagingUpdateBill(
             nextPage: Int,
-            data: MutableLiveData<BillsDetailsResponse>,
+            flow: MutableStateFlow<SubmitResult<BillsDetailsResponse>>,
             availableCurrencies: String
         )
 

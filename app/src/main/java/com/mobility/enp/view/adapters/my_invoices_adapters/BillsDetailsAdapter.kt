@@ -1,6 +1,7 @@
 package com.mobility.enp.view.adapters.my_invoices_adapters
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.os.Build
@@ -27,7 +28,11 @@ import com.mobility.enp.data.model.api_my_invoices.BillData
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.databinding.ItemInvoicesBinding
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestFlow
+import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class BillsDetailsAdapter(
     private var billData: BillData,
@@ -323,36 +328,56 @@ class BillsDetailsAdapter(
     override fun onBindViewHolder(holder: BillsViewHolder, position: Int) {
         val current = billsArray[holder.bindingAdapterPosition]
         holder.bind(current, viewModel, errorBody)
-        checkDataFill(holder.bindingAdapterPosition, current)
+        checkDataFill(holder.bindingAdapterPosition, current, holder.binding.root.context)
     }
 
-    private fun checkDataFill(position: Int, currentBill: Bill) {
+    private fun checkDataFill(position: Int, currentBill: Bill, context: Context) {
         Log.d(
             "BillsDetailsAdapter",
             "onBindViewHolder: adapter pos $position arrayTotal ${billsArray.size - 1} totalItems ${billData.total}"
         )
         if (billsArray[billsArray.size - 1] == currentBill && lastPage > currentPage) {
 
-            val data: MutableLiveData<BillsDetailsResponse> = MutableLiveData()
 
-            data.observe(lifecycleOwner) { dataResponse ->
+            val billDetailsFlow =
+                MutableStateFlow<SubmitResult<BillsDetailsResponse>>(SubmitResult.Loading)
 
-                spinnerInterface.onStopSpinner()
+            collectLatestFlow(lifecycleOwner, billDetailsFlow) { serverResponse ->
+                when (serverResponse) {
+                    is SubmitResult.Success -> {
+                        spinnerInterface.onStopSpinner()
 
-                dataResponse?.let {
-                    currentPage = it.data.currentPage
+                        serverResponse.data.let { data ->
+                            spinnerInterface.onStopSpinner()
 
-                    for (month: Bill in it.data.bills) {
-                        billsArray.add(month)
-                        notifyItemChanged(billsArray.size - 1)
+                            currentPage = data.data.currentPage
+
+                            for (month: Bill in data.data.bills) {
+                                billsArray.add(month)
+                                notifyItemChanged(billsArray.size - 1)
+                            }
+                        }
                     }
 
-                    data.removeObservers(lifecycleOwner)
+                    is SubmitResult.FailureServerError -> {
+                        spinnerInterface.onStopSpinner()
+                        logError(context.resources.getString(R.string.server_error_msg))
+                    }
+
+                    is SubmitResult.FailureApiError -> {
+                        spinnerInterface.onStopSpinner()
+                        logError(context.resources.getString(R.string.api_call_error))
+                    }
+
+                    else -> {
+                        spinnerInterface.onStopSpinner()
+                        SubmitResult.Empty
+                    }
                 }
             }
 
             spinnerInterface.onStartSpinner()
-            spinnerInterface.pagingUpdateBill(currentPage + 1, data, availableCurrencies)
+            spinnerInterface.pagingUpdateBill(currentPage + 1, billDetailsFlow, availableCurrencies)
         }
     }
 
@@ -389,6 +414,10 @@ class BillsDetailsAdapter(
             return oldInvoicesList[oldItemPosition].equals(newInvoicesList[newItemPosition])
         }
 
+    }
+
+    private fun logError(string: String) {
+        Log.d(ToolHistoryListingAdapter.Companion.TAG, "showError: $string")
     }
 
     interface DownloadBillsDetails {
