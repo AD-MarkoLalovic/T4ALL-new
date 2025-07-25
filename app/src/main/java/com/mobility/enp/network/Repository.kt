@@ -39,12 +39,12 @@ object Repository {
         data: MutableLiveData<MyInvoicesResponse>,
         token: String?,
         errorBody: MutableLiveData<ErrorBody>,
-        application: Application,
+        context: Context,
         perPage: Int,
         selectedCountry: String
     ) {
 
-        val lang = getUserLanguage(application)
+        val lang = getUserLanguage(context)
 
         apiService(token).getInvoicesPerMonth(lang, 1, perPage, selectedCountry)
             .enqueue(object : Callback<MyInvoicesResponse> {
@@ -71,7 +71,7 @@ object Repository {
         data: MutableLiveData<MyInvoicesResponse>,
         token: String?,
         errorBody: MutableLiveData<ErrorBody>,
-        application: Application,
+        application: Context,
         page: Int,
         perPage: Int,
         selectedCountry: String

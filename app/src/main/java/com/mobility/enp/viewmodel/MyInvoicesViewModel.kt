@@ -18,16 +18,21 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.mobility.enp.MyApplication
 import com.mobility.enp.R
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.pdf_table.PdfTable
-import com.mobility.enp.data.room.database.DRoom
+import com.mobility.enp.data.repository.BillsRepository
 import com.mobility.enp.network.Repository
 import com.mobility.enp.services.MyFirebaseMessagingService
 import com.mobility.enp.view.PdfViewActivity
@@ -43,9 +48,21 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
-class MyInvoicesViewModel(application: Application) : AndroidViewModel(application) {
+class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel() {
 
-    private var database: DRoom = DRoom.getRoomInstance(getApplication())
+    companion object {
+        const val TAG = "BillViewModel"
+
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val myRepository = (this[APPLICATION_KEY] as MyApplication).billsRepository
+                MyInvoicesViewModel(
+                    repository = myRepository
+                )
+            }
+        }
+    }
+
     private val perPage = 10
 
     private val _monthlyInvoicesList = MutableLiveData<MyInvoicesResponse>()
@@ -74,15 +91,15 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
 
     private suspend fun getUserToken(): String? {
         return withContext(Dispatchers.IO) {
-            database.loginDao().fetchAllowedUsers().accessToken
+            repository.getTokenTemp()
         }
     }
 
     fun isNetworkAvailable(): Boolean {
-        return Repository.isNetworkAvailable(getApplication())
+        return repository.isNetworkPresent()
     }
 
-    fun fetchMonthlyInvoices(errorBody: MutableLiveData<ErrorBody>) {
+    fun fetchMonthlyInvoices(errorBody: MutableLiveData<ErrorBody>, context: Context) {
         if (isNetworkAvailable()) {
             _checkNetMyInvoices.value = true
             viewModelScope.launch {
@@ -90,7 +107,12 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
                     val userToken = getUserToken()
                     userToken?.let { token ->
                         Repository.getInvoices(
-                            _monthlyInvoicesList, token, errorBody, getApplication(), perPage,selectedCountry
+                            _monthlyInvoicesList,
+                            token,
+                            errorBody,
+                            context,
+                            perPage,
+                            selectedCountry
                         )
                     }
                 }
@@ -101,22 +123,19 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun setLocalData(bills: MyInvoicesResponse) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                database.myInvoicesDao().deleteDataMonthlyInvoices()
-                database.myInvoicesDao().insertMonthlyInvoices(bills)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.setLocalBillsData(bills)
         }
     }
 
     suspend fun checkBills() = withContext(Dispatchers.IO) {
-        database.myInvoicesDao().fetchDataMonthlyInvoices()
+        repository.fetchSavedBillsData()
     }
 
     fun fetchLocalData() {
         viewModelScope.launch {
             val data = withContext(Dispatchers.IO) {
-                database.myInvoicesDao().fetchDataMonthlyInvoices()
+                repository.fetchSavedBillsData()
             }
             _monthlyInvoicesList.value = data
         }
@@ -125,14 +144,20 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
     fun fetchMonthlyInvoicesPaging(
         errorBody: MutableLiveData<ErrorBody>,
         data: MutableLiveData<MyInvoicesResponse>,
-        nextPage: Int
+        nextPage: Int, context: Context
     ) {
         if (isNetworkAvailable()) {
             viewModelScope.launch {
                 val userToken = getUserToken()
                 userToken?.let { token ->
                     Repository.getInvoicesPaging(
-                        data, token, errorBody, getApplication(), nextPage, perPage,selectedCountry
+                        data,
+                        token,
+                        errorBody,
+                        context,
+                        nextPage,
+                        perPage,
+                        selectedCountry
                     )
                 }
             }
@@ -145,14 +170,21 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
         data: MonthlyBillsAdapter.FetchBillsDetails,
         yearMonth: String,
         currency: String,
-        error: MutableLiveData<ErrorBody>
+        error: MutableLiveData<ErrorBody>, context: Context
     ) {
         if (isNetworkAvailable()) {
             viewModelScope.launch {
                 val userToken = getUserToken()
                 userToken?.let { token ->
                     Repository.getBillsDetails(
-                        data, token, yearMonth, currency, perPage, error, getApplication(),selectedCountry
+                        data,
+                        token,
+                        yearMonth,
+                        currency,
+                        perPage,
+                        error,
+                        context,
+                        selectedCountry
                     )
                 }
             }
@@ -166,14 +198,22 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
         yearMonth: String,
         currency: String,
         page: Int,
-        error: MutableLiveData<ErrorBody>
+        error: MutableLiveData<ErrorBody>, context: Context
     ) {
         if (isNetworkAvailable()) {
             viewModelScope.launch {
                 val userToken = getUserToken()
                 userToken?.let { token ->
                     Repository.getBillsDetailsPaging(
-                        data, token, yearMonth, currency, page, perPage, error, getApplication(),selectedCountry
+                        data,
+                        token,
+                        yearMonth,
+                        currency,
+                        page,
+                        perPage,
+                        error,
+                        context,
+                        selectedCountry
                     )
                 }
             }
@@ -251,8 +291,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
                 inputStream = ByteArrayInputStream(decodedData)
 
                 viewModelScope.launch(Dispatchers.IO) {
-                    database.pdfDao().deleteData()
-                    database.pdfDao().upsertData(PdfTable(0, decodedData))
+                    repository.savePdfData(decodedData)
                 }
 
                 outputStream = FileOutputStream(futureStudioIconFile)
@@ -286,7 +325,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
                 notificationManager.createNotificationChannel(channel)
 
                 val builder = NotificationCompat.Builder(
-                    getApplication(), MyFirebaseMessagingService.CHANNEL_ID
+                    context, MyFirebaseMessagingService.CHANNEL_ID
                 ).setSmallIcon(R.drawable.select_country_icon)
                     .setContentTitle(context.getString(R.string.file_downloaded))
                     .setContentText(contentText)
@@ -335,7 +374,7 @@ class MyInvoicesViewModel(application: Application) : AndroidViewModel(applicati
 
     private suspend fun fetchPdf(): PdfTable {
         return withContext(Dispatchers.IO) {
-            database.pdfDao().fetchData()
+            repository.getPdfTable()
         }
     }
 

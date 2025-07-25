@@ -9,7 +9,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,7 +22,6 @@ import com.mobility.enp.network.Repository
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
-import com.mobility.enp.view.adapters.refund_request_adapters.RefundRequestsCreatedAdapter
 import com.mobility.enp.view.dialogs.NotificationsRequestDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
@@ -38,7 +36,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     private var _binding: FragmentBillsBinding? = null
     private val binding: FragmentBillsBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
-    private val viewModel: MyInvoicesViewModel by viewModels()
+    private val viewModel: MyInvoicesViewModel by activityViewModels { MyInvoicesViewModel.Factory }
 
     private lateinit var adapterMonthly: MonthlyBillsAdapter
 
@@ -73,7 +71,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         setSelectedButton(binding.buttonAll)
         setButtonsEnabled(true)
 
-        viewModel.fetchMonthlyInvoices(errorBody)
+        viewModel.fetchMonthlyInvoices(errorBody,requireContext())
 
         setListener()
 
@@ -87,12 +85,12 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                     Toast.makeText(
                         requireContext(), getText(R.string.payment_successfully), Toast.LENGTH_SHORT
                     ).show()
-                    viewModel.fetchMonthlyInvoices(errorBody)
+                    viewModel.fetchMonthlyInvoices(errorBody,requireContext())
                 } else {
                     Toast.makeText(
                         requireContext(), getText(R.string.payment_unsuccessful), Toast.LENGTH_SHORT
                     ).show()
-                    viewModel.fetchMonthlyInvoices(errorBody)
+                    viewModel.fetchMonthlyInvoices(errorBody,requireContext())
                 }
             }
         }
@@ -220,7 +218,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                 MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
                 binding.invoicesLoadingView.visibility = View.GONE
 
-                viewModel.fetchMonthlyInvoices(errorBody)
+                viewModel.fetchMonthlyInvoices(errorBody,requireContext())
             }
         }
     }
@@ -241,7 +239,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("")
             setButtonsEnabled(false)
-            viewModel.fetchMonthlyInvoices(errorBody)
+            viewModel.fetchMonthlyInvoices(errorBody,requireContext())
         }
 
         binding.buttonCroatia.setOnClickListener {
@@ -252,7 +250,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("HR")
             setButtonsEnabled(false)
-            viewModel.fetchMonthlyInvoices(errorBody)
+            viewModel.fetchMonthlyInvoices(errorBody,requireContext())
         }
 
         binding.northMacedonia.setOnClickListener {
@@ -263,7 +261,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("MK")
             setButtonsEnabled(false)
-            viewModel.fetchMonthlyInvoices(errorBody)
+            viewModel.fetchMonthlyInvoices(errorBody,requireContext())
         }
 
         binding.buttonMontenegro.setOnClickListener {
@@ -274,7 +272,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("ME")
             setButtonsEnabled(false)
-            viewModel.fetchMonthlyInvoices(errorBody)
+            viewModel.fetchMonthlyInvoices(errorBody,requireContext())
         }
 
         binding.buttonSerbia.setOnClickListener {
@@ -285,7 +283,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("RS")
             setButtonsEnabled(false)
-            viewModel.fetchMonthlyInvoices(errorBody)
+            viewModel.fetchMonthlyInvoices(errorBody,requireContext())
         }
 
     }
@@ -327,7 +325,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
     override fun pagingUpdate(nextPage: Int, data: MutableLiveData<MyInvoicesResponse>) {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.fetchMonthlyInvoicesPaging(errorBody, data, nextPage)
+            viewModel.fetchMonthlyInvoicesPaging(errorBody, data, nextPage,requireContext())
         }
     }
 
@@ -335,7 +333,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         nextPage: Int, data: MutableLiveData<BillsDetailsResponse>, availableCurrencies: String
     ) {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.fetchBillDetailsPaging(data, month, availableCurrencies, nextPage, errorBody)
+            viewModel.fetchBillDetailsPaging(data, month, availableCurrencies, nextPage, errorBody,requireContext())
         }
     }
 

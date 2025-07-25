@@ -153,7 +153,7 @@ class MonthlyBillsAdapter(
                             override fun onFailed() {
                                 spinnerInt.onStopSpinner()
                             }
-                        }, montYear, availableCurrency.toString(), error)
+                        }, montYear, availableCurrency.toString(), error,binding.root.context)
 
 
                         franchiserResource?.let { data ->
