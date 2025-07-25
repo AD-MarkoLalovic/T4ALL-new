@@ -132,7 +132,17 @@ interface ApiService {
     ): Response<MyInvoicesResponse>
 
     @GET("/api/v1/bills/month")
-    fun getInvoicesMonthlyDetails(
+    suspend fun getInvoicesMonthlyDetails(
+        @Query("filter[yearMonth]") yearMonth: String,
+        @Query("filter[currency]") currency: String,
+        @Query("page") page: Int, // current page
+        @Query("perPage") perPage: Int,
+        @Query(value = "lang") language: String,
+        @Query("filter[country]") country : String
+    ): Response<BillsDetailsResponse>
+
+    @GET("/api/v1/bills/month")
+    fun getInvoicesMonthlyDetailsOld(
         @Query("filter[yearMonth]") yearMonth: String,
         @Query("filter[currency]") currency: String,
         @Query("page") page: Int, // current page

@@ -38,7 +38,6 @@ import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.PdfViewActivity
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
-import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -161,7 +160,10 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         }
     }
 
-    fun fetchMonthlyInvoicesPaging(page: Int,flow: MutableStateFlow<SubmitResult<MyInvoicesResponse>>) {
+    fun fetchMonthlyInvoicesPaging(
+        page: Int,
+        flow: MutableStateFlow<SubmitResult<MyInvoicesResponse>>
+    ) {
         flow.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getInvoicesDataPaging(page, perPage, selectedCountry)
@@ -239,29 +241,63 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     }
 
     fun fetchBillDetailsNew(
-        data: MonthlyBillsAdapter.FetchBillsDetails,
+        flow: MutableStateFlow<SubmitResult<BillsDetailsResponse>>,
         yearMonth: String,
         currency: String,
-        error: MutableLiveData<ErrorBody>, context: Context
     ) {
-        if (isNetworkAvailable()) {
-            viewModelScope.launch {
-                val userToken = getUserToken()
-                userToken?.let { token ->
-                    Repository.getBillsDetails(
-                        data,
-                        token,
-                        yearMonth,
-                        currency,
-                        perPage,
-                        error,
-                        context,
-                        selectedCountry
-                    )
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.getBillDetails(yearMonth, currency, perPage, selectedCountry)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    flow.value = SubmitResult.Empty
+                } else {
+                    flow.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(
+                            UserPassViewModel.Companion.TAG,
+                            "Error while fetching bill details"
+                        )
+                        flow.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        flow.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN UserPassViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                flow.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                flow.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(
+                                    "UserPassViewModel",
+                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                                )
+                            }
+                        }
+                    }
+
+                    else -> {}
                 }
             }
-        } else {
-            _checkNetMyInvoices.postValue(false)
         }
     }
 
@@ -381,7 +417,12 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
 
                 val intent = Intent(context, PdfViewActivity::class.java)
                 val pendingIntent =
-                    PendingIntent.getActivity(context, 100, intent, PendingIntent.FLAG_IMMUTABLE)
+                    PendingIntent.getActivity(
+                        context,
+                        100,
+                        intent,
+                        PendingIntent.FLAG_IMMUTABLE
+                    )
 
                 val channel = NotificationChannel(
                     MyFirebaseMessagingService.CHANNEL_ID,
@@ -393,7 +434,8 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
                 channel.lightColor = Color.BLUE
 
-                val notificationManager = context.getSystemService(NotificationManager::class.java)
+                val notificationManager =
+                    context.getSystemService(NotificationManager::class.java)
                 notificationManager.createNotificationChannel(channel)
 
                 val builder = NotificationCompat.Builder(
@@ -401,7 +443,8 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 ).setSmallIcon(R.drawable.select_country_icon)
                     .setContentTitle(context.getString(R.string.file_downloaded))
                     .setContentText(contentText)
-                    .setContentIntent(pendingIntent).setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setContentIntent(pendingIntent)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setAutoCancel(true)
 
                 if (ActivityCompat.checkSelfPermission(

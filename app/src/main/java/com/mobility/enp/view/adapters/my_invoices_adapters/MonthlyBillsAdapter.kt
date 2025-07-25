@@ -17,7 +17,6 @@ import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.refactor.Data
 import com.mobility.enp.data.model.api_my_invoices.refactor.Month
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.databinding.ItemBillBinding
 import com.mobility.enp.util.SubmitResult
@@ -114,53 +113,79 @@ class MonthlyBillsAdapter(
                     if (viewModel.isNetworkAvailable()) {
                         montYearListener.onMontYearSelected(montYear)
 
-                        viewModel.fetchBillDetailsNew(object : FetchBillsDetails {
-                            override fun onOK(bill: BillsDetailsResponse) {
-                                bill.data.let {
-                                    val billsDetailsAdapter = BillsDetailsAdapter(
-                                        it,
-                                        viewModel,
-                                        error,
-                                        lifecycleOwner,
-                                        spinnerInt,
-                                        availableCurrency.toString()
-                                    )
-                                    binding.recyclerViewMonthlyBills.adapter = billsDetailsAdapter
-                                    billsDetailsAdapter.submitList(it)
+                        val billDetailsFlow =
+                            MutableStateFlow<SubmitResult<BillsDetailsResponse>>(SubmitResult.Loading)
 
-                                    if (it.bills.isNotEmpty()) {
-                                        val heightInDp: Int = when (it.bills.size) {
-                                            1 -> binding.root.context.resources.getDimensionPixelSize(
-                                                R.dimen.recycler_view_one_item
-                                            )
+                        collectLatestFlow(lifecycleOwner, billDetailsFlow) { serverResponse ->
+                            when (serverResponse) {
+                                is SubmitResult.Success -> {
+                                    spinnerInterface.onStopSpinner()
 
-                                            2 -> binding.root.context.resources.getDimensionPixelSize(
-                                                R.dimen.recycler_view_two_items
-                                            )
+                                    serverResponse.data.let { data ->
 
-                                            3 -> binding.root.context.resources.getDimensionPixelSize(
-                                                R.dimen.recycler_view_three_items
-                                            )
+                                        val billsDetailsAdapter = BillsDetailsAdapter(
+                                            data.data,
+                                            viewModel,
+                                            error,
+                                            lifecycleOwner,
+                                            spinnerInt,
+                                            availableCurrency.toString()
+                                        )
+                                        binding.recyclerViewMonthlyBills.adapter = billsDetailsAdapter
+                                        billsDetailsAdapter.submitList(data.data)
 
-                                            else -> binding.root.context.resources.getDimensionPixelSize(
-                                                R.dimen.recycler_view_more_items
-                                            )
+                                        if (data.data
+                                            .bills.isNotEmpty()) {
+                                            val heightInDp: Int = when (data.data.bills.size) {
+                                                1 -> binding.root.context.resources.getDimensionPixelSize(
+                                                    R.dimen.recycler_view_one_item
+                                                )
+
+                                                2 -> binding.root.context.resources.getDimensionPixelSize(
+                                                    R.dimen.recycler_view_two_items
+                                                )
+
+                                                3 -> binding.root.context.resources.getDimensionPixelSize(
+                                                    R.dimen.recycler_view_three_items
+                                                )
+
+                                                else -> binding.root.context.resources.getDimensionPixelSize(
+                                                    R.dimen.recycler_view_more_items
+                                                )
+                                            }
+                                            binding.scrollView.layoutParams.height = heightInDp
+                                            binding.scrollView.requestLayout()
+
+                                            binding.recyclerViewMonthlyBills.visibility = View.VISIBLE
+                                            binding.scrollView.visibility = View.VISIBLE
                                         }
-                                        binding.scrollView.layoutParams.height = heightInDp
-                                        binding.scrollView.requestLayout()
+                                        spinnerInt.onStopSpinner()
 
-                                        binding.recyclerViewMonthlyBills.visibility = View.VISIBLE
-                                        binding.scrollView.visibility = View.VISIBLE
                                     }
-                                    spinnerInt.onStopSpinner()
+
+                                }
+
+                                is SubmitResult.FailureServerError -> {
+                                    spinnerInterface.onStopSpinner()
+                                    logError(binding.root.context.resources.getString(R.string.server_error_msg))
+                                }
+
+                                is SubmitResult.FailureApiError -> {
+                                    spinnerInterface.onStopSpinner()
+                                    logError(binding.root.context.resources.getString(R.string.api_call_error))
+                                }
+
+                                else -> {
+                                    spinnerInterface.onStopSpinner()
+                                    SubmitResult.Empty
                                 }
                             }
+                            binding.executePendingBindings()
+                        }
 
-                            override fun onFailed() {
-                                spinnerInt.onStopSpinner()
-                            }
-                        }, montYear, availableCurrency.toString(), error, binding.root.context)
 
+                        spinnerInterface.onStartSpinner()
+                        viewModel.fetchBillDetailsNew(billDetailsFlow,montYear,availableCurrency.toString())
 
                         franchiserResource?.let { data ->
                             binding.arrowDown.setImageDrawable(

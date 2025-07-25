@@ -35,47 +35,6 @@ object Repository {
         return apiService(token).getUserPersonalData()
     }
 
-    suspend fun getBillsDetails(
-        data: MonthlyBillsAdapter.FetchBillsDetails,
-        token: String?,
-        yearMonth: String,
-        currency: String,
-        perPage: Int,
-        errorBody: MutableLiveData<ErrorBody>, application: Context,
-        selectedCountry: String
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        apiService(token).getInvoicesMonthlyDetails(
-            yearMonth,
-            currency,
-            1,
-            perPage,
-            lang,
-            selectedCountry
-        )
-            .enqueue(object : Callback<BillsDetailsResponse> {
-
-                override fun onResponse(
-                    call: Call<BillsDetailsResponse>, response: Response<BillsDetailsResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        response.body()?.let {
-                            data.onOK(it)
-                        }
-                    } else {
-                        errorBody.postValue(getMessageFromErrorBody(response))
-                        data.onFailed()
-                    }
-                }
-
-                override fun onFailure(call: Call<BillsDetailsResponse>, t: Throwable) {
-                    Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-                }
-            })
-    }
-
     suspend fun getBillsDetailsPaging(
         data: MutableLiveData<BillsDetailsResponse>,
         token: String?,
@@ -89,7 +48,7 @@ object Repository {
 
         val lang = getUserLanguage(application)
 
-        apiService(token).getInvoicesMonthlyDetails(
+        apiService(token).getInvoicesMonthlyDetailsOld(
             yearMonth,
             currency,
             page,
