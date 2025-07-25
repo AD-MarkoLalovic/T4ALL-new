@@ -1,5 +1,6 @@
 package com.mobility.enp.view.adapters.my_invoices_adapters
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -16,9 +17,14 @@ import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.refactor.Data
 import com.mobility.enp.data.model.api_my_invoices.refactor.Month
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.databinding.ItemBillBinding
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestFlow
+import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 //First ADAPTER
 class MonthlyBillsAdapter(
@@ -153,7 +159,7 @@ class MonthlyBillsAdapter(
                             override fun onFailed() {
                                 spinnerInt.onStopSpinner()
                             }
-                        }, montYear, availableCurrency.toString(), error,binding.root.context)
+                        }, montYear, availableCurrency.toString(), error, binding.root.context)
 
 
                         franchiserResource?.let { data ->
@@ -278,33 +284,57 @@ class MonthlyBillsAdapter(
         holder.bind(
             currentBill, viewModel, errorBody, spinnerInt, montYearListener
         )
-        checkDataFill(holder.bindingAdapterPosition, currentBill)
+        checkDataFill(holder.bindingAdapterPosition, currentBill, holder.binding.root.context)
     }
 
-    private fun checkDataFill(position: Int, currentBill: Month) {
+    private fun checkDataFill(position: Int, currentBill: Month, context: Context) {
         Log.d(
             TAG,
             "onBindViewHolder: adapter pos $position arrayTotal ${monthlyBillsArray.size - 1} totalItems ${data.total}"
         )
         if (monthlyBillsArray[monthlyBillsArray.size - 1] == currentBill && lastPage > currentPage) {
-            val data: MutableLiveData<MyInvoicesResponse> = MutableLiveData()
 
-            data.observe(lifecycleOwner) { dataResponse ->
-                spinnerInterface.onStopSpinner()
-                dataResponse?.let {
-                    currentPage = it.data?.currentPage ?: 0
+            val paginationUpdate =
+                MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Loading)
 
-                    for (month: Month in it.data!!.months) {
-                        monthlyBillsArray.add(month)
-                        notifyItemChanged(monthlyBillsArray.size - 1)
+            collectLatestFlow(lifecycleOwner, paginationUpdate) { serverResponse ->
+                when (serverResponse) {
+                    is SubmitResult.Success -> {
+                        spinnerInterface.onStopSpinner()
+                        serverResponse?.let { response ->
+                            currentPage = response.data.data?.currentPage ?: 0
+
+                            for (month: Month in response.data.data!!.months) {
+                                monthlyBillsArray.add(month)
+                                notifyItemChanged(monthlyBillsArray.size - 1)
+                            }
+                        }
                     }
 
-                    data.removeObservers(lifecycleOwner)
+                    is SubmitResult.FailureServerError -> {
+                        spinnerInterface.onStopSpinner()
+                        logError(context.resources.getString(R.string.server_error_msg))
+                    }
+
+                    is SubmitResult.FailureApiError -> {
+                        spinnerInterface.onStopSpinner()
+                        logError(context.resources.getString(R.string.api_call_error))
+                    }
+
+                    else -> {
+                        spinnerInterface.onStopSpinner()
+                        SubmitResult.Empty
+                    }
                 }
             }
+
             spinnerInterface.onStartSpinner()
-            spinnerInterface.pagingUpdate(currentPage + 1, data)
+            spinnerInterface.pagingUpdate(currentPage + 1, paginationUpdate)
         }
+    }
+
+    private fun logError(string: String) {
+        Log.d(ToolHistoryListingAdapter.Companion.TAG, "showError: $string")
     }
 
     override fun getItemCount() = monthlyBillsArray.size
@@ -317,7 +347,7 @@ class MonthlyBillsAdapter(
     interface TriggerSpinner {
         fun onStartSpinner()
         fun onStopSpinner()
-        fun pagingUpdate(nextPage: Int, data: MutableLiveData<MyInvoicesResponse>)
+        fun pagingUpdate(nextPage: Int, flow: MutableStateFlow<SubmitResult<MyInvoicesResponse>>)
         fun pagingUpdateBill(
             nextPage: Int,
             data: MutableLiveData<BillsDetailsResponse>,

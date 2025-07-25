@@ -124,12 +124,12 @@ interface ApiService {
     ): Response<V2HistoryTagResponse>
 
     @GET("/api/v1/bills")
-    fun getInvoicesPerMonth(
+    suspend fun getInvoicesPerMonth(
         @Query(value = "lang") language: String,
         @Query("page") page: Int, // current page
         @Query("perPage") perPage: Int, // items per page
         @Query("filter[country]") country : String
-    ): Call<MyInvoicesResponse>
+    ): Response<MyInvoicesResponse>
 
     @GET("/api/v1/bills/month")
     fun getInvoicesMonthlyDetails(

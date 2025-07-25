@@ -1,7 +1,6 @@
 package com.mobility.enp.viewmodel
 
 import android.Manifest
-import android.app.Application
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -35,10 +34,14 @@ import com.mobility.enp.data.model.pdf_table.PdfTable
 import com.mobility.enp.data.repository.BillsRepository
 import com.mobility.enp.network.Repository
 import com.mobility.enp.services.MyFirebaseMessagingService
+import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.PdfViewActivity
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
@@ -65,8 +68,9 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
 
     private val perPage = 10
 
-    private val _monthlyInvoicesList = MutableLiveData<MyInvoicesResponse>()
-    val monthlyInvoicesList: LiveData<MyInvoicesResponse?> get() = _monthlyInvoicesList
+
+    private val _myInvoices = MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Empty)
+    val myInvoices: StateFlow<SubmitResult<MyInvoicesResponse>> get() = _myInvoices
 
     private val _checkNetDownload = MutableLiveData<Boolean>()
     val checkNetDownload: LiveData<Boolean> = _checkNetDownload
@@ -99,26 +103,119 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         return repository.isNetworkPresent()
     }
 
-    fun fetchMonthlyInvoices(errorBody: MutableLiveData<ErrorBody>, context: Context) {
-        if (isNetworkAvailable()) {
-            _checkNetMyInvoices.value = true
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    val userToken = getUserToken()
-                    userToken?.let { token ->
-                        Repository.getInvoices(
-                            _monthlyInvoicesList,
-                            token,
-                            errorBody,
-                            context,
-                            perPage,
-                            selectedCountry
+    fun fetchMonthlyInvoices() {
+        _myInvoices.value = SubmitResult.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.getInvoicesData(perPage, selectedCountry)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _myInvoices.value = SubmitResult.Empty
+                } else {
+                    _myInvoices.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(
+                            UserPassViewModel.Companion.TAG,
+                            "Error while fetching my invoices data"
                         )
+                        _myInvoices.value = SubmitResult.FailureServerError
                     }
+
+                    is NetworkError.NoConnection -> {
+                        _myInvoices.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN UserPassViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                _myInvoices.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _myInvoices.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(
+                                    "UserPassViewModel",
+                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                                )
+                            }
+                        }
+                    }
+
+                    else -> {}
                 }
             }
-        } else {
-            _checkNetMyInvoices.value = false
+        }
+    }
+
+    fun fetchMonthlyInvoicesPaging(page: Int,flow: MutableStateFlow<SubmitResult<MyInvoicesResponse>>) {
+        flow.value = SubmitResult.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.getInvoicesDataPaging(page, perPage, selectedCountry)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    flow.value = SubmitResult.Empty
+                } else {
+                    flow.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(
+                            UserPassViewModel.Companion.TAG,
+                            "Error while fetching my invoices data"
+                        )
+                        flow.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        flow.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN UserPassViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                flow.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                flow.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(
+                                    "UserPassViewModel",
+                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                                )
+                            }
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
         }
     }
 
@@ -137,32 +234,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
             val data = withContext(Dispatchers.IO) {
                 repository.fetchSavedBillsData()
             }
-            _monthlyInvoicesList.value = data
-        }
-    }
-
-    fun fetchMonthlyInvoicesPaging(
-        errorBody: MutableLiveData<ErrorBody>,
-        data: MutableLiveData<MyInvoicesResponse>,
-        nextPage: Int, context: Context
-    ) {
-        if (isNetworkAvailable()) {
-            viewModelScope.launch {
-                val userToken = getUserToken()
-                userToken?.let { token ->
-                    Repository.getInvoicesPaging(
-                        data,
-                        token,
-                        errorBody,
-                        context,
-                        nextPage,
-                        perPage,
-                        selectedCountry
-                    )
-                }
-            }
-        } else {
-            _checkNetMyInvoices.postValue(false)
+            _myInvoices.value = SubmitResult.Success(data)
         }
     }
 
