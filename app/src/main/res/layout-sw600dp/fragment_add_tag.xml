@@ -96,8 +96,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_enter_serial_number"
-                    android:inputType="number"
                     android:imeOptions="actionNext"
+                    android:inputType="number"
                     android:maxLines="1"
                     android:textColor="@color/figmaSplashScreenColor" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -109,9 +109,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimens_16dp"
                 android:layout_marginTop="@dimen/dimens_22dp"
-                android:text="@string/verification_code"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/inputSerialNumber" />
+                app:layout_constraintTop_toBottomOf="@+id/inputSerialNumber"
+                tools:text="@string/verification_code" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputVerificationCodeAddTag"
@@ -137,11 +137,11 @@
                     style="@style/Paragraph"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
                     android:imeOptions="actionDone"
                     android:inputType="text"
-                    android:hint="@string/hint_enter_verification_code"
-                    android:textColor="@color/figmaSplashScreenColor" />
+                    android:maxLines="1"
+                    android:textColor="@color/figmaSplashScreenColor"
+                    tools:hint="@string/hint_enter_verification_code" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

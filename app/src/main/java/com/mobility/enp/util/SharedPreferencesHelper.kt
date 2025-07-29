@@ -59,6 +59,16 @@ object SharedPreferencesHelper {
         return getPreferences(context).getBoolean("language_changed", false)
     }
 
+    fun saveUserCountryCode(context: Context, code: String) {
+        getPreferences(context).edit {
+            putString("country_code", code)
+        }
+    }
+
+    fun getCountryCode(context: Context): String? {
+        return getPreferences(context).getString("country_code", null)
+    }
+
 }
 
 
