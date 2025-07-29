@@ -15,7 +15,8 @@ import kotlinx.coroutines.launch
 class PdfViewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPdfViewBinding
-    private val viewModel: MyInvoicesViewModel by viewModels()
+    private val viewModel: MyInvoicesViewModel by viewModels { MyInvoicesViewModel.Factory }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

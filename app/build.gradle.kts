@@ -34,8 +34,6 @@ android {
         applicationId = "com.mobility.enp"
         minSdk = 29
         targetSdk = 35
-        versionCode = 167
-        targetSdk = 34
         versionCode = 170
         versionName = "1.4.4"
 
@@ -101,6 +99,7 @@ dependencies {
 
     //https://developer.android.com/build/migrate-to-catalogs#kts
 
+    implementation(libs.android.pdf.viewer)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -145,7 +144,6 @@ dependencies {
     debugImplementation(libs.androidx.fragment.testing.manifest)
 
     //pdf
-    implementation(libs.androidpdfviewer)
     implementation(libs.itext7.core)
     ksp(libs.androidx.room.compiler)
     ksp(libs.compiler)
