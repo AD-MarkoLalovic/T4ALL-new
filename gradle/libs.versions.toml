@@ -1,6 +1,6 @@
 [versions]
 agp = "8.7.0"
-androidpdfviewer = "3.1.0-beta.1"
+androidPdfViewerVersion = "3.2.0-beta05"
 androidxFragmentTesting = "1.4.1"
 firebaseBom = "33.0.0"
 firebaseCrashlyticsGradle = "3.0.2"
@@ -20,7 +20,7 @@ ui-ktx = "2.8.2"
 lifecycle-ktx = "2.8.7"
 room-runtime = "2.6.1"
 dataBinding = "8.7.2"
-coreKtx = "1.13.1"
+coreKtx = "1.16.0"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
@@ -46,7 +46,7 @@ junitKtx = "1.2.1"
 espressoContrib = "3.6.1"
 
 [libraries]
-androidpdfviewer = { module = "com.github.DImuthuUpe:AndroidPdfViewer", version.ref = "androidpdfviewer" }
+android-pdf-viewer = { module = "io.github.oothp:android-pdf-viewer", version.ref = "androidPdfViewerVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-fragment-testing = { module = "androidx.fragment:fragment-testing", version.ref = "androidxFragmentTesting" }
 androidx-fragment-testing-manifest = { module = "androidx.fragment:fragment-testing-manifest", version.ref = "fragmentTestingManifest" }
@@ -74,7 +74,6 @@ androidx-gson = { group = "com.google.code.gson", name = "gson", version.ref = "
 androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
 androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "webkit" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
-androidx-pdfviewer = { group = "com.github.barteksc", name = "android-pdf-viewer", version.ref = "pdfViewer" }
 firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebase-messaging" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebase-analytics" }
