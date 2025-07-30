@@ -84,36 +84,35 @@ class UserRepository(
     suspend fun putUpdateUserData(data: UpdateUserDataRequest): Result<BasicInfoEntity> {
         if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
 
-        val userToken = getUserToken()
-        userToken?.let { token ->
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
             val lang = getLangKey()
+            val response = apiService(userToken).updateUserInfo(data, lang)
+            if (response.isSuccessful) {
+                val body = response.body()
+                body?.let {
+                    saveBasicInfo(it)
+                    val localData = getLocalBasicInfo()
+                    if (localData != null) {
+                        Result.success(localData)
+                    } else {
+                        Result.failure(NetworkError.ServerError)
+                    }
+                } ?: Result.failure(NetworkError.ServerError)
 
-            try {
-                val response = apiService(token).updateUserInfo(data, lang)
-                if (response.isSuccessful) {
-                    val body = response.body()
-                    body?.let {
-                        saveBasicInfo(it)
-                        val localData = getLocalBasicInfo()
-                        if (localData != null) {
-                            return Result.success(localData)
-                        } else {
-                            return Result.failure(NetworkError.ServerError)
-                        }
-                    } ?: return Result.failure(NetworkError.ServerError)
-
-                } else {
-                    response.errorBody()?.let { errorBody ->
-                        val apiErrorResponse = parseErrorResponse(response.code(), errorBody)
-                        return Result.failure(NetworkError.ApiError(apiErrorResponse))
-                    } ?: return Result.failure(NetworkError.ServerError)
-                }
-            } catch (e: Exception) {
-                Log.e("BasicInfoUpdate", "Neočekivana greška: ${e.message}", e)
-                return Result.failure(NetworkError.ServerError)
+            } else {
+                response.errorBody()?.let { errorBody ->
+                    val apiErrorResponse = parseErrorResponse(response.code(), errorBody)
+                    Result.failure(NetworkError.ApiError(apiErrorResponse))
+                } ?: Result.failure(NetworkError.ServerError)
             }
+        } catch (e: Exception) {
+            Log.e("BasicInfoUpdate", "Neočekivana greška: ${e.message}", e)
+            Result.failure(NetworkError.ServerError)
         }
-        return Result.failure(NetworkError.ServerError)
+
+
     }
 
 
