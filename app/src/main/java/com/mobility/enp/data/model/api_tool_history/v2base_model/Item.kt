@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose
 data class Item(
     @SerializedName("amount")
     @Expose
-    val amount: Int?,
+    val amount: Double?,
     @SerializedName("amountWithDiscount")
     @Expose
     val amountWithDiscount: String?,
