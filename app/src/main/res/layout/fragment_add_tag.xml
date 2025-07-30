@@ -101,6 +101,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="number"
                     android:maxLines="1"
+                    android:maxLength="16"
                     android:textColor="@color/figmaSplashScreenColor" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -142,6 +143,7 @@
                     android:imeOptions="actionDone"
                     android:inputType="text"
                     android:maxLines="1"
+                    android:maxLength="16"
                     android:textColor="@color/figmaSplashScreenColor"
                     tools:hint="@string/hint_enter_verification_code" />
             </com.google.android.material.textfield.TextInputLayout>
