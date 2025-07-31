@@ -18,12 +18,15 @@ class AddTagViewModel(private var repository: ProfileRepository) : ViewModel() {
     private val _addTag = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
     val addTag: StateFlow<SubmitResultFold<Unit>> get() = _addTag
 
-    fun addNewTag(serialNumber: String, verificationCode: String) {
+    fun addNewTag(serialNumber: String, verificationCode: String, montenegrin: Boolean) {
         viewModelScope.launch {
             _addTag.value = SubmitResultFold.Loading
 
-            val result =
-                repository.addTag(serialNumber = serialNumber, verificationCode = verificationCode)
+            val result = if (montenegrin) {
+                repository.addTag(serialNumber = serialNumber, verificationOrSerNumber = verificationCode, true)
+            } else {
+                repository.addTag(serialNumber = serialNumber, verificationOrSerNumber = verificationCode, false)
+            }
 
             result.fold(
                 onSuccess = {
@@ -39,6 +42,10 @@ class AddTagViewModel(private var repository: ProfileRepository) : ViewModel() {
 
     fun resetAddTagState() {
         _addTag.value = SubmitResultFold.Idle
+    }
+
+    fun getCountryCode(): String? {
+        return repository.getCountryCode()
     }
 
 

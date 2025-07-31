@@ -169,6 +169,14 @@ interface ApiService {
         @Query(value = "lang") languageKey: String
     ): Response<Unit>
 
+    @FormUrlEncoded
+    @POST("/api/v1/tags/add-tag/mne")
+    suspend fun postAddTagME(
+        @Field("serialNumber") serialNumber: String,
+        @Field("serialNumber_confirmation") serialNumberConfirmation: String,
+        @Query(value = "lang") languageKey: String
+    ): Response<Unit>
+
     @POST("/api/v1/history/complaint")
     suspend fun postComplaintN(
         @Body complaintBody: ComplaintBody

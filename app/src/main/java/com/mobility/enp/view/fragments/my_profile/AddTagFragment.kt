@@ -29,6 +29,9 @@ class AddTagFragment : Fragment() {
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: AddTagViewModel by viewModels { AddTagViewModel.factory }
 
+    private lateinit var countryCode: String
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,8 +43,11 @@ class AddTagFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        countryCode = viewModel.getCountryCode().orEmpty()
+
         setObservers()
         setFranchiser()
+        setVerificationTextByCountryCode(countryCode)
 
         binding.bttConfirmAddTag.setOnClickListener {
             val serial = binding.serialNumber.text.toString().trim()
@@ -49,7 +55,11 @@ class AddTagFragment : Fragment() {
 
             if (serial.isNotEmpty() && verification.isNotEmpty()
             ) {
-                viewModel.addNewTag(serial, verification)
+                if (countryCode == "ME") {
+                    viewModel.addNewTag(serial, verification, true)
+                } else {
+                    viewModel.addNewTag(serial, verification, false)
+                }
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -57,7 +67,6 @@ class AddTagFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-
         }
 
     }
@@ -159,6 +168,17 @@ class AddTagFragment : Fragment() {
             }
         }
     }
+
+    private fun setVerificationTextByCountryCode(code: String) {
+        if (code == "ME") {
+            binding.txVerificationCodeAddTag.text = getString(R.string.confirm_serial_number)
+            binding.verificationCode.hint = getString(R.string.confirm_serial_number)
+        } else {
+            binding.txVerificationCodeAddTag.text = getString(R.string.verification_code)
+            binding.verificationCode.hint = getString(R.string.hint_enter_verification_code)
+        }
+    }
+
 
     private fun showToastMessage(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
