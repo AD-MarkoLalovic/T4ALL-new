@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "destination: $destination")
             when (destination.id) {
 
-                R.id.homeFragment,R.id.loginNotificationDialog -> {
+                R.id.homeFragment -> {
                     binding.toolbarShared.root.visibility = View.VISIBLE
                     binding.toolbarShared.backArrow.visibility = View.GONE
                     binding.toolbarShared.iconLogo.visibility = View.VISIBLE
@@ -216,9 +216,9 @@ class MainActivity : AppCompatActivity() {
             "sr", "cnr" -> Locale("sr", "RS")
             else -> Locale(userLanguage)
         }
-
-        val config = Configuration()
         Locale.setDefault(locale)
+
+        val config = Configuration(newBase.resources.configuration)
         config.setLocale(locale)
 
         val localizedContext = newBase.createConfigurationContext(config)

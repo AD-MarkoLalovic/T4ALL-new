@@ -1,5 +1,6 @@
 package com.mobility.enp.view.dialogs
 
+import android.app.Dialog
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -13,16 +14,44 @@ import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlin.getValue
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 
-class ChangePasswordDialog(
-    private val title: String,
-    private val subtitle: String,
-    val onConfirmButton: (Any) -> Unit
-) : DialogFragment() {
+class ChangePasswordDialog() : DialogFragment() {
 
     private var _binding: GeneralDialogBinding? = null
     private val binding: GeneralDialogBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
+
+    companion object {
+        private const val ARG_TITLE = "ARG_TITLE"
+        private const val ARG_SUBTITLE = "ARG_SUBTITLE"
+        private const val ARG_RESULT_KEY = "ARG_RESULT_KEY"
+        private const val ARG_RESULT_VALUE_KEY = "ARG_RESULT_VALUE_KEY"
+
+
+        fun newInstance(
+            title: String,
+            subtitle: String,
+            resultKey: String,
+            resultValueKey: String
+        ): ChangePasswordDialog {
+            return ChangePasswordDialog().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_TITLE, title)
+                    putString(ARG_SUBTITLE, subtitle)
+                    putString(ARG_RESULT_KEY, resultKey)
+                    putString(ARG_RESULT_VALUE_KEY, resultValueKey)
+                }
+            }
+        }
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return super.onCreateDialog(savedInstanceState).apply {
+            window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,12 +66,21 @@ class ChangePasswordDialog(
         super.onViewCreated(view, savedInstanceState)
 
         setFranchiser()
+        val title = requireArguments().getString(ARG_TITLE)
+        val subtitle = requireArguments().getString(ARG_SUBTITLE)
+        val resultKey = requireArguments().getString(ARG_RESULT_KEY)!!
+        val resultValueKey = requireArguments().getString(ARG_RESULT_VALUE_KEY)!!
+
 
         binding.title.text = title
         binding.subTitle.text = subtitle
+
         binding.confirmButton.setOnClickListener {
+            setFragmentResult(
+                resultKey,
+                bundleOf(resultValueKey to true)
+            )
             dismiss()
-            onConfirmButton(Any())
         }
     }
 
@@ -56,7 +94,6 @@ class ChangePasswordDialog(
 
     override fun onStart() {
         super.onStart()
-        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         setDimensionsPercent(95)
         isCancelable = false
     }

@@ -28,13 +28,13 @@ android {
     }
 
     namespace = "com.mobility.enp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.mobility.enp"
         minSdk = 29
-        targetSdk = 34
-        versionCode = 171
+        targetSdk = 35
+        versionCode = 172
         versionName = "1.4.5"
 
         resourceConfigurations += listOf("en", "sr", "de", "mk", "tr", "b+cnr", "hr", "el", "bs")
@@ -66,7 +66,7 @@ android {
             versionNameSuffix = "-stage"
             multiDexEnabled = true
             buildConfigField("String", "API_URL", "\"https://mobileapitest.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+80256@gmail.com\"")
+            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+20257@gmail.com\"")
             buildConfigField("String", "TEST_PASSWORD", "\"demodemo\"")
         }
         create("prod") {
@@ -99,6 +99,7 @@ dependencies {
 
     //https://developer.android.com/build/migrate-to-catalogs#kts
 
+    implementation(libs.android.pdf.viewer)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -143,7 +144,6 @@ dependencies {
     debugImplementation(libs.androidx.fragment.testing.manifest)
 
     //pdf
-    implementation(libs.androidpdfviewer)
     implementation(libs.itext7.core)
     ksp(libs.androidx.room.compiler)
     ksp(libs.compiler)

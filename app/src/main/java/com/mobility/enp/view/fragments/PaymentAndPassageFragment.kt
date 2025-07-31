@@ -591,19 +591,15 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     override fun setPrimaryCard(cardId: Int) {
-
-        val primaryCardDialog = LostTagDialog(
-            getString(R.string.choose_primary_card),
-            getString(R.string.confirm_change_primary_card),
-            object : LostTagDialog.OnButtonClickInLostTag {
-                override fun onClickConfirmed() {
-                    viewModel.setNewPrimaryCard(cardId)
-                }
-            })
-        primaryCardDialog.isCancelable = false
-        primaryCardDialog.show(childFragmentManager, "PrimaryCardDialog")
-
+        LostTagDialog.newInstance(
+            title = getString(R.string.choose_primary_card),
+            subtitle = getString(R.string.confirm_change_primary_card),
+            onButtonClick = {
+                viewModel.setNewPrimaryCard(cardId)
+            }
+        ).show(parentFragmentManager, "PrimaryCardDialog")
     }
+
 
     override fun clickRemoveCard(cardId: String) {
         val confirmRemovalCardDialog =

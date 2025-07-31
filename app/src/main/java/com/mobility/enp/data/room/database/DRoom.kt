@@ -9,7 +9,7 @@ import androidx.room.TypeConverters
 import com.mobility.enp.Config
 import com.mobility.enp.data.model.IntroPageStatus
 import com.mobility.enp.data.model.ProfileImage
-import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
+import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.basic_information.entity.BasicInfoEntity
 import com.mobility.enp.data.model.api_my_profile.refund_request.entity.DataRefundRequestEntity
 import com.mobility.enp.data.model.api_my_profile.refund_request.tags.entity.TagsRefundRequestEntity
@@ -51,7 +51,7 @@ import com.mobility.enp.data.room.notification.NotificationDao
     entities = [UserLoginResponseRoomTable::class, FcmToken::class, NotificationModel::class, IndexData::class, ToolHistoryListing::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class, HomeEntity::class, V2HistoryTagResponse::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class, HomeCardsEntity::class],
-    version = 205,
+    version = 210,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)

@@ -149,7 +149,6 @@
     <string name="password_error_message" translatable="true">Полето за нова лозинка мора да содржи најмалку 8 карактери.</string>
     <string name="enter_old_password_message" translatable="true">Полето за стара лозинка е задолжително.</string>
     <string name="incorrect_old_password_message" translatable="true">Погрешно унета стара шифра.</string>
-    <string name="password_change_failed" translatable="true">Промената на лозинката не успеа.</string>
     <string name="repeat_the_new_password" translatable="true">Повторно внесете ја новата лозинка</string>
     <string name="enter_support_message" translatable="true">Внесете го текстот на пораката.</string>
     <string name="create_account" translatable="true">Создадете сметка на T4A</string>
@@ -234,10 +233,8 @@
     <string name="tag_device_payment_method_north_macedonia">Ако сакате да го користите вашиот уред TAG на патиштата во Северној Македонији, ве молиме додадете валидна платежна картичка</string>
     <string name="tag_device_payment_method_serbia">Ако сакате да го користите вашиот уред TAG на патиштата во Србији, ве молиме додадете валидна платежна картичка</string>
     <string name="tag_device_payment_method_montenegro">Ако сакате да го користите вашиот уред TAG на патиштата во Црна Гора, ве молиме додадете валидна платежна картичка</string>
-    <string name="previous_invoices">Вашите фактури ќе бидат прикажани тука.</string>
     <string name="text_no_refund_tags">Немате тагови за кои можете да поднесете барање за враќање на средствата.</string>
     <string name="text_no_my_tags">Моментално немате додадено тагови. Ве молиме додадете го вашиот таг.</string>
-    <string name="no_invoices">Вашите фактури ќе бидат прикажани тука.</string>
     <string name="no_tool_history">Вашите поминувања ќе бидат прикажани тука.</string>
     <string name="enter_old_password">Внесете стара лозинка</string>
     <string name="enter_new_password">Внесете нова лозинка</string>
@@ -310,7 +307,7 @@
     <string name="price">Цена</string>
     <string name="please_select_dates">Ве молиме изберете датуми</string>
     <string name="formatting_error">Грешка во форматот</string>
-    <string name="please_select_one_tag">Извоз на историјата на премин е можен само за една ОЗНАКА или за сите ОЗНАКИ</string>
+    <string name="please_select_one_tag">Извоз на историјата на премин е можен само за една TAG или за сите TAGs</string>
     <string name="case_number_info">Бројот на предметот се однесува на бројот под кој е поднесена вашата рекламација
         и кој се наоѓа во одговорот што сте го добиле од нас. Приговорите со погрешен или непостоечки број нема да бидат прифатени.</string>
     <string name="server_error_msg">Грешка на серверот</string>
@@ -353,8 +350,6 @@
     <string name="field_bank_account_isrequired">Полето жиро сметка треба да содржи 13 цифри.</string>
     <string name="access_denied">Пристапот е одбиен</string>
     <string name="only_t4all_users_access_denied">Во моментов не е можно да се најават налози кои не се T4All. Ве молиме користете го WEB порталот.</string>
-    <string name="notification_login_title">Известување</string>
-    <string name="notification_login_subtitle">Апликацијата моментално е во бета фаза на развој. Некои функционалности сè уште се во изработка. Ви благодариме за разбирањето!</string>
     <string name="tag_registration_instruction_hr">За регистрација на тагови во Хрватска, потребно е да изберете кои тагови сакате да ги регистрирате и да кликнете на копчето „Регистрација“.</string>
     <string name="notes_serbian_tag_in_croatia">"Напомени за користење на српскиот ТАГ уред во Република Хрватска  "</string>
     <string name="activation_successful_enp_tag_device">"Активацијата на ЕНП/ТАГ уредот е успешна.  "</string>
@@ -376,5 +371,10 @@
     <string name="highway_a11">Автопат A11:</string>
     <string name="check_status_on_hac_portal">Проверете го статусот на HAC порталот</string>
     <string name="link_login_to_hac">Најави се на HAC портал</string>
+    <string name="facebook_text">Следете нè на Фејсбук и дознајте први сè за придобивките од T4A системот.</string>
+    <string name="instagram_text">Следете нè на Инстаграм и дознајте први сè за придобивките од T4A системот.</string>
+    <string name="jp_putevi_srbije">ЈП Путеви Србије</string>
+    <string name="no_invoices">Нема сметки за избраната земја</string>
+    <string name="confirm_serial_number">Потврдете го серискиот број</string>
 
 </resources>

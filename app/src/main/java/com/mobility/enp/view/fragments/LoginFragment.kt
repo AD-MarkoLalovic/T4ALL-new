@@ -63,8 +63,6 @@ class LoginFragment : Fragment() {
 
         passwordVisibility()
 
-        franchiseViewModel.setEnableLoginDialog(true)
-
         if (BuildConfig.DEBUG) {
             binding.editEmail.setText(BuildConfig.TEST_USERNAME)
             binding.editPassword.setText(BuildConfig.TEST_PASSWORD)
@@ -80,7 +78,7 @@ class LoginFragment : Fragment() {
             if (userName.isNotEmpty() && userPassword.isNotEmpty()) {
 
                 val body = LoginBody(userName, userPassword)
-                loginViewModel.loginUser(body, requireContext())
+                loginViewModel.loginUser(body)
 
             } else {
                 Toast.makeText(

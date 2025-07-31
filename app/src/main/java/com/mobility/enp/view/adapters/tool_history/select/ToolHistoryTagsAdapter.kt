@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.Visibility
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.ToolHistoryTagsAdapterBinding
@@ -30,7 +29,7 @@ class ToolHistoryTagsAdapter(
             if (tag.registrationPlate.isNullOrEmpty()) { // ignore recommendation android studio is wrong here
                 tag.registrationPlate = tag.serialNumber
                 binding.serialNumber.visibility = View.INVISIBLE
-            }else{
+            } else {
                 binding.serialNumber.visibility = View.VISIBLE
             }
 
@@ -119,6 +118,7 @@ class ToolHistoryTagsAdapter(
         val tag = listOfTags[holder.bindingAdapterPosition]
         holder.bind(tag)
     }
+
 
     interface TagSend {
         fun onSendTag(tag: Tag)

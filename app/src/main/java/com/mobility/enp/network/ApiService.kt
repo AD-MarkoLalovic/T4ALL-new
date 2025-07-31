@@ -3,17 +3,17 @@ package com.mobility.enp.network
 import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
-import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
+import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
+import com.mobility.enp.data.model.api_my_profile.my_tags.response.MyTagsResponse
 import com.mobility.enp.data.model.api_my_profile.refund_request.SendRefundRequest
 import com.mobility.enp.data.model.api_my_profile.refund_request.response.RefundRequestsResponse
 import com.mobility.enp.data.model.api_my_profile.refund_request.tags.response.TagsResponseRefundRequest
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_tags.LostTagResponse
-import com.mobility.enp.data.model.api_tags.TagsResponse
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
@@ -83,7 +83,10 @@ interface ApiService {
     ): Response<BasicInfoResponse>
 
     @PUT("/api/v1/personal-data/change-password")
-    fun changePassword(@Body request: ChangePasswordRequest): Call<Unit>
+    suspend fun putChangePassword(
+        @Body request: ChangePasswordRequest,
+        @Query("lang") language: String
+    ): Response<Unit>
 
     @POST("/api/v1/contact")
     suspend fun sendContactMessage(@Body request: SupportRequest): Response<Unit>
@@ -121,43 +124,29 @@ interface ApiService {
     ): Response<V2HistoryTagResponse>
 
     @GET("/api/v1/bills")
-    fun getInvoicesIndex(
-        @Query(value = "lang") language: String,
-        @Query("perPage") perPage: Int // items per page
-    ): Call<MyInvoicesResponse>
-
-    @GET("/api/v1/bills")
-    fun getInvoicesIndexPaging(
+    suspend fun getInvoicesPerMonth(
         @Query(value = "lang") language: String,
         @Query("page") page: Int, // current page
-        @Query("perPage") perPage: Int // items per page
-    ): Call<MyInvoicesResponse>
+        @Query("perPage") perPage: Int, // items per page
+        @Query("filter[country]") country: String
+    ): Response<MyInvoicesResponse>
 
     @GET("/api/v1/bills/month")
-    fun getBillsByMonth(
-        @Query("filter[yearMonth]") yearMonth: String,
-        @Query("filter[currency]") currency: String,
-        //@Query("page") page: Int, // current page
-        @Query("perPage") perPage: Int,
-        @Query(value = "lang") language: String
-
-    ): Call<BillsDetailsResponse>
-
-    @GET("/api/v1/bills/month")
-    fun getBillsByMonthPaging(
+    suspend fun getInvoicesMonthlyDetails(
         @Query("filter[yearMonth]") yearMonth: String,
         @Query("filter[currency]") currency: String,
         @Query("page") page: Int, // current page
         @Query("perPage") perPage: Int,
-        @Query(value = "lang") language: String
-    ): Call<BillsDetailsResponse>
+        @Query(value = "lang") language: String,
+        @Query("filter[country]") country: String
+    ): Response<BillsDetailsResponse>
 
-    @GET("/api/v1/tags")
-    fun getUserTags(
-        @Query("page") page: String,
-        @Query("perPage") perPage: String,
-        @Query(value = "lang") language: String
-    ): Call<TagsResponse>
+    @GET("/api/v2/tags")
+    suspend fun getUserTagsNew(
+        @Query("page") page: Int,
+        @Query("perPage") perPage: Int,
+        @Query("lang") language: String
+    ): Response<MyTagsResponse>
 
     //endregion
 
@@ -168,17 +157,25 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("/api/v1/tags/lost-tag")
-    fun postLostTag(
+    suspend fun postLostTag(
         @Field("serialNumber") serialNumber: String
-    ): Call<LostTagResponse>
+    ): Response<Unit>
 
     @FormUrlEncoded
     @POST("/api/v1/tags/add-tag")
-    fun postAddTag(
-        @Field("verificationCode") verificationCode: String,
+    suspend fun postAddTag(
         @Field("serialNumber") serialNumber: String,
+        @Field("verificationCode") verificationCode: String,
         @Query(value = "lang") languageKey: String
-    ): Call<LostTagResponse>
+    ): Response<Unit>
+
+    @FormUrlEncoded
+    @POST("/api/v1/tags/add-tag/mne")
+    suspend fun postAddTagME(
+        @Field("serialNumber") serialNumber: String,
+        @Field("serialNumber_confirmation") serialNumberConfirmation: String,
+        @Query(value = "lang") languageKey: String
+    ): Response<Unit>
 
     @POST("/api/v1/history/complaint")
     suspend fun postComplaintN(
@@ -231,7 +228,7 @@ interface ApiService {
     @POST("/api/v1/tags/found-tag")
     suspend fun postFoundTag(
         @Field("serialNumber") serialNumber: String
-    ): Response<LostTagResponse>
+    ): Response<Unit>
 
     @GET("/api/v1/cards/web")
     suspend fun getCreditCardsWeb(@Query("lang") language: String): Response<CardWebModel>
@@ -266,12 +263,12 @@ interface ApiService {
         @Query(value = "locale") locale: String,
         @Query(value = "date_from") dateFrom: String,
         @Query(value = "date_to") dateTo: String,
-        @Query(value = "currency") currency: String
+        @Query(value = "country") country: String
     ): Response<CsvModel>
 
     @GET("/api/v1/banks")
     suspend fun getBanks(): Response<BanksResponse>
 
     @PUT("api/v1/personal-data/change-language")
-    suspend fun changeLanguage(@Query("language") languageCode: String)
+    suspend fun changeLanguage(@Query("language") languageCode: String): Response<Unit>
 }

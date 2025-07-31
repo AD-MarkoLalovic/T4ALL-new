@@ -3,14 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="data"
-            type="com.mobility.enp.data.model.api_tags.Tag" />
-
-    </data>
-
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,18 +29,32 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary_light_darkest"
+                    app:layout_constraintBottom_toBottomOf="@+id/franchiserTag"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/txTagSerialNumber"
                     tools:text="BG1234UL" />
 
                 <TextView
+                    android:id="@+id/txTagSerialNumber"
                     style="@style/SubtitlesRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{data.serialNumber}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="CE040130628219221" />
+
+                <TextView
+                    android:id="@+id/franchiserTag"
+                    style="@style/CaptionRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_22dp"
+                    android:gravity="end"
+                    android:textColor="@color/figmaIntroEclipseColorInactive"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/txTable"
+                    app:layout_constraintTop_toBottomOf="@+id/txTagSerialNumber"
+                    tools:text="JP “Putevi Srbije“" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,13 +63,12 @@
                 android:background="@color/white"
                 android:padding="@dimen/dimens_16dp">
 
-
                 <TextView
                     android:id="@+id/txCategory"
                     style="@style/CaptionRegular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_16dp"
+                    android:layout_marginTop="@dimen/dimens_8dp"
                     android:text="@string/category"
                     android:textColor="@color/primary_light_darkest"
                     app:layout_constraintStart_toStartOf="parent"
@@ -76,7 +81,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimens_16dp"
-                    android:text='@{data.category.value + " "}'
                     app:layout_constraintBottom_toBottomOf="@+id/txCategory"
                     app:layout_constraintStart_toEndOf="@+id/txCategory"
                     app:layout_constraintTop_toTopOf="@+id/txCategory"
@@ -89,7 +93,6 @@
                     android:layout_height="38dp"
                     android:paddingVertical="@dimen/dimens_0dp"
                     android:text="@string/lost_tag"
-                    android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -100,7 +103,6 @@
                     android:layout_height="38dp"
                     android:paddingVertical="@dimen/dimens_0dp"
                     android:text="@string/found_tag"
-                    android:visibility="gone"
                     app:backgroundTint="@color/country_filter"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -113,26 +115,44 @@
                     android:layout_height="wrap_content"
                     android:text="@string/status"
                     android:textColor="@color/primary_light_darkest"
-                    app:layout_constraintBottom_toBottomOf="@id/cyclerTagStatuses"
+                    app:layout_constraintBottom_toBottomOf="@id/tagsStatus"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/cyclerTagStatuses"
+                    app:layout_constraintTop_toTopOf="@id/tagsStatus"
                     tools:text="@string/status" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/cyclerTagStatuses"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/tagsStatus"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimens_16dp"
-                    android:layout_marginTop="28dp"
-                    android:elevation="@dimen/dimens_10dp"
+                    android:layout_marginTop="42dp"
+                    android:layout_marginEnd="@dimen/dimens_16dp"
+                    android:background="@drawable/border_tags_status"
+                    android:gravity="center|start"
                     android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                    android:paddingHorizontal="@dimen/dimens_8dp"
+                    android:paddingVertical="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@id/txCountry"
                     app:layout_constraintTop_toBottomOf="@id/txCategory"
-                    app:spanCount="2"
-                    tools:itemCount="3"
-                    tools:listitem="@layout/card_cycler_tag_statuses" />
+                    tools:backgroundTint="@color/tag_active">
+
+                    <ImageView
+                        android:id="@+id/flagIcon"
+                        android:layout_width="@dimen/dimens_22dp"
+                        android:layout_height="@dimen/dimens_16dp"
+                        android:importantForAccessibility="no"
+                        tools:background="@drawable/flag_serbia" />
+
+                    <TextView
+                        android:id="@+id/countryStatus"
+                        style="@style/CaptionRegular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimens_8dp"
+                        tools:text="Serbia Formedg" />
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

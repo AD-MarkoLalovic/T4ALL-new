@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
+import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
@@ -15,6 +16,7 @@ import com.mobility.enp.data.room.LastUser
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 /**
@@ -150,12 +152,41 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
         }
     }
 
+    suspend fun sendLangKey(): Result<Unit> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken()
+
+        userToken?.let { token ->
+            return try {
+                val sendKeyResponse = apiService(token).changeLanguage(getLangKey())
+                if (sendKeyResponse.isSuccessful) {
+                    sendKeyResponse.body()?.let { response ->
+                        Result.success(response)
+                    } ?: Result.failure(NetworkError.ServerError)
+                } else {
+                    sendKeyResponse.errorBody()?.let { errorBody ->
+                        val apiErrorResponse = parseErrorResponse(sendKeyResponse.code(), errorBody)
+                        Result.failure(NetworkError.ApiError(apiErrorResponse))
+                    } ?: Result.failure(NetworkError.ServerError)
+                }
+            } catch (e: Exception) {
+                Log.e("LANG_KEY", "unexpected error: ${e.message}", e)
+                Result.failure(NetworkError.ServerError)
+            }
+        }
+
+        return Result.failure(NetworkError.ServerError)
+    }
+
+
     suspend fun getToken(): UserLoginResponseRoomTable? {
         return withContext(Dispatchers.IO) {
             database.loginDao().fetchAllowedUsers()
         }
     }
-
 
     /**
      * Registration
@@ -178,5 +209,32 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
                 R.drawable.montenegro_flag
             )
         )
+    }
+
+    suspend fun passwordChange(body: ChangePasswordRequest): Result<Unit> {
+        if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val lang = getLangKey()
+            val response = apiService(userToken).putChangePassword(body, lang)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                val errorResponse = response.errorBody()?.let {
+                    parseErrorResponse(errorCode = response.code(), errorBody = it)
+                }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.d("PasswordChange", "AuthRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
+    fun userPassword(): Flow<String> {
+        return database.loginDao().fetchPassword()
     }
 }

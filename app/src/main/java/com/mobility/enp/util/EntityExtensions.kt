@@ -2,6 +2,7 @@ package com.mobility.enp.util
 
 import android.content.Context
 import com.mobility.enp.R
+import com.mobility.enp.data.model.api_my_profile.my_tags.response.MyTagsList
 import com.mobility.enp.data.model.cards.registration_croatia.RegistrationResponse
 import com.mobility.enp.data.model.cards.tags_for_croatia.Tag
 import com.mobility.enp.data.model.cardsweb.CardWebModel
@@ -9,6 +10,8 @@ import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.entity.TollHistoryHomeEntity
 import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 import com.mobility.enp.view.ui_models.home.HomeTollHistoryUI
+import com.mobility.enp.view.ui_models.my_tags.TagStatusUiModel
+import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 
 fun TollHistoryHomeEntity.toUIModel(): HomeTollHistoryUI {
     return HomeTollHistoryUI(
@@ -39,6 +42,7 @@ fun CardWebModel.toEntityList(context: Context, user: String): List<HomeCardsEnt
         )
         listCards.add(srCard)
     }
+
     if (data?.showTabME == true && data.cardsME.isNullOrEmpty()) {
         val meCard = HomeCardsEntity(
             email = user,
@@ -49,6 +53,7 @@ fun CardWebModel.toEntityList(context: Context, user: String): List<HomeCardsEnt
         )
         listCards.add(meCard)
     }
+
     if (data?.showTabMK == true && data.cardsMK.isNullOrEmpty()) {
         val mkCard = HomeCardsEntity(
             email = user,
@@ -59,6 +64,30 @@ fun CardWebModel.toEntityList(context: Context, user: String): List<HomeCardsEnt
         )
         listCards.add(mkCard)
     }
+
+    // added 2 general objects for social networks
+
+    val facebookCard = HomeCardsEntity(
+        email = user,
+        code = "facebook",
+        title = context.getString(R.string.socialNetworksTitle),
+        description = context.getString(R.string.facebook_text),
+        additionEnabled = false,
+        isSocialNetworks = true
+    )
+
+    listCards.add(facebookCard)
+
+    val instagramCard = HomeCardsEntity(
+        email = user,
+        code = "instagram",
+        title = context.getString(R.string.socialNetworksTitle),
+        description = context.getString(R.string.instagram_text),
+        additionEnabled = false,
+        isSocialNetworks = true
+    )
+
+    listCards.add(instagramCard)
 
     return listCards
 }
@@ -78,6 +107,28 @@ fun List<Tag>.toTagsForCroatiaUIList(): List<TagsForCroatiaUI> {
     }
 }
 
+
+fun List<MyTagsList>.toTagUiModel(): List<TagUiModel> {
+    return this.map { tag ->
+        TagUiModel(
+            serialNumber = tag.serialNumber,
+            registrationPlate = tag.registrationPlate,
+            countryCode = tag.country?.value,
+            countryName = tag.country?.text,
+            statuses = tag.statuses?.map {
+                TagStatusUiModel(
+                    statusesCountry = it.country?.value,
+                    statusText = it.status?.text,
+                    statusValue = it.status?.value
+                )
+            } ?: emptyList(),
+            showButtonFoundTag = tag.showButtonFoundTag,
+            showButtonLostTag = tag.showButtonLostTag,
+            category = tag.category?.value,
+            franchiser = tag.franchiser?.companyName
+        )
+    }
+}
 
 fun RegistrationResponse.getRedirectWithToken(): String {
     return "${this.data.redirectUrl}/${this.data.token}"

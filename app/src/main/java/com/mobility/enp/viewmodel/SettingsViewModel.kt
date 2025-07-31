@@ -15,15 +15,21 @@ class SettingsViewModel(private val repository: UserRepository) : ViewModel() {
 
     fun sendingLangToServer() {
         viewModelScope.launch {
-            try {
-                repository.sendLangKey()
-            } catch (e: Exception) {
-                Log.e("SettingsViewModel", "Error sending language: ${e.message}", e)
-            }
+            val result = repository.sendLangKey()
+            result.fold(
+                onSuccess = {
+                    Log.d(TAG, "language change was sent")
+                },
+                onFailure = { error ->
+                    Log.d(TAG, "sendLanguage error occurred : $error")
+                }
+            )
         }
     }
 
     companion object {
+        const val TAG = "SETTINGS_FRAGMENT"
+
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val myRepository = (this[APPLICATION_KEY] as MyApplication).repositoryUser

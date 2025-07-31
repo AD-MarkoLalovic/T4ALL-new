@@ -6,7 +6,7 @@
 
         <variable
             name="totalCurrency"
-            type="com.mobility.enp.data.model.api_my_invoices.TotalCurrency" />
+            type="com.mobility.enp.data.model.api_my_invoices.refactor.TotalCurrency" />
     </data>
 
     <RelativeLayout

@@ -153,7 +153,6 @@
     <string name="password_error_message">Das neue Passwortfeld muss mindestens 8 Zeichen enthalten.</string>
     <string name="enter_old_password_message">Das alte Passwortfeld ist obligatorisch.</string>
     <string name="incorrect_old_password_message">Altes Passwort falsch eingegeben.</string>
-    <string name="password_change_failed">Passwort ändern fehlgeschlagen.</string>
     <string name="repeat_the_new_password">Wiederholen Sie das neue Passwort.</string>
     <string name="enter_support_message">Geben Sie den Nachrichtentext ein.</string>
     <string name="create_account">Erstellen Sie ein T4A-Konto</string>
@@ -245,10 +244,8 @@
     <string name="tag_device_payment_method_north_macedonia">Wenn Sie Ihr TAG-Gerät auf den Straßen Nordmazedoniens verwenden möchten, fügen Sie bitte eine gültige Zahlungskarte hinzu.</string>
     <string name="tag_device_payment_method_serbia">Wenn Sie Ihr TAG-Gerät auf den Straßen Serbiens verwenden möchten, fügen Sie bitte eine gültige Zahlungskarte hinzu.</string>
     <string name="tag_device_payment_method_montenegro">Wenn Sie Ihr TAG-Gerät auf den Straßen Montenegros verwenden möchten, fügen Sie bitte eine gültige Zahlungskarte hinzu.</string>
-    <string name="previous_invoices">Ihre Rechnungen werden hier angezeigt.</string>
     <string name="text_no_refund_tags">Sie haben keine Tags, für die Sie eine Rückerstattung beantragen können.</string>
     <string name="text_no_my_tags">Sie haben derzeit keine hinzugefügten Tags. Bitte fügen Sie Ihren Tag hinzu</string>
-    <string name="no_invoices">Ihre Rechnungen werden hier angezeigt.</string>
     <string name="no_tool_history">"Ihre Durchfahrten werden hier angezeigt. "</string>
     <string name="enter_old_password">Geben Sie das alte Passwort ein</string>
     <string name="enter_new_password">Geben Sie das neue Passwort ein</string>
@@ -365,8 +362,6 @@
     <string name="field_bank_account_isrequired">Das Feld „Girokonto“ muss 13 Ziffern enthalten.</string>
     <string name="access_denied">Zugriff verweigert</string>
     <string name="only_t4all_users_access_denied">Es ist derzeit nicht möglich, sich mit Konten anzumelden, die nicht T4All sind. Bitte verwenden Sie das WEB-Portal</string>
-    <string name="notification_login_title">Benachrichtigung</string>
-    <string name="notification_login_subtitle">Die App befindet sich derzeit in der Beta-Entwicklungsphase. Einige Funktionen werden noch entwickelt. Vielen Dank für Ihr Verständnis!</string>
     <string name="tag_registration_instruction_hr">Um Tags in Kroatien zu registrieren, wählen Sie bitte die Tags aus, die Sie registrieren möchten, und klicken Sie auf die Schaltfläche „Registrierung“.</string>
     <string name="notes_serbian_tag_in_croatia">"Hinweise zur Verwendung des serbischen TAG-Geräts in der Republik Kroatien  "</string>
     <string name="activation_successful_enp_tag_device">"Sie haben Ihr ENP/TAG-Gerät erfolgreich aktiviert.  "</string>
@@ -388,4 +383,9 @@
     <string name="highway_a11">Autobahn A11:</string>
     <string name="check_status_on_hac_portal">Status auf dem HAC-Portal überprüfen</string>
     <string name="link_login_to_hac">Melden Sie sich beim HAC-Portal an</string>
+    <string name="facebook_text">Folgen Sie uns auf Facebook und erfahren Sie als Erste(r) alle Neuigkeiten zu den Vorteilen des T4A-Systems.</string>
+    <string name="instagram_text">Folgen Sie uns auf Instagram und erfahren Sie als Erste(r) alle Neuigkeiten zu den Vorteilen des T4A-Systems.</string>
+    <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
+    <string name="no_invoices">Keine Rechnungen für das ausgewählte Land verfügbar</string>
+    <string name="confirm_serial_number">Bestätigen Sie die Seriennummer</string>
 </resources>

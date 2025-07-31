@@ -142,7 +142,6 @@
     <string name="password_error_message">New password field must contain at least 8 characters</string>
     <string name="enter_old_password_message">Field old password is mandatory</string>
     <string name="incorrect_old_password_message">Old password entered incorrectly.</string>
-    <string name="password_change_failed">Password change failed.</string>
     <string name="repeat_the_new_password">Repeat the new password.</string>
     <string name="enter_support_message">Enter the message text.</string>
     <string name="create_account">Create T4A account</string>
@@ -227,10 +226,8 @@
     <string name="tag_device_payment_method_north_macedonia">If you want to use your TAG device on the roads in North Macedonia, please add a valid payment card.</string>
     <string name="tag_device_payment_method_serbia">If you want to use your TAG device on the roads in Serbia, please add a valid payment card.</string>
     <string name="tag_device_payment_method_montenegro">If you want to use your TAG device on the roads in Montenegro, please add a valid payment card</string>
-    <string name="previous_invoices">Your invoices will be displayed here.</string>
     <string name="text_no_refund_tags">You do not have tags for which you can request a refund.</string>
     <string name="text_no_my_tags">You currently have no added tags. Please add your tag.</string>
-    <string name="no_invoices">Your invoices will be displayed here.</string>
     <string name="no_tool_history">Your passes will be displayed here.</string>
     <string name="enter_old_password">Enter old password</string>
     <string name="enter_new_password">Enter new password</string>
@@ -346,8 +343,6 @@
     <string name="field_bank_account_isrequired">The bank account field must contain 13 digits.</string>
     <string name="access_denied">Access denied</string>
     <string name="only_t4all_users_access_denied">It is currently not possible to log in accounts that are not T4All. Please use the WEB portal.</string>
-    <string name="notification_login_title">Notification</string>
-    <string name="notification_login_subtitle">The app is currently in beta development phase. Some features are still being developed. Thank you for your understanding!</string>
     <string name="tag_registration_instruction_hr">To register tags in Croatia, you need to select the tags you want to register and click the “Register” button.</string>
     <string name="notes_serbian_tag_in_croatia">"Notes on using the Serbian TAG device in the Republic of Croatia  "</string>
     <string name="activation_successful_enp_tag_device">"You have successfully activated the ENP/TAG device.  "</string>
@@ -369,4 +364,9 @@
     <string name="highway_a11">Highway A11:</string>
     <string name="check_status_on_hac_portal">Check status on the HAC portal</string>
     <string name="link_login_to_hac">Log in to the HAC portal</string>
+    <string name="facebook_text">Follow us on Facebook and be the first to learn all the news about T4A benefits.</string>
+    <string name="instagram_text">Follow us on Instagram and be the first to learn all the news about T4A benefits.</string>
+    <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
+    <string name="no_invoices">No bills for selected country available</string>
+    <string name="confirm_serial_number">Confirm the serial number</string>
 </resources>

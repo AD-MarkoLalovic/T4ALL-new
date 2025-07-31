@@ -47,7 +47,7 @@
     <string name="bank" translatable="true">Банка</string>
     <string name="send" translatable="true">Пошаљи </string>
     <string name="registration_text" translatable="true">Регистрација ЕНП/ТАГ уређаја СРБИЈА</string>
-    <string name="tags_registration_hint" translatable="true">\nМолимо вас да унесете регистарску ознаку.
+    <string name="tags_registration_hint" translatable="true">Молимо вас да унесете регистарску ознаку.
         \nВерификациони код је регистрација.\nСва поља су обавезна</string>
     <string name="serial_number" translatable="true">Серијски број</string>
     <string name="verification_code" translatable="true">Верификациони код</string>
@@ -164,7 +164,6 @@
     <string name="password_error_message" translatable="true">Поље нова лозинка мора садржати најмање 8 карактера.</string>
     <string name="enter_old_password_message" translatable="true">Поље стара лозинка је обавезно.</string>
     <string name="incorrect_old_password_message" translatable="true">Погрешно унета стара шифра.</string>
-    <string name="password_change_failed" translatable="true">Промена лозинке није успела.</string>
     <string name="repeat_the_new_password" translatable="true">Поново унесите нову лозинку</string>
     <string name="enter_support_message" translatable="true">Унесите текст поруке.</string>
     <string name="create_account" translatable="true">Креирајте Т4А налог</string>
@@ -257,10 +256,8 @@
     <string name="tag_device_payment_method_north_macedonia">Уколико желите да Ваш ТАГ уређај користите на путевима у Северној Македонији, молимо Вас да додате валидну платну картицу.</string>
     <string name="tag_device_payment_method_serbia">Уколико желите да Ваш ТАГ уређај користите на путевима у Србији, молимо вас да додате важећу платну картицу.</string>
     <string name="tag_device_payment_method_montenegro">Уколико желите да Ваш ТАГ уређај користите на путевима у Црној Гори молимо Вас да додате валидну платну картицу</string>
-    <string name="previous_invoices">Ваше фактуре ће бити приказане овде.</string>
     <string name="text_no_refund_tags">Немате тагове за које можете да поднесете захтев за повраћај средстава.</string>
     <string name="text_no_my_tags">Тренутно немате додатих тагова. Молимо ваc додајте таг.</string>
-    <string name="no_invoices">Ваше фактуре ће бити приказане овде.</string>
     <string name="no_tool_history">Ваши проласци ће бити приказани овде.</string>
     <string name="enter_old_password">Унесите стару шифру</string>
     <string name="enter_new_password">Унесите нову шифру</string>
@@ -355,7 +352,7 @@
     <string name="price">Цена</string>
     <string name="please_select_dates">Изаберите датуме</string>
     <string name="formatting_error">Грешка у формату</string>
-    <string name="please_select_one_tag">Извоз историје пролаза могућ је само за једну ОЗНАКУ или за све ОЗНАКЕ</string>
+    <string name="please_select_one_tag">Извоз историје пролаза могућ је само за једну TAG или за све TAGs</string>
     <string name="mm_dd_yyyy" translatable="false">dd/mm/yyyy</string>
     <string name="case_number_info">Број предмета односи се на број под којим је заведена Ваша рекламација и који се налази у одговору који сте добили од нас. Приговори са погрешним или непостојећим бројем неће бити уважени.
 </string>
@@ -407,8 +404,6 @@
     <string name="field_bank_account_isrequired">Поље жиро рачун треба да садржи 13 цифара.</string>
     <string name="access_denied">Приступ одбијен</string>
     <string name="only_t4all_users_access_denied">Тренутно није могуће да се улогују налози који нису T4All. Молимo вас да користите ВЕБ портал.</string>
-    <string name="notification_login_title">Обавештење</string>
-    <string name="notification_login_subtitle">Апликација је тренутно у бета фази развоја. Неке функционалности су још у изради. Хвала на разумевању!</string>
     <string name="tag_registration_instruction_hr">За регистрацију тагова у Хрватској потребно је да одаберете које тагове желите да региструјете и да кликнете на дугме „Регистрација“.</string>
     <string name="notes_serbian_tag_in_croatia">Напомене за коришћење српског ТАГ-а у Републици Хрватској</string>
     <string name="activation_successful_enp_tag_device">Успешно сте извршили активацију ЕНП/ТАГ уређаја.</string>
@@ -440,5 +435,13 @@
     <string name="tag_registration_plate_notice">Приликом регистрације ТАГ уређаја на ХАЦ порталу уносите стварну регистарску ознаку возила у коме ћете користити ТАГ уређај.</string>
     <string name="check_status_on_hac_portal">Проверите статус на ХАЦ порталу</string>
     <string name="link_login_to_hac">Пријави се на HAC портал</string>
+    <string name="facebook_text">Пратите нас на Фејсбуку и сазнајте први све новости о погодностима Т4А система.</string>
+    <string name="instagram_text">Пратите нас на Инстаграму и сазнајте први све новости о погодностима Т4А система.</string>
+    <string name="socialNetworksTitle" translatable="false">TOLL4ALL</string>
+    <string name="facebook" translatable="false">Facebook</string>
+    <string name="instagram" translatable="false">Instagram</string>
+    <string name="jp_putevi_srbije">ЈП Путеви Србије</string>
+    <string name="no_invoices">Нема рачуна за изабрану земљу</string>
+    <string name="confirm_serial_number">Потврдите серијски број</string>
 
 </resources>

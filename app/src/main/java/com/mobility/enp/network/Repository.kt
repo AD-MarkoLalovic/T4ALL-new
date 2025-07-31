@@ -9,12 +9,8 @@ import androidx.lifecycle.MutableLiveData
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
-import com.mobility.enp.data.model.api_my_invoices.MyInvoicesResponse
-import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
+import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
-import com.mobility.enp.data.model.api_tags.LostTagResponse
-import com.mobility.enp.data.model.api_tags.PostLostTag
-import com.mobility.enp.data.model.api_tags.TagsResponse
 import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
@@ -39,206 +35,6 @@ object Repository {
         return apiService(token).getUserPersonalData()
     }
 
-    //updated
-    fun changePassword(
-        request: ChangePasswordRequest,
-        token: String?,
-        errorBody: MutableLiveData<ErrorBody>
-    ) {
-        val call = apiService(token).changePassword(request)
-        call.enqueue(object : Callback<Unit> {
-            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                if (!response.isSuccessful) {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<Unit>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-        })
-    }
-
-
-    suspend fun getInvoices(
-        data: MutableLiveData<MyInvoicesResponse>,
-        token: String?,
-        errorBody: MutableLiveData<ErrorBody>,
-        application: Application,
-        perPage: Int
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        apiService(token).getInvoicesIndex(lang, perPage)
-            .enqueue(object : Callback<MyInvoicesResponse> {
-
-                override fun onResponse(
-                    call: Call<MyInvoicesResponse>, response: Response<MyInvoicesResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        data.postValue(response.body())
-                    } else {
-                        errorBody.postValue(getMessageFromErrorBody(response))
-                    }
-                }
-
-                override fun onFailure(call: Call<MyInvoicesResponse>, t: Throwable) {
-                    Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-                }
-
-            })
-
-    }
-
-    suspend fun getInvoicesPaging(
-        data: MutableLiveData<MyInvoicesResponse>,
-        token: String?,
-        errorBody: MutableLiveData<ErrorBody>,
-        application: Application,
-        page: Int,
-        perPage: Int
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        apiService(token).getInvoicesIndexPaging(lang, page, perPage)
-            .enqueue(object : Callback<MyInvoicesResponse> {
-
-                override fun onResponse(
-                    call: Call<MyInvoicesResponse>, response: Response<MyInvoicesResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        data.postValue(response.body())
-                    } else {
-                        errorBody.postValue(getMessageFromErrorBody(response))
-                    }
-                }
-
-                override fun onFailure(call: Call<MyInvoicesResponse>, t: Throwable) {
-                    Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-                }
-
-            })
-
-    }
-
-    suspend fun getTags(
-        token: String?,
-        page: Int,
-        perPage: Int,
-        errorBody: MutableLiveData<ErrorBody>,
-        data: MutableLiveData<TagsResponse>,
-        application: Context
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        val call = apiService(token).getUserTags(page.toString(), perPage.toString(), lang)
-        call.enqueue(object : Callback<TagsResponse> {
-            override fun onResponse(call: Call<TagsResponse>, response: Response<TagsResponse>) {
-                if (response.isSuccessful) {
-                    data.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<TagsResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-        })
-
-    }
-
-    fun postLostTag(
-        token: String?,
-        body: PostLostTag,
-        errorBody: MutableLiveData<ErrorBody>,
-        mutableLiveData: MutableLiveData<LostTagResponse>
-    ) {
-        val call = apiService(token).postLostTag(body.serialNumber)
-        call.enqueue(object : Callback<LostTagResponse> {
-            override fun onResponse(
-                call: Call<LostTagResponse>, response: Response<LostTagResponse>
-            ) {
-                if (response.isSuccessful) {
-                    mutableLiveData.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<LostTagResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
-    }
-
-    suspend fun getBillsDetails(
-        data: MonthlyBillsAdapter.FetchBillsDetails,
-        token: String?,
-        yearMonth: String,
-        currency: String,
-        perPage: Int,
-        errorBody: MutableLiveData<ErrorBody>, application: Context
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        apiService(token).getBillsByMonth(yearMonth, currency, perPage, lang)
-            .enqueue(object : Callback<BillsDetailsResponse> {
-
-                override fun onResponse(
-                    call: Call<BillsDetailsResponse>, response: Response<BillsDetailsResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        response.body()?.let {
-                            data.onOK(it)
-                        }
-                    } else {
-                        errorBody.postValue(getMessageFromErrorBody(response))
-                        data.onFailed()
-                    }
-                }
-
-                override fun onFailure(call: Call<BillsDetailsResponse>, t: Throwable) {
-                    Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-                }
-            })
-    }
-
-    suspend fun getBillsDetailsPaging(
-        data: MutableLiveData<BillsDetailsResponse>,
-        token: String?,
-        yearMonth: String,
-        currency: String,
-        page: Int,
-        perPage: Int,
-        errorBody: MutableLiveData<ErrorBody>, application: Context
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        apiService(token).getBillsByMonthPaging(yearMonth, currency, page, perPage, lang)
-            .enqueue(object : Callback<BillsDetailsResponse> {
-
-                override fun onResponse(
-                    call: Call<BillsDetailsResponse>, response: Response<BillsDetailsResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        data.postValue(response.body())
-                    } else {
-                        errorBody.postValue(getMessageFromErrorBody(response))
-                    }
-                }
-
-                override fun onFailure(call: Call<BillsDetailsResponse>, t: Throwable) {
-                    Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-                }
-            })
-    }
 
     fun getBillDetailsPdf(
         data: BillsDetailsAdapter.DownloadBillsDetails,
@@ -273,36 +69,6 @@ object Repository {
         return apiService(token).getPdfListingPasses(billId)
     }
 
-    suspend fun postAddTag(
-        token: String?,
-        serialNumber: String,
-        verificationCode: String,
-        errorBody: MutableLiveData<ErrorBody>,
-        data: MutableLiveData<LostTagResponse>,
-        application: Application
-    ) {
-
-        val lang = getUserLanguage(application)
-
-        val call = apiService(token).postAddTag(verificationCode, serialNumber, lang)
-        call.enqueue(object : Callback<LostTagResponse> {
-            override fun onResponse(
-                call: Call<LostTagResponse>, response: Response<LostTagResponse>
-            ) {
-                if (response.isSuccessful) {
-                    data.postValue(response.body())
-                } else {
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<LostTagResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
-    }
-
     fun postPayBill(
         token: String?,
         billId: String?,
@@ -329,33 +95,10 @@ object Repository {
         }
     }
 
-    suspend fun postFoundLostTag(
-        token: String,
-        serialNumber: String,
-        errorBody: MutableLiveData<ErrorBody>,
-        data: MutableLiveData<LostTagResponse>
-    ) {
-        try {
-            val response = apiService(token).postFoundTag(serialNumber)
-            if (response.isSuccessful) {
-                data.postValue(response.body())
-            } else {
-                errorBody.postValue(getMessageFromErrorBody(response))
-            }
-        } catch (e: Exception) {
-            Log.d(TAG, "getUserCountries: ${e.cause} \n ${e.message}")
-        }
-    }
-
     suspend fun sendCustomerSupport(
         customerSupport: CustomerSupport
     ): Response<Unit> {
         return apiService("").sendCustomerSupport(customerSupport)
-    }
-
-    suspend fun sendLanguageKey(token: String?, context: Context) {
-        val language = getUserLanguage(context)
-        apiService(token).changeLanguage(language)
     }
 
     fun getUserLanguage(context: Context): String {

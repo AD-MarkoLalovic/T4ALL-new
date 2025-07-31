@@ -140,7 +140,6 @@
     <string name="password_error_message">Polje za novu lozinku mora sadržavati najmanje 8 znakova</string>
     <string name="enter_old_password_message">Polje za staru lozinku je obavezno</string>
     <string name="incorrect_old_password_message">Pogrešno unesena stara lozinka.</string>
-    <string name="password_change_failed">Promjena lozinke nije uspjela.</string>
     <string name="repeat_the_new_password">Ponovite novu lozinku.</string>
     <string name="enter_support_message">Unesite tekst poruke.</string>
     <string name="create_account">Kreiraj T4A račun</string>
@@ -230,10 +229,8 @@
     <string name="tag_device_payment_method_north_macedonia">Ukoliko želite da Vaš TAG uređaj koristite na cestama u Sjevernoj Makedoniji, molimo vas da dodate važeću platnu karticu.</string>
     <string name="tag_device_payment_method_serbia">Ukoliko želite da Vaš TAG uređaj koristite na cestama u Srbiji, molimo vas da dodate važeću platnu karticu.</string>
     <string name="tag_device_payment_method_montenegro">Ukoliko želite da Vaš TAG uređaj koristite na cestama u Crnoj Gori molimo Vas da dodate važeću platnu karticu</string>
-    <string name="previous_invoices">Vaše fakture će biti prikazane ovdje.</string>
     <string name="text_no_refund_tags">Nemate tagove za koje možete podnijeti zahtjev za povrat sredstava.</string>
     <string name="text_no_my_tags">Trenutno nemate dodanih tagova. Molimo dodajte svoj tag.</string>
-    <string name="no_invoices">Vaše fakture će biti prikazane ovdje.</string>
     <string name="no_tool_history">Vaši prolazi će biti prikazani ovdje.</string>
     <string name="enter_old_password">Unesite staru lozinku</string>
     <string name="enter_new_password">Unesite novu lozinku</string>
@@ -307,7 +304,7 @@
     <string name="price">Cijena</string>
     <string name="please_select_dates">Molimo odaberite datume</string>
     <string name="formatting_error">Greška u formatu</string>
-    <string name="please_select_one_tag">Izvoz povijesti prolaza moguć je samo za jednu OZNAKU ili za sve OZNAKE</string>
+    <string name="please_select_one_tag">Izvoz povijesti prolaza moguć je samo za jednu TAG ili za sve TAG-ove</string>
     <string name="case_number_info">Broj predmeta odnosi se na broj pod kojim je zavedena Vaša reklamacija i koji se
         nalazi u odgovoru koji ste dobili od nas. Prigovori sa pogrešnim ili nepostojećim brojem neće biti uvaženi.</string>
     <string name="server_error_msg">Greška na poslužitelju</string>
@@ -350,8 +347,6 @@
     <string name="field_bank_account_isrequired">Polje žiro račun treba sadržavati 13 znamenki.</string>
     <string name="access_denied">Pristup odbijen</string>
     <string name="only_t4all_users_access_denied">Trenutno nije moguće da se uloguju nalozi koji nisu T4All. Molimo vas da koristite WEB portal.</string>
-    <string name="notification_login_title">Obavijest</string>
-    <string name="notification_login_subtitle">Aplikacija je trenutno u beta fazi razvoja. Neke funkcionalnosti su još u izradi. Hvala na razumijevanju!</string>
     <string name="tag_registration_instruction_hr">Za registraciju tagova u Hrvatskoj potrebno je odabrati koje tagove želite registrirati i kliknuti na gumb „Registracija“.</string>
     <string name="notes_serbian_tag_in_croatia">"Napomene za korištenje srpskog TAG uređaja u Republici Hrvatskoj  "</string>
     <string name="activation_successful_enp_tag_device">"Uspešno ste izvršili aktivaciju ENP/TAG uređaja.  "</string>
@@ -373,5 +368,10 @@
     <string name="highway_a11">Autocesta A11:</string>
     <string name="check_status_on_hac_portal">Provjerite status na HAC portalu</string>
     <string name="link_login_to_hac">Prijavi se na HAC portal</string>
+    <string name="facebook_text">Pratite nas na Facebooku i budite prvi koji će saznati sve novosti o pogodnostima T4A sustava.</string>
+    <string name="instagram_text">Pratite nas na Instagramu i budite prvi koji će saznati sve novosti o pogodnostima T4A sustava.</string>
+    <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
+    <string name="no_invoices">Nema računa za odabranu zemlju</string>
+    <string name="confirm_serial_number">Potvrdite serijski broj</string>
 
 </resources>

@@ -1,126 +1,159 @@
 package com.mobility.enp.viewmodel
 
-import android.app.Application
-import android.content.Context
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.mobility.enp.data.model.ErrorBody
-import com.mobility.enp.data.model.api_tags.LostTagResponse
-import com.mobility.enp.data.model.api_tags.PostLostTag
-import com.mobility.enp.data.model.api_tags.TagStatus
-import com.mobility.enp.data.model.api_tags.TagsResponse
-import com.mobility.enp.data.room.database.DRoom
-import com.mobility.enp.network.Repository
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.mobility.enp.MyApplication
+import com.mobility.enp.data.repository.ProfileRepository
+import com.mobility.enp.util.SubmitResultFold
+import com.mobility.enp.view.ui_models.my_tags.TagUiModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-class MyTagsViewModel(application: Application) : AndroidViewModel(application) {
+enum class ReportType {
+    LOST, FOUND
+}
 
-    private val database: DRoom = DRoom.getRoomInstance(getApplication())
+class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
 
-    lateinit var allTagsFiltered: List<TagStatus>
-    private lateinit var lastBlockedTagSerial: String
+    private val _myTags =
+        MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Idle)
+    val myTags: StateFlow<SubmitResultMyTags<List<TagUiModel>>> get() = _myTags
 
-    private val _tagApiData: MutableLiveData<TagsResponse> = MutableLiveData()
-    val tagApiData: LiveData<TagsResponse> get() = _tagApiData
+    private val _reportTag = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
+    val reportTag: StateFlow<SubmitResultFold<Unit>> get() = _reportTag
 
-    private val _lostTag: MutableLiveData<LostTagResponse> = MutableLiveData()
-    val lostTag: LiveData<LostTagResponse> get() = _lostTag
+    var allTags: List<TagUiModel> = emptyList()
+    private var selectedStatus: String = ""
+    private var selectedCountry: String = "RS"
+    private var allStatusLabel: String = ""
 
-    private val _foundTag: MutableLiveData<LostTagResponse> = MutableLiveData()
-    val foundTag: LiveData<LostTagResponse> get() = _foundTag
-
-    private val _errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
-    val errorBody: LiveData<ErrorBody> get() = _errorBody
-
-    private var _isInternetAvailable: MutableLiveData<Boolean> = MutableLiveData()
-    val isInternetAvailable: LiveData<Boolean> get() = _isInternetAvailable
-
-    suspend fun getTagsApiData(
-        context: Context,
-    ) {
-        if (Repository.isNetworkAvailable(context)) {
-            database.loginDao().fetchAllowedUsers().accessToken?.let { token ->
-                Repository.getTags(token, 1, 1000, _errorBody, _tagApiData, getApplication())
-            }
-        } else {
-            _isInternetAvailable.postValue(false)
-        }
-
+    fun setStatusFilter(statusKey: String) {
+        selectedStatus = statusKey
+        applyCombinedFilter()
     }
 
+    fun setCountryFilter(countryCode: String) {
+        when (countryCode) {
+            "SRB" -> {
+                selectedCountry = "RS"
+                applyCombinedFilter()
+            }
 
-    fun newFilterLogic(tagStatus: Int): TagsResponse? {  // status filter
-        val fullList = tagApiData.value ?: return null
+            "MKD" -> {
+                selectedCountry = "MK"
+                applyCombinedFilter()
+            }
 
-        if (tagStatus == -1) {  // any button is pressed
-            return fullList
-        }
+            "MNE" -> {
+                selectedCountry = "ME"
+                applyCombinedFilter()
+            }
 
-        // Filter the tags based on whether any of their statuses contains the passed status
-        val filteredList = fullList.data.tags.filter { tag ->
-            tag.statuses.any { status ->
-                status.status.value == tagStatus
+            "HRV" -> {
+                selectedCountry = "HR"
+                applyCombinedFilter()
             }
         }
-
-        // Create a new instance of Data with the filtered list of tags
-        val newData = fullList.data.copy(
-            tags = filteredList
-        )
-
-        // Create a new instance of TagsResponse with the new data
-        return fullList.copy(
-            data = newData
-        )
-
     }
 
-    fun newFilterLogic(tagSerial: String): TagsResponse? {  // serial filter
+    fun setAllStatusLabel(label: String) {
+        allStatusLabel = label
+        selectedStatus = label
+    }
 
-        val fullList = tagApiData.value
-
-        if (tagSerial.isEmpty()) {
-            return fullList
-        }
-
-        fullList?.let { tagResponse ->
-            // Filter the tags that contain the serial number
-            val filteredList = tagResponse.data.tags.filter { tag ->
-                tag.serialNumber.contains(tagSerial)
+    private fun applyCombinedFilter() {
+        val filtered = allTags.filter { tag ->
+            val statusForCountry = tag.statuses.firstOrNull {
+                it.statusesCountry == selectedCountry
             }
 
-            // Create a new instance of Data with the filtered list of tags
-            val newData = tagResponse.data.copy(
-                tags = filteredList
+            val matchesCountry = statusForCountry != null
+
+            val matchesStatus =
+                selectedStatus == allStatusLabel || statusForCountry?.statusText == selectedStatus
+
+            matchesCountry && matchesStatus
+        }
+        _myTags.value = SubmitResultMyTags.Filtered(filtered)
+    }
+
+    fun fetchMyTags() {
+        viewModelScope.launch {
+            _myTags.value = SubmitResultMyTags.Loading
+
+            val result = repository.getMyTags()
+            result.fold(
+                onSuccess = { tags ->
+                    allTags = tags
+                    _myTags.value = SubmitResultMyTags.Success(tags)
+                },
+                onFailure = { error ->
+                    _myTags.value = SubmitResultMyTags.Failure(error)
+
+                }
             )
+        }
+    }
 
-            // Create a new instance of TagsResponse with the new data
-            val newTagsResponse = tagResponse.copy(
-                data = newData
+    fun internetChecked(): Boolean {
+        return repository.isNetworkAvail()
+    }
+
+    fun reportLostTag(serialNumber: String) {
+        viewModelScope.launch {
+            _reportTag.value = SubmitResultFold.Loading
+
+            val result = repository.reportLostTag(serialNumber)
+            result.fold(
+                onSuccess = {
+                    _reportTag.value = SubmitResultFold.Success(Unit, ReportType.LOST)
+                },
+                onFailure = { error ->
+                    _reportTag.value = SubmitResultFold.Failure(error)
+                }
             )
-
-            return newTagsResponse
-        }
-
-        return null
-    }
-
-    suspend fun postLostTag(
-        body: PostLostTag,
-    ) {
-        database.loginDao().fetchAllowedUsers().accessToken?.let { token ->
-            Repository.postLostTag(token, body, _errorBody, _lostTag)
-            lastBlockedTagSerial = body.serialNumber
         }
     }
 
-    suspend fun postFoundTag(
-        body: PostLostTag
-    ) {
-        database.loginDao().fetchAllowedUsers().accessToken?.let { token ->
-            Repository.postFoundLostTag(token, body.serialNumber, _errorBody, _foundTag)
+    fun reportFoundTag(serialNumber: String) {
+        viewModelScope.launch {
+            _reportTag.value = SubmitResultFold.Loading
 
+            val result = repository.reportFoundTag(serialNumber)
+            result.fold(
+                onSuccess = {
+                   _reportTag.value = SubmitResultFold.Success(Unit, ReportType.FOUND)
+                },
+                onFailure = { error ->
+                    _reportTag.value = SubmitResultFold.Failure(error)
+                }
+            )
         }
     }
+
+    sealed class SubmitResultMyTags<out T> {
+        data class Success<T>(val data: T) : SubmitResultMyTags<T>()
+        data class Filtered<T>(val data: T) : SubmitResultMyTags<T>()
+        object Loading : SubmitResultMyTags<Nothing>()
+        data class Failure(val error: Throwable) : SubmitResultMyTags<Nothing>()
+        object Idle : SubmitResultMyTags<Nothing>()
+    }
+
+    companion object {
+        val factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val myRepo = (this[APPLICATION_KEY] as MyApplication).profileRepository
+                MyTagsViewModel(
+                    repository = myRepo
+                )
+            }
+        }
+    }
+
 
 }

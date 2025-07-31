@@ -140,7 +140,6 @@
     <string name="password_error_message">Το πεδίο νέου κωδικού πρέπει να περιέχει τουλάχιστον 8 χαρακτήρες</string>
     <string name="enter_old_password_message">Το πεδίο παλιού κωδικού είναι υποχρεωτικό</string>
     <string name="incorrect_old_password_message">Ο παλιός κωδικός εισήχθη λανθασμένα.</string>
-    <string name="password_change_failed">Η αλλαγή κωδικού απέτυχε.</string>
     <string name="repeat_the_new_password">Επαναλάβετε τον νέο κωδικό.</string>
     <string name="enter_support_message">Εισάγετε το κείμενο του μηνύματος.</string>
     <string name="create_account">Δημιουργία λογαριασμού T4A</string>
@@ -227,10 +226,8 @@
     <string name="tag_device_payment_method_north_macedonia">Εάν θέλετε να χρησιμοποιήσετε τη συσκευή TAG στους δρόμους της Βόρειας Μακεδονίας, παρακαλούμε να προσθέσετε μια έγκυρη κάρτα πληρωμής.</string>
     <string name="tag_device_payment_method_serbia">Εάν θέλετε να χρησιμοποιήσετε τη συσκευή TAG στους δρόμους της Σερβίας, παρακαλούμε να προσθέσετε μια έγκυρη κάρτα πληρωμής.</string>
     <string name="tag_device_payment_method_montenegro">Εάν θέλετε να χρησιμοποιήσετε τη συσκευή TAG στους δρόμους του Μαυροβουνίου, παρακαλούμε να προσθέσετε μια έγκυρη κάρτα πληρωμής.</string>
-    <string name="previous_invoices">Οι τιμολόγιά σας θα εμφανιστούν εδώ.</string>
     <string name="text_no_refund_tags">Δεν έχετε ετικέτες για τις οποίες μπορείτε να ζητήσετε επιστροφή χρημάτων.</string>
     <string name="text_no_my_tags">Δεν έχετε προσθέσει καμία ετικέτα. Παρακαλώ προσθέστε την ετικέτα σας.</string>
-    <string name="no_invoices">Οι τιμολόγιά σας θα εμφανιστούν εδώ.</string>
     <string name="no_tool_history">Οι διελεύσεις σας θα εμφανιστούν εδώ.</string>
     <string name="enter_old_password">Εισάγετε τον παλιό κωδικό πρόσβασης</string>
     <string name="enter_new_password">Εισάγετε τον νέο κωδικό πρόσβασης</string>
@@ -344,8 +341,6 @@
     <string name="field_bank_account_isrequired">Το πεδίο του τραπεζικού λογαριασμού πρέπει να περιέχει 13 ψηφία.</string>
     <string name="access_denied">Πρόσβαση απορρίφθηκε</string>
     <string name="only_t4all_users_access_denied">Αυτή τη στιγμή δεν είναι δυνατή η σύνδεση λογαριασμών που δεν είναι T4All. Παρακαλούμε χρησιμοποιήστε την ΙΣΤΟΣΕΛΙΔΑ.</string>
-    <string name="notification_login_title">Ειδοποίηση</string>
-    <string name="notification_login_subtitle">Η εφαρμογή βρίσκεται επί του παρόντος σε φάση ανάπτυξης beta. Ορισμένες λειτουργίες είναι ακόμη υπό κατασκευή. Ευχαριστούμε για την κατανόησή σας!</string>
     <string name="tag_registration_instruction_hr">Για να καταχωρήσετε ετικέτες στην Κροατία, πρέπει να επιλέξετε ποιες ετικέτες θέλετε να καταχωρήσετε και να κάνετε κλικ στο κουμπί «Εγγραφή».</string>
     <string name="notes_serbian_tag_in_croatia">"Σημειώσεις για τη χρήση της σερβικής συσκευής TAG στη Δημοκρατία της Κροατίας  "</string>
     <string name="activation_successful_enp_tag_device">"Έχετε ενεργοποιήσει επιτυχώς τη συσκευή ENP/TAG."</string>
@@ -367,4 +362,9 @@
     <string name="highway_a11">Αυτοκινητόδρομος A11:</string>
     <string name="check_status_on_hac_portal">Ελέγξτε την κατάσταση στην πύλη HAC</string>
     <string name="link_login_to_hac">Συνδεθείτε στο HAC portal</string>
+    <string name="facebook_text">Ακολουθήστε μας στο Facebook και μάθετε πρώτοι όλα τα νέα για τα προνόμια του συστήματος T4A.</string>
+    <string name="instagram_text">Ακολουθήστε μας στο Instagram και μάθετε πρώτοι όλα τα νέα για τα προνόμια του συστήματος T4A.</string>
+    <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
+    <string name="no_invoices">Δεν υπάρχουν λογαριασμοί για την επιλεγμένη χώρα</string>
+    <string name="confirm_serial_number">Επιβεβαιώστε τον αριθμό σειράς</string>
 </resources>

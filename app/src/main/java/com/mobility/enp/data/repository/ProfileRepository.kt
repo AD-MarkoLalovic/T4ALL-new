@@ -4,11 +4,15 @@ import android.content.Context
 import android.util.Log
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
+import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SharedPreferencesHelper
+import com.mobility.enp.util.toTagUiModel
+import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -106,6 +110,33 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
         return Result.failure(NetworkError.ServerError)
     }
 
+    suspend fun getBasicUserInformation(): Result<BasicInfoResponse> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val response = apiService(userToken).getUserData()
+            if (response.isSuccessful) {
+                response.body()?.let { data ->
+                    SharedPreferencesHelper.saveUserCountryCode(context, data.data.country.code)
+                    Result.success(data)
+                } ?: Result.failure(NetworkError.ServerError)
+            } else {
+                response.errorBody()?.let { errorBody ->
+                    val errorResponse = parseErrorResponse(response.code(), errorBody)
+                    Result.failure(NetworkError.ApiError(errorResponse))
+                } ?: Result.failure(NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "error: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+
+    }
+
     suspend fun sendSupportMessage(request: SupportRequest): Result<Boolean> {
         if (!isNetworkAvailable()) {
             return Result.failure(NetworkError.NoConnection)
@@ -166,6 +197,121 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
         }
 
         return Result.failure(NetworkError.ServerError)
+    }
+
+    suspend fun getMyTags(): Result<List<TagUiModel>> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val lang = getLangKey()
+            val response = apiService(userToken).getUserTagsNew(1, 2000, lang)
+
+            if (response.isSuccessful) {
+                val tags = response.body()?.data?.tags?.items?.toTagUiModel().orEmpty()
+                Result.success(tags)
+            } else {
+                val errorResponse =
+                    response.errorBody()?.let { parseErrorResponse(response.code(), it) }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
+            }
+
+        } catch (e: Exception) {
+            Log.d("MyTags", "ProfileRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
+    suspend fun addTag(
+        serialNumber: String,
+        verificationOrSerNumber: String,
+        montenegrin: Boolean
+    ): Result<Unit> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val lang = getLangKey()
+            val response = if (montenegrin) {
+                apiService(userToken).postAddTagME(
+                    serialNumber = serialNumber,
+                    serialNumberConfirmation = verificationOrSerNumber,
+                    lang
+                )
+            } else {
+                apiService(userToken).postAddTag(
+                    serialNumber = serialNumber,
+                    verificationCode = verificationOrSerNumber,
+                    lang
+                )
+            }
+
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                val errorResponse =
+                    response.errorBody()?.let { parseErrorResponse(response.code(), it) }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.d("AddTag", "ProfileRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
+    suspend fun reportLostTag(serialNumber: String): Result<Unit> {
+        if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val response = apiService(userToken).postLostTag(serialNumber = serialNumber)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                val errorResponse = response.errorBody()?.let {
+                    parseErrorResponse(errorCode = response.code(), errorBody = it)
+                }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.d("LostTag", "ProfileRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
+    suspend fun reportFoundTag(serialNumber: String): Result<Unit> {
+        if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val response = apiService(userToken).postFoundTag(serialNumber = serialNumber)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                val errorResponse = response.errorBody()?.let {
+                    parseErrorResponse(errorCode = response.code(), errorBody = it)
+                }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.d("FoundTag", "ProfileRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
+    fun getCountryCode(): String? {
+        return SharedPreferencesHelper.getCountryCode(context)
     }
 
 }

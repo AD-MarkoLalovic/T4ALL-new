@@ -216,7 +216,9 @@
         tools:layout="@layout/fragment_add_tag">
         <action
             android:id="@+id/action_addTagFragment_to_myTagsFragment2"
-            app:destination="@id/myTagsFragment2" />
+            app:destination="@id/myTagsFragment2"
+            app:popUpTo="@id/myTagsFragment2"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <action
@@ -289,9 +291,6 @@
         android:name="com.mobility.enp.view.fragments.my_profile.MyInvoicesFragment"
         android:label="InvoicesFragment"
         tools:layout="@layout/fragment_bills">
-        <action
-            android:id="@+id/action_invoicesFragment_to_profileFragment2"
-            app:destination="@id/profileFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_invoicesFragment"
@@ -427,14 +426,6 @@
             app:argType="string"
             app:nullable="true" />
     </dialog>
-    <dialog
-        android:id="@+id/loginNotificationDialog"
-        android:name="com.mobility.enp.view.dialogs.LoginNotificationDialog"
-        android:label="LoginNotificationDialog"
-        tools:layout="@layout/login_notification_dialog" />
-    <action
-        android:id="@+id/action_global_loginNotificationDialog"
-        app:destination="@id/loginNotificationDialog" />
     <fragment
         android:id="@+id/hacPortalWebFragment"
         android:name="com.mobility.enp.view.fragments.card.HacPortalWebFragment"
