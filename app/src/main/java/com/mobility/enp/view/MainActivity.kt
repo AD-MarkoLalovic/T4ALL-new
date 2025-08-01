@@ -8,8 +8,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.viewModels
+import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -33,15 +38,42 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private val franchiseViewModel: FranchiseViewModel by viewModels { FranchiseViewModel.Factory }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setNavigationBarAppearance(
+            backgroundColor = ContextCompat.getColor(this, R.color.white)
+        )
+
         setupNavigation()
         setListeners()
         setObservers()
         messageLanguageChanged(this)
+        applyDisplayCutouts()
+
+    }
+
+    private fun applyDisplayCutouts() {
+        val rootView = findViewById<ConstraintLayout>(R.id.rootLayout)
+
+        ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            v.setPadding(insets.left, insets.top, insets.right, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
+    }
+
+    private fun setNavigationBarAppearance(@ColorInt backgroundColor: Int) {
+        @Suppress("DEPRECATION")
+        window.navigationBarColor = backgroundColor
+
+        WindowCompat.getInsetsController(window, window.decorView)
+            .isAppearanceLightNavigationBars = true
     }
 
     private fun setObservers() {
