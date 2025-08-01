@@ -63,7 +63,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
         setObservers()
 
-//        vModel.getBaseData() todo
         vModel.getBaseDataAlternativeApi()
 
         binding.loopIcon.setOnClickListener {
@@ -85,8 +84,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         binding.progBar.visibility = View.GONE
         binding.loopIcon.isEnabled = true
 
-//        vModel.getBaseData()  todo
-//        vModel.getBaseDataAlternativeApi() todo
+        vModel.getBaseDataAlternativeApi()
     }
 
     private fun setObservers() {
@@ -134,43 +132,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         }
 
 
-        collectLatestLifecycleFlow(vModel.baseTagDataStateNew) { tagIndex ->
-            when (tagIndex) {
-                is SubmitResult.Loading -> {
-                    binding.progBar.visibility = View.VISIBLE
-                }
-
-                is SubmitResult.Success -> {
-                    Log.d(TAG, "setObservers: ${tagIndex.data.first}")
-//                    setIndexData(tagIndex.data.first)
-                }
-
-                is SubmitResult.FailureNoConnection -> {
-                    showNoConnectionState()
-                    runSavedDataCheck()
-                }
-
-                is SubmitResult.FailureServerError -> {
-                    binding.progBar.visibility = View.GONE
-                    showError(getString(R.string.server_error_msg))
-                }
-
-                is SubmitResult.FailureApiError -> {
-                    binding.progBar.visibility = View.GONE
-                    showError(tagIndex.errorMessage)
-                }
-
-                is SubmitResult.InvalidApiToken -> {
-                    showError(tagIndex.errorMessage)
-                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
-                }
-
-                else -> {
-                    SubmitResult.Empty
-                }
-            }
-        }
-
         collectLatestLifecycleFlow(vModel.complaintObjectionState) { serverResponse ->
             when (serverResponse) {
                 is SubmitResult.Loading -> {
@@ -179,7 +140,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
-                    vModel.getBaseData()
+                    vModel.getBaseDataAlternativeApi()
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -203,18 +164,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
                 else -> {
                     SubmitResult.Empty
-                }
-            }
-        }
-
-        vModel.errorBody.observe(viewLifecycleOwner) { errorBody ->   // need to check this // removed in future task
-            binding.progBar.visibility = View.GONE
-            context?.let { context ->
-                Toast.makeText(
-                    context, errorBody.errorBody, Toast.LENGTH_SHORT
-                ).show()
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
                 }
             }
         }

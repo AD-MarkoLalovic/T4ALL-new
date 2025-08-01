@@ -6,11 +6,11 @@ import androidx.annotation.Keep
 import com.google.gson.annotations.Expose
 
 @Keep
-data class IndexData(
-    @SerializedName("data")
+data class Statuse(
+    @SerializedName("country")
     @Expose
-    val `data`: Data? = Data(),
-    @SerializedName("message")
+    val country: Country? = Country(),
+    @SerializedName("status")
     @Expose
-    val message: String? = ""
+    val status: Status? = Status()
 )

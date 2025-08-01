@@ -59,7 +59,6 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.CsvActivity
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.fragments.tool_history.ToolHistoryFilterFragment
-import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -92,11 +91,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         MutableStateFlow<SubmitResult<Pair<IndexData, CardWebModel>>>(SubmitResult.Loading)
     val baseTagDataState: StateFlow<SubmitResult<Pair<IndexData, CardWebModel>>> get() = _baseTagDataState
 
-
-    private val _baseTagDataStateNew =
-        MutableStateFlow<SubmitResult<Pair<List<TagUiModel>, CardWebModel>>>(SubmitResult.Loading)
-    val baseTagDataStateNew: StateFlow<SubmitResult<Pair<List<TagUiModel>, CardWebModel>>> get() = _baseTagDataStateNew
-
     private val _csvTable = MutableStateFlow<SubmitResult<CsvModel>>(SubmitResult.Empty)
     val csvTable: StateFlow<SubmitResult<CsvModel>> get() = _csvTable
 
@@ -115,10 +109,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     fun setStateIndex(indexData: IndexData) { // from room
         _baseTagDataState.value = SubmitResult.Success(Pair(indexData, CardWebModel(null, null)))
     }
-
-    private val _errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
-    val errorBody: LiveData<ErrorBody> get() = _errorBody
-
 
     var startDate = MutableLiveData<TimeSave>()
     var endDate = MutableLiveData<TimeSave>()
@@ -269,7 +259,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         viewModelScope.launch(Dispatchers.IO) {
 
             val resultTags = async {
-                repository.getTagBaseData(1,5)
+                repository.getTagBaseData(1, 5)
             }
 
             val resultCards = async {
@@ -285,9 +275,9 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 val cardData = resultCardsDeferred.getOrNull()
 
                 if (tagsData == null || cardData == null) {
-                    _baseTagDataStateNew.value = SubmitResult.Empty
+                    _baseTagDataState.value = SubmitResult.Empty
                 } else {
-                    _baseTagDataStateNew.value = SubmitResult.Success(Pair(tagsData, cardData))
+                    _baseTagDataState.value = SubmitResult.Success(Pair(tagsData, cardData))
                 }
 
             } else {
@@ -298,11 +288,11 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                             "Error while fetching tags data",
                             error
                         )
-                        _baseTagDataStateNew.value = SubmitResult.FailureServerError
+                        _baseTagDataState.value = SubmitResult.FailureServerError
                     }
 
                     is NetworkError.NoConnection -> {
-                        _baseTagDataStateNew.value = SubmitResult.FailureNoConnection
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
                     }
 
                     is NetworkError.ApiError -> {
@@ -312,7 +302,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                                     "API_TOKEN UserPassViewModel",
                                     "invalid token detected login out user"
                                 )
-                                _baseTagDataStateNew.value =
+                                _baseTagDataState.value =
                                     SubmitResult.InvalidApiToken(
                                         error.errorResponse.code,
                                         error.errorResponse.message ?: ""
@@ -320,7 +310,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                             }
 
                             else -> {
-                                _baseTagDataStateNew.value =
+                                _baseTagDataState.value =
                                     SubmitResult.FailureApiError(
                                         error.errorResponse.message ?: ""
                                     )
@@ -340,11 +330,11 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                             "Error while fetching cards data",
                             error
                         )
-                        _baseTagDataStateNew.value= SubmitResult.FailureServerError
+                        _baseTagDataState.value = SubmitResult.FailureServerError
                     }
 
                     is NetworkError.NoConnection -> {
-                        _baseTagDataStateNew.value = SubmitResult.FailureNoConnection
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
                     }
 
                     is NetworkError.ApiError -> {
@@ -354,7 +344,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                                     "API_TOKEN UserPassViewModel",
                                     "invalid token detected login out user"
                                 )
-                                _baseTagDataStateNew.value =
+                                _baseTagDataState.value =
                                     SubmitResult.InvalidApiToken(
                                         error.errorResponse.code,
                                         error.errorResponse.message ?: ""
@@ -362,7 +352,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                             }
 
                             else -> {
-                                _baseTagDataStateNew.value =
+                                _baseTagDataState.value =
                                     SubmitResult.FailureApiError(
                                         error.errorResponse.message ?: ""
                                     )

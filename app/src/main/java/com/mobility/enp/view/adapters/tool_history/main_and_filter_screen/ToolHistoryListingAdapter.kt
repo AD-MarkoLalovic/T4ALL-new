@@ -177,11 +177,15 @@ class ToolHistoryListingAdapter(
             false
         }
 
+        val country = toolHistoryIndex.data.tags?.let {
+            it[holder.bindingAdapterPosition].country?.text
+        }
+
         holder.bind(
             tagUtilCycler,
             holder.bindingAdapterPosition,
             holder,
-            toolHistoryIndex.data?.customer?.country ?: ""
+            country ?: "no data"
         )
     }
 

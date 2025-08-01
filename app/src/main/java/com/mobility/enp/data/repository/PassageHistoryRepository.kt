@@ -17,6 +17,7 @@ import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.collections.orEmpty
+import kotlin.let
 
 
 class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, context) {
@@ -55,7 +56,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
     }
 
 
-    suspend fun getTagBaseData(currentPage: Int, perPage: Int): Result<List<TagUiModel>> {
+    suspend fun getTagBaseData(currentPage: Int, perPage: Int): Result<IndexData> {
         if (!isNetworkAvailable()) {
             return Result.failure(NetworkError.NoConnection)
         }
@@ -64,18 +65,18 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
         return try {
             val lang = getLangKey()
-            val response = apiService(userToken).getUserTagsNew(currentPage, perPage, lang)
+            val response = apiService(userToken).getUserTagsNewForHistory(currentPage, perPage, lang)
 
             if (response.isSuccessful) {
-                val tags = response.body()?.data?.tags?.items?.toTagUiModel().orEmpty()
-                Result.success(tags)
+                response.body()?.let { indexData ->
+                    Result.success(indexData)
+                } ?: Result.failure(NetworkError.ServerError)
             } else {
-                val errorResponse =
-                    response.errorBody()?.let { parseErrorResponse(response.code(), it) }
-                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
-                    ?: NetworkError.ServerError)
+                response.errorBody()?.let { errorBody ->
+                    val errorResponse = parseErrorResponse(response.code(), errorBody)
+                    Result.failure(NetworkError.ApiError(errorResponse))
+                } ?: Result.failure(NetworkError.ServerError)
             }
-
         } catch (e: Exception) {
             Log.d("MyTags", "ProfileRepository: ${e.message} ${e.cause}")
             Result.failure(NetworkError.ServerError)
