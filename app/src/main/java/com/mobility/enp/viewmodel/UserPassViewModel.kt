@@ -59,6 +59,7 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.CsvActivity
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.fragments.tool_history.ToolHistoryFilterFragment
+import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -90,6 +91,11 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     private val _baseTagDataState =
         MutableStateFlow<SubmitResult<Pair<IndexData, CardWebModel>>>(SubmitResult.Loading)
     val baseTagDataState: StateFlow<SubmitResult<Pair<IndexData, CardWebModel>>> get() = _baseTagDataState
+
+
+    private val _baseTagDataStateNew =
+        MutableStateFlow<SubmitResult<Pair<List<TagUiModel>, CardWebModel>>>(SubmitResult.Loading)
+    val baseTagDataStateNew: StateFlow<SubmitResult<Pair<List<TagUiModel>, CardWebModel>>> get() = _baseTagDataStateNew
 
     private val _csvTable = MutableStateFlow<SubmitResult<CsvModel>>(SubmitResult.Empty)
     val csvTable: StateFlow<SubmitResult<CsvModel>> get() = _csvTable
@@ -242,6 +248,121 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
                             else -> {
                                 _baseTagDataState.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(
+                                    TAG,
+                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    fun getBaseDataAlternativeApi() {   // uses faster api call to get serial numbers of tags saving about 10 seconds on server response time
+        _baseTagDataState.value = SubmitResult.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+
+            val resultTags = async {
+                repository.getTagBaseData(1,5)
+            }
+
+            val resultCards = async {
+                repository.getCardsFromServer()
+            }
+
+            val tagResultDeferred = resultTags.await()
+            val resultCardsDeferred = resultCards.await()
+
+            if (tagResultDeferred.isSuccess && resultCardsDeferred.isSuccess) {
+
+                val tagsData = tagResultDeferred.getOrNull()
+                val cardData = resultCardsDeferred.getOrNull()
+
+                if (tagsData == null || cardData == null) {
+                    _baseTagDataStateNew.value = SubmitResult.Empty
+                } else {
+                    _baseTagDataStateNew.value = SubmitResult.Success(Pair(tagsData, cardData))
+                }
+
+            } else {
+                when (val error = tagResultDeferred.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.e(
+                            "UserPassVM",
+                            "Error while fetching tags data",
+                            error
+                        )
+                        _baseTagDataStateNew.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataStateNew.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN UserPassViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                _baseTagDataStateNew.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _baseTagDataStateNew.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(
+                                    TAG,
+                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                                )
+                            }
+                        }
+                    }
+                }
+
+                when (val error = resultCardsDeferred.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.e(
+                            "UserPassVM",
+                            "Error while fetching cards data",
+                            error
+                        )
+                        _baseTagDataStateNew.value= SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataStateNew.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN UserPassViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                _baseTagDataStateNew.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _baseTagDataStateNew.value =
                                     SubmitResult.FailureApiError(
                                         error.errorResponse.message ?: ""
                                     )

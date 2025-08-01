@@ -63,7 +63,8 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
         setObservers()
 
-        vModel.getBaseData()
+//        vModel.getBaseData() todo
+        vModel.getBaseDataAlternativeApi()
 
         binding.loopIcon.setOnClickListener {
             if (Repository.isNetworkAvailable(requireContext())) {
@@ -84,7 +85,8 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         binding.progBar.visibility = View.GONE
         binding.loopIcon.isEnabled = true
 
-        vModel.getBaseData()
+//        vModel.getBaseData()  todo
+//        vModel.getBaseDataAlternativeApi() todo
     }
 
     private fun setObservers() {
@@ -103,6 +105,44 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
                 is SubmitResult.Success -> {
                     setIndexData(tagIndex.data.first)
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                    runSavedDataCheck()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(tagIndex.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(tagIndex.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {
+                    SubmitResult.Empty
+                }
+            }
+        }
+
+
+        collectLatestLifecycleFlow(vModel.baseTagDataStateNew) { tagIndex ->
+            when (tagIndex) {
+                is SubmitResult.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    Log.d(TAG, "setObservers: ${tagIndex.data.first}")
+//                    setIndexData(tagIndex.data.first)
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -252,6 +292,31 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         binding.cycler.layoutManager = LinearLayoutManager(requireContext())
 
     }
+
+
+    private fun setIndexDataNew(indexData: IndexData) {
+        Log.d(TAG, "setIndexData: $indexData")
+
+        binding.loopIcon.isEnabled = true
+
+        binding.progBar.visibility = View.GONE
+
+        CoroutineScope(Dispatchers.IO).launch {
+            vModel.insertRoomToolHistoryIndexData(indexData)
+        }
+
+        vModel.tagSerials = indexData.data?.tags as ArrayList<Tag>
+        vModel.indexData =
+            indexData  // filter fragment need some data from here saving here to reduce api calls
+
+        val toolHistoryListingAdapter =
+            ToolHistoryListingAdapter(indexData, vModel, this, this, this)
+
+        binding.cycler.adapter = toolHistoryListingAdapter
+        binding.cycler.layoutManager = LinearLayoutManager(requireContext())
+
+    }
+
 
     override fun sendComplaintData(complaintBody: ComplaintBody) {
         vModel.postComplaint(complaintBody)
