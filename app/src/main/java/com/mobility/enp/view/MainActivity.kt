@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun applyDisplayCutouts() {
-        val rootView = findViewById<ConstraintLayout>(R.id.rootLayout)
+        val rootView = binding.rootLayout
 
         ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
