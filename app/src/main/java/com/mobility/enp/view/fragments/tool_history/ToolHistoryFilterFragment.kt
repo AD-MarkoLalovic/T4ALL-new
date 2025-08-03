@@ -234,18 +234,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     }
 
     private fun setObservers() {
-        vModel.errorBody.observe(viewLifecycleOwner) { errorBody ->
-            binding.progBar.visibility = View.GONE
-            context?.let { context ->
-                Toast.makeText(
-                    context, errorBody.errorBody, Toast.LENGTH_SHORT
-                ).show()
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
-                }
-            }
-        }
-
         collectLatestLifecycleFlow(vModel.baseTagDataState) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {

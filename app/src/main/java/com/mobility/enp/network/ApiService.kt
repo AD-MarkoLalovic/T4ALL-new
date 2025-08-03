@@ -148,7 +148,7 @@ interface ApiService {
         @Query("lang") language: String
     ): Response<MyTagsResponse>
 
-    @GET("/api/v2/tags")
+    @GET("/api/v1/tags")
     suspend fun getUserTagsNewForHistory(
         @Query("page") page: Int,
         @Query("perPage") perPage: Int,
