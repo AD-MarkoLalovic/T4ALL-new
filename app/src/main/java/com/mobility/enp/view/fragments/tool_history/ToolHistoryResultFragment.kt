@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
+import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
@@ -31,7 +32,7 @@ import kotlinx.coroutines.withContext
 
 
 class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.SendToFragment,
-    ToolHistoryListingAdapter.SavePassageData {
+    ToolHistoryListingAdapter.SavePassageData, ToolHistoryListingAdapter.PaginationUpdate {
 
     private lateinit var binding: FragmentToolHistorySearchResultBinding
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
@@ -84,7 +85,7 @@ class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.S
 
         indexData?.let { data ->
             val toolHistoryListingAdapter =
-                ToolHistoryListingAdapter(data, vModel, this, this, this)
+                ToolHistoryListingAdapter(data, vModel, this, this, this,this)
             binding.cycler.adapter = toolHistoryListingAdapter
             binding.cycler.layoutManager = LinearLayoutManager(context)
         }
@@ -180,6 +181,17 @@ class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.S
     private fun noInternetMessage() {
         val mainBinding = (activity as MainActivity).binding
         MainActivity.showSnackMessage(getString(R.string.no_internet), mainBinding)
+    }
+
+    override fun sendDataFillMainAdapter(   // updates tags on main adapter
+        nextPage: Int,
+        perPage: Int,
+        flow: MutableStateFlow<SubmitResult<IndexData>>,
+    ) {
+        binding.progBar.visibility = View.VISIBLE
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            vModel.getBaseTagDataPagination(nextPage,perPage,flow)
+        }
     }
 
     private fun showError(message: String) {

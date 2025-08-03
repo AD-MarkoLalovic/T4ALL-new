@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.SendToFragment,
-    ToolHistoryListingAdapter.SavePassageData {
+    ToolHistoryListingAdapter.SavePassageData, ToolHistoryListingAdapter.PaginationUpdate {
 
     private var _binding: FragmentPassageHistoryBinding? = null
     private val binding: FragmentPassageHistoryBinding get() = _binding!!
@@ -235,31 +235,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             indexData  // filter fragment need some data from here saving here to reduce api calls
 
         val toolHistoryListingAdapter =
-            ToolHistoryListingAdapter(indexData, vModel, this, this, this)
-
-        binding.cycler.adapter = toolHistoryListingAdapter
-        binding.cycler.layoutManager = LinearLayoutManager(requireContext())
-
-    }
-
-
-    private fun setIndexDataNew(indexData: IndexData) {
-        Log.d(TAG, "setIndexData: $indexData")
-
-        binding.loopIcon.isEnabled = true
-
-        binding.progBar.visibility = View.GONE
-
-        CoroutineScope(Dispatchers.IO).launch {
-            vModel.insertRoomToolHistoryIndexData(indexData)
-        }
-
-        vModel.tagSerials = indexData.data?.tags as ArrayList<Tag>
-        vModel.indexData =
-            indexData  // filter fragment need some data from here saving here to reduce api calls
-
-        val toolHistoryListingAdapter =
-            ToolHistoryListingAdapter(indexData, vModel, this, this, this)
+            ToolHistoryListingAdapter(indexData, vModel, this, this, this, this)
 
         binding.cycler.adapter = toolHistoryListingAdapter
         binding.cycler.layoutManager = LinearLayoutManager(requireContext())
@@ -283,6 +259,18 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         binding.progBar.visibility = View.VISIBLE
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             vModel.getToolHistoryTransit(flow, tagSerialNumber, nextPage)
+        }
+    }
+
+    override fun sendDataFillMainAdapter(
+        // updates tags on main adapter
+        nextPage: Int,
+        perPage: Int,
+        flow: MutableStateFlow<SubmitResult<IndexData>>,
+    ) {
+        binding.progBar.visibility = View.VISIBLE
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            vModel.getBaseTagDataPagination(nextPage, perPage, flow)
         }
     }
 
@@ -316,4 +304,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         super.onDestroyView()
         _binding = null
     }
+
+
 }

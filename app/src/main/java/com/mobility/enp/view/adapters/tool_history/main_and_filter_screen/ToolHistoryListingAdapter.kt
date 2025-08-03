@@ -1,6 +1,5 @@
 package com.mobility.enp.view.adapters.tool_history.main_and_filter_screen
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.TagUtilCycler
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
+import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.util.SubmitResult
@@ -25,10 +25,15 @@ class ToolHistoryListingAdapter(
     private val viewModel: UserPassViewModel,
     private val complaintInterface: ToolHistoryListingPassageAdapter.SendToFragment,
     val lifecycleOwner: LifecycleOwner,
-    val passageData: SavePassageData,
+    val passageData: SavePassageData, val paginationUpdate: PaginationUpdate
 ) : RecyclerView.Adapter<ToolHistoryListingAdapter.TagsViewHolder>() {
 
-    private lateinit var context: Context
+    var currentPage: Int = toolHistoryIndex.data?.currentPage ?: 0
+    val lastPage: Int = toolHistoryIndex.data?.lastPage ?: 0
+    val perPage: Int = toolHistoryIndex.data?.perPage ?: 0
+    val total: Int = toolHistoryIndex.data?.total ?: 0
+
+    val listOfTags: ArrayList<Tag> = toolHistoryIndex.data?.tags as ArrayList<Tag>
 
     companion object {
         const val TAG = "PrimaryPassageAdapter"
@@ -45,6 +50,8 @@ class ToolHistoryListingAdapter(
             holder: TagsViewHolder, countryCode: String
         ) {
             // perform initial data fill // for sub adapter
+
+
             binding.data = toolHistoryIndex
 
             holder.binding.progbar.visibility = View.VISIBLE
@@ -70,7 +77,11 @@ class ToolHistoryListingAdapter(
                         binding.cyclerTotalPrice.adapter =
                             TotalCostPassageAdapter(toolHistoryListing.data?.sumTags)
                         binding.cyclerTotalPrice.layoutManager =
-                            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                            LinearLayoutManager(
+                                binding.root.context,
+                                LinearLayoutManager.VERTICAL,
+                                false
+                            )
 
                         binding.position = position
 
@@ -86,7 +97,7 @@ class ToolHistoryListingAdapter(
                             lifecycleOwner,
                             itemSerialNumber, countryCode
                         )
-                        binding.cycler.layoutManager = LinearLayoutManager(context)
+                        binding.cycler.layoutManager = LinearLayoutManager(binding.root.context)
 
                         binding.executePendingBindings()
 
@@ -99,7 +110,9 @@ class ToolHistoryListingAdapter(
                 override fun onFailed(boolean: Boolean, cause: String) {
                     holder.binding.progbar.visibility = View.GONE
                     Toast.makeText(
-                        context, "failed to set sub adapter with data", Toast.LENGTH_SHORT
+                        binding.root.context,
+                        "failed to set sub adapter with data",
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
             }
@@ -115,11 +128,11 @@ class ToolHistoryListingAdapter(
                     }
 
                     is SubmitResult.FailureServerError -> {
-                        logError(context.resources.getString(R.string.server_error_msg))
+                        logError(binding.root.context.resources.getString(R.string.server_error_msg))
                     }
 
                     is SubmitResult.FailureApiError -> {
-                        logError(context.resources.getString(R.string.api_call_error))
+                        logError(binding.root.context.resources.getString(R.string.api_call_error))
                     }
 
                     else -> {
@@ -140,7 +153,6 @@ class ToolHistoryListingAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsViewHolder {
-        context = parent.context
         return TagsViewHolder(
             ToolHistoryIndexCardBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
@@ -155,7 +167,8 @@ class ToolHistoryListingAdapter(
     override fun getItemCount(): Int = toolHistoryIndex.data?.tags?.size ?: 0
 
     override fun onBindViewHolder(holder: TagsViewHolder, position: Int) {
-        val currentTag = toolHistoryIndex.data?.tags!![holder.bindingAdapterPosition]
+        holder.binding.noPassage.visibility = View.GONE
+        val currentTag = listOfTags[holder.bindingAdapterPosition]
 
         val tagUtilCycler = TagUtilCycler("", "")
 
@@ -177,7 +190,7 @@ class ToolHistoryListingAdapter(
             false
         }
 
-        val country = toolHistoryIndex.data.tags?.let {
+        val country = toolHistoryIndex.data?.tags?.let {
             it[holder.bindingAdapterPosition].country?.text
         }
 
@@ -187,7 +200,56 @@ class ToolHistoryListingAdapter(
             holder,
             country ?: "no data"
         )
+
+        performDataFill(currentTag, holder.bindingAdapterPosition)
     }
+
+
+    private fun performDataFill(currentItem: Tag, bindingAdapterPosition: Int) {
+        if (listOfTags[listOfTags.size - 1] == currentItem && lastPage > currentPage) {
+            val indexListing =
+                MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)
+
+            collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
+                complaintInterface.stopSpinner()
+                when (serverResponse) {
+                    is SubmitResult.Success -> {
+                        serverResponse.data.let {
+                            Log.d(
+                                "MainAdapter",
+                                "performDataFill: ${it.data?.currentPage} ${it.data?.lastPage}"
+                            )
+                            currentPage = it.data?.currentPage ?: 0
+
+                            for (item: Tag in it.data?.tags ?: emptyList()) {
+                                listOfTags.add(item)
+                                notifyItemChanged(listOfTags.size - 1)
+                                Log.d(
+                                    "MainAdapter",
+                                    "dataInserted: $item"
+                                )
+                            }
+                        }
+                    }
+
+                    is SubmitResult.FailureApiError -> {}
+                    is SubmitResult.InvalidApiToken -> {}
+
+                    else -> {
+                        SubmitResult.Empty
+                    }
+                }
+            }
+
+            paginationUpdate.sendDataFillMainAdapter(currentPage + 1, perPage, indexListing)
+        } else if (lastPage == currentPage && listOfTags[listOfTags.size - 1] == currentItem) {
+            Log.d(
+                ToolHistoryListingPassageAdapter.Companion.TAG,
+                "last item $currentItem total $total"
+            )
+        }
+    }
+
 
     interface PassageDataInterface {
         fun onOk(toolHistoryListing: V2HistoryTagResponse)
@@ -196,6 +258,14 @@ class ToolHistoryListingAdapter(
 
     interface SavePassageData {
         fun psgData(toolHistoryListing: V2HistoryTagResponse)
+    }
+
+    interface PaginationUpdate {
+        fun sendDataFillMainAdapter(
+            nextPage: Int,
+            perPage: Int,
+            flow: MutableStateFlow<SubmitResult<IndexData>>,
+        )
     }
 
 }
