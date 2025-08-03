@@ -62,6 +62,11 @@ class ToolHistoryListingAdapter(
             val contentInterface = object : PassageDataInterface {
 
                 override fun onOk(toolHistoryListing: V2HistoryTagResponse) {
+
+                    binding.cycler.visibility = View.VISIBLE
+                    binding.cyclerTotalPrice.visibility = View.VISIBLE
+                    binding.noPassage.visibility = View.GONE
+
                     toolHistoryListing.serial = itemSerialNumber
 
                     passageData.psgData(toolHistoryListing)
@@ -69,6 +74,7 @@ class ToolHistoryListingAdapter(
                     holder.binding.progbar.visibility = View.GONE
 
                     if (!toolHistoryListing.data?.sumTags.isNullOrEmpty()) {
+
 
                         /**
                          * this adapter is used for presenting the total cost of tag
@@ -104,6 +110,8 @@ class ToolHistoryListingAdapter(
 
                     } else {
                         binding.noPassage.visibility = View.VISIBLE
+                        binding.cycler.visibility = View.GONE
+                        binding.cyclerTotalPrice.visibility = View.GONE
                     }
                 }
 
