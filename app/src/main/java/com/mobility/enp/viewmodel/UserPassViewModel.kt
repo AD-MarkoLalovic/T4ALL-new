@@ -372,7 +372,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         perPage: Int,
         flow: MutableStateFlow<SubmitResult<IndexData>>
     ) {
-        viewModelScope.launch (Dispatchers.IO) {
+        viewModelScope.launch (Dispatchers.IO) {  // 2 flows success returns to adapter and issues return to fragment
             val result = repository.getTagBaseData(nextPage, perPage)
             if (result.isSuccess) {
                 val data = result.getOrNull()
@@ -385,11 +385,11 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(TAG, "Error while fetching tag serial data")
-                        flow.value = SubmitResult.FailureServerError
+                        _baseTagDataState.value = SubmitResult.FailureServerError
                     }
 
                     is NetworkError.NoConnection -> {
-                        flow.value = SubmitResult.FailureNoConnection
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
                     }
 
                     is NetworkError.ApiError -> {
@@ -399,7 +399,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                                     "API_TOKEN UserPassViewModel",
                                     "invalid token detected login out user"
                                 )
-                                flow.value =
+                                _baseTagDataState.value =
                                     SubmitResult.InvalidApiToken(
                                         error.errorResponse.code,
                                         error.errorResponse.message ?: ""
@@ -407,7 +407,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                             }
 
                             else -> {
-                                flow.value =
+                                _baseTagDataState.value =
                                     SubmitResult.FailureApiError(
                                         error.errorResponse.message ?: ""
                                     )
