@@ -8,18 +8,28 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
+import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.ToolHistoryTagsAdapterBinding
+import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.viewmodel.FranchiseViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class ToolHistoryTagsAdapter(
-    private val listOfTags: ArrayList<Tag>,
     tagInterface: TagSend,
-    private val franchiseModel: FranchiseViewModel
+    private val franchiseModel: FranchiseViewModel,
+    private val paginationUpdate: PaginationUpdate,
+    private val toolHistoryIndex: IndexData
 ) :
     RecyclerView.Adapter<ToolHistoryTagsAdapter.ToolHistoryTagsViewHolder>() {
 
     val tagSendInt = tagInterface
+    private val listOfTags: ArrayList<Tag> = toolHistoryIndex.data?.tags as ArrayList<Tag>
+    var currentPage: Int = toolHistoryIndex.data?.currentPage ?: 0
+    val lastPage: Int = toolHistoryIndex.data?.lastPage ?: 0
+    val perPage: Int = toolHistoryIndex.data?.perPage ?: 0
+    val total: Int = toolHistoryIndex.data?.total ?: 0
+
     lateinit var context: Context
 
     inner class ToolHistoryTagsViewHolder(val binding: ToolHistoryTagsAdapterBinding) :
@@ -119,6 +129,13 @@ class ToolHistoryTagsAdapter(
         holder.bind(tag)
     }
 
+    interface PaginationUpdate {
+        fun sendDataFillFilterAdapter(
+            nextPage: Int,
+            perPage: Int,
+            flow: MutableStateFlow<SubmitResult<IndexData>>,
+        )
+    }
 
     interface TagSend {
         fun onSendTag(tag: Tag)

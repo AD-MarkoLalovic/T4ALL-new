@@ -33,10 +33,12 @@ import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
+class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
+    ToolHistoryTagsAdapter.PaginationUpdate {
 
     private var _binding: FragmentToolHistorySearchQueryBinding? = null
     private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
@@ -404,10 +406,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             if (!index.tags.isNullOrEmpty()) {
                 binding.noData.visibility = View.GONE
 
-                vModel.tagSerials = index.tags as ArrayList<Tag>
-                Log.d(TAG, "setObservers: ${vModel.tagSerials}")
-
-                val adapter = ToolHistoryTagsAdapter(vModel.tagSerials, this, franchiseViewModel)
+                val adapter = ToolHistoryTagsAdapter( this, franchiseViewModel,this,indexData)
 
                 binding.cycler.adapter = adapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
@@ -464,6 +463,20 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             }
         }
     }
+
+
+    override fun sendDataFillFilterAdapter(
+        // updates tags on main adapter
+        nextPage: Int,
+        perPage: Int,
+        flow: MutableStateFlow<SubmitResult<IndexData>>,
+    ) {
+        binding.progBar.visibility = View.VISIBLE
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            vModel.getBaseTagDataPagination(nextPage, perPage, flow)
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
