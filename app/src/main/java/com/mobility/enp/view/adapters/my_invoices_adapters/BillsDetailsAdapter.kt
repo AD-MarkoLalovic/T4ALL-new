@@ -69,8 +69,7 @@ class BillsDetailsAdapter(
 
         fun bind(
             bill: Bill,
-            viewModel: MyInvoicesViewModel,
-            errorBody: MutableLiveData<ErrorBody>
+            viewModel: MyInvoicesViewModel
         ) {
             binding.bill = bill
 
@@ -283,7 +282,7 @@ class BillsDetailsAdapter(
                 })
             } else {
                 // API poziv za PDF račun
-                viewModel.downloadBill(object : DownloadBillsDetails {
+                viewModel.downloadPdfBill(object : DownloadBillsDetails {
                     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
                     override fun onOK(pdf: BillDownload?) {
                         pdf?.data?.pdfContent?.let {
@@ -305,7 +304,7 @@ class BillsDetailsAdapter(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                }, billId, errorBody)
+                }, billId)
             }
         } else {
             Toast.makeText(
@@ -327,7 +326,7 @@ class BillsDetailsAdapter(
 
     override fun onBindViewHolder(holder: BillsViewHolder, position: Int) {
         val current = billsArray[holder.bindingAdapterPosition]
-        holder.bind(current, viewModel, errorBody)
+        holder.bind(current, viewModel)
         checkDataFill(holder.bindingAdapterPosition, current, holder.binding.root.context)
     }
 
