@@ -188,9 +188,9 @@ interface ApiService {
     ): Response<LostTagResponse>
 
     @GET("/api/v1/bills/invoice/{bill_id}/bill/pdf")
-    fun getPdfBill(
+    suspend fun getPdfBill(
         @Path(value = "bill_id") billId: String
-    ): Call<BillDownload>
+    ): Response<BillDownload>
 
     @GET("/api/v1/bills/invoice/{bill_id}/list/passes/export/pdf")
     suspend fun getPdfListingPasses(

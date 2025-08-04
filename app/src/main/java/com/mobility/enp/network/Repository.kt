@@ -35,33 +35,6 @@ object Repository {
         return apiService(token).getUserPersonalData()
     }
 
-
-    fun getBillDetailsPdf(
-        data: BillsDetailsAdapter.DownloadBillsDetails,
-        token: String?,
-        billId: String,
-        errorBody: MutableLiveData<ErrorBody>
-    ) {
-        apiService(token).getPdfBill(billId).enqueue(object : Callback<BillDownload> {
-
-            override fun onResponse(call: Call<BillDownload>, response: Response<BillDownload>) {
-                if (response.isSuccessful) {
-                    response.body().let {
-                        data.onOK(it)
-                    }
-                } else {
-                    data.onFailed()
-                    errorBody.postValue(getMessageFromErrorBody(response))
-                }
-            }
-
-            override fun onFailure(call: Call<BillDownload>, t: Throwable) {
-                Log.d(TAG, "onFailure: \n ${t.cause} \n\n ${t.message}")
-            }
-
-        })
-    }
-
     suspend fun getListingPasses(
         token: String, billId: String
     ): Response<BillDownload> {
