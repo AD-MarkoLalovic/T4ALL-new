@@ -101,7 +101,7 @@ class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.S
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
                     setAdapter()
-                    vModel.getBaseData()
+                    vModel.getBaseDataAlternativeApi()
                 }
 
                 is SubmitResult.FailureNoConnection -> {
