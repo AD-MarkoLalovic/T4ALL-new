@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 
 class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
-    ToolHistoryTagsAdapter.PaginationUpdate {
+    ToolHistoryTagsAdapter.PaginationUpdate, ToolHistoryTagsAdapter.SendToFragment {
 
     private var _binding: FragmentToolHistorySearchQueryBinding? = null
     private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
@@ -406,7 +406,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
             if (!index.tags.isNullOrEmpty()) {
                 binding.noData.visibility = View.GONE
 
-                val adapter = ToolHistoryTagsAdapter( this, franchiseViewModel,this,indexData)
+                val adapter = ToolHistoryTagsAdapter(this, franchiseViewModel, this, indexData,this,this)
 
                 binding.cycler.adapter = adapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
@@ -477,7 +477,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         }
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -486,6 +485,14 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
     override fun onResume() {
         super.onResume()
         vModel.selectedTags.clear()
+    }
+
+    override fun startSpinner() {
+        binding.progBar.visibility = View.VISIBLE
+    }
+
+    override fun stopSpinner() {
+        binding.progBar.visibility = View.GONE
     }
 
     interface UserPermission {
