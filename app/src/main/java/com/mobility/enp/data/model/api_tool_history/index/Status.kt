@@ -6,7 +6,7 @@ import androidx.annotation.Keep
 import com.google.gson.annotations.Expose
 
 @Keep
-data class Category(
+data class Status(
     @SerializedName("text")
     @Expose
     val text: String? = null,

@@ -38,7 +38,6 @@ import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.element.Table
 import com.mobility.enp.MyApplication
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_tags.LostTagResponse
 import com.mobility.enp.data.model.api_tool_history.TimeSave
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
@@ -110,10 +109,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         _baseTagDataState.value = SubmitResult.Success(Pair(indexData, CardWebModel(null, null)))
     }
 
-    private val _errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
-    val errorBody: LiveData<ErrorBody> get() = _errorBody
-
-
     var startDate = MutableLiveData<TimeSave>()
     var endDate = MutableLiveData<TimeSave>()
     private var userSelectedCalendarStart: Long? = null
@@ -136,19 +131,134 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     private val itemsPerPage = 10
 
+//
+//    /**
+//     * this function return serial tag data and card data for filter fragment && Main fragment of user history
+//     * @return SubmitResult<Pair<IndexData, CardWebModel>>
+//     * @param IndexData -> data containing serials of tags
+//     * @param CardWebModel -> data containing which country buttons can be shown for user
+//     */
+//    fun getBaseData() {   // same for main page and for filter fragment for base data
+//        _baseTagDataState.value = SubmitResult.Loading
+//        viewModelScope.launch(Dispatchers.IO) {
+//
+//            val resultTags = async {
+//                repository.getIndexData()
+//            }
+//
+//            val resultCards = async {
+//                repository.getCardsFromServer()
+//            }
+//
+//            val tagResultDeferred = resultTags.await()
+//            val resultCardsDeferred = resultCards.await()
+//
+//            if (tagResultDeferred.isSuccess && resultCardsDeferred.isSuccess) {
+//
+//                val tagsData = tagResultDeferred.getOrNull()
+//                val cardData = resultCardsDeferred.getOrNull()
+//
+//                if (tagsData == null || cardData == null) {
+//                    _baseTagDataState.value = SubmitResult.Empty
+//                } else {
+//                    _baseTagDataState.value = SubmitResult.Success(Pair(tagsData, cardData))
+//                }
+//
+//            } else {
+//                when (val error = tagResultDeferred.exceptionOrNull()) {
+//                    is NetworkError.ServerError -> {
+//                        Log.e(
+//                            "UserPassVM",
+//                            "Error while fetching tags data",
+//                            error
+//                        )
+//                        _baseTagDataState.value = SubmitResult.FailureServerError
+//                    }
+//
+//                    is NetworkError.NoConnection -> {
+//                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+//                    }
+//
+//                    is NetworkError.ApiError -> {
+//                        when (error.errorResponse.code) {
+//                            401, 405 -> {
+//                                Log.d(
+//                                    "API_TOKEN UserPassViewModel",
+//                                    "invalid token detected login out user"
+//                                )
+//                                _baseTagDataState.value =
+//                                    SubmitResult.InvalidApiToken(
+//                                        error.errorResponse.code,
+//                                        error.errorResponse.message ?: ""
+//                                    )
+//                            }
+//
+//                            else -> {
+//                                _baseTagDataState.value =
+//                                    SubmitResult.FailureApiError(
+//                                        error.errorResponse.message ?: ""
+//                                    )
+//                                Log.d(
+//                                    TAG,
+//                                    "UserPassViewModel api error ${error.errorResponse.message}"
+//                                )
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                when (val error = resultCardsDeferred.exceptionOrNull()) {
+//                    is NetworkError.ServerError -> {
+//                        Log.e(
+//                            "UserPassVM",
+//                            "Error while fetching cards data",
+//                            error
+//                        )
+//                        _baseTagDataState.value = SubmitResult.FailureServerError
+//                    }
+//
+//                    is NetworkError.NoConnection -> {
+//                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+//                    }
+//
+//                    is NetworkError.ApiError -> {
+//                        when (error.errorResponse.code) {
+//                            401, 405 -> {
+//                                Log.d(
+//                                    "API_TOKEN UserPassViewModel",
+//                                    "invalid token detected login out user"
+//                                )
+//                                _baseTagDataState.value =
+//                                    SubmitResult.InvalidApiToken(
+//                                        error.errorResponse.code,
+//                                        error.errorResponse.message ?: ""
+//                                    )
+//                            }
+//
+//                            else -> {
+//                                _baseTagDataState.value =
+//                                    SubmitResult.FailureApiError(
+//                                        error.errorResponse.message ?: ""
+//                                    )
+//                                Log.d(
+//                                    TAG,
+//                                    "UserPassViewModel api error ${error.errorResponse.message}"
+//                                )
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-    /**
-     * this function return serial tag data and card data for filter fragment && Main fragment of user history
-     * @return SubmitResult<Pair<IndexData, CardWebModel>>
-     * @param IndexData -> data containing serials of tags
-     * @param CardWebModel -> data containing which country buttons can be shown for user
-     */
-    fun getBaseData() {   // same for main page and for filter fragment for base data
+
+    fun getBaseDataAlternativeApi() {   // uses faster api call to get serial numbers of tags saving about 10 seconds on server response time
         _baseTagDataState.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
 
             val resultTags = async {
-                repository.getIndexData()
+                repository.getTagBaseData(1, 5)
             }
 
             val resultCards = async {
@@ -252,6 +362,64 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    fun getBaseTagDataPagination(
+        nextPage: Int,
+        perPage: Int,
+        flow: MutableStateFlow<SubmitResult<IndexData>>
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {  // 2 flows success returns to adapter and issues return to fragment
+            val result = repository.getTagBaseData(nextPage, perPage)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    flow.value = SubmitResult.Empty
+                } else {
+                    flow.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _baseTagDataState.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN UserPassViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                _baseTagDataState.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _baseTagDataState.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(
+                                    "UserPassViewModel",
+                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                                )
+                            }
+                        }
+                    }
+
+                    else -> {}
                 }
             }
         }
@@ -485,13 +653,19 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         flow.value = SubmitResult.Loading
 
         viewModelScope.launch(Dispatchers.IO) {
+            val dateFrom = startDate.value?.formattedTime
+            val dateTo = endDate.value?.formattedTime
+
             var result =
-                repository.getAdapterPassageData(tagSerialNumber, currentPage, itemsPerPage)
+                repository.getAdapterPassageData(
+                    tagSerialNumber,
+                    currentPage,
+                    itemsPerPage,
+                    dateFrom ?: "",
+                    dateTo ?: ""
+                )
+
             if (!selectedCountry.isEmpty()) {
-
-                val dateFrom = startDate.value?.formattedTime
-                val dateTo = endDate.value?.formattedTime
-
                 result = repository.getAdapterPassageDataCountryFilter(
                     tagSerialNumber,
                     selectedCountry,
@@ -845,9 +1019,9 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     private var _data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
     val data: LiveData<IndexData> get() = _data
 
-    var tagSerials: ArrayList<Tag> = ArrayList()
     var selectedTags: ArrayList<Tag> = ArrayList()
     var indexData: IndexData? = null
+    var tagForExport: Tag? = null
 
     suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
         repository.insertRoomTagBaseData(indexData)
@@ -994,7 +1168,8 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                             val tagSerial = if (allTagsSelected) {
                                 ""
                             } else {
-                                tagSerials[0].serialNumber ?: ""
+                                tagForExport?.serialNumber
+                                    ?: ""  // if one item last selected tag is added
                             }
 
                             val result = repository.getCsvTableData(

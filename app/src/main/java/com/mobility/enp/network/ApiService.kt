@@ -109,7 +109,9 @@ interface ApiService {
         @Query("filter[serial_number]") serialNumbers: String,
         @Query("page") page: String, // current page
         @Query("perPage") perPage: String, // fixed
-        @Query("lang") language: String
+        @Query("lang") language: String,
+        @Query("filter[date_from]") dateFrom: String,
+        @Query("filter[date_to]") dateTo: String
     ): Response<V2HistoryTagResponse>
 
     @GET("/api/v2/history")
@@ -148,6 +150,12 @@ interface ApiService {
         @Query("lang") language: String
     ): Response<MyTagsResponse>
 
+    @GET("/api/v1/tags")
+    suspend fun getUserTagsNewForHistory(
+        @Query("page") page: Int,
+        @Query("perPage") perPage: Int,
+        @Query("lang") language: String
+    ): Response<IndexData>
     //endregion
 
     @GET("/api/v1/tags")

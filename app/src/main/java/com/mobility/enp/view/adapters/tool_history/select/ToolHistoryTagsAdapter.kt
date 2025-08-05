@@ -1,31 +1,45 @@
 package com.mobility.enp.view.adapters.tool_history.select
 
-import android.content.Context
 import android.content.res.ColorStateList
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
+import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.ToolHistoryTagsAdapterBinding
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestFlow
+import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapter
 import com.mobility.enp.viewmodel.FranchiseViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class ToolHistoryTagsAdapter(
-    private val listOfTags: ArrayList<Tag>,
     tagInterface: TagSend,
-    private val franchiseModel: FranchiseViewModel
+    private val franchiseModel: FranchiseViewModel,
+    private val paginationUpdate: PaginationUpdate,
+    toolHistoryIndex: IndexData,
+    private val complaintInterface: SendToFragment,
+    val lifecycleOwner: LifecycleOwner,
 ) :
     RecyclerView.Adapter<ToolHistoryTagsAdapter.ToolHistoryTagsViewHolder>() {
 
     val tagSendInt = tagInterface
-    lateinit var context: Context
+    private val listOfTags: ArrayList<Tag> = toolHistoryIndex.data?.tags as ArrayList<Tag>
+    var currentPage: Int = toolHistoryIndex.data?.currentPage ?: 0
+    val lastPage: Int = toolHistoryIndex.data?.lastPage ?: 0
+    val perPage: Int = toolHistoryIndex.data?.perPage ?: 0
+    val total: Int = toolHistoryIndex.data?.total ?: 0
 
     inner class ToolHistoryTagsViewHolder(val binding: ToolHistoryTagsAdapterBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(tag: Tag) {
+
             if (tag.registrationPlate.isNullOrEmpty()) { // ignore recommendation android studio is wrong here
                 tag.registrationPlate = tag.serialNumber
                 binding.serialNumber.visibility = View.INVISIBLE
@@ -43,6 +57,10 @@ class ToolHistoryTagsAdapter(
                     setCheckboxColors()
                     tagSendInt.onTagRemove(tag)
                 }
+            }
+
+            if (binding.regPlate.text == binding.serialNumber.text) {
+                binding.serialNumber.visibility = View.INVISIBLE
             }
 
             binding.executePendingBindings()
@@ -100,14 +118,56 @@ class ToolHistoryTagsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToolHistoryTagsViewHolder {
-        context = parent.context
         return ToolHistoryTagsViewHolder(
             ToolHistoryTagsAdapterBinding.inflate(
                 LayoutInflater.from(
-                    context
+                    parent.context
                 ), parent, false
             )
         )
+    }
+
+
+    private fun performDataFill(currentItem: Tag) {
+        if (listOfTags[listOfTags.size - 1] == currentItem && lastPage > currentPage) {
+            val indexListing =
+                MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)
+
+            collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
+                complaintInterface.stopSpinner()
+                when (serverResponse) {
+                    is SubmitResult.Success -> {
+                        serverResponse.data.let {
+                            Log.d(
+                                "MainAdapter",
+                                "performDataFill: ${it.data?.currentPage} ${it.data?.lastPage}"
+                            )
+                            currentPage = it.data?.currentPage ?: 0
+
+                            for (item: Tag in it.data?.tags ?: emptyList()) {
+                                listOfTags.add(item)
+                                notifyItemChanged(listOfTags.size - 1)
+                                Log.d(
+                                    "FilterAdapter $currentItem $total",
+                                    "dataInserted: $item"
+                                )
+                            }
+                        }
+                    }
+
+                    else -> {
+                        SubmitResult.Empty
+                    }
+                }
+            }
+            complaintInterface.startSpinner()
+            paginationUpdate.sendDataFillFilterAdapter(currentPage + 1, perPage, indexListing)
+        } else if (lastPage == currentPage && listOfTags[listOfTags.size - 1] == currentItem) {
+            Log.d(
+                ToolHistoryListingPassageAdapter.Companion.TAG,
+                "last item $currentItem total $total"
+            )
+        }
     }
 
     override fun getItemCount(): Int {
@@ -116,13 +176,27 @@ class ToolHistoryTagsAdapter(
 
     override fun onBindViewHolder(holder: ToolHistoryTagsViewHolder, position: Int) {
         val tag = listOfTags[holder.bindingAdapterPosition]
+
         holder.bind(tag)
+        performDataFill(tag)
     }
 
+    interface PaginationUpdate {
+        fun sendDataFillFilterAdapter(
+            nextPage: Int,
+            perPage: Int,
+            flow: MutableStateFlow<SubmitResult<IndexData>>,
+        )
+    }
 
     interface TagSend {
         fun onSendTag(tag: Tag)
         fun onTagRemove(tag: Tag)
+    }
+
+    interface SendToFragment {
+        fun startSpinner()
+        fun stopSpinner()
     }
 
 }
