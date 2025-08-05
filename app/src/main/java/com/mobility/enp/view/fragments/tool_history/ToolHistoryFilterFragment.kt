@@ -176,7 +176,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
                 binding.btnSearch.backgroundTintList = ColorStateList.valueOf(color)
                 binding.exportBlock.setTextColor(color)
                 binding.exportBlock.visibility =
-                    View.GONE // because frashizers can not export from what daniel told me
+                    View.GONE // because fraternizers can not export from what daniel told me
 
                 binding.searchMark.setImageResource(franchiseModel.loopIcon)
 
@@ -436,6 +436,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
 
     override fun onSendTag(tag: Tag) {
         vModel.selectedTags.add(tag)
+        vModel.tagForExport =  tag
         Log.d(TAG, "onSendTag: ${vModel.selectedTags}")
     }
 

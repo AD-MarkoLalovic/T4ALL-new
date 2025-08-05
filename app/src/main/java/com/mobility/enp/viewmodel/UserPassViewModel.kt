@@ -1016,6 +1016,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     var tagSerials: ArrayList<Tag> = ArrayList()
     var selectedTags: ArrayList<Tag> = ArrayList()
     var indexData: IndexData? = null
+    var tagForExport : Tag? = null
 
     suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
         repository.insertRoomTagBaseData(indexData)
@@ -1162,7 +1163,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                             val tagSerial = if (allTagsSelected) {
                                 ""
                             } else {
-                                tagSerials[0].serialNumber ?: ""
+                                tagForExport?.serialNumber ?: ""  // if one item last selected tag is added
                             }
 
                             val result = repository.getCsvTableData(
