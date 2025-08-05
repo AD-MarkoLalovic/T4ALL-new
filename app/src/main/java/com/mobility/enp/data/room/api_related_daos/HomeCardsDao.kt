@@ -33,5 +33,4 @@ interface HomeCardsDao {
     suspend fun deleteCards(cards: List<HomeCardsEntity>)
 
 
-
 }

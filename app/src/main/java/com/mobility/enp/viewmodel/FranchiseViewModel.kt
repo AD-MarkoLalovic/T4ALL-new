@@ -23,10 +23,10 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
     val franchiseModel: LiveData<FranchiseModel?> get() = _franchiseModel
 
     private val _openSuccessDialog: MutableLiveData<Boolean?> = MutableLiveData()
-    val openSuccessDialog : LiveData<Boolean?> get() = _openSuccessDialog
+    val openSuccessDialog: LiveData<Boolean?> get() = _openSuccessDialog
 
 
-    fun postOpenDialog(bool: Boolean?){
+    fun postOpenDialog(bool: Boolean?) {
         _openSuccessDialog.value = bool
     }
 
@@ -55,7 +55,8 @@ class FranchiseViewModel(private val repository: FranchiserRepository) : ViewMod
             }
         }
     }
-    fun getFranchiseModelFromLogin(portalKey: String, context: Context){
+
+    fun getFranchiseModelFromLogin(portalKey: String, context: Context) {
         val franchiseModel = Util.franchiseID(portalKey, context)
         _franchiseModel.value = franchiseModel
     }

@@ -392,7 +392,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 if (data == null) {
                     adapterInterface.onFailed()
                 } else {
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         adapterInterface.onOK(data)
                     }
                 }

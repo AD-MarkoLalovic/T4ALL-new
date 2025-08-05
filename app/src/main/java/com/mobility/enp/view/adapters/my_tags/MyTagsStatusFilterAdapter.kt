@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.databinding.ItemTagStatusBinding
 
-class MyTagsStatusFilterAdapter (
+class MyTagsStatusFilterAdapter(
     private var onSelected: (String) -> Unit
 ) :
     ListAdapter<String, MyTagsStatusFilterAdapter.StatusTagViewHolder>(DIFF_CALLBACK) {
-        var selectedStatus = 0
+    var selectedStatus = 0
 
     inner class StatusTagViewHolder(private val binding: ItemTagStatusBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -23,10 +23,20 @@ class MyTagsStatusFilterAdapter (
 
             if (isSelected) {
                 binding.tagStatus.setBackgroundResource(R.drawable.rounded_status_marked_border)
-                binding.tagStatus.setTextColor(ContextCompat.getColor(binding.root.context, R.color.white))
+                binding.tagStatus.setTextColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.white
+                    )
+                )
             } else {
                 binding.tagStatus.setBackgroundResource(R.drawable.rounded_status_unmarked_border_)
-                binding.tagStatus.setTextColor(ContextCompat.getColor(binding.root.context, R.color.primary_light_dark))
+                binding.tagStatus.setTextColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.primary_light_dark
+                    )
+                )
             }
 
             binding.tagStatus.setOnClickListener {

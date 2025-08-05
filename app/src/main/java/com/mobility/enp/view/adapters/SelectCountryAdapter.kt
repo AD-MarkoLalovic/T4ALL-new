@@ -23,7 +23,10 @@ class SelectCountryAdapter(
             binding.icon.setImageResource(county.flagResId)
 
             val colorStateList = if (isSelected) {
-                ContextCompat.getColorStateList(binding.root.context, R.color.figmaSplashScreenColor)
+                ContextCompat.getColorStateList(
+                    binding.root.context,
+                    R.color.figmaSplashScreenColor
+                )
             } else {
                 ContextCompat.getColorStateList(binding.root.context, R.color.primary_light_dark)
             }

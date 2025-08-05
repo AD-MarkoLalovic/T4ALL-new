@@ -12,12 +12,8 @@ import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
-import com.mobility.enp.util.toTagUiModel
-import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlin.collections.orEmpty
-import kotlin.let
 
 
 class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, context) {
@@ -65,7 +61,8 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
         return try {
             val lang = getLangKey()
-            val response = apiService(userToken).getUserTagsNewForHistory(currentPage, perPage, lang)
+            val response =
+                apiService(userToken).getUserTagsNewForHistory(currentPage, perPage, lang)
 
             if (response.isSuccessful) {
                 response.body()?.let { indexData ->
@@ -126,7 +123,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
     suspend fun getAdapterPassageData(
         tagSerialNumber: String,
         page: Int,
-        perPage: Int,dateFrom: String, dateTo: String
+        perPage: Int, dateFrom: String, dateTo: String
     ): Result<V2HistoryTagResponse> {
 
         if (!isNetworkAvailable()) {
@@ -138,7 +135,12 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         userToken?.let { token ->
             return try {
                 val response = apiService(token).getToolHistoryTransitV2(
-                    tagSerialNumber, page.toString(), perPage.toString(), getLangKey(),dateFrom,dateTo
+                    tagSerialNumber,
+                    page.toString(),
+                    perPage.toString(),
+                    getLangKey(),
+                    dateFrom,
+                    dateTo
                 )
                 if (response.isSuccessful) {
                     response.body()?.let { indexData ->

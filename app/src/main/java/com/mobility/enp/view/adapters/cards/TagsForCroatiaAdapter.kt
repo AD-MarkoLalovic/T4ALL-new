@@ -46,12 +46,21 @@ class TagsForCroatiaAdapter(
         private fun updateColors(isChecked: Boolean) {
             val colorStateList = franchisePrimaryColor?.let {
                 if (isChecked) ColorStateList.valueOf(it)
-                else ContextCompat.getColorStateList(binding.root.context, R.color.primary_light_dark)
+                else ContextCompat.getColorStateList(
+                    binding.root.context,
+                    R.color.primary_light_dark
+                )
             } ?: run {
                 if (isChecked) {
-                    ContextCompat.getColorStateList(binding.root.context, R.color.figmaSplashScreenColor)
+                    ContextCompat.getColorStateList(
+                        binding.root.context,
+                        R.color.figmaSplashScreenColor
+                    )
                 } else {
-                    ContextCompat.getColorStateList(binding.root.context, R.color.primary_light_dark)
+                    ContextCompat.getColorStateList(
+                        binding.root.context,
+                        R.color.primary_light_dark
+                    )
                 }
             }
 

@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class PassageHistoryBanksVm(private val repository: UserRepository) : ViewModel(){
+class PassageHistoryBanksVm(private val repository: UserRepository) : ViewModel() {
     private val _banks = MutableStateFlow<SubmitResult<List<BankUIModel>>>(SubmitResult.Loading)
     val banks: StateFlow<SubmitResult<List<BankUIModel>>> = _banks
 
@@ -73,7 +73,6 @@ class PassageHistoryBanksVm(private val repository: UserRepository) : ViewModel(
             }
         }
     }
-
 
 
     companion object {

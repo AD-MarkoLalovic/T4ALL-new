@@ -2,8 +2,6 @@ package com.mobility.enp.data.repository
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
@@ -11,7 +9,6 @@ import com.mobility.enp.data.model.pdf_table.PdfTable
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
-import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 
 class BillsRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, context) {
 

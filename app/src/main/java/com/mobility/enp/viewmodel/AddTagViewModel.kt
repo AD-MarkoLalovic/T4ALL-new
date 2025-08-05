@@ -23,9 +23,17 @@ class AddTagViewModel(private var repository: ProfileRepository) : ViewModel() {
             _addTag.value = SubmitResultFold.Loading
 
             val result = if (montenegrin) {
-                repository.addTag(serialNumber = serialNumber, verificationOrSerNumber = verificationCode, true)
+                repository.addTag(
+                    serialNumber = serialNumber,
+                    verificationOrSerNumber = verificationCode,
+                    true
+                )
             } else {
-                repository.addTag(serialNumber = serialNumber, verificationOrSerNumber = verificationCode, false)
+                repository.addTag(
+                    serialNumber = serialNumber,
+                    verificationOrSerNumber = verificationCode,
+                    false
+                )
             }
 
             result.fold(

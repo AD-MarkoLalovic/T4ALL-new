@@ -1,6 +1,5 @@
 package com.mobility.enp.network
 
-import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -8,13 +7,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
-import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
-import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.login.CustomerSupport
-import com.mobility.enp.util.SharedPreferencesHelper
-import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
-import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -72,18 +66,6 @@ object Repository {
         customerSupport: CustomerSupport
     ): Response<Unit> {
         return apiService("").sendCustomerSupport(customerSupport)
-    }
-
-    fun getUserLanguage(context: Context): String {
-
-        val languageCode = SharedPreferencesHelper.getUserLanguage(context)
-        return when {
-            languageCode.contains("sr") -> "lat"
-            languageCode.contains("cnr") -> "me"
-            languageCode.contains("el") -> "gr"
-            languageCode.contains("bs") -> "ba"
-            else -> languageCode
-        }
     }
 
     private fun <T> getMessageFromErrorBody(response: Response<T>): ErrorBody {

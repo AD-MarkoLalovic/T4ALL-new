@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
@@ -18,7 +17,6 @@ import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagRes
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
-import com.mobility.enp.view.MainActivity
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -241,6 +239,7 @@ class ToolHistoryListingAdapter(
                             }
                         }
                     }
+
                     else -> {
                         SubmitResult.Empty
                     }

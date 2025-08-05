@@ -406,7 +406,8 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
             if (!index.tags.isNullOrEmpty()) {
                 binding.noData.visibility = View.GONE
 
-                val adapter = ToolHistoryTagsAdapter(this, franchiseViewModel, this, indexData,this,this)
+                val adapter =
+                    ToolHistoryTagsAdapter(this, franchiseViewModel, this, indexData, this, this)
 
                 binding.cycler.adapter = adapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
@@ -436,7 +437,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
 
     override fun onSendTag(tag: Tag) {
         vModel.selectedTags.add(tag)
-        vModel.tagForExport =  tag
+        vModel.tagForExport = tag
         Log.d(TAG, "onSendTag: ${vModel.selectedTags}")
     }
 

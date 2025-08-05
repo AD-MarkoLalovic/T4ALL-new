@@ -10,7 +10,6 @@ import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -84,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun logoFix(portalKey: String){
+    fun logoFix(portalKey: String) {
         val franchiseModel = Util.franchiseID(portalKey, this)
         franchiseModel?.franchiseLogoToolbar?.let {
             binding.toolbarShared.iconLogo.setImageDrawable(it)

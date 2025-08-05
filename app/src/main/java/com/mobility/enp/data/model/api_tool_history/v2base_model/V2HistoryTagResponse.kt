@@ -8,7 +8,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 @Keep
-@Entity( tableName = "HISTORY_V2")
+@Entity(tableName = "HISTORY_V2")
 data class V2HistoryTagResponse(
     @PrimaryKey(autoGenerate = true)
     val id: Int,

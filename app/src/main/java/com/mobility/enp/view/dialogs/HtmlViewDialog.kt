@@ -17,7 +17,6 @@ import com.mobility.enp.databinding.PdfDialogBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.HtmlDialogViewModel
-import kotlin.getValue
 
 class HtmlViewDialog() : DialogFragment() {
 

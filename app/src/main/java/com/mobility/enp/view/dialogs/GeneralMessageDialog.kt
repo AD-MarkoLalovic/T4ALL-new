@@ -6,13 +6,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import com.mobility.enp.databinding.GeneralDialogBinding
 import com.mobility.enp.util.setDimensionsPercent
-import androidx.core.graphics.drawable.toDrawable
-import androidx.fragment.app.activityViewModels
 import com.mobility.enp.viewmodel.FranchiseViewModel
-import kotlin.getValue
 
 class GeneralMessageDialog(
     private val title: String,

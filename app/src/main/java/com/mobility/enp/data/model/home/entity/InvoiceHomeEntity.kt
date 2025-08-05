@@ -11,7 +11,8 @@ import androidx.room.PrimaryKey
         parentColumns = ["id"],
         childColumns = ["homeId"],
         onDelete = ForeignKey.CASCADE
-    )])
+    )]
+)
 data class InvoiceHomeEntity(
     @PrimaryKey
     val homeId: Int,

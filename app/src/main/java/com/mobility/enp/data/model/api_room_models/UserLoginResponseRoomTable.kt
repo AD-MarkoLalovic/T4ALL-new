@@ -24,5 +24,5 @@ data class UserLoginResponseRoomTable(
         username: String?,
         password: String?,
         portalKey: String?
-    ) : this(null, accessToken, tokenType, username, password,portalKey)
+    ) : this(null, accessToken, tokenType, username, password, portalKey)
 }

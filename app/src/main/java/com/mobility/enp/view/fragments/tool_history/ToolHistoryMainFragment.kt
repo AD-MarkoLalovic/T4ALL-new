@@ -15,7 +15,6 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
-import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.FragmentPassageHistoryBinding
 import com.mobility.enp.network.Repository

@@ -54,9 +54,11 @@ class CardFragment : Fragment() {
             BuildConfig.FLAVOR.contains("stage") -> {
                 "https://admintest.toll4all.com/mweb/customers/add-card/"
             }
+
             BuildConfig.FLAVOR.contains("prod") -> {
                 "https://openbalkan-etc.com/mweb/customers/add-card/"
             }
+
             else -> {
                 Log.w("BuildType", "Unrecognized BUILD_TYPE: ${BuildConfig.BUILD_TYPE}")
                 "about:blank"

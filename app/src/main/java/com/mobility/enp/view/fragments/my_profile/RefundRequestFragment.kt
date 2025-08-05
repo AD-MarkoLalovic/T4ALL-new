@@ -57,7 +57,7 @@ class RefundRequestFragment : Fragment() {
     }
 
     private fun setFranchiser() {
-        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner){franchiseModel ->
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
             franchiseModel?.franchisePrimaryColor?.let {
                 binding.buttonRequest.backgroundTintList = ColorStateList.valueOf(it)
             }
@@ -119,7 +119,8 @@ class RefundRequestFragment : Fragment() {
             refundLoadingView.visibility = View.GONE
             buttonRequest.visibility = View.VISIBLE
         }
-        Toast.makeText(requireContext(), getString(R.string.server_error_msg), Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getString(R.string.server_error_msg), Toast.LENGTH_SHORT)
+            .show()
     }
 
     private fun showApiErrorState(message: String) {

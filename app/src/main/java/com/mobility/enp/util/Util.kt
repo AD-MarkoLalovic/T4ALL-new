@@ -80,7 +80,7 @@ object Util {
 
                     else ->
                         ContextCompat.getColorStateList(context, R.color.flavor_text_default)
-                },R.drawable.arrow_background_social_networks_telekom,
+                }, R.drawable.arrow_background_social_networks_telekom,
                 R.style.TelekomCalendarTheme
             )
 
@@ -109,7 +109,7 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
-                ),R.drawable.arrow_background_social_networks_s_blue,
+                ), R.drawable.arrow_background_social_networks_s_blue,
                 R.style.S_Blue_CalendarTheme
             )
 
@@ -225,7 +225,7 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
-                ),R.drawable.arrow_background_social_networks_rafaelo,
+                ), R.drawable.arrow_background_social_networks_rafaelo,
                 R.style.RafaeloCalendarTheme
             )
 
@@ -254,7 +254,7 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
-                ),R.drawable.arrow_background_social_networks_freetrans,
+                ), R.drawable.arrow_background_social_networks_freetrans,
                 R.style.FreeTransCalendarTheme
             )
 
@@ -283,7 +283,7 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_sbb_e_box_tehnocoop_color
-                ),R.drawable.arrow_background_social_networks_e_box,
+                ), R.drawable.arrow_background_social_networks_e_box,
                 R.style.EboxCalendarTheme
             )
 
@@ -313,7 +313,7 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
-                ),R.drawable.arrow_background_social_networks_pay_n_roll,
+                ), R.drawable.arrow_background_social_networks_pay_n_roll,
                 R.style.PayNRollCalendarTheme
             )
 
@@ -342,7 +342,7 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_sbb_e_box_tehnocoop_color
-                ),R.drawable.arrow_background_social_networks_sbb,
+                ), R.drawable.arrow_background_social_networks_sbb,
 
                 R.style.SbbCalendarTheme
             )
@@ -406,7 +406,7 @@ object Util {
                 ContextCompat.getColorStateList(
                     context,
                     R.color.flavor_text_euro_petrol_rafaelo_freetrans_sblue_pay_n_roll
-                ),R.drawable.arrow_background_social_networks_euro_pertol,
+                ), R.drawable.arrow_background_social_networks_euro_pertol,
                 R.style.EuroPetrolCalendarTheme
             )
 

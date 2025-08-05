@@ -150,7 +150,7 @@ class CardRepository(database: DRoom, context: Context) : BaseRepository(databas
             }
         }
 
-       return Result.failure(NetworkError.ServerError)
+        return Result.failure(NetworkError.ServerError)
     }
 
     suspend fun registrationCroatia(serialNumbers: SerialNumberRequest): Result<String> {
@@ -162,7 +162,7 @@ class CardRepository(database: DRoom, context: Context) : BaseRepository(databas
         userToken?.let { token ->
             return try {
                 val response = apiService(token).postRegistrationCroatia(serialNumbers)
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     response.body()?.let { data ->
                         val fullUrl = data.getRedirectWithToken()
                         Result.success(fullUrl)

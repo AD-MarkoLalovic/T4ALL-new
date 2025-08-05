@@ -1,7 +1,6 @@
 package com.mobility.enp.data.repository
 
 import android.content.Context
-import com.mobility.enp.data.model.home.entity.HomeEntity
 import com.mobility.enp.data.room.database.DRoom
 
 class FranchiserRepository(
@@ -10,7 +9,7 @@ class FranchiserRepository(
 ) : BaseRepository(database, context) {
     private val homeDao = database.homeScreenDao()
 
-    suspend fun getPortalKey(): String?{
+    suspend fun getPortalKey(): String? {
         return database.loginDao().fetchAllowedUsers().portalKey
     }
 }

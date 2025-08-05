@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.mobility.enp.view.ui_models.refund_request.TagsRefundRequestUIModel
 
 @Entity(tableName = "tags_refund_request")
-data class TagsRefundRequestEntity (
+data class TagsRefundRequestEntity(
     @PrimaryKey
     val id: String,
     val serialNumber: String,
