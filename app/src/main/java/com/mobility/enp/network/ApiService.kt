@@ -109,7 +109,9 @@ interface ApiService {
         @Query("filter[serial_number]") serialNumbers: String,
         @Query("page") page: String, // current page
         @Query("perPage") perPage: String, // fixed
-        @Query("lang") language: String
+        @Query("lang") language: String,
+        @Query("filter[date_from]") dateFrom: String,
+        @Query("filter[date_to]") dateTo: String
     ): Response<V2HistoryTagResponse>
 
     @GET("/api/v2/history")

@@ -372,7 +372,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         perPage: Int,
         flow: MutableStateFlow<SubmitResult<IndexData>>
     ) {
-        viewModelScope.launch (Dispatchers.IO) {  // 2 flows success returns to adapter and issues return to fragment
+        viewModelScope.launch(Dispatchers.IO) {  // 2 flows success returns to adapter and issues return to fragment
             val result = repository.getTagBaseData(nextPage, perPage)
             if (result.isSuccess) {
                 val data = result.getOrNull()
@@ -653,13 +653,19 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         flow.value = SubmitResult.Loading
 
         viewModelScope.launch(Dispatchers.IO) {
+            val dateFrom = startDate.value?.formattedTime
+            val dateTo = endDate.value?.formattedTime
+
             var result =
-                repository.getAdapterPassageData(tagSerialNumber, currentPage, itemsPerPage)
+                repository.getAdapterPassageData(
+                    tagSerialNumber,
+                    currentPage,
+                    itemsPerPage,
+                    dateFrom ?: "",
+                    dateTo ?: ""
+                )
+
             if (!selectedCountry.isEmpty()) {
-
-                val dateFrom = startDate.value?.formattedTime
-                val dateTo = endDate.value?.formattedTime
-
                 result = repository.getAdapterPassageDataCountryFilter(
                     tagSerialNumber,
                     selectedCountry,
@@ -1013,10 +1019,9 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     private var _data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
     val data: LiveData<IndexData> get() = _data
 
-    var tagSerials: ArrayList<Tag> = ArrayList()
     var selectedTags: ArrayList<Tag> = ArrayList()
     var indexData: IndexData? = null
-    var tagForExport : Tag? = null
+    var tagForExport: Tag? = null
 
     suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
         repository.insertRoomTagBaseData(indexData)
@@ -1163,7 +1168,8 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                             val tagSerial = if (allTagsSelected) {
                                 ""
                             } else {
-                                tagForExport?.serialNumber ?: ""  // if one item last selected tag is added
+                                tagForExport?.serialNumber
+                                    ?: ""  // if one item last selected tag is added
                             }
 
                             val result = repository.getCsvTableData(

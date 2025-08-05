@@ -230,7 +230,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             vModel.insertRoomToolHistoryIndexData(indexData)
         }
 
-        vModel.tagSerials = indexData.data?.tags as ArrayList<Tag>
         vModel.indexData =
             indexData  // filter fragment need some data from here saving here to reduce api calls
 

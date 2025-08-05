@@ -1,6 +1,7 @@
 package com.mobility.enp.view.fragments.tool_history
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,6 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
-import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
 import com.mobility.enp.util.SubmitResult
@@ -60,8 +60,9 @@ class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.S
         super.onViewCreated(view, savedInstanceState)
 
         setObservers()
-        setAdapter()
         setFranchise()
+
+        vModel.getBaseDataAlternativeApi()
     }
 
     private fun setFranchise() {
@@ -73,25 +74,73 @@ class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.S
         }
     }
 
-    private fun setAdapter() {
-        val listOfTags: List<Tag> = if (vModel.allTagsSelected) {
-            vModel.tagSerials
-        } else {
-            vModel.selectedTags
-        }
+    private fun setIndexData(tagIndex: IndexData) {
+        binding.progBar.visibility = View.GONE
+        when (vModel.allTagsSelected) {
+            true -> {  // uses unmodified tag index for adapter to list all possible tags and passages
+                val toolHistoryListingAdapter =
+                    ToolHistoryListingAdapter(tagIndex, vModel, this, this, this, this)
+                binding.cycler.adapter = toolHistoryListingAdapter
+                binding.cycler.layoutManager = LinearLayoutManager(context)
 
-        val indexData = vModel.indexData
-        indexData?.data?.tags = listOfTags  // sets selected tags to object for reuse
+                Log.d(TAG, "setIndexData: umodified")
+            }
 
-        indexData?.let { data ->
-            val toolHistoryListingAdapter =
-                ToolHistoryListingAdapter(data, vModel, this, this, this,this)
-            binding.cycler.adapter = toolHistoryListingAdapter
-            binding.cycler.layoutManager = LinearLayoutManager(context)
+            false -> {  // modifies tag response so that only the selected tags from user are searched and prevents pagination
+
+                tagIndex.data?.tags = vModel.selectedTags
+                tagIndex.data?.currentPage = 1
+                tagIndex.data?.total = 1
+                tagIndex.data?.perPage = 5
+                tagIndex.data?.lastPage = 1
+
+                val toolHistoryListingAdapter =
+                    ToolHistoryListingAdapter(tagIndex, vModel, this, this, this, this)
+                binding.cycler.adapter = toolHistoryListingAdapter
+                binding.cycler.layoutManager = LinearLayoutManager(context)
+
+                Log.d(TAG, "setIndexData: modified")
+            }
         }
     }
 
     private fun setObservers() {
+
+        collectLatestLifecycleFlow(vModel.baseTagDataState) { tagIndex ->
+            when (tagIndex) {
+                is SubmitResult.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    setIndexData(tagIndex.data.first)
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(tagIndex.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(tagIndex.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {
+                    SubmitResult.Empty
+                }
+            }
+        }
+
         collectLatestLifecycleFlow(vModel.complaintObjectionStateFiltered) { serverResponse ->
             when (serverResponse) {
                 is SubmitResult.Loading -> {
@@ -100,7 +149,6 @@ class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.S
 
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
-                    setAdapter()
                     vModel.getBaseDataAlternativeApi()
                 }
 
@@ -183,14 +231,15 @@ class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.S
         MainActivity.showSnackMessage(getString(R.string.no_internet), mainBinding)
     }
 
-    override fun sendDataFillMainAdapter(   // updates tags on main adapter
+    override fun sendDataFillMainAdapter(
+        // updates tags on main adapter
         nextPage: Int,
         perPage: Int,
         flow: MutableStateFlow<SubmitResult<IndexData>>,
     ) {
         binding.progBar.visibility = View.VISIBLE
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            vModel.getBaseTagDataPagination(nextPage,perPage,flow)
+            vModel.getBaseTagDataPagination(nextPage, perPage, flow)
         }
     }
 

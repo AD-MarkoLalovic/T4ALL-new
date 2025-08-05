@@ -126,7 +126,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
     suspend fun getAdapterPassageData(
         tagSerialNumber: String,
         page: Int,
-        perPage: Int,
+        perPage: Int,dateFrom: String, dateTo: String
     ): Result<V2HistoryTagResponse> {
 
         if (!isNetworkAvailable()) {
@@ -138,7 +138,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         userToken?.let { token ->
             return try {
                 val response = apiService(token).getToolHistoryTransitV2(
-                    tagSerialNumber, page.toString(), perPage.toString(), getLangKey()
+                    tagSerialNumber, page.toString(), perPage.toString(), getLangKey(),dateFrom,dateTo
                 )
                 if (response.isSuccessful) {
                     response.body()?.let { indexData ->

@@ -1,25 +1,32 @@
 package com.mobility.enp.data.model.api_tool_history.index
 
 
-import com.google.gson.annotations.SerializedName
 import androidx.annotation.Keep
 import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
 @Keep
 data class Data(
     @SerializedName("currentPage")
     @Expose
-    val currentPage: Int? = 0,
+    var currentPage: Int? = 0,
     @SerializedName("lastPage")
     @Expose
-    val lastPage: Int? = 0,
+    var lastPage: Int? = 0,
     @SerializedName("perPage")
     @Expose
-    val perPage: Int? = 0,
+    var perPage: Int? = 0,
     @SerializedName("tags")
     @Expose
     var tags: List<Tag>? = listOf(),
     @SerializedName("total")
     @Expose
-    val total: Int? = 0
-)
+    var total: Int? = 0
+) {
+    fun setPageCount() {
+        this.currentPage = 0
+        this.lastPage = 0
+        this.perPage = 0
+        this.total = 0
+    }
+}
