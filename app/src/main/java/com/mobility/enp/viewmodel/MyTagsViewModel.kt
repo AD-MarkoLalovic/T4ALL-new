@@ -127,7 +127,7 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
             val result = repository.reportFoundTag(serialNumber)
             result.fold(
                 onSuccess = {
-                   _reportTag.value = SubmitResultFold.Success(Unit, ReportType.FOUND)
+                    _reportTag.value = SubmitResultFold.Success(Unit, ReportType.FOUND)
                 },
                 onFailure = { error ->
                     _reportTag.value = SubmitResultFold.Failure(error)

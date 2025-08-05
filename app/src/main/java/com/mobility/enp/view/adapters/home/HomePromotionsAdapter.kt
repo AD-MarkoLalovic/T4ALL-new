@@ -1,6 +1,5 @@
 package com.mobility.enp.view.adapters.home
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
@@ -38,7 +37,8 @@ class HomePromotionsAdapter(
             }
 
             franchiseModel?.franchiseSocialNetworkArrow?.let { arrow ->
-                binding.btnSocialNetworks.background = ContextCompat.getDrawable(binding.root.context,arrow)
+                binding.btnSocialNetworks.background =
+                    ContextCompat.getDrawable(binding.root.context, arrow)
             }
 
             when (card.code) {

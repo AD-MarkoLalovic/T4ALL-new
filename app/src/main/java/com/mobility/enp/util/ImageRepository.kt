@@ -44,7 +44,8 @@ class ImageRepository(private val context: Context) {
                         }
 
                         // Dodajem novi zapis s novom putanjom
-                        val newProfileImage = ProfileImage(displayName = displayName, imagePath = newImagePath)
+                        val newProfileImage =
+                            ProfileImage(displayName = displayName, imagePath = newImagePath)
                         database.profileImageDao().insertImage(newProfileImage)
                     }
                 } catch (e: Exception) {

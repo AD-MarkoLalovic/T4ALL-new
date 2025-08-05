@@ -1,7 +1,6 @@
 package com.mobility.enp.util
 
 import android.content.res.Resources
-import android.os.Message
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment

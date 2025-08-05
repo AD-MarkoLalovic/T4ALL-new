@@ -22,5 +22,5 @@ interface ProfileImageDao {
     suspend fun deleteAll()
 
     @Query("SELECT * FROM profile_image ")
-    suspend fun selectAll():List<ProfileImage>
+    suspend fun selectAll(): List<ProfileImage>
 }

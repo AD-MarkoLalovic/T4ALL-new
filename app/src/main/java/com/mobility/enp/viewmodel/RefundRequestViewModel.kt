@@ -14,12 +14,12 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.ui_models.refund_request.RefundRequestUIModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.launch
 
 class RefundRequestViewModel(private val repository: UserRepository) : ViewModel() {
 
-    private val _refundRequestUI = MutableStateFlow<SubmitResult<List<RefundRequestUIModel>>>(SubmitResult.Loading)
+    private val _refundRequestUI =
+        MutableStateFlow<SubmitResult<List<RefundRequestUIModel>>>(SubmitResult.Loading)
     val refundRequestUI: StateFlow<SubmitResult<List<RefundRequestUIModel>>> = _refundRequestUI
 
     init {
@@ -69,8 +69,10 @@ class RefundRequestViewModel(private val repository: UserRepository) : ViewModel
                         _refundRequestUI.value =
                             SubmitResult.FailureNoConnection // Postavi FailureNoConnection
                     }
+
                     is NetworkError.ApiError -> {
-                            _refundRequestUI.value = SubmitResult.FailureApiError(error.errorResponse.message!!)
+                        _refundRequestUI.value =
+                            SubmitResult.FailureApiError(error.errorResponse.message!!)
                     }
                 }
             }

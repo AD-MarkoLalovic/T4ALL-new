@@ -52,6 +52,35 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
     }
 
 
+    suspend fun getTagBaseData(currentPage: Int, perPage: Int): Result<IndexData> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val lang = getLangKey()
+            val response =
+                apiService(userToken).getUserTagsNewForHistory(currentPage, perPage, lang)
+
+            if (response.isSuccessful) {
+                response.body()?.let { indexData ->
+                    Result.success(indexData)
+                } ?: Result.failure(NetworkError.ServerError)
+            } else {
+                response.errorBody()?.let { errorBody ->
+                    val errorResponse = parseErrorResponse(response.code(), errorBody)
+                    Result.failure(NetworkError.ApiError(errorResponse))
+                } ?: Result.failure(NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.d("MyTags", "ProfileRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
+
     suspend fun getCardsFromServer(): Result<CardWebModel> {
 
         if (!isNetworkAvailable()) {
@@ -94,7 +123,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
     suspend fun getAdapterPassageData(
         tagSerialNumber: String,
         page: Int,
-        perPage: Int,
+        perPage: Int, dateFrom: String, dateTo: String
     ): Result<V2HistoryTagResponse> {
 
         if (!isNetworkAvailable()) {
@@ -106,7 +135,12 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         userToken?.let { token ->
             return try {
                 val response = apiService(token).getToolHistoryTransitV2(
-                    tagSerialNumber, page.toString(), perPage.toString(), getLangKey()
+                    tagSerialNumber,
+                    page.toString(),
+                    perPage.toString(),
+                    getLangKey(),
+                    dateFrom,
+                    dateTo
                 )
                 if (response.isSuccessful) {
                     response.body()?.let { indexData ->

@@ -21,7 +21,7 @@ data class UserData(
     val pib: String?
 ) {
     fun toEntity(): BasicInfoEntity {
-        return BasicInfoEntity (
+        return BasicInfoEntity(
             id = id,
             address = address,
             city = city,

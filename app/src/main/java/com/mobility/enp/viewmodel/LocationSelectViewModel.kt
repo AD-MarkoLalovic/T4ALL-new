@@ -10,7 +10,7 @@ import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.registration.RegistrationCountry
 import com.mobility.enp.data.repository.AuthRepository
 
-class LocationSelectViewModel(private val repository: AuthRepository): ViewModel() {
+class LocationSelectViewModel(private val repository: AuthRepository) : ViewModel() {
 
     fun fetchCountries(context: Context): List<RegistrationCountry> {
         return repository.getCountries(context)

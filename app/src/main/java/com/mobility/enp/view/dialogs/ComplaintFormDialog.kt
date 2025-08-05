@@ -1,6 +1,5 @@
 package com.mobility.enp.view.dialogs
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -222,7 +221,7 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                     (view as? TextView)?.setTextColor(
                         ColorStateList.valueOf(it)
                     )
-                }?:run {
+                } ?: run {
                     (view as? TextView)?.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),
@@ -257,7 +256,7 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                                 color
                             )
                         }
-                    }?:run {
+                    } ?: run {
                         if (position == 0) {
                             textView?.setTextColor(
                                 ContextCompat.getColor(requireContext(), R.color.hint_text_color)
@@ -342,7 +341,7 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                         (view as? TextView)?.setTextColor(
                             color
                         )
-                    }?:run {
+                    } ?: run {
                         (view as? TextView)?.setTextColor(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -358,7 +357,7 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
                     color?.let {
                         (view as? TextView)?.setTextColor(color)
 
-                    }?:run {
+                    } ?: run {
                         (view as? TextView)?.setTextColor(
                             ContextCompat.getColor(requireContext(), R.color.figmaSplashScreenColor)
                         )
@@ -382,10 +381,12 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
             shape = GradientDrawable.RECTANGLE
             setColor(Color.WHITE)
             setStroke(3, newColor)
-            cornerRadii = floatArrayOf(0f, 0f, 84f, 84f, 84f, 84f, 0f, 0f) // top-right, bottom-right
+            cornerRadii =
+                floatArrayOf(0f, 0f, 84f, 84f, 84f, 84f, 0f, 0f) // top-right, bottom-right
         }
 
-        val unselectedDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_right_spinner_unselected)
+        val unselectedDrawable =
+            ContextCompat.getDrawable(requireContext(), R.drawable.rounded_right_spinner_unselected)
 
         return StateListDrawable().apply {
             addState(intArrayOf(android.R.attr.state_focused), selectedShape)

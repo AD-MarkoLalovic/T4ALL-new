@@ -9,8 +9,8 @@ data class DataX(
     @SerializedName("unique_numbers")
     val uniqueNumber: List<Int>
 ) {
-    fun toBanksEntity() : BanksEntity {
-        return BanksEntity (
+    fun toBanksEntity(): BanksEntity {
+        return BanksEntity(
             id = id,
             name = name,
             uniqueNumber = uniqueNumber

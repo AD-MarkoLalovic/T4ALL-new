@@ -11,4 +11,4 @@ data class TollHistory(
     val exitTime: String?,
     val paymentAmount: PaymentAmount?,
 
-)
+    )

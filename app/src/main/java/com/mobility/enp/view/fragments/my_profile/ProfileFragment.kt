@@ -110,7 +110,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                     .setExitAnim(R.anim.slide_out_right)
                     .build()
 
-                findNavController().navigate(R.id.loginFragment,null,options)
+                findNavController().navigate(R.id.loginFragment, null, options)
             }
         }
 

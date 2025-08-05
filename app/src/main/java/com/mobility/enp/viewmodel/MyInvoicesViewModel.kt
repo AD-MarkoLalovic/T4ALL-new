@@ -380,24 +380,66 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         }
     }
 
-    fun downloadBill(
-        data: BillsDetailsAdapter.DownloadBillsDetails,
-        billId: String,
-        errorBody: MutableLiveData<ErrorBody>
+    fun downloadPdfBill(
+        adapterInterface: BillsDetailsAdapter.DownloadBillsDetails,
+        billId: String
     ) {
-        if (isNetworkAvailable()) {
-            _checkNetDownload.value = true
-            viewModelScope.launch {
-                val userToken = getUserToken()
-                userToken?.let { token ->
-                    Repository.getBillDetailsPdf(
-                        data, token, billId, errorBody
-                    )
+        viewModelScope.launch(Dispatchers.IO) {
+            val result =
+                repository.downloadPdfData(billId)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    adapterInterface.onFailed()
+                } else {
+                    withContext(Dispatchers.Main) {
+                        adapterInterface.onOK(data)
+                    }
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(
+                            UserPassViewModel.Companion.TAG,
+                            "Error while fetching bill paging detals"
+                        )
+                        _myInvoices.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _myInvoices.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN UserPassViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                _myInvoices.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _myInvoices.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(
+                                    "UserPassViewModel",
+                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                                )
+                            }
+                        }
+                    }
+
+                    else -> {}
                 }
             }
-        } else {
-            data.onFailed()
-            _checkNetDownload.value = false
         }
     }
 

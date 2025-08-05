@@ -1,4 +1,4 @@
-package com.mobility.enp.data.model.api_my_invoices.refactor
+package com.mobility.enp.data.model.api_tool_history.index
 
 
 import androidx.annotation.Keep
@@ -6,11 +6,11 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 @Keep
-data class AllowedCountry(
-    @SerializedName("name")
+data class Country(
+    @SerializedName("text")
     @Expose
-    val name: String?,
+    val text: String? = null,
     @SerializedName("value")
     @Expose
-    val value: String?
+    val value: String? = null
 )

@@ -7,16 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.mobility.enp.R
 import com.mobility.enp.databinding.LanguageDialogLayoutBinding
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import androidx.core.graphics.drawable.toDrawable
-import com.mobility.enp.util.SharedPreferencesHelper
 
 class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) : DialogFragment() {
 

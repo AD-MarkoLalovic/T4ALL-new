@@ -541,7 +541,7 @@ class TagPickerRequestFragment : Fragment() {
             binding.etCenterAccountNumber.requestFocus()
             return null
         }
-        if (rightAccountNumber.length < 2 ) {
+        if (rightAccountNumber.length < 2) {
             showError(getString(R.string.enter_bank_account))
             binding.etRightAccountNumber.requestFocus()
             return null

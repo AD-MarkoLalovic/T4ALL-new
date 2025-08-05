@@ -46,7 +46,9 @@ class LocationSelectFragment : Fragment() {
         binding.button.setOnClickListener {
             Log.d("MARKO", "onViewCreated: $selectedCountry")
             findNavController().navigate(
-                LocationSelectFragmentDirections.actionLocationSelectFragmentToTosFragment(selectedCountry)
+                LocationSelectFragmentDirections.actionLocationSelectFragmentToTosFragment(
+                    selectedCountry
+                )
             )
         }
 

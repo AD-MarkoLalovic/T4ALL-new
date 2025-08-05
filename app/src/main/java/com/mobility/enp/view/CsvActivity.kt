@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.mobility.enp.databinding.ActivityCsvBinding
 import com.mobility.enp.viewmodel.UserPassViewModel

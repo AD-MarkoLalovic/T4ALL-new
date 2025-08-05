@@ -34,8 +34,8 @@ android {
         applicationId = "com.mobility.enp"
         minSdk = 29
         targetSdk = 35
-        versionCode = 172
-        versionName = "1.4.5"
+        versionCode = 180
+        versionName = "1.4.6"
 
         resourceConfigurations += listOf("en", "sr", "de", "mk", "tr", "b+cnr", "hr", "el", "bs")
 
@@ -66,7 +66,7 @@ android {
             versionNameSuffix = "-stage"
             multiDexEnabled = true
             buildConfigField("String", "API_URL", "\"https://mobileapitest.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+20257@gmail.com\"")
+            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+7356@gmail.com\"")
             buildConfigField("String", "TEST_PASSWORD", "\"demodemo\"")
         }
         create("prod") {
@@ -149,6 +149,8 @@ dependencies {
     ksp(libs.compiler)
 
     //Moshi biblioteka
-    implementation(libs.moshi)  // Glavna Moshi biblioteka
-    implementation(libs.moshi.kotlin)  // Podrška za Kotlin
+    implementation(libs.moshi)              // Glavna Moshi biblioteka za JSON parsiranje
+    implementation(libs.moshi.kotlin)       // Kotlin ekstenzije i podrška za Kotlin specifične tipove
+    ksp(libs.moshi.kotlin.codegen)          // KSP codegen za automatsko generisanje adaptera bez refleksije
+
 }

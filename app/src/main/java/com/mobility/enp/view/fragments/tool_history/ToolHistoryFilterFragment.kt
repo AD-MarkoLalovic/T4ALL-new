@@ -33,10 +33,12 @@ import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
+class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
+    ToolHistoryTagsAdapter.PaginationUpdate, ToolHistoryTagsAdapter.SendToFragment {
 
     private var _binding: FragmentToolHistorySearchQueryBinding? = null
     private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
@@ -77,7 +79,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         binding.progBar.visibility = View.VISIBLE
 
         if (vModel.internetAvailable()) {
-            vModel.getBaseData()
+            vModel.getBaseDataAlternativeApi()
         } else {
             checkInternet()
         }
@@ -174,7 +176,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
                 binding.btnSearch.backgroundTintList = ColorStateList.valueOf(color)
                 binding.exportBlock.setTextColor(color)
                 binding.exportBlock.visibility =
-                    View.GONE // because frashizers can not export from what daniel told me
+                    View.GONE // because fraternizers can not export from what daniel told me
 
                 binding.searchMark.setImageResource(franchiseModel.loopIcon)
 
@@ -229,23 +231,11 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
             binding.progBar.visibility = View.GONE
 
-            vModel.getBaseData()
+            vModel.getBaseDataAlternativeApi()
         }
     }
 
     private fun setObservers() {
-        vModel.errorBody.observe(viewLifecycleOwner) { errorBody ->
-            binding.progBar.visibility = View.GONE
-            context?.let { context ->
-                Toast.makeText(
-                    context, errorBody.errorBody, Toast.LENGTH_SHORT
-                ).show()
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
-                }
-            }
-        }
-
         collectLatestLifecycleFlow(vModel.baseTagDataState) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {
@@ -416,10 +406,8 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
             if (!index.tags.isNullOrEmpty()) {
                 binding.noData.visibility = View.GONE
 
-                vModel.tagSerials = index.tags as ArrayList<Tag>
-                Log.d(TAG, "setObservers: ${vModel.tagSerials}")
-
-                val adapter = ToolHistoryTagsAdapter(vModel.tagSerials, this, franchiseViewModel)
+                val adapter =
+                    ToolHistoryTagsAdapter(this, franchiseViewModel, this, indexData, this, this)
 
                 binding.cycler.adapter = adapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
@@ -449,6 +437,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
 
     override fun onSendTag(tag: Tag) {
         vModel.selectedTags.add(tag)
+        vModel.tagForExport = tag
         Log.d(TAG, "onSendTag: ${vModel.selectedTags}")
     }
 
@@ -477,6 +466,19 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
         }
     }
 
+
+    override fun sendDataFillFilterAdapter(
+        // updates tags on main adapter
+        nextPage: Int,
+        perPage: Int,
+        flow: MutableStateFlow<SubmitResult<IndexData>>,
+    ) {
+        binding.progBar.visibility = View.VISIBLE
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            vModel.getBaseTagDataPagination(nextPage, perPage, flow)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -485,6 +487,14 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend {
     override fun onResume() {
         super.onResume()
         vModel.selectedTags.clear()
+    }
+
+    override fun startSpinner() {
+        binding.progBar.visibility = View.VISIBLE
+    }
+
+    override fun stopSpinner() {
+        binding.progBar.visibility = View.GONE
     }
 
     interface UserPermission {
