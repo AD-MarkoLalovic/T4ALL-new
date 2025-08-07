@@ -65,7 +65,7 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
     }
 
     suspend fun getUserFcmData(): Pair<String, FcmToken> {
-        val userAccessToken = database.loginDao().fetchAllowedUsers().accessToken ?: ""
+        val userAccessToken = database.loginDao().fetchAllowedUsers()?.accessToken ?: ""
         val fcmToken = database.fcmToken().getTableData()
         return Pair(userAccessToken, fcmToken)
     }

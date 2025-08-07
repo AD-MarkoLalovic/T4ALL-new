@@ -106,7 +106,7 @@ class CardRepository(database: DRoom, context: Context) : BaseRepository(databas
         return Result.failure(NetworkError.ServerError)
     }
 
-    suspend fun getUserTokenData(): UserLoginResponseRoomTable {
+    suspend fun getUserTokenData(): UserLoginResponseRoomTable? {
         return withContext(Dispatchers.IO) {
             database.loginDao().fetchAllowedUsers()
         }

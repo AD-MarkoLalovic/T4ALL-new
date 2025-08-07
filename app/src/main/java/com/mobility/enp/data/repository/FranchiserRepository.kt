@@ -10,6 +10,6 @@ class FranchiserRepository(
     private val homeDao = database.homeScreenDao()
 
     suspend fun getPortalKey(): String? {
-        return database.loginDao().fetchAllowedUsers().portalKey
+        return database.loginDao().fetchAllowedUsers()?.portalKey ?:""
     }
 }
