@@ -94,6 +94,8 @@
         tools:layout="@layout/fragment_location_select">
         <action
             android:id="@+id/action_locationSelectFragment_to_tosFragment"
+            app:popUpTo="@id/locationSelectFragment"
+            app:popUpToInclusive="true"
             app:destination="@id/tosFragment" />
     </fragment>
 
@@ -101,10 +103,15 @@
         android:id="@+id/tosFragment"
         android:name="com.mobility.enp.view.fragments.registration_v2.RegistrationFragment"
         android:label="TosFragment"
-        tools:layout="@layout/fragment_tos">
+        tools:layout="@layout/user_registration_login">
         <argument
             android:name="countryData"
             app:argType="string" />
+        <action
+            android:id="@+id/action_tosFragment_to_loginFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/tosFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/myTagsFragment2"

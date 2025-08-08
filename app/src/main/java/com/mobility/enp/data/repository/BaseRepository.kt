@@ -26,7 +26,7 @@ abstract class BaseRepository(
 
     protected suspend fun getUserToken(): String? {
         return withContext(Dispatchers.IO) {
-            database.loginDao().fetchAllowedUsers().accessToken
+            database.loginDao().fetchAllowedUsers()?.accessToken ?:""
         }
     }
 

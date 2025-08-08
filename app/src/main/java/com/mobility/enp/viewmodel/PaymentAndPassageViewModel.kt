@@ -185,7 +185,7 @@ class PaymentAndPassageViewModel(
         return list
     }
 
-    suspend fun getUserTokenCardWeb(): UserLoginResponseRoomTable {
+    suspend fun getUserTokenCardWeb(): UserLoginResponseRoomTable? {
         return repository.getUserTokenData()
     }
 
