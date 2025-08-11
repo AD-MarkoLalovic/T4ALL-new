@@ -30,6 +30,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.itextpdf.kernel.font.PdfFontFactory
 import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.PdfWriter
 import com.itextpdf.layout.Document
@@ -944,10 +945,13 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 val pdfDocument = PdfDocument(pdfWriter)
                 val document = Document(pdfDocument)
 
+                val boldFont =
+                    PdfFontFactory.createFont(com.itextpdf.io.font.constants.StandardFonts.HELVETICA_BOLD)
+
                 val table = Table(headers.size)
 
                 headers.forEach { header ->
-                    table.addCell(Cell().add(Paragraph(header).setBold()))
+                    table.addCell(Cell().add(Paragraph(header).setFont(boldFont)))
                 }
 
 
