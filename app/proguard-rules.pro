@@ -6,6 +6,8 @@
 }
 
 -keep class com.mobility.enp.data.model.** {*;}
+-keep class com.itextpdf.** {*;}
+-keep class com.fasterxml.jackson.** {*;}
 
 -keepattributes Exceptions, Signature, InnerClasses
 
