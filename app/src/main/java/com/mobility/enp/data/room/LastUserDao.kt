@@ -11,7 +11,7 @@ interface LastUserDao {
     suspend fun upsertLastUser(lastUser: LastUser)
 
     @Query("SELECT * FROM last_user")
-    suspend fun getLastUser(): LastUser
+    suspend fun getLastUser(): LastUser?
 
     @Query("DELETE FROM last_user")
     suspend fun deleteLastUser()
