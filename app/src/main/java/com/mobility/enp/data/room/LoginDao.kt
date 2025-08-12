@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 interface LoginDao {
 
     @Query("SELECT * FROM loginTable")
-    suspend fun fetchAllowedUsers(): UserLoginResponseRoomTable
+    suspend fun fetchAllowedUsers(): UserLoginResponseRoomTable?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(userLoginResponseRoomTable: UserLoginResponseRoomTable)

@@ -11,17 +11,19 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentTosBinding
+import com.mobility.enp.databinding.UserRegistrationLoginBinding
 
 class RegistrationFragment : Fragment() {
 
-    private var _binding: FragmentTosBinding? = null
-    private val binding: FragmentTosBinding get() = _binding!!
+    private var _binding: UserRegistrationLoginBinding? = null
+    private val binding: UserRegistrationLoginBinding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentTosBinding.inflate(inflater, container, false)
+        _binding = UserRegistrationLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -96,11 +98,7 @@ class RegistrationFragment : Fragment() {
         fun onBackIconClick() {  // it gets detected here
             // Notify fragment or perform any action
             binding.webView.post {  // fixes a navigation issue.
-                if (findNavController().previousBackStackEntry != null) {
-                    findNavController().popBackStack()
-                } else {
-                    activity?.onBackPressed()
-                }
+                findNavController().navigate(R.id.action_tosFragment_to_loginFragment)
             }
         }
     }

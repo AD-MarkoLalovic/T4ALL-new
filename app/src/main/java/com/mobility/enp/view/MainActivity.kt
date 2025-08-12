@@ -2,6 +2,7 @@ package com.mobility.enp.view
 
 import android.content.Context
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -68,11 +69,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setNavigationBarAppearance(@ColorInt backgroundColor: Int) {
-        @Suppress("DEPRECATION")
-        window.navigationBarColor = backgroundColor
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU){
+            @Suppress("DEPRECATION")
+            window.navigationBarColor = backgroundColor
 
-        WindowCompat.getInsetsController(window, window.decorView)
-            .isAppearanceLightNavigationBars = true
+            WindowCompat.getInsetsController(window, window.decorView)
+                .isAppearanceLightNavigationBars = true
+        }
     }
 
     private fun setObservers() {
