@@ -132,7 +132,7 @@ class HomeRepository(
     }
 
     suspend fun getUserForPromotion(): String {
-        return database.lastUserDao().getLastUser().email
+        return database.lastUserDao().getLastUser()?.email ?:""
     }
 
     suspend fun updateHomeCard(card: HomeCardsEntity) {
