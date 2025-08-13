@@ -84,48 +84,50 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
     ) {
         repository.insertLoginToken(userLoginResponseRoomTable)
         repository.getUserFcmData().let { pair ->
-            _fcmResponse.value = SubmitResult.Loading
-            val result = repository.postFcmToken(pair.second, pair.first)
-            if (result.isSuccess) {
-                val data = result.getOrNull()
-                if (data == null) {
-                    _fcmResponse.value = SubmitResult.Empty
+            pair.second?.let { fcmToken ->
+                _fcmResponse.value = SubmitResult.Loading
+                val result = repository.postFcmToken(fcmToken, pair.first)
+                if (result.isSuccess) {
+                    val data = result.getOrNull()
+                    if (data == null) {
+                        _fcmResponse.value = SubmitResult.Empty
+                    } else {
+                        _fcmResponse.value = SubmitResult.Success(data)
+                    }
                 } else {
-                    _fcmResponse.value = SubmitResult.Success(data)
-                }
-            } else {
-                when (val error = result.exceptionOrNull()) {
-                    is NetworkError.ServerError -> {
-                        Log.d(TAG, "Error while fetching tag serial data")
-                        _fcmResponse.value = SubmitResult.FailureServerError
-                    }
+                    when (val error = result.exceptionOrNull()) {
+                        is NetworkError.ServerError -> {
+                            Log.d(TAG, "Error while fetching tag serial data")
+                            _fcmResponse.value = SubmitResult.FailureServerError
+                        }
 
-                    is NetworkError.NoConnection -> {
-                        _fcmResponse.value = SubmitResult.FailureNoConnection
-                    }
+                        is NetworkError.NoConnection -> {
+                            _fcmResponse.value = SubmitResult.FailureNoConnection
+                        }
 
-                    is NetworkError.ApiError -> {
-                        when (error.errorResponse.code) {
-                            401, 405 -> {
-                                Log.d(TOKEN, "invalid token detected login out user")
-                                _fcmResponse.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code ?: 0,
-                                        error.errorResponse.message ?: ""
-                                    )
-                            }
+                        is NetworkError.ApiError -> {
+                            when (error.errorResponse.code) {
+                                401, 405 -> {
+                                    Log.d(TOKEN, "invalid token detected login out user")
+                                    _fcmResponse.value =
+                                        SubmitResult.InvalidApiToken(
+                                            error.errorResponse.code ?: 0,
+                                            error.errorResponse.message ?: ""
+                                        )
+                                }
 
-                            else -> {
-                                _fcmResponse.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
-                                Log.d(TAG, "api error ${error.errorResponse.message}")
+                                else -> {
+                                    _fcmResponse.value =
+                                        SubmitResult.FailureApiError(
+                                            error.errorResponse.message ?: ""
+                                        )
+                                    Log.d(TAG, "api error ${error.errorResponse.message}")
+                                }
                             }
                         }
-                    }
 
-                    else -> {}
+                        else -> {}
+                    }
                 }
             }
         }
