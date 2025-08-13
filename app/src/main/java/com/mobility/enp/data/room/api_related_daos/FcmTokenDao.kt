@@ -16,5 +16,5 @@ interface FcmTokenDao {
     suspend fun deleteTable()
 
     @Query("SELECT * FROM fcm_token")
-    suspend fun getTableData(): FcmToken
+    suspend fun getTableData(): FcmToken?
 }
