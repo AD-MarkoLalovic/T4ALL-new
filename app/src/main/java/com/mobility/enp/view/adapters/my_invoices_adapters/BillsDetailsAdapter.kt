@@ -257,7 +257,7 @@ class BillsDetailsAdapter(
 
             if (isListingOfPassages) {
                 // API poziv za listing prolazaka
-                viewModel.listingPasses(billId, object : DownloadBillsDetails {
+                viewModel.downloadPassageData( object : DownloadBillsDetails {
                     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
                     override fun onOK(pdf: BillDownload?) {
                         pdf?.data?.pdfContent?.let {
@@ -279,7 +279,7 @@ class BillsDetailsAdapter(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                })
+                },billId)
             } else {
                 // API poziv za PDF račun
                 viewModel.downloadPdfBill(object : DownloadBillsDetails {

@@ -29,13 +29,6 @@ object Repository {
         return apiService(token).getUserPersonalData()
     }
 
-    suspend fun getListingPasses(
-        token: String, billId: String
-    ): Response<BillDownload> {
-
-        return apiService(token).getPdfListingPasses(billId)
-    }
-
     fun postPayBill(
         token: String?,
         billId: String?,
