@@ -73,7 +73,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
         setObserversError()
 
-        setSelectedButton(binding.buttonAll)
         setButtonsEnabled(true)
 
         viewModel.fetchMonthlyInvoices()
@@ -127,7 +126,28 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     private fun loadData(response: SubmitResult.Success<MyInvoicesResponse>) {
 
         response.data.data?.allowedCountries?.let { allowedCountry ->
-            binding.buttonAll.visibility = View.VISIBLE
+            if (viewModel.getButtonPaintAllowed()) {
+                allowedCountry[0].let { firstCountry ->
+                    when (firstCountry.value) {
+                        "RS" -> {
+                            setSelectedButton(binding.buttonSerbia)
+                        }
+
+                        "ME" -> {
+                            setSelectedButton(binding.buttonMontenegro)
+                        }
+
+                        "MK" -> {
+                            setSelectedButton(binding.northMacedonia)
+                        }
+
+                        "HR" -> {
+                            setSelectedButton(binding.buttonCroatia)
+                        }
+                    }
+                }
+                viewModel.setButtonPaintAllowed(false)
+            }
 
             for (country in allowedCountry) {
                 when (country.value) {
@@ -269,18 +289,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     }
 
     private fun setListener() {
-        binding.buttonAll.setOnClickListener {
-            binding.textNoBills.visibility = View.GONE
-            setSelectedButton(it)
-            if (::adapterMonthly.isInitialized) {
-                adapterMonthly.resetAdapter()
-            }
-            binding.invoicesLoadingView.visibility = View.VISIBLE
-            viewModel.setSelectedCountry("")
-            setButtonsEnabled(false)
-            viewModel.fetchMonthlyInvoices()
-        }
-
         binding.buttonCroatia.setOnClickListener {
             binding.textNoBills.visibility = View.GONE
             setSelectedButton(it)
@@ -347,7 +355,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
 
     private fun setButtonsEnabled(enabled: Boolean) { // to prevent button spam until data is fetched from api
-        binding.buttonAll.isEnabled = enabled
         binding.buttonCroatia.isEnabled = enabled
         binding.buttonMontenegro.isEnabled = enabled
         binding.northMacedonia.isEnabled = enabled
@@ -419,8 +426,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         buttonSerbia.isSelected = false
         buttonMontenegro.isSelected = false
         buttonCroatia.isSelected = false
-        buttonAll.isSelected = false
-
         selectedButton.isSelected = true
     }
 

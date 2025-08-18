@@ -66,7 +66,15 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     }
 
     private val perPage = 10
+    private var isButtonPaintAllowed = true
 
+    fun getButtonPaintAllowed(): Boolean {
+        return isButtonPaintAllowed
+    }
+
+    fun setButtonPaintAllowed(value: Boolean) {
+        this.isButtonPaintAllowed = value
+    }
 
     private val _myInvoices = MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Empty)
     val myInvoices: StateFlow<SubmitResult<MyInvoicesResponse>> get() = _myInvoices

@@ -69,24 +69,10 @@
                 app:layout_constraintTop_toBottomOf="@id/valueTitle">
 
                 <LinearLayout
+                    android:id="@+id/linear_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
-
-                    <TextView
-                        android:id="@+id/buttonAll"
-                        style="@style/CaptionMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dimens_40dp"
-                        android:layout_marginEnd="@dimen/dimens_6dp"
-                        android:background="@drawable/currency_selector"
-                        android:gravity="center"
-                        android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/all"
-                        android:textColor="@color/text_color_selector"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
 
 
                     <TextView
