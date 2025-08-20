@@ -33,8 +33,8 @@ android {
         applicationId = "com.mobility.enp"
         minSdk = 29
         targetSdk = 35
-        versionCode = 197
-        versionName = "1.5.1"
+        versionCode = 202
+        versionName = "1.5.3"
 
         resourceConfigurations += listOf("en", "sr", "de", "mk", "tr", "b+cnr", "hr", "el", "bs")
 
