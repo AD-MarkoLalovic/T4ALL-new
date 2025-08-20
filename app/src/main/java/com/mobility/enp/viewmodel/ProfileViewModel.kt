@@ -11,11 +11,9 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.repository.ProfileRepository
-import com.mobility.enp.network.Repository
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -189,29 +187,21 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
         return list.isNotEmpty()
     }
 
-    fun fetchLocalData() {
+    fun fetchLocalData() {  // terms and conditions button
         if (isNetworkAvailable()) {
             viewModelScope.launch {
                 try {
-                    val token = getUserToken()
-
-                    token?.let {
-                        val countryCode = async {
-                            val response = Repository.getUserPersonalInfo(it)
-                            response.data.country.code
-                        }
-
-                        val userLanguage = async {
-                            repository.getLanguageKey()
-                        }
-
-                        val code = countryCode.await()
-                        val language = userLanguage.await()
-
-                        _userInfo.value = "$code/$language"
-                    }
+                    val result = repository.getBasicUserInformation()
+                    result.fold(onSuccess = { body ->
+                        val countryCode = body.data.country.code
+                        val language = repository.getLanguageKey()
+                        _userInfo.value = "$countryCode/$language"
+                    }, onFailure = {
+                        val error = result.exceptionOrNull()
+                        Log.e("ProfileViewModel", error?.message ?: "Unknown error")
+                    })
                 } catch (e: Exception) {
-                    Log.e("ProfileViewModel", "Error fetching local data", e)
+                    Log.e("ProfileViewModel", "Error fetching user data", e)
                 }
             }
         } else {

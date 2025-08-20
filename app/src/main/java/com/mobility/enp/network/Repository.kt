@@ -22,13 +22,6 @@ object Repository {
         return RestClient.create(ApiService::class.java, token).apiService
     }
 
-    // updated
-    suspend fun getUserPersonalInfo(
-        token: String?
-    ): BasicInfoResponse {
-        return apiService(token).getUserPersonalData()
-    }
-
     fun postPayBill(
         token: String?,
         billId: String?,
