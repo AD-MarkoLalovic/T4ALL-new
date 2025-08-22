@@ -367,4 +367,7 @@
     <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
     <string name="no_invoices">Δεν υπάρχουν λογαριασμοί για την επιλεγμένη χώρα</string>
     <string name="confirm_serial_number">Επιβεβαιώστε τον αριθμό σειράς</string>
+    <string name="permission_denied_message">Η άδεια απορρίφθηκε</string>
+    <string name="camera_permission_required_message">Απαιτείται άδεια πρόσβασης στην κάμερα. Μπορείτε να την ενεργοποιήσετε στις Ρυθμίσεις.</string>
+    <string name="camera_not_available_message">Η κάμερα δεν είναι διαθέσιμη.</string>
 </resources>

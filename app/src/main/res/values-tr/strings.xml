@@ -378,4 +378,7 @@
     <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
     <string name="no_invoices">Seçilen ülke için fatura bulunmamaktadır</string>
     <string name="confirm_serial_number">Seri numarasını onaylayın</string>
+    <string name="permission_denied_message">İzin reddedildi</string>
+    <string name="camera_permission_required_message">Kamera erişim izni gereklidir. Ayarlardan etkinleştirebilirsiniz.</string>
+    <string name="camera_not_available_message">Kamera kullanılamıyor.</string>
 </resources>

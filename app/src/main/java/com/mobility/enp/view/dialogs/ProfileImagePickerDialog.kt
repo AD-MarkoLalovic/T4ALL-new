@@ -8,13 +8,13 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
@@ -22,6 +22,11 @@ import androidx.fragment.app.activityViewModels
 import com.mobility.enp.databinding.DialogChangeProfilePictureBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
+import androidx.core.graphics.drawable.toDrawable
+import com.mobility.enp.R
+import com.mobility.enp.util.FragmentResultKeys
+import com.mobility.enp.util.SharedPreferencesHelper
+import com.mobility.enp.util.toast
 
 class ProfileImagePickerDialog(
     private val imageSelectionListener: ImagePickDialogListener,
@@ -32,59 +37,57 @@ class ProfileImagePickerDialog(
     private val binding: DialogChangeProfilePictureBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
-    // Contract za pokretanje kamere i dobivanje rezultata
+    // Kamera contract
     private val takePictureContract =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val imageBitmap = result.data?.extras?.get("data") as Bitmap?
                 imageSelectionListener.onImageSelected(imageBitmap)
-
                 dismiss()
             }
         }
 
-    // Contract za odabir slike iz galerije i dobivanje rezultata
-    private val pickGalleryImageContract =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val selectedImageUri = result.data?.data
-                val imageBitmap = MediaStore.Images.Media.getBitmap(
-                    requireContext().contentResolver,
-                    selectedImageUri
-                )
-                imageSelectionListener.onImageSelected(imageBitmap)
-
-                dismiss()
-            }
+    private val pickProfileImageLauncher = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) {
+            val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, uri)
+            imageSelectionListener.onImageSelected(bitmap)
+            dismiss()
         }
+    }
 
+    // Camera permisija launcher
     private val requestCameraPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
-                // Dozvola za kameru je odobrena, pokreni intent za snimanje slike
-                val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                try {
-                    takePictureContract.launch(takePictureIntent)
-                } catch (e: ActivityNotFoundException) {
-                    // Handle error if camera is not available
-                }
-            } else {
-                // Korisnik nije odobrio dozvolu za kameru, prikaži poruku ili obavijestite korisnika
-                Toast.makeText(
+                SharedPreferencesHelper.resetPermissionDenyCount(
                     requireContext(),
-                    "Potrebna je dozvola za pristup kameri.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                    "camera_deny_count"
+                )
+                dispatchTakePictureIntent()
+            } else {
+                SharedPreferencesHelper.incrementPermissionDenyCount(
+                    requireContext(),
+                    "camera_deny_count"
+                )
+
+                val denyCount = SharedPreferencesHelper.getPermissionDenyCount(
+                    requireContext(),
+                    "camera_deny_count"
+                )
+                if (denyCount > 2) {
+                    cameraPermissionDeniedDialog()
+                }
             }
         }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = DialogChangeProfilePictureBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -92,64 +95,72 @@ class ProfileImagePickerDialog(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (imageExists) {
-            binding.bttDelete.visibility = View.VISIBLE
-        } else {
-            binding.bttDelete.visibility = View.GONE
-        }
+        permissionDeniedDialogResultListener()
 
-        binding.bttFromCamera.setOnClickListener {
-            dispatchTakePictureIntent()
-        }
+        binding.bttDelete.visibility = if (imageExists) View.VISIBLE else View.GONE
 
-        binding.bttFromGallery.setOnClickListener {
-            openGallery()
-        }
-
+        binding.bttFromCamera.setOnClickListener { dispatchTakePictureIntent() }
+        binding.bttFromGallery.setOnClickListener { openGallery() }
         binding.bttDelete.setOnClickListener {
             imageSelectionListener.onDeleteImage()
             dismiss()
         }
+        binding.changeProfilePictureDialogClose.setOnClickListener { dismiss() }
 
-        binding.changeProfilePictureDialogClose.setOnClickListener {
-            dismiss()
-        }
-
-        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
-            franchiseModel?.let { model ->
-                model.franchisePrimaryColor.let { color ->
-                    binding.bttFromGallery.backgroundTintList = ColorStateList.valueOf(color)
-                    binding.bttFromCamera.setImageResource(franchiseModel.cameraResource)
-                }
-                binding.changeProfilePictureDialogClose.setImageResource(model.franchiseCloseButton)
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { model ->
+            model?.let {
+                binding.bttFromGallery.backgroundTintList =
+                    ColorStateList.valueOf(it.franchisePrimaryColor)
+                binding.bttFromCamera.setImageResource(it.cameraResource)
+                binding.changeProfilePictureDialogClose.setImageResource(it.franchiseCloseButton)
             }
-
         }
     }
 
-
     private fun dispatchTakePictureIntent() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+            == PackageManager.PERMISSION_GRANTED
         ) {
-            // Dozvola za kameru je već odobrena, pokreni intent za snimanje slike
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             try {
                 takePictureContract.launch(takePictureIntent)
             } catch (e: ActivityNotFoundException) {
-                // Handle error if camera is not available
+                toast(getString(R.string.camera_permission_required_message))
             }
         } else {
-            // Dozvola za kameru nije odobrena, zatraži dozvolu od korisnika
             requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
 
     private fun openGallery() {
-        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        pickGalleryImageContract.launch(galleryIntent)
+        pickProfileImageLauncher.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        )
+    }
+
+
+    private fun cameraPermissionDeniedDialog() {
+        PermissionDeniedDialog.newInstance(
+            title = requireContext().getString(R.string.permission_denied_message),
+            subtitle = requireContext().getString(R.string.camera_permission_required_message),
+            resultKey = FragmentResultKeys.CAMERA_PERMISSION_RESULT,
+            resultValueKey = FragmentResultKeys.CAMERA_PERMISSION_CONFIRMED
+        ).show(childFragmentManager, "CameraPermissionDeniedDialog")
+    }
+
+    private fun permissionDeniedDialogResultListener() {
+        childFragmentManager.setFragmentResultListener(
+            FragmentResultKeys.CAMERA_PERMISSION_RESULT,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val clickSettings =
+                bundle.getBoolean(FragmentResultKeys.CAMERA_PERMISSION_CONFIRMED, false)
+            if (clickSettings) {
+                val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.fromParts("package", requireContext().packageName, null)
+                startActivity(intent)
+            }
+        }
     }
 
     interface ImagePickDialogListener {
@@ -167,6 +178,4 @@ class ProfileImagePickerDialog(
         super.onDestroyView()
         _binding = null
     }
-
-
 }
