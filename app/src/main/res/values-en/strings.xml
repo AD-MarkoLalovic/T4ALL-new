@@ -369,4 +369,7 @@
     <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
     <string name="no_invoices">No bills for selected country available</string>
     <string name="confirm_serial_number">Confirm the serial number</string>
+    <string name="permission_denied_message">Permission denied</string>
+    <string name="camera_permission_required_message">Camera access permission is required. You can enable it in settings.</string>
+    <string name="camera_not_available_message">Camera is not available.</string>
 </resources>

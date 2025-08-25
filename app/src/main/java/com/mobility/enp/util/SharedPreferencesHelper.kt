@@ -69,6 +69,25 @@ object SharedPreferencesHelper {
         return getPreferences(context).getString("country_code", null)
     }
 
+    fun incrementPermissionDenyCount(context: Context, key: String): Int {
+        val pref = getPreferences(context)
+        val count = pref.getInt(key, 0) + 1
+        pref.edit {
+            putInt(key, count)
+        }
+        return count
+    }
+
+    fun resetPermissionDenyCount(context: Context, key: String) {
+        getPreferences(context).edit {
+            putInt(key, 0)
+        }
+    }
+
+    fun getPermissionDenyCount(context: Context, key: String): Int {
+        return getPreferences(context).getInt(key, 0)
+    }
+
 }
 
 
