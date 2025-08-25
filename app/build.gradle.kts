@@ -118,7 +118,6 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.sqlite.ktx)
     implementation(libs.androidx.glide)
-    implementation(libs.androidx.dexter)
     implementation(libs.androidx.gson)
     implementation(libs.androidx.viewpager2)
     implementation(libs.androidx.webkit)
