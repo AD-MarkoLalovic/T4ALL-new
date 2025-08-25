@@ -199,7 +199,7 @@ class ToolHistoryListingAdapter(
         }
 
         val country = toolHistoryIndex.data?.tags?.let {
-            it[holder.bindingAdapterPosition].country?.text
+            it[holder.bindingAdapterPosition].country?.value
         }
 
         holder.bind(
