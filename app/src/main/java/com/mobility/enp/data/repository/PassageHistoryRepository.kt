@@ -318,7 +318,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         database.csvTableDao().upsertData(csvTable)
     }
 
-    suspend fun getIndexDataRoom(): IndexData {
+    suspend fun getIndexDataRoom(): IndexData? {
         return withContext(Dispatchers.IO) {
             database.toolHistoryDao().fetchData()
         }

@@ -1014,7 +1014,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     }
 
 
-    suspend fun fetchIndexData(): IndexData {
+    suspend fun fetchIndexData(): IndexData? {
         return withContext(Dispatchers.IO) {
             repository.getIndexDataRoom()
         }

@@ -199,20 +199,19 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                     R.id.action_global_noInternetConnectionDialog, bundle
                 )
 
-                val binding = (activity as MainActivity).binding
+                val bindingMain = (activity as MainActivity).binding
                 MainActivity.showSnackMessage(
-                    getString(R.string.checking_for_connection), binding
+                    getString(R.string.checking_for_connection), bindingMain
                 )
+                binding.progBar.visibility = View.VISIBLE
             }
 
-            withContext(Dispatchers.IO) {
-                while (true) {
-                    if (vModel.internetAvailable()) {
-                        triggerUpdate()
-                        break
-                    } else {
-                        delay(1000L)
-                    }
+            while (true) {
+                if (vModel.internetAvailable()) {
+                    triggerUpdate()
+                    break
+                } else {
+                    delay(1000L)
                 }
             }
         }

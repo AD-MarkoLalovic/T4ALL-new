@@ -15,6 +15,6 @@ interface HistoryIndexDao {
     suspend fun deleteData()
 
     @Query("SELECT * FROM indexdata")
-    fun fetchData(): IndexData
+    fun fetchData(): IndexData?
 
 }
