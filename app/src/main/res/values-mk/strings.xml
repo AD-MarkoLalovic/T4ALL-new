@@ -344,8 +344,8 @@
     <string name="no_waiting_in_line">Bez čekanja u redu</string>
     <string name="no_currency_exchange">Bez promene valuta</string>
     <string name="permission_granted">Дозвола одобрена</string>
-    <string name="notification_title">Дозволете на T4A да ви испраќа известувања</string>
-    <string name="notification_subtitle">Известувањата служат за преземање фактури и експортовање на табели во историјата на премини</string>
+    <string name="notification_title">Дозволете T4A да ви испраќа известувања</string>
+    <string name="notification_subtitle">Известувањата се користат за преземање на сметки и извезување на табели во историјата на преминувања.</string>
     <string name="listing_of_passages_downloaded_successfully">Листингот на поминувања е успешно преземен.</string>
     <string name="field_bank_account_isrequired">Полето жиро сметка треба да содржи 13 цифри.</string>
     <string name="access_denied">Пристапот е одбиен</string>
@@ -379,5 +379,6 @@
     <string name="permission_denied_message">Дозволата е одбиена</string>
     <string name="camera_permission_required_message">Потребно е дозвола за пристап до камерата. Можете да ја овозможите во поставките.</string>
     <string name="camera_not_available_message">Камерата не е достапна.</string>
+    <string name="notification_permission_required_message">Потребно е овластување за известувања. Можете да го овозможите во поставките.</string>
 
 </resources>

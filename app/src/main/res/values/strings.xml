@@ -398,8 +398,8 @@
     <string name="no_waiting_in_line">"Без чекања у реду        "</string>
     <string name="no_currency_exchange">"Без промене валута        "</string>
     <string name="permission_granted">Дозвола одобрена</string>
-    <string name="notification_title">Дозволите T4A да вам шаље нотификације</string>
-    <string name="notification_subtitle">Нотификације служе за преузимање рачуна и експортовање табела у историји пролазака</string>
+    <string name="notification_title">Дозволите да вам T4A шаље обавештења</string>
+    <string name="notification_subtitle">Обавештења служе за преузимање рачуна и извоз табела у историји пролаза.</string>
     <string name="listing_of_passages_downloaded_successfully">Листинг пролазака је успешно преузет.</string>
     <string name="field_bank_account_isrequired">Поље жиро рачун треба да садржи 13 цифара.</string>
     <string name="access_denied">Приступ одбијен</string>
@@ -446,5 +446,6 @@
     <string name="permission_denied_message">Дозвола је одбијена</string>
     <string name="camera_permission_required_message">Потребна је дозвола за приступ камери. Можете је омогућити у подешавањима.</string>
     <string name="camera_not_available_message">Камера није доступна.</string>
+    <string name="notification_permission_required_message">Потребна је дозвола за обавештења. Можете је омогућити у подешавањима.</string>
 
 </resources>

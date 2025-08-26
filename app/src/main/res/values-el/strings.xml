@@ -336,7 +336,7 @@
     <string name="no_currency_exchange">Bez promene valuta</string>
     <string name="permission_granted">Άδεια Εγκρίθηκε</string>
     <string name="notification_title">Επιτρέψτε στο T4A να σας στέλνει ειδοποιήσεις</string>
-    <string name="notification_subtitle">Οι ειδοποιήσεις χρησιμοποιούνται για τη λήψη τιμολογίων και την εξαγωγή πινάκων στο ιστορικό διελεύσεων</string>
+    <string name="notification_subtitle">Οι ειδοποιήσεις χρησιμοποιούνται για λήψη τιμολογίων και εξαγωγή πινάκων στο ιστορικό διελεύσεων.</string>
     <string name="listing_of_passages_downloaded_successfully">Η λίστα διελεύσεων λήφθηκε με επιτυχία.</string>
     <string name="field_bank_account_isrequired">Το πεδίο του τραπεζικού λογαριασμού πρέπει να περιέχει 13 ψηφία.</string>
     <string name="access_denied">Πρόσβαση απορρίφθηκε</string>
@@ -370,4 +370,5 @@
     <string name="permission_denied_message">Η άδεια απορρίφθηκε</string>
     <string name="camera_permission_required_message">Απαιτείται άδεια πρόσβασης στην κάμερα. Μπορείτε να την ενεργοποιήσετε στις Ρυθμίσεις.</string>
     <string name="camera_not_available_message">Η κάμερα δεν είναι διαθέσιμη.</string>
+    <string name="notification_permission_required_message">Απαιτείται άδεια ειδοποιήσεων. Μπορείτε να την ενεργοποιήσετε στις ρυθμίσεις.</string>
 </resources>
