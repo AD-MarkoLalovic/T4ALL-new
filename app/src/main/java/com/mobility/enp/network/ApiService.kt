@@ -71,9 +71,6 @@ interface ApiService {
     ): Response<Any>
 
     @GET("/api/v1/personal-data")
-    suspend fun getUserPersonalData(): BasicInfoResponse
-
-    @GET("/api/v1/personal-data")
     suspend fun getUserData(): Response<BasicInfoResponse>
 
     @PUT("/api/v1/personal-data")

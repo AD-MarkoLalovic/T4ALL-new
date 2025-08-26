@@ -33,8 +33,8 @@ android {
         applicationId = "com.mobility.enp"
         minSdk = 29
         targetSdk = 35
-        versionCode = 202
-        versionName = "1.5.3"
+        versionCode = 203
+        versionName = "1.5.4"
 
         resourceConfigurations += listOf("en", "sr", "de", "mk", "tr", "b+cnr", "hr", "el", "bs")
 
@@ -118,7 +118,6 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.sqlite.ktx)
     implementation(libs.androidx.glide)
-    implementation(libs.androidx.dexter)
     implementation(libs.androidx.gson)
     implementation(libs.androidx.viewpager2)
     implementation(libs.androidx.webkit)

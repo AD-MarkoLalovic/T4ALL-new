@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="notification"
+            type="com.mobility.enp.data.model.notification.NotificationModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="@dimen/dimens_100dp"
+            android:layout_height="@dimen/dimens_100dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="@dimen/dimens_10dp"
+            android:importantForAccessibility="no"
+            tools:background="@drawable/notification_icon" />
+
+        <TextView
+            android:id="@+id/textContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@id/imageView"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="10"
+            android:scrollHorizontally="true"
+            android:text="@{notification.description}"
+            tools:text="@string/lorem" />
+
+        <TextView
+            android:id="@+id/dateOfMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textContent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/dimens_5dp"
+            android:layout_marginEnd="@dimen/dimens_10dp"
+            tools:text="10.12.2002" />
+
+
+        <View
+            android:id="@+id/seperator"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimens_1dp"
+            android:layout_below="@+id/dateOfMessage"
+            android:layout_marginVertical="@dimen/dimens_15dp"
+            android:background="@color/primary_light_light" />
+    </RelativeLayout>
+
+</layout>

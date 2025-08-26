@@ -369,5 +369,8 @@
     <string name="jp_putevi_srbije">"JP Putevi Srbije "</string>
     <string name="no_invoices">Nema računa za odabranu zemlju</string>
     <string name="confirm_serial_number">Potvrdite serijski broj</string>
+    <string name="permission_denied_message">Dozvola je odbijena</string>
+    <string name="camera_permission_required_message">Potrebna je dozvola za pristup kameri. Možete je omogućiti u postavkama.</string>
+    <string name="camera_not_available_message">Kamera nije dostupna.</string>
 
 </resources>
