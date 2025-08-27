@@ -96,7 +96,6 @@ class CardFragment : Fragment() {
         binding.webView.isFocusable = true
         binding.webView.isFocusableInTouchMode = true
         binding.webView.webChromeClient = WebChromeClient()
-
         binding.webView.webViewClient = createWebViewClient()
     }
 
@@ -108,29 +107,33 @@ class CardFragment : Fragment() {
 
             url?.let { link ->
                 if (link.contains("/payment/success")) {
-                    activity?.runOnUiThread {
-                        Toast.makeText(
-                            requireContext(),
-                            R.string.credit_card_successful,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    if (isAdded) {
+                        activity?.runOnUiThread {
+                            Toast.makeText(
+                                requireContext(),
+                                R.string.credit_card_successful,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
 
-                    countryCode?.let {
-                        viewModel.addCard(it)
-                    }
+                        countryCode?.let {
+                            viewModel.addCard(it)
+                        }
 
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        delay(2000L)
+                        // Only launch a coroutine on viewLifecycleOwner if the view is still active
+                        // and the fragment is not in a destroying state.
+                        if ((viewLifecycleOwner.lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED))) {
+                            viewLifecycleOwner.lifecycleScope.launch {
+                                delay(2000L)
 
-                        // Pre navigacije proveravamo da li je fragment još uvek aktivan
-                        if (isAdded && isResumed) {
-                            findNavController().popBackStack()
+                                if (isAdded && isResumed) {
+                                    findNavController().popBackStack()
+                                }
+                            }
                         }
                     }
                 }
             }
-
             Log.d(TAG, "url: $url")
         }
 
@@ -157,8 +160,9 @@ class CardFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // Zaustavljamo učitavanje u WebView pre nego što postavimo _binding na null
         binding.webView.stopLoading()
+        binding.webView.webChromeClient = null
+        binding.webView.destroy()
         _binding = null
     }
 }
