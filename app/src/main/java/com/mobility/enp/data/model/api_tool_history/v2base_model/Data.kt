@@ -25,11 +25,11 @@ data class Data(
 ) {
     fun deepImmutableCopy(): Data {
         return Data(
-            allowedCountries = allowedCountries?.map { it },
+            allowedCountries = allowedCountries?.map { it?.copy() }?.toList(),
             customer = customer,
             records = records,
-            sumTags = sumTags.map { it },
-            tags = tags?.map { it }
+            sumTags = sumTags.map { it.copy() }.toList(),
+            tags = tags?.map { it?.copy() }?.toList()
         )
     }
 }
