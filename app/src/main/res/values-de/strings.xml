@@ -357,7 +357,7 @@
     <string name="no_currency_exchange">Bez promene valuta</string>
     <string name="permission_granted">Erlaubnis erteilt</string>
     <string name="notification_title">Erlauben Sie T4A, Ihnen Benachrichtigungen zu senden</string>
-    <string name="notification_subtitle">Benachrichtigungen werden für den Rechnungsdownload und den Export von Tabellen im Durchgangsverlauf verwendet</string>
+    <string name="notification_subtitle">Benachrichtigungen dienen zum Herunterladen von Rechnungen und zum Exportieren von Tabellen in der Verlaufshistorie.</string>
     <string name="listing_of_passages_downloaded_successfully">Die Durchgangsliste wurde erfolgreich heruntergeladen.</string>
     <string name="field_bank_account_isrequired">Das Feld „Girokonto“ muss 13 Ziffern enthalten.</string>
     <string name="access_denied">Zugriff verweigert</string>
@@ -391,4 +391,5 @@
     <string name="permission_denied_message">Erlaubnis verweigert</string>
     <string name="camera_permission_required_message">Die Erlaubnis für den Kamerazugriff ist erforderlich. Sie können sie in den Einstellungen aktivieren.</string>
     <string name="camera_not_available_message">Kamera ist nicht verfügbar.</string>
+    <string name="notification_permission_required_message">Benachrichtigungsberechtigung ist erforderlich. Sie können sie in den Einstellungen aktivieren.</string>
 </resources>

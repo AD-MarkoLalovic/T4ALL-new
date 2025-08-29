@@ -1,5 +1,7 @@
 package com.mobility.enp.view.fragments.my_profile
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,12 +21,15 @@ import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.databinding.FragmentBillsBinding
 import com.mobility.enp.network.Repository
+import com.mobility.enp.util.FragmentResultKeys
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
 import com.mobility.enp.view.dialogs.NotificationsRequestDialog
+import com.mobility.enp.view.dialogs.PermissionDeniedDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
 import kotlinx.coroutines.Dispatchers
@@ -49,8 +54,25 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
                 // Permission is granted. You can proceed with sending notifications.
+                SharedPreferencesHelper.resetPermissionDenyCount(
+                    requireContext(),
+                    "notification_deny_count"
+                )
                 userPerm.onPermissionGranted()
                 sendNotification()
+            } else {
+                SharedPreferencesHelper.incrementPermissionDenyCount(
+                    requireContext(),
+                    "notification_deny_count"
+                )
+
+                val denyCount = SharedPreferencesHelper.getPermissionDenyCount(
+                    requireContext(),
+                    "notification_deny_count"
+                )
+                if (denyCount > 2) {
+                    cameraPermissionDeniedDialog()
+                }
             }
         }
 
@@ -70,6 +92,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         binding.viewModel = viewModel
 
         setObservers()
+        permissionNotificationDeniedDialogResultListener()
 
         setObserversError()
 
@@ -122,6 +145,30 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             }
         }
 
+    }
+
+    private fun cameraPermissionDeniedDialog() {
+        PermissionDeniedDialog.newInstance(
+            title = requireContext().getString(R.string.permission_denied_message),
+            subtitle = requireContext().getString(R.string.notification_permission_required_message),
+            resultKey = FragmentResultKeys.NOTIFICATION_PERMISSION_RESULT,
+            resultValueKey = FragmentResultKeys.NOTIFICATION_PERMISSION_CONFIRMED
+        ).show(parentFragmentManager, "CameraPermissionDeniedDialog")
+    }
+
+    private fun permissionNotificationDeniedDialogResultListener() {
+        parentFragmentManager.setFragmentResultListener(
+            FragmentResultKeys.NOTIFICATION_PERMISSION_RESULT,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val clickSettings =
+                bundle.getBoolean(FragmentResultKeys.NOTIFICATION_PERMISSION_CONFIRMED, false)
+            if (clickSettings) {
+                val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.fromParts("package", requireContext().packageName, null)
+                startActivity(intent)
+            }
+        }
     }
 
     private fun loadData(response: SubmitResult.Success<MyInvoicesResponse>) {

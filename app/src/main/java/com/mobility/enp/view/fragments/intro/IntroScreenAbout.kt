@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
@@ -21,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentIntroScreenAboutBinding
 import com.mobility.enp.util.SharedPreferencesHelper
+import com.mobility.enp.util.toast
 import com.mobility.enp.view.dialogs.NotificationsRequestDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.launch
@@ -35,8 +35,9 @@ class IntroScreenAbout : Fragment() {
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
-                // Permission is granted. You can proceed with sending notifications.
-                sendNotification()
+                toast(getString(R.string.permission_granted))
+            } else {
+                SharedPreferencesHelper.incrementPermissionDenyCount(requireContext(), "notification_deny_count")
             }
         }
     private var isExpanded = false
@@ -147,11 +148,6 @@ class IntroScreenAbout : Fragment() {
             animateHeight(view, 0, targetHeight)
         }
         isExpanded = !isExpanded
-    }
-
-    private fun sendNotification() {
-        Toast.makeText(requireContext(), getString(R.string.permission_granted), Toast.LENGTH_SHORT)
-            .show()
     }
 
     private fun showNotificationPermissionRationale() {
