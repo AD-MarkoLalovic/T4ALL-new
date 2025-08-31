@@ -204,7 +204,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             binding.textNoBills.visibility = View.GONE
             binding.recyclerViewBills.visibility = View.VISIBLE
             adapterMonthly = MonthlyBillsAdapter(
-                response.data.data!!,
+                response.data.data,
                 viewModel,
                 errorBody,
                 this,

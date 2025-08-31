@@ -406,7 +406,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
                 object : NotificationsRequestDialog.OnButtonClick {
                     override fun onClickConfirmed() {
                         userPerm = userPermission
-                        requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                        requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                     }
 
                     override fun onClickRejected() {
