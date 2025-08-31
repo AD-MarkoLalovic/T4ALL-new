@@ -182,25 +182,23 @@ class BillsDetailsAdapter(
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
                         showNotification(binding, id, isListingParam)
                     } else {
-                        when {
-                            ContextCompat.checkSelfPermission(
+                        if (ContextCompat.checkSelfPermission(
                                 binding.root.context,
                                 Manifest.permission.POST_NOTIFICATIONS
-                            ) == PackageManager.PERMISSION_GRANTED -> {
-                                showNotification(binding, id, isListingParam)
-                            }
+                            ) == PackageManager.PERMISSION_GRANTED
+                        ) {
+                            // Ako je permisija već odobrena  odmah šaljemo notifikaciju
+                            showNotification(binding, id, isListingParam)
+                        } else {
+                            // Ako nije tražimo od korisnika
+                            spinnerInterface.requestNotificationFromUser(object : UserPermission {
+                                override fun onPermissionGranted() {
+                                    showNotification(binding, id, isListingParam)
+                                }
 
-                            else -> {
-                                spinnerInterface.requestNotificationFromUser(object :
-                                    UserPermission {
-                                    override fun onPermissionGranted() {
-                                        showNotification(binding, id, isListingParam)
-                                    }
-
-                                    override fun onPermissionDenied() {
-                                    }
-                                })
-                            }
+                                override fun onPermissionDenied() {
+                                }
+                            })
                         }
                     }
                     true

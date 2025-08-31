@@ -71,7 +71,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                     "notification_deny_count"
                 )
                 if (denyCount > 2) {
-                    cameraPermissionDeniedDialog()
+                    notificationPermissionDeniedDialog()
                 }
             }
         }
@@ -147,13 +147,13 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
     }
 
-    private fun cameraPermissionDeniedDialog() {
+    private fun notificationPermissionDeniedDialog() {
         PermissionDeniedDialog.newInstance(
             title = requireContext().getString(R.string.permission_denied_message),
             subtitle = requireContext().getString(R.string.notification_permission_required_message),
             resultKey = FragmentResultKeys.NOTIFICATION_PERMISSION_RESULT,
             resultValueKey = FragmentResultKeys.NOTIFICATION_PERMISSION_CONFIRMED
-        ).show(parentFragmentManager, "CameraPermissionDeniedDialog")
+        ).show(parentFragmentManager, "NotificationPermissionDeniedDialog")
     }
 
     private fun permissionNotificationDeniedDialogResultListener() {
