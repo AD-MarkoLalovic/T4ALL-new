@@ -505,11 +505,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         _binding = null
     }
 
-    override fun onResume() {
-        super.onResume()
-        vModel.selectedTags.clear()
-    }
-
     override fun startSpinner() {
         binding.progBar.visibility = View.VISIBLE
     }
