@@ -6,10 +6,11 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.viewModels
-import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -45,38 +46,47 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setNavigationBarAppearance(
-            backgroundColor = ContextCompat.getColor(this, R.color.white)
-        )
+        setSystemBarsAppearance()
+        applyDisplayCutouts()
 
         setupNavigation()
         setListeners()
         setObservers()
         messageLanguageChanged(this)
-        applyDisplayCutouts()
 
     }
 
     private fun applyDisplayCutouts() {
-        val rootView = binding.rootLayout
-
-        ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, windowInsets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { v, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-
             v.setPadding(insets.left, insets.top, insets.right, insets.bottom)
             WindowInsetsCompat.CONSUMED
         }
     }
 
-    private fun setNavigationBarAppearance(@ColorInt backgroundColor: Int) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU){
+    private fun setSystemBarsAppearance() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            window.insetsController?.setSystemBarsAppearance(
+                APPEARANCE_LIGHT_STATUS_BARS or APPEARANCE_LIGHT_NAVIGATION_BARS,
+                APPEARANCE_LIGHT_STATUS_BARS or APPEARANCE_LIGHT_NAVIGATION_BARS
+            )
             @Suppress("DEPRECATION")
-            window.navigationBarColor = backgroundColor
+            window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+            @Suppress("DEPRECATION")
+            window.navigationBarColor = ContextCompat.getColor(this, R.color.white)
+        } else {
+            // Starije verzije koriste WindowCompat
+            val controller = WindowCompat.getInsetsController(window, binding.root)
+            controller.isAppearanceLightStatusBars = true
+            controller.isAppearanceLightNavigationBars = true
 
-            WindowCompat.getInsetsController(window, window.decorView)
-                .isAppearanceLightNavigationBars = true
+            @Suppress("DEPRECATION")
+            window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+            @Suppress("DEPRECATION")
+            window.navigationBarColor = ContextCompat.getColor(this, R.color.white)
         }
     }
+
 
     private fun setObservers() {
         franchiseViewModel.franchiseModel.observe(this) { franchiseModel ->
