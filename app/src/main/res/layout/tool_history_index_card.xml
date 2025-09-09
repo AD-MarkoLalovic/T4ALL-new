@@ -91,7 +91,7 @@
         <ScrollView
             android:id="@+id/nsScroll"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimens_500dp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/cyclerTotalPrice"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
@@ -105,7 +105,7 @@
             <com.mobility.enp.view.adapters.my_invoices_adapters.CustomRecyclerView
                 android:id="@+id/cycler"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="wrap_content"
                 android:fadeScrollbars="false"
                 android:scrollIndicators="none"
                 android:scrollbarAlwaysDrawVerticalTrack="false"
