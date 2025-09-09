@@ -75,12 +75,25 @@ class PaymentAndPassageViewModel(
                     }
 
                     is NetworkError.ApiError -> {
-                        _getCardDataFlow.value =
-                            SubmitResult.FailureApiError(error.errorResponse.message ?: "")
-                        Log.d(TAG, "api error ${error.errorResponse.message}")
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN PaymentAndPassageViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                _getCardDataFlow.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+                            else -> {
+                                _getCardDataFlow.value =
+                                    SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                                Log.d(TAG, "api error ${error.errorResponse.message}")
+                            }
+                        }
                     }
-
-                    else -> {}
                 }
             }
         }
