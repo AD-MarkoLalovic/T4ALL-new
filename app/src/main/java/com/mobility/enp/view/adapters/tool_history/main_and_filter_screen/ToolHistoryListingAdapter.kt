@@ -43,7 +43,6 @@ class ToolHistoryListingAdapter(
         val binding: ToolHistoryIndexCardBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-
         fun bind(
             toolHistoryIndex: TagUtilCycler,
             position: Int,
@@ -51,20 +50,21 @@ class ToolHistoryListingAdapter(
         ) {
             // perform initial data fill // for sub adapter
 
-
             binding.data = toolHistoryIndex
 
             holder.binding.progbar.visibility = View.VISIBLE
             binding.noPassage.visibility = View.GONE
+            binding.nsScroll.visibility = View.INVISIBLE
+            binding.cycler.visibility = View.INVISIBLE
+            binding.nsScroll.layoutParams.height = 250
+            binding.nsScroll.requestLayout()
 
             val itemSerialNumber = toolHistoryIndex.serialNumber
 
             val contentInterface = object : PassageDataInterface {
 
                 override fun onOk(toolHistoryListing: V2HistoryTagResponse) {
-
-                    binding.cycler.visibility = View.VISIBLE
-                    binding.cyclerTotalPrice.visibility = View.VISIBLE
+                    binding.cyclerTotalPrice.visibility = View.INVISIBLE
                     binding.noPassage.visibility = View.GONE
 
                     toolHistoryListing.serial = itemSerialNumber
@@ -89,8 +89,33 @@ class ToolHistoryListingAdapter(
                                 false
                             )
 
+                        binding.cyclerTotalPrice.visibility = View.VISIBLE
+
                         binding.position = position
 
+                        val heightInDp = when(toolHistoryListing.data.records?.items?.size){
+                            1 -> binding.root.context.resources.getDimensionPixelSize(
+                                R.dimen.recycler_view_one_item
+                            )
+
+                            2 -> binding.root.context.resources.getDimensionPixelSize(
+                                R.dimen.recycler_view_two_items
+                            )
+
+                            3 -> binding.root.context.resources.getDimensionPixelSize(
+                                R.dimen.recycler_view_three_items
+                            )
+
+                            else -> binding.root.context.resources.getDimensionPixelSize(
+                                R.dimen.recycler_view_more_items
+                            )
+                        }
+
+                        binding.nsScroll.layoutParams.height = heightInDp
+                        binding.nsScroll.requestLayout()
+
+                        binding.nsScroll.visibility = View.VISIBLE
+                        binding.cycler.visibility = View.VISIBLE
 
                         /**
                          * this adapter is used for presenting individual passages for 1 tag serial
@@ -103,6 +128,7 @@ class ToolHistoryListingAdapter(
                             lifecycleOwner,
                             itemSerialNumber, countryCode
                         )
+
                         binding.cycler.layoutManager = LinearLayoutManager(binding.root.context)
 
                         binding.executePendingBindings()

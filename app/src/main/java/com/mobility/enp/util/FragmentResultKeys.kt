@@ -7,4 +7,6 @@ object FragmentResultKeys {
     const val ADDED_TAG_CONFIRMED = "added_tag_confirmed"
     const val CAMERA_PERMISSION_RESULT = "camera_permission_result"
     const val CAMERA_PERMISSION_CONFIRMED = "camera_permission_confirmed"
+    const val NOTIFICATION_PERMISSION_RESULT = "notification_permission_result"
+    const val NOTIFICATION_PERMISSION_CONFIRMED = "notification_permission_confirmed"
 }

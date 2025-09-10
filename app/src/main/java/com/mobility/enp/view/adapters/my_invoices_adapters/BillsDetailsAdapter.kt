@@ -173,71 +173,40 @@ class BillsDetailsAdapter(
             }
 
             popupMenu.setOnMenuItemClickListener { menuItem ->
-                when (menuItem.itemId) {
-                    R.id.pdfDownload -> {
-                        // Skidanje PDF racuna
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-                            showNotification(binding, id, false)
+                val isListing = menuItem.itemId == R.id.listingOfPassagesDownload
+                val isPdf = menuItem.itemId == R.id.pdfDownload
+
+                if (isPdf || isListing) {
+                    val isListingParam = isListing
+
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                        showNotification(binding, id, isListingParam)
+                    } else {
+                        if (ContextCompat.checkSelfPermission(
+                                binding.root.context,
+                                Manifest.permission.POST_NOTIFICATIONS
+                            ) == PackageManager.PERMISSION_GRANTED
+                        ) {
+                            // Ako je permisija već odobrena  odmah šaljemo notifikaciju
+                            showNotification(binding, id, isListingParam)
                         } else {
-                            when {
-                                ContextCompat.checkSelfPermission(
-                                    binding.root.context,
-                                    Manifest.permission.POST_NOTIFICATIONS
-                                ) == PackageManager.PERMISSION_GRANTED -> {
-                                    showNotification(binding, id, false)
+                            // Ako nije tražimo od korisnika
+                            spinnerInterface.requestNotificationFromUser(object : UserPermission {
+                                override fun onPermissionGranted() {
+                                    showNotification(binding, id, isListingParam)
                                 }
 
-                                else -> {
-                                    spinnerInterface.requestNotificationFromUser(object :
-                                        UserPermission {
-                                        override fun onPermissionGranted() {
-                                            showNotification(binding, id, false)
-                                        }
-
-                                        override fun onPermissionDenied() {
-                                        }
-                                    })
+                                override fun onPermissionDenied() {
                                 }
-                            }
+                            })
                         }
-                        true
                     }
-
-                    R.id.listingOfPassagesDownload -> {
-                        // Skidanje listinga prolazaka
-
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-                            showNotification(binding, id, true)
-                        } else {
-                            when {
-                                ContextCompat.checkSelfPermission(
-                                    binding.root.context,
-                                    Manifest.permission.POST_NOTIFICATIONS
-                                ) == PackageManager.PERMISSION_GRANTED -> {
-                                    showNotification(binding, id, true)
-                                }
-
-                                else -> {
-                                    spinnerInterface.requestNotificationFromUser(object :
-                                        UserPermission {
-                                        override fun onPermissionGranted() {
-                                            showNotification(binding, id, true)
-                                        }
-
-                                        override fun onPermissionDenied() {
-                                        }
-                                    })
-                                }
-                            }
-                        }
-                        true
-                    }
-
-                    else -> {
-                        false
-                    }
+                    true
+                } else {
+                    false
                 }
             }
+
             popupMenu.show()
         }
 
@@ -257,7 +226,7 @@ class BillsDetailsAdapter(
 
             if (isListingOfPassages) {
                 // API poziv za listing prolazaka
-                viewModel.downloadPassageData( object : DownloadBillsDetails {
+                viewModel.downloadPassageData(object : DownloadBillsDetails {
                     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
                     override fun onOK(pdf: BillDownload?) {
                         pdf?.data?.pdfContent?.let {
@@ -279,7 +248,7 @@ class BillsDetailsAdapter(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                },billId)
+                }, billId)
             } else {
                 // API poziv za PDF račun
                 viewModel.downloadPdfBill(object : DownloadBillsDetails {

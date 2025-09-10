@@ -1,8 +1,10 @@
 package com.mobility.enp.view.fragments.tool_history
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,11 +26,14 @@ import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.databinding.FragmentToolHistorySearchQueryBinding
+import com.mobility.enp.util.FragmentResultKeys
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.select.ToolHistoryTagsAdapter
 import com.mobility.enp.view.dialogs.NotificationsRequestDialog
+import com.mobility.enp.view.dialogs.PermissionDeniedDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
@@ -48,8 +53,25 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
                 // Permission is granted. You can proceed with sending notifications.
+                SharedPreferencesHelper.resetPermissionDenyCount(
+                    requireContext(),
+                    "notification_deny_count"
+                )
                 userPerm.onPermissionGranted()
                 sendNotification()
+            } else {
+                SharedPreferencesHelper.incrementPermissionDenyCount(
+                    requireContext(),
+                    "notification_deny_count"
+                )
+
+                val denyCount = SharedPreferencesHelper.getPermissionDenyCount(
+                    requireContext(),
+                    "notification_deny_count"
+                )
+                if (denyCount > 2) {
+                    notificationPermissionDeniedDialog()
+                }
             }
         }
     private lateinit var userPerm: UserPermission
@@ -72,6 +94,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
 
         setObservers()
         setFranchiser()
+        permissionNotificationDeniedDialogResultListener()
 
         vModel.selectedTags.clear()
         vModel.selectedCountry = ""
@@ -282,29 +305,27 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
 
-                    if (!csvTable.data.data?.csvContent.isNullOrEmpty()) {
-                        val nameExtra = UUID.randomUUID().toString().substring(0, 8)
-                        vModel.processCsvData(csvTable.data, nameExtra, requireContext())
-                        when {
-                            ContextCompat.checkSelfPermission(
-                                requireContext(), Manifest.permission.POST_NOTIFICATIONS
-                            ) == PackageManager.PERMISSION_GRANTED -> {
-                                csvTable.data.data?.csvContent?.let {
-                                    vModel.saveBase64ToCSV(
-                                        it, nameExtra, requireContext()
-                                    ) // <- converts csv to pdf saves locally and in room byte array
-                                }
-                                vModel.setCsvState()
-                            }
+                    csvTable.data.data?.csvContent
+                        ?.takeIf { it.isNotEmpty() }
+                        ?.let { csvContent ->
+                            val nameExtra = UUID.randomUUID().toString().take(8)
+                            vModel.processCsvData(csvTable.data, nameExtra, requireContext())
 
-                            else -> {
+                            if (ContextCompat.checkSelfPermission(
+                                    requireContext(),
+                                    Manifest.permission.POST_NOTIFICATIONS
+                                ) == PackageManager.PERMISSION_GRANTED
+                            ) {
+                                vModel.saveBase64ToCSV(csvContent, nameExtra, requireContext())
+                                vModel.setCsvState()
+                            } else {
                                 showNotificationPermissionRationale(object : UserPermission {
                                     override fun onPermissionGranted() {
-                                        csvTable.data.data?.csvContent?.let {
-                                            vModel.saveBase64ToCSV(
-                                                it, nameExtra, requireContext()
-                                            )
-                                        }
+                                        vModel.saveBase64ToCSV(
+                                            csvContent,
+                                            nameExtra,
+                                            requireContext()
+                                        )
                                         vModel.setCsvState()
                                     }
 
@@ -314,13 +335,13 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
                                 })
                             }
                         }
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.no_passage_data),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                        ?: run {
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.no_passage_data),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -385,7 +406,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
                 object : NotificationsRequestDialog.OnButtonClick {
                     override fun onClickConfirmed() {
                         userPerm = userPermission
-                        requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                        requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                     }
 
                     override fun onClickRejected() {
@@ -484,17 +505,36 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         _binding = null
     }
 
-    override fun onResume() {
-        super.onResume()
-        vModel.selectedTags.clear()
-    }
-
     override fun startSpinner() {
         binding.progBar.visibility = View.VISIBLE
     }
 
     override fun stopSpinner() {
         binding.progBar.visibility = View.GONE
+    }
+
+    private fun notificationPermissionDeniedDialog() {
+        PermissionDeniedDialog.newInstance(
+            title = requireContext().getString(R.string.permission_denied_message),
+            subtitle = requireContext().getString(R.string.notification_permission_required_message),
+            resultKey = FragmentResultKeys.NOTIFICATION_PERMISSION_RESULT,
+            resultValueKey = FragmentResultKeys.NOTIFICATION_PERMISSION_CONFIRMED
+        ).show(parentFragmentManager, "NotificationPermissionDeniedDialog")
+    }
+
+    private fun permissionNotificationDeniedDialogResultListener() {
+        parentFragmentManager.setFragmentResultListener(
+            FragmentResultKeys.NOTIFICATION_PERMISSION_RESULT,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val clickSettings =
+                bundle.getBoolean(FragmentResultKeys.NOTIFICATION_PERMISSION_CONFIRMED, false)
+            if (clickSettings) {
+                val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.fromParts("package", requireContext().packageName, null)
+                startActivity(intent)
+            }
+        }
     }
 
     interface UserPermission {
