@@ -15,6 +15,6 @@ interface CsvDao {
     suspend fun deleteData()
 
     @Query("SELECT * FROM CSV")
-    suspend fun fetchData(): CsvTable
+    suspend fun fetchData(): CsvTable?
 
 }
