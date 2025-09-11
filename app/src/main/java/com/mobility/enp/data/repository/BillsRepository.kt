@@ -36,7 +36,7 @@ class BillsRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, co
         database.pdfDao().upsertData(PdfTable(0, decodedData))
     }
 
-    suspend fun getPdfTable(): PdfTable {
+    suspend fun getPdfTable(): PdfTable? {
         return database.pdfDao().fetchData()
     }
 

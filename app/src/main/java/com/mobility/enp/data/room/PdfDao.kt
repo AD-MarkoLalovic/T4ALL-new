@@ -15,6 +15,6 @@ interface PdfDao {
     suspend fun deleteData()
 
     @Query("SELECT * FROM PDF")
-    suspend fun fetchData(): PdfTable
+    suspend fun fetchData(): PdfTable?
 
 }
