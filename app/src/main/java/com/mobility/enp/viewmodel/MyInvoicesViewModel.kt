@@ -556,7 +556,8 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     }
 
     suspend fun loadPdf() {
-        val data: ByteArray? = fetchPdf().data
+        val pdf = fetchPdf()
+        val data: ByteArray? = pdf?.data
         if (data != null && data.isNotEmpty()) {
             _savedPdfData.postValue(data)
         } else {
@@ -564,7 +565,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         }
     }
 
-    private suspend fun fetchPdf(): PdfTable {
+    private suspend fun fetchPdf(): PdfTable? {
         return withContext(Dispatchers.IO) {
             repository.getPdfTable()
         }
