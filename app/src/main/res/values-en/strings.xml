@@ -373,4 +373,6 @@
     <string name="camera_permission_required_message">Camera access permission is required. You can enable it in settings.</string>
     <string name="camera_not_available_message">Camera is not available.</string>
     <string name="notification_permission_required_message">Notification permission is required. You can enable it in settings.</string>
+    <string name="deactivate_tag">Deactivate Tag</string>
+    <string name="activate_tag">Activate Tag</string>
 </resources>

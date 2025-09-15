@@ -380,5 +380,7 @@
     <string name="camera_permission_required_message">Потребно е дозвола за пристап до камерата. Можете да ја овозможите во поставките.</string>
     <string name="camera_not_available_message">Камерата не е достапна.</string>
     <string name="notification_permission_required_message">Потребно е овластување за известувања. Можете да го овозможите во поставките.</string>
+    <string name="deactivate_tag">Деактивирај Tag</string>
+    <string name="activate_tag">Активирај Tag</string>
 
 </resources>

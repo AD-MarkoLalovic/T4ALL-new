@@ -382,4 +382,6 @@
     <string name="camera_permission_required_message">Kamera erişim izni gereklidir. Ayarlardan etkinleştirebilirsiniz.</string>
     <string name="camera_not_available_message">Kamera kullanılamıyor.</string>
     <string name="notification_permission_required_message">Bildirim izni gereklidir. Ayarlardan etkinleştirebilirsiniz.</string>
+    <string name="deactivate_tag">Etiketi devre dışı bırak</string>
+    <string name="activate_tag">Etiketi etkinleştir</string>
 </resources>
