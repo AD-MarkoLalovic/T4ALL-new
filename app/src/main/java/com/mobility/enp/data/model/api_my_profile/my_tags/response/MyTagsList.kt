@@ -13,5 +13,7 @@ data class MyTagsList(
     val showButtonFoundTag: Boolean?,
     val showButtonLostTag: Boolean?,
     val state: Int?,
-    val statuses: List<Statuse>?
+    val statuses: List<Statuse>?,
+    val showButtonActivateTag: Boolean?,
+    val showButtonDeactivateTag: Boolean?
 )

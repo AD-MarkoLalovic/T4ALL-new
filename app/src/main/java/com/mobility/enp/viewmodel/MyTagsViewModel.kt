@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
+import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 enum class ReportType {
-    LOST, FOUND
+    LOST, FOUND, DEACTIVATED, ACTIVATED
 }
 
 class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
@@ -23,6 +24,14 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
     private val _myTags =
         MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Idle)
     val myTags: StateFlow<SubmitResultMyTags<List<TagUiModel>>> get() = _myTags
+
+    private val _myTagsCountry =
+        MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Idle)
+    val myTagsCountry: StateFlow<SubmitResultMyTags<List<TagUiModel>>> get() = _myTagsCountry
+
+    private val _deactivateActivateTag =
+        MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
+    val deactivateActivateTag: StateFlow<SubmitResultFold<Unit>> get() = _deactivateActivateTag
 
     private val _reportTag = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
     val reportTag: StateFlow<SubmitResultFold<Unit>> get() = _reportTag
@@ -102,6 +111,55 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
 
     fun internetChecked(): Boolean {
         return repository.isNetworkAvail()
+    }
+
+    fun fetchShowActivateDeactivateButtonsByCountry(countryCode: String) {
+        viewModelScope.launch {
+            _myTags.value = SubmitResultMyTags.Loading
+
+            val result = repository.getMyTagsByCountry(countryCode)
+            result.fold(
+                onSuccess = { tags ->
+                    allTags = tags
+                    _myTagsCountry.value = SubmitResultMyTags.Success(tags)
+                },
+                onFailure = { error ->
+                    _myTagsCountry.value = SubmitResultMyTags.Failure(error)
+                }
+            )
+        }
+    }
+
+    fun deactivateTagByCountry(body: ActivateDeactivateTagModel) {
+        viewModelScope.launch {
+            _deactivateActivateTag.value = SubmitResultFold.Loading
+            val result = repository.deactivateTag(body)
+            result.fold(
+                onSuccess = {
+                    _deactivateActivateTag.value =
+                        SubmitResultFold.Success(Unit, ReportType.DEACTIVATED)
+                },
+                onFailure = { error ->
+                    _deactivateActivateTag.value = SubmitResultFold.Failure(error)
+                }
+            )
+        }
+    }
+
+    fun activateTagByCountry(body: ActivateDeactivateTagModel) {
+        viewModelScope.launch {
+            _deactivateActivateTag.value = SubmitResultFold.Loading
+            val result = repository.activateTag(body)
+            result.fold(
+                onSuccess = {
+                    _deactivateActivateTag.value =
+                        SubmitResultFold.Success(Unit, ReportType.ACTIVATED)
+                },
+                onFailure = { error ->
+                    _deactivateActivateTag.value = SubmitResultFold.Failure(error)
+                }
+            )
+        }
     }
 
     fun reportLostTag(serialNumber: String) {

@@ -13,6 +13,7 @@ import com.mobility.enp.data.model.api_my_profile.refund_request.SendRefundReque
 import com.mobility.enp.data.model.api_my_profile.refund_request.response.RefundRequestsResponse
 import com.mobility.enp.data.model.api_my_profile.refund_request.tags.response.TagsResponseRefundRequest
 import com.mobility.enp.data.model.api_room_models.FcmToken
+import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.data.model.api_tags.LostTagResponse
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
@@ -146,6 +147,24 @@ interface ApiService {
         @Query("perPage") perPage: Int,
         @Query("lang") language: String
     ): Response<MyTagsResponse>
+
+    @GET("/api/v2/tags")
+    suspend fun getUserTagsNewByCountry(
+        @Query("page") page: Int,
+        @Query("perPage") perPage: Int,
+        @Query("lang") language: String,
+        @Query("filter[country]") country: String
+    ): Response<MyTagsResponse>
+
+    @POST("/api/v1/tags/deactivate-tag")
+    suspend fun deactivateTag(
+        @Body body: ActivateDeactivateTagModel
+    ): Response<Unit>
+
+    @POST("/api/v1/tags/activate-tag")
+    suspend fun activateTag(
+        @Body body: ActivateDeactivateTagModel
+    ): Response<Unit>
 
     @GET("/api/v1/tags")
     suspend fun getUserTagsNewForHistory(
