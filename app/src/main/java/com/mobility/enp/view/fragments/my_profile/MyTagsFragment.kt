@@ -95,7 +95,14 @@ class MyTagsFragment : Fragment() {
 
                     showToastMessage(message)
 
-                    viewModel.fetchMyTags()
+//                    statusFilterAdapter.resetAdapter()
+//                    allowedCountriesAdapter.resetAdapter()
+//                    tagsListAdapter.resetAdapter()
+//
+//                    viewModel.reset()
+//                    viewModel.fetchMyTags()
+
+                    findNavController().navigate(R.id.action_myTagsFragment2_to_profileFragment2)
                 }
             }
 
@@ -178,6 +185,7 @@ class MyTagsFragment : Fragment() {
                         else -> ""
                     }
                     showToastMessage(message)
+
                     viewModel.fetchMyTags()
                 }
             }

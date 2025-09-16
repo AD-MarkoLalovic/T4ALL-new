@@ -29,6 +29,11 @@ class MyTagsListAdapter(
 
     private val tags = mutableListOf<TagUiModel>()
 
+    fun resetAdapter(){
+        this.tags.clear()
+        notifyDataSetChanged()
+    }
+
     var selectedCountry: String = "SRB"
         set(value) {
             field = value
