@@ -373,4 +373,6 @@
     <string name="notification_permission_required_message">Απαιτείται άδεια ειδοποιήσεων. Μπορείτε να την ενεργοποιήσετε στις ρυθμίσεις.</string>
     <string name="deactivate_tag">Απενεργοποίηση ετικέτας</string>
     <string name="activate_tag">Ενεργοποίηση ετικέτας</string>
+    <string name="deactivate_tag_text">Θέλεις να απενεργοποιήσεις το Tag;</string>
+    <string name="activate_tag_text">Θέλεις να ενεργοποιήσεις το Tag;</string>
 </resources>

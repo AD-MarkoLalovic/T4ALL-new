@@ -9,9 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
+import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.databinding.ItemMyTagsBinding
-import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.ui_models.my_tags.TagStatusUiModel
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
@@ -22,7 +21,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class MyTagsListAdapter(
     private val onLostClicked: (String) -> Unit,
     private val onFoundClicked: (String) -> Unit,
-    val lifecycleOwnerParent: LifecycleOwner,val viewModelTags: MyTagsViewModel
+    val lifecycleOwnerParent: LifecycleOwner, val viewModelTags: MyTagsViewModel,
+    private val onDeactivateTagClicked: (body: ActivateDeactivateTagModel) -> Unit,
+    private val onActivateTagClicked: (body: ActivateDeactivateTagModel) -> Unit
 ) :
     RecyclerView.Adapter<MyTagsListAdapter.MyTagViewHolder>() {
 
@@ -43,6 +44,30 @@ class MyTagsListAdapter(
             buttonActivateTag.visibility = View.GONE
             buttonDeactivateTag.visibility = View.GONE
 
+            val countryCode = when (selectedCountry) {
+                "MKD" -> "MK"
+                "MNE" -> "ME"
+                else -> ""
+            }
+
+            binding.buttonActivateTag.setOnClickListener {
+                onActivateTagClicked(
+                    ActivateDeactivateTagModel(
+                        tag.serialNumber,
+                        countryCode
+                    )
+                )
+            }
+
+            binding.buttonDeactivateTag.setOnClickListener {
+                onDeactivateTagClicked(
+                    ActivateDeactivateTagModel(
+                        tag.serialNumber,
+                        countryCode
+                    )
+                )
+            }
+
             franchiserTag.text =
                 tag.franchiser ?: root.context.getString(R.string.jp_putevi_srbije)
 
@@ -53,12 +78,6 @@ class MyTagsListAdapter(
                 if (selectedCountry == "HRV") View.GONE else if (tag.showButtonLostTag == true) View.VISIBLE else View.GONE
             buttonFoundTag.visibility =
                 if (selectedCountry == "HRV") View.GONE else if (tag.showButtonFoundTag == true) View.VISIBLE else View.GONE
-
-            val countryCode =  when (selectedCountry) {
-                "MKD" -> "MK"
-                "MNE" -> "ME"
-                else -> ""
-            }
 
             val flow =
                 MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Loading)
@@ -71,8 +90,10 @@ class MyTagsListAdapter(
                         val showActivateButton = serverResponse.data[0].showButtonActivateTag
                         val showDeactivateButton = serverResponse.data[0].showButtonDeactivateTag
 
-                        buttonActivateTag.visibility = if (showActivateButton == true) View.VISIBLE else View.GONE
-                        buttonDeactivateTag.visibility = if (showDeactivateButton == true) View.VISIBLE else View.GONE
+                        buttonActivateTag.visibility =
+                            if (showActivateButton == true) View.VISIBLE else View.GONE
+                        buttonDeactivateTag.visibility =
+                            if (showDeactivateButton == true) View.VISIBLE else View.GONE
                     }
 
                     is SubmitResultMyTags.Failure -> {
@@ -85,7 +106,7 @@ class MyTagsListAdapter(
                 }
             }
 
-            viewModelTags.fetchShowActivateDeactivateButtonsByCountry(countryCode,flow)
+            viewModelTags.fetchShowActivateDeactivateButtonsByCountry(countryCode, flow)
 
             // Ako nema registracije, prikaži "Serijski broj"
             if (tag.registrationPlate.isNullOrEmpty()) {

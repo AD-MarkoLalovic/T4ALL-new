@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -235,7 +236,13 @@ class MyTagsFragment : Fragment() {
                         viewModel.reportFoundTag(serialNumber)
                     }
                 ).show(parentFragmentManager, "FoundTagDialog")
-            },viewLifecycleOwner,viewModel
+            }, viewLifecycleOwner, viewModel, onActivateTagClicked = { tagData ->
+                Log.d("data", "setAdapters: $tagData")
+
+            }, onDeactivateTagClicked = { tagData ->
+                Log.d("data", "setAdapters: $tagData")
+
+            }
         )
         binding.cyclerContent.adapter = tagsListAdapter
 

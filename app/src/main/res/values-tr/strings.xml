@@ -384,4 +384,6 @@
     <string name="notification_permission_required_message">Bildirim izni gereklidir. Ayarlardan etkinleştirebilirsiniz.</string>
     <string name="deactivate_tag">Etiketi devre dışı bırak</string>
     <string name="activate_tag">Etiketi etkinleştir</string>
+    <string name="deactivate_tag_text">Tag’i devre dışı bırakmak istiyor musun?</string>
+    <string name="activate_tag_text">Tag’i etkinleştirmek istiyor musun?</string>
 </resources>
