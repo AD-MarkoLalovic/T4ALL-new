@@ -87,8 +87,11 @@ class MyTagsListAdapter(
                     is SubmitResultMyTags.Success -> {
                         Log.d("ServResponse", "$serverResponse: ")
 
-                        val showActivateButton = serverResponse.data[0].showButtonActivateTag
-                        val showDeactivateButton = serverResponse.data[0].showButtonDeactivateTag
+                        val foundTag =
+                            serverResponse.data.filter { it.serialNumber == tag.serialNumber }
+
+                        val showActivateButton = foundTag[0].showButtonActivateTag
+                        val showDeactivateButton = foundTag[0].showButtonDeactivateTag
 
                         buttonActivateTag.visibility =
                             if (showActivateButton == true) View.VISIBLE else View.GONE
