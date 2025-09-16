@@ -6,6 +6,7 @@ import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.api_room_models.FcmToken
+import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
 import com.mobility.enp.data.room.database.DRoom
@@ -109,6 +110,7 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
 
         return Result.failure(NetworkError.ServerError)
     }
+
 
     suspend fun getBasicUserInformation(): Result<BasicInfoResponse> {
         if (!isNetworkAvailable()) {
@@ -222,6 +224,79 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
 
         } catch (e: Exception) {
             Log.d("MyTags", "ProfileRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
+    suspend fun getMyTagsByCountry(countryCode: String): Result<List<TagUiModel>> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val lang = getLangKey()
+            val response = apiService(userToken).getUserTagsNewByCountry(1, 2000, lang, countryCode)
+
+            if (response.isSuccessful) {
+                val tags = response.body()?.data?.tags?.items?.toTagUiModel().orEmpty()
+                Result.success(tags)
+            } else {
+                val errorResponse =
+                    response.errorBody()?.let { parseErrorResponse(response.code(), it) }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
+            }
+
+        } catch (e: Exception) {
+            Log.d("MyTags", "ProfileRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
+
+    suspend fun deactivateTag(body: ActivateDeactivateTagModel): Result<Unit> {
+        if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val response = apiService(userToken).deactivateTag(body = body)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                val errorResponse = response.errorBody()?.let {
+                    parseErrorResponse(errorCode = response.code(), errorBody = it)
+                }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.d("DeactivateTag", "ProfileRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
+
+    suspend fun activateTag(body: ActivateDeactivateTagModel): Result<Unit> {
+        if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val response = apiService(userToken).activateTag(body = body)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                val errorResponse = response.errorBody()?.let {
+                    parseErrorResponse(errorCode = response.code(), errorBody = it)
+                }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.d("ActivateTag", "ProfileRepository: ${e.message} ${e.cause}")
             Result.failure(NetworkError.ServerError)
         }
     }

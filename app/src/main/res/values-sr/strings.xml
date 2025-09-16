@@ -382,4 +382,6 @@
     <string name="camera_permission_required_message">Potrebna je dozvola za pristup kameri. Možete je omogućiti u podešavanjima.</string>
     <string name="camera_not_available_message">Kamera nije dostupna.</string>
     <string name="notification_permission_required_message">Potrebna je dozvola za obaveštenja. Možete je omogućiti u podešavanjima.</string>
+    <string name="deactivate_tag">Deaktiviraj Tag</string>
+    <string name="activate_tag">Aktiviraj Tag</string>
 </resources>

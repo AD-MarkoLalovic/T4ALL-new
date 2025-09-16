@@ -76,6 +76,28 @@ class MyTagsFragment : Fragment() {
     }
 
     private fun observeMyTags() {
+        collectLatestLifecycleFlow(viewModel.deactivateActivateTag) { result ->
+            when (result) {
+                is SubmitResultFold.Failure -> {
+                    handleError(result.error)
+                }
+
+                SubmitResultFold.Idle -> {}
+                SubmitResultFold.Loading -> binding.progbar.visibility = View.VISIBLE
+                is SubmitResultFold.Success<*> -> {
+                    val type = result.reportType
+                    val message = when (type) {
+                        ReportType.DEACTIVATED -> getString(R.string.reported_lost_tag_successfully)
+                        ReportType.ACTIVATED -> getString(R.string.reported_found_tag_successfully)
+                        else -> ""
+                    }
+
+                    showToastMessage(message)
+                    viewModel.fetchMyTags()
+                }
+            }
+
+        }
         collectLatestLifecycleFlow(viewModel.myTags) { result ->
             when (result) {
                 is MyTagsViewModel.SubmitResultMyTags.Loading -> {
@@ -213,7 +235,7 @@ class MyTagsFragment : Fragment() {
                         viewModel.reportFoundTag(serialNumber)
                     }
                 ).show(parentFragmentManager, "FoundTagDialog")
-            }
+            },viewLifecycleOwner,viewModel
         )
         binding.cyclerContent.adapter = tagsListAdapter
 
