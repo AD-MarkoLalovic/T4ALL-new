@@ -76,28 +76,6 @@ class MyTagsFragment : Fragment() {
     }
 
     private fun observeMyTags() {
-        collectLatestLifecycleFlow(viewModel.myTagsCountry) { result ->
-            when (result) {
-                is MyTagsViewModel.SubmitResultMyTags.Loading -> {
-                    binding.progbar.visibility = View.VISIBLE
-                }
-
-                is MyTagsViewModel.SubmitResultMyTags.Success -> {
-                    binding.progbar.visibility = View.GONE
-                    val activateTag = result.data[0].showButtonActivateTag ?: false
-                    val deactivateTag = result.data[0].showButtonDeactivateTag ?: false
-//                    tagsListAdapter.updateButtons(activateTag,deactivateTag)
-                }
-
-                is MyTagsViewModel.SubmitResultMyTags.Failure -> {
-                    handleError(result.error)
-                }
-
-                is MyTagsViewModel.SubmitResultMyTags.Idle -> {}
-
-                else -> {}
-            }
-        }
         collectLatestLifecycleFlow(viewModel.deactivateActivateTag) { result ->
             when (result) {
                 is SubmitResultFold.Failure -> {
@@ -257,7 +235,7 @@ class MyTagsFragment : Fragment() {
                         viewModel.reportFoundTag(serialNumber)
                     }
                 ).show(parentFragmentManager, "FoundTagDialog")
-            }
+            },viewLifecycleOwner,viewModel
         )
         binding.cyclerContent.adapter = tagsListAdapter
 

@@ -25,10 +25,6 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
         MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Idle)
     val myTags: StateFlow<SubmitResultMyTags<List<TagUiModel>>> get() = _myTags
 
-    private val _myTagsCountry =
-        MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Idle)
-    val myTagsCountry: StateFlow<SubmitResultMyTags<List<TagUiModel>>> get() = _myTagsCountry
-
     private val _deactivateActivateTag =
         MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
     val deactivateActivateTag: StateFlow<SubmitResultFold<Unit>> get() = _deactivateActivateTag
@@ -113,18 +109,16 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
         return repository.isNetworkAvail()
     }
 
-    fun fetchShowActivateDeactivateButtonsByCountry(countryCode: String) {
+    fun fetchShowActivateDeactivateButtonsByCountry(countryCode: String, flow : MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>) {
         viewModelScope.launch {
-            _myTagsCountry.value = SubmitResultMyTags.Loading
-
+            flow.value = SubmitResultMyTags.Loading
             val result = repository.getMyTagsByCountry(countryCode)
             result.fold(
                 onSuccess = { tags ->
-                    allTags = tags
-                    _myTagsCountry.value = SubmitResultMyTags.Success(tags)
+                    flow.value = SubmitResultMyTags.Success(tags)
                 },
                 onFailure = { error ->
-                    _myTagsCountry.value = SubmitResultMyTags.Failure(error)
+                    flow.value = SubmitResultMyTags.Failure(error)
                 }
             )
         }

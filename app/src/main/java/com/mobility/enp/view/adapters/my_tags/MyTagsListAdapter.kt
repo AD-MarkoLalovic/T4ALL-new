@@ -1,19 +1,28 @@
 package com.mobility.enp.view.adapters.my_tags
 
 import android.content.res.ColorStateList
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.ItemMyTagsBinding
+import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.ui_models.my_tags.TagStatusUiModel
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
+import com.mobility.enp.viewmodel.MyTagsViewModel
+import com.mobility.enp.viewmodel.MyTagsViewModel.SubmitResultMyTags
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class MyTagsListAdapter(
     private val onLostClicked: (String) -> Unit,
-    private val onFoundClicked: (String) -> Unit
+    private val onFoundClicked: (String) -> Unit,
+    val lifecycleOwnerParent: LifecycleOwner,val viewModelTags: MyTagsViewModel
 ) :
     RecyclerView.Adapter<MyTagsListAdapter.MyTagViewHolder>() {
 
@@ -41,6 +50,36 @@ class MyTagsListAdapter(
                 if (selectedCountry == "HRV") View.GONE else if (tag.showButtonLostTag == true) View.VISIBLE else View.GONE
             buttonFoundTag.visibility =
                 if (selectedCountry == "HRV") View.GONE else if (tag.showButtonFoundTag == true) View.VISIBLE else View.GONE
+
+            val countryCode =  when (selectedCountry) {
+                "MKD" -> "MK"
+                "MNE" -> "ME"
+                else -> ""
+            }
+
+            val flow =
+                MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Loading)
+
+            collectLatestFlow(lifecycleOwnerParent, flow) { serverResponse ->
+                when (serverResponse) {
+                    is SubmitResultMyTags.Success -> {
+                        Log.d("ServResponse", "$serverResponse: ")
+                    }
+
+                    is SubmitResultMyTags.Loading -> {
+
+                    }
+
+                    is SubmitResultMyTags.Failure -> {
+                    }
+
+                    else -> {
+                        SubmitResultMyTags.Idle
+                    }
+                }
+            }
+
+            viewModelTags.fetchShowActivateDeactivateButtonsByCountry(countryCode,flow)
 
             // Ako nema registracije, prikaži "Serijski broj"
             if (tag.registrationPlate.isNullOrEmpty()) {
