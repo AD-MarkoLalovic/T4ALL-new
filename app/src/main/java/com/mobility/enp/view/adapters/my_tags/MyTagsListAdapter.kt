@@ -40,6 +40,9 @@ class MyTagsListAdapter(
         fun bind(tag: TagUiModel) = with(binding) {
             txTagSerialNumber.text = tag.serialNumber
 
+            buttonActivateTag.visibility = View.GONE
+            buttonDeactivateTag.visibility = View.GONE
+
             franchiserTag.text =
                 tag.franchiser ?: root.context.getString(R.string.jp_putevi_srbije)
 
@@ -64,13 +67,16 @@ class MyTagsListAdapter(
                 when (serverResponse) {
                     is SubmitResultMyTags.Success -> {
                         Log.d("ServResponse", "$serverResponse: ")
-                    }
 
-                    is SubmitResultMyTags.Loading -> {
+                        val showActivateButton = serverResponse.data[0].showButtonActivateTag
+                        val showDeactivateButton = serverResponse.data[0].showButtonDeactivateTag
 
+                        buttonActivateTag.visibility = if (showActivateButton == true) View.VISIBLE else View.GONE
+                        buttonDeactivateTag.visibility = if (showDeactivateButton == true) View.VISIBLE else View.GONE
                     }
 
                     is SubmitResultMyTags.Failure -> {
+                        Log.d("ServResponse", "ServError ${serverResponse.error}")
                     }
 
                     else -> {
