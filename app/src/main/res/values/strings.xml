@@ -451,5 +451,7 @@
     <string name="activate_tag">Активирај Таг</string>
     <string name="deactivate_tag_text">Да ли желиш да деактивираш Таг</string>
     <string name="activate_tag_text">Да ли желиш да активираш Таг</string>
+    <string name="activate_tag_successful">Успешно сте активирали Таг</string>
+    <string name="deactivate_tag_successful">Успешно сте деактивирали Таг</string>
 
 </resources>

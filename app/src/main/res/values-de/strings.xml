@@ -396,4 +396,6 @@
     <string name="activate_tag">Tag aktivieren</string>
     <string name="deactivate_tag_text">Möchtest du das Tag deaktivieren?</string>
     <string name="activate_tag_text">Möchtest du das Tag aktivieren?</string>
+    <string name="activate_tag_successful">Sie haben das Tag erfolgreich aktiviert</string>
+    <string name="deactivate_tag_successful">Sie haben das Tag erfolgreich deaktiviert</string>
 </resources>

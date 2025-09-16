@@ -88,12 +88,13 @@ class MyTagsFragment : Fragment() {
                 is SubmitResultFold.Success<*> -> {
                     val type = result.reportType
                     val message = when (type) {
-                        ReportType.DEACTIVATED -> getString(R.string.reported_lost_tag_successfully)
-                        ReportType.ACTIVATED -> getString(R.string.reported_found_tag_successfully)
+                        ReportType.DEACTIVATED -> getString(R.string.deactivate_tag_successful)
+                        ReportType.ACTIVATED -> getString(R.string.activate_tag_successful)
                         else -> ""
                     }
 
                     showToastMessage(message)
+
                     viewModel.fetchMyTags()
                 }
             }
@@ -238,10 +239,22 @@ class MyTagsFragment : Fragment() {
                 ).show(parentFragmentManager, "FoundTagDialog")
             }, viewLifecycleOwner, viewModel, onActivateTagClicked = { tagData ->
                 Log.d("data", "setAdapters: $tagData")
-
+                LostTagDialog.newInstance(
+                    title = requireContext().getString(R.string.activate_tag),
+                    subtitle = requireContext().getString(R.string.activate_tag_text),
+                    onButtonClick = {
+                        viewModel.activateTagByCountry(tagData)
+                    }
+                ).show(parentFragmentManager, "FoundTagDialog")
             }, onDeactivateTagClicked = { tagData ->
                 Log.d("data", "setAdapters: $tagData")
-
+                LostTagDialog.newInstance(
+                    title = requireContext().getString(R.string.deactivate_tag),
+                    subtitle = requireContext().getString(R.string.deactivate_tag_text),
+                    onButtonClick = {
+                        viewModel.deactivateTagByCountry(tagData)
+                    }
+                ).show(parentFragmentManager, "FoundTagDialog")
             }
         )
         binding.cyclerContent.adapter = tagsListAdapter
