@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -87,13 +88,21 @@ class MyTagsFragment : Fragment() {
                 is SubmitResultFold.Success<*> -> {
                     val type = result.reportType
                     val message = when (type) {
-                        ReportType.DEACTIVATED -> getString(R.string.reported_lost_tag_successfully)
-                        ReportType.ACTIVATED -> getString(R.string.reported_found_tag_successfully)
+                        ReportType.DEACTIVATED -> getString(R.string.deactivate_tag_successful)
+                        ReportType.ACTIVATED -> getString(R.string.activate_tag_successful)
                         else -> ""
                     }
 
                     showToastMessage(message)
-                    viewModel.fetchMyTags()
+
+//                    statusFilterAdapter.resetAdapter()
+//                    allowedCountriesAdapter.resetAdapter()
+//                    tagsListAdapter.resetAdapter()
+//
+//                    viewModel.reset()
+//                    viewModel.fetchMyTags()
+
+                    findNavController().navigate(R.id.action_myTagsFragment2_to_profileFragment2)
                 }
             }
 
@@ -176,6 +185,7 @@ class MyTagsFragment : Fragment() {
                         else -> ""
                     }
                     showToastMessage(message)
+
                     viewModel.fetchMyTags()
                 }
             }
@@ -235,7 +245,25 @@ class MyTagsFragment : Fragment() {
                         viewModel.reportFoundTag(serialNumber)
                     }
                 ).show(parentFragmentManager, "FoundTagDialog")
-            },viewLifecycleOwner,viewModel
+            }, viewLifecycleOwner, viewModel, onActivateTagClicked = { tagData ->
+                Log.d("data", "setAdapters: $tagData")
+                LostTagDialog.newInstance(
+                    title = requireContext().getString(R.string.activate_tag),
+                    subtitle = requireContext().getString(R.string.activate_tag_text),
+                    onButtonClick = {
+                        viewModel.activateTagByCountry(tagData)
+                    }
+                ).show(parentFragmentManager, "FoundTagDialog")
+            }, onDeactivateTagClicked = { tagData ->
+                Log.d("data", "setAdapters: $tagData")
+                LostTagDialog.newInstance(
+                    title = requireContext().getString(R.string.deactivate_tag),
+                    subtitle = requireContext().getString(R.string.deactivate_tag_text),
+                    onButtonClick = {
+                        viewModel.deactivateTagByCountry(tagData)
+                    }
+                ).show(parentFragmentManager, "FoundTagDialog")
+            }
         )
         binding.cyclerContent.adapter = tagsListAdapter
 

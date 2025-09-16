@@ -15,6 +15,11 @@ class MyTagsStatusFilterAdapter(
     ListAdapter<String, MyTagsStatusFilterAdapter.StatusTagViewHolder>(DIFF_CALLBACK) {
     var selectedStatus = 0
 
+    fun resetAdapter() {
+        selectedStatus = RecyclerView.NO_POSITION
+        submitList(emptyList())
+    }
+
     inner class StatusTagViewHolder(private val binding: ItemTagStatusBinding) :
         RecyclerView.ViewHolder(binding.root) {
 

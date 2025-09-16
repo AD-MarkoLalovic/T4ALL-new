@@ -382,5 +382,9 @@
     <string name="notification_permission_required_message">Потребно е овластување за известувања. Можете да го овозможите во поставките.</string>
     <string name="deactivate_tag">Деактивирај Tag</string>
     <string name="activate_tag">Активирај Tag</string>
+    <string name="deactivate_tag_text">Дали сакаш да деактивираш Таг</string>
+    <string name="activate_tag_text">Дали сакаш да активираш Таг</string>
+    <string name="activate_tag_successful">Успешно го активиравте Таг</string>
+    <string name="deactivate_tag_successful">Успешно го деактивиравте Таг</string>
 
 </resources>

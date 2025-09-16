@@ -379,5 +379,9 @@
     <string name="notification_permission_required_message">Potrebna je dozvola za obavijesti. Možete je omogućiti u postavkama.</string>
     <string name="deactivate_tag">Deaktiviraj Tag</string>
     <string name="activate_tag">Aktiviraj Tag</string>
+    <string name="deactivate_tag_text">Želiš li deaktivirati Tag</string>
+    <string name="activate_tag_text">Želiš li aktivirati Tag</string>
+    <string name="activate_tag_successful">Uspješno ste aktivirali Tag</string>
+    <string name="deactivate_tag_successful">Uspješno ste deaktivirali Tag</string>
 
 </resources>

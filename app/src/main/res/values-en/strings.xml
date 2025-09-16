@@ -375,4 +375,8 @@
     <string name="notification_permission_required_message">Notification permission is required. You can enable it in settings.</string>
     <string name="deactivate_tag">Deactivate Tag</string>
     <string name="activate_tag">Activate Tag</string>
+    <string name="deactivate_tag_text">Do you want to deactivate Tag</string>
+    <string name="activate_tag_text">Do you want to activate Tag</string>
+    <string name="activate_tag_successful">Successfully activated Tag</string>
+    <string name="deactivate_tag_successful">Successfully deactivated Tag</string>
 </resources>

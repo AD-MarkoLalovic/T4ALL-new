@@ -37,6 +37,13 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
     private var selectedCountry: String = "RS"
     private var allStatusLabel: String = ""
 
+    fun reset(){
+        selectedCountry = "RS"
+        allStatusLabel = ""
+        selectedStatus = ""
+        allTags = listOf()
+    }
+
     fun setStatusFilter(statusKey: String) {
         selectedStatus = statusKey
         applyCombinedFilter()
