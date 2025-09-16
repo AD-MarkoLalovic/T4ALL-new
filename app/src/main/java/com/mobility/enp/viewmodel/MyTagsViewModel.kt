@@ -115,7 +115,7 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
 
     fun fetchShowActivateDeactivateButtonsByCountry(countryCode: String) {
         viewModelScope.launch {
-            _myTags.value = SubmitResultMyTags.Loading
+            _myTagsCountry.value = SubmitResultMyTags.Loading
 
             val result = repository.getMyTagsByCountry(countryCode)
             result.fold(
