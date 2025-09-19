@@ -95,13 +95,6 @@ class MyTagsFragment : Fragment() {
 
                     showToastMessage(message)
 
-//                    statusFilterAdapter.resetAdapter()
-//                    allowedCountriesAdapter.resetAdapter()
-//                    tagsListAdapter.resetAdapter()
-//
-//                    viewModel.reset()
-//                    viewModel.fetchMyTags()
-
                     findNavController().navigate(R.id.action_myTagsFragment2_to_profileFragment2)
                 }
             }
@@ -169,6 +162,29 @@ class MyTagsFragment : Fragment() {
             }
         }
 
+        collectLatestLifecycleFlow(viewModel.myTagsCountry) { serverResponse ->
+            when (serverResponse) {
+                is MyTagsViewModel.SubmitResultMyTags.Success -> {
+                    Log.d("ServResponse", "$serverResponse: ")
+                    tagsListAdapter.setButtons(serverResponse.data)
+
+                }
+
+                is MyTagsViewModel.SubmitResultMyTags.Failure -> {
+                    Log.d("ServResponse", "ServError ${serverResponse.error}")
+                }
+
+                else -> {
+                    MyTagsViewModel.SubmitResultMyTags.Idle
+                }
+            }
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(1000L)
+                unhideUI()
+            }
+        }
+
+
         collectLatestLifecycleFlow(viewModel.reportTag) { result ->
             when (result) {
                 is SubmitResultFold.Failure -> {
@@ -190,6 +206,11 @@ class MyTagsFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun unhideUI() {
+        binding.cyclerContent.visibility = View.VISIBLE
+        binding.progbar.visibility = View.GONE
     }
 
     private fun updateTagsList(tags: List<TagUiModel>) {
@@ -282,7 +303,19 @@ class MyTagsFragment : Fragment() {
         allowedCountriesAdapter = MyTagsStatusFilterAdapter { selectedCountry ->
             clearSearchFieldFocusAndKeyboard()
             tagsListAdapter.selectedCountry = selectedCountry
+            tagsListAdapter.clearData()
             viewModel.setCountryFilter(selectedCountry)
+
+            val countryCode = when (selectedCountry) {
+                "MKD" -> "MK"
+                "MNE" -> "ME"
+                else -> ""
+            }
+
+            binding.cyclerContent.visibility = View.GONE
+            binding.progbar.visibility = View.VISIBLE
+
+            viewModel.fetchShowActivateDeactivateButtonsByCountry(countryCode)
         }
         binding.rvAllowedCountries.adapter = allowedCountriesAdapter
 
