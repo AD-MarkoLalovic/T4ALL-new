@@ -167,6 +167,7 @@ class MyTagsFragment : Fragment() {
                 is MyTagsViewModel.SubmitResultMyTags.Success -> {
                     Log.d("ServResponse", "$serverResponse: ")
                     tagsListAdapter.setButtons(serverResponse.data)
+
                 }
 
                 is MyTagsViewModel.SubmitResultMyTags.Failure -> {
@@ -176,6 +177,10 @@ class MyTagsFragment : Fragment() {
                 else -> {
                     MyTagsViewModel.SubmitResultMyTags.Idle
                 }
+            }
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(1000L)
+                unhideUI()
             }
         }
 
@@ -201,6 +206,11 @@ class MyTagsFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun unhideUI() {
+        binding.cyclerContent.visibility = View.VISIBLE
+        binding.progbar.visibility = View.GONE
     }
 
     private fun updateTagsList(tags: List<TagUiModel>) {
@@ -301,6 +311,9 @@ class MyTagsFragment : Fragment() {
                 "MNE" -> "ME"
                 else -> ""
             }
+
+            binding.cyclerContent.visibility = View.GONE
+            binding.progbar.visibility = View.VISIBLE
 
             viewModel.fetchShowActivateDeactivateButtonsByCountry(countryCode)
         }
