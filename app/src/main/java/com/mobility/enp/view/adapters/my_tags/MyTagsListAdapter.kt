@@ -1,7 +1,6 @@
 package com.mobility.enp.view.adapters.my_tags
 
 import android.content.res.ColorStateList
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.databinding.ItemMyTagsBinding
-import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.ui_models.my_tags.TagStatusUiModel
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import com.mobility.enp.viewmodel.MyTagsViewModel
@@ -28,10 +26,15 @@ class MyTagsListAdapter(
     RecyclerView.Adapter<MyTagsListAdapter.MyTagViewHolder>() {
 
     private val tags = mutableListOf<TagUiModel>()
+    private var listCountryFilter: List<TagUiModel>? = null
 
-    fun resetAdapter(){
-        this.tags.clear()
+    fun setButtons(list: List<TagUiModel>) {
+        listCountryFilter = list
         notifyDataSetChanged()
+    }
+
+    fun clearData() {
+        this.listCountryFilter = null
     }
 
     var selectedCountry: String = "SRB"
@@ -87,34 +90,19 @@ class MyTagsListAdapter(
             val flow =
                 MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Loading)
 
-            collectLatestFlow(lifecycleOwnerParent, flow) { serverResponse ->
-                when (serverResponse) {
-                    is SubmitResultMyTags.Success -> {
-                        Log.d("ServResponse", "$serverResponse: ")
 
-                        val foundTag =
-                            serverResponse.data.filter { it.serialNumber == tag.serialNumber }
+            listCountryFilter?.let { list ->
+                val foundTag =
+                    list.filter { it.serialNumber == tag.serialNumber }
 
-                        val showActivateButton = foundTag[0].showButtonActivateTag
-                        val showDeactivateButton = foundTag[0].showButtonDeactivateTag
+                val showActivateButton = foundTag[0].showButtonActivateTag
+                val showDeactivateButton = foundTag[0].showButtonDeactivateTag
 
-                        buttonActivateTag.visibility =
-                            if (showActivateButton == true) View.VISIBLE else View.GONE
-                        buttonDeactivateTag.visibility =
-                            if (showDeactivateButton == true) View.VISIBLE else View.GONE
-                    }
-
-                    is SubmitResultMyTags.Failure -> {
-                        Log.d("ServResponse", "ServError ${serverResponse.error}")
-                    }
-
-                    else -> {
-                        SubmitResultMyTags.Idle
-                    }
-                }
+                buttonActivateTag.visibility =
+                    if (showActivateButton == true) View.VISIBLE else View.GONE
+                buttonDeactivateTag.visibility =
+                    if (showDeactivateButton == true) View.VISIBLE else View.GONE
             }
-
-            viewModelTags.fetchShowActivateDeactivateButtonsByCountry(countryCode, flow)
 
             // Ako nema registracije, prikaži "Serijski broj"
             if (tag.registrationPlate.isNullOrEmpty()) {
