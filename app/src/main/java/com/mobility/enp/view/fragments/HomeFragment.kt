@@ -30,6 +30,7 @@ import com.mobility.enp.databinding.FragmentHomeWelcomeBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
+import com.mobility.enp.util.safeNavigation
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.TotalCurrencyAdapter
 import com.mobility.enp.view.adapters.home.HomePassageAdapter
@@ -236,8 +237,8 @@ class HomeFragment : Fragment() {
                         HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment(
                             card.code
                         )
-                    findNavController().navigate(action)
-                } else if (card.isSocialNetworks == true) {
+                    findNavController().safeNavigation(action)
+                } else if (card.isSocialNetworks) {
 
                     when (card.code) {
                         "facebook" -> {
@@ -251,7 +252,7 @@ class HomeFragment : Fragment() {
                 } else {
                     val action =
                         HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment("RS")
-                    findNavController().navigate(action)
+                    findNavController().safeNavigation(action)
                 }
 
             },
