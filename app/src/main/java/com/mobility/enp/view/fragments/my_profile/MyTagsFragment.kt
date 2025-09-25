@@ -266,7 +266,7 @@ class MyTagsFragment : Fragment() {
                         viewModel.reportFoundTag(serialNumber)
                     }
                 ).show(parentFragmentManager, "FoundTagDialog")
-            }, viewLifecycleOwner, viewModel, onActivateTagClicked = { tagData ->
+            }, onActivateTagClicked = { tagData ->
                 Log.d("data", "setAdapters: $tagData")
                 LostTagDialog.newInstance(
                     title = requireContext().getString(R.string.activate_tag),

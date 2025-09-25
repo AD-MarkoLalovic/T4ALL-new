@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class MyTagsListAdapter(
     private val onLostClicked: (String) -> Unit,
     private val onFoundClicked: (String) -> Unit,
-    val lifecycleOwnerParent: LifecycleOwner, val viewModelTags: MyTagsViewModel,
     private val onDeactivateTagClicked: (body: ActivateDeactivateTagModel) -> Unit,
     private val onActivateTagClicked: (body: ActivateDeactivateTagModel) -> Unit
 ) :
