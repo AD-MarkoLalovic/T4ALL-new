@@ -31,6 +31,8 @@ import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyTagsViewModel
 import com.mobility.enp.viewmodel.ReportType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -95,7 +97,8 @@ class MyTagsFragment : Fragment() {
 
                     showToastMessage(message)
 
-                    findNavController().navigate(R.id.action_myTagsFragment2_to_profileFragment2)
+                    findNavController().popBackStack(R.id.myTagsFragment2, true)  // forces a fragment to reset statuses
+                    findNavController().navigate(R.id.myTagsFragment2)
                 }
             }
 
