@@ -1,18 +1,17 @@
 package com.mobility.enp.view.adapters.my_tags
 
 import android.content.res.ColorStateList
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.databinding.ItemMyTagsBinding
 import com.mobility.enp.view.ui_models.my_tags.TagStatusUiModel
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
-import com.mobility.enp.viewmodel.MyTagsViewModel
 import com.mobility.enp.viewmodel.MyTagsViewModel.SubmitResultMyTags
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -25,15 +24,15 @@ class MyTagsListAdapter(
     RecyclerView.Adapter<MyTagsListAdapter.MyTagViewHolder>() {
 
     private val tags = mutableListOf<TagUiModel>()
-    private var listCountryFilter: List<TagUiModel>? = null
 
-    fun setButtons(list: List<TagUiModel>) {
-        listCountryFilter = list
+    fun setItems(list: List<TagUiModel>) {  // this list should be used
+        tags.clear()
+        tags.addAll(list)
         notifyDataSetChanged()
     }
 
     fun clearData() {
-        this.listCountryFilter = null
+        tags.clear()
     }
 
     var selectedCountry: String = "SRB"
@@ -46,6 +45,9 @@ class MyTagsListAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(tag: TagUiModel) = with(binding) {
+
+            Log.d("UIError", "$tag")
+
             txTagSerialNumber.text = tag.serialNumber
 
             buttonActivateTag.visibility = View.GONE
@@ -86,11 +88,8 @@ class MyTagsListAdapter(
             buttonFoundTag.visibility =
                 if (selectedCountry == "HRV") View.GONE else if (tag.showButtonFoundTag == true) View.VISIBLE else View.GONE
 
-            val flow =
-                MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Loading)
 
-
-            listCountryFilter?.let { list ->
+            tags.let { list ->
                 val foundTag =
                     list.filter { it.serialNumber == tag.serialNumber }
 
@@ -277,12 +276,6 @@ class MyTagsListAdapter(
 
     override fun onBindViewHolder(holder: MyTagViewHolder, position: Int) {
         holder.bind(tags[position])
-    }
-
-    fun setItems(newItems: List<TagUiModel>) {
-        tags.clear()
-        tags.addAll(newItems)
-        notifyDataSetChanged()
     }
 
 }

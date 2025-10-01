@@ -31,8 +31,6 @@ import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyTagsViewModel
 import com.mobility.enp.viewmodel.ReportType
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -66,7 +64,7 @@ class MyTagsFragment : Fragment() {
         setAdapters()
         observeMyTags()
 
-        viewModel.fetchMyTags()
+        viewModel.fetchInitialData()
     }
 
     private fun setListener() {
@@ -97,12 +95,75 @@ class MyTagsFragment : Fragment() {
 
                     showToastMessage(message)
 
-                    findNavController().popBackStack(R.id.myTagsFragment2, true)  // forces a fragment to reset statuses
+                    findNavController().popBackStack(
+                        R.id.myTagsFragment2,
+                        true
+                    )  // forces a fragment to reset statuses
                     findNavController().navigate(R.id.myTagsFragment2)
                 }
             }
 
         }
+
+        collectLatestLifecycleFlow(viewModel.initialData) { result ->
+            when (result) {
+
+                is MyTagsViewModel.SubmitResultMyTags.Loading -> {
+                    binding.progbar.visibility = View.VISIBLE
+                }
+
+                is MyTagsViewModel.SubmitResultMyTags.Success -> {
+                    binding.progbar.visibility = View.GONE
+
+                    val myTags = result.data
+
+                    if (myTags.isEmpty()) {
+                        binding.textNoMyTags.visibility = View.VISIBLE
+                        binding.myTagsContainer.visibility = View.GONE
+                    } else {
+                        val countryList = myTags.flatMap { it.statuses }
+                            .mapNotNull { it.statusesCountry }
+                            .distinct()
+                            .reversed()
+                            .map { code ->
+                                when (code) {
+                                    "RS" -> "SRB"
+                                    "MK" -> "MKD"
+                                    "ME" -> "MNE"
+                                    "HR" -> "HRV"
+                                    else -> code
+                                }
+                            }
+
+                        // sets available countries because they return all of them only when there is no country filter
+
+                        allowedCountriesAdapter.submitList(countryList) {
+                            allowedCountriesAdapter.selectedStatus = 0
+                        }
+
+
+                        val countryCode = when (countryList[0]) {
+                            "MKD" -> "MK"
+                            "MNE" -> "ME"
+                            "HRV" -> "HR"
+                            "SRB" -> "RS"
+                            else -> ""
+                        }
+
+                        viewModel.setCurrentApiCountry(countryCode)
+                        viewModel.fetchMyTags()
+                    }
+                }
+
+                is MyTagsViewModel.SubmitResultMyTags.Failure -> {
+                    handleError(result.error)
+                }
+
+                else -> {}
+            }
+
+        }
+
         collectLatestLifecycleFlow(viewModel.myTags) { result ->
             when (result) {
                 is MyTagsViewModel.SubmitResultMyTags.Loading -> {
@@ -121,32 +182,15 @@ class MyTagsFragment : Fragment() {
                     } else {
                         binding.textNoMyTags.visibility = View.GONE
                         binding.myTagsContainer.visibility = View.VISIBLE
+
                         viewModel.setAllStatusLabel(allStatusText)
 
                         val statusList =
                             listOf(requireContext().getString(R.string.all_status_tags)) + myTags.flatMap { it.statuses }
                                 .mapNotNull { it.statusText }
-                                .distinct()
+                                .distinct().sorted()
                         statusFilterAdapter.submitList(statusList) {
                             statusFilterAdapter.selectedStatus = 0
-                        }
-
-                        val countryList = myTags.flatMap { it.statuses }
-                            .mapNotNull { it.statusesCountry }
-                            .distinct()
-                            .reversed()
-                            .map { code ->
-                                when (code) {
-                                    "RS" -> "SRB"
-                                    "MK" -> "MKD"
-                                    "ME" -> "MNE"
-                                    "HR" -> "HRV"
-                                    else -> code
-                                }
-                            }
-
-                        allowedCountriesAdapter.submitList(countryList) {
-                            allowedCountriesAdapter.selectedStatus = 0
                         }
 
                         tagsListAdapter.setItems(myTags)
@@ -168,8 +212,26 @@ class MyTagsFragment : Fragment() {
         collectLatestLifecycleFlow(viewModel.myTagsCountry) { serverResponse ->
             when (serverResponse) {
                 is MyTagsViewModel.SubmitResultMyTags.Success -> {
+
                     Log.d("ServResponse", "$serverResponse: ")
-                    tagsListAdapter.setButtons(serverResponse.data)
+
+                    binding.textNoFilteredTags.visibility = View.GONE
+                    binding.textNoMyTags.visibility = View.GONE
+
+                    viewModel.allTags = serverResponse.data
+
+                    statusFilterAdapter.setStatus(0)
+
+                    val statusList =
+                        listOf(requireContext().getString(R.string.all_status_tags)) + serverResponse.data.flatMap { it.statuses }
+                            .mapNotNull { it.statusText }
+                            .distinct().sorted()
+
+                    statusFilterAdapter.submitList(statusList) {
+                        statusFilterAdapter.selectedStatus = 0
+                    }
+
+                    tagsListAdapter.setItems(serverResponse.data)
 
                 }
 
@@ -312,6 +374,8 @@ class MyTagsFragment : Fragment() {
             val countryCode = when (selectedCountry) {
                 "MKD" -> "MK"
                 "MNE" -> "ME"
+                "HRV" -> "HR"
+                "SRB" -> "RS"
                 else -> ""
             }
 

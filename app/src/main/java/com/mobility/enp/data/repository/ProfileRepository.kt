@@ -201,7 +201,7 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
         return Result.failure(NetworkError.ServerError)
     }
 
-    suspend fun getMyTags(): Result<List<TagUiModel>> {
+    suspend fun getMyTags(country: String): Result<List<TagUiModel>> {
         if (!isNetworkAvailable()) {
             return Result.failure(NetworkError.NoConnection)
         }
@@ -210,7 +210,7 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
 
         return try {
             val lang = getLangKey()
-            val response = apiService(userToken).getUserTagsNew(1, 2000, lang)
+            val response = apiService(userToken).getUserTagsNewByCountry(1, 2000, lang, country)
 
             if (response.isSuccessful) {
                 val tags = response.body()?.data?.tags?.items?.toTagUiModel().orEmpty()
