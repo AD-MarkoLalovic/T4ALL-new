@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -31,8 +32,10 @@ import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyTagsViewModel
 import com.mobility.enp.viewmodel.ReportType
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MyTagsFragment : Fragment() {
 
@@ -269,7 +272,16 @@ class MyTagsFragment : Fragment() {
                     }
                     showToastMessage(message)
 
-                    resetFragment()
+                    // i have added a delay because if called immediately api returns old data i assume they need a couple of seconds to write this to database for all countries
+
+                    binding.progbar.visibility = View.VISIBLE
+
+                    viewLifecycleOwner.lifecycleScope.launch (Dispatchers.IO) {
+                        delay(2000)
+                        withContext(Dispatchers.Main){
+                            resetFragment()
+                        }
+                    }
                 }
             }
         }
