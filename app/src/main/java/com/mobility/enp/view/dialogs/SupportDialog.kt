@@ -124,16 +124,14 @@ class SupportDialog : DialogFragment() {
                     SubmitResult.Empty
                 }
             }
-
         }
     }
 
     private fun openSuccessfulMailDialog() {
-        val generalDialog = GeneralMessageDialog(
+        GeneralMessageDialog.newInstance(
             requireContext().getString(R.string.support_successful_mail),
             requireContext().getString(R.string.support_successful_massage)
-        )
-        generalDialog.show(parentFragmentManager, "SupportDialog")
+        ).show(parentFragmentManager, "SupportDialog")
     }
 
     private fun setObserversError() {
