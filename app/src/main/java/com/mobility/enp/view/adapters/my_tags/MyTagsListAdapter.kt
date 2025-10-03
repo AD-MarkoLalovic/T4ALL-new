@@ -1,6 +1,5 @@
 package com.mobility.enp.view.adapters.my_tags
 
-import android.content.res.ColorStateList
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +11,6 @@ import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.databinding.ItemMyTagsBinding
 import com.mobility.enp.view.ui_models.my_tags.TagStatusUiModel
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
-import com.mobility.enp.viewmodel.MyTagsViewModel.SubmitResultMyTags
-import kotlinx.coroutines.flow.MutableStateFlow
 
 class MyTagsListAdapter(
     private val onLostClicked: (String) -> Unit,
@@ -173,6 +170,9 @@ class MyTagsListAdapter(
                 // Stilizacija na osnovu statusValue
                 val statusValue = status?.statusValue
                 val context = root.context
+
+                //dont mix background tint list and drawables it causes an issue when deactivated tag is set and then switches to activated one / drawable takes priority and the color with tint list is now shown
+                // when switching tabs because recycler reuses ui elements
                 when (statusValue) {
                     "5", "6", "8", "10", "12" -> {
                         countryStatus.setTextColor(
@@ -181,11 +181,9 @@ class MyTagsListAdapter(
                                 R.color.figmaColorObjection
                             )
                         )
-                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.figmaToolHistoryUnpaidBackground
-                            )
+                        tagsStatus.background = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.border_tag_state_5_6_8_10_12
                         )
                     }
 
@@ -196,11 +194,9 @@ class MyTagsListAdapter(
                                 R.color.tag_active
                             )
                         )
-                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.figmaToolHistoryPaidBackground
-                            )
+                        tagsStatus.background = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.border_tag_state_activated
                         )
                     }
 
@@ -211,11 +207,9 @@ class MyTagsListAdapter(
                                 R.color.dark_orange
                             )
                         )
-                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.soft_peach
-                            )
+                        tagsStatus.background = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.border_tag_state_9
                         )
                     }
 
@@ -226,11 +220,9 @@ class MyTagsListAdapter(
                                 R.color.primary_light_dark
                             )
                         )
-                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.primary_light_light
-                            )
+                        tagsStatus.background = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.border_tag_state_1_11
                         )
                     }
 
@@ -249,11 +241,9 @@ class MyTagsListAdapter(
                                 android.R.color.transparent
                             )
                         )
-                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                android.R.color.transparent
-                            )
+                        tagsStatus.background = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.border_tag_state_traansparent
                         )
                     }
                 }
