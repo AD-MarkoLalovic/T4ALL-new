@@ -1,20 +1,16 @@
 package com.mobility.enp.view.adapters.my_tags
 
-import android.content.res.ColorStateList
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.databinding.ItemMyTagsBinding
 import com.mobility.enp.view.ui_models.my_tags.TagStatusUiModel
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
-import com.mobility.enp.viewmodel.MyTagsViewModel
-import com.mobility.enp.viewmodel.MyTagsViewModel.SubmitResultMyTags
-import kotlinx.coroutines.flow.MutableStateFlow
 
 class MyTagsListAdapter(
     private val onLostClicked: (String) -> Unit,
@@ -25,15 +21,15 @@ class MyTagsListAdapter(
     RecyclerView.Adapter<MyTagsListAdapter.MyTagViewHolder>() {
 
     private val tags = mutableListOf<TagUiModel>()
-    private var listCountryFilter: List<TagUiModel>? = null
 
-    fun setButtons(list: List<TagUiModel>) {
-        listCountryFilter = list
+    fun setItems(list: List<TagUiModel>) {  // this list should be used
+        tags.clear()
+        tags.addAll(list)
         notifyDataSetChanged()
     }
 
     fun clearData() {
-        this.listCountryFilter = null
+        tags.clear()
     }
 
     var selectedCountry: String = "SRB"
@@ -46,6 +42,9 @@ class MyTagsListAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(tag: TagUiModel) = with(binding) {
+
+            Log.d("UIError", "$tag")
+
             txTagSerialNumber.text = tag.serialNumber
 
             buttonActivateTag.visibility = View.GONE
@@ -86,11 +85,8 @@ class MyTagsListAdapter(
             buttonFoundTag.visibility =
                 if (selectedCountry == "HRV") View.GONE else if (tag.showButtonFoundTag == true) View.VISIBLE else View.GONE
 
-            val flow =
-                MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Loading)
 
-
-            listCountryFilter?.let { list ->
+            tags.let { list ->
                 val foundTag =
                     list.filter { it.serialNumber == tag.serialNumber }
 
@@ -98,9 +94,9 @@ class MyTagsListAdapter(
                 val showDeactivateButton = foundTag[0].showButtonDeactivateTag
 
                 buttonActivateTag.visibility =
-                    if (showActivateButton == true) View.VISIBLE else View.GONE
+                    if (showActivateButton == true && selectedCountry != "SRB") View.VISIBLE else View.GONE
                 buttonDeactivateTag.visibility =
-                    if (showDeactivateButton == true) View.VISIBLE else View.GONE
+                    if (showDeactivateButton == true && selectedCountry != "SRB") View.VISIBLE else View.GONE
             }
 
             // Ako nema registracije, prikaži "Serijski broj"
@@ -174,6 +170,9 @@ class MyTagsListAdapter(
                 // Stilizacija na osnovu statusValue
                 val statusValue = status?.statusValue
                 val context = root.context
+
+                //dont mix background tint list and drawables it causes an issue when deactivated tag is set and then switches to activated one / drawable takes priority and the color with tint list is now shown
+                // when switching tabs because recycler reuses ui elements
                 when (statusValue) {
                     "5", "6", "8", "10", "12" -> {
                         countryStatus.setTextColor(
@@ -182,11 +181,9 @@ class MyTagsListAdapter(
                                 R.color.figmaColorObjection
                             )
                         )
-                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.figmaToolHistoryUnpaidBackground
-                            )
+                        tagsStatus.background = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.border_tag_state_5_6_8_10_12
                         )
                     }
 
@@ -197,11 +194,9 @@ class MyTagsListAdapter(
                                 R.color.tag_active
                             )
                         )
-                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.figmaToolHistoryPaidBackground
-                            )
+                        tagsStatus.background = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.border_tag_state_activated
                         )
                     }
 
@@ -212,11 +207,9 @@ class MyTagsListAdapter(
                                 R.color.dark_orange
                             )
                         )
-                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.soft_peach
-                            )
+                        tagsStatus.background = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.border_tag_state_9
                         )
                     }
 
@@ -227,11 +220,9 @@ class MyTagsListAdapter(
                                 R.color.primary_light_dark
                             )
                         )
-                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.primary_light_light
-                            )
+                        tagsStatus.background = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.border_tag_state_1_11
                         )
                     }
 
@@ -250,11 +241,9 @@ class MyTagsListAdapter(
                                 android.R.color.transparent
                             )
                         )
-                        tagsStatus.backgroundTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                context,
-                                android.R.color.transparent
-                            )
+                        tagsStatus.background = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.border_tag_state_traansparent
                         )
                     }
                 }
@@ -277,12 +266,6 @@ class MyTagsListAdapter(
 
     override fun onBindViewHolder(holder: MyTagViewHolder, position: Int) {
         holder.bind(tags[position])
-    }
-
-    fun setItems(newItems: List<TagUiModel>) {
-        tags.clear()
-        tags.addAll(newItems)
-        notifyDataSetChanged()
     }
 
 }
