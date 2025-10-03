@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -96,11 +95,7 @@ class MyTagsFragment : Fragment() {
 
                     showToastMessage(message)
 
-                    findNavController().popBackStack(
-                        R.id.myTagsFragment2,
-                        true
-                    )  // forces a fragment to reset statuses
-                    findNavController().navigate(R.id.myTagsFragment2)
+                    resetFragment()
                 }
             }
 
@@ -274,10 +269,19 @@ class MyTagsFragment : Fragment() {
                     }
                     showToastMessage(message)
 
-                    viewModel.fetchMyTags()
+                    resetFragment()
                 }
             }
         }
+    }
+
+    // forces fragment to reset
+    private fun resetFragment() {
+        findNavController().popBackStack(
+            R.id.myTagsFragment2,
+            true
+        )
+        findNavController().navigate(R.id.myTagsFragment2)
     }
 
     private fun unhideUI() {
