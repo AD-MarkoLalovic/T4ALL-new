@@ -97,9 +97,9 @@ class MyTagsListAdapter(
                 val showDeactivateButton = foundTag[0].showButtonDeactivateTag
 
                 buttonActivateTag.visibility =
-                    if (showActivateButton == true) View.VISIBLE else View.GONE
+                    if (showActivateButton == true && selectedCountry != "SRB") View.VISIBLE else View.GONE
                 buttonDeactivateTag.visibility =
-                    if (showDeactivateButton == true) View.VISIBLE else View.GONE
+                    if (showDeactivateButton == true && selectedCountry != "SRB") View.VISIBLE else View.GONE
             }
 
             // Ako nema registracije, prikaži "Serijski broj"

@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -118,7 +119,6 @@ class MyTagsFragment : Fragment() {
                     val myTags = result.data
 
                     if (myTags.isEmpty()) {
-                        binding.textNoMyTags.visibility = View.VISIBLE
                         binding.myTagsContainer.visibility = View.GONE
                     } else {
                         val countryList = myTags.flatMap { it.statuses }
@@ -178,7 +178,6 @@ class MyTagsFragment : Fragment() {
                     if (myTags.isEmpty()) {
                         binding.textNoMyTags.visibility = View.VISIBLE
                         binding.myTagsContainer.visibility = View.GONE
-
                     } else {
                         binding.textNoMyTags.visibility = View.GONE
                         binding.myTagsContainer.visibility = View.VISIBLE
@@ -211,6 +210,14 @@ class MyTagsFragment : Fragment() {
 
         collectLatestLifecycleFlow(viewModel.myTagsCountry) { serverResponse ->
             when (serverResponse) {
+
+                is MyTagsViewModel.SubmitResultMyTags.Loading -> {
+                    binding.textNoFilteredTags.visibility = View.GONE
+                    binding.textNoMyTags.visibility = View.GONE
+
+                    binding.progbar.visibility = View.VISIBLE
+                }
+
                 is MyTagsViewModel.SubmitResultMyTags.Success -> {
 
                     Log.d("ServResponse", "$serverResponse: ")
@@ -367,6 +374,8 @@ class MyTagsFragment : Fragment() {
 
         allowedCountriesAdapter = MyTagsStatusFilterAdapter { selectedCountry ->
             clearSearchFieldFocusAndKeyboard()
+            binding.textNoMyTags.visibility = View.GONE
+
             tagsListAdapter.selectedCountry = selectedCountry
             tagsListAdapter.clearData()
             viewModel.setCountryFilter(selectedCountry)
