@@ -14,13 +14,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentTagsBinding
 import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.Util.isTablet
 import com.mobility.enp.util.collectLatestLifecycleFlow
@@ -136,7 +136,7 @@ class MyTagsFragment : Fragment() {
                         // sets available countries because they return all of them only when there is no country filter
 
                         allowedCountriesAdapter.submitList(countryList) {
-                            allowedCountriesAdapter.selectedStatus = 0
+                            allowedCountriesAdapter.setTabPosition(0)
                         }
 
 
@@ -148,8 +148,14 @@ class MyTagsFragment : Fragment() {
                             else -> ""
                         }
 
-                        viewModel.setCurrentApiCountry(countryCode)
-                        viewModel.fetchMyTags()
+                        val savedTab = SharedPreferencesHelper.getUserTabCode(requireContext())
+
+                        if (savedTab > 0) {
+                            allowedCountriesAdapter.performClick(savedTab)
+                        } else {
+                            viewModel.setCurrentApiCountry(countryCode)
+                            viewModel.fetchMyTags()
+                        }
                     }
                 }
 
@@ -186,8 +192,9 @@ class MyTagsFragment : Fragment() {
                             listOf(requireContext().getString(R.string.all_status_tags)) + myTags.flatMap { it.statuses }
                                 .mapNotNull { it.statusText }
                                 .distinct().sorted()
+
                         statusFilterAdapter.submitList(statusList) {
-                            statusFilterAdapter.selectedStatus = 0
+                            statusFilterAdapter.setTabPosition(0)
                         }
 
                         tagsListAdapter.setItems(myTags)
@@ -220,6 +227,11 @@ class MyTagsFragment : Fragment() {
 
                     Log.d("ServResponse", "$serverResponse: ")
 
+                    serverResponse.data.isNotEmpty().let {
+                        binding.myTagsContainer.visibility = View.VISIBLE
+                        binding.buttonAddTag.isEnabled = true
+                    }
+
                     binding.textNoFilteredTags.visibility = View.GONE
                     binding.textNoMyTags.visibility = View.GONE
 
@@ -233,11 +245,10 @@ class MyTagsFragment : Fragment() {
                             .distinct().sorted()
 
                     statusFilterAdapter.submitList(statusList) {
-                        statusFilterAdapter.selectedStatus = 0
+                        statusFilterAdapter.setTabPosition(0)
                     }
 
                     tagsListAdapter.setItems(serverResponse.data)
-
                 }
 
                 is MyTagsViewModel.SubmitResultMyTags.Failure -> {
@@ -276,9 +287,9 @@ class MyTagsFragment : Fragment() {
 
                     binding.progbar.visibility = View.VISIBLE
 
-                    viewLifecycleOwner.lifecycleScope.launch (Dispatchers.IO) {
+                    viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                         delay(2000)
-                        withContext(Dispatchers.Main){
+                        withContext(Dispatchers.Main) {
                             resetFragment()
                         }
                     }
@@ -403,6 +414,11 @@ class MyTagsFragment : Fragment() {
                 "SRB" -> "RS"
                 else -> ""
             }
+
+            SharedPreferencesHelper.setCurrentTab(
+                requireContext(),
+                allowedCountriesAdapter.getTabPosition()
+            )
 
             binding.cyclerContent.visibility = View.GONE
             binding.progbar.visibility = View.VISIBLE
