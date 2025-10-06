@@ -12,11 +12,12 @@ import androidx.fragment.app.activityViewModels
 import com.mobility.enp.databinding.NotificationsRequestDiagBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
+import androidx.core.graphics.drawable.toDrawable
 
 class NotificationsRequestDialog : DialogFragment {
 
-    private lateinit var title: String
-    private lateinit var subtitle: String
+    private var title: String = ""
+    private var subtitle: String = ""
 
     private var _binding: NotificationsRequestDiagBinding? = null
     private val binding: NotificationsRequestDiagBinding get() = _binding!!
@@ -37,7 +38,7 @@ class NotificationsRequestDialog : DialogFragment {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = NotificationsRequestDiagBinding.inflate(inflater, container, false)
         return binding.root
     }
