@@ -23,6 +23,17 @@ object SharedPreferencesHelper {
         return getPreferences(context).getString("user_language", "sr") ?: "sr"
     }
 
+
+    fun setCurrentTab(context: Context, tabNumber: Int) {
+        getPreferences(context).edit {
+            putInt("user_tab_code", tabNumber).apply()
+        }
+    }
+
+    fun getUserTabCode(context: Context): Int {
+        return getPreferences(context).getInt("user_tab_code", 0)
+    }
+
     // Funkcija za prikazivanje odabranog jezika na intro ekranima
     fun getSaveIntroSelectedLanguage(context: Context): String {
         return getPreferences(context).getString("selected_Language", "sr") ?: "sr"
