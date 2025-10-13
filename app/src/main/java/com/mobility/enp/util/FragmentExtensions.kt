@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -32,4 +34,10 @@ fun DialogFragment.setDimensionsPercent(widthPercent: Int, heightPercent: Int? =
 
 fun Fragment.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(requireContext(), message, duration).show()
+}
+
+fun NavController.safeNavigation(direction: NavDirections) {
+    currentDestination?.getAction(direction.actionId)?.let {
+        navigate(direction)
+    }
 }

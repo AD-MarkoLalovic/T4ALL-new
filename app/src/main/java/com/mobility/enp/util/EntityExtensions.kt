@@ -125,7 +125,9 @@ fun List<MyTagsList>.toTagUiModel(): List<TagUiModel> {
             showButtonFoundTag = tag.showButtonFoundTag,
             showButtonLostTag = tag.showButtonLostTag,
             category = tag.category?.value,
-            franchiser = tag.franchiser?.companyName
+            franchiser = tag.franchiser?.companyName,
+            showButtonActivateTag = tag.showButtonActivateTag,
+            showButtonDeactivateTag = tag.showButtonDeactivateTag
         )
     }
 }

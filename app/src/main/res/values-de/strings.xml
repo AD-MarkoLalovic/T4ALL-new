@@ -392,4 +392,12 @@
     <string name="camera_permission_required_message">Die Erlaubnis für den Kamerazugriff ist erforderlich. Sie können sie in den Einstellungen aktivieren.</string>
     <string name="camera_not_available_message">Kamera ist nicht verfügbar.</string>
     <string name="notification_permission_required_message">Benachrichtigungsberechtigung ist erforderlich. Sie können sie in den Einstellungen aktivieren.</string>
+    <string name="deactivate_tag">Deaktivieren</string>
+    <string name="activate_tag">Tag aktivieren</string>
+    <string name="deactivate_tag_text">"Möchten Sie den Tag deaktivieren? "</string>
+    <string name="activate_tag_text">Möchten Sie den Tag aktivieren?</string>
+    <string name="activate_tag_successful">Sie haben das Tag erfolgreich aktiviert</string>
+    <string name="deactivate_tag_successful">Sie haben das Tag erfolgreich deaktiviert</string>
+    <string name="deactivate_tag_title">"Tag deaktivieren "</string>
+    <string name="activate_tag_title">Tag aktivieren</string>
 </resources>

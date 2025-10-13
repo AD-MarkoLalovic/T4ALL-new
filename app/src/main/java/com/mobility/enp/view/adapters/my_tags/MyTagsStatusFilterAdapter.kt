@@ -13,7 +13,32 @@ class MyTagsStatusFilterAdapter(
     private var onSelected: (String) -> Unit
 ) :
     ListAdapter<String, MyTagsStatusFilterAdapter.StatusTagViewHolder>(DIFF_CALLBACK) {
-    var selectedStatus = 0
+    private var selectedStatus = 0
+
+    fun setStatus(position: Int) {
+        clearStatus()
+        selectedStatus = position
+        notifyItemChanged(position)
+    }
+
+    fun getTabPosition(): Int {
+        return selectedStatus
+    }
+
+    fun setTabPosition(position: Int) {
+        this.selectedStatus = position
+    }
+
+    fun performClick(position: Int) {
+        if (position in 0 until itemCount && position != selectedStatus) {
+            val oldPosition = selectedStatus
+            selectedStatus = position
+            notifyItemChanged(oldPosition)
+            notifyItemChanged(selectedStatus)
+
+            onSelected(getItem(position))
+        }
+    }
 
     inner class StatusTagViewHolder(private val binding: ItemTagStatusBinding) :
         RecyclerView.ViewHolder(binding.root) {

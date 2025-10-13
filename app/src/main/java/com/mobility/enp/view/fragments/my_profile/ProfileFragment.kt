@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentProfileBinding
 import com.mobility.enp.util.ImageRepository
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
@@ -64,6 +65,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         setCurrentVersion()
 
         viewModelProfile.setRefundRequestVisibility()
+        SharedPreferencesHelper.setCurrentTab(requireContext(), 0)
 
         binding.bttChangeProfilePicture.setOnClickListener {
             // check for existing image in room

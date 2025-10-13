@@ -2,11 +2,9 @@
 agp = "8.12.0"
 androidPdfViewerVersion = "3.2.0-beta05"
 androidxFragmentTesting = "1.8.9"
-firebaseBom = "34.1.0"
+firebaseBom = "34.3.0"
 firebaseCrashlyticsGradle = "3.0.6"
-firebaseCrashlyticsVersion = "20.0.0"
 fragmentTestingManifest = "1.8.9"
-googleServicesVersion = "4.4.3"
 itext7Core = "9.2.0"
 kotlin = "2.2.10"
 ktx = "2.9.3"
@@ -34,8 +32,6 @@ glide = "4.16.0"
 viewpager2 = "1.1.0"
 webkit = "1.14.0"
 google-services = "4.4.3"
-firebase-messaging = "25.0.0"
-firebase-analytics = "23.0.0"
 ksp = "2.2.10-2.0.2"
 roundImg = "2.3.0"
 junitJunit = "4.13.2"
@@ -70,14 +66,14 @@ androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", vers
 androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "webkit" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
-firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebase-messaging" }
-firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebase-analytics" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+google-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-gms-google-services = { module = "com.google.gms:google-services", version.ref = "googleServicesVersion" }
-google-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics", version.ref = "firebaseCrashlyticsVersion" }
+gms-google-services = { module = "com.google.gms:google-services", version.ref = "google-services" }
 itext7-core = { module = "com.itextpdf:itext7-core", version.ref = "itext7Core" }
 jakewharton-retrofit2-kotlin-coroutines-adapter = { module = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter", version.ref = "retrofit2KotlinCoroutinesAdapterVersion" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }

@@ -116,7 +116,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
     suspend fun fetchedStoredCsvData(): ByteArray? {
         return withContext(Dispatchers.IO) {
-            database.csvTableDao().fetchData().data
+            database.csvTableDao().fetchData()?.data
         }
     }
 

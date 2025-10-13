@@ -9,7 +9,9 @@ data class TagUiModel(
     val showButtonLostTag: Boolean?,
     val showButtonFoundTag: Boolean?,
     val category: Int?,
-    val franchiser: String?
+    val franchiser: String?,
+    var showButtonActivateTag: Boolean?,  // requires country code filter or api will always send false ...
+    var showButtonDeactivateTag: Boolean?
 )
 
 

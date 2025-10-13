@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentTagsBinding
 import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.Util.isTablet
 import com.mobility.enp.util.collectLatestLifecycleFlow
@@ -30,8 +32,10 @@ import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyTagsViewModel
 import com.mobility.enp.viewmodel.ReportType
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MyTagsFragment : Fragment() {
 
@@ -63,7 +67,7 @@ class MyTagsFragment : Fragment() {
         setAdapters()
         observeMyTags()
 
-        viewModel.fetchMyTags()
+        viewModel.fetchInitialData()
     }
 
     private fun setListener() {
@@ -76,34 +80,45 @@ class MyTagsFragment : Fragment() {
     }
 
     private fun observeMyTags() {
-        collectLatestLifecycleFlow(viewModel.myTags) { result ->
+        collectLatestLifecycleFlow(viewModel.deactivateActivateTag) { result ->
             when (result) {
+                is SubmitResultFold.Failure -> {
+                    handleError(result.error)
+                }
+
+                SubmitResultFold.Idle -> {}
+                SubmitResultFold.Loading -> binding.progbar.visibility = View.VISIBLE
+                is SubmitResultFold.Success<*> -> {
+                    val type = result.reportType
+                    val message = when (type) {
+                        ReportType.DEACTIVATED -> getString(R.string.deactivate_tag_successful)
+                        ReportType.ACTIVATED -> getString(R.string.activate_tag_successful)
+                        else -> ""
+                    }
+
+                    showToastMessage(message)
+
+                    resetFragment()
+                }
+            }
+
+        }
+
+        collectLatestLifecycleFlow(viewModel.initialData) { result ->
+            when (result) {
+
                 is MyTagsViewModel.SubmitResultMyTags.Loading -> {
                     binding.progbar.visibility = View.VISIBLE
                 }
 
                 is MyTagsViewModel.SubmitResultMyTags.Success -> {
                     binding.progbar.visibility = View.GONE
-                    binding.buttonAddTag.isEnabled = true
+
                     val myTags = result.data
 
                     if (myTags.isEmpty()) {
-                        binding.textNoMyTags.visibility = View.VISIBLE
                         binding.myTagsContainer.visibility = View.GONE
-
                     } else {
-                        binding.textNoMyTags.visibility = View.GONE
-                        binding.myTagsContainer.visibility = View.VISIBLE
-                        viewModel.setAllStatusLabel(allStatusText)
-
-                        val statusList =
-                            listOf(requireContext().getString(R.string.all_status_tags)) + myTags.flatMap { it.statuses }
-                                .mapNotNull { it.statusText }
-                                .distinct()
-                        statusFilterAdapter.submitList(statusList) {
-                            statusFilterAdapter.selectedStatus = 0
-                        }
-
                         val countryList = myTags.flatMap { it.statuses }
                             .mapNotNull { it.statusesCountry }
                             .distinct()
@@ -118,8 +133,68 @@ class MyTagsFragment : Fragment() {
                                 }
                             }
 
+                        // sets available countries because they return all of them only when there is no country filter
+
                         allowedCountriesAdapter.submitList(countryList) {
-                            allowedCountriesAdapter.selectedStatus = 0
+                            allowedCountriesAdapter.setTabPosition(0)
+                        }
+
+
+                        val countryCode = when (countryList[0]) {
+                            "MKD" -> "MK"
+                            "MNE" -> "ME"
+                            "HRV" -> "HR"
+                            "SRB" -> "RS"
+                            else -> ""
+                        }
+
+                        val savedTab = SharedPreferencesHelper.getUserTabCode(requireContext())
+
+                        if (savedTab > 0) {
+                            allowedCountriesAdapter.performClick(savedTab)
+                        } else {
+                            viewModel.setCurrentApiCountry(countryCode)
+                            viewModel.fetchMyTags()
+                        }
+                    }
+                }
+
+                is MyTagsViewModel.SubmitResultMyTags.Failure -> {
+                    handleError(result.error)
+                }
+
+                else -> {}
+            }
+
+        }
+
+        collectLatestLifecycleFlow(viewModel.myTags) { result ->
+            when (result) {
+                is MyTagsViewModel.SubmitResultMyTags.Loading -> {
+                    binding.progbar.visibility = View.VISIBLE
+                }
+
+                is MyTagsViewModel.SubmitResultMyTags.Success -> {
+                    binding.progbar.visibility = View.GONE
+                    binding.buttonAddTag.isEnabled = true
+                    val myTags = result.data
+
+                    if (myTags.isEmpty()) {
+                        binding.textNoMyTags.visibility = View.VISIBLE
+                        binding.myTagsContainer.visibility = View.GONE
+                    } else {
+                        binding.textNoMyTags.visibility = View.GONE
+                        binding.myTagsContainer.visibility = View.VISIBLE
+
+                        viewModel.setAllStatusLabel(allStatusText)
+
+                        val statusList =
+                            listOf(requireContext().getString(R.string.all_status_tags)) + myTags.flatMap { it.statuses }
+                                .mapNotNull { it.statusText }
+                                .distinct().sorted()
+
+                        statusFilterAdapter.submitList(statusList) {
+                            statusFilterAdapter.setTabPosition(0)
                         }
 
                         tagsListAdapter.setItems(myTags)
@@ -138,6 +213,59 @@ class MyTagsFragment : Fragment() {
             }
         }
 
+        collectLatestLifecycleFlow(viewModel.myTagsCountry) { serverResponse ->
+            when (serverResponse) {
+
+                is MyTagsViewModel.SubmitResultMyTags.Loading -> {
+                    binding.textNoFilteredTags.visibility = View.GONE
+                    binding.textNoMyTags.visibility = View.GONE
+
+                    binding.progbar.visibility = View.VISIBLE
+                }
+
+                is MyTagsViewModel.SubmitResultMyTags.Success -> {
+
+                    Log.d("ServResponse", "$serverResponse: ")
+
+                    serverResponse.data.isNotEmpty().let {
+                        binding.myTagsContainer.visibility = View.VISIBLE
+                        binding.buttonAddTag.isEnabled = true
+                    }
+
+                    binding.textNoFilteredTags.visibility = View.GONE
+                    binding.textNoMyTags.visibility = View.GONE
+
+                    viewModel.allTags = serverResponse.data
+
+                    statusFilterAdapter.setStatus(0)
+
+                    val statusList =
+                        listOf(requireContext().getString(R.string.all_status_tags)) + serverResponse.data.flatMap { it.statuses }
+                            .mapNotNull { it.statusText }
+                            .distinct().sorted()
+
+                    statusFilterAdapter.submitList(statusList) {
+                        statusFilterAdapter.setTabPosition(0)
+                    }
+
+                    tagsListAdapter.setItems(serverResponse.data)
+                }
+
+                is MyTagsViewModel.SubmitResultMyTags.Failure -> {
+                    Log.d("ServResponse", "ServError ${serverResponse.error}")
+                }
+
+                else -> {
+                    MyTagsViewModel.SubmitResultMyTags.Idle
+                }
+            }
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(1000L)
+                unhideUI()
+            }
+        }
+
+
         collectLatestLifecycleFlow(viewModel.reportTag) { result ->
             when (result) {
                 is SubmitResultFold.Failure -> {
@@ -154,10 +282,34 @@ class MyTagsFragment : Fragment() {
                         else -> ""
                     }
                     showToastMessage(message)
-                    viewModel.fetchMyTags()
+
+                    // i have added a delay because if called immediately api returns old data i assume they need a couple of seconds to write this to database for all countries
+
+                    binding.progbar.visibility = View.VISIBLE
+
+                    viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                        delay(2000)
+                        withContext(Dispatchers.Main) {
+                            resetFragment()
+                        }
+                    }
                 }
             }
         }
+    }
+
+    // forces fragment to reset
+    private fun resetFragment() {
+        findNavController().popBackStack(
+            R.id.myTagsFragment2,
+            true
+        )
+        findNavController().navigate(R.id.myTagsFragment2)
+    }
+
+    private fun unhideUI() {
+        binding.cyclerContent.visibility = View.VISIBLE
+        binding.progbar.visibility = View.GONE
     }
 
     private fun updateTagsList(tags: List<TagUiModel>) {
@@ -213,6 +365,24 @@ class MyTagsFragment : Fragment() {
                         viewModel.reportFoundTag(serialNumber)
                     }
                 ).show(parentFragmentManager, "FoundTagDialog")
+            }, onActivateTagClicked = { tagData ->
+                Log.d("data", "setAdapters: $tagData")
+                LostTagDialog.newInstance(
+                    title = requireContext().getString(R.string.activate_tag),
+                    subtitle = requireContext().getString(R.string.activate_tag_text),
+                    onButtonClick = {
+                        viewModel.activateTagByCountry(tagData)
+                    }
+                ).show(parentFragmentManager, "FoundTagDialog")
+            }, onDeactivateTagClicked = { tagData ->
+                Log.d("data", "setAdapters: $tagData")
+                LostTagDialog.newInstance(
+                    title = requireContext().getString(R.string.deactivate_tag),
+                    subtitle = requireContext().getString(R.string.deactivate_tag_text),
+                    onButtonClick = {
+                        viewModel.deactivateTagByCountry(tagData)
+                    }
+                ).show(parentFragmentManager, "FoundTagDialog")
             }
         )
         binding.cyclerContent.adapter = tagsListAdapter
@@ -231,8 +401,29 @@ class MyTagsFragment : Fragment() {
 
         allowedCountriesAdapter = MyTagsStatusFilterAdapter { selectedCountry ->
             clearSearchFieldFocusAndKeyboard()
+            binding.textNoMyTags.visibility = View.GONE
+
             tagsListAdapter.selectedCountry = selectedCountry
+            tagsListAdapter.clearData()
             viewModel.setCountryFilter(selectedCountry)
+
+            val countryCode = when (selectedCountry) {
+                "MKD" -> "MK"
+                "MNE" -> "ME"
+                "HRV" -> "HR"
+                "SRB" -> "RS"
+                else -> ""
+            }
+
+            SharedPreferencesHelper.setCurrentTab(
+                requireContext(),
+                allowedCountriesAdapter.getTabPosition()
+            )
+
+            binding.cyclerContent.visibility = View.GONE
+            binding.progbar.visibility = View.VISIBLE
+
+            viewModel.fetchShowActivateDeactivateButtonsByCountry(countryCode)
         }
         binding.rvAllowedCountries.adapter = allowedCountriesAdapter
 

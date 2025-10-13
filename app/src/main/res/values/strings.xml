@@ -447,5 +447,13 @@
     <string name="camera_permission_required_message">Потребна је дозвола за приступ камери. Можете је омогућити у подешавањима.</string>
     <string name="camera_not_available_message">Камера није доступна.</string>
     <string name="notification_permission_required_message">Потребна је дозвола за обавештења. Можете је омогућити у подешавањима.</string>
+    <string name="deactivate_tag">Деактивирај</string>
+    <string name="activate_tag">Активирај Таг</string>
+    <string name="deactivate_tag_text">Желите да деактивирате таг?</string>
+    <string name="activate_tag_text">"Желите да активирате таг?  "</string>
+    <string name="activate_tag_successful">Успешно сте активирали Таг</string>
+    <string name="deactivate_tag_successful">Успешно сте деактивирали Таг</string>
+    <string name="deactivate_tag_title">Деактивирај таг</string>
+    <string name="activate_tag_title">Активирај таг</string>
 
 </resources>

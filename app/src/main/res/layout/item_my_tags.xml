@@ -86,26 +86,74 @@
                     app:layout_constraintTop_toTopOf="@+id/txCategory"
                     tools:text="1" />
 
-                <Button
-                    android:id="@+id/buttonLostTag"
-                    style="@style/MyOutlinedButtonSmall"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/buttonContainer"
                     android:layout_width="wrap_content"
-                    android:layout_height="38dp"
-                    android:paddingVertical="@dimen/dimens_0dp"
-                    android:text="@string/lost_tag"
+                    android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <Button
-                    android:id="@+id/buttonFoundTag"
-                    style="@style/MyButtonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="38dp"
-                    android:paddingVertical="@dimen/dimens_0dp"
-                    android:text="@string/found_tag"
-                    app:backgroundTint="@color/country_filter"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <RelativeLayout
+                        android:id="@+id/lostFoundButtonContainer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <Button
+                            android:id="@+id/buttonLostTag"
+                            style="@style/MyOutlinedButtonSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="38dp"
+                            android:minWidth="150dp"
+                            android:paddingVertical="@dimen/dimens_0dp"
+                            android:text="@string/lost_tag"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <Button
+                            android:id="@+id/buttonFoundTag"
+                            style="@style/MyButtonStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="38dp"
+                            android:minWidth="150dp"
+                            android:paddingVertical="@dimen/dimens_0dp"
+                            android:text="@string/found_tag"
+                            app:backgroundTint="@color/country_filter"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </RelativeLayout>
+
+                    <Button
+                        android:id="@+id/buttonDeactivateTag"
+                        style="@style/MyOutlinedButtonSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="38dp"
+                        android:layout_marginTop="@dimen/dimens_10dp"
+                        android:minWidth="150dp"
+                        android:paddingVertical="@dimen/dimens_0dp"
+                        android:text="@string/deactivate_tag"
+                        android:visibility="gone"
+                        app:backgroundTint="@color/country_filter"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/lostFoundButtonContainer"
+                        tools:visibility="visible" />
+
+                    <Button
+                        android:id="@+id/buttonActivateTag"
+                        style="@style/MyOutlinedButtonSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="38dp"
+                        android:layout_marginTop="@dimen/dimens_10dp"
+                        android:minWidth="150dp"
+                        android:paddingVertical="@dimen/dimens_0dp"
+                        android:text="@string/activate_tag"
+                        android:visibility="gone"
+                        app:backgroundTint="@color/country_filter"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/lostFoundButtonContainer"
+                        tools:visibility="invisible" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                 <TextView
@@ -135,7 +183,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@id/txCountry"
-                    app:layout_constraintTop_toBottomOf="@id/txCategory"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonContainer"
                     tools:backgroundTint="@color/tag_active">
 
                     <ImageView
@@ -151,7 +199,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dimens_8dp"
-                        tools:text="Serbia Formedg" />
+                        tools:text="Serbia Formed" />
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

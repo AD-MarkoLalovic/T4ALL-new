@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
+import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
@@ -15,14 +16,25 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 enum class ReportType {
-    LOST, FOUND
+    LOST, FOUND, DEACTIVATED, ACTIVATED
 }
 
 class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
+    private val _initialData =
+        MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Idle)
+    val initialData: StateFlow<SubmitResultMyTags<List<TagUiModel>>> get() = _initialData
 
     private val _myTags =
         MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Idle)
     val myTags: StateFlow<SubmitResultMyTags<List<TagUiModel>>> get() = _myTags
+
+    private val _myTagsCountry =
+        MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Idle)
+    val myTagsCountry: StateFlow<SubmitResultMyTags<List<TagUiModel>>> get() = _myTagsCountry
+
+    private val _deactivateActivateTag =
+        MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
+    val deactivateActivateTag: StateFlow<SubmitResultFold<Unit>> get() = _deactivateActivateTag
 
     private val _reportTag = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
     val reportTag: StateFlow<SubmitResultFold<Unit>> get() = _reportTag
@@ -31,6 +43,18 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
     private var selectedStatus: String = ""
     private var selectedCountry: String = "RS"
     private var allStatusLabel: String = ""
+    private var currentCountryForApi = ""
+
+    fun reset() {
+        selectedCountry = "RS"
+        allStatusLabel = ""
+        selectedStatus = ""
+        allTags = listOf()
+    }
+
+    fun setCurrentApiCountry(country: String) {
+        this.currentCountryForApi = country
+    }
 
     fun setStatusFilter(statusKey: String) {
         selectedStatus = statusKey
@@ -82,11 +106,15 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
         _myTags.value = SubmitResultMyTags.Filtered(filtered)
     }
 
+    /**
+     * Performs data fill with filter based on
+     * @param currentCountryForApi
+     */
     fun fetchMyTags() {
         viewModelScope.launch {
             _myTags.value = SubmitResultMyTags.Loading
 
-            val result = repository.getMyTags()
+            val result = repository.getMyTags(currentCountryForApi)
             result.fold(
                 onSuccess = { tags ->
                     allTags = tags
@@ -94,7 +122,28 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
                 },
                 onFailure = { error ->
                     _myTags.value = SubmitResultMyTags.Failure(error)
+                }
+            )
+        }
+    }
 
+    /**
+     * fetches inital data such as available countries because those require no filter
+     * and sets first available country as default for fetch data fill that sets adapters
+     * for example RS if serbian user
+     */
+    fun fetchInitialData() {
+        viewModelScope.launch {
+            _initialData.value = SubmitResultMyTags.Loading
+
+            val result = repository.getMyTags("")
+            result.fold(
+                onSuccess = { tags ->
+                    allTags = tags
+                    _initialData.value = SubmitResultMyTags.Success(tags)
+                },
+                onFailure = { error ->
+                    _initialData.value = SubmitResultMyTags.Failure(error)
                 }
             )
         }
@@ -102,6 +151,56 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
 
     fun internetChecked(): Boolean {
         return repository.isNetworkAvail()
+    }
+
+    fun fetchShowActivateDeactivateButtonsByCountry(countryCode: String) {
+        currentCountryForApi =
+            countryCode // when user click the country button it updates this for fetchData
+
+        viewModelScope.launch {
+            _myTagsCountry.value = SubmitResultMyTags.Loading
+            val result = repository.getMyTagsByCountry(countryCode)
+            result.fold(
+                onSuccess = { tags ->
+                    _myTagsCountry.value = SubmitResultMyTags.Success(tags)
+                },
+                onFailure = { error ->
+                    _myTagsCountry.value = SubmitResultMyTags.Failure(error)
+                }
+            )
+        }
+    }
+
+    fun deactivateTagByCountry(body: ActivateDeactivateTagModel) {
+        viewModelScope.launch {
+            _deactivateActivateTag.value = SubmitResultFold.Loading
+            val result = repository.deactivateTag(body)
+            result.fold(
+                onSuccess = {
+                    _deactivateActivateTag.value =
+                        SubmitResultFold.Success(Unit, ReportType.DEACTIVATED)
+                },
+                onFailure = { error ->
+                    _deactivateActivateTag.value = SubmitResultFold.Failure(error)
+                }
+            )
+        }
+    }
+
+    fun activateTagByCountry(body: ActivateDeactivateTagModel) {
+        viewModelScope.launch {
+            _deactivateActivateTag.value = SubmitResultFold.Loading
+            val result = repository.activateTag(body)
+            result.fold(
+                onSuccess = {
+                    _deactivateActivateTag.value =
+                        SubmitResultFold.Success(Unit, ReportType.ACTIVATED)
+                },
+                onFailure = { error ->
+                    _deactivateActivateTag.value = SubmitResultFold.Failure(error)
+                }
+            )
+        }
     }
 
     fun reportLostTag(serialNumber: String) {
