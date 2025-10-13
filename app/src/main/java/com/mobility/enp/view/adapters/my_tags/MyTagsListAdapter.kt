@@ -81,9 +81,9 @@ class MyTagsListAdapter(
 
             // Prikaz dugmadi u zavisnosti od stanja
             buttonLostTag.visibility =
-                if (selectedCountry == "HRV") View.GONE else if (tag.showButtonLostTag == true) View.VISIBLE else View.GONE
+                if (tag.showButtonLostTag == true) View.VISIBLE else View.GONE
             buttonFoundTag.visibility =
-                if (selectedCountry == "HRV") View.GONE else if (tag.showButtonFoundTag == true) View.VISIBLE else View.GONE
+                if (tag.showButtonFoundTag == true) View.VISIBLE else View.GONE
 
 
             tags.let { list ->
