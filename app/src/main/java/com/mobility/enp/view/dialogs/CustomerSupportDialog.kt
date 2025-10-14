@@ -1,7 +1,7 @@
 package com.mobility.enp.view.dialogs
 
+import android.app.Dialog
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,24 +11,35 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.mobility.enp.R
 import com.mobility.enp.databinding.ContactFormDialogBinding
-import com.mobility.enp.util.SubmitResultCustomerSupport
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.CustomerSupportViewModel
+import androidx.core.graphics.drawable.toDrawable
+import com.mobility.enp.data.model.login.CustomerSupport
+import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SubmitResultFold
+import com.mobility.enp.util.collectLatestLifecycleFlow
+import com.mobility.enp.util.toast
 
 class CustomerSupportDialog : DialogFragment() {
 
     private var _binding: ContactFormDialogBinding? = null
     private val binding: ContactFormDialogBinding get() = _binding!!
-    private val viewModel: CustomerSupportViewModel by viewModels()
+    private val viewModel: CustomerSupportViewModel by viewModels { CustomerSupportViewModel.factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         _binding = ContactFormDialogBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+        isCancelable = true
+        return dialog
     }
 
     override fun onStart() {
@@ -40,41 +51,27 @@ class CustomerSupportDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.submitSuccessful.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is SubmitResultCustomerSupport.Loading -> {
-                    binding.loadingCustomerSupport.visibility = View.VISIBLE
+        collectLatestLifecycleFlow(viewModel.submitSuccessful) { resultFold ->
+            when (resultFold) {
+                is SubmitResultFold.Failure -> {
+                    binding.loadingCustomerSupport.visibility = View.GONE
+                    handleError(resultFold.error)
+
+                    viewModel.resetSubmitState()
                 }
 
-                is SubmitResultCustomerSupport.Success -> {
+                SubmitResultFold.Idle -> {}
+                SubmitResultFold.Loading -> binding.loadingCustomerSupport.visibility = View.VISIBLE
+                is SubmitResultFold.Success<*> -> {
                     binding.loadingCustomerSupport.visibility = View.GONE
 
-                    showDialog(
-                        getString(R.string.support_successful_mail),
-                        getString(R.string.support_successful_massage)
+                    dialog(
+                        title = getString(R.string.support_successful_mail),
+                        subtitle = getString(R.string.support_successful_massage)
                     )
                     dismiss()
                 }
-
-                is SubmitResultCustomerSupport.Failure -> {
-                    binding.loadingCustomerSupport.visibility = View.GONE
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.message_was_not_send),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                is SubmitResultCustomerSupport.NoNetwork -> {
-                    binding.loadingCustomerSupport.visibility = View.GONE
-
-                    showDialog(
-                        getString(R.string.no_connection_title),
-                        getString(R.string.please_connect_to_the_internet)
-                    )
-                }
             }
-
         }
 
         binding.contactFormSendButton.setOnClickListener {
@@ -84,7 +81,13 @@ class CustomerSupportDialog : DialogFragment() {
 
             if (subject.isNotEmpty() && email.isNotEmpty() && message.isNotEmpty()) {
                 if (isValidEmail(email)) {
-                    viewModel.submitCustomerSupport(subject, email, message)
+                    viewModel.sendCustomerSupport(
+                        CustomerSupport(
+                            subject = subject,
+                            email = email,
+                            message = message
+                        )
+                    )
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -107,18 +110,36 @@ class CustomerSupportDialog : DialogFragment() {
 
     }
 
+    private fun handleError(error: Throwable) {
+        when (error) {
+            is NetworkError.ServerError -> {
+                toast(getString(R.string.server_error_msg))
+            }
+
+            is NetworkError.ApiError -> {
+                toast(
+                    error.errorResponse.message ?: getString(R.string.server_error_msg)
+                )
+            }
+
+            is NetworkError.NoConnection -> {
+                dialog(
+                    title = getString(R.string.no_connection_title),
+                    subtitle = getString(R.string.please_connect_to_the_internet)
+                )
+            }
+        }
+    }
+
     private fun isValidEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    private fun showDialog(title: String, subtitle: String) {
-        val dialog = LoginNoInternetConnectionDialog()
-        val bundle = Bundle().apply {
-            putString(getString(R.string.title), title)
-            putString(getString(R.string.subtitle), subtitle)
-        }
-        dialog.arguments = bundle
-        dialog.show(parentFragmentManager, "CustomerSupport")
+    private fun dialog(title: String, subtitle: String) {
+        GeneralMessageDialog.newInstance(
+            title = title,
+            subtitle = subtitle
+        ).show(parentFragmentManager, "CustomerSupport")
     }
 
     override fun onDestroyView() {

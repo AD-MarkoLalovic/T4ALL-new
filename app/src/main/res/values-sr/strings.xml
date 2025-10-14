@@ -298,7 +298,6 @@
     <string name="inactive_card">Istekla/Izbrisana Kartica</string>
     <string name="fill_in_all_fields">Popunite sva polja.</string>
     <string name="enter_valid_email_address">Unesite važeću email adresu.</string>
-    <string name="message_was_not_send">Poruka nije poslata.</string>
     <string name="account_deactivation_notice">"Poštovani korisnici, molimo vas da ovu kontakt formu koristite isključivo za potrebe potpune deaktivacije vašeg korisničkog naloga. Svi ostali zahtevi upućeni putem ove forme neće biti procesuirani."</string>
     <string name="pdf_invoices">PDF Računi</string>
     <string name="listing_of_passages">Listing prolazaka</string>

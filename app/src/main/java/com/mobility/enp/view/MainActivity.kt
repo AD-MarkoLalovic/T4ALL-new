@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.basicInformationFragment, R.id.changePasswordFragment, R.id.invoicesFragment,
                 R.id.myTagsFragment2, R.id.addTagFragment, R.id.refundRequestFragment2, R.id.tagPickerRequestFragment,
                 R.id.settingsFragment, R.id.toolHistorySearchFragment, R.id.toolHistorySearchResultFragment,
-                R.id.termsAndPrivacyFragment, R.id.cardFragment, R.id.noInternetConnectionDialog, R.id.loginNoInternetConnectionDialog -> {
+                R.id.termsAndPrivacyFragment, R.id.cardFragment, R.id.noInternetConnectionDialog -> {
                     // Ako je destinacija neki od ovih fragmenata, prikaži Toolbar i sakrij BottomNavigationView
 
                     if (franchiseViewModel.franchiseModel.value == null) {

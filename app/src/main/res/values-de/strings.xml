@@ -306,7 +306,6 @@
     <string name="inactive_card">Abgelaufene/Gelöschte Karte</string>
     <string name="fill_in_all_fields">Füllen Sie alle Felder aus.</string>
     <string name="enter_valid_email_address">Geben Sie eine gültige E-Mail-Adresse ein.</string>
-    <string name="message_was_not_send">Die Nachricht wurde nicht gesendet.</string>
     <string name="account_deactivation_notice">Sehr geehrte Nutzer, bitte verwenden Sie dieses Kontaktformular ausschließlich zum Zwecke der vollständigen Deaktivierung Ihres Benutzerkontos. Alle anderen Anfragen, die über dieses Formular eingereicht werden, werden nicht bearbeitet.</string>
     <string name="pdf_invoices">PDF Rechnungen</string>
     <string name="listing_of_passages">Auflistung der durchgänge</string>

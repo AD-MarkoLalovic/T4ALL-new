@@ -6,9 +6,6 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mobility.enp.data.model.ErrorBody
-import com.mobility.enp.data.model.api_my_invoices.BillDownload
-import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
-import com.mobility.enp.data.model.login.CustomerSupport
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -46,12 +43,6 @@ object Repository {
                 }
             })
         }
-    }
-
-    suspend fun sendCustomerSupport(
-        customerSupport: CustomerSupport
-    ): Response<Unit> {
-        return apiService("").sendCustomerSupport(customerSupport)
     }
 
     private fun <T> getMessageFromErrorBody(response: Response<T>): ErrorBody {
