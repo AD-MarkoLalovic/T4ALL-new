@@ -383,22 +383,7 @@
     <action
         android:id="@+id/action_global_noInternetConnectionDialog"
         app:destination="@id/noInternetConnectionDialog" />
-    <dialog
-        android:id="@+id/loginNoInternetConnectionDialog"
-        android:name="com.mobility.enp.view.dialogs.LoginNoInternetConnectionDialog"
-        android:label="LoginNoInternetConnectionDialog"
-        tools:layout="@layout/general_dialog">
-        <argument
-            android:name="title"
-            app:argType="string" />
 
-        <argument
-            android:name="subtitle"
-            app:argType="string" />
-    </dialog>
-    <action
-        android:id="@+id/action_global_loginNoInternetConnectionDialog"
-        app:destination="@id/loginNoInternetConnectionDialog" />
     <dialog
         android:id="@+id/forgotPassDialog"
         android:name="com.mobility.enp.view.dialogs.ForgotPassDialog"

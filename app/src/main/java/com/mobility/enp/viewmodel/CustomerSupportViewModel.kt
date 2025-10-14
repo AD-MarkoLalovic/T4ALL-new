@@ -1,42 +1,49 @@
 package com.mobility.enp.viewmodel
 
-import android.app.Application
-import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.login.CustomerSupport
-import com.mobility.enp.network.Repository
-import com.mobility.enp.util.SubmitResultCustomerSupport
+import com.mobility.enp.data.repository.AuthRepository
+import com.mobility.enp.util.SubmitResultFold
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class CustomerSupportViewModel(application: Application) : AndroidViewModel(application) {
+class CustomerSupportViewModel(private val repo: AuthRepository) : ViewModel() {
 
-    private var _submitSuccessful = MutableLiveData<SubmitResultCustomerSupport>()
-    val submitSuccessful: LiveData<SubmitResultCustomerSupport> get() = _submitSuccessful
+    private var _submitSuccessful = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
+    val submitSuccessful: StateFlow<SubmitResultFold<Unit>> get() = _submitSuccessful
 
-    fun submitCustomerSupport(subject: String, email: String, message: String) {
-        val customerSupport = CustomerSupport(subject, email, message)
-
+    fun sendCustomerSupport(data: CustomerSupport) {
         viewModelScope.launch {
-            _submitSuccessful.value = SubmitResultCustomerSupport.Loading
+            _submitSuccessful.value = SubmitResultFold.Loading
 
-            if (Repository.isNetworkAvailable(getApplication())) {
-                try {
-                    val response = Repository.sendCustomerSupport(customerSupport)
-                    if (response.isSuccessful) {
-                        _submitSuccessful.value = SubmitResultCustomerSupport.Success
-                    } else {
-                        _submitSuccessful.value = SubmitResultCustomerSupport.Failure
-                    }
-                } catch (e: Exception) {
-                    Log.d("CustomerSupportViewModel", "Error: $e")
-                    _submitSuccessful.value = SubmitResultCustomerSupport.Failure
+            val result = repo.sendCustomerSupport(data)
+            result.fold(
+                onSuccess = {
+                    _submitSuccessful.value = SubmitResultFold.Success(Unit)
+                },
+                onFailure = { error ->
+                    _submitSuccessful.value = SubmitResultFold.Failure(error)
                 }
-            } else {
-                Log.d("CustomerSupportViewModel", "No network available")
-                _submitSuccessful.value = SubmitResultCustomerSupport.NoNetwork
+            )
+        }
+    }
+
+    fun resetSubmitState() {
+        _submitSuccessful.value = SubmitResultFold.Idle
+    }
+
+    companion object {
+        val factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val myRepo = (this[APPLICATION_KEY] as MyApplication).repositoryAuth
+                CustomerSupportViewModel(repo = myRepo)
             }
         }
     }

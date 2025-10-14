@@ -298,7 +298,6 @@
     <string name="inactive_card">Süresi Dolmuş/Silinmiş Kart</string>
     <string name="fill_in_all_fields">Tüm alanları doldurun.</string>
     <string name="enter_valid_email_address">Geçerli bir e-posta adresi girin.</string>
-    <string name="message_was_not_send">Mesaj gönderilmedi.</string>
     <string name="account_deactivation_notice">Sayın kullanıcılar, bu iletişim formunu yalnızca kullanıcı hesabınızın tamamen devre dışı bırakılması için kullanmanızı rica ederiz. Bu form aracılığıyla gönderilen diğer talepler işleme alınmayacaktır.</string>
     <string name="pdf_invoices">PDF Faturalar</string>
     <string name="listing_of_passages">Geçişlerin listesi</string>

@@ -295,7 +295,6 @@
     <string name="inactive_card">Истечена/Избришана Картичка</string>
     <string name="fill_in_all_fields">Пополнете ги сите полиња.</string>
     <string name="enter_valid_email_address">Внесете валидна е-пошта.</string>
-    <string name="message_was_not_send">Пораката не е испратена.</string>
     <string name="account_deactivation_notice">Почитувани корисници, ве молиме користете ја оваа контакт форма исклучиво за целосна деактивација на вашиот кориснички профил. Сите други барања испратени преку оваа форма нема да бидат процесирани.</string>
     <string name="pdf_invoices">PDF Сметки</string>
     <string name="listing_of_passages">Листинг на поминувања</string>

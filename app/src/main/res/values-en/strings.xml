@@ -288,7 +288,6 @@
     <string name="inactive_card">Expired/Deleted Card</string>
     <string name="fill_in_all_fields">Fill in all fields.</string>
     <string name="enter_valid_email_address">Enter a valid email address.</string>
-    <string name="message_was_not_send">The message was not sent.</string>
     <string name="account_deactivation_notice">Dear users, please use this contact form exclusively for the purpose of fully deactivating your account. All other requests submitted via this form will not be processed.</string>
     <string name="pdf_invoices">PDF Invoices</string>
     <string name="listing_of_passages">" Listing of passages"</string>

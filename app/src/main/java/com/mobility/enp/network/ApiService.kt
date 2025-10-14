@@ -278,6 +278,7 @@ interface ApiService {
 
     @POST("/api/v1/support")
     suspend fun sendCustomerSupport(
+        @Query(value = "lang") language: String,
         @Body customerSupport: CustomerSupport
     ): Response<Unit>
 

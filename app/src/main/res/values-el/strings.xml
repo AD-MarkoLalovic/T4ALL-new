@@ -288,7 +288,6 @@
     <string name="inactive_card">Ληγμένη/Διαγραμμένη Κάρτα</string>
     <string name="fill_in_all_fields">Συμπληρώστε όλα τα πεδία.</string>
     <string name="enter_valid_email_address">Εισάγετε μια έγκυρη διεύθυνση email.</string>
-    <string name="message_was_not_send">Το μήνυμα δεν εστάλη.</string>
     <string name="account_deactivation_notice">Αγαπητοί χρήστες, παρακαλούμε χρησιμοποιήστε αυτήν τη φόρμα επικοινωνίας αποκλειστικά για την πλήρη απενεργοποίηση του λογαριασμού σας. Όλα τα άλλα αιτήματα που υποβάλλονται μέσω αυτής της φόρμας δεν θα διεκπεραιωθούν.</string>
     <string name="pdf_invoices">PDF Λογαριασμοί</string>
     <string name="listing_of_passages">Λίστα διόδων</string>
