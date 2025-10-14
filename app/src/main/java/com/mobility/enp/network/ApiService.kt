@@ -142,13 +142,6 @@ interface ApiService {
     ): Response<BillsDetailsResponse>
 
     @GET("/api/v2/tags")
-    suspend fun getUserTagsNew(
-        @Query("page") page: Int,
-        @Query("perPage") perPage: Int,
-        @Query("lang") language: String
-    ): Response<MyTagsResponse>
-
-    @GET("/api/v2/tags")
     suspend fun getUserTagsNewByCountry(
         @Query("page") page: Int,
         @Query("perPage") perPage: Int,

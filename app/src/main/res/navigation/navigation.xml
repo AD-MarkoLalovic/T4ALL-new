@@ -295,14 +295,13 @@
         <action
             android:id="@+id/action_profileFragment_to_deactivateAccountDialog"
             app:destination="@id/deactivateAccountDialog" />
-
-
     </fragment>
+
     <fragment
         android:id="@+id/invoicesFragment"
         android:name="com.mobility.enp.view.fragments.my_profile.MyInvoicesFragment"
         android:label="InvoicesFragment"
-        tools:layout="@layout/fragment_bills"></fragment>
+        tools:layout="@layout/fragment_bills" />
     <action
         android:id="@+id/action_global_invoicesFragment"
         app:destination="@id/invoicesFragment" />
