@@ -23,9 +23,6 @@ class MyTagsListAdapter(
     private val tags = mutableListOf<TagUiModel>()
 
     fun setItems(list: List<TagUiModel>) {  // this list should be used
-
-        Log.d("TEST_DATA", "list: $list")
-
         tags.clear()
         tags.addAll(list)
         notifyDataSetChanged()
