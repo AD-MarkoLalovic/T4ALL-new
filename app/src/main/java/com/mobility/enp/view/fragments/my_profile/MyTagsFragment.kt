@@ -88,6 +88,7 @@ class MyTagsFragment : Fragment() {
 
                 SubmitResultFold.Idle -> {}
                 SubmitResultFold.Loading -> binding.progbar.visibility = View.VISIBLE
+
                 is SubmitResultFold.Success<*> -> {
                     val type = result.reportType
                     val message = when (type) {
@@ -98,15 +99,18 @@ class MyTagsFragment : Fragment() {
 
                     showToastMessage(message)
 
-                    resetFragment()
+                    viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                        delay(2000)
+                        withContext(Dispatchers.Main) {
+                            resetFragment()
+                        }
+                    }
                 }
             }
-
         }
 
-        collectLatestLifecycleFlow(viewModel.initialData) { result ->
-            when (result) {
-
+        collectLatestLifecycleFlow(viewModel.initialData) { serverResponse ->
+            when (serverResponse) {
                 is MyTagsViewModel.SubmitResultMyTags.Loading -> {
                     binding.progbar.visibility = View.VISIBLE
                 }
@@ -114,7 +118,7 @@ class MyTagsFragment : Fragment() {
                 is MyTagsViewModel.SubmitResultMyTags.Success -> {
                     binding.progbar.visibility = View.GONE
 
-                    val myTags = result.data
+                    val myTags = serverResponse.data
 
                     if (myTags.isEmpty()) {
                         binding.myTagsContainer.visibility = View.GONE
@@ -160,33 +164,38 @@ class MyTagsFragment : Fragment() {
                 }
 
                 is MyTagsViewModel.SubmitResultMyTags.Failure -> {
-                    handleError(result.error)
+                    handleError(serverResponse.error)
                 }
 
                 else -> {}
             }
-
         }
 
-        collectLatestLifecycleFlow(viewModel.myTags) { result ->
-            when (result) {
+        collectLatestLifecycleFlow(viewModel.myTags) { serverResponse ->
+            when (serverResponse) {
                 is MyTagsViewModel.SubmitResultMyTags.Loading -> {
+                    binding.textNoFilteredTags.visibility = View.GONE
+                    binding.textNoMyTags.visibility = View.GONE
                     binding.progbar.visibility = View.VISIBLE
                 }
 
                 is MyTagsViewModel.SubmitResultMyTags.Success -> {
                     binding.progbar.visibility = View.GONE
                     binding.buttonAddTag.isEnabled = true
-                    val myTags = result.data
+
+                    val myTags = serverResponse.data
 
                     if (myTags.isEmpty()) {
                         binding.textNoMyTags.visibility = View.VISIBLE
                         binding.myTagsContainer.visibility = View.GONE
                     } else {
                         binding.textNoMyTags.visibility = View.GONE
+                        binding.textNoFilteredTags.visibility = View.GONE
                         binding.myTagsContainer.visibility = View.VISIBLE
 
                         viewModel.setAllStatusLabel(allStatusText)
+
+                        statusFilterAdapter.setStatus(0)
 
                         val statusList =
                             listOf(requireContext().getString(R.string.all_status_tags)) + myTags.flatMap { it.statuses }
@@ -202,61 +211,13 @@ class MyTagsFragment : Fragment() {
                 }
 
                 is MyTagsViewModel.SubmitResultMyTags.Failure -> {
-                    handleError(result.error)
+                    handleError(serverResponse.error)
                 }
 
                 is MyTagsViewModel.SubmitResultMyTags.Idle -> {}
 
                 is MyTagsViewModel.SubmitResultMyTags.Filtered -> {
-                    updateTagsList(result.data)
-                }
-            }
-        }
-
-        collectLatestLifecycleFlow(viewModel.myTagsCountry) { serverResponse ->
-            when (serverResponse) {
-
-                is MyTagsViewModel.SubmitResultMyTags.Loading -> {
-                    binding.textNoFilteredTags.visibility = View.GONE
-                    binding.textNoMyTags.visibility = View.GONE
-
-                    binding.progbar.visibility = View.VISIBLE
-                }
-
-                is MyTagsViewModel.SubmitResultMyTags.Success -> {
-
-                    Log.d("ServResponse", "$serverResponse: ")
-
-                    serverResponse.data.isNotEmpty().let {
-                        binding.myTagsContainer.visibility = View.VISIBLE
-                        binding.buttonAddTag.isEnabled = true
-                    }
-
-                    binding.textNoFilteredTags.visibility = View.GONE
-                    binding.textNoMyTags.visibility = View.GONE
-
-                    viewModel.allTags = serverResponse.data
-
-                    statusFilterAdapter.setStatus(0)
-
-                    val statusList =
-                        listOf(requireContext().getString(R.string.all_status_tags)) + serverResponse.data.flatMap { it.statuses }
-                            .mapNotNull { it.statusText }
-                            .distinct().sorted()
-
-                    statusFilterAdapter.submitList(statusList) {
-                        statusFilterAdapter.setTabPosition(0)
-                    }
-
-                    tagsListAdapter.setItems(serverResponse.data)
-                }
-
-                is MyTagsViewModel.SubmitResultMyTags.Failure -> {
-                    Log.d("ServResponse", "ServError ${serverResponse.error}")
-                }
-
-                else -> {
-                    MyTagsViewModel.SubmitResultMyTags.Idle
+                    updateTagsList(serverResponse.data)
                 }
             }
             viewLifecycleOwner.lifecycleScope.launch {
@@ -264,8 +225,6 @@ class MyTagsFragment : Fragment() {
                 unhideUI()
             }
         }
-
-
         collectLatestLifecycleFlow(viewModel.reportTag) { result ->
             when (result) {
                 is SubmitResultFold.Failure -> {
@@ -405,6 +364,7 @@ class MyTagsFragment : Fragment() {
 
             tagsListAdapter.selectedCountry = selectedCountry
             tagsListAdapter.clearData()
+
             viewModel.setCountryFilter(selectedCountry)
 
             val countryCode = when (selectedCountry) {
