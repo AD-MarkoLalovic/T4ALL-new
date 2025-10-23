@@ -242,17 +242,17 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
 
         return try {
             // Fetch first page
-            val page1Response = apiService(userToken)
+            val baseResponse = apiService(userToken)
                 .getUserTagsNewByCountry(1, perPage, lang, countryCode)
 
-            if (!page1Response.isSuccessful) {
+            if (!baseResponse.isSuccessful) {
                 val errorResponse =
-                    page1Response.errorBody()?.let { parseErrorResponse(page1Response.code(), it) }
+                    baseResponse.errorBody()?.let { parseErrorResponse(baseResponse.code(), it) }
                 return Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
                     ?: NetworkError.ServerError)
             }
 
-            val body = page1Response.body()!!
+            val body = baseResponse.body()!!
             val pagination = body.data?.tags?.pagination
             val itemsPage1 = body.data?.tags?.items?.toTagUiModel().orEmpty()
             val lastPage = pagination?.lastPage ?: 1
