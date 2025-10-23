@@ -158,7 +158,7 @@ class MyTagsFragment : Fragment() {
                             allowedCountriesAdapter.performClick(savedTab)
                         } else {
                             viewModel.setCurrentApiCountry(countryCode)
-                            viewModel.fetchMyTags()
+                            viewModel.fetchDataByCountry()
                         }
                     }
                 }
@@ -367,14 +367,6 @@ class MyTagsFragment : Fragment() {
 
             viewModel.setCountryFilter(selectedCountry)
 
-            val countryCode = when (selectedCountry) {
-                "MKD" -> "MK"
-                "MNE" -> "ME"
-                "HRV" -> "HR"
-                "SRB" -> "RS"
-                else -> ""
-            }
-
             SharedPreferencesHelper.setCurrentTab(
                 requireContext(),
                 allowedCountriesAdapter.getTabPosition()
@@ -383,7 +375,7 @@ class MyTagsFragment : Fragment() {
             binding.cyclerContent.visibility = View.GONE
             binding.progbar.visibility = View.VISIBLE
 
-            viewModel.fetchShowActivateDeactivateButtonsByCountry(countryCode)
+            viewModel.fetchDataByCountry()
         }
         binding.rvAllowedCountries.adapter = allowedCountriesAdapter
 
@@ -483,7 +475,7 @@ class MyTagsFragment : Fragment() {
 
         binding.buttonAddTag.isEnabled = true
 
-        viewModel.fetchMyTags()
+        viewModel.fetchDataByCountry()
     }
 
     private fun showToastMessage(message: String) {

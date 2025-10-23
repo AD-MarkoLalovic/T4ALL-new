@@ -103,27 +103,6 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
     }
 
     /**
-     * Performs data fill with filter based on
-     * @param currentCountryForApi
-     */
-    fun fetchMyTags() {
-        viewModelScope.launch {
-            _myTags.value = SubmitResultMyTags.Loading
-
-            val result = repository.getMyTags(currentCountryForApi)
-            result.fold(
-                onSuccess = { tags ->
-                    allTags = tags
-                    _myTags.value = SubmitResultMyTags.Success(tags)
-                },
-                onFailure = { error ->
-                    _myTags.value = SubmitResultMyTags.Failure(error)
-                }
-            )
-        }
-    }
-
-    /**
      * fetches inital data such as available countries because those require no filter
      * and sets first available country as default for fetch data fill that sets adapters
      * for example RS if serbian user
@@ -149,13 +128,13 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
         return repository.isNetworkAvail()
     }
 
-    fun fetchShowActivateDeactivateButtonsByCountry(countryCode: String) {
+    fun fetchDataByCountry() {
         currentCountryForApi =
-            countryCode // when user click the country button it updates this for fetchData
+            selectedCountry
 
         viewModelScope.launch {
             _myTags.value = SubmitResultMyTags.Loading
-            val result = repository.getMyTagsByCountry(countryCode)
+            val result = repository.getMyTagsByCountry(currentCountryForApi)
             result.fold(
                 onSuccess = { tags ->
                     allTags = tags
