@@ -207,6 +207,8 @@ class MyTagsFragment : Fragment() {
                         }
 
                         tagsListAdapter.setItems(myTags)
+
+                        hideStatusUi(false)
                     }
                 }
 
@@ -360,10 +362,13 @@ class MyTagsFragment : Fragment() {
 
         allowedCountriesAdapter = MyTagsStatusFilterAdapter { selectedCountry ->
             clearSearchFieldFocusAndKeyboard()
+
             binding.textNoMyTags.visibility = View.GONE
 
             tagsListAdapter.selectedCountry = selectedCountry
             tagsListAdapter.clearData()
+
+            hideStatusUi(true)
 
             viewModel.setCountryFilter(selectedCountry)
 
@@ -495,6 +500,22 @@ class MyTagsFragment : Fragment() {
         }
 
         recyclerView.layoutParams = params
+    }
+
+    private fun hideStatusUi(boolean: Boolean) {
+        when (boolean) {
+            true -> {
+                binding.txStatusMyTags.visibility = View.GONE
+
+                statusFilterAdapter.submitList(emptyList<String>()) {
+                    statusFilterAdapter.setTabPosition(0)
+                }
+            }
+
+            false -> {
+                binding.txStatusMyTags.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onDestroyView() {
