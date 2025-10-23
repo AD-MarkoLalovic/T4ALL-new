@@ -130,48 +130,17 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
     }
 
     fun fetchDataByCountry() {
-        currentCountryForApi =
-            selectedCountry
+        currentCountryForApi = selectedCountry
 
         viewModelScope.launch {
             _myTags.value = SubmitResultMyTags.Loading
+            val result = repository.getAllMyTagsByCountry(currentCountryForApi, tagsPerApiRequest)
 
-            val allItems = mutableListOf<TagUiModel>()
-
-            val resultPage1 =
-                repository.getMyTagsByCountry(1, currentCountryForApi, tagsPerApiRequest)
-            resultPage1.fold(
-                onSuccess = { (pagination, items) ->
-
-                    allItems.addAll(items)
-
-                    val lastPage = pagination.lastPage ?: 1
-                    if (lastPage > 1) {
-                        // calls the remaining data for every page
-                        for (page in 2..lastPage) {
-                            val nextPage = repository.getMyTagsByCountry(
-                                page,
-                                currentCountryForApi,
-                                tagsPerApiRequest
-                            )
-
-                            nextPage.fold(
-                                onSuccess = { (_, nextItems) ->
-                                    allItems.addAll(nextItems)
-                                },
-
-                                onFailure = { err ->
-                                    _myTags.value = SubmitResultMyTags.Failure(err)
-                                    return@launch
-                                }
-                            )
-                        }
-                    }
-
+            result.fold(
+                onSuccess = { allItems ->
                     allTags = allItems
                     _myTags.value = SubmitResultMyTags.Success(allItems)
                 },
-
                 onFailure = { error ->
                     _myTags.value = SubmitResultMyTags.Failure(error)
                 }
