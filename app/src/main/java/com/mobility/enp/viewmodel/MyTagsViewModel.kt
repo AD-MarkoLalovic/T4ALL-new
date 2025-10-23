@@ -40,7 +40,7 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
     private var selectedCountry: String = "RS"
     private var allStatusLabel: String = ""
     private var currentCountryForApi = ""
-    private val tagsPerApiRequest: Int = 5
+    private val tagsPerApiRequest: Int = 20
 
     fun reset() {
         selectedCountry = "RS"
