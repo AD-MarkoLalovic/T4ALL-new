@@ -40,6 +40,7 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
     private var selectedCountry: String = "RS"
     private var allStatusLabel: String = ""
     private var currentCountryForApi = ""
+    private val tagsPerApiRequest: Int = 5
 
     fun reset() {
         selectedCountry = "RS"
@@ -134,12 +135,43 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
 
         viewModelScope.launch {
             _myTags.value = SubmitResultMyTags.Loading
-            val result = repository.getMyTagsByCountry(currentCountryForApi)
-            result.fold(
-                onSuccess = { tags ->
-                    allTags = tags
-                    _myTags.value = SubmitResultMyTags.Success(tags)
+
+            val allItems = mutableListOf<TagUiModel>()
+
+            val resultPage1 =
+                repository.getMyTagsByCountry(1, currentCountryForApi, tagsPerApiRequest)
+            resultPage1.fold(
+                onSuccess = { (pagination, items) ->
+
+                    allItems.addAll(items)
+
+                    val lastPage = pagination.lastPage ?: 1
+                    if (lastPage > 1) {
+                        // calls the remaining data for every page
+                        for (page in 2..lastPage) {
+                            val nextPage = repository.getMyTagsByCountry(
+                                page,
+                                currentCountryForApi,
+                                tagsPerApiRequest
+                            )
+
+                            nextPage.fold(
+                                onSuccess = { (_, nextItems) ->
+                                    allItems.addAll(nextItems)
+                                },
+
+                                onFailure = { err ->
+                                    _myTags.value = SubmitResultMyTags.Failure(err)
+                                    return@launch
+                                }
+                            )
+                        }
+                    }
+
+                    allTags = allItems
+                    _myTags.value = SubmitResultMyTags.Success(allItems)
                 },
+
                 onFailure = { error ->
                     _myTags.value = SubmitResultMyTags.Failure(error)
                 }

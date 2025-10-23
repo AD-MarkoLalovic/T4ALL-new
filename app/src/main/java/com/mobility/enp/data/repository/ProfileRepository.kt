@@ -5,6 +5,7 @@ import android.util.Log
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
+import com.mobility.enp.data.model.api_my_profile.my_tags.response.Pagination
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
@@ -228,7 +229,11 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
         }
     }
 
-    suspend fun getMyTagsByCountry(countryCode: String): Result<List<TagUiModel>> {
+    suspend fun getMyTagsByCountry(
+        selectedPage : Int,
+        countryCode: String,
+        perPage: Int
+    ): Result<Pair<Pagination, List<TagUiModel>>> {
         if (!isNetworkAvailable()) {
             return Result.failure(NetworkError.NoConnection)
         }
@@ -237,11 +242,14 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
 
         return try {
             val lang = getLangKey()
-            val response = apiService(userToken).getUserTagsNewByCountry(1, 2000, lang, countryCode)
+            val response =
+                apiService(userToken).getUserTagsNewByCountry(selectedPage, perPage, lang, countryCode)
 
             if (response.isSuccessful) {
                 val tags = response.body()?.data?.tags?.items?.toTagUiModel().orEmpty()
-                Result.success(tags)
+                val pagination = response.body()?.data?.tags?.pagination!!
+
+                Result.success(Pair(pagination, tags))
             } else {
                 val errorResponse =
                     response.errorBody()?.let { parseErrorResponse(response.code(), it) }
@@ -254,7 +262,6 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
             Result.failure(NetworkError.ServerError)
         }
     }
-
 
     suspend fun deactivateTag(body: ActivateDeactivateTagModel): Result<Unit> {
         if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
