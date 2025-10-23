@@ -15,6 +15,9 @@ import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.toTagUiModel
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 
 //changed this to be for profile fragment because it was not used initial idea
@@ -228,33 +231,62 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
         }
     }
 
-    suspend fun getMyTagsByCountry(countryCode: String): Result<List<TagUiModel>> {
-        if (!isNetworkAvailable()) {
-            return Result.failure(NetworkError.NoConnection)
-        }
+    suspend fun getAllMyTagsByCountry(
+        countryCode: String,
+        perPage: Int
+    ): Result<List<TagUiModel>> {
+        if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
 
         val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+        val lang = getLangKey()
 
         return try {
-            val lang = getLangKey()
-            val response = apiService(userToken).getUserTagsNewByCountry(1, 2000, lang, countryCode)
+            // Fetch first page
+            val baseResponse = apiService(userToken)
+                .getUserTagsNewByCountry(1, perPage, lang, countryCode)
 
-            if (response.isSuccessful) {
-                val tags = response.body()?.data?.tags?.items?.toTagUiModel().orEmpty()
-                Result.success(tags)
-            } else {
+            if (!baseResponse.isSuccessful) {
                 val errorResponse =
-                    response.errorBody()?.let { parseErrorResponse(response.code(), it) }
-                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    baseResponse.errorBody()?.let { parseErrorResponse(baseResponse.code(), it) }
+                return Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
                     ?: NetworkError.ServerError)
             }
 
+            val body = baseResponse.body()!!
+            val pagination = body.data?.tags?.pagination
+            val itemsPage1 = body.data?.tags?.items?.toTagUiModel().orEmpty()
+            val lastPage = pagination?.lastPage ?: 1
+
+            // If only one page (no more tag data) → return immediately
+            if (lastPage == 1) {
+                return Result.success(itemsPage1)
+            }
+
+            // else fetch remaining pages in parallel using async
+            val deferredPages = (2..lastPage).map { page ->
+                coroutineScope {
+                    async {
+                        val pageResponse = apiService(userToken)
+                            .getUserTagsNewByCountry(page, perPage, lang, countryCode)
+
+                        if (pageResponse.isSuccessful) {
+                            pageResponse.body()?.data?.tags?.items?.toTagUiModel().orEmpty()
+                        } else {
+                            emptyList()
+                        }
+                    }
+                }
+            }
+
+            val remainingItems = deferredPages.awaitAll().flatten()
+            val allItems = itemsPage1 + remainingItems
+
+            Result.success(allItems)
+
         } catch (e: Exception) {
-            Log.d("MyTags", "ProfileRepository: ${e.message} ${e.cause}")
             Result.failure(NetworkError.ServerError)
         }
     }
-
 
     suspend fun deactivateTag(body: ActivateDeactivateTagModel): Result<Unit> {
         if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)

@@ -158,7 +158,7 @@ class MyTagsFragment : Fragment() {
                             allowedCountriesAdapter.performClick(savedTab)
                         } else {
                             viewModel.setCurrentApiCountry(countryCode)
-                            viewModel.fetchMyTags()
+                            viewModel.fetchDataByCountry()
                         }
                     }
                 }
@@ -207,6 +207,8 @@ class MyTagsFragment : Fragment() {
                         }
 
                         tagsListAdapter.setItems(myTags)
+
+                        hideStatusUi(false)
                     }
                 }
 
@@ -360,20 +362,15 @@ class MyTagsFragment : Fragment() {
 
         allowedCountriesAdapter = MyTagsStatusFilterAdapter { selectedCountry ->
             clearSearchFieldFocusAndKeyboard()
+
             binding.textNoMyTags.visibility = View.GONE
 
             tagsListAdapter.selectedCountry = selectedCountry
             tagsListAdapter.clearData()
 
-            viewModel.setCountryFilter(selectedCountry)
+            hideStatusUi(true)
 
-            val countryCode = when (selectedCountry) {
-                "MKD" -> "MK"
-                "MNE" -> "ME"
-                "HRV" -> "HR"
-                "SRB" -> "RS"
-                else -> ""
-            }
+            viewModel.setCountryFilter(selectedCountry)
 
             SharedPreferencesHelper.setCurrentTab(
                 requireContext(),
@@ -383,7 +380,7 @@ class MyTagsFragment : Fragment() {
             binding.cyclerContent.visibility = View.GONE
             binding.progbar.visibility = View.VISIBLE
 
-            viewModel.fetchShowActivateDeactivateButtonsByCountry(countryCode)
+            viewModel.fetchDataByCountry()
         }
         binding.rvAllowedCountries.adapter = allowedCountriesAdapter
 
@@ -483,7 +480,7 @@ class MyTagsFragment : Fragment() {
 
         binding.buttonAddTag.isEnabled = true
 
-        viewModel.fetchMyTags()
+        viewModel.fetchDataByCountry()
     }
 
     private fun showToastMessage(message: String) {
@@ -503,6 +500,22 @@ class MyTagsFragment : Fragment() {
         }
 
         recyclerView.layoutParams = params
+    }
+
+    private fun hideStatusUi(boolean: Boolean) {
+        when (boolean) {
+            true -> {
+                binding.txStatusMyTags.visibility = View.GONE
+
+                statusFilterAdapter.submitList(emptyList<String>()) {
+                    statusFilterAdapter.setTabPosition(0)
+                }
+            }
+
+            false -> {
+                binding.txStatusMyTags.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onDestroyView() {
