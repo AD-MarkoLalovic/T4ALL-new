@@ -235,7 +235,7 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
         }
     }
 
-    fun userPassword(): Flow<String> {
+    suspend fun userPassword(): String {
         return database.loginDao().fetchPassword()
     }
 

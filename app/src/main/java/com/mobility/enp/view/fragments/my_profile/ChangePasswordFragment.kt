@@ -3,6 +3,7 @@ package com.mobility.enp.view.fragments.my_profile
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
@@ -24,6 +26,7 @@ import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.ChangePasswordDialog
 import com.mobility.enp.viewmodel.ChangePasswordViewModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
+import kotlinx.coroutines.launch
 
 class ChangePasswordFragment : Fragment() {
 
@@ -185,7 +188,8 @@ class ChangePasswordFragment : Fragment() {
     }
 
     private fun setObservers() {
-        collectLatestLifecycleFlow(viewModel.userPass) { pass ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            val pass = viewModel.getPass()
             currentPassword = pass
         }
 

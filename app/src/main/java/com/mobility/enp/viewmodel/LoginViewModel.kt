@@ -16,15 +16,14 @@ import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
 import com.mobility.enp.data.repository.AuthRepository
 import com.mobility.enp.data.room.LastUser
-import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
-import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TOKEN
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
 
@@ -55,15 +54,18 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
 
             result.fold(
                 onSuccess = { response ->
-                    insertLoginToken(
-                        UserLoginResponseRoomTable(
-                            null,
-                            response.data?.accessToken,
-                            response.data?.tokenType,
-                            user.email, user.password, response.data?.portal_key
-                        )
+                    val entity = UserLoginResponseRoomTable(
+                        null,
+                        response.data?.accessToken,
+                        response.data?.tokenType,
+                        user.email, user.password, response.data?.portal_key
                     )
-                    storeLastUserEmail(user.email!!)
+
+                    withContext(Dispatchers.IO) {
+                        repository.insertLoginToken(entity)
+                        repository.storeLastUserEmail(user.email!!)
+                    }
+
                     sendLanguage()
 
                     _loginState.value = LoginState.Success(response, response.data?.portal_key)
@@ -77,64 +79,6 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
 
     fun setIdleState() {
         _loginState.value = LoginState.Idle
-    }
-
-    private suspend fun insertLoginToken(
-        userLoginResponseRoomTable: UserLoginResponseRoomTable,
-    ) {
-        repository.insertLoginToken(userLoginResponseRoomTable)
-        repository.getUserFcmData().let { pair ->
-            pair.second?.let { fcmToken ->
-                _fcmResponse.value = SubmitResult.Loading
-                val result = repository.postFcmToken(fcmToken, pair.first)
-                if (result.isSuccess) {
-                    val data = result.getOrNull()
-                    if (data == null) {
-                        _fcmResponse.value = SubmitResult.Empty
-                    } else {
-                        _fcmResponse.value = SubmitResult.Success(data)
-                    }
-                } else {
-                    when (val error = result.exceptionOrNull()) {
-                        is NetworkError.ServerError -> {
-                            Log.d(TAG, "Error while fetching tag serial data")
-                            _fcmResponse.value = SubmitResult.FailureServerError
-                        }
-
-                        is NetworkError.NoConnection -> {
-                            _fcmResponse.value = SubmitResult.FailureNoConnection
-                        }
-
-                        is NetworkError.ApiError -> {
-                            when (error.errorResponse.code) {
-                                401, 405 -> {
-                                    Log.d(TOKEN, "invalid token detected login out user")
-                                    _fcmResponse.value =
-                                        SubmitResult.InvalidApiToken(
-                                            error.errorResponse.code ?: 0,
-                                            error.errorResponse.message ?: ""
-                                        )
-                                }
-
-                                else -> {
-                                    _fcmResponse.value =
-                                        SubmitResult.FailureApiError(
-                                            error.errorResponse.message ?: ""
-                                        )
-                                    Log.d(TAG, "api error ${error.errorResponse.message}")
-                                }
-                            }
-                        }
-
-                        else -> {}
-                    }
-                }
-            }
-        }
-    }
-
-    private suspend fun storeLastUserEmail(email: String) {
-        repository.storeLastUserEmail(email)
     }
 
     suspend fun getUserToken(): UserLoginResponseRoomTable? {

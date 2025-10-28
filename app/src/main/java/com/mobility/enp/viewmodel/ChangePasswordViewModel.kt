@@ -10,14 +10,11 @@ import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.repository.AuthRepository
 import com.mobility.enp.util.SubmitResultFold
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ChangePasswordViewModel(private val repo: AuthRepository) : ViewModel() {
-
-    val userPass: Flow<String> = repo.userPassword()
 
     private val _changePassword = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
     val changePassword: StateFlow<SubmitResultFold<Unit>> get() = _changePassword
@@ -36,6 +33,10 @@ class ChangePasswordViewModel(private val repo: AuthRepository) : ViewModel() {
                 }
             )
         }
+    }
+
+    suspend fun getPass(): String {
+        return repo.userPassword()
     }
 
     fun resetChangePasswordState() {
