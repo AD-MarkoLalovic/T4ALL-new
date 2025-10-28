@@ -17,7 +17,6 @@ import com.mobility.enp.data.room.LastUser
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 /**
@@ -65,12 +64,6 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
         database.loginDao().insert(userLoginResponseRoomTable)
     }
 
-    suspend fun getUserFcmData(): Pair<String, FcmToken?> {
-        val userAccessToken = database.loginDao().fetchAllowedUsers()?.accessToken ?: ""
-        val fcmToken = database.fcmToken().getTableData()
-        return Pair(userAccessToken, fcmToken)
-    }
-
     suspend fun loginUser(user: LoginBody): Result<UserResponse> {
         if (!isNetworkAvailable()) {
             return Result.failure(NetworkError.NoConnection)
@@ -97,36 +90,6 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
             Result.failure(NetworkError.ServerError)
         }
     }
-
-    suspend fun postFcmToken(
-        fcmToken: FcmToken,
-        userToken: String
-    ): Result<HomePageFcmTokenResponse> {
-        if (!isNetworkAvailable()) {
-            return Result.failure(NetworkError.NoConnection)
-        }
-
-        return try {
-            val response = apiService(userToken).postFirebaseFcmToken(
-                fcmToken
-            )
-
-            if (response.isSuccessful) {
-                response.body()?.let { indexData ->
-                    Result.success(indexData)
-                } ?: Result.failure(NetworkError.ServerError)
-            } else {
-                response.errorBody()?.let { errorBody ->
-                    val errorResponse = parseErrorResponse(response.code(), errorBody)
-                    Result.failure(NetworkError.ApiError(errorResponse))
-                } ?: Result.failure(NetworkError.ServerError)
-            }
-        } catch (e: Exception) {
-            Log.d(TAG, "getIndexData: ${e.message} ${e.cause}")
-            Result.failure(NetworkError.ServerError)
-        }
-    }
-
 
     suspend fun postForgotPassword(
         email: ForgotPasswordRequest,
