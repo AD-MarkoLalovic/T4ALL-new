@@ -137,10 +137,6 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
         }
     }
 
-    private suspend fun storeLastUserEmail(email: String) {
-        repository.storeLastUserEmail(email)
-    }
-
     suspend fun getUserToken(): UserLoginResponseRoomTable? {
         return repository.getStoredUser()
     }
