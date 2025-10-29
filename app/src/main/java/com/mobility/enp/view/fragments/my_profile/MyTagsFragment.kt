@@ -67,7 +67,6 @@ class MyTagsFragment : Fragment() {
         setAdapters()
         observeMyTags()
 
-
         viewModel.fetchInitialData()
     }
 
@@ -189,10 +188,12 @@ class MyTagsFragment : Fragment() {
                     if (myTags.isEmpty()) {
                         binding.textNoMyTags.visibility = View.VISIBLE
                         binding.myTagsContainer.visibility = View.GONE
+                        binding.constraintLayoutPage.visibility = View.GONE
                     } else {
                         binding.textNoMyTags.visibility = View.GONE
                         binding.textNoFilteredTags.visibility = View.GONE
                         binding.myTagsContainer.visibility = View.VISIBLE
+                        binding.constraintLayoutPage.visibility = View.VISIBLE
 
                         viewModel.setAllStatusLabel(allStatusText)
 

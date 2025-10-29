@@ -41,6 +41,7 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
     private var allStatusLabel: String = ""
     private var currentCountryForApi = ""
     private val tagsPerApiRequest: Int = 25
+    private var currentPage: Int = 1
 
     fun reset() {
         selectedCountry = "RS"
@@ -112,7 +113,7 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
         viewModelScope.launch {
             _initialData.value = SubmitResultMyTags.Loading
 
-            val result = repository.getMyTags("",tagsPerApiRequest)
+            val result = repository.getMyTags("", tagsPerApiRequest)
             result.fold(
                 onSuccess = { tags ->
                     allTags = tags
@@ -134,7 +135,12 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
 
         viewModelScope.launch {
             _myTags.value = SubmitResultMyTags.Loading
-            val result = repository.getAllMyTagsByCountry(currentCountryForApi, tagsPerApiRequest)
+
+            val result = repository.getAllMyTagsByCountry(
+                currentCountryForApi,
+                tagsPerApiRequest,
+                currentPage
+            )
 
             result.fold(
                 onSuccess = { allItems ->
