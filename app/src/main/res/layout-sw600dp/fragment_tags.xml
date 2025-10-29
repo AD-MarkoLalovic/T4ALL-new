@@ -70,7 +70,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/inputSerialNumber"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimens_8dp"
                         android:focusable="false"
@@ -85,7 +85,7 @@
                         app:boxStrokeWidthFocused="@dimen/dimens_1dp"
                         app:endIconMode="clear_text"
                         app:hintEnabled="false"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/searchMark"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txSerialNumberMyTags">
 
@@ -99,6 +99,20 @@
                             android:inputType="number"
                             android:textColor="@color/figmaSplashScreenColor" />
                     </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <ImageView
+                        android:id="@+id/searchMark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/dimens_5dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/search_pick"
+                        app:layout_constraintStart_toEndOf="@id/inputSerialNumber"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/inputSerialNumber"
+                        app:layout_constraintBottom_toBottomOf="@+id/inputSerialNumber"
+                        />
 
                     <View
                         android:id="@+id/lineMyTags"
@@ -228,7 +242,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/dimens_2dp"
-                    android:text="@string/of_text"
+                    android:text="/"
                     android:textFontWeight="700"
                     app:layout_constraintStart_toEndOf="@id/currentPage"
                     app:layout_constraintTop_toTopOf="@id/pageText" />
@@ -243,22 +257,27 @@
                     app:layout_constraintTop_toTopOf="@id/pageText"
                     tools:text="1000" />
 
-                <Button
+                <ImageView
                     android:id="@+id/buttonNextPage"
-                    style="@style/MyButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="38dp"
+                    android:background="@drawable/toolbar_shared_back_arrow"
+                    android:contentDescription="@null"
+                    android:elevation="@dimen/dimens_10dp"
                     android:paddingVertical="@dimen/dimens_0dp"
-                    android:text="@string/next"
+                    android:text="@string/back_button"
+                    android:rotation="180"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
+                <ImageView
                     android:id="@+id/buttonPreviousPage"
-                    style="@style/MyButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="38dp"
                     android:layout_marginEnd="@dimen/dimens_5dp"
+                    android:background="@drawable/toolbar_shared_back_arrow"
+                    android:contentDescription="@null"
+                    android:elevation="@dimen/dimens_10dp"
                     android:paddingVertical="@dimen/dimens_0dp"
                     android:text="@string/back_button"
                     app:layout_constraintEnd_toStartOf="@id/buttonNextPage"
