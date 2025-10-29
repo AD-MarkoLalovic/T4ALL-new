@@ -6,6 +6,7 @@ import androidx.webkit.Page
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
+import com.mobility.enp.data.model.api_my_profile.my_tags.response.Pagination
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
@@ -234,7 +235,7 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
 
 
     suspend fun getAllMyTagsByCountry(countryCode: String,
-                                   perPage: Int,page: Int): Result<List<TagUiModel>> {
+                                   perPage: Int,page: Int): Result<Pair<List<TagUiModel>, Pagination?>> {
         if (!isNetworkAvailable()) {
             return Result.failure(NetworkError.NoConnection)
         }
@@ -247,7 +248,8 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
 
             if (response.isSuccessful) {
                 val tags = response.body()?.data?.tags?.items?.toTagUiModel().orEmpty()
-                Result.success(tags)
+                val pagination = response.body()?.data?.tags?.pagination
+                Result.success(Pair(tags,pagination))
             } else {
                 val errorResponse =
                     response.errorBody()?.let { parseErrorResponse(response.code(), it) }

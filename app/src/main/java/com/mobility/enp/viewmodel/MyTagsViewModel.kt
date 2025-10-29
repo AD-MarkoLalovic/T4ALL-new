@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
+import com.mobility.enp.data.model.api_my_profile.my_tags.response.Pagination
 import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.util.SubmitResultFold
@@ -28,6 +29,11 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
         MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Idle)
     val myTags: StateFlow<SubmitResultMyTags<List<TagUiModel>>> get() = _myTags
 
+    private val _paginationData =
+        MutableStateFlow<SubmitResultMyTags<Pagination?>>(SubmitResultMyTags.Idle)
+    val paginationData: StateFlow<SubmitResultMyTags<Pagination?>> get() = _paginationData
+
+
     private val _deactivateActivateTag =
         MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
     val deactivateActivateTag: StateFlow<SubmitResultFold<Unit>> get() = _deactivateActivateTag
@@ -42,6 +48,7 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
     private var currentCountryForApi = ""
     private val tagsPerApiRequest: Int = 25
     private var currentPage: Int = 1
+    private var pagination: Pagination? = null
 
     fun reset() {
         selectedCountry = "RS"
@@ -135,6 +142,7 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
 
         viewModelScope.launch {
             _myTags.value = SubmitResultMyTags.Loading
+            _paginationData.value = SubmitResultMyTags.Loading
 
             val result = repository.getAllMyTagsByCountry(
                 currentCountryForApi,
@@ -144,8 +152,10 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
 
             result.fold(
                 onSuccess = { allItems ->
-                    allTags = allItems
-                    _myTags.value = SubmitResultMyTags.Success(allItems)
+                    allTags = allItems.first
+                    pagination = allItems.second
+                    _myTags.value = SubmitResultMyTags.Success(allItems.first)
+                    _paginationData.value = SubmitResultMyTags.Success(allItems.second)
                 },
                 onFailure = { error ->
                     _myTags.value = SubmitResultMyTags.Failure(error)

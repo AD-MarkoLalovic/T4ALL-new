@@ -188,12 +188,10 @@ class MyTagsFragment : Fragment() {
                     if (myTags.isEmpty()) {
                         binding.textNoMyTags.visibility = View.VISIBLE
                         binding.myTagsContainer.visibility = View.GONE
-                        binding.constraintLayoutPage.visibility = View.GONE
                     } else {
                         binding.textNoMyTags.visibility = View.GONE
                         binding.textNoFilteredTags.visibility = View.GONE
                         binding.myTagsContainer.visibility = View.VISIBLE
-                        binding.constraintLayoutPage.visibility = View.VISIBLE
 
                         viewModel.setAllStatusLabel(allStatusText)
 
@@ -229,6 +227,28 @@ class MyTagsFragment : Fragment() {
                 unhideUI()
             }
         }
+
+        collectLatestLifecycleFlow(viewModel.paginationData) { result ->
+            when (result) {
+                is MyTagsViewModel.SubmitResultMyTags.Loading -> {
+                    binding.constraintLayoutPage.visibility = View.GONE
+                }
+
+                is MyTagsViewModel.SubmitResultMyTags.Success -> {
+                    result.data?.let { pagination ->
+                        binding.constraintLayoutPage.visibility = View.VISIBLE
+
+                        binding.lastPage.text = pagination.lastPage.toString()
+                        binding.currentPage.text = pagination.currentPage.toString()
+                    }
+                }
+
+                is MyTagsViewModel.SubmitResultMyTags.Idle -> {}
+
+                else -> {}
+            }
+        }
+
         collectLatestLifecycleFlow(viewModel.reportTag) { result ->
             when (result) {
                 is SubmitResultFold.Failure -> {
@@ -364,6 +384,7 @@ class MyTagsFragment : Fragment() {
 
         allowedCountriesAdapter = MyTagsStatusFilterAdapter { selectedCountry ->
             clearSearchFieldFocusAndKeyboard()
+            binding.constraintLayoutPage.visibility = View.GONE
 
             binding.textNoMyTags.visibility = View.GONE
 
