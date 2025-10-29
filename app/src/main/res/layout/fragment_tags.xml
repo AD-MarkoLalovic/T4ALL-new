@@ -107,7 +107,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/dimens_5dp"
                         android:contentDescription="@null"
-                        android:src="@drawable/search_pick"
+                        android:src="@drawable/loop"
                         app:layout_constraintStart_toEndOf="@id/inputSerialNumber"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/inputSerialNumber"
@@ -224,7 +224,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.7" />
+                    app:layout_constraintVertical_bias="0.6" />
 
                 <TextView
                     android:id="@+id/currentPage"
