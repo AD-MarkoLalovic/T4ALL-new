@@ -399,4 +399,8 @@
     <string name="deactivate_tag_successful">Sie haben das Tag erfolgreich deaktiviert</string>
     <string name="deactivate_tag_title">"Tag deaktivieren "</string>
     <string name="activate_tag_title">Tag aktivieren</string>
+    <string name="of_text">Von</string>
+    <string name="from_button">Zu</string>
+    <string name="back_button">Zurück</string>
+    <string name="page_text">Seite</string>
 </resources>

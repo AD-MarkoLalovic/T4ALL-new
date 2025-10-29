@@ -378,4 +378,8 @@
     <string name="deactivate_tag_successful">Απενεργοποιήσατε με επιτυχία το Tag</string>
     <string name="deactivate_tag_title">"Απενεργοποίηση ετικέτας "</string>
     <string name="activate_tag_title">Ενεργοποίηση ετικέτας</string>
+    <string name="of_text">Από</string>
+    <string name="from_button">Προς</string>
+    <string name="back_button">Πίσω</string>
+    <string name="page_text">Σελίδα</string>
 </resources>

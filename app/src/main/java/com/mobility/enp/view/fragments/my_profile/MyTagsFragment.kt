@@ -67,6 +67,7 @@ class MyTagsFragment : Fragment() {
         setAdapters()
         observeMyTags()
 
+
         viewModel.fetchInitialData()
     }
 

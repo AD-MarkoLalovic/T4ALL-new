@@ -189,6 +189,82 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayoutPage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_block"
+                android:backgroundTint="@color/primary_light_lightest"
+                android:paddingBottom="5dp"
+                android:paddingHorizontal="@dimen/dimens_16dp">
+
+                <TextView
+                    android:id="@+id/pageText"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/page_text"
+                    android:textFontWeight="700"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintVertical_bias="0.7"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/currentPage"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_5dp"
+                    tools:text="1"
+                    app:layout_constraintStart_toEndOf="@id/pageText"
+                    app:layout_constraintTop_toTopOf="@id/pageText" />
+
+                <TextView
+                    android:id="@+id/divider"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/dimens_2dp"
+                    android:textFontWeight="700"
+                    android:text="@string/of_text"
+                    app:layout_constraintStart_toEndOf="@id/currentPage"
+                    app:layout_constraintTop_toTopOf="@id/pageText" />
+
+                <TextView
+                    android:id="@+id/lastPage"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_5dp"
+                    tools:text="1000"
+                    app:layout_constraintStart_toEndOf="@id/divider"
+                    app:layout_constraintTop_toTopOf="@id/pageText" />
+
+                <Button
+                    android:id="@+id/buttonNextPage"
+                    style="@style/MyButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:paddingVertical="@dimen/dimens_0dp"
+                    android:text="@string/next"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/buttonPreviousPage"
+                    style="@style/MyButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:paddingVertical="@dimen/dimens_0dp"
+                    android:text="@string/back_button"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/buttonNextPage"
+                    android:layout_marginEnd="@dimen/dimens_5dp"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -213,6 +289,7 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
     <ProgressBar
         android:id="@+id/progbar"
         android:layout_width="wrap_content"

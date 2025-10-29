@@ -389,4 +389,8 @@
     <string name="deactivate_tag_successful">Uspešno ste deaktivirali Tag</string>
     <string name="deactivate_tag_title">"Deaktiviraj tag "</string>
     <string name="activate_tag_title">Aktiviraj tag</string>
+    <string name="of_text">Od</string>
+    <string name="from_button">Do</string>
+    <string name="back_button">Nazad</string>
+    <string name="page_text">Stranica</string>
 </resources>
