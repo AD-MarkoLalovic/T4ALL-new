@@ -1,7 +1,6 @@
 package com.mobility.enp.data.room.database
 
 import android.content.Context
-import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -51,7 +50,7 @@ import com.mobility.enp.data.room.notification.NotificationDao
     entities = [UserLoginResponseRoomTable::class, FcmToken::class, NotificationModel::class, IndexData::class, ToolHistoryListing::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class, HomeEntity::class, V2HistoryTagResponse::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class, HomeCardsEntity::class],
-    version = 215,
+    version = 217,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -79,7 +78,6 @@ abstract class DRoom : RoomDatabase() {
 
     companion object {
         private var instance: DRoom? = null
-        const val TAG = "ROOM"
 
         fun getRoomInstance(context: Context): DRoom {
             if (instance == null) {
@@ -93,13 +91,12 @@ abstract class DRoom : RoomDatabase() {
 
         fun buildDatabase(context: Context): DRoom {  // its a singleton
             if (instance == null) {
-                Log.d(TAG, "getRoomInstance: null creating new instance")
                 synchronized(DRoom::class) {  // factory is cypher for sql
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         DRoom::class.java,
                         Config.TABLE_NAME
-                    ).fallbackToDestructiveMigration().build()
+                    ).fallbackToDestructiveMigration(true).build()
                 }
             }
             return instance!!

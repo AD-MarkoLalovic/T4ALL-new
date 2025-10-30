@@ -141,7 +141,6 @@
     <string name="password_repeat_error_message">Passwords do not match.</string>
     <string name="password_error_message">New password field must contain at least 8 characters</string>
     <string name="enter_old_password_message">Field old password is mandatory</string>
-    <string name="incorrect_old_password_message">Old password entered incorrectly.</string>
     <string name="repeat_the_new_password">Repeat the new password.</string>
     <string name="enter_support_message">Enter the message text.</string>
     <string name="create_account">Create T4A account</string>

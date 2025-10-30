@@ -60,7 +60,7 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
                         null,
                         response.data?.accessToken,
                         response.data?.tokenType,
-                        user.email, user.password, response.data?.portal_key
+                        user.email, response.data?.portal_key
                     )
 
                     withContext(Dispatchers.IO) {

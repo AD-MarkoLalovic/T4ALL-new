@@ -234,10 +234,6 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
         }
     }
 
-    suspend fun userPassword(): String {
-        return database.loginDao().fetchPassword()
-    }
-
     suspend fun sendCustomerSupport(data: CustomerSupport): Result<Unit> {
         if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
 

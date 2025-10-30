@@ -20,7 +20,4 @@ interface LoginDao {
     @Query("DELETE FROM loginTable")
     suspend fun deleteAll()
 
-    @Query("SELECT password FROM loginTable LIMIT 1")
-    suspend fun fetchPassword(): String
-
 }

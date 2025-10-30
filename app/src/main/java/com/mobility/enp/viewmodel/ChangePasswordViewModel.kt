@@ -35,10 +35,6 @@ class ChangePasswordViewModel(private val repo: AuthRepository) : ViewModel() {
         }
     }
 
-    suspend fun getPass(): String {
-        return repo.userPassword()
-    }
-
     fun resetChangePasswordState() {
         _changePassword.value = SubmitResultFold.Idle
     }
