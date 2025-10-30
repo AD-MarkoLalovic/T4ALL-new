@@ -185,6 +185,9 @@ class MyTagsFragment : Fragment() {
                     binding.textNoFilteredTags.visibility = View.GONE
                     binding.textNoMyTags.visibility = View.GONE
                     binding.progbar.visibility = View.VISIBLE
+
+                    tagsListAdapter.clearData()
+                    hideStatusUi(true)
                 }
 
                 is MyTagsViewModel.SubmitResultMyTags.Success -> {
@@ -250,9 +253,11 @@ class MyTagsFragment : Fragment() {
                             1 -> {
                                 binding.buttonPreviousPage.isEnabled = false
                                 binding.buttonPreviousPage.isClickable = false
+                                binding.buttonPreviousPage.visibility = View.INVISIBLE
                             }
 
                             else -> {
+                                binding.buttonPreviousPage.visibility = View.VISIBLE
                                 binding.buttonPreviousPage.isClickable = true
                                 binding.buttonPreviousPage.isEnabled = true
                             }
@@ -261,11 +266,13 @@ class MyTagsFragment : Fragment() {
 
                         when (pagination.currentPage == pagination.lastPage) {
                             true -> {
+                                binding.buttonNextPage.visibility = View.INVISIBLE
                                 binding.buttonNextPage.isEnabled = false
                                 binding.buttonNextPage.isClickable = false
                             }
 
                             false -> {
+                                binding.buttonNextPage.visibility = View.VISIBLE
                                 binding.buttonNextPage.isEnabled = true
                                 binding.buttonNextPage.isClickable = true
                             }
@@ -416,6 +423,8 @@ class MyTagsFragment : Fragment() {
         binding.cyclerTagTypes.adapter = statusFilterAdapter
 
         allowedCountriesAdapter = MyTagsStatusFilterAdapter { selectedCountry ->
+            viewModel.nullPagination()
+
             clearSearchFieldFocusAndKeyboard()
             binding.constraintLayoutPage.visibility = View.GONE
 

@@ -56,6 +56,10 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
         allTags = listOf()
     }
 
+    fun nullPagination(){  // when switchign countries so it doesnt continue on last selected page
+        pagination = null
+    }
+
     fun setCurrentApiCountry(country: String) {
         this.currentCountryForApi = country
     }
