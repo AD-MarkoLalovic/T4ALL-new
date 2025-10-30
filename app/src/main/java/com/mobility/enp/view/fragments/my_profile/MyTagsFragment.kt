@@ -77,6 +77,14 @@ class MyTagsFragment : Fragment() {
         binding.buttonAddTag.setOnClickListener {
             findNavController().navigate(R.id.action_myTagsFragment2_to_addTagFragment)
         }
+
+        binding.buttonPreviousPage.setOnClickListener {
+            viewModel.fetchDataByCountry(1)
+        }
+
+        binding.buttonNextPage.setOnClickListener {
+            viewModel.fetchDataByCountry(2)
+        }
     }
 
     private fun observeMyTags() {
@@ -158,7 +166,7 @@ class MyTagsFragment : Fragment() {
                             allowedCountriesAdapter.performClick(savedTab)
                         } else {
                             viewModel.setCurrentApiCountry(countryCode)
-                            viewModel.fetchDataByCountry()
+                            viewModel.fetchDataByCountry(0)
                         }
                     }
                 }
@@ -237,6 +245,31 @@ class MyTagsFragment : Fragment() {
                 is MyTagsViewModel.SubmitResultMyTags.Success -> {
                     result.data?.let { pagination ->
                         binding.constraintLayoutPage.visibility = View.VISIBLE
+
+                        when (pagination.currentPage) {
+                            1 -> {
+                                binding.buttonPreviousPage.isEnabled = false
+                                binding.buttonPreviousPage.isClickable = false
+                            }
+
+                            else -> {
+                                binding.buttonPreviousPage.isClickable = true
+                                binding.buttonPreviousPage.isEnabled = true
+                            }
+
+                        }
+
+                        when (pagination.currentPage == pagination.lastPage) {
+                            true -> {
+                                binding.buttonNextPage.isEnabled = false
+                                binding.buttonNextPage.isClickable = false
+                            }
+
+                            false -> {
+                                binding.buttonNextPage.isEnabled = true
+                                binding.buttonNextPage.isClickable = true
+                            }
+                        }
 
                         binding.lastPage.text = pagination.lastPage.toString()
                         binding.currentPage.text = pagination.currentPage.toString()
@@ -403,7 +436,7 @@ class MyTagsFragment : Fragment() {
             binding.cyclerContent.visibility = View.GONE
             binding.progbar.visibility = View.VISIBLE
 
-            viewModel.fetchDataByCountry()
+            viewModel.fetchDataByCountry(0)
         }
         binding.rvAllowedCountries.adapter = allowedCountriesAdapter
 
@@ -503,7 +536,7 @@ class MyTagsFragment : Fragment() {
 
         binding.buttonAddTag.isEnabled = true
 
-        viewModel.fetchDataByCountry()
+        viewModel.fetchDataByCountry(0)
     }
 
     private fun showToastMessage(message: String) {

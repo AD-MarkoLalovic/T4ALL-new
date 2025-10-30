@@ -47,7 +47,6 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
     private var allStatusLabel: String = ""
     private var currentCountryForApi = ""
     private val tagsPerApiRequest: Int = 25
-    private var currentPage: Int = 1
     private var pagination: Pagination? = null
 
     fun reset() {
@@ -137,8 +136,20 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
         return repository.isNetworkAvail()
     }
 
-    fun fetchDataByCountry() {
+    // 0 null 1 back 2 forward
+    fun fetchDataByCountry(selectPage: Int) {
         currentCountryForApi = selectedCountry
+
+        var currentPage = if (pagination != null) {
+            pagination?.currentPage ?: 1
+        } else {
+            1
+        }
+
+        when (selectPage) {
+            1 -> currentPage -= 1
+            2 -> currentPage += 1
+        }
 
         viewModelScope.launch {
             _myTags.value = SubmitResultMyTags.Loading
@@ -154,6 +165,7 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
                 onSuccess = { allItems ->
                     allTags = allItems.first
                     pagination = allItems.second
+
                     _myTags.value = SubmitResultMyTags.Success(allItems.first)
                     _paginationData.value = SubmitResultMyTags.Success(allItems.second)
                 },
