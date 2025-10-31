@@ -57,10 +57,9 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
             result.fold(
                 onSuccess = { response ->
                     val entity = UserLoginResponseRoomTable(
-                        null,
-                        response.data?.accessToken,
-                        response.data?.tokenType,
-                        user.email, response.data?.portal_key
+                        accessToken = response.data?.accessToken,
+                        tokenType = response.data?.tokenType,
+                        username = user.email, portalKey = response.data?.portal_key
                     )
 
                     withContext(Dispatchers.IO) {
