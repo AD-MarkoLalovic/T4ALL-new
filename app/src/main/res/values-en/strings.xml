@@ -379,4 +379,8 @@
     <string name="deactivate_tag_successful">Successfully deactivated Tag</string>
     <string name="deactivate_tag_title">"Deactivate tag "</string>
     <string name="activate_tag_title">Activate tag</string>
+    <string name="back_button">Back</string>
+    <string name="from_button">From</string>
+    <string name="of_text">Of</string>
+    <string name="page_text">Page</string>
 </resources>

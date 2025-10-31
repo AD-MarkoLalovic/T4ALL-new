@@ -388,4 +388,8 @@
     <string name="deactivate_tag_successful">Tag’i başarıyla devre dışı bıraktınız</string>
     <string name="deactivate_tag_title">Etiketi devre dışı bırak</string>
     <string name="activate_tag_title">Etiketi etkinleştir</string>
+    <string name="of_text">den</string>
+    <string name="from_button">e</string>
+    <string name="back_button">Geri</string>
+    <string name="page_text">Sayfa</string>
 </resources>

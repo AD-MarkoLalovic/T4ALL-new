@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -76,6 +77,18 @@ class MyTagsFragment : Fragment() {
 
         binding.buttonAddTag.setOnClickListener {
             findNavController().navigate(R.id.action_myTagsFragment2_to_addTagFragment)
+        }
+
+        binding.buttonPreviousPage.setOnClickListener {
+            viewModel.fetchDataByCountry(1)
+        }
+
+        binding.buttonNextPage.setOnClickListener {
+            viewModel.fetchDataByCountry(2)
+        }
+
+        binding.searchMark.setOnClickListener {
+            viewModel.fetchDataBySerialNumber()
         }
     }
 
@@ -158,7 +171,7 @@ class MyTagsFragment : Fragment() {
                             allowedCountriesAdapter.performClick(savedTab)
                         } else {
                             viewModel.setCurrentApiCountry(countryCode)
-                            viewModel.fetchDataByCountry()
+                            viewModel.fetchDataByCountry(0)
                         }
                     }
                 }
@@ -177,6 +190,9 @@ class MyTagsFragment : Fragment() {
                     binding.textNoFilteredTags.visibility = View.GONE
                     binding.textNoMyTags.visibility = View.GONE
                     binding.progbar.visibility = View.VISIBLE
+
+                    tagsListAdapter.clearData()
+                    hideStatusUi(true)
                 }
 
                 is MyTagsViewModel.SubmitResultMyTags.Success -> {
@@ -187,7 +203,7 @@ class MyTagsFragment : Fragment() {
 
                     if (myTags.isEmpty()) {
                         binding.textNoMyTags.visibility = View.VISIBLE
-                        binding.myTagsContainer.visibility = View.GONE
+                        binding.myTagsContainer.visibility = View.VISIBLE
                     } else {
                         binding.textNoMyTags.visibility = View.GONE
                         binding.textNoFilteredTags.visibility = View.GONE
@@ -227,6 +243,67 @@ class MyTagsFragment : Fragment() {
                 unhideUI()
             }
         }
+
+        collectLatestLifecycleFlow(viewModel.paginationData) { result ->
+            when (result) {
+                is MyTagsViewModel.SubmitResultMyTags.Loading -> {
+                    binding.constraintLayoutPage.visibility = View.GONE
+                }
+
+                is MyTagsViewModel.SubmitResultMyTags.Success -> {
+                    result.data?.let { pagination ->
+                        binding.constraintLayoutPage.visibility = View.VISIBLE
+
+                        when (pagination.currentPage) {
+                            1 -> {
+                                binding.buttonPreviousPage.isEnabled = false
+                                binding.buttonPreviousPage.isClickable = false
+                                binding.buttonPreviousPage.visibility = View.INVISIBLE
+                            }
+
+                            else -> {
+                                binding.buttonPreviousPage.visibility = View.VISIBLE
+                                binding.buttonPreviousPage.isClickable = true
+                                binding.buttonPreviousPage.isEnabled = true
+                            }
+
+                        }
+
+                        when (pagination.currentPage == pagination.lastPage) {
+                            true -> {
+                                binding.buttonNextPage.visibility = View.INVISIBLE
+                                binding.buttonNextPage.isEnabled = false
+                                binding.buttonNextPage.isClickable = false
+                            }
+
+                            false -> {
+                                binding.buttonNextPage.visibility = View.VISIBLE
+                                binding.buttonNextPage.isEnabled = true
+                                binding.buttonNextPage.isClickable = true
+                            }
+                        }
+
+                        //users with less then 1 page
+                        when(pagination.lastPage == 1){
+                            true -> {
+                                binding.constraintLayoutPage.visibility = View.GONE
+                            }
+                            false -> {
+                                binding.constraintLayoutPage.visibility = View.VISIBLE
+                            }
+                        }
+
+                        binding.lastPage.text = pagination.lastPage.toString()
+                        binding.currentPage.text = pagination.currentPage.toString()
+                    }
+                }
+
+                is MyTagsViewModel.SubmitResultMyTags.Idle -> {}
+
+                else -> {}
+            }
+        }
+
         collectLatestLifecycleFlow(viewModel.reportTag) { result ->
             when (result) {
                 is SubmitResultFold.Failure -> {
@@ -286,25 +363,64 @@ class MyTagsFragment : Fragment() {
     }
 
     private fun setupTextWatcher() {
+        binding.searchMark.isClickable = false
+        binding.searchMark.isEnabled = false
+
         textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!binding.editSerialNumberMyTags.isFocused) return
-                val query = s.toString().lowercase()
-                statusFilterAdapter.clearStatus()
-                allowedCountriesAdapter.clearStatus()
+                when (s?.length) {
+                    11 -> {
+                        binding.searchMark.setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                requireContext(),
+                                R.drawable.loop
+                            )
+                        )
 
-                // Filtriramo listu tagova na osnovu unosa u editText
-                val result = viewModel.allTags.filter { tag ->
-                    tag.serialNumber.lowercase().contains(query)
+                        viewModel.setSerialNumberForSearch(s.toString())
+
+                        binding.searchMark.isEnabled = true
+                        binding.searchMark.isClickable = true
+                    }
+
+                    0 -> {
+                        binding.searchMark.setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                requireContext(),
+                                R.drawable.loop
+                            )
+                        )
+                        binding.searchMark.isEnabled = false
+                        binding.searchMark.isClickable = false
+                    }
+
+                    else -> {
+                        binding.searchMark.setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                requireContext(),
+                                R.drawable.loop_red
+                            )
+                        )
+                        binding.searchMark.isEnabled = false
+                        binding.searchMark.isClickable = false
+                    }
                 }
-
-                updateTagsList(result)
             }
 
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {
+                when (s?.length) {
+                    0 -> {
+                        if (viewModel.serialNumberSearchPerformed) {
+                            viewModel.serialNumberSearchPerformed = false
+                            viewModel.fetchInitialData()
+                        }
+                    }
+                }
+            }
         }
+
     }
 
     private fun setAdapters() {
@@ -361,7 +477,10 @@ class MyTagsFragment : Fragment() {
         binding.cyclerTagTypes.adapter = statusFilterAdapter
 
         allowedCountriesAdapter = MyTagsStatusFilterAdapter { selectedCountry ->
+            viewModel.nullPagination()
+
             clearSearchFieldFocusAndKeyboard()
+            binding.constraintLayoutPage.visibility = View.GONE
 
             binding.textNoMyTags.visibility = View.GONE
 
@@ -380,7 +499,7 @@ class MyTagsFragment : Fragment() {
             binding.cyclerContent.visibility = View.GONE
             binding.progbar.visibility = View.VISIBLE
 
-            viewModel.fetchDataByCountry()
+            viewModel.fetchDataByCountry(0)
         }
         binding.rvAllowedCountries.adapter = allowedCountriesAdapter
 
@@ -480,7 +599,7 @@ class MyTagsFragment : Fragment() {
 
         binding.buttonAddTag.isEnabled = true
 
-        viewModel.fetchDataByCountry()
+        viewModel.fetchDataByCountry(0)
     }
 
     private fun showToastMessage(message: String) {
@@ -505,16 +624,17 @@ class MyTagsFragment : Fragment() {
     private fun hideStatusUi(boolean: Boolean) {
         when (boolean) {
             true -> {
-                binding.txStatusMyTags.visibility = View.GONE
+                statusFilterAdapter.setStatus(0)
 
-                statusFilterAdapter.submitList(emptyList<String>()) {
+                val statusList =
+                    listOf(requireContext().getString(R.string.all_status_tags))
+
+                statusFilterAdapter.submitList(statusList) {
                     statusFilterAdapter.setTabPosition(0)
                 }
             }
 
-            false -> {
-                binding.txStatusMyTags.visibility = View.VISIBLE
-            }
+            false -> {}
         }
     }
 

@@ -5,6 +5,7 @@ import android.util.Log
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
+import com.mobility.enp.data.model.api_my_profile.my_tags.response.Pagination
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
@@ -204,7 +205,7 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
         return Result.failure(NetworkError.ServerError)
     }
 
-    suspend fun getMyTags(country: String): Result<List<TagUiModel>> {
+    suspend fun getMyTags(country: String, perPage: Int): Result<List<TagUiModel>> {
         if (!isNetworkAvailable()) {
             return Result.failure(NetworkError.NoConnection)
         }
@@ -213,7 +214,7 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
 
         return try {
             val lang = getLangKey()
-            val response = apiService(userToken).getUserTagsNewByCountry(1, 2000, lang, country)
+            val response = apiService(userToken).getUserTagsNewByCountry(1, perPage, lang, country)
 
             if (response.isSuccessful) {
                 val tags = response.body()?.data?.tags?.items?.toTagUiModel().orEmpty()
@@ -231,6 +232,73 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
         }
     }
 
+
+    suspend fun getAllMyTagsByCountry(
+        countryCode: String,
+        perPage: Int, page: Int
+    ): Result<Pair<List<TagUiModel>, Pagination?>> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val lang = getLangKey()
+            val response =
+                apiService(userToken).getUserTagsNewByCountry(page, perPage, lang, countryCode)
+
+            if (response.isSuccessful) {
+                val tags = response.body()?.data?.tags?.items?.toTagUiModel().orEmpty()
+                val pagination = response.body()?.data?.tags?.pagination
+                Result.success(Pair(tags, pagination))
+            } else {
+                val errorResponse =
+                    response.errorBody()?.let { parseErrorResponse(response.code(), it) }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
+            }
+
+        } catch (e: Exception) {
+            Log.d("MyTags", "ProfileRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
+
+    suspend fun getAllMyTagsBySerialNumber(
+        countryCode: String,
+        serialNumber: String
+    ): Result<Pair<List<TagUiModel>, Pagination?>> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val lang = getLangKey()
+            val response =
+                apiService(userToken).getUserTagsNewBySerialNumber(lang, serialNumber, countryCode)
+
+            if (response.isSuccessful) {
+                val tags = response.body()?.data?.tags?.items?.toTagUiModel().orEmpty()
+                val pagination = response.body()?.data?.tags?.pagination
+                Result.success(Pair(tags, pagination))
+            } else {
+                val errorResponse =
+                    response.errorBody()?.let { parseErrorResponse(response.code(), it) }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
+            }
+
+        } catch (e: Exception) {
+            Log.d("MyTags", "ProfileRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
+    //the better api call for normal users
     suspend fun getAllMyTagsByCountry(
         countryCode: String,
         perPage: Int

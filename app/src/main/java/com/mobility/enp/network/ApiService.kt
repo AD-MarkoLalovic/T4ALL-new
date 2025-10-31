@@ -149,6 +149,13 @@ interface ApiService {
         @Query("filter[country]") country: String
     ): Response<MyTagsResponse>
 
+    @GET("/api/v2/tags")
+    suspend fun getUserTagsNewBySerialNumber(
+        @Query("lang") language: String,
+        @Query("filter[serialNumber]") serialNumber: String,
+        @Query("filter[country]") countryCode: String
+    ): Response<MyTagsResponse>
+
     @POST("/api/v1/tags/deactivate-tag")
     suspend fun deactivateTag(
         @Body body: ActivateDeactivateTagModel

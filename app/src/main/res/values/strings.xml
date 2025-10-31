@@ -453,5 +453,9 @@
     <string name="deactivate_tag_successful">Успешно сте деактивирали Таг</string>
     <string name="deactivate_tag_title">Деактивирај таг</string>
     <string name="activate_tag_title">Активирај таг</string>
+    <string name="of_text">Од</string>
+    <string name="from_button">До</string>
+    <string name="back_button">Назад</string>
+    <string name="page_text">Страница</string>
 
 </resources>

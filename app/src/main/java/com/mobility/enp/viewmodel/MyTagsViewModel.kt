@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
+import com.mobility.enp.data.model.api_my_profile.my_tags.response.Pagination
 import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.util.SubmitResultFold
@@ -28,6 +29,10 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
         MutableStateFlow<SubmitResultMyTags<List<TagUiModel>>>(SubmitResultMyTags.Idle)
     val myTags: StateFlow<SubmitResultMyTags<List<TagUiModel>>> get() = _myTags
 
+    private val _paginationData =
+        MutableStateFlow<SubmitResultMyTags<Pagination?>>(SubmitResultMyTags.Idle)
+    val paginationData: StateFlow<SubmitResultMyTags<Pagination?>> get() = _paginationData
+
     private val _deactivateActivateTag =
         MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
     val deactivateActivateTag: StateFlow<SubmitResultFold<Unit>> get() = _deactivateActivateTag
@@ -35,18 +40,30 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
     private val _reportTag = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
     val reportTag: StateFlow<SubmitResultFold<Unit>> get() = _reportTag
 
+    private var serialNumberSearch: String? = null
+    var serialNumberSearchPerformed : Boolean = false
+
+    fun setSerialNumberForSearch(serialNumber: String) {
+        this.serialNumberSearch = serialNumber
+    }
+
     var allTags: List<TagUiModel> = emptyList()
     private var selectedStatus: String = ""
     private var selectedCountry: String = "RS"
     private var allStatusLabel: String = ""
     private var currentCountryForApi = ""
-    private val tagsPerApiRequest: Int = 20
+    private val tagsPerApiRequest: Int = 25
+    private var pagination: Pagination? = null
 
     fun reset() {
         selectedCountry = "RS"
         allStatusLabel = ""
         selectedStatus = ""
         allTags = listOf()
+    }
+
+    fun nullPagination() {  // when switchign countries so it doesnt continue on last selected page
+        pagination = null
     }
 
     fun setCurrentApiCountry(country: String) {
@@ -112,7 +129,7 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
         viewModelScope.launch {
             _initialData.value = SubmitResultMyTags.Loading
 
-            val result = repository.getMyTags("")
+            val result = repository.getMyTags("", tagsPerApiRequest)
             result.fold(
                 onSuccess = { tags ->
                     allTags = tags
@@ -129,17 +146,62 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
         return repository.isNetworkAvail()
     }
 
-    fun fetchDataByCountry() {
+    // 0 null 1 back 2 forward
+    fun fetchDataByCountry(selectPage: Int) {
         currentCountryForApi = selectedCountry
+
+        var currentPage = if (pagination != null) {
+            pagination?.currentPage ?: 1
+        } else {
+            1
+        }
+
+        when (selectPage) {
+            1 -> currentPage -= 1
+            2 -> currentPage += 1
+        }
 
         viewModelScope.launch {
             _myTags.value = SubmitResultMyTags.Loading
-            val result = repository.getAllMyTagsByCountry(currentCountryForApi, tagsPerApiRequest)
+            _paginationData.value = SubmitResultMyTags.Loading
+
+            val result = repository.getAllMyTagsByCountry(
+                currentCountryForApi,
+                tagsPerApiRequest,
+                currentPage
+            )
 
             result.fold(
                 onSuccess = { allItems ->
-                    allTags = allItems
-                    _myTags.value = SubmitResultMyTags.Success(allItems)
+                    allTags = allItems.first
+                    pagination = allItems.second
+
+                    _myTags.value = SubmitResultMyTags.Success(allItems.first)
+                    _paginationData.value = SubmitResultMyTags.Success(allItems.second)
+                },
+                onFailure = { error ->
+                    _myTags.value = SubmitResultMyTags.Failure(error)
+                }
+            )
+        }
+    }
+
+    fun fetchDataBySerialNumber() {
+        viewModelScope.launch {
+
+            _myTags.value = SubmitResultMyTags.Loading
+
+            serialNumberSearchPerformed = true
+
+            val result = repository.getAllMyTagsBySerialNumber(currentCountryForApi,serialNumberSearch ?: "")
+
+            result.fold(
+                onSuccess = { allItems ->
+                    allTags = allItems.first
+                    pagination = allItems.second
+
+                    _myTags.value = SubmitResultMyTags.Success(allItems.first)
+                    _paginationData.value = SubmitResultMyTags.Success(allItems.second)
                 },
                 onFailure = { error ->
                     _myTags.value = SubmitResultMyTags.Failure(error)

@@ -1,221 +1,323 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".view.fragments.my_profile.MyTagsFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/border_login"
-        android:backgroundTint="@color/primary_light_lightest"
-        android:paddingHorizontal="@dimen/dimens_100dp"
-        app:layout_constraintBottom_toTopOf="@+id/secondLineMyTags"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <TextView
-            android:id="@+id/txMyTags"
-            style="@style/H2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimens_42dp"
-            android:text="@string/my_tags"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical"
+            tools:context=".view.fragments.my_profile.MyTagsFragment">
 
-        <TextView
-            android:id="@+id/textNoMyTags"
-            style="@style/Paragraph"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimens_16dp"
-            android:text="@string/text_no_my_tags"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txMyTags" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/myTagsContainer"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txMyTags"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:visibility="visible">
-
-            <TextView
-                android:id="@+id/txSerialNumberMyTags"
-                style="@style/CaptionRegular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimens_16dp"
-                android:layout_marginTop="@dimen/dimens_25dp"
-                android:text="@string/serial_number"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputSerialNumber"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimens_8dp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusBottomEnd="@dimen/dimens_84dp"
-                app:boxCornerRadiusBottomStart="@dimen/dimens_84dp"
-                app:boxCornerRadiusTopEnd="@dimen/dimens_84dp"
-                app:boxCornerRadiusTopStart="@dimen/dimens_84dp"
-                app:boxStrokeColor="@color/figmaSplashScreenColor"
-                app:boxStrokeWidth="@dimen/dimens_0dp"
-                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
-                app:endIconMode="clear_text"
-                app:hintEnabled="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txSerialNumberMyTags">
+                android:background="@drawable/border_login"
+                android:backgroundTint="@color/primary_light_lightest"
+                android:paddingHorizontal="@dimen/dimens_16dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editSerialNumberMyTags"
-                    style="@style/Paragraph"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/txMyTags"
+                    style="@style/H3"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_enter_serial_number"
-                    android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:textColor="@color/figmaSplashScreenColor" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginTop="@dimen/dimens_16dp"
+                    android:text="@string/my_tags"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/myTagsContainer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txMyTags"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/txSerialNumberMyTags"
+                        style="@style/CaptionRegular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimens_16dp"
+                        android:layout_marginTop="@dimen/dimens_25dp"
+                        android:text="@string/serial_number"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/inputSerialNumber"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_8dp"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxCornerRadiusBottomEnd="@dimen/dimens_84dp"
+                        app:boxCornerRadiusBottomStart="@dimen/dimens_84dp"
+                        app:boxCornerRadiusTopEnd="@dimen/dimens_84dp"
+                        app:boxCornerRadiusTopStart="@dimen/dimens_84dp"
+                        app:boxStrokeColor="@color/figmaSplashScreenColor"
+                        app:boxStrokeWidth="@dimen/dimens_0dp"
+                        app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                        app:endIconMode="clear_text"
+                        app:hintEnabled="false"
+                        app:layout_constraintEnd_toStartOf="@id/searchMark"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txSerialNumberMyTags">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editSerialNumberMyTags"
+                            style="@style/Paragraph"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/hint_enter_serial_number"
+                            android:imeOptions="actionDone"
+                            android:inputType="number"
+                            android:maxLength="11"
+                            android:textColor="@color/figmaSplashScreenColor"
+                            app:counterEnabled="true" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <ImageView
+                        android:id="@+id/searchMark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/dimens_5dp"
+                        android:background="@drawable/loop"
+                        android:contentDescription="@null"
+                        app:layout_constraintBottom_toBottomOf="@+id/inputSerialNumber"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/inputSerialNumber"
+                        app:layout_constraintTop_toTopOf="@+id/inputSerialNumber" />
+
+                    <View
+                        android:id="@+id/lineMyTags"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dimens_2dp"
+                        android:layout_marginTop="@dimen/dimens_16dp"
+                        android:background="@color/primary_light_light"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/inputSerialNumber" />
+
+                    <TextView
+                        android:id="@+id/txCountryMyTags"
+                        style="@style/CaptionRegular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimens_16dp"
+                        android:layout_marginTop="@dimen/dimens_16dp"
+                        android:text="@string/country"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/lineMyTags" />
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvAllowedCountries"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="@dimen/dimens_16dp"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/txCountryMyTags"
+                        tools:listitem="@layout/item_tag_status" />
+
+                    <TextView
+                        android:id="@+id/txStatusMyTags"
+                        style="@style/CaptionRegular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimens_16dp"
+                        android:layout_marginTop="@dimen/dimens_14dp"
+                        android:text="@string/status"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/rvAllowedCountries" />
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/cyclerTagTypes"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="@dimen/dimens_16dp"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/txStatusMyTags"
+                        tools:listitem="@layout/item_tag_status" />
+
+                    <TextView
+                        android:id="@+id/textNoMyTags"
+                        style="@style/Paragraph"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_16dp"
+                        android:text="@string/text_no_my_tags"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cyclerTagTypes" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/cyclerContent"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/dimens_24dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/cyclerTagTypes"
+                        tools:itemCount="5"
+                        tools:listitem="@layout/item_my_tags" />
+
+                    <TextView
+                        android:id="@+id/textNoFilteredTags"
+                        style="@style/Paragraph"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_26dp"
+                        android:text="@string/text_no_my_tags"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/cyclerTagTypes" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayoutPage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_block"
+                android:backgroundTint="@color/primary_light_lightest"
+                android:paddingHorizontal="@dimen/dimens_16dp"
+                android:paddingVertical="@dimen/dimens_5dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/pageText"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/page_text"
+                    android:textFontWeight="700"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.6" />
+
+                <TextView
+                    android:id="@+id/currentPage"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_5dp"
+                    app:layout_constraintStart_toEndOf="@id/pageText"
+                    app:layout_constraintTop_toTopOf="@id/pageText"
+                    tools:text="1" />
+
+                <TextView
+                    android:id="@+id/divider"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/dimens_2dp"
+                    android:text="/"
+                    android:textFontWeight="700"
+                    app:layout_constraintStart_toEndOf="@id/currentPage"
+                    app:layout_constraintTop_toTopOf="@id/pageText" />
+
+                <TextView
+                    android:id="@+id/lastPage"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_5dp"
+                    app:layout_constraintStart_toEndOf="@id/divider"
+                    app:layout_constraintTop_toTopOf="@id/pageText"
+                    tools:text="1000" />
+
+                <ImageView
+                    android:id="@+id/buttonNextPage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:background="@drawable/toolbar_shared_back_arrow"
+                    android:contentDescription="@null"
+                    android:elevation="@dimen/dimens_10dp"
+                    android:paddingVertical="@dimen/dimens_0dp"
+                    android:rotation="180"
+                    android:text="@string/back_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/buttonPreviousPage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_marginEnd="@dimen/dimens_5dp"
+                    android:background="@drawable/toolbar_shared_back_arrow"
+                    android:contentDescription="@null"
+                    android:elevation="@dimen/dimens_10dp"
+                    android:paddingVertical="@dimen/dimens_0dp"
+                    android:text="@string/back_button"
+                    app:layout_constraintEnd_toStartOf="@id/buttonNextPage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
-                android:id="@+id/lineMyTags"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dimens_2dp"
-                android:layout_marginTop="@dimen/dimens_16dp"
-                android:background="@color/primary_light_light"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/inputSerialNumber" />
-
-            <TextView
-                android:id="@+id/txCountryMyTags"
-                style="@style/CaptionRegular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimens_16dp"
-                android:layout_marginTop="@dimen/dimens_16dp"
-                android:text="@string/country"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lineMyTags" />
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvAllowedCountries"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="@dimen/dimens_16dp"
-                android:nestedScrollingEnabled="false"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txCountryMyTags"
-                tools:listitem="@layout/item_tag_status" />
-
-            <TextView
-                android:id="@+id/txStatusMyTags"
-                style="@style/CaptionRegular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimens_16dp"
-                android:layout_marginTop="@dimen/dimens_14dp"
-                android:text="@string/status"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rvAllowedCountries" />
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/cyclerTagTypes"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="@dimen/dimens_16dp"
-                android:nestedScrollingEnabled="false"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txStatusMyTags"
-                tools:listitem="@layout/item_tag_status" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/cyclerContent"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="@dimen/dimens_34dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cyclerTagTypes"
-                tools:itemCount="4"
-                tools:listitem="@layout/item_my_tags" />
+                android:layout_weight="1"
+                android:background="@color/primary_light_lightest" />
 
-            <TextView
-                android:id="@+id/textNoFilteredTags"
-                style="@style/Paragraph"
-                android:layout_width="0dp"
+            <View
+                android:id="@+id/secondLineMyTags"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimens_1dp"
+                android:background="@color/primary_light_light" />
+
+
+            <Button
+                android:id="@+id/buttonAddTag"
+                style="@style/MyButtonStyle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimens_26dp"
-                android:text="@string/text_no_my_tags"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cyclerTagTypes" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="@dimen/dimens_8dp"
+                android:text="@string/add_tag" />
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <View
-        android:id="@+id/secondLineMyTags"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/dimens_1dp"
-        android:layout_marginBottom="@dimen/dimens_16dp"
-        android:background="@color/primary_light_light"
-        app:layout_constraintBottom_toTopOf="@+id/buttonAddTag"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/buttonAddTag"
-        style="@style/MyButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="100dp"
-        android:layout_marginBottom="@dimen/dimens_16dp"
-        android:text="@string/add_tag"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <ProgressBar
         android:id="@+id/progbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-
+        android:layout_gravity="center" />
+</FrameLayout>
 
 
 

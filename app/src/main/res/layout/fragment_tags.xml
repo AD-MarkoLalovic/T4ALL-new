@@ -36,17 +36,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/textNoMyTags"
-                    style="@style/Paragraph"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_16dp"
-                    android:text="@string/text_no_my_tags"
-                    android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txMyTags" />
-
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/myTagsContainer"
                     android:layout_width="0dp"
@@ -70,7 +59,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/inputSerialNumber"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimens_8dp"
                         android:focusable="false"
@@ -85,7 +74,7 @@
                         app:boxStrokeWidthFocused="@dimen/dimens_1dp"
                         app:endIconMode="clear_text"
                         app:hintEnabled="false"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/searchMark"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txSerialNumberMyTags">
 
@@ -97,8 +86,23 @@
                             android:hint="@string/hint_enter_serial_number"
                             android:imeOptions="actionDone"
                             android:inputType="number"
-                            android:textColor="@color/figmaSplashScreenColor" />
+                            android:maxLength="11"
+                            android:textColor="@color/figmaSplashScreenColor"
+                            app:counterEnabled="true" />
                     </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <ImageView
+                        android:id="@+id/searchMark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/dimens_5dp"
+                        android:background="@drawable/loop"
+                        android:contentDescription="@null"
+                        app:layout_constraintBottom_toBottomOf="@+id/inputSerialNumber"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/inputSerialNumber"
+                        app:layout_constraintTop_toTopOf="@+id/inputSerialNumber" />
 
                     <View
                         android:id="@+id/lineMyTags"
@@ -160,6 +164,17 @@
                         app:layout_constraintTop_toBottomOf="@id/txStatusMyTags"
                         tools:listitem="@layout/item_tag_status" />
 
+                    <TextView
+                        android:id="@+id/textNoMyTags"
+                        style="@style/Paragraph"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_16dp"
+                        android:text="@string/text_no_my_tags"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cyclerTagTypes" />
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/cyclerContent"
                         android:layout_width="0dp"
@@ -189,6 +204,88 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayoutPage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_block"
+                android:backgroundTint="@color/primary_light_lightest"
+                android:paddingHorizontal="@dimen/dimens_16dp"
+                android:paddingVertical="@dimen/dimens_5dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/pageText"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/page_text"
+                    android:textFontWeight="700"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.6" />
+
+                <TextView
+                    android:id="@+id/currentPage"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_5dp"
+                    app:layout_constraintStart_toEndOf="@id/pageText"
+                    app:layout_constraintTop_toTopOf="@id/pageText"
+                    tools:text="1" />
+
+                <TextView
+                    android:id="@+id/divider"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/dimens_2dp"
+                    android:text="/"
+                    android:textFontWeight="700"
+                    app:layout_constraintStart_toEndOf="@id/currentPage"
+                    app:layout_constraintTop_toTopOf="@id/pageText" />
+
+                <TextView
+                    android:id="@+id/lastPage"
+                    style="@style/CaptionRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_5dp"
+                    app:layout_constraintStart_toEndOf="@id/divider"
+                    app:layout_constraintTop_toTopOf="@id/pageText"
+                    tools:text="1000" />
+
+                <ImageView
+                    android:id="@+id/buttonNextPage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:background="@drawable/toolbar_shared_back_arrow"
+                    android:contentDescription="@null"
+                    android:elevation="@dimen/dimens_10dp"
+                    android:paddingVertical="@dimen/dimens_0dp"
+                    android:rotation="180"
+                    android:text="@string/back_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/buttonPreviousPage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_marginEnd="@dimen/dimens_5dp"
+                    android:background="@drawable/toolbar_shared_back_arrow"
+                    android:contentDescription="@null"
+                    android:elevation="@dimen/dimens_10dp"
+                    android:paddingVertical="@dimen/dimens_0dp"
+                    android:text="@string/back_button"
+                    app:layout_constraintEnd_toStartOf="@id/buttonNextPage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -213,6 +310,7 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
     <ProgressBar
         android:id="@+id/progbar"
         android:layout_width="wrap_content"
