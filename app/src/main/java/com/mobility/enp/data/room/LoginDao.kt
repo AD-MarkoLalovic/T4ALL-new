@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
-import kotlinx.coroutines.flow.Flow
 
 @Keep
 @Dao
@@ -20,8 +19,5 @@ interface LoginDao {
 
     @Query("DELETE FROM loginTable")
     suspend fun deleteAll()
-
-    @Query("SELECT password FROM loginTable LIMIT 1")
-    fun fetchPassword(): Flow<String>
 
 }

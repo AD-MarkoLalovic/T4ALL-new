@@ -139,7 +139,6 @@
     <string name="password_repeat_error_message">Šifre se ne podudaraju.</string>
     <string name="password_error_message">Nova šifra mora sadržati najmanje 8 karaktera</string>
     <string name="enter_old_password_message">Polje stare šifre je obavezno</string>
-    <string name="incorrect_old_password_message">Stara šifra je unijeta netačno.</string>
     <string name="repeat_the_new_password">Ponovite novu šifru.</string>
     <string name="enter_support_message">Unesite tekst poruke.</string>
     <string name="create_account">Napravite T4A nalog</string>

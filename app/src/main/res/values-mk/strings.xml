@@ -148,7 +148,6 @@
     <string name="password_repeat_error_message" translatable="true">Повторно внесената лозинка не соодветсува со новата лозинка</string>
     <string name="password_error_message" translatable="true">Полето за нова лозинка мора да содржи најмалку 8 карактери.</string>
     <string name="enter_old_password_message" translatable="true">Полето за стара лозинка е задолжително.</string>
-    <string name="incorrect_old_password_message" translatable="true">Погрешно унета стара шифра.</string>
     <string name="repeat_the_new_password" translatable="true">Повторно внесете ја новата лозинка</string>
     <string name="enter_support_message" translatable="true">Внесете го текстот на пораката.</string>
     <string name="create_account" translatable="true">Создадете сметка на T4A</string>

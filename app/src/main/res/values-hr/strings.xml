@@ -139,7 +139,6 @@
     <string name="password_repeat_error_message">Lozinke se ne podudaraju.</string>
     <string name="password_error_message">Polje za novu lozinku mora sadržavati najmanje 8 znakova</string>
     <string name="enter_old_password_message">Polje za staru lozinku je obavezno</string>
-    <string name="incorrect_old_password_message">Pogrešno unesena stara lozinka.</string>
     <string name="repeat_the_new_password">Ponovite novu lozinku.</string>
     <string name="enter_support_message">Unesite tekst poruke.</string>
     <string name="create_account">Kreiraj T4A račun</string>

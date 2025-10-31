@@ -17,7 +17,6 @@ import com.mobility.enp.data.room.LastUser
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 /**
@@ -233,10 +232,6 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
             Log.d("PasswordChange", "AuthRepository: ${e.message} ${e.cause}")
             Result.failure(NetworkError.ServerError)
         }
-    }
-
-    fun userPassword(): Flow<String> {
-        return database.loginDao().fetchPassword()
     }
 
     suspend fun sendCustomerSupport(data: CustomerSupport): Result<Unit> {

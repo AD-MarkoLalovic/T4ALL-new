@@ -139,7 +139,6 @@
     <string name="password_repeat_error_message">Οι κωδικοί πρόσβασης δεν ταιριάζουν.</string>
     <string name="password_error_message">Το πεδίο νέου κωδικού πρέπει να περιέχει τουλάχιστον 8 χαρακτήρες</string>
     <string name="enter_old_password_message">Το πεδίο παλιού κωδικού είναι υποχρεωτικό</string>
-    <string name="incorrect_old_password_message">Ο παλιός κωδικός εισήχθη λανθασμένα.</string>
     <string name="repeat_the_new_password">Επαναλάβετε τον νέο κωδικό.</string>
     <string name="enter_support_message">Εισάγετε το κείμενο του μηνύματος.</string>
     <string name="create_account">Δημιουργία λογαριασμού T4A</string>

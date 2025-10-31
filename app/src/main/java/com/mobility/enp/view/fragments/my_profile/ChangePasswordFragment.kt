@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.mobility.enp.R
@@ -31,8 +32,6 @@ class ChangePasswordFragment : Fragment() {
     private val binding: FragmentChangePasswordBinding get() = _binding!!
     private val viewModel: ChangePasswordViewModel by viewModels { ChangePasswordViewModel.factory }
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
-
-    private var currentPassword: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -185,10 +184,6 @@ class ChangePasswordFragment : Fragment() {
     }
 
     private fun setObservers() {
-        collectLatestLifecycleFlow(viewModel.userPass) { pass ->
-            currentPassword = pass
-        }
-
         collectLatestLifecycleFlow(viewModel.changePassword) { resultFold ->
             when (resultFold) {
                 is SubmitResultFold.Failure -> handleError(resultFold.error)
@@ -200,14 +195,10 @@ class ChangePasswordFragment : Fragment() {
     }
 
     private fun validatePassword(oldPassword: String, newPassword: String, repeatPassword: String) {
-        // Provera da li je polje za staru lozinku prazno ili neispravno
-        if (oldPassword.isEmpty() || !isOldPasswordCorrect(oldPassword)) {
+        // Provera da li je polje za staru lozinku prazno
+        if (oldPassword.isEmpty()) {
             binding.enterOldPasswordLayout.apply {
-                error = if (oldPassword.isEmpty()) {
-                    getString(R.string.enter_old_password_message)
-                } else {
-                    getString(R.string.incorrect_old_password_message)
-                }
+                error = getString(R.string.enter_old_password_message)
                 isErrorEnabled = true // Podesavanje errorEnabled na true
                 errorIconDrawable = null // Uklanjanje ikone greške
             }
@@ -253,11 +244,6 @@ class ChangePasswordFragment : Fragment() {
                 }
             }
         }
-
-    }
-
-    private fun isOldPasswordCorrect(oldPassword: String): Boolean {
-        return currentPassword == oldPassword
     }
 
     private fun handleError(error: Throwable) {
@@ -318,6 +304,5 @@ class ChangePasswordFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 
 }
