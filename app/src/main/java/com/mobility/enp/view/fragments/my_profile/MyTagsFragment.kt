@@ -203,7 +203,7 @@ class MyTagsFragment : Fragment() {
 
                     if (myTags.isEmpty()) {
                         binding.textNoMyTags.visibility = View.VISIBLE
-                        binding.myTagsContainer.visibility = View.GONE
+                        binding.myTagsContainer.visibility = View.VISIBLE
                     } else {
                         binding.textNoMyTags.visibility = View.GONE
                         binding.textNoFilteredTags.visibility = View.GONE
