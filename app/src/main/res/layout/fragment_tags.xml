@@ -97,7 +97,9 @@
                             android:hint="@string/hint_enter_serial_number"
                             android:imeOptions="actionDone"
                             android:inputType="number"
-                            android:textColor="@color/figmaSplashScreenColor" />
+                            android:maxLength="11"
+                            android:textColor="@color/figmaSplashScreenColor"
+                            app:counterEnabled="true" />
                     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -106,13 +108,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/dimens_5dp"
+                        android:background="@drawable/loop"
                         android:contentDescription="@null"
-                        android:src="@drawable/loop"
-                        app:layout_constraintStart_toEndOf="@id/inputSerialNumber"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/inputSerialNumber"
                         app:layout_constraintBottom_toBottomOf="@+id/inputSerialNumber"
-                        />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/inputSerialNumber"
+                        app:layout_constraintTop_toTopOf="@+id/inputSerialNumber" />
 
                     <View
                         android:id="@+id/lineMyTags"
@@ -265,8 +266,8 @@
                     android:contentDescription="@null"
                     android:elevation="@dimen/dimens_10dp"
                     android:paddingVertical="@dimen/dimens_0dp"
-                    android:text="@string/back_button"
                     android:rotation="180"
+                    android:text="@string/back_button"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

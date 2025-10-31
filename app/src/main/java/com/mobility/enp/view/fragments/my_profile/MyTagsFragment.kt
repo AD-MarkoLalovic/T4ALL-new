@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -24,6 +26,7 @@ import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.Util.isTablet
 import com.mobility.enp.util.collectLatestLifecycleFlow
+import com.mobility.enp.util.toast
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.my_tags.MyTagsListAdapter
 import com.mobility.enp.view.adapters.my_tags.MyTagsStatusFilterAdapter
@@ -84,6 +87,10 @@ class MyTagsFragment : Fragment() {
 
         binding.buttonNextPage.setOnClickListener {
             viewModel.fetchDataByCountry(2)
+        }
+
+        binding.searchMark.setOnClickListener {
+            Toast.makeText(requireContext(), "banana", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -348,25 +355,52 @@ class MyTagsFragment : Fragment() {
     }
 
     private fun setupTextWatcher() {
+        binding.searchMark.isClickable = false
+        binding.searchMark.isEnabled = false
+
         textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!binding.editSerialNumberMyTags.isFocused) return
-                val query = s.toString().lowercase()
-                statusFilterAdapter.clearStatus()
-                allowedCountriesAdapter.clearStatus()
+                when (s?.length) {
+                    11 -> {
+                        binding.searchMark.setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                requireContext(),
+                                R.drawable.loop
+                            )
+                        )
+                        binding.searchMark.isEnabled = true
+                        binding.searchMark.isClickable = true
+                    }
 
-                // Filtriramo listu tagova na osnovu unosa u editText
-                val result = viewModel.allTags.filter { tag ->
-                    tag.serialNumber.lowercase().contains(query)
+                    0 -> {
+                        binding.searchMark.setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                requireContext(),
+                                R.drawable.loop_red
+                            )
+                        )
+                        binding.searchMark.isEnabled = false
+                        binding.searchMark.isClickable = false
+                    }
+
+                    else -> {
+                        binding.searchMark.setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                requireContext(),
+                                R.drawable.loop_red
+                            )
+                        )
+                        binding.searchMark.isEnabled = false
+                        binding.searchMark.isClickable = false
+                    }
                 }
-
-                updateTagsList(result)
             }
 
             override fun afterTextChanged(s: Editable?) {}
         }
+
     }
 
     private fun setAdapters() {
@@ -579,6 +613,7 @@ class MyTagsFragment : Fragment() {
                     statusFilterAdapter.setTabPosition(0)
                 }
             }
+
             false -> {}
         }
     }
