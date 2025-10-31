@@ -283,6 +283,16 @@ class MyTagsFragment : Fragment() {
                             }
                         }
 
+                        //users with less then 1 page
+                        when(pagination.lastPage == 1){
+                            true -> {
+                                binding.constraintLayoutPage.visibility = View.GONE
+                            }
+                            false -> {
+                                binding.constraintLayoutPage.visibility = View.VISIBLE
+                            }
+                        }
+
                         binding.lastPage.text = pagination.lastPage.toString()
                         binding.currentPage.text = pagination.currentPage.toString()
                     }

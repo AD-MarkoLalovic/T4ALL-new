@@ -33,7 +33,6 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
         MutableStateFlow<SubmitResultMyTags<Pagination?>>(SubmitResultMyTags.Idle)
     val paginationData: StateFlow<SubmitResultMyTags<Pagination?>> get() = _paginationData
 
-
     private val _deactivateActivateTag =
         MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
     val deactivateActivateTag: StateFlow<SubmitResultFold<Unit>> get() = _deactivateActivateTag
