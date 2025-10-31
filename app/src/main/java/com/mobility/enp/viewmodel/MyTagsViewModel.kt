@@ -41,6 +41,13 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
     private val _reportTag = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
     val reportTag: StateFlow<SubmitResultFold<Unit>> get() = _reportTag
 
+    private var serialNumberSearch: String? = null
+    var serialNumberSearchPerformed : Boolean = false
+
+    fun setSerialNumberForSearch(serialNumber: String) {
+        this.serialNumberSearch = serialNumber
+    }
+
     var allTags: List<TagUiModel> = emptyList()
     private var selectedStatus: String = ""
     private var selectedCountry: String = "RS"
@@ -56,7 +63,7 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
         allTags = listOf()
     }
 
-    fun nullPagination(){  // when switchign countries so it doesnt continue on last selected page
+    fun nullPagination() {  // when switchign countries so it doesnt continue on last selected page
         pagination = null
     }
 
@@ -164,6 +171,30 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
                 tagsPerApiRequest,
                 currentPage
             )
+
+            result.fold(
+                onSuccess = { allItems ->
+                    allTags = allItems.first
+                    pagination = allItems.second
+
+                    _myTags.value = SubmitResultMyTags.Success(allItems.first)
+                    _paginationData.value = SubmitResultMyTags.Success(allItems.second)
+                },
+                onFailure = { error ->
+                    _myTags.value = SubmitResultMyTags.Failure(error)
+                }
+            )
+        }
+    }
+
+    fun fetchDataBySerialNumber() {
+        viewModelScope.launch {
+
+            _myTags.value = SubmitResultMyTags.Loading
+
+            serialNumberSearchPerformed = true
+
+            val result = repository.getAllMyTagsBySerialNumber(serialNumberSearch ?: "")
 
             result.fold(
                 onSuccess = { allItems ->

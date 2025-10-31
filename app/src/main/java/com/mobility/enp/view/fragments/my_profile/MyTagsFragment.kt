@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -26,7 +25,6 @@ import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.Util.isTablet
 import com.mobility.enp.util.collectLatestLifecycleFlow
-import com.mobility.enp.util.toast
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.my_tags.MyTagsListAdapter
 import com.mobility.enp.view.adapters.my_tags.MyTagsStatusFilterAdapter
@@ -90,7 +88,7 @@ class MyTagsFragment : Fragment() {
         }
 
         binding.searchMark.setOnClickListener {
-            Toast.makeText(requireContext(), "banana", Toast.LENGTH_SHORT).show()
+            viewModel.fetchDataBySerialNumber()
         }
     }
 
@@ -370,6 +368,9 @@ class MyTagsFragment : Fragment() {
                                 R.drawable.loop
                             )
                         )
+
+                        viewModel.setSerialNumberForSearch(s.toString())
+
                         binding.searchMark.isEnabled = true
                         binding.searchMark.isClickable = true
                     }
@@ -378,7 +379,7 @@ class MyTagsFragment : Fragment() {
                         binding.searchMark.setImageDrawable(
                             AppCompatResources.getDrawable(
                                 requireContext(),
-                                R.drawable.loop_red
+                                R.drawable.loop
                             )
                         )
                         binding.searchMark.isEnabled = false
@@ -398,7 +399,16 @@ class MyTagsFragment : Fragment() {
                 }
             }
 
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {
+                when (s?.length) {
+                    0 -> {
+                        if (viewModel.serialNumberSearchPerformed) {
+                            viewModel.serialNumberSearchPerformed = false
+                            viewModel.fetchInitialData()
+                        }
+                    }
+                }
+            }
         }
 
     }
