@@ -279,7 +279,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                         visibleCroatianComponents(true)
                         binding.bttRegTagForCroatia.visibility = View.VISIBLE
 
-                        tagsForCroatiaAdapter.submitList(result.data)
+                        tagsForCroatiaAdapter.submitList(tagsList)
                     } else {
                         visibleCroatianComponents(true)
                         binding.bttRegTagForCroatia.visibility = View.GONE
