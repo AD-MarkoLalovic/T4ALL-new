@@ -570,16 +570,16 @@ class MyTagsFragment : Fragment() {
     private fun hideStatusUi(boolean: Boolean) {
         when (boolean) {
             true -> {
-                binding.txStatusMyTags.visibility = View.GONE
+                statusFilterAdapter.setStatus(0)
 
-                statusFilterAdapter.submitList(emptyList<String>()) {
+                val statusList =
+                    listOf(requireContext().getString(R.string.all_status_tags))
+
+                statusFilterAdapter.submitList(statusList) {
                     statusFilterAdapter.setTabPosition(0)
                 }
             }
-
-            false -> {
-                binding.txStatusMyTags.visibility = View.VISIBLE
-            }
+            false -> {}
         }
     }
 
