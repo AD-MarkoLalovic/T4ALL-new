@@ -194,7 +194,7 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
 
             serialNumberSearchPerformed = true
 
-            val result = repository.getAllMyTagsBySerialNumber(serialNumberSearch ?: "")
+            val result = repository.getAllMyTagsBySerialNumber(currentCountryForApi,serialNumberSearch ?: "")
 
             result.fold(
                 onSuccess = { allItems ->

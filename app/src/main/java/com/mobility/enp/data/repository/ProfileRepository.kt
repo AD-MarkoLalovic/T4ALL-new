@@ -266,7 +266,10 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
     }
 
 
-    suspend fun getAllMyTagsBySerialNumber(serialNumber: String): Result<Pair<List<TagUiModel>, Pagination?>> {
+    suspend fun getAllMyTagsBySerialNumber(
+        countryCode: String,
+        serialNumber: String
+    ): Result<Pair<List<TagUiModel>, Pagination?>> {
         if (!isNetworkAvailable()) {
             return Result.failure(NetworkError.NoConnection)
         }
@@ -275,7 +278,8 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
 
         return try {
             val lang = getLangKey()
-            val response = apiService(userToken).getUserTagsNewBySerialNumber(lang, serialNumber)
+            val response =
+                apiService(userToken).getUserTagsNewBySerialNumber(lang, serialNumber, countryCode)
 
             if (response.isSuccessful) {
                 val tags = response.body()?.data?.tags?.items?.toTagUiModel().orEmpty()

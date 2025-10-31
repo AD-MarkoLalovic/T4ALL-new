@@ -152,7 +152,8 @@ interface ApiService {
     @GET("/api/v2/tags")
     suspend fun getUserTagsNewBySerialNumber(
         @Query("lang") language: String,
-        @Query("filter[serialNumber]") country: String
+        @Query("filter[serialNumber]") serialNumber: String,
+        @Query("filter[country]") countryCode: String
     ): Response<MyTagsResponse>
 
     @POST("/api/v1/tags/deactivate-tag")
