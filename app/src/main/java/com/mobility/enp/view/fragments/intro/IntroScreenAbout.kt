@@ -37,7 +37,10 @@ class IntroScreenAbout : Fragment() {
             if (isGranted) {
                 toast(getString(R.string.permission_granted))
             } else {
-                SharedPreferencesHelper.incrementPermissionDenyCount(requireContext(), "notification_deny_count")
+                SharedPreferencesHelper.incrementPermissionDenyCount(
+                    requireContext(),
+                    "notification_deny_count"
+                )
             }
         }
     private var isExpanded = false
@@ -153,19 +156,22 @@ class IntroScreenAbout : Fragment() {
     private fun showNotificationPermissionRationale() {
         lifecycleScope.launch {
             val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
-            val generalMessageDialog = NotificationsRequestDialog(
-                getString(R.string.notification_title),
-                getString(R.string.notification_subtitle),
-                object : NotificationsRequestDialog.OnButtonClick {
+
+            val dialog = NotificationsRequestDialog
+                .newInstance(
+                    getString(R.string.notification_title),
+                    getString(R.string.notification_subtitle)
+                )
+                .setOnButtonClickListener(object : NotificationsRequestDialog.OnButtonClick {
                     override fun onClickConfirmed() {
                         requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
                     }
 
                     override fun onClickRejected() {
                     }
-                }
-            )
-            generalMessageDialog.show(fragmentManager, "permDialog")
+                })
+
+            dialog.show(fragmentManager, "permDialog")
         }
     }
 

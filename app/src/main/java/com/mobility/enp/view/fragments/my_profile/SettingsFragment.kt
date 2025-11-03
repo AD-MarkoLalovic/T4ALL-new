@@ -122,10 +122,13 @@ class SettingsFragment : Fragment() {
     private fun showNotificationPermissionRationale() {
         lifecycleScope.launch {
             val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
-            val generalMessageDialog = NotificationsRequestDialog(
-                getString(R.string.notification_title),
-                getString(R.string.notification_subtitle),
-                object : NotificationsRequestDialog.OnButtonClick {
+
+            val dialog = NotificationsRequestDialog
+                .newInstance(
+                    getString(R.string.notification_title),
+                    getString(R.string.notification_subtitle)
+                )
+                .setOnButtonClickListener(object : NotificationsRequestDialog.OnButtonClick {
                     override fun onClickConfirmed() {
                         requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
                     }
@@ -133,9 +136,9 @@ class SettingsFragment : Fragment() {
                     override fun onClickRejected() {
                         binding.notificationSwitch.isChecked = isPermissionGranted()
                     }
-                }
-            )
-            generalMessageDialog.show(fragmentManager, "permDialog")
+                })
+
+            dialog.show(fragmentManager, "permDialog")
         }
     }
 
