@@ -400,20 +400,24 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
     private fun showNotificationPermissionRationale(userPermission: UserPermission) {
         lifecycleScope.launch {
             val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
-            val generalMessageDialog = NotificationsRequestDialog(
-                getString(R.string.notification_title),
-                getString(R.string.notification_subtitle),
-                object : NotificationsRequestDialog.OnButtonClick {
+
+            val dialog = NotificationsRequestDialog
+                .newInstance(
+                    getString(R.string.notification_title),
+                    getString(R.string.notification_subtitle)
+                )
+                .setOnButtonClickListener(object : NotificationsRequestDialog.OnButtonClick {
                     override fun onClickConfirmed() {
                         userPerm = userPermission
-                        requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
                     }
 
                     override fun onClickRejected() {
                         userPermission.onPermissionDenied()
                     }
                 })
-            generalMessageDialog.show(fragmentManager, "permDialog")
+
+            dialog.show(fragmentManager, "permDialog")
         }
     }
 
