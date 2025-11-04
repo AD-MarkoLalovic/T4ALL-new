@@ -14,7 +14,7 @@ import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import androidx.core.graphics.drawable.toDrawable
 
-class NotificationsRequestDialog : DialogFragment {
+class NotificationsRequestDialog : DialogFragment() {
 
     private var title: String = ""
     private var subtitle: String = ""
@@ -23,14 +23,23 @@ class NotificationsRequestDialog : DialogFragment {
     private val binding: NotificationsRequestDiagBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
-    private lateinit var onButtonClick: OnButtonClick
+    private var onButtonClick: OnButtonClick? = null
 
-    constructor() : super()
+    companion object {
+        fun newInstance(title: String, subtitle: String): NotificationsRequestDialog {
+            val args = Bundle().apply {
+                putString("title", title)
+                putString("subtitle", subtitle)
+            }
+            val fragment = NotificationsRequestDialog()
+            fragment.arguments = args
+            return fragment
+        }
+    }
 
-    constructor(title: String, subtitle: String, onButtonClick: OnButtonClick) : super() {
-        this.title = title
-        this.subtitle = subtitle
-        this.onButtonClick = onButtonClick
+    fun setOnButtonClickListener(listener: OnButtonClick): NotificationsRequestDialog {
+        this.onButtonClick = listener
+        return this
     }
 
     override fun onCreateView(
@@ -46,6 +55,9 @@ class NotificationsRequestDialog : DialogFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        title = arguments?.getString("title", "") ?: ""
+        subtitle = arguments?.getString("subtitle", "") ?: ""
+
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
             franchiseModel?.franchisePrimaryColor?.let { color ->
                 binding.confirmButton.backgroundTintList = ColorStateList.valueOf(color)
@@ -54,13 +66,15 @@ class NotificationsRequestDialog : DialogFragment {
 
         binding.title.text = title
         binding.subTitle.text = subtitle
+
+
         binding.confirmButton.setOnClickListener {
             dialog?.dismiss()
-            onButtonClick.onClickConfirmed()
+            onButtonClick?.onClickConfirmed()
         }
         binding.rejectButton.setOnClickListener {
             dialog?.dismiss()
-            onButtonClick.onClickRejected()
+            onButtonClick?.onClickRejected()
         }
     }
 
