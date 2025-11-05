@@ -127,7 +127,8 @@ class CardFragment : Fragment() {
                                 delay(2000L)
 
                                 if (isAdded && isResumed) {
-                                    findNavController().popBackStack()
+                                    val action = CardFragmentDirections.actionCardFragmentToPaymentAndPassageFragment(countryCode)
+                                    findNavController().navigate(action)
                                 }
                             }
                         }

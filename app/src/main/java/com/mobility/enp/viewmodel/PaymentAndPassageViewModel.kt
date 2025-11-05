@@ -30,17 +30,19 @@ class PaymentAndPassageViewModel(
     private val repository: CardRepository
 ) : ViewModel() {
 
+    var saveSelectCountry: String? = null
+
     private val _getCardDataFlow =
-        MutableStateFlow<SubmitResult<CardWebModel>>(SubmitResult.Loading)
+        MutableStateFlow<SubmitResult<CardWebModel>>(SubmitResult.Empty)
     val getCardDataFlow: StateFlow<SubmitResult<CardWebModel>> get() = _getCardDataFlow
 
     private val _successfullyChangedPrimaryCard =
-        MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Loading)
+        MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Empty)
     val successfullyChangedPrimaryCard: StateFlow<SubmitResult<Boolean>> get() = _successfullyChangedPrimaryCard
 
 
     private val _successfullyDeletedCard =
-        MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Loading)
+        MutableStateFlow<SubmitResult<Boolean>>(SubmitResult.Empty)
     val successfullyDeletedCard: StateFlow<SubmitResult<Boolean>> get() = _successfullyDeletedCard
 
     private val _tagsList =
@@ -256,6 +258,7 @@ class PaymentAndPassageViewModel(
         _getCardDataFlow.value = SubmitResult.Empty
         _successfullyChangedPrimaryCard.value = SubmitResult.Empty
         _successfullyDeletedCard.value = SubmitResult.Empty
+        saveSelectCountry = null
     }
 
     companion object {
