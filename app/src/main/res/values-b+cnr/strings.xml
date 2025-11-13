@@ -205,7 +205,6 @@
     <string name="text_add_card">Trenutno nemate dodatih kartica. Molimo dodajte karticu.</string>
     <string name="no_notifications">Nema obavještenja</string>
     <string name="no_notifications_received">Ovaj korisnik nije primio obavještenja</string>
-    <string name="payment_unsuccessful">Plaćanje nije uspjelo.</string>
     <string name="file_downloaded">Fajl preuzet</string>
     <string name="download_failed">Preuzimanje nije uspjelo</string>
     <string name="perm_required">Potrebna je dozvola molimo omogućite.</string>

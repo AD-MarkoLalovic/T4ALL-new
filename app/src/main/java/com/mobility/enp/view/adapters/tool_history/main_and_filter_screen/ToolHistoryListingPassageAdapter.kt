@@ -17,8 +17,8 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.ItemRelationPassageRealBinding
-import com.mobility.enp.network.Repository
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.dialogs.ComplaintFormDialog
 import com.mobility.enp.view.dialogs.ComplaintFormDialogOld
@@ -209,7 +209,7 @@ class ToolHistoryListingPassageAdapter(
     override fun onBindViewHolder(holder: RelationViewHolder, position: Int) {
         val currentItem = relation[holder.bindingAdapterPosition]
         holder.bind(currentItem, complaintInterface)
-        if (Repository.isNetworkAvailable(context)) {
+        if (Util.isNetworkAvailable(context)) {
             performDataFill(currentItem, holder.bindingAdapterPosition) // paggination
         }
     }

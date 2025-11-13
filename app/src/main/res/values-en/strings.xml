@@ -206,7 +206,6 @@
     <string name="text_add_card">You currently have no added cards. Please add a card.</string>
     <string name="no_notifications">No notifications</string>
     <string name="no_notifications_received">No notifications have been received by this user</string>
-    <string name="payment_unsuccessful">Payment was unsuccessful.</string>
     <string name="file_downloaded">File Downloaded</string>
     <string name="download_failed">Download failed</string>
     <string name="perm_required">Permission is required please grant.</string>

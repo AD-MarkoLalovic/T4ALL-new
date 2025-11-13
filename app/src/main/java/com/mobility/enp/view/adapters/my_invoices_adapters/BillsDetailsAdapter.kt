@@ -18,11 +18,9 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.Bill
 import com.mobility.enp.data.model.api_my_invoices.BillData
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
@@ -37,7 +35,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class BillsDetailsAdapter(
     private var billData: BillData,
     private val viewModel: MyInvoicesViewModel,
-    private val errorBody: MutableLiveData<ErrorBody>,
     private val lifecycleOwner: LifecycleOwner,
     private val spinnerInterface: MonthlyBillsAdapter.TriggerSpinner,
     private val availableCurrencies: String
@@ -56,7 +53,6 @@ class BillsDetailsAdapter(
     private var countDownTimer: CountDownTimer = object : CountDownTimer(5000, 1000) {
         override fun onTick(millisUntilFinished: Long) {
             canDownload = false
-            Log.d(TAG, "onTick: $canDownload $millisUntilFinished")
         }
 
         override fun onFinish() {
@@ -75,62 +71,66 @@ class BillsDetailsAdapter(
 
             val billId = bill.id.toString()
 
-            if (bill.status?.value == 1) {
+            when (bill.status?.value) {
+                1 -> {
 
-                binding.bttPayNow.apply {
-                    visibility = View.INVISIBLE
-                    isClickable = false
+                    binding.bttPayNow.apply {
+                        visibility = View.INVISIBLE
+                        isClickable = false
+                    }
+
+                    binding.invoicesCardView.strokeColor = ContextCompat.getColor(
+                        binding.invoicesCardView.context,
+                        R.color.figmaToolHistoryPaidBackground
+                    )
+
+                    binding.invoicesStatus.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            binding.invoicesStatus.context,
+                            R.drawable.status_icon_green
+                        )
+                    )
+
+                    binding.firstContainerInvoice.setBackgroundResource(R.color.figmaToolHistoryPaidBackground)
+                    binding.secondContainerInvoices.setBackgroundResource(R.color.white)
+
                 }
+                7 -> {
+                    binding.bttPayNow.apply {
+                        visibility = View.INVISIBLE
+                        isClickable = false
+                    }
 
-                binding.invoicesCardView.strokeColor = ContextCompat.getColor(
-                    binding.invoicesCardView.context,
-                    R.color.figmaToolHistoryPaidBackground
-                )
-
-                binding.invoicesStatus.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        binding.invoicesStatus.context,
-                        R.drawable.status_icon_green
+                    binding.invoicesCardView.strokeColor = ContextCompat.getColor(
+                        binding.invoicesCardView.context,
+                        R.color.light_orange
                     )
-                )
 
-                binding.firstContainerInvoice.setBackgroundResource(R.color.figmaToolHistoryPaidBackground)
-                binding.secondContainerInvoices.setBackgroundResource(R.color.white)
+                    binding.invoicesStatus.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            binding.invoicesStatus.context,
+                            R.drawable.status_icon_orange
+                        )
+                    )
 
-            } else if (bill.status?.value == 7) {
-                binding.bttPayNow.apply {
-                    visibility = View.INVISIBLE
-                    isClickable = false
+                    binding.firstContainerInvoice.setBackgroundResource(R.color.light_orange)
+                    binding.secondContainerInvoices.setBackgroundResource(R.color.white)
                 }
-
-                binding.invoicesCardView.strokeColor = ContextCompat.getColor(
-                    binding.invoicesCardView.context,
-                    R.color.light_orange
-                )
-
-                binding.invoicesStatus.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        binding.invoicesStatus.context,
-                        R.drawable.status_icon_orange
+                else -> {
+                    binding.invoicesCardView.strokeColor = ContextCompat.getColor(
+                        binding.invoicesCardView.context,
+                        R.color.figmaToolHistoryUnpaidBackground
                     )
-                )
 
-                binding.firstContainerInvoice.setBackgroundResource(R.color.light_orange)
-                binding.secondContainerInvoices.setBackgroundResource(R.color.white)
-            } else {
-                binding.invoicesCardView.strokeColor = ContextCompat.getColor(
-                    binding.invoicesCardView.context,
-                    R.color.figmaToolHistoryUnpaidBackground
-                )
-
-                binding.invoicesStatus.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        binding.invoicesStatus.context,
-                        R.drawable.status_icon_red
+                    binding.invoicesStatus.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            binding.invoicesStatus.context,
+                            R.drawable.status_icon_red
+                        )
                     )
-                )
-                binding.firstContainerInvoice.setBackgroundResource(R.color.figmaToolHistoryUnpaidBackground)
-                binding.secondContainerInvoices.setBackgroundResource(R.color.white)
+                    binding.firstContainerInvoice.setBackgroundResource(R.color.figmaToolHistoryUnpaidBackground)
+                    binding.secondContainerInvoices.setBackgroundResource(R.color.white)
+                }
             }
 
             binding.downloadBillDetails.setOnClickListener {
@@ -143,7 +143,7 @@ class BillsDetailsAdapter(
                 binding.bttPayNow.startAnimation(flashAnimation)
 
                 spinnerInterface.onStartSpinner()
-                viewModel.payBill(billId, errorBody)
+                viewModel.payBill(billId)
             }
 
             binding.executePendingBindings()
@@ -177,10 +177,9 @@ class BillsDetailsAdapter(
                 val isPdf = menuItem.itemId == R.id.pdfDownload
 
                 if (isPdf || isListing) {
-                    val isListingParam = isListing
 
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-                        showNotification(binding, id, isListingParam)
+                        showNotification(binding, id, isListing)
                     } else {
                         if (ContextCompat.checkSelfPermission(
                                 binding.root.context,
@@ -188,12 +187,12 @@ class BillsDetailsAdapter(
                             ) == PackageManager.PERMISSION_GRANTED
                         ) {
                             // Ako je permisija već odobrena  odmah šaljemo notifikaciju
-                            showNotification(binding, id, isListingParam)
+                            showNotification(binding, id, isListing)
                         } else {
                             // Ako nije tražimo od korisnika
                             spinnerInterface.requestNotificationFromUser(object : UserPermission {
                                 override fun onPermissionGranted() {
-                                    showNotification(binding, id, isListingParam)
+                                    showNotification(binding, id, isListing)
                                 }
 
                                 override fun onPermissionDenied() {
@@ -339,7 +338,6 @@ class BillsDetailsAdapter(
 
                     else -> {
                         spinnerInterface.onStopSpinner()
-                        SubmitResult.Empty
                     }
                 }
             }

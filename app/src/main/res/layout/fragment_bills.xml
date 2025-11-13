@@ -2,13 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="viewModel"
-            type="com.mobility.enp.viewmodel.MyInvoicesViewModel" />
-    </data>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -51,6 +44,21 @@
                 android:layout_marginStart="@dimen/dimens_16dp"
                 android:layout_marginTop="@dimen/dimens_16dp"
                 android:text="@string/country"
+                android:textColor="@color/primary_dark_dark"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/firstLineMyInvoices"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/txNoInternet"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:text="@string/please_connect_to_the_internet"
+                android:visibility="gone"
                 android:textColor="@color/primary_dark_dark"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/firstLineMyInvoices" />
@@ -100,7 +108,6 @@
                         android:textColor="@color/text_color_selector"
                         android:visibility="gone"
                         tools:visibility="visible" />
-
 
                     <TextView
                         android:id="@+id/buttonMontenegro"

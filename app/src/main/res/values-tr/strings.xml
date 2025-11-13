@@ -216,7 +216,6 @@
     <string name="text_add_card">Şu anda eklenmiş kartınız bulunmamaktadır. Lütfen bir kart ekleyin.</string>
     <string name="no_notifications">Bildirim yok</string>
     <string name="no_notifications_received">Bu kullanıcı tarafından herhangi bir bildirim alınmadı</string>
-    <string name="payment_unsuccessful">Ödeme başarısız oldu.</string>
     <string name="file_downloaded">Dosya indirildi</string>
     <string name="download_failed">İndirme başarısız oldu</string>
     <string name="perm_required">İzin gerekiyor, lütfen izin verin.</string>

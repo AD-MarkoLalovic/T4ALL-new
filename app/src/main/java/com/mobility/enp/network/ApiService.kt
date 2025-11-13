@@ -31,7 +31,6 @@ import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -222,9 +221,10 @@ interface ApiService {
     ): Response<BillDownload>
 
     @POST("/api/v1/bills/pay/{bill_id}/bill")
-    fun payBill(
-        @Path(value = "bill_id") billId: String
-    ): Call<Unit>
+    suspend fun payBill(
+        @Path(value = "bill_id") billId: String,
+        @Query(value = "lang") language: String
+    ): Response<Unit>
 
     @GET("/api/v1/refund-requests")
     suspend fun refundRequest(
