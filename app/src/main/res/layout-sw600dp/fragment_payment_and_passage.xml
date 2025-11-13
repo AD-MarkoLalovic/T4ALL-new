@@ -227,7 +227,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:elevation="@dimen/dimens_10dp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
     </RelativeLayout>
 </layout>
