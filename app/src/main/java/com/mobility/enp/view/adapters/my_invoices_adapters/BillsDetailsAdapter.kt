@@ -383,7 +383,7 @@ class BillsDetailsAdapter(
     }
 
     private fun logError(string: String) {
-        Log.d(ToolHistoryListingAdapter.Companion.TAG, "showError: $string")
+        Log.d(ToolHistoryListingAdapter.TAG, "showError: $string")
     }
 
     interface DownloadBillsDetails {

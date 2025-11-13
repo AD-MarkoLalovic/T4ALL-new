@@ -349,7 +349,6 @@ class MonthlyBillsAdapter(
 
                     else -> {
                         spinnerInterface.onStopSpinner()
-                        SubmitResult.Empty
                     }
                 }
             }
@@ -360,7 +359,7 @@ class MonthlyBillsAdapter(
     }
 
     private fun logError(string: String) {
-        Log.d(ToolHistoryListingAdapter.Companion.TAG, "showError: $string")
+        Log.d(ToolHistoryListingAdapter.TAG, "showError: $string")
     }
 
     override fun getItemCount() = monthlyBillsArray.size

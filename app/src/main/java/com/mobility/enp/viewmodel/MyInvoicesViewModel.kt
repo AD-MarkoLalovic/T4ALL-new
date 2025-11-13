@@ -91,7 +91,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(
-                            UserPassViewModel.Companion.TAG,
+                            UserPassViewModel.TAG,
                             "Error while fetching my invoices data"
                         )
                         _myInvoices.value = SubmitResult.FailureServerError
@@ -152,7 +152,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(
-                            UserPassViewModel.Companion.TAG,
+                            UserPassViewModel.TAG,
                             "Error while fetching my invoices data"
                         )
                         flow.value = SubmitResult.FailureServerError
@@ -232,7 +232,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(
-                            UserPassViewModel.Companion.TAG,
+                            UserPassViewModel.TAG,
                             "Error while fetching bill details"
                         )
                         flow.value = SubmitResult.FailureServerError
@@ -296,7 +296,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(
-                            UserPassViewModel.Companion.TAG,
+                            UserPassViewModel.TAG,
                             "Error while fetching bill paging detals"
                         )
                         flow.value = SubmitResult.FailureServerError
@@ -379,7 +379,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(
-                            UserPassViewModel.Companion.TAG,
+                            UserPassViewModel.TAG,
                             "Error while fetching bill paging detals"
                         )
                         _myInvoices.value = SubmitResult.FailureServerError
@@ -570,7 +570,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(
-                            UserPassViewModel.Companion.TAG,
+                            UserPassViewModel.TAG,
                             "Error while fetching bill paging detals"
                         )
                         _myInvoices.value = SubmitResult.FailureServerError

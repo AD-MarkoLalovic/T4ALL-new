@@ -238,9 +238,7 @@ class ToolHistoryListingPassageAdapter(
                         }
                     }
 
-                    else -> {
-                        SubmitResult.Empty
-                    }
+                    else -> {}
                 }
             }
 

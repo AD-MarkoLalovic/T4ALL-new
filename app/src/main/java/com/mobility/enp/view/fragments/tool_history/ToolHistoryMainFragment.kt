@@ -89,7 +89,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     private fun setObservers() {
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
-            franchiseModel?.franchisePrimaryColor?.let { color ->
+            franchiseModel?.franchisePrimaryColor?.let {
                 binding.loopIcon.setBackgroundResource(franchiseModel.loopIcon)
             }
         }
@@ -124,9 +124,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
 
-                else -> {
-                    SubmitResult.Empty
-                }
+                else -> {}
             }
         }
 
@@ -161,9 +159,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
 
-                else -> {
-                    SubmitResult.Empty
-                }
+                else -> {}
             }
         }
     }
