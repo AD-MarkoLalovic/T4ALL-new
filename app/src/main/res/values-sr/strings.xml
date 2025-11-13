@@ -152,7 +152,7 @@
     <string name="create_account">Kreirajte T4A nalog</string>
     <string name="all_fields_are_mandatory">Sva polja su obavezna.</string>
     <string name="change_successfully_saved">Izmene uspešno sačuvane.</string>
-    <string name="please_connect_to_the_internet">Povezite se na internet.</string>
+    <string name="please_connect_to_the_internet">Povežite se na internet.</string>
     <string name="general_terms_and_conditions">Opšti uslovi i uslovi korišćenja</string>
     <string name="privacy_policy">Politika privatnosti</string>
     <string name="choose_country_and_payment">Izaberite zemlju i način plaćanja</string>
@@ -216,7 +216,6 @@
     <string name="text_add_card">Trenutno nemate dodatih kartica. Molimo vas dodajte karticu.</string>
     <string name="no_notifications">Nema obavestenja</string>
     <string name="no_notifications_received">Ovaj korisnik nije primio ni jedno obavestenje</string>
-    <string name="payment_unsuccessful">Plaćanje nije uspelo.</string>
     <string name="file_downloaded">Fajl je preuzet</string>
     <string name="download_failed">Preuzimanje nije uspelo</string>
     <string name="perm_required">Dozvola je potrebna, molim vas odobrite.</string>

@@ -224,7 +224,6 @@
     <string name="text_add_card">Sie haben derzeit keine hinzugefügten Karten. Bitte fügen Sie eine Karte hinzu.</string>
     <string name="no_notifications">Keine Benachrichtigungen</string>
     <string name="no_notifications_received">Von diesem Benutzer wurden keine Benachrichtigungen erhalten</string>
-    <string name="payment_unsuccessful">Die Zahlung war nicht erfolgreich.</string>
     <string name="file_downloaded">Datei heruntergeladen</string>
     <string name="download_failed">Download fehlgeschlagen</string>
     <string name="perm_required">Genehmigung ist erforderlich, bitte erteilen Sie sie.</string>

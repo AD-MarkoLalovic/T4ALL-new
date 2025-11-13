@@ -206,7 +206,6 @@
     <string name="text_add_card">Δεν έχετε προσθέσει καμία κάρτα. Παρακαλώ προσθέστε μία κάρτα.</string>
     <string name="no_notifications">Δεν υπάρχουν ειδοποιήσεις</string>
     <string name="no_notifications_received">Δεν έχουν ληφθεί ειδοποιήσεις για αυτόν τον χρήστη</string>
-    <string name="payment_unsuccessful">Η πληρωμή απέτυχε.</string>
     <string name="file_downloaded">Το αρχείο λήφθηκε</string>
     <string name="download_failed">Η λήψη απέτυχε</string>
     <string name="perm_required">Απαιτείται άδεια, παρακαλώ παραχωρήστε την.</string>

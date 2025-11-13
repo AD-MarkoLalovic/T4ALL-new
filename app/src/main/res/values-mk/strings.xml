@@ -213,7 +213,6 @@
     <string name="text_add_card">Моментално немате додадени картици. Ве молиме додадете картица.</string>
     <string name="no_notifications">Нема известувања</string>
     <string name="no_notifications_received">Овој корисник не добил известувања</string>
-    <string name="payment_unsuccessful">Плаќањето не успеа.</string>
     <string name="file_downloaded">Датотеката е преземена</string>
     <string name="download_failed">Преземањето не успеа</string>
     <string name="perm_required">Потребна е дозвола, ве молам одобрете.</string>

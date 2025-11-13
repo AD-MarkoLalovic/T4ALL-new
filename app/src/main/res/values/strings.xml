@@ -236,7 +236,6 @@
     <string name="text_add_card" translatable="true">Тренутно немате додатих картица. Молимо вас додајте картицу.</string>
     <string name="no_notifications" translatable="true">Нема обавештења</string>
     <string name="no_notifications_received" translatable="true">Овај корисник није примио ниједно обавештење</string>
-    <string name="payment_unsuccessful" translatable="true">Плаћање није успело.</string>
     <string name="file_downloaded" translatable="true">Фајл је преузет</string>
     <string name="download_failed" translatable="true">Преузимање није успело</string>
     <string name="perm_required" translatable="true">Дозвола је потребна, молим вас одобрите.</string>
