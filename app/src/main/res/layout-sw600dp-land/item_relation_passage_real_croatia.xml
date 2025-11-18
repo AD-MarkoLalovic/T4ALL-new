@@ -43,7 +43,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/txtAccountNumber"
-            android:layout_alignBottom="@+id/carInvoiceNumber"
             android:layout_centerInParent="true"
             android:layout_marginEnd="@dimen/dimens_5dp"
             android:layout_toStartOf="@id/carTagCurrency"
