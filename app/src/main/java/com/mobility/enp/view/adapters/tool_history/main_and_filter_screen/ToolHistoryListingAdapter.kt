@@ -89,12 +89,12 @@ class ToolHistoryListingAdapter(
 
                             binding.cyclerTotalPrice.visibility = View.VISIBLE
                         } else {
-                            binding.cyclerTotalPrice.visibility = View.GONE
+                            binding.cyclerTotalPrice.visibility = View.INVISIBLE
                         }
                     }
 
-                    //record of passages for tag
                     if (!toolHistoryListing.data?.records?.items.isNullOrEmpty()) {
+
                         binding.position = position
 
                         val heightInDp = when (toolHistoryListing.data.records.items.size) {
@@ -121,20 +121,34 @@ class ToolHistoryListingAdapter(
                         binding.nsScroll.visibility = View.VISIBLE
                         binding.cycler.visibility = View.VISIBLE
 
-                        //adapter that presents the passages
-                        binding.cycler.adapter = ToolHistoryListingPassageAdapter(
-                            toolHistoryListing,
-                            complaintInterface,
-                            false,
-                            lifecycleOwner,
-                            itemSerialNumber, countryCode
-                        )
+
+                        // croatia passage adapter
+                        if (viewModel.selectedCountry == binding.root.context.getString(R.string.croatia_hr)) {
+                            binding.cycler.adapter = ToolHistoryListingPassageAdapterCroatia(
+                                toolHistoryListing,
+                                false,
+                                lifecycleOwner,
+                                itemSerialNumber, countryCode, viewModel
+                            )
+                        } else {
+                            //record of passages for tag for normal countries
+                            //adapter that presents the passages
+                            binding.cycler.adapter = ToolHistoryListingPassageAdapter(
+                                toolHistoryListing,
+                                complaintInterface,
+                                false,
+                                lifecycleOwner,
+                                itemSerialNumber, countryCode, viewModel
+                            )
+                        }
 
                         binding.cycler.layoutManager = LinearLayoutManager(binding.root.context)
 
                         binding.executePendingBindings()
 
-                    } else {
+                    }
+
+                    if (toolHistoryListing.data?.records?.items.isNullOrEmpty()) {
                         binding.noPassage.visibility = View.VISIBLE
                         binding.cycler.visibility = View.GONE
                     }

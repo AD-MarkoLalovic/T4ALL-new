@@ -23,6 +23,7 @@ import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.dialogs.ComplaintFormDialog
 import com.mobility.enp.view.dialogs.ComplaintFormDialogOld
 import com.mobility.enp.view.dialogs.ObjectionFormDialog
+import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class ToolHistoryListingPassageAdapter(
@@ -31,7 +32,7 @@ class ToolHistoryListingPassageAdapter(
     private val hideComplaintButton: Boolean,
     private val lifecycleOwner: LifecycleOwner,
     private val tagSerialNumber: String,
-    private val countryCode: String
+    private val countryCode: String, private val viewmodel: UserPassViewModel
 ) :
     RecyclerView.Adapter<ToolHistoryListingPassageAdapter.RelationViewHolder>() {
 
@@ -59,9 +60,6 @@ class ToolHistoryListingPassageAdapter(
 
             binding.relation = relation
             binding.viewShade.background = null
-            binding.toolHistoryStatus.setOnClickListener {
-                Log.d(TAG, "relation status: $relation")
-            }
 
             when (relation.bill.countryCode) {
                 "RS" -> {
@@ -208,7 +206,9 @@ class ToolHistoryListingPassageAdapter(
 
     override fun onBindViewHolder(holder: RelationViewHolder, position: Int) {
         val currentItem = relation[holder.bindingAdapterPosition]
+
         holder.bind(currentItem, complaintInterface)
+
         if (Util.isNetworkAvailable(context)) {
             performDataFill(currentItem, holder.bindingAdapterPosition) // paggination
         }
