@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -73,27 +72,32 @@ class ToolHistoryListingAdapter(
 
                     holder.binding.progbar.visibility = View.GONE
 
-                    if (!toolHistoryListing.data?.sumTags.isNullOrEmpty()) {
+                    if (viewModel.selectedCountry != binding.root.context.getString(R.string.croatia_hr)) {
+                        if (!toolHistoryListing.data?.sumTags.isNullOrEmpty()) {  // sum total of price for passages hr doesn't have this data
+                            /**
+                             * this adapter is used for presenting the total cost of tag
+                             * @param takes in a List<SumTag> of costs
+                             */
+                            binding.cyclerTotalPrice.adapter =
+                                TotalCostPassageAdapter(toolHistoryListing.data.sumTags)
+                            binding.cyclerTotalPrice.layoutManager =
+                                LinearLayoutManager(
+                                    binding.root.context,
+                                    LinearLayoutManager.VERTICAL,
+                                    false
+                                )
 
+                            binding.cyclerTotalPrice.visibility = View.VISIBLE
+                        } else {
+                            binding.cyclerTotalPrice.visibility = View.GONE
+                        }
+                    }
 
-                        /**
-                         * this adapter is used for presenting the total cost of tag
-                         * @param takes in a List<SumTag> of costs
-                         */
-                        binding.cyclerTotalPrice.adapter =
-                            TotalCostPassageAdapter(toolHistoryListing.data?.sumTags)
-                        binding.cyclerTotalPrice.layoutManager =
-                            LinearLayoutManager(
-                                binding.root.context,
-                                LinearLayoutManager.VERTICAL,
-                                false
-                            )
-
-                        binding.cyclerTotalPrice.visibility = View.VISIBLE
-
+                    //record of passages for tag
+                    if (!toolHistoryListing.data?.records?.items.isNullOrEmpty()) {
                         binding.position = position
 
-                        val heightInDp = when(toolHistoryListing.data.records?.items?.size){
+                        val heightInDp = when (toolHistoryListing.data.records.items.size) {
                             1 -> binding.root.context.resources.getDimensionPixelSize(
                                 R.dimen.recycler_view_one_item
                             )
@@ -117,10 +121,7 @@ class ToolHistoryListingAdapter(
                         binding.nsScroll.visibility = View.VISIBLE
                         binding.cycler.visibility = View.VISIBLE
 
-                        /**
-                         * this adapter is used for presenting individual passages for 1 tag serial
-                         * @param takes in V2HistoryTagResponse model from 1 tag
-                         */
+                        //adapter that presents the passages
                         binding.cycler.adapter = ToolHistoryListingPassageAdapter(
                             toolHistoryListing,
                             complaintInterface,
@@ -133,21 +134,15 @@ class ToolHistoryListingAdapter(
 
                         binding.executePendingBindings()
 
-
                     } else {
                         binding.noPassage.visibility = View.VISIBLE
                         binding.cycler.visibility = View.GONE
-                        binding.cyclerTotalPrice.visibility = View.GONE
                     }
                 }
 
                 override fun onFailed(boolean: Boolean, cause: String) {
                     holder.binding.progbar.visibility = View.GONE
-                    Toast.makeText(
-                        binding.root.context,
-                        "failed to set sub adapter with data",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Log.d(TAG, "passage adapter failed to set data $cause: ")
                 }
             }
 
