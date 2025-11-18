@@ -23,6 +23,7 @@ class ToolHistoryListingAdapter(
     private val toolHistoryIndex: IndexData,
     private val viewModel: UserPassViewModel,
     private val complaintInterface: ToolHistoryListingPassageAdapter.SendToFragment,
+    private val complaintInterfaceCroatia: ToolHistoryListingPassageAdapterCroatia.SendToFragment,
     val lifecycleOwner: LifecycleOwner,
     val passageData: SavePassageData, val paginationUpdate: PaginationUpdate
 ) : RecyclerView.Adapter<ToolHistoryListingAdapter.TagsViewHolder>() {
@@ -126,9 +127,9 @@ class ToolHistoryListingAdapter(
                         if (viewModel.selectedCountry == binding.root.context.getString(R.string.croatia_hr)) {
                             binding.cycler.adapter = ToolHistoryListingPassageAdapterCroatia(
                                 toolHistoryListing,
-                                false,
+                                complaintInterfaceCroatia,
                                 lifecycleOwner,
-                                itemSerialNumber, countryCode, viewModel
+                                itemSerialNumber
                             )
                         } else {
                             //record of passages for tag for normal countries

@@ -381,4 +381,5 @@
     <string name="from_button">Do</string>
     <string name="back_button">Nazad</string>
     <string name="page_text">Stranica</string>
+    <string name="croatian_reclamation">Reklamaciju za prolazak u Republici Hrvatskoj morate podnijeti na HAC portalu.</string>
 </resources>

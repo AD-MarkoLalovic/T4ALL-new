@@ -391,4 +391,5 @@
     <string name="from_button">e</string>
     <string name="back_button">Geri</string>
     <string name="page_text">Sayfa</string>
+    <string name="croatian_reclamation">Hırvatistan Cumhuriyeti’ndeki geçiş için şikayeti HAC portalı üzerinden yapmanız gerekmektedir.</string>
 </resources>

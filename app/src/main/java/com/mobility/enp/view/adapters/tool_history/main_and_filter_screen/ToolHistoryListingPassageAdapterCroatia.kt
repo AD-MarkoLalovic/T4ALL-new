@@ -6,8 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
-import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
-import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
+import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.ItemRelationPassageRealCroatiaBinding
@@ -19,10 +18,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class ToolHistoryListingPassageAdapterCroatia(
     private val data: V2HistoryTagResponse,
-    private val hideComplaintButton: Boolean,
+    private val complaintInterface: SendToFragment,
     private val lifecycleOwner: LifecycleOwner,
     private val tagSerialNumber: String,
-    private val countryCode: String, private val viewmodel: UserPassViewModel
 ) :
     RecyclerView.Adapter<ToolHistoryListingPassageAdapterCroatia.RelationViewHolder>() {
 
@@ -47,12 +45,16 @@ class ToolHistoryListingPassageAdapterCroatia(
         fun bind(relation: Item) {
             Log.d(TAG, "bind: $relation")
 
-            with(binding){
+            with(binding) {
                 carTagNumber.text = relation.amount.toString()
                 carTagCurrency.text = "EUR"
                 passageRelation.text = relation.tollPlaza
-                passageEntryDate.text = "Time of passage"
+                passageEntryDate.text = root.context.getString(R.string.time_of_passage)
                 passageExitDate.text = relation.checkDate
+
+                btnComplaint.setOnClickListener {
+                    complaintInterface.croatiaReclamationDialog()
+                }
             }
         }
     }
@@ -87,7 +89,7 @@ class ToolHistoryListingPassageAdapterCroatia(
                 MutableStateFlow<SubmitResult<V2HistoryTagResponse>>(SubmitResult.Loading)
 
             collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
-//                complaintInterface.stopSpinner()
+                complaintInterface.stopSpinner()
                 when (serverResponse) {
                     is SubmitResult.Success -> {
                         serverResponse.data.let {
@@ -109,15 +111,13 @@ class ToolHistoryListingPassageAdapterCroatia(
                 }
             }
 
-//            complaintInterface.sendDataFill(currentPage + 1, indexListing, tagSerialNumber)
+            complaintInterface.sendDataFill(currentPage + 1, indexListing, tagSerialNumber)
         } else if (lastPage == currentPage && relation[relation.size - 1] == currentItem) {
             Log.d(TAG, "performDataFill: no more passage data for tag ${data.serial}")
         }
     }
 
     interface SendToFragment {
-        fun sendComplaintData(complaintBody: ComplaintBody)
-        fun sendObjectionData(objectionBody: ObjectionBody)
         fun sendDataFill(
             nextPage: Int,
             flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
@@ -125,6 +125,8 @@ class ToolHistoryListingPassageAdapterCroatia(
         )
 
         fun stopSpinner()
+
+        fun croatiaReclamationDialog()
     }
 
 }

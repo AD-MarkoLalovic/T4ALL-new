@@ -23,6 +23,7 @@ import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapter
+import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapterCroatia
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -33,7 +34,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.SendToFragment,
-    ToolHistoryListingAdapter.SavePassageData, ToolHistoryListingAdapter.PaginationUpdate {
+    ToolHistoryListingAdapter.SavePassageData, ToolHistoryListingAdapter.PaginationUpdate, ToolHistoryListingPassageAdapterCroatia.SendToFragment {
 
     private var _binding: FragmentPassageHistoryBinding? = null
     private val binding: FragmentPassageHistoryBinding get() = _binding!!
@@ -228,7 +229,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             indexData  // filter fragment need some data from here saving here to reduce api calls
 
         val toolHistoryListingAdapter =
-            ToolHistoryListingAdapter(indexData, vModel, this, this, this, this)
+            ToolHistoryListingAdapter(indexData, vModel, this,this, this, this, this)
 
         binding.cycler.adapter = toolHistoryListingAdapter
         binding.cycler.layoutManager = LinearLayoutManager(requireContext())
@@ -269,6 +270,9 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
     override fun stopSpinner() {
         binding.progBar.visibility = View.GONE
+    }
+
+    override fun croatiaReclamationDialog() {
     }
 
     override fun psgData(toolHistoryListing: V2HistoryTagResponse) {

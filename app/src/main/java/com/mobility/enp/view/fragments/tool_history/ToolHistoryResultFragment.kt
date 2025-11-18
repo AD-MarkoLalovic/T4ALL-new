@@ -24,6 +24,8 @@ import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapter
+import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapterCroatia
+import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +35,8 @@ import kotlinx.coroutines.withContext
 
 
 class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.SendToFragment,
-    ToolHistoryListingAdapter.SavePassageData, ToolHistoryListingAdapter.PaginationUpdate {
+    ToolHistoryListingAdapter.SavePassageData, ToolHistoryListingAdapter.PaginationUpdate,
+    ToolHistoryListingPassageAdapterCroatia.SendToFragment {
 
     private lateinit var binding: FragmentToolHistorySearchResultBinding
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
@@ -85,7 +88,7 @@ class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.S
         when (vModel.allTagsSelected) {
             true -> {  // uses unmodified tag index for adapter to list all possible tags and passages
                 val toolHistoryListingAdapter =
-                    ToolHistoryListingAdapter(tagIndex, vModel, this, this, this, this)
+                    ToolHistoryListingAdapter(tagIndex, vModel, this, this, this, this, this)
                 binding.cycler.adapter = toolHistoryListingAdapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
 
@@ -101,7 +104,7 @@ class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.S
                 tagIndex.data?.lastPage = 1
 
                 val toolHistoryListingAdapter =
-                    ToolHistoryListingAdapter(tagIndex, vModel, this, this, this, this)
+                    ToolHistoryListingAdapter(tagIndex, vModel, this, this, this, this, this)
                 binding.cycler.adapter = toolHistoryListingAdapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
 
@@ -221,6 +224,17 @@ class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.S
 
     override fun stopSpinner() {
         binding.progBar.visibility = View.GONE
+    }
+
+    override fun croatiaReclamationDialog() {
+
+        val fm = activity?.supportFragmentManager
+
+        fm?.let { manager ->
+            GeneralMessageDialog.newInstance(
+                getString(R.string.complaint), getString(R.string.croatian_reclamation)
+            ).show(manager, "croatiaDialog")
+        }
     }
 
     private fun showNoConnectionState() {
