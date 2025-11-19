@@ -105,6 +105,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                         binding.rvCreditCard.visibility = View.VISIBLE
                         binding.bttAddCard.visibility = View.VISIBLE
                     } else {
+                        setCountryListener("HR")
                         binding.rvCreditCard.visibility = View.GONE
                         binding.bttAddCard.visibility = View.GONE
                     }
