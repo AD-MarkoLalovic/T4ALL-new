@@ -52,6 +52,10 @@ class ToolHistoryListingPassageAdapterCroatia(
                 passageEntryDate.text = root.context.getString(R.string.time_of_passage)
                 passageExitDate.text = relation.checkDate
 
+                binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_light)
+                topContainer.setBackgroundResource(R.drawable.tool_history_top_light)
+                bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_light)
+
                 btnComplaint.setOnClickListener {
                     complaintInterface.croatiaReclamationDialog()
                 }
