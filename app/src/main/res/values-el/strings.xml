@@ -381,4 +381,5 @@
     <string name="back_button">Πίσω</string>
     <string name="page_text">Σελίδα</string>
     <string name="croatian_reclamation">Την ένσταση για τη διέλευση στη Δημοκρατία της Κροατίας πρέπει να την υποβάλετε στην πύλη HAC.</string>
+    <string name="please_select_country">Παρακαλώ επιλέξτε χώρα</string>
 </resources>

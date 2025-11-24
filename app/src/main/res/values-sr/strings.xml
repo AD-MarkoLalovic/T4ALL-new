@@ -392,4 +392,5 @@
     <string name="back_button">Nazad</string>
     <string name="page_text">Stranica</string>
     <string name="croatian_reclamation">Reklamaciju za prolazak u Republici Hrvatskoj morate podneti na HAC portalu.</string>
+    <string name="please_select_country">Molimo izaberite državu</string>
 </resources>
