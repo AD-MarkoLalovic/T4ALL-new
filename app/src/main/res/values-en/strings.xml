@@ -383,4 +383,5 @@
     <string name="of_text">Of</string>
     <string name="page_text">Page</string>
     <string name="croatian_reclamation">You must submit a reclamation for the passage in the Republic of Croatia on the HAC portal.</string>
+    <string name="please_select_country">Please Select Country</string>
 </resources>
