@@ -371,7 +371,7 @@ class MyTagsFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 when (s?.length) {
-                    11 -> {
+                    11 , 16-> {
                         binding.searchMark.setImageDrawable(
                             AppCompatResources.getDrawable(
                                 requireContext(),
