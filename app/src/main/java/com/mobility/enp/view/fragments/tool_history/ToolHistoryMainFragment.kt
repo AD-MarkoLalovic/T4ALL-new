@@ -62,18 +62,42 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
 
+        setListeners()
         setObservers()
 
         vModel.getBaseDataAlternativeApi()
 
         binding.loopIcon.setOnClickListener {
             if (Util.isNetworkAvailable(requireContext())) {
+                vModel.selectedCountry = ""  // should clear for filter fragment
                 findNavController().navigate(ToolHistoryMainFragmentDirections.actionToolHistoryFragmentToToolHistorySearchFragment())
             } else {
                 Toast.makeText(
                     context, context?.getString(R.string.no_internet), Toast.LENGTH_SHORT
                 ).show()
             }
+        }
+    }
+
+    private fun setListeners() {
+        binding.buttonSerbia.setOnClickListener {
+            setSelectedButton(binding.buttonSerbia)
+            vModel.selectedCountry = getString(R.string.serbia_rs)
+        }
+
+        binding.buttonMontenegro.setOnClickListener {
+            setSelectedButton(binding.buttonMontenegro)
+            vModel.selectedCountry = getString(R.string.montenegro_me)
+        }
+
+        binding.northMacedonia.setOnClickListener {
+            setSelectedButton(binding.northMacedonia)
+            vModel.selectedCountry = getString(R.string.northmacedonia_mk)
+        }
+
+        binding.buttonCroatia.setOnClickListener {
+            setSelectedButton(binding.buttonCroatia)
+            vModel.selectedCountry = getString(R.string.croatia_hr)
         }
     }
 
@@ -182,7 +206,15 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 binding.northMacedonia.visibility = View.VISIBLE
             }
         }
+    }
 
+    private fun setSelectedButton(selectedButton: View) = with(binding) {
+        northMacedonia.isSelected = false
+        buttonSerbia.isSelected = false
+        buttonMontenegro.isSelected = false
+        buttonCroatia.isSelected = false
+
+        selectedButton.isSelected = true
     }
 
     private fun runSavedDataCheck() {
