@@ -16,6 +16,7 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
+import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.databinding.FragmentPassageHistoryBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.Util
@@ -103,6 +104,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
                 is SubmitResult.Success -> {
                     setIndexData(tagIndex.data.first)
+                    setAvailableFilters(tagIndex.data.second)
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -163,6 +165,24 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 else -> {}
             }
         }
+    }
+
+    private fun setAvailableFilters(cardData: CardWebModel) {
+        cardData.data?.let { model ->
+            if (model.showTabHR) {
+                binding.buttonCroatia.visibility = View.VISIBLE
+            }
+            if (model.showTabRS) {
+                binding.buttonSerbia.visibility = View.VISIBLE
+            }
+            if (model.showTabME) {
+                binding.buttonMontenegro.visibility = View.VISIBLE
+            }
+            if (model.showTabMK) {
+                binding.northMacedonia.visibility = View.VISIBLE
+            }
+        }
+
     }
 
     private fun runSavedDataCheck() {
