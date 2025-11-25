@@ -26,6 +26,7 @@ import com.mobility.enp.view.adapters.tool_history.MyTollCountriesFilterAdapter
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapter
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapterCroatia
+import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -45,6 +46,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
 
     private lateinit var statusFilterAdapter: MyTollCountriesFilterAdapter
+    private lateinit var toolHistoryListingAdapter: ToolHistoryListingAdapter
 
     companion object {
         const val TAG = "ToolHist"
@@ -100,6 +102,41 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 binding.loopIcon.setBackgroundResource(franchiseModel.loopIcon)
             }
         }
+
+        collectLatestLifecycleFlow(vModel.baseTagDataStateByCountry) { tagIndex ->
+            when (tagIndex) {
+                is SubmitResult.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    setIndexData(tagIndex.data)
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                    runSavedDataCheck()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(tagIndex.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(tagIndex.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {}
+            }
+        }
+
 
         collectLatestLifecycleFlow(vModel.baseTagDataState) { tagIndex ->
             when (tagIndex) {
@@ -191,9 +228,33 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         }
 
         statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
+            val selectedCountry = when (selectedStatus) {
+                getString(R.string.croatia) -> {
+                    getString(R.string.croatia_hr)
+                }
 
+                getString(R.string.montenegro) -> {
+                    getString(R.string.montenegro_me)
+                }
 
+                getString(R.string.macedonia) -> {
+                    getString(R.string.northmacedonia_mk)
+                }
 
+                getString(R.string.serbia) -> {
+                    getString(R.string.serbia_rs)
+                }
+
+                else -> ""
+            }
+
+            vModel.selectedCountry = selectedCountry
+
+            toolHistoryListingAdapter.clearData()
+
+            binding.progBar.visibility = View.VISIBLE
+
+            vModel.getBaseDataAlternativeApiForCountriesOnMain()
         }
 
         binding.cyclerTagTypes.adapter = statusFilterAdapter
@@ -267,7 +328,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         vModel.indexData =
             indexData  // filter fragment need some data from here saving here to reduce api calls
 
-        val toolHistoryListingAdapter =
+        toolHistoryListingAdapter =
             ToolHistoryListingAdapter(indexData, vModel, this, this, this, this, this)
 
         binding.cycler.adapter = toolHistoryListingAdapter
@@ -312,6 +373,13 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     }
 
     override fun croatiaReclamationDialog() {
+        val fm = activity?.supportFragmentManager
+
+        fm?.let { manager ->
+            GeneralMessageDialog.newInstance(
+                getString(R.string.complaint), getString(R.string.croatian_reclamation)
+            ).show(manager, "croatiaDialog")
+        }
     }
 
     override fun psgData(toolHistoryListing: V2HistoryTagResponse) {
