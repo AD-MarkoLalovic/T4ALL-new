@@ -22,6 +22,7 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
+import com.mobility.enp.view.adapters.tool_history.MyTollCountriesFilterAdapter
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapter
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapterCroatia
@@ -35,12 +36,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.SendToFragment,
-    ToolHistoryListingAdapter.SavePassageData, ToolHistoryListingAdapter.PaginationUpdate, ToolHistoryListingPassageAdapterCroatia.SendToFragment {
+    ToolHistoryListingAdapter.SavePassageData, ToolHistoryListingAdapter.PaginationUpdate,
+    ToolHistoryListingPassageAdapterCroatia.SendToFragment {
 
     private var _binding: FragmentPassageHistoryBinding? = null
     private val binding: FragmentPassageHistoryBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
+
+    private lateinit var statusFilterAdapter: MyTollCountriesFilterAdapter
 
     companion object {
         const val TAG = "ToolHist"
@@ -62,7 +66,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
 
-        setListeners()
         setObservers()
 
         vModel.getBaseDataAlternativeApi()
@@ -76,28 +79,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                     context, context?.getString(R.string.no_internet), Toast.LENGTH_SHORT
                 ).show()
             }
-        }
-    }
-
-    private fun setListeners() {
-        binding.buttonSerbia.setOnClickListener {
-            setSelectedButton(binding.buttonSerbia)
-            vModel.selectedCountry = getString(R.string.serbia_rs)
-        }
-
-        binding.buttonMontenegro.setOnClickListener {
-            setSelectedButton(binding.buttonMontenegro)
-            vModel.selectedCountry = getString(R.string.montenegro_me)
-        }
-
-        binding.northMacedonia.setOnClickListener {
-            setSelectedButton(binding.northMacedonia)
-            vModel.selectedCountry = getString(R.string.northmacedonia_mk)
-        }
-
-        binding.buttonCroatia.setOnClickListener {
-            setSelectedButton(binding.buttonCroatia)
-            vModel.selectedCountry = getString(R.string.croatia_hr)
         }
     }
 
@@ -192,29 +173,35 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     }
 
     private fun setAvailableFilters(cardData: CardWebModel) {
-        cardData.data?.let { model ->
-            if (model.showTabHR) {
-                binding.buttonCroatia.visibility = View.VISIBLE
-            }
-            if (model.showTabRS) {
-                binding.buttonSerbia.visibility = View.VISIBLE
-            }
-            if (model.showTabME) {
-                binding.buttonMontenegro.visibility = View.VISIBLE
-            }
-            if (model.showTabMK) {
-                binding.northMacedonia.visibility = View.VISIBLE
-            }
+        Log.d(TAG, "setAvailableFilters: $cardData")
+
+        val countryList = ArrayList<String>()
+
+        if (cardData.data?.showTabHR == true) {
+            countryList.add(getString(R.string.croatia))
         }
-    }
+        if (cardData.data?.showTabME == true) {
+            countryList.add(getString(R.string.montenegro))
+        }
+        if (cardData.data?.showTabMK == true) {
+            countryList.add(getString(R.string.macedonia))
+        }
+        if (cardData.data?.showTabRS == true) {
+            countryList.add(getString(R.string.serbia))
+        }
 
-    private fun setSelectedButton(selectedButton: View) = with(binding) {
-        northMacedonia.isSelected = false
-        buttonSerbia.isSelected = false
-        buttonMontenegro.isSelected = false
-        buttonCroatia.isSelected = false
+        statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
 
-        selectedButton.isSelected = true
+
+
+        }
+
+        binding.cyclerTagTypes.adapter = statusFilterAdapter
+
+        statusFilterAdapter.submitList(countryList.reversed()) {
+            statusFilterAdapter.setTabPosition(0)
+        }
+
     }
 
     private fun runSavedDataCheck() {
@@ -281,7 +268,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             indexData  // filter fragment need some data from here saving here to reduce api calls
 
         val toolHistoryListingAdapter =
-            ToolHistoryListingAdapter(indexData, vModel, this,this, this, this, this)
+            ToolHistoryListingAdapter(indexData, vModel, this, this, this, this, this)
 
         binding.cycler.adapter = toolHistoryListingAdapter
         binding.cycler.layoutManager = LinearLayoutManager(requireContext())
