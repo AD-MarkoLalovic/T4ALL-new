@@ -156,7 +156,6 @@ class MyTagsFragment : Fragment() {
                             allowedCountriesAdapter.setTabPosition(0)
                         }
 
-
                         val countryCode = when (countryList[0]) {
                             "MKD" -> "MK"
                             "MNE" -> "ME"

@@ -20,7 +20,7 @@ import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class ToolHistoryListingAdapter(
-    private val toolHistoryIndex: IndexData,
+    private var toolHistoryIndex: IndexData,
     private val viewModel: UserPassViewModel,
     private val complaintInterface: ToolHistoryListingPassageAdapter.SendToFragment,
     private val complaintInterfaceCroatia: ToolHistoryListingPassageAdapterCroatia.SendToFragment,
@@ -29,11 +29,19 @@ class ToolHistoryListingAdapter(
 ) : RecyclerView.Adapter<ToolHistoryListingAdapter.TagsViewHolder>() {
 
     var currentPage: Int = toolHistoryIndex.data?.currentPage ?: 0
-    val lastPage: Int = toolHistoryIndex.data?.lastPage ?: 0
-    val perPage: Int = toolHistoryIndex.data?.perPage ?: 0
-    val total: Int = toolHistoryIndex.data?.total ?: 0
+    var lastPage: Int = toolHistoryIndex.data?.lastPage ?: 0
+    var perPage: Int = toolHistoryIndex.data?.perPage ?: 0
+    var total: Int = toolHistoryIndex.data?.total ?: 0
 
     val listOfTags: ArrayList<Tag> = toolHistoryIndex.data?.tags as ArrayList<Tag>
+
+    fun clearData(){
+        toolHistoryIndex = IndexData(0,null,"")
+        lastPage = 0
+        perPage = 0
+        total = 0
+        notifyDataSetChanged()
+    }
 
     companion object {
         const val TAG = "PrimaryPassageAdapter"
