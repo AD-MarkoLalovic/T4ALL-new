@@ -27,20 +27,20 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.pdf_table.PdfTable
 import com.mobility.enp.data.repository.BillsRepository
-import com.mobility.enp.network.Repository
 import com.mobility.enp.services.MyFirebaseMessagingService
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.view.PdfViewActivity
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
@@ -52,30 +52,13 @@ import java.io.OutputStream
 
 class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel() {
 
-    companion object {
-        const val TAG = "BillViewModel"
-
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val myRepository = (this[APPLICATION_KEY] as MyApplication).billsRepository
-                MyInvoicesViewModel(
-                    repository = myRepository
-                )
-            }
-        }
-    }
-
     private val perPage = 10
-
 
     private val _myInvoices = MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Empty)
     val myInvoices: StateFlow<SubmitResult<MyInvoicesResponse>> get() = _myInvoices
 
-    private val _checkNetDownload = MutableLiveData<Boolean>()
-    val checkNetDownload: LiveData<Boolean> = _checkNetDownload
-
-    private val _billPad = MutableLiveData<Boolean>()
-    val billPad: LiveData<Boolean> get() = _billPad
+    private val _billPad = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
+    val billPad = _billPad.asStateFlow()
 
     private val _savedPdfData = MutableLiveData<ByteArray>()
     val pdfData: LiveData<ByteArray> get() = _savedPdfData
@@ -83,19 +66,10 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     private val _openDialogForNoPdfData = MutableLiveData<Boolean>()
     val openDialogForNoPdfData: LiveData<Boolean> get() = _openDialogForNoPdfData
 
-    private val _checkNetMyInvoices = MutableLiveData<Boolean>()
-    val checkNetMyInvoices: LiveData<Boolean> get() = _checkNetMyInvoices
-
     private var selectedCountry: String = ""
 
     fun setSelectedCountry(country: String) {
         this.selectedCountry = country
-    }
-
-    private suspend fun getUserToken(): String? {
-        return withContext(Dispatchers.IO) {
-            repository.getTokenTemp()
-        }
     }
 
     fun isNetworkAvailable(): Boolean {
@@ -117,7 +91,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(
-                            UserPassViewModel.Companion.TAG,
+                            UserPassViewModel.TAG,
                             "Error while fetching my invoices data"
                         )
                         _myInvoices.value = SubmitResult.FailureServerError
@@ -178,7 +152,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(
-                            UserPassViewModel.Companion.TAG,
+                            UserPassViewModel.TAG,
                             "Error while fetching my invoices data"
                         )
                         flow.value = SubmitResult.FailureServerError
@@ -258,7 +232,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(
-                            UserPassViewModel.Companion.TAG,
+                            UserPassViewModel.TAG,
                             "Error while fetching bill details"
                         )
                         flow.value = SubmitResult.FailureServerError
@@ -322,7 +296,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(
-                            UserPassViewModel.Companion.TAG,
+                            UserPassViewModel.TAG,
                             "Error while fetching bill paging detals"
                         )
                         flow.value = SubmitResult.FailureServerError
@@ -365,19 +339,24 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         }
     }
 
-    fun payBill(billId: String, errorBody: MutableLiveData<ErrorBody>) {
-        if (isNetworkAvailable()) {
-            viewModelScope.launch {
-                val userToken = getUserToken()
-                userToken?.let { token ->
-                    Repository.postPayBill(
-                        token, billId, _billPad, errorBody
-                    )
+    fun payBill(billId: String) {
+        viewModelScope.launch {
+            _billPad.value = SubmitResultFold.Loading
+
+            val result = repository.postPayBill(billId)
+            result.fold(
+                onSuccess = {
+                    _billPad.value = SubmitResultFold.Success(Unit)
+                },
+                onFailure = { error ->
+                    _billPad.value = SubmitResultFold.Failure(error)
                 }
-            }
-        } else {
-            _checkNetMyInvoices.postValue(false)
+            )
         }
+    }
+
+    fun resetBillPad() {
+        _billPad.value = SubmitResultFold.Idle
     }
 
     fun downloadPdfBill(
@@ -400,7 +379,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(
-                            UserPassViewModel.Companion.TAG,
+                            UserPassViewModel.TAG,
                             "Error while fetching bill paging detals"
                         )
                         _myInvoices.value = SubmitResult.FailureServerError
@@ -591,7 +570,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(
-                            UserPassViewModel.Companion.TAG,
+                            UserPassViewModel.TAG,
                             "Error while fetching bill paging detals"
                         )
                         _myInvoices.value = SubmitResult.FailureServerError
@@ -630,6 +609,24 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
 
                     else -> {}
                 }
+            }
+        }
+    }
+
+    fun resetState() {
+        _myInvoices.value = SubmitResult.Empty
+        selectedCountry = ""
+    }
+
+    companion object {
+        const val TAG = "BillViewModel"
+
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val myRepository = (this[APPLICATION_KEY] as MyApplication).billsRepository
+                MyInvoicesViewModel(
+                    repository = myRepository
+                )
             }
         }
     }

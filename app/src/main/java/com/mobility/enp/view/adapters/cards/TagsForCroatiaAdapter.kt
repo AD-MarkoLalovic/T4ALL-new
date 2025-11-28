@@ -15,7 +15,7 @@ import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 class TagsForCroatiaAdapter(
     private val onCheckChange: (SerialNumberRequest) -> Unit,
     private val franchisePrimaryColor: Int?
-) : ListAdapter<TagsForCroatiaUI, TagsForCroatiaAdapter.TagsViewHolder>(TagsForCroatiaDiffCallback()) {
+) : ListAdapter<TagsForCroatiaUI, TagsForCroatiaAdapter.TagsViewHolder>(TagsForCroatiaDiffCallback) {
 
     private val serialNumbers = mutableListOf<String>()
 
@@ -70,21 +70,6 @@ class TagsForCroatiaAdapter(
         }
     }
 
-    class TagsForCroatiaDiffCallback : DiffUtil.ItemCallback<TagsForCroatiaUI>() {
-        override fun areItemsTheSame(
-            oldItem: TagsForCroatiaUI,
-            newItem: TagsForCroatiaUI
-        ): Boolean {
-            return oldItem.serialNumberUI == newItem.serialNumberUI
-        }
-
-        override fun areContentsTheSame(
-            oldItem: TagsForCroatiaUI,
-            newItem: TagsForCroatiaUI
-        ): Boolean {
-            return oldItem == newItem
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsViewHolder {
         val binding =
@@ -97,5 +82,20 @@ class TagsForCroatiaAdapter(
         holder.bind(currentItem)
     }
 
+}
 
+object TagsForCroatiaDiffCallback : DiffUtil.ItemCallback<TagsForCroatiaUI>() {
+    override fun areItemsTheSame(
+        oldItem: TagsForCroatiaUI,
+        newItem: TagsForCroatiaUI
+    ): Boolean {
+        return oldItem.serialNumberUI == newItem.serialNumberUI
+    }
+
+    override fun areContentsTheSame(
+        oldItem: TagsForCroatiaUI,
+        newItem: TagsForCroatiaUI
+    ): Boolean {
+        return oldItem == newItem
+    }
 }

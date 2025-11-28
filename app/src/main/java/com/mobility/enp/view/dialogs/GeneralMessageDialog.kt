@@ -7,21 +7,43 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import com.mobility.enp.databinding.GeneralDialogBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
 
-class GeneralMessageDialog(
-    private val title: String,
-    private val subtitle: String
-) : DialogFragment() {
+class GeneralMessageDialog() : DialogFragment() {
 
     private var _binding: GeneralDialogBinding? = null
     private val binding: GeneralDialogBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
+    companion object {
+        private const val ARG_TITLE = "ARG_TITLE"
+        private const val ARG_SUBTITLE = "ARG_SUBTITLE"
+        private const val ARG_RESULT_KEY = "ARG_RESULT_KEY"
+        private const val ARG_RESULT_VALUE_KEY = "ARG_RESULT_VALUE_KEY"
+
+        fun newInstance(
+            title: String,
+            subtitle: String,
+            resultKey: String? = null,
+            resultValueKey: String? = null
+        ): GeneralMessageDialog {
+            return GeneralMessageDialog().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_TITLE, title)
+                    putString(ARG_SUBTITLE, subtitle)
+                    putString(ARG_RESULT_KEY, resultKey)
+                    putString(ARG_RESULT_VALUE_KEY, resultValueKey)
+                }
+            }
+
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +57,12 @@ class GeneralMessageDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val title = requireArguments().getString(ARG_TITLE).orEmpty()
+        val subtitle = requireArguments().getString(ARG_SUBTITLE).orEmpty()
+        val resultKey = requireArguments().getString(ARG_RESULT_KEY)
+        val resultValueKey = requireArguments().getString(ARG_RESULT_VALUE_KEY)
+
         binding.title.text = title
         binding.subTitle.text = subtitle
 
@@ -45,6 +73,12 @@ class GeneralMessageDialog(
         }
 
         binding.confirmButton.setOnClickListener {
+            if (resultKey != null && resultValueKey != null) {
+                setFragmentResult(
+                    resultKey,
+                    bundleOf(resultValueKey to true)
+                )
+            }
             dismiss()
         }
     }

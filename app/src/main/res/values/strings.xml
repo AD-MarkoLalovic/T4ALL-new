@@ -163,7 +163,6 @@
     <string name="password_repeat_error_message" translatable="true">Поново унета лозинка се не поклапа са новом лозинком</string>
     <string name="password_error_message" translatable="true">Поље нова лозинка мора садржати најмање 8 карактера.</string>
     <string name="enter_old_password_message" translatable="true">Поље стара лозинка је обавезно.</string>
-    <string name="incorrect_old_password_message" translatable="true">Погрешно унета стара шифра.</string>
     <string name="repeat_the_new_password" translatable="true">Поново унесите нову лозинку</string>
     <string name="enter_support_message" translatable="true">Унесите текст поруке.</string>
     <string name="create_account" translatable="true">Креирајте Т4А налог</string>
@@ -237,7 +236,6 @@
     <string name="text_add_card" translatable="true">Тренутно немате додатих картица. Молимо вас додајте картицу.</string>
     <string name="no_notifications" translatable="true">Нема обавештења</string>
     <string name="no_notifications_received" translatable="true">Овај корисник није примио ниједно обавештење</string>
-    <string name="payment_unsuccessful" translatable="true">Плаћање није успело.</string>
     <string name="file_downloaded" translatable="true">Фајл је преузет</string>
     <string name="download_failed" translatable="true">Преузимање није успело</string>
     <string name="perm_required" translatable="true">Дозвола је потребна, молим вас одобрите.</string>
@@ -340,7 +338,6 @@
     <string name="inactive_card">Истекла/Избрисана Картица</string>
     <string name="fill_in_all_fields">Попуните сва поља.</string>
     <string name="enter_valid_email_address">Унесите важећу имејл адресу.</string>
-    <string name="message_was_not_send">Порука није послата.</string>
     <string name="account_deactivation_notice">Поштовани корисници, молимо вас да ову контакт форму користите искључиво за потребе потпуне деактивације вашег корисничког налога. Сви остали захтеви упућени путем ове форме неће бити процесуирани.</string>
     <string name="pdf_invoices">PDF Рачуни</string>
     <string name="listing_of_passages">Листинг пролазака</string>
@@ -455,5 +452,11 @@
     <string name="deactivate_tag_successful">Успешно сте деактивирали Таг</string>
     <string name="deactivate_tag_title">Деактивирај таг</string>
     <string name="activate_tag_title">Активирај таг</string>
+    <string name="of_text">Од</string>
+    <string name="from_button">До</string>
+    <string name="back_button">Назад</string>
+    <string name="page_text">Страница</string>
+    <string name="croatian_reclamation">Рекламацију за пролазак у Републици Хрватској морате поднети на HAC порталу.</string>
+    <string name="please_select_country">Молимо изаберите државу</string>
 
 </resources>

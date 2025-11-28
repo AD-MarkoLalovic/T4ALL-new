@@ -1016,7 +1016,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     }
 
     private fun convertLongToDateString(time: Long): TimeSave {
-        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+        val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
         val date = Date(time)
         val formDate = sdf.format(date)
         return TimeSave(formDate, date)

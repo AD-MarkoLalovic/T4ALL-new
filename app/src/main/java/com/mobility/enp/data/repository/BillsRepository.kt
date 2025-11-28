@@ -9,14 +9,9 @@ import com.mobility.enp.data.model.pdf_table.PdfTable
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
+import kotlinx.coroutines.CancellationException
 
 class BillsRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, context) {
-
-
-    suspend fun getTokenTemp(): String? {
-        val userToken = getUserToken()
-        return userToken
-    }
 
     fun isNetworkPresent(): Boolean {
         return isNetworkAvailable()
@@ -39,7 +34,6 @@ class BillsRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, co
     suspend fun getPdfTable(): PdfTable? {
         return database.pdfDao().fetchData()
     }
-
 
     suspend fun getInvoicesData(
         perPage: Int,
@@ -268,6 +262,31 @@ class BillsRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, co
         }
 
         return Result.failure(NetworkError.ServerError)
+    }
+
+    suspend fun postPayBill(bill: String): Result<Unit> {
+        if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val lang = getLangKey()
+            val response = apiService(userToken).payBill(billId = bill, language = lang)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                val errorResponse = response.errorBody()?.let {
+                    parseErrorResponse(errorCode = response.code(), errorBody = it)
+                }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.d("PayBill", "BillsRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
     }
 
 }

@@ -7,6 +7,7 @@ import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
+import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
@@ -16,7 +17,6 @@ import com.mobility.enp.data.room.LastUser
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 /**
@@ -234,7 +234,24 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
         }
     }
 
-    fun userPassword(): Flow<String> {
-        return database.loginDao().fetchPassword()
+    suspend fun sendCustomerSupport(data: CustomerSupport): Result<Unit> {
+        if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
+
+        return try {
+            val lang = getLangKey()
+            val response = apiService("").sendCustomerSupport(lang, data)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                val errorResponse = response.errorBody()?.let {
+                    parseErrorResponse(errorCode = response.code(), errorBody = it)
+                }
+                Result.failure(errorResponse?.let { NetworkError.ApiError(it) }
+                    ?: NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.d("SendCustomerSupport", "AuthRepository: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
     }
 }

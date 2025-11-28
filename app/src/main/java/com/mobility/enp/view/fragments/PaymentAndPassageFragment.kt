@@ -17,11 +17,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.mobility.enp.R
 import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.data.model.cards.response.CardsResponse
@@ -60,8 +57,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private lateinit var tagsForCroatiaAdapter: TagsForCroatiaAdapter
 
     private var allCards: List<Card> = emptyList()
-    private val args: PaymentAndPassageFragmentArgs by navArgs()
-    private var selectedCountry: String = ""
     private var showLoginToHac = false
 
     override fun onCreateView(
@@ -74,9 +69,14 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = viewLifecycleOwner
+        val argCountry = arguments?.getString("countryCode")
 
-        selectedCountry = args.countryCode ?: ""
+        if (!argCountry.isNullOrEmpty()) {
+            viewModel.saveSelectCountry = argCountry
+            arguments?.remove("countryCode")
+        } else if (viewModel.saveSelectCountry.isNullOrEmpty()) {
+            viewModel.saveSelectCountry = ""
+        }
 
         setListener()
         setupAdapters()
@@ -84,32 +84,33 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         viewModel.fetchCardFlow()
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                delay(2000)
-                binding.loadingCards.visibility = View.GONE
-            }
-        }
     }
-
 
     private fun setObservers() {
         collectLatestLifecycleFlow(viewModel.getCardDataFlow) { cardWeb ->
             when (cardWeb) {
                 is SubmitResult.Loading -> {
-                    binding.loadingCards.visibility = View.VISIBLE
-                    binding.rvCreditCard.visibility = View.GONE
-                    binding.recyclerCardsCountry.visibility = View.GONE
+                    if (viewModel.saveSelectCountry != "HR") {
+                        binding.loadingCards.visibility = View.VISIBLE
+                        binding.rvCreditCard.visibility = View.GONE
+                        binding.recyclerCardsCountry.visibility = View.GONE
+                    }
                 }
 
                 is SubmitResult.Success -> {
-                    binding.rvCreditCard.visibility = View.VISIBLE
-                    binding.recyclerCardsCountry.visibility = View.VISIBLE
                     binding.loadingCards.visibility = View.GONE
-                    binding.bttAddCard.visibility = View.VISIBLE
+                    binding.recyclerCardsCountry.visibility = View.VISIBLE
+
+                    if (viewModel.saveSelectCountry != "HR") {
+                        binding.rvCreditCard.visibility = View.VISIBLE
+                        binding.bttAddCard.visibility = View.VISIBLE
+                    } else {
+                        setCountryListener("HR")
+                        binding.rvCreditCard.visibility = View.GONE
+                        binding.bttAddCard.visibility = View.GONE
+                    }
 
                     showLoginToHac = cardWeb.data.data?.hacPortalUrl != null
-
                     updateAdapter(cardWeb.data)
 
                 }
@@ -279,7 +280,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                         visibleCroatianComponents(true)
                         binding.bttRegTagForCroatia.visibility = View.VISIBLE
 
-                        tagsForCroatiaAdapter.submitList(result.data)
+                        tagsForCroatiaAdapter.submitList(tagsList)
                     } else {
                         visibleCroatianComponents(true)
                         binding.bttRegTagForCroatia.visibility = View.GONE
@@ -389,7 +390,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
             allCards = sortedCards ?: emptyList()
 
-            filterCardsByCountry(selectedCountry)
+            filterCardsByCountry(viewModel.saveSelectCountry!!)
         }
     }
 
@@ -457,15 +458,17 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 cardsCountryAdapter.updateCountries(countryNameAndAdditionalField)
 
                 // Ako ništa nije selektovano iz argumenata, uzimamo prvu dostupnu zemlju
-                if (selectedCountry.isEmpty() && countryNameAndAdditionalField.isNotEmpty()) {
+                if (viewModel.saveSelectCountry.isNullOrEmpty() && countryNameAndAdditionalField.isNotEmpty()) {
                     val firstClickable =
                         countryNameAndAdditionalField.firstOrNull { it.isClickable }
-                    selectedCountry = firstClickable?.code ?: "" // fallback ako nema klikabilne
+                    viewModel.saveSelectCountry =
+                        firstClickable?.code ?: "" // fallback ako nema klikabilne
                 }
 
-                cardsCountryAdapter.setSelectedCountry(selectedCountry)
+                cardsCountryAdapter.setSelectedCountry(viewModel.saveSelectCountry!!)
 
-                val position = cardsCountryAdapter.getPositionByCountryCode(selectedCountry)
+                val position =
+                    cardsCountryAdapter.getPositionByCountryCode(viewModel.saveSelectCountry!!)
                 if (position != -1) {
                     binding.recyclerCardsCountry.scrollToPosition(position)
                 }
@@ -514,10 +517,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
 
         binding.bttAddCard.setOnClickListener {
-            if (selectedCountry.isNotEmpty()) {
+            if (!viewModel.saveSelectCountry.isNullOrEmpty()) {
                 val action =
                     PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
-                        selectedCountry
+                        viewModel.saveSelectCountry
                     )
                 findNavController().navigate(action)
             }
@@ -599,9 +602,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     }
 
     override fun setCountryListener(country: String) {
+        viewModel.saveSelectCountry = country
+
         when (country) {
             "RS" -> {
-                selectedCountry = "RS"
                 visibleCroatianComponents(false)
                 binding.termsConditionsCheckmark.isChecked = false
                 filterCardsByCountry("RS")
@@ -612,7 +616,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             }
 
             "MK" -> {
-                selectedCountry = "MK"
                 visibleCroatianComponents(false)
                 filterCardsByCountry("MK")
                 setBlockVisibility(true)
@@ -623,7 +626,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             }
 
             "ME" -> {
-                selectedCountry = "ME"
                 visibleCroatianComponents(false)
                 filterCardsByCountry("ME")
                 setBlockVisibility(true)
@@ -634,7 +636,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             }
 
             "HR" -> {
-                selectedCountry = "HR"
                 setBlockVisibility(false)
                 setCardVisibility(false)
                 makeCardClickable(false)
@@ -644,7 +645,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 viewModel.fetchTagsForCroatia()
             }
         }
-        cardsCountryAdapter.setSelectedCountry(selectedCountry)  // Dodato za ažuriranje selektovane zemlje u adapteru
+        cardsCountryAdapter.setSelectedCountry(country)  // Dodato za ažuriranje selektovane zemlje u adapteru
     }
 
     private fun setClickableText() {
@@ -667,7 +668,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             override fun onClick(widget: View) {
                 val action =
                     PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewDialog(
-                        selectedCountry, "termsAndConditions"  // dont change this string
+                        viewModel.saveSelectCountry,
+                        "termsAndConditions"  // dont change this string
                     )
                 findNavController().navigate(action)
             }
@@ -688,7 +690,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             override fun onClick(widget: View) {
                 val action =
                     PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewDialog(
-                        selectedCountry, "privacyPolicy"  // dont change this string
+                        viewModel.saveSelectCountry, "privacyPolicy"  // dont change this string
                     )
                 findNavController().navigate(action)
             }
@@ -798,6 +800,5 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     override fun onResume() {
         super.onResume()
         binding.termsConditionsCheckmark.isChecked = false
-        setCountryListener(selectedCountry)
     }
 }

@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
 
@@ -55,15 +56,17 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
 
             result.fold(
                 onSuccess = { response ->
-                    insertLoginToken(
-                        UserLoginResponseRoomTable(
-                            null,
-                            response.data?.accessToken,
-                            response.data?.tokenType,
-                            user.email, user.password, response.data?.portal_key
-                        )
+                    val entity = UserLoginResponseRoomTable(
+                        accessToken = response.data?.accessToken,
+                        tokenType = response.data?.tokenType,
+                        username = user.email, portalKey = response.data?.portal_key
                     )
-                    storeLastUserEmail(user.email!!)
+
+                    withContext(Dispatchers.IO) {
+                        insertLoginToken(entity)
+                        repository.storeLastUserEmail(user.email!!)
+                    }
+
                     sendLanguage()
 
                     _loginState.value = LoginState.Success(response, response.data?.portal_key)
@@ -131,10 +134,6 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
                 }
             }
         }
-    }
-
-    private suspend fun storeLastUserEmail(email: String) {
-        repository.storeLastUserEmail(email)
     }
 
     suspend fun getUserToken(): UserLoginResponseRoomTable? {

@@ -139,7 +139,6 @@
     <string name="password_repeat_error_message">Šifre se ne podudaraju.</string>
     <string name="password_error_message">Nova šifra mora sadržati najmanje 8 karaktera</string>
     <string name="enter_old_password_message">Polje stare šifre je obavezno</string>
-    <string name="incorrect_old_password_message">Stara šifra je unijeta netačno.</string>
     <string name="repeat_the_new_password">Ponovite novu šifru.</string>
     <string name="enter_support_message">Unesite tekst poruke.</string>
     <string name="create_account">Napravite T4A nalog</string>
@@ -206,7 +205,6 @@
     <string name="text_add_card">Trenutno nemate dodatih kartica. Molimo dodajte karticu.</string>
     <string name="no_notifications">Nema obavještenja</string>
     <string name="no_notifications_received">Ovaj korisnik nije primio obavještenja</string>
-    <string name="payment_unsuccessful">Plaćanje nije uspjelo.</string>
     <string name="file_downloaded">Fajl preuzet</string>
     <string name="download_failed">Preuzimanje nije uspjelo</string>
     <string name="perm_required">Potrebna je dozvola molimo omogućite.</string>
@@ -287,7 +285,6 @@
     <string name="inactive_card">Istekla/Izbrisana Kartica</string>
     <string name="fill_in_all_fields">Popunite sva polja.</string>
     <string name="enter_valid_email_address">Unesite važeću email adresu.</string>
-    <string name="message_was_not_send">Poruka nije poslata.</string>
     <string name="account_deactivation_notice">Poštovani korisnici, molimo vas da ovu kontakt formu koristite isključivo za potrebe potpune deaktivacije vašeg korisničkog naloga. Svi ostali zahtjevi upućeni putem ove forme neće biti procesuirani.</string>
     <string name="pdf_invoices">PDF Računi</string>
     <string name="listing_of_passages">Listing prolazaka</string>
@@ -380,4 +377,10 @@
     <string name="deactivate_tag_successful">Uspešno ste deaktivirali Tag</string>
     <string name="deactivate_tag_title">"Deaktiviraj tag "</string>
     <string name="activate_tag_title">Aktiviraj tag</string>
+    <string name="of_text">Od</string>
+    <string name="from_button">Do</string>
+    <string name="back_button">Nazad</string>
+    <string name="page_text">Stranica</string>
+    <string name="croatian_reclamation">Reklamaciju za prolazak u Republici Hrvatskoj morate podnijeti na HAC portalu.</string>
+    <string name="please_select_country">Molimo izaberite državu</string>
 </resources>

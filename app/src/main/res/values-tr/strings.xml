@@ -149,7 +149,6 @@
     <string name="password_repeat_error_message">Parolalar uyuşmuyor.</string>
     <string name="password_error_message">Yeni şifre alanı en az 8 karakter içermelidir.</string>
     <string name="enter_old_password_message">Eski şifre alanı zorunludur.</string>
-    <string name="incorrect_old_password_message">Eski şifre yanlış girildi.</string>
     <string name="repeat_the_new_password">Yeni şifreyi tekrarlayın.</string>
     <string name="enter_support_message">Mesaj metnini girin.</string>
     <string name="create_account">T4A hesabı oluştur</string>
@@ -217,7 +216,6 @@
     <string name="text_add_card">Şu anda eklenmiş kartınız bulunmamaktadır. Lütfen bir kart ekleyin.</string>
     <string name="no_notifications">Bildirim yok</string>
     <string name="no_notifications_received">Bu kullanıcı tarafından herhangi bir bildirim alınmadı</string>
-    <string name="payment_unsuccessful">Ödeme başarısız oldu.</string>
     <string name="file_downloaded">Dosya indirildi</string>
     <string name="download_failed">İndirme başarısız oldu</string>
     <string name="perm_required">İzin gerekiyor, lütfen izin verin.</string>
@@ -298,7 +296,6 @@
     <string name="inactive_card">Süresi Dolmuş/Silinmiş Kart</string>
     <string name="fill_in_all_fields">Tüm alanları doldurun.</string>
     <string name="enter_valid_email_address">Geçerli bir e-posta adresi girin.</string>
-    <string name="message_was_not_send">Mesaj gönderilmedi.</string>
     <string name="account_deactivation_notice">Sayın kullanıcılar, bu iletişim formunu yalnızca kullanıcı hesabınızın tamamen devre dışı bırakılması için kullanmanızı rica ederiz. Bu form aracılığıyla gönderilen diğer talepler işleme alınmayacaktır.</string>
     <string name="pdf_invoices">PDF Faturalar</string>
     <string name="listing_of_passages">Geçişlerin listesi</string>
@@ -390,4 +387,10 @@
     <string name="deactivate_tag_successful">Tag’i başarıyla devre dışı bıraktınız</string>
     <string name="deactivate_tag_title">Etiketi devre dışı bırak</string>
     <string name="activate_tag_title">Etiketi etkinleştir</string>
+    <string name="of_text">den</string>
+    <string name="from_button">e</string>
+    <string name="back_button">Geri</string>
+    <string name="page_text">Sayfa</string>
+    <string name="croatian_reclamation">Hırvatistan Cumhuriyeti’ndeki geçiş için şikayeti HAC portalı üzerinden yapmanız gerekmektedir.</string>
+    <string name="please_select_country">Lütfen ülke seçiniz</string>
 </resources>

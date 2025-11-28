@@ -141,7 +141,6 @@
     <string name="password_repeat_error_message">Passwords do not match.</string>
     <string name="password_error_message">New password field must contain at least 8 characters</string>
     <string name="enter_old_password_message">Field old password is mandatory</string>
-    <string name="incorrect_old_password_message">Old password entered incorrectly.</string>
     <string name="repeat_the_new_password">Repeat the new password.</string>
     <string name="enter_support_message">Enter the message text.</string>
     <string name="create_account">Create T4A account</string>
@@ -207,7 +206,6 @@
     <string name="text_add_card">You currently have no added cards. Please add a card.</string>
     <string name="no_notifications">No notifications</string>
     <string name="no_notifications_received">No notifications have been received by this user</string>
-    <string name="payment_unsuccessful">Payment was unsuccessful.</string>
     <string name="file_downloaded">File Downloaded</string>
     <string name="download_failed">Download failed</string>
     <string name="perm_required">Permission is required please grant.</string>
@@ -288,7 +286,6 @@
     <string name="inactive_card">Expired/Deleted Card</string>
     <string name="fill_in_all_fields">Fill in all fields.</string>
     <string name="enter_valid_email_address">Enter a valid email address.</string>
-    <string name="message_was_not_send">The message was not sent.</string>
     <string name="account_deactivation_notice">Dear users, please use this contact form exclusively for the purpose of fully deactivating your account. All other requests submitted via this form will not be processed.</string>
     <string name="pdf_invoices">PDF Invoices</string>
     <string name="listing_of_passages">" Listing of passages"</string>
@@ -381,4 +378,10 @@
     <string name="deactivate_tag_successful">Successfully deactivated Tag</string>
     <string name="deactivate_tag_title">"Deactivate tag "</string>
     <string name="activate_tag_title">Activate tag</string>
+    <string name="back_button">Back</string>
+    <string name="from_button">From</string>
+    <string name="of_text">Of</string>
+    <string name="page_text">Page</string>
+    <string name="croatian_reclamation">You must submit a reclamation for the passage in the Republic of Croatia on the HAC portal.</string>
+    <string name="please_select_country">Please Select Country</string>
 </resources>

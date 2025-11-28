@@ -147,13 +147,12 @@
     <string name="password_repeat_error_message">Ponovo uneta lozinka se ne poklapa sa novom lozinkom</string>
     <string name="password_error_message">Polje nova lozinka mora sadržati najmanje 8 karaktera.</string>
     <string name="enter_old_password_message">Polje stara lozinka je obavezno.</string>
-    <string name="incorrect_old_password_message">Pogrešno uneta stara šifra.</string>
     <string name="repeat_the_new_password">Ponovo unesite novu lozinku</string>
     <string name="enter_support_message">Unesite tekst poruke.</string>
     <string name="create_account">Kreirajte T4A nalog</string>
     <string name="all_fields_are_mandatory">Sva polja su obavezna.</string>
     <string name="change_successfully_saved">Izmene uspešno sačuvane.</string>
-    <string name="please_connect_to_the_internet">Povezite se na internet.</string>
+    <string name="please_connect_to_the_internet">Povežite se na internet.</string>
     <string name="general_terms_and_conditions">Opšti uslovi i uslovi korišćenja</string>
     <string name="privacy_policy">Politika privatnosti</string>
     <string name="choose_country_and_payment">Izaberite zemlju i način plaćanja</string>
@@ -217,7 +216,6 @@
     <string name="text_add_card">Trenutno nemate dodatih kartica. Molimo vas dodajte karticu.</string>
     <string name="no_notifications">Nema obavestenja</string>
     <string name="no_notifications_received">Ovaj korisnik nije primio ni jedno obavestenje</string>
-    <string name="payment_unsuccessful">Plaćanje nije uspelo.</string>
     <string name="file_downloaded">Fajl je preuzet</string>
     <string name="download_failed">Preuzimanje nije uspelo</string>
     <string name="perm_required">Dozvola je potrebna, molim vas odobrite.</string>
@@ -298,7 +296,6 @@
     <string name="inactive_card">Istekla/Izbrisana Kartica</string>
     <string name="fill_in_all_fields">Popunite sva polja.</string>
     <string name="enter_valid_email_address">Unesite važeću email adresu.</string>
-    <string name="message_was_not_send">Poruka nije poslata.</string>
     <string name="account_deactivation_notice">"Poštovani korisnici, molimo vas da ovu kontakt formu koristite isključivo za potrebe potpune deaktivacije vašeg korisničkog naloga. Svi ostali zahtevi upućeni putem ove forme neće biti procesuirani."</string>
     <string name="pdf_invoices">PDF Računi</string>
     <string name="listing_of_passages">Listing prolazaka</string>
@@ -390,4 +387,10 @@
     <string name="deactivate_tag_successful">Uspešno ste deaktivirali Tag</string>
     <string name="deactivate_tag_title">"Deaktiviraj tag "</string>
     <string name="activate_tag_title">Aktiviraj tag</string>
+    <string name="of_text">Od</string>
+    <string name="from_button">Do</string>
+    <string name="back_button">Nazad</string>
+    <string name="page_text">Stranica</string>
+    <string name="croatian_reclamation">Reklamaciju za prolazak u Republici Hrvatskoj morate podneti na HAC portalu.</string>
+    <string name="please_select_country">Molimo izaberite državu</string>
 </resources>

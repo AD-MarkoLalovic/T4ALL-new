@@ -17,12 +17,13 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.FragmentPassageHistoryBinding
-import com.mobility.enp.network.Repository
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapter
+import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapterCroatia
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -33,7 +34,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.SendToFragment,
-    ToolHistoryListingAdapter.SavePassageData, ToolHistoryListingAdapter.PaginationUpdate {
+    ToolHistoryListingAdapter.SavePassageData, ToolHistoryListingAdapter.PaginationUpdate, ToolHistoryListingPassageAdapterCroatia.SendToFragment {
 
     private var _binding: FragmentPassageHistoryBinding? = null
     private val binding: FragmentPassageHistoryBinding get() = _binding!!
@@ -65,7 +66,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         vModel.getBaseDataAlternativeApi()
 
         binding.loopIcon.setOnClickListener {
-            if (Repository.isNetworkAvailable(requireContext())) {
+            if (Util.isNetworkAvailable(requireContext())) {
                 findNavController().navigate(ToolHistoryMainFragmentDirections.actionToolHistoryFragmentToToolHistorySearchFragment())
             } else {
                 Toast.makeText(
@@ -89,7 +90,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     private fun setObservers() {
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
-            franchiseModel?.franchisePrimaryColor?.let { color ->
+            franchiseModel?.franchisePrimaryColor?.let {
                 binding.loopIcon.setBackgroundResource(franchiseModel.loopIcon)
             }
         }
@@ -124,9 +125,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
 
-                else -> {
-                    SubmitResult.Empty
-                }
+                else -> {}
             }
         }
 
@@ -161,9 +160,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
 
-                else -> {
-                    SubmitResult.Empty
-                }
+                else -> {}
             }
         }
     }
@@ -232,7 +229,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             indexData  // filter fragment need some data from here saving here to reduce api calls
 
         val toolHistoryListingAdapter =
-            ToolHistoryListingAdapter(indexData, vModel, this, this, this, this)
+            ToolHistoryListingAdapter(indexData, vModel, this,this, this, this, this)
 
         binding.cycler.adapter = toolHistoryListingAdapter
         binding.cycler.layoutManager = LinearLayoutManager(requireContext())
@@ -273,6 +270,9 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
     override fun stopSpinner() {
         binding.progBar.visibility = View.GONE
+    }
+
+    override fun croatiaReclamationDialog() {
     }
 
     override fun psgData(toolHistoryListing: V2HistoryTagResponse) {

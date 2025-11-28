@@ -211,18 +211,15 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                     SubmitResult.Empty
                 }
             }
-
         }
 
         franchiseViewModel.openSuccessDialog.observe(viewLifecycleOwner) { showDialog ->
             if (showDialog != null && showDialog) {
                 franchiseViewModel.postOpenDialog(null)
-                val generalDialog =
-                    GeneralMessageDialog(
-                        requireContext().getString(R.string.support_successful_mail),
-                        requireContext().getString(R.string.support_successful_massage)
-                    )
-                generalDialog.show(childFragmentManager, "GeneralDialogSupport")
+                GeneralMessageDialog.newInstance(
+                    requireContext().getString(R.string.support_successful_mail),
+                    requireContext().getString(R.string.support_successful_massage)
+                ).show(childFragmentManager, "GeneralDialogSupport")
             }
         }
 

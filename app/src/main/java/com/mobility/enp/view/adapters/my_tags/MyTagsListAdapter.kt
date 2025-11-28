@@ -30,6 +30,7 @@ class MyTagsListAdapter(
 
     fun clearData() {
         tags.clear()
+        notifyDataSetChanged()
     }
 
     var selectedCountry: String = "SRB"

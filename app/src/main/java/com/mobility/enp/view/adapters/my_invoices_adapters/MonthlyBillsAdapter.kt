@@ -9,10 +9,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.refactor.Data
 import com.mobility.enp.data.model.api_my_invoices.refactor.Month
@@ -29,7 +27,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class MonthlyBillsAdapter(
     private val data: Data,
     private var viewModel: MyInvoicesViewModel,
-    private val errorBody: MutableLiveData<ErrorBody>,
     private val spinnerInterface: TriggerSpinner,
     val lifecycleOwner: LifecycleOwner,
     private val montYearListener: MontYearListener,
@@ -64,7 +61,6 @@ class MonthlyBillsAdapter(
         fun bind(
             month: Month,
             viewModel: MyInvoicesViewModel,
-            error: MutableLiveData<ErrorBody>,
             spinnerInt: TriggerSpinner,
             montYearListener: MontYearListener
         ) {
@@ -126,7 +122,6 @@ class MonthlyBillsAdapter(
                                         val billsDetailsAdapter = BillsDetailsAdapter(
                                             data.data,
                                             viewModel,
-                                            error,
                                             lifecycleOwner,
                                             spinnerInt,
                                             availableCurrency.toString()
@@ -180,7 +175,6 @@ class MonthlyBillsAdapter(
 
                                 else -> {
                                     spinnerInterface.onStopSpinner()
-                                    SubmitResult.Empty
                                 }
                             }
                             binding.executePendingBindings()
@@ -314,7 +308,7 @@ class MonthlyBillsAdapter(
         }
 
         holder.bind(
-            currentBill, viewModel, errorBody, spinnerInt, montYearListener
+            currentBill, viewModel, spinnerInt, montYearListener
         )
         checkDataFill(holder.bindingAdapterPosition, currentBill, holder.binding.root.context)
     }
@@ -355,7 +349,6 @@ class MonthlyBillsAdapter(
 
                     else -> {
                         spinnerInterface.onStopSpinner()
-                        SubmitResult.Empty
                     }
                 }
             }
@@ -366,7 +359,7 @@ class MonthlyBillsAdapter(
     }
 
     private fun logError(string: String) {
-        Log.d(ToolHistoryListingAdapter.Companion.TAG, "showError: $string")
+        Log.d(ToolHistoryListingAdapter.TAG, "showError: $string")
     }
 
     override fun getItemCount() = monthlyBillsArray.size

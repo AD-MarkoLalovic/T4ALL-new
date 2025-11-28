@@ -11,20 +11,21 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
-import com.mobility.enp.data.model.ErrorBody
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.databinding.FragmentBillsBinding
-import com.mobility.enp.network.Repository
 import com.mobility.enp.util.FragmentResultKeys
+import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.NetworkObserver
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.collectLatestLifecycleFlow
+import com.mobility.enp.util.toast
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
@@ -33,10 +34,10 @@ import com.mobility.enp.view.dialogs.PermissionDeniedDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.mobility.enp.data.model.api_my_invoices.refactor.Data
+import com.mobility.enp.util.Util
 
 class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     MonthlyBillsAdapter.MontYearListener {
@@ -47,8 +48,9 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     private val viewModel: MyInvoicesViewModel by activityViewModels { MyInvoicesViewModel.Factory }
 
     private lateinit var adapterMonthly: MonthlyBillsAdapter
+    private lateinit var networkObserver: NetworkObserver
+    private var dataExists: Data? = null
 
-    private var errorBody: MutableLiveData<ErrorBody> = MutableLiveData()
     private var month = ""
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -88,22 +90,20 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = viewModel
-
         setObservers()
-        permissionNotificationDeniedDialogResultListener()
-
-        setObserversError()
 
         setSelectedButton(binding.buttonAll)
         setButtonsEnabled(true)
 
-        viewModel.fetchMonthlyInvoices()
-
         setListener()
+        setupNetworkObserver()
+        permissionNotificationDeniedDialogResultListener()
 
-        observeViewModel()
+        if (!Util.isNetworkAvailable(requireContext())) {
+            binding.txNoInternet.visibility = View.VISIBLE
+            showNoConnectionState()
+
+        }
     }
 
     private fun setObservers() {
@@ -116,6 +116,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                 is SubmitResult.Success -> {
                     binding.invoicesLoadingView.visibility = View.GONE
                     binding.recyclerViewBills.visibility = View.VISIBLE
+                    binding.txNoInternet.visibility = View.GONE
 
                     loadData(serverResponse)
                 }
@@ -139,8 +140,27 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
 
-                else -> {
-                    SubmitResult.Empty
+                else -> {}
+            }
+        }
+
+        collectLatestLifecycleFlow(viewModel.billPad) { result ->
+            when(result) {
+                is SubmitResultFold.Failure -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    handleError(result.error)
+                    viewModel.resetBillPad()
+                }
+                SubmitResultFold.Idle -> {}
+                SubmitResultFold.Loading -> {
+                    binding.invoicesLoadingView.visibility = View.VISIBLE
+                }
+                is SubmitResultFold.Success<*> -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+
+                    toast(getString(R.string.payment_successfully))
+                    viewModel.fetchMonthlyInvoices()
+                    viewModel.resetBillPad()
                 }
             }
         }
@@ -175,6 +195,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
         response.data.data?.allowedCountries?.let { allowedCountry ->
             binding.buttonAll.visibility = View.VISIBLE
+            binding.valueTitle.visibility = View.VISIBLE
 
             for (country in allowedCountry) {
                 when (country.value) {
@@ -201,12 +222,13 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             binding.textNoBills.visibility = View.VISIBLE
             setButtonsEnabled(true)
         } else {
+            dataExists = response.data.data
+
             binding.textNoBills.visibility = View.GONE
             binding.recyclerViewBills.visibility = View.VISIBLE
             adapterMonthly = MonthlyBillsAdapter(
                 response.data.data,
                 viewModel,
-                errorBody,
                 this,
                 this,
                 this,
@@ -222,97 +244,23 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
     }
 
-    private fun observeViewModel() {
-        viewModel.billPad.observe(viewLifecycleOwner) { bool ->
-            if (bool != null) {
-                if (bool) {
-                    Toast.makeText(
-                        requireContext(), getText(R.string.payment_successfully), Toast.LENGTH_SHORT
-                    ).show()
-                    viewModel.fetchMonthlyInvoices()
-                } else {
-                    Toast.makeText(
-                        requireContext(), getText(R.string.payment_unsuccessful), Toast.LENGTH_SHORT
-                    ).show()
-                    viewModel.fetchMonthlyInvoices()
-                }
+    private fun handleError(error: Throwable) {
+        when(error) {
+            NetworkError.ServerError -> {
+                toast(getString(R.string.server_error_msg))
+            }
+            NetworkError.NoConnection -> {
+                noInternetMessage()
+            }
+            is NetworkError.ApiError -> {
+                toast(error.errorResponse.message ?: getString(R.string.server_error_msg))
             }
         }
-
-        viewModel.checkNetDownload.observe(viewLifecycleOwner) {
-            if (!it) {
-                showNoInternetDialog()
-            }
-        }
-
-        viewModel.checkNetMyInvoices.observe(viewLifecycleOwner) { hasInternet ->
-            if (hasInternet != null && !hasInternet) {
-
-                viewLifecycleOwner.lifecycleScope.launch {
-                    val localData = viewModel.checkBills()
-
-                    if (localData != null) {
-                        val binding = (activity as MainActivity).binding
-                        MainActivity.showSnackMessage(
-                            getString(R.string.offline_using_stored_data), binding
-                        )
-                        viewModel.fetchLocalData()
-                    } else {
-
-                        showNoInternetDialog()
-
-                        val binding = (activity as MainActivity).binding
-                        MainActivity.showSnackMessage(
-                            getString(R.string.checking_for_connection), binding
-                        )
-
-                        withContext(Dispatchers.IO) {
-                            context?.let {
-                                while (true) {
-                                    if (Repository.isNetworkAvailable(it)) {
-                                        triggerUpdate()
-                                        break
-                                    } else {
-                                        delay(1000L)
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
-        }
-    }
-
-    private fun showNoInternetDialog() {
-        val bundle = Bundle().apply {
-            putString(getString(R.string.title), getString(R.string.no_connection_title))
-            putString(
-                getString(R.string.subtitle), getString(R.string.please_connect_to_the_internet)
-            )
-        }
-
-        findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
     }
 
     private fun sendNotification() {
         Toast.makeText(requireContext(), getString(R.string.permission_granted), Toast.LENGTH_SHORT)
             .show()
-    }
-
-    private suspend fun triggerUpdate() {
-        val mainActivity = activity as? MainActivity
-        val bindingMain = mainActivity?.binding
-
-        bindingMain?.let {
-            withContext(Dispatchers.Main) {
-                MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
-                binding.invoicesLoadingView.visibility = View.GONE
-
-                viewModel.fetchMonthlyInvoices()
-            }
-        }
     }
 
     private fun setListener() {
@@ -378,21 +326,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
     }
 
-    private fun setObserversError() {
-        errorBody = MutableLiveData()
-        errorBody.observe(viewLifecycleOwner) { errorBody ->
-
-            setButtonsEnabled(true)
-
-            context?.let { context ->
-                if (errorBody.errorCode == 405 || errorBody.errorCode == 401) {
-                    MainActivity.logoutOnInvalidToken(context, findNavController())
-                }
-            }
-        }
-    }
-
-
     private fun setButtonsEnabled(enabled: Boolean) { // to prevent button spam until data is fetched from api
         binding.buttonAll.isEnabled = enabled
         binding.buttonCroatia.isEnabled = enabled
@@ -443,10 +376,13 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     override fun requestNotificationFromUser(userPermission: BillsDetailsAdapter.UserPermission) {
         lifecycleScope.launch {
             val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
-            val generalMessageDialog = NotificationsRequestDialog(
-                getString(R.string.notification_title),
-                getString(R.string.notification_subtitle),
-                object : NotificationsRequestDialog.OnButtonClick {
+
+            val dialog = NotificationsRequestDialog
+                .newInstance(
+                    getString(R.string.notification_title),
+                    getString(R.string.notification_subtitle)
+                )
+                .setOnButtonClickListener(object : NotificationsRequestDialog.OnButtonClick {
                     override fun onClickConfirmed() {
                         userPerm = userPermission
                         requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
@@ -456,7 +392,8 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                         userPermission.onPermissionDenied()
                     }
                 })
-            generalMessageDialog.show(fragmentManager, "permDialog")
+
+            dialog.show(fragmentManager, "permDialog")
         }
     }
 
@@ -472,7 +409,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     }
 
     private fun showNoConnectionState() {
-        binding.invoicesLoadingView.visibility = View.GONE
         noInternetMessage()
     }
 
@@ -489,8 +425,36 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         month = montYear
     }
 
+    private fun setupNetworkObserver() {
+        networkObserver = NetworkObserver(
+            requireContext(),
+            onAvailable = {
+                viewModel.fetchMonthlyInvoices()
+            },
+            onLost = {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    noInternetMessage()
+                    if (dataExists != null) {
+                        binding.recyclerViewBills.visibility = View.VISIBLE
+                        binding.txNoInternet.visibility = View.GONE
+                        binding.valueTitle.visibility = View.VISIBLE
+                    } else {
+                        binding.recyclerViewBills.visibility = View.GONE
+                        binding.txNoInternet.visibility = View.VISIBLE
+                        binding.valueTitle.visibility = View.GONE
+                    }
+                }
+
+            }
+        )
+
+        networkObserver.start()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        networkObserver.stop()
+        viewModel.resetState()
         _binding = null
     }
 

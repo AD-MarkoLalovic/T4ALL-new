@@ -110,6 +110,8 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         binding.btnSearch.setOnClickListener {
             if (vModel.selectedTags.isEmpty() && !vModel.allTagsSelected) {
                 Toast.makeText(context, R.string.please_select_tag, Toast.LENGTH_SHORT).show()
+            } else if (vModel.selectedCountry.isEmpty()){
+                Toast.makeText(context, R.string.please_select_country, Toast.LENGTH_SHORT).show()
             } else {
                 if (vModel.internetAvailable()) {
                     findNavController().navigate(ToolHistoryFilterFragmentDirections.actionToolHistorySearchFragmentToToolHistorySearchResultFragment())
@@ -156,13 +158,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
 
         binding.txtDateRight.setOnClickListener {
             vModel.showDatePicker(false, requireContext(), franchiseViewModel.franchiseModel.value)
-        }
-
-        setSelectedButton(binding.buttonAll)
-
-        binding.buttonAll.setOnClickListener {
-            setSelectedButton(binding.buttonAll)
-            vModel.selectedCountry = ""
         }
 
         binding.buttonSerbia.setOnClickListener {
@@ -243,7 +238,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         buttonSerbia.isSelected = false
         buttonMontenegro.isSelected = false
         buttonCroatia.isSelected = false
-        buttonAll.isSelected = false
 
         selectedButton.isSelected = true
     }
@@ -400,20 +394,24 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
     private fun showNotificationPermissionRationale(userPermission: UserPermission) {
         lifecycleScope.launch {
             val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
-            val generalMessageDialog = NotificationsRequestDialog(
-                getString(R.string.notification_title),
-                getString(R.string.notification_subtitle),
-                object : NotificationsRequestDialog.OnButtonClick {
+
+            val dialog = NotificationsRequestDialog
+                .newInstance(
+                    getString(R.string.notification_title),
+                    getString(R.string.notification_subtitle)
+                )
+                .setOnButtonClickListener(object : NotificationsRequestDialog.OnButtonClick {
                     override fun onClickConfirmed() {
                         userPerm = userPermission
-                        requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
                     }
 
                     override fun onClickRejected() {
                         userPermission.onPermissionDenied()
                     }
                 })
-            generalMessageDialog.show(fragmentManager, "permDialog")
+
+            dialog.show(fragmentManager, "permDialog")
         }
     }
 
@@ -469,9 +467,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
 
     private fun setVisibleCountries(cardWebModel: CardWebModel) {
         cardWebModel.data?.let { model ->
-
-            binding.buttonAll.visibility = View.VISIBLE
-
             if (model.showTabHR) {
                 binding.buttonCroatia.visibility = View.VISIBLE
             }

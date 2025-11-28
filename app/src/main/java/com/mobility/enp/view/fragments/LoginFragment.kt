@@ -318,12 +318,10 @@ class LoginFragment : Fragment() {
     }
 
     private fun showPermissionDeniedDialog() {
-        val dialog =
-            GeneralMessageDialog(
-                requireContext().getString(R.string.access_denied),
-                requireContext().getString(R.string.only_t4all_users_access_denied)
-            )
-        dialog.show(parentFragmentManager, "ShowPermissionDeniedDialog")
+        GeneralMessageDialog.newInstance(
+            requireContext().getString(R.string.access_denied),
+            requireContext().getString(R.string.only_t4all_users_access_denied)
+        ).show(parentFragmentManager, "ShowPermissionDeniedDialog")
     }
 
     override fun onDestroyView() {

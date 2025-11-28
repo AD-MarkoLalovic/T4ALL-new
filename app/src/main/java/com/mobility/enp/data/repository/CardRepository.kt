@@ -15,7 +15,6 @@ import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-
 class CardRepository(database: DRoom, context: Context) : BaseRepository(database, context) {
 
     fun getLangForCard(context: Context): String {
