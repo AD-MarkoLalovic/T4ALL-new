@@ -52,6 +52,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleTollHistory" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cyclerTagTypes"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/dimens_16dp"
+        android:nestedScrollingEnabled="false"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="@id/cardView"
+        app:layout_constraintStart_toStartOf="@id/cardView"
+        app:layout_constraintTop_toBottomOf="@id/line"
+        tools:listitem="@layout/item_tag_status" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -66,7 +78,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/line">
+        app:layout_constraintTop_toBottomOf="@+id/cyclerTagTypes">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cycler"
@@ -78,9 +90,9 @@
             android:scrollbarFadeDuration="0"
             android:scrollbarStyle="insideInset"
             android:scrollbars="vertical"
-            tools:listitem="@layout/tool_history_index_card"
             app:layoutManager="LinearLayoutManager"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            tools:listitem="@layout/tool_history_index_card" />
 
     </androidx.cardview.widget.CardView>
 
