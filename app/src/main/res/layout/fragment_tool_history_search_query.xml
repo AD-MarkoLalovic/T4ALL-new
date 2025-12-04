@@ -125,84 +125,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/seperator" />
 
-            <HorizontalScrollView
-                android:id="@+id/horizontalScrollView"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cyclerTagTypes"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dimens_16dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="@dimen/dimens_16dp"
-                android:scrollbars="none"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/valueTitle">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/buttonSerbia"
-                        style="@style/CaptionMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dimens_40dp"
-                        android:layout_marginEnd="@dimen/dimens_6dp"
-                        android:background="@drawable/currency_selector"
-                        android:gravity="center"
-                        android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/serbia"
-                        android:visibility="gone"
-                        tools:visibility="visible"
-                        android:textColor="@color/text_color_selector" />
-
-
-                    <TextView
-                        android:id="@+id/buttonMontenegro"
-                        style="@style/CaptionMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dimens_40dp"
-                        android:layout_marginEnd="@dimen/dimens_6dp"
-                        android:background="@drawable/currency_selector"
-                        android:gravity="center"
-                        android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/montenegro"
-                        android:visibility="gone"
-                        tools:visibility="visible"
-                        android:textColor="@color/text_color_selector" />
-
-
-                    <TextView
-                        android:id="@+id/northMacedonia"
-                        style="@style/CaptionMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dimens_40dp"
-                        android:layout_marginEnd="@dimen/dimens_6dp"
-                        android:background="@drawable/currency_selector"
-                        android:gravity="center"
-                        android:visibility="gone"
-                        tools:visibility="visible"
-                        android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/north_macedonian_passage"
-                        android:textColor="@color/text_color_selector" />
-
-
-                    <TextView
-                        android:id="@+id/buttonCroatia"
-                        style="@style/CaptionMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dimens_40dp"
-                        android:layout_marginEnd="@dimen/dimens_6dp"
-                        android:background="@drawable/currency_selector"
-                        android:gravity="center"
-                        android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/croatia"
-                        android:visibility="gone"
-                        tools:visibility="visible"
-                        android:textColor="@color/text_color_selector" />
-
-                </LinearLayout>
-            </HorizontalScrollView>
-
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintStart_toStartOf="@+id/valueTitle"
+                app:layout_constraintEnd_toEndOf="@+id/rlRight"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/valueTitle"
+                tools:listitem="@layout/item_tag_status" />
 
             <TextView
                 android:id="@+id/txtDate"
@@ -214,7 +148,7 @@
                 android:text="@string/date"
                 android:textColor="@color/primary_dark_dark"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/horizontalScrollView" />
+                app:layout_constraintTop_toBottomOf="@id/cyclerTagTypes" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideLineTollSearch"
