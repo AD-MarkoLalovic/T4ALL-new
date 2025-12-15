@@ -64,8 +64,9 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"))
             versionNameSuffix = "-stage"
             multiDexEnabled = true
+            isDefault = true
             buildConfigField("String", "API_URL", "\"https://mobileapitest.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+80256@gmail.com\"")
+            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+8025@gmail.com\"")
             buildConfigField("String", "TEST_PASSWORD", "\"demodemo\"")
         }
         create("prod") {

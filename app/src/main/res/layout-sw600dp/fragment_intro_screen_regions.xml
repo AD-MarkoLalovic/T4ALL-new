@@ -26,7 +26,7 @@
                 android:layout_height="@dimen/dimens_0dp"
                 android:importantForAccessibility="no"
                 android:scaleType="fitXY"
-                android:src="@drawable/intro_screen_second_picture"
+                android:src="@drawable/intro_screen_second_tablet"
                 app:layout_constraintBottom_toTopOf="@+id/guidelineFirstIntro2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
