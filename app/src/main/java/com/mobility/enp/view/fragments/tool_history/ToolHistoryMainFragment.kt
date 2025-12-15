@@ -31,8 +31,10 @@ import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -47,6 +49,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
     private lateinit var statusFilterAdapter: MyTollCountriesFilterAdapter
     private lateinit var toolHistoryListingAdapter: ToolHistoryListingAdapter
+    private var savedDataCheckJob: Job? = null
 
     companion object {
         const val TAG = "ToolHist"
@@ -290,9 +293,11 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     }
 
     private fun runSavedDataCheck() {
+        if (savedDataCheckJob?.isActive == true) return
+
         binding.loopIcon.isEnabled = false
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        savedDataCheckJob  = viewLifecycleOwner.lifecycleScope.launch {
 
             val indexData = vModel.fetchIndexData()   // room
 
@@ -328,7 +333,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 binding.progBar.visibility = View.VISIBLE
             }
 
-            while (true) {
+            while (isActive) {
                 if (vModel.internetAvailable()) {
                     triggerUpdate()
                     break
