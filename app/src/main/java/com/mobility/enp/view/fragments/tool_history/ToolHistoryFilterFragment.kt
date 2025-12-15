@@ -477,6 +477,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
             }
 
             Log.d(TAG, "selected country: $selectedCountry")
+
             vModel.selectedCountry = selectedCountry
         }
 

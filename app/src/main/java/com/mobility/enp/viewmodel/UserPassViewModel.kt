@@ -800,6 +800,12 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
+    fun deletePassageData(){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.deleteRoomData()
+        }
+    }
+
     private suspend fun saveCsvLocally(encoded: String, nameExtra: String, context: Context) =
         coroutineScope {
             try {
@@ -981,6 +987,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     }
 
     suspend fun insertPassageData(toolHistoryListing: V2HistoryTagResponse) {
+        toolHistoryListing.countryCode = selectedCountry
         repository.insertPassageDataAdapter(toolHistoryListing)
     }
 

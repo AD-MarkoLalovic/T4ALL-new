@@ -56,6 +56,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPassageHistoryBinding.inflate(inflater, container, false)
+        vModel.deletePassageData()
         return binding.root
     }
 
@@ -225,6 +226,28 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         }
         if (cardData.data?.showTabRS == true) {
             countryList.add(getString(R.string.serbia))
+        }
+
+        // for room to avoid empty data i take first selected field
+
+        vModel.selectedCountry = when(countryList.reversed()[0]){
+            getString(R.string.croatia) -> {
+                getString(R.string.croatia_hr)
+            }
+
+            getString(R.string.montenegro) -> {
+                getString(R.string.montenegro_me)
+            }
+
+            getString(R.string.macedonia) -> {
+                getString(R.string.northmacedonia_mk)
+            }
+
+            getString(R.string.serbia) -> {
+                getString(R.string.serbia_rs)
+            }
+
+            else -> ""
         }
 
         statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->

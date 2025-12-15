@@ -114,6 +114,10 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         database.v2ToolHistoryDao().insertData(data)
     }
 
+    suspend fun deleteRoomData(){
+        database.v2ToolHistoryDao().deleteData()
+    }
+
     suspend fun fetchedStoredCsvData(): ByteArray? {
         return withContext(Dispatchers.IO) {
             database.csvTableDao().fetchData()?.data
