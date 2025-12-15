@@ -17,7 +17,7 @@ interface ToolHistoryV2Dao {
     @Query("SELECT * FROM HISTORY_V2")
     fun fetchData(): List<V2HistoryTagResponse>
 
-    @Query("SELECT * FROM HISTORY_V2 WHERE serial = :serial")
-    fun fetchPassageBySerial(serial: String): V2HistoryTagResponse
+    @Query("SELECT * FROM HISTORY_V2 WHERE serial = :serial AND countryCode = :countryCode")
+    fun fetchPassageBySerial(serial: String,countryCode: String): V2HistoryTagResponse
 
 }

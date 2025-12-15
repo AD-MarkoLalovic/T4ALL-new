@@ -31,8 +31,10 @@ import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -47,6 +49,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
     private lateinit var statusFilterAdapter: MyTollCountriesFilterAdapter
     private lateinit var toolHistoryListingAdapter: ToolHistoryListingAdapter
+    private var savedDataCheckJob: Job? = null
 
     companion object {
         const val TAG = "ToolHist"
@@ -56,6 +59,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPassageHistoryBinding.inflate(inflater, container, false)
+        vModel.deletePassageData()
         return binding.root
     }
 
@@ -227,8 +231,10 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             countryList.add(getString(R.string.serbia))
         }
 
-        statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
-            val selectedCountry = when (selectedStatus) {
+        // for room to avoid empty data i take first selected field
+
+        if (countryList.isNotEmpty()) {
+            vModel.selectedCountry = when (countryList.reversed()[0]) {
                 getString(R.string.croatia) -> {
                     getString(R.string.croatia_hr)
                 }
@@ -248,27 +254,51 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 else -> ""
             }
 
-            vModel.selectedCountry = selectedCountry
+            statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
+                val selectedCountry = when (selectedStatus) {
+                    getString(R.string.croatia) -> {
+                        getString(R.string.croatia_hr)
+                    }
 
-            toolHistoryListingAdapter.clearData()
+                    getString(R.string.montenegro) -> {
+                        getString(R.string.montenegro_me)
+                    }
 
-            binding.progBar.visibility = View.VISIBLE
+                    getString(R.string.macedonia) -> {
+                        getString(R.string.northmacedonia_mk)
+                    }
 
-            vModel.getBaseDataAlternativeApiForCountriesOnMain()
+                    getString(R.string.serbia) -> {
+                        getString(R.string.serbia_rs)
+                    }
+
+                    else -> ""
+                }
+
+                vModel.selectedCountry = selectedCountry
+
+                toolHistoryListingAdapter.clearData()
+
+                binding.progBar.visibility = View.VISIBLE
+
+                vModel.getBaseDataAlternativeApiForCountriesOnMain()
+            }
+
+            binding.cyclerTagTypes.adapter = statusFilterAdapter
+
+            statusFilterAdapter.submitList(countryList.reversed()) {
+                statusFilterAdapter.setTabPosition(0)
+            }
         }
-
-        binding.cyclerTagTypes.adapter = statusFilterAdapter
-
-        statusFilterAdapter.submitList(countryList.reversed()) {
-            statusFilterAdapter.setTabPosition(0)
-        }
-
     }
 
     private fun runSavedDataCheck() {
+        if (savedDataCheckJob?.isActive == true) return
+
         binding.loopIcon.isEnabled = false
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        savedDataCheckJob  = viewLifecycleOwner.lifecycleScope.launch {
+
             val indexData = vModel.fetchIndexData()   // room
 
             indexData?.let { data ->
@@ -303,7 +333,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 binding.progBar.visibility = View.VISIBLE
             }
 
-            while (true) {
+            while (isActive) {
                 if (vModel.internetAvailable()) {
                     triggerUpdate()
                     break

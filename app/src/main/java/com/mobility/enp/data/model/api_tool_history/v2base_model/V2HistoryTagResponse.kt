@@ -8,9 +8,11 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 @Keep
-@Entity(tableName = "HISTORY_V2")
+@Entity(
+    tableName = "HISTORY_V2",
+    primaryKeys = ["serial", "countryCode"]
+) // composite PK 
 data class V2HistoryTagResponse(
-    @PrimaryKey(autoGenerate = true)
     val id: Int,
     @SerializedName("data")
     @Expose
@@ -19,4 +21,5 @@ data class V2HistoryTagResponse(
     @Expose
     val message: String?,
     var serial: String,
+    var countryCode: String
 )
