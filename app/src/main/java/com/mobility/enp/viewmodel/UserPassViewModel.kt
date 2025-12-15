@@ -111,6 +111,8 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     val complaintObjectionStateFiltered: StateFlow<SubmitResult<LostTagResponse>> get() = _complaintObjectionStateFiltered
 
     fun setStateIndex(indexData: IndexData) { // from room
+        _baseTagDataState.value =
+            SubmitResult.Empty  // needs to be set to empty before using saved data by country filter or it will only work once
         _baseTagDataState.value = SubmitResult.Success(Pair(indexData, CardWebModel(null, null)))
     }
 
@@ -132,7 +134,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         indexData = null
         selectedCountry = ""
     }
-
 
     private val itemsPerPage = 10
 
@@ -739,7 +740,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         tagSerialNumber: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.fetchPassageDataBySerialNew(tagSerialNumber)?.let {
+            repository.fetchPassageDataBySerialNew(tagSerialNumber, selectedCountry)?.let {
                 withContext(Dispatchers.Main) {
                     dataInterface.onOk(it)
                 }
@@ -800,8 +801,8 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
-    fun deletePassageData(){
-        viewModelScope.launch(Dispatchers.IO){
+    fun deletePassageData() {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.deleteRoomData()
         }
     }

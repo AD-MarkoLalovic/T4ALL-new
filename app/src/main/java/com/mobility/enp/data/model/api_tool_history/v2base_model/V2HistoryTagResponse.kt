@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName
 @Entity(
     tableName = "HISTORY_V2",
     primaryKeys = ["serial", "countryCode"]
-)
+) // composite PK 
 data class V2HistoryTagResponse(
     val id: Int,
     @SerializedName("data")

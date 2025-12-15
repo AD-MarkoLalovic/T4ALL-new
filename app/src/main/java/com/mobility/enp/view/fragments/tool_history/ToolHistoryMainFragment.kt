@@ -230,28 +230,8 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
         // for room to avoid empty data i take first selected field
 
-        vModel.selectedCountry = when(countryList.reversed()[0]){
-            getString(R.string.croatia) -> {
-                getString(R.string.croatia_hr)
-            }
-
-            getString(R.string.montenegro) -> {
-                getString(R.string.montenegro_me)
-            }
-
-            getString(R.string.macedonia) -> {
-                getString(R.string.northmacedonia_mk)
-            }
-
-            getString(R.string.serbia) -> {
-                getString(R.string.serbia_rs)
-            }
-
-            else -> ""
-        }
-
-        statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
-            val selectedCountry = when (selectedStatus) {
+        if (countryList.isNotEmpty()) {
+            vModel.selectedCountry = when (countryList.reversed()[0]) {
                 getString(R.string.croatia) -> {
                     getString(R.string.croatia_hr)
                 }
@@ -271,27 +251,49 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 else -> ""
             }
 
-            vModel.selectedCountry = selectedCountry
+            statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
+                val selectedCountry = when (selectedStatus) {
+                    getString(R.string.croatia) -> {
+                        getString(R.string.croatia_hr)
+                    }
 
-            toolHistoryListingAdapter.clearData()
+                    getString(R.string.montenegro) -> {
+                        getString(R.string.montenegro_me)
+                    }
 
-            binding.progBar.visibility = View.VISIBLE
+                    getString(R.string.macedonia) -> {
+                        getString(R.string.northmacedonia_mk)
+                    }
 
-            vModel.getBaseDataAlternativeApiForCountriesOnMain()
+                    getString(R.string.serbia) -> {
+                        getString(R.string.serbia_rs)
+                    }
+
+                    else -> ""
+                }
+
+                vModel.selectedCountry = selectedCountry
+
+                toolHistoryListingAdapter.clearData()
+
+                binding.progBar.visibility = View.VISIBLE
+
+                vModel.getBaseDataAlternativeApiForCountriesOnMain()
+            }
+
+            binding.cyclerTagTypes.adapter = statusFilterAdapter
+
+            statusFilterAdapter.submitList(countryList.reversed()) {
+                statusFilterAdapter.setTabPosition(0)
+            }
         }
-
-        binding.cyclerTagTypes.adapter = statusFilterAdapter
-
-        statusFilterAdapter.submitList(countryList.reversed()) {
-            statusFilterAdapter.setTabPosition(0)
-        }
-
     }
 
     private fun runSavedDataCheck() {
         binding.loopIcon.isEnabled = false
 
         viewLifecycleOwner.lifecycleScope.launch {
+
             val indexData = vModel.fetchIndexData()   // room
 
             indexData?.let { data ->
