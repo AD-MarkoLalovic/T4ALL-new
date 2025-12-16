@@ -161,10 +161,13 @@
                     android:layout_width="@dimen/dimens_20dp"
                     android:layout_height="@dimen/dimens_20dp"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignTop="@+id/btnObjection"
+                    android:layout_alignBottom="@+id/btnObjection"
+                    android:layout_marginVertical="7dp"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/dimens_10dp"
                     android:background="@drawable/figma_objection_background"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical|center_horizontal">
 
                 </View>
 

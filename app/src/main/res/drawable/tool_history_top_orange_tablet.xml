@@ -4,6 +4,6 @@
     <!--    for paid top container-->
     <solid android:color="@color/light_orange" />
     <corners
-        android:topLeftRadius="@dimen/dimens_29dp"
-        android:topRightRadius="@dimen/dimens_29dp" />
+        android:topLeftRadius="@dimen/dimens_15dp"
+        android:topRightRadius="@dimen/dimens_15dp" />
 </shape>
