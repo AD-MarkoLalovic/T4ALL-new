@@ -113,7 +113,7 @@ class ToolHistoryListingPassageAdapter(
                 val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
                 if (relation.complaint != null) {
-                    if (!relation.complaint.objections.isNullOrEmpty() && relation.complaint.objections.size > 2) {
+                    if (!relation.complaint.objections.isNullOrEmpty() && relation.complaint.objections.size >= 2) {
                         GeneralMessageDialog.newInstance(
                             title = binding.root.context.getString(R.string.contact_support),
                             subtitle = binding.root.context.getString(R.string.limit_reclamation)
