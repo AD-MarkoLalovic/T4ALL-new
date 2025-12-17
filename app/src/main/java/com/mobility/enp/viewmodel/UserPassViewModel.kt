@@ -137,6 +137,10 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     private val itemsPerPage = 10
 
+    fun isNetAvailable(): Boolean{
+        return repository.isInternetAvailable()
+    }
+
     fun getBaseDataAlternativeApi() {   // uses faster api call to get serial numbers of tags saving about 10 seconds on server response time
         _baseTagDataState.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
@@ -973,6 +977,14 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     suspend fun fetchIndexData(): IndexData? {
         return withContext(Dispatchers.IO) {
             repository.getIndexDataRoom()
+        }
+    }
+
+    fun deleteTagSerialData(){
+        _baseTagDataState.value = SubmitResult.Empty
+        _baseTagDataStateByCountry.value = SubmitResult.Empty
+        viewModelScope.launch (Dispatchers.IO) {
+            repository.deleteTagSerialData()
         }
     }
 

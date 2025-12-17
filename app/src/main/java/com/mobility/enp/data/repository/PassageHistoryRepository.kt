@@ -110,6 +110,10 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         database.toolHistoryDao().insertData(indexData)
     }
 
+    suspend fun deleteTagSerialData(){
+        database.toolHistoryDao().deleteData()
+    }
+
     suspend fun insertPassageDataAdapter(data: V2HistoryTagResponse) {
         database.v2ToolHistoryDao().insertData(data)
     }

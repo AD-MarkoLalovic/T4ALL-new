@@ -391,5 +391,6 @@
     <string name="page_text">Страница</string>
     <string name="croatian_reclamation">Рекламацијата за поминување во Република Хрватска мора да ја поднесете на HAC порталот.</string>
     <string name="please_select_country">Ве молиме изберете земја</string>
+    <string name="limit_reclamation">Не е можно да се испрати приговор повеќе од два пати. За дополнителни информации можете да го контактирате Корисничкиот центар на бесплатниот телефонски број 0800 111 004.</string>
 
 </resources>
