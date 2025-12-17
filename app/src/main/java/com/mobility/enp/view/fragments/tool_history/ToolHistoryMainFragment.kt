@@ -336,18 +336,25 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 vModel.setStateIndex(data)
 
             } ?: run {
+                val navController = findNavController()
+
+                if (navController.currentDestination?.id ==
+                    R.id.noInternetConnectionDialog
+                ) {
+                    return@launch
+                }
+
                 val bundle = Bundle().apply {
-                    putString(
-                        getString(R.string.title), getString(R.string.no_connection_title)
-                    )
+                    putString(getString(R.string.title), getString(R.string.no_connection_title))
                     putString(
                         getString(R.string.subtitle),
                         getString(R.string.please_connect_to_the_internet)
                     )
                 }
 
-                findNavController().navigate(
-                    R.id.action_global_noInternetConnectionDialog, bundle
+                navController.navigate(
+                    R.id.action_global_noInternetConnectionDialog,
+                    bundle
                 )
 
                 val bindingMain = (activity as MainActivity).binding
@@ -391,6 +398,14 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     }
 
     private fun showNoInternetDialog() {
+        val navController = findNavController()
+
+        if (navController.currentDestination?.id ==
+            R.id.noInternetConnectionDialog
+        ) {
+            return
+        }
+
         val bundle = Bundle().apply {
             putString(getString(R.string.title), getString(R.string.no_connection_title))
             putString(
@@ -398,7 +413,11 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 getString(R.string.please_connect_to_the_internet)
             )
         }
-        findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
+
+        navController.navigate(
+            R.id.action_global_noInternetConnectionDialog,
+            bundle
+        )
     }
 
     override fun sendComplaintData(complaintBody: ComplaintBody) {
