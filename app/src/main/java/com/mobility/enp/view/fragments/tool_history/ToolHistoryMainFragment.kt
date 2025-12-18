@@ -60,6 +60,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     ): View {
         _binding = FragmentPassageHistoryBinding.inflate(inflater, container, false)
         vModel.deletePassageData()
+        vModel.deleteTagSerialData()
         return binding.root
     }
 
@@ -154,7 +155,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 }
 
                 is SubmitResult.FailureNoConnection -> {
-                    showNoConnectionState()
+                    showNoInternetDialog()
                     runSavedDataCheck()
                 }
 
@@ -281,13 +282,36 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
                 binding.progBar.visibility = View.VISIBLE
 
-                vModel.getBaseDataAlternativeApiForCountriesOnMain()
+                if (vModel.isNetAvailable()){
+                    vModel.getBaseDataAlternativeApiForCountriesOnMain()
+                }else{
+                    fetchStoredData()
+                }
             }
 
             binding.cyclerTagTypes.adapter = statusFilterAdapter
 
             statusFilterAdapter.submitList(countryList.reversed()) {
                 statusFilterAdapter.setTabPosition(0)
+            }
+        }
+    }
+
+    private fun fetchStoredData(){
+
+        viewLifecycleOwner.lifecycleScope.launch{
+            val indexData = vModel.fetchIndexData()   // room
+
+            indexData?.let { data ->
+
+                val bindingMain = (activity as MainActivity).binding
+
+                MainActivity.showSnackMessage(
+                    getString(R.string.offline_using_stored_data), bindingMain
+                )
+
+                vModel.setStateIndex(data)
+
             }
         }
     }
@@ -312,18 +336,25 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 vModel.setStateIndex(data)
 
             } ?: run {
+                val navController = findNavController()
+
+                if (navController.currentDestination?.id ==
+                    R.id.noInternetConnectionDialog
+                ) {
+                    return@launch
+                }
+
                 val bundle = Bundle().apply {
-                    putString(
-                        getString(R.string.title), getString(R.string.no_connection_title)
-                    )
+                    putString(getString(R.string.title), getString(R.string.no_connection_title))
                     putString(
                         getString(R.string.subtitle),
                         getString(R.string.please_connect_to_the_internet)
                     )
                 }
 
-                findNavController().navigate(
-                    R.id.action_global_noInternetConnectionDialog, bundle
+                navController.navigate(
+                    R.id.action_global_noInternetConnectionDialog,
+                    bundle
                 )
 
                 val bindingMain = (activity as MainActivity).binding
@@ -366,6 +397,28 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
     }
 
+    private fun showNoInternetDialog() {
+        val navController = findNavController()
+
+        if (navController.currentDestination?.id ==
+            R.id.noInternetConnectionDialog
+        ) {
+            return
+        }
+
+        val bundle = Bundle().apply {
+            putString(getString(R.string.title), getString(R.string.no_connection_title))
+            putString(
+                getString(R.string.subtitle),
+                getString(R.string.please_connect_to_the_internet)
+            )
+        }
+
+        navController.navigate(
+            R.id.action_global_noInternetConnectionDialog,
+            bundle
+        )
+    }
 
     override fun sendComplaintData(complaintBody: ComplaintBody) {
         vModel.postComplaint(complaintBody)

@@ -384,4 +384,5 @@
     <string name="page_text">Page</string>
     <string name="croatian_reclamation">You must submit a reclamation for the passage in the Republic of Croatia on the HAC portal.</string>
     <string name="please_select_country">Please Select Country</string>
+    <string name="limit_reclamation">It is not possible to submit a complaint more than two times. For additional information, you can contact the Customer Service Center at the toll-free phone number 0800 111 004.</string>
 </resources>

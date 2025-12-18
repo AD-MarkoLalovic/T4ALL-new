@@ -22,6 +22,7 @@ import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.dialogs.ComplaintFormDialog
 import com.mobility.enp.view.dialogs.ComplaintFormDialogOld
+import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.view.dialogs.ObjectionFormDialog
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -112,11 +113,19 @@ class ToolHistoryListingPassageAdapter(
                 val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
                 if (relation.complaint != null) {
-                    val objectionDialog =
-                        ObjectionFormDialog({ objection ->
-                            complaintInterface.sendObjectionData(objection)
-                        }, relation.complaint.id)
-                    objectionDialog.show(fragmentManager, "ObjectionFormDialog")
+                    if (!relation.complaint.objections.isNullOrEmpty() && relation.complaint.objections.size >= 2) {
+                        GeneralMessageDialog.newInstance(
+                            title = binding.root.context.getString(R.string.contact_support),
+                            subtitle = binding.root.context.getString(R.string.limit_reclamation)
+                        ).show(fragmentManager, "denyComplaint")
+                    } else {
+                        val objectionDialog =
+                            ObjectionFormDialog({ objection ->
+                                complaintInterface.sendObjectionData(objection)
+                            }, relation.complaint.id)
+                        objectionDialog.show(fragmentManager, "ObjectionFormDialog")
+
+                    }
                 }
             }
 
@@ -130,7 +139,7 @@ class ToolHistoryListingPassageAdapter(
                 }
 
                 binding.btnComplaint.visibility = View.GONE
-                binding.container.visibility = View.VISIBLE
+                binding.container.visibility = View.VISIBLE  // shows objection button
 
                 if (!relation.complaint.objections.isNullOrEmpty()) {
                     val buttonText = context.getString(R.string.objection)
