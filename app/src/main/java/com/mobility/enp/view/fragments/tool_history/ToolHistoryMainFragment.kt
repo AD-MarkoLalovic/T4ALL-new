@@ -112,7 +112,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 }
 
                 is SubmitResult.Success -> {
-                    setIndexData(tagIndex.data, ArrayList(vModel.listOfCountries))
+                    setIndexData(tagIndex.data)
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -147,27 +147,37 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 }
 
                 is SubmitResult.Success -> {
-                    // sets available countries filter
-                    tagIndex.data.second.let { cardData ->
-                        val countryList = ArrayList<String>()
+                    // sets available countries filter and primary adapter
 
-                        if (cardData.data?.showTabHR == true) {
-                            countryList.add(getString(R.string.croatia))
+                    if (!tagIndex.data.first.availableCountries.isNullOrEmpty()) {
+                        tagIndex.data.first.availableCountries?.let {
+//                            setAvailableFilters(it)
                         }
-                        if (cardData.data?.showTabME == true) {
-                            countryList.add(getString(R.string.montenegro))
-                        }
-                        if (cardData.data?.showTabMK == true) {
-                            countryList.add(getString(R.string.macedonia))
-                        }
-                        if (cardData.data?.showTabRS == true) {
-                            countryList.add(getString(R.string.serbia))
-                        }
+                    } else {
+                        tagIndex.data.second.let { cardData ->
+                            val countryList = ArrayList<String>()
 
-                        setAvailableFilters(countryList)
-                        setIndexData(tagIndex.data.first, countryList) // sets serial tag data
+                            if (cardData.data?.showTabHR == true) {
+                                countryList.add(getString(R.string.croatia))
+                            }
+                            if (cardData.data?.showTabME == true) {
+                                countryList.add(getString(R.string.montenegro))
+                            }
+                            if (cardData.data?.showTabMK == true) {
+                                countryList.add(getString(R.string.macedonia))
+                            }
+                            if (cardData.data?.showTabRS == true) {
+                                countryList.add(getString(R.string.serbia))
+                            }
+
+                            vModel.listOfCountries = countryList
+
+                            setAvailableFilters(countryList)
+                        }
 
                     }
+
+                    setIndexData(tagIndex.data.first) // sets serial tag data
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -372,16 +382,16 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         }
     }
 
-    private fun setIndexData(indexData: IndexData, countryList: ArrayList<String>) {
+    private fun setIndexData(indexData: IndexData) {
         Log.d(TAG, "setIndexData: $indexData")
 
         binding.loopIcon.isEnabled = true
 
         binding.progBar.visibility = View.GONE
 
-        vModel.listOfCountries = countryList
-
-        indexData.availableCountries = (vModel.listOfCountries)
+        if (vModel.listOfCountries.isNotEmpty()){
+            indexData.availableCountries = (vModel.listOfCountries)
+        }
 
         CoroutineScope(Dispatchers.IO).launch {
             vModel.insertRoomToolHistoryIndexData(indexData)
