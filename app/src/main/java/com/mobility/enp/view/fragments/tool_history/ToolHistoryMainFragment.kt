@@ -16,7 +16,6 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
-import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.databinding.FragmentPassageHistoryBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.Util
@@ -59,8 +58,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPassageHistoryBinding.inflate(inflater, container, false)
-        vModel.deletePassageData()
-        vModel.deleteTagSerialData()
         return binding.root
     }
 
@@ -70,12 +67,15 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         vModel.nullData()
         vModel.setCsvState()
 
+
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
 
         setObservers()
 
         vModel.getBaseDataAlternativeApi()
+
+        runExistingFilterCheck()
 
         binding.loopIcon.setOnClickListener {
             if (Util.isNetworkAvailable(requireContext())) {
@@ -85,6 +85,21 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 Toast.makeText(
                     context, context?.getString(R.string.no_internet), Toast.LENGTH_SHORT
                 ).show()
+            }
+        }
+    }
+
+    private fun runExistingFilterCheck() {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+
+            val indexData = vModel.fetchIndexData()   // room
+
+            indexData?.availableCountries?.let { countryList ->
+                if (countryList.isNotEmpty()) {
+                    withContext(Dispatchers.Main){
+                        setAvailableFilters(countryList)
+                    }
+                }
             }
         }
     }
@@ -150,8 +165,29 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 }
 
                 is SubmitResult.Success -> {
-                    setIndexData(tagIndex.data.first)
-                    setAvailableFilters(tagIndex.data.second)
+                    // sets available countries filter and primary adapter
+                    tagIndex.data.second?.let { cardData ->
+                        val countryList = ArrayList<String>()
+
+                        if (cardData.data?.showTabHR == true) {
+                            countryList.add(getString(R.string.croatia))
+                        }
+                        if (cardData.data?.showTabME == true) {
+                            countryList.add(getString(R.string.montenegro))
+                        }
+                        if (cardData.data?.showTabMK == true) {
+                            countryList.add(getString(R.string.macedonia))
+                        }
+                        if (cardData.data?.showTabRS == true) {
+                            countryList.add(getString(R.string.serbia))
+                        }
+
+                        vModel.listOfCountries = countryList
+
+                        setAvailableFilters(countryList)
+                    }
+
+                    setIndexData(tagIndex.data.first) // sets serial tag data
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -214,26 +250,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         }
     }
 
-    private fun setAvailableFilters(cardData: CardWebModel) {
-        Log.d(TAG, "setAvailableFilters: $cardData")
-
-        val countryList = ArrayList<String>()
-
-        if (cardData.data?.showTabHR == true) {
-            countryList.add(getString(R.string.croatia))
-        }
-        if (cardData.data?.showTabME == true) {
-            countryList.add(getString(R.string.montenegro))
-        }
-        if (cardData.data?.showTabMK == true) {
-            countryList.add(getString(R.string.macedonia))
-        }
-        if (cardData.data?.showTabRS == true) {
-            countryList.add(getString(R.string.serbia))
-        }
-
-        // for room to avoid empty data i take first selected field
-
+    private fun setAvailableFilters(countryList: List<String>) {
         if (countryList.isNotEmpty()) {
             vModel.selectedCountry = when (countryList.reversed()[0]) {
                 getString(R.string.croatia) -> {
@@ -282,9 +299,9 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
                 binding.progBar.visibility = View.VISIBLE
 
-                if (vModel.isNetAvailable()){
+                if (vModel.isNetAvailable()) {
                     vModel.getBaseDataAlternativeApiForCountriesOnMain()
-                }else{
+                } else {
                     fetchStoredData()
                 }
             }
@@ -297,9 +314,45 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         }
     }
 
-    private fun fetchStoredData(){
+    private fun funSetRoomStatusFilter(countryList: List<String>) {
+        statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
+            val selectedCountry = when (selectedStatus) {
+                getString(R.string.croatia) -> {
+                    getString(R.string.croatia_hr)
+                }
 
-        viewLifecycleOwner.lifecycleScope.launch{
+                getString(R.string.montenegro) -> {
+                    getString(R.string.montenegro_me)
+                }
+
+                getString(R.string.macedonia) -> {
+                    getString(R.string.northmacedonia_mk)
+                }
+
+                getString(R.string.serbia) -> {
+                    getString(R.string.serbia_rs)
+                }
+
+                else -> ""
+            }
+
+            vModel.selectedCountry = selectedCountry
+
+            toolHistoryListingAdapter.clearData()
+        }
+
+        binding.cyclerTagTypes.adapter = statusFilterAdapter
+
+        statusFilterAdapter.submitList(countryList.reversed()) {
+            statusFilterAdapter.setTabPosition(0)
+        }
+
+        fetchStoredData()
+    }
+
+    private fun fetchStoredData() {
+
+        viewLifecycleOwner.lifecycleScope.launch {
             val indexData = vModel.fetchIndexData()   // room
 
             indexData?.let { data ->
@@ -311,7 +364,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 )
 
                 vModel.setStateIndex(data)
-
             }
         }
     }
@@ -321,7 +373,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
         binding.loopIcon.isEnabled = false
 
-        savedDataCheckJob  = viewLifecycleOwner.lifecycleScope.launch {
+        savedDataCheckJob = viewLifecycleOwner.lifecycleScope.launch {
 
             val indexData = vModel.fetchIndexData()   // room
 
@@ -381,6 +433,10 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         binding.loopIcon.isEnabled = true
 
         binding.progBar.visibility = View.GONE
+
+        if (vModel.listOfCountries.isNotEmpty()) {
+            indexData.availableCountries = (vModel.listOfCountries)
+        }
 
         CoroutineScope(Dispatchers.IO).launch {
             vModel.insertRoomToolHistoryIndexData(indexData)

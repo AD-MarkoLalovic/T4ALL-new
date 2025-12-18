@@ -88,8 +88,8 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     }
 
     private val _baseTagDataState =
-        MutableStateFlow<SubmitResult<Pair<IndexData, CardWebModel>>>(SubmitResult.Loading)
-    val baseTagDataState: StateFlow<SubmitResult<Pair<IndexData, CardWebModel>>> get() = _baseTagDataState
+        MutableStateFlow<SubmitResult<Pair<IndexData, CardWebModel?>>>(SubmitResult.Loading)
+    val baseTagDataState: StateFlow<SubmitResult<Pair<IndexData, CardWebModel?>>> get() = _baseTagDataState
 
     private val _baseTagDataStateByCountry =
         MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)
@@ -994,6 +994,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     var selectedTags: ArrayList<Tag> = ArrayList()
     var indexData: IndexData? = null
     var tagForExport: Tag? = null
+    var listOfCountries : List<String> = emptyList()
 
     suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
         repository.insertRoomTagBaseData(indexData)
