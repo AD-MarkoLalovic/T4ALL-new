@@ -994,6 +994,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     var selectedTags: ArrayList<Tag> = ArrayList()
     var indexData: IndexData? = null
     var tagForExport: Tag? = null
+    lateinit var listOfCountries : List<String>
 
     suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
         repository.insertRoomTagBaseData(indexData)

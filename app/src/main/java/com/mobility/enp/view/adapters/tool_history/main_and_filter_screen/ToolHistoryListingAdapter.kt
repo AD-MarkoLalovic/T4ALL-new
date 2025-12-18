@@ -36,7 +36,7 @@ class ToolHistoryListingAdapter(
     val listOfTags: ArrayList<Tag> = toolHistoryIndex.data?.tags as ArrayList<Tag>
 
     fun clearData(){
-        toolHistoryIndex = IndexData(0,null,"")
+        toolHistoryIndex = IndexData(0,null,"",null)
         lastPage = 0
         perPage = 0
         total = 0

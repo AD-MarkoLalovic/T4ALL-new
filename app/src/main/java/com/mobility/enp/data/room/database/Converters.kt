@@ -50,6 +50,19 @@ class Converters {
         }
     }
 
+
+    @TypeConverter
+    fun fromStringList(value: List<String>?): String {
+        return gson.toJson(value)
+    }
+
+    @TypeConverter
+    fun toStringList(value: String?): ArrayList<String> {
+        if (value.isNullOrEmpty()) return arrayListOf()
+        val type = object : TypeToken<ArrayList<String>>() {}.type
+        return gson.fromJson(value, type)
+    }
+
     @TypeConverter
     fun fromDataMonthlyBills(data: com.mobility.enp.data.model.api_my_invoices.refactor.Data?): String? {
         synchronized(this) {
