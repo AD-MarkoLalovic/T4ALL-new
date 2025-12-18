@@ -67,12 +67,15 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         vModel.nullData()
         vModel.setCsvState()
 
+
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
 
         setObservers()
 
         vModel.getBaseDataAlternativeApi()
+
+        runExistingFilterCheck()
 
         binding.loopIcon.setOnClickListener {
             if (Util.isNetworkAvailable(requireContext())) {
@@ -82,6 +85,21 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 Toast.makeText(
                     context, context?.getString(R.string.no_internet), Toast.LENGTH_SHORT
                 ).show()
+            }
+        }
+    }
+
+    private fun runExistingFilterCheck() {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+
+            val indexData = vModel.fetchIndexData()   // room
+
+            indexData?.availableCountries?.let { countryList ->
+                if (countryList.isNotEmpty()) {
+                    withContext(Dispatchers.Main){
+                        setAvailableFilters(countryList)
+                    }
+                }
             }
         }
     }
