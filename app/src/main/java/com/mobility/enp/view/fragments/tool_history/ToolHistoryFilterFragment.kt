@@ -439,19 +439,19 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         Log.d(TAG, "onSendTag: ${vModel.selectedTags}")
     }
 
-    private fun setVisibleCountries(cardWebModel: CardWebModel) {
+    private fun setVisibleCountries(cardWebModel: CardWebModel?) {
         val countryList = ArrayList<String>()
 
-        if (cardWebModel.data?.showTabHR == true) {
+        if (cardWebModel?.data?.showTabHR == true) {
             countryList.add(getString(R.string.croatia))
         }
-        if (cardWebModel.data?.showTabME == true) {
+        if (cardWebModel?.data?.showTabME == true) {
             countryList.add(getString(R.string.montenegro))
         }
-        if (cardWebModel.data?.showTabMK == true) {
+        if (cardWebModel?.data?.showTabMK == true) {
             countryList.add(getString(R.string.macedonia))
         }
-        if (cardWebModel.data?.showTabRS == true) {
+        if (cardWebModel?.data?.showTabRS == true) {
             countryList.add(getString(R.string.serbia))
         }
 

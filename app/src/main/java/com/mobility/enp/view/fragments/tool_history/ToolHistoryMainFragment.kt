@@ -148,33 +148,25 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
                 is SubmitResult.Success -> {
                     // sets available countries filter and primary adapter
+                    tagIndex.data.second?.let { cardData ->
+                        val countryList = ArrayList<String>()
 
-                    if (!tagIndex.data.first.availableCountries.isNullOrEmpty()) {
-                        tagIndex.data.first.availableCountries?.let {
-//                            setAvailableFilters(it)
+                        if (cardData.data?.showTabHR == true) {
+                            countryList.add(getString(R.string.croatia))
                         }
-                    } else {
-                        tagIndex.data.second.let { cardData ->
-                            val countryList = ArrayList<String>()
-
-                            if (cardData.data?.showTabHR == true) {
-                                countryList.add(getString(R.string.croatia))
-                            }
-                            if (cardData.data?.showTabME == true) {
-                                countryList.add(getString(R.string.montenegro))
-                            }
-                            if (cardData.data?.showTabMK == true) {
-                                countryList.add(getString(R.string.macedonia))
-                            }
-                            if (cardData.data?.showTabRS == true) {
-                                countryList.add(getString(R.string.serbia))
-                            }
-
-                            vModel.listOfCountries = countryList
-
-                            setAvailableFilters(countryList)
+                        if (cardData.data?.showTabME == true) {
+                            countryList.add(getString(R.string.montenegro))
+                        }
+                        if (cardData.data?.showTabMK == true) {
+                            countryList.add(getString(R.string.macedonia))
+                        }
+                        if (cardData.data?.showTabRS == true) {
+                            countryList.add(getString(R.string.serbia))
                         }
 
+                        vModel.listOfCountries = countryList
+
+                        setAvailableFilters(countryList)
                     }
 
                     setIndexData(tagIndex.data.first) // sets serial tag data
@@ -304,6 +296,42 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         }
     }
 
+    private fun funSetRoomStatusFilter(countryList: List<String>) {
+        statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
+            val selectedCountry = when (selectedStatus) {
+                getString(R.string.croatia) -> {
+                    getString(R.string.croatia_hr)
+                }
+
+                getString(R.string.montenegro) -> {
+                    getString(R.string.montenegro_me)
+                }
+
+                getString(R.string.macedonia) -> {
+                    getString(R.string.northmacedonia_mk)
+                }
+
+                getString(R.string.serbia) -> {
+                    getString(R.string.serbia_rs)
+                }
+
+                else -> ""
+            }
+
+            vModel.selectedCountry = selectedCountry
+
+            toolHistoryListingAdapter.clearData()
+        }
+
+        binding.cyclerTagTypes.adapter = statusFilterAdapter
+
+        statusFilterAdapter.submitList(countryList.reversed()) {
+            statusFilterAdapter.setTabPosition(0)
+        }
+
+        fetchStoredData()
+    }
+
     private fun fetchStoredData() {
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -318,7 +346,6 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 )
 
                 vModel.setStateIndex(data)
-
             }
         }
     }
@@ -389,7 +416,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
         binding.progBar.visibility = View.GONE
 
-        if (vModel.listOfCountries.isNotEmpty()){
+        if (vModel.listOfCountries.isNotEmpty()) {
             indexData.availableCountries = (vModel.listOfCountries)
         }
 
