@@ -31,6 +31,7 @@ import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
+import com.mobility.enp.view.adapters.tool_history.MyTollCountriesFilterAdapter
 import com.mobility.enp.view.adapters.tool_history.select.ToolHistoryTagsAdapter
 import com.mobility.enp.view.dialogs.NotificationsRequestDialog
 import com.mobility.enp.view.dialogs.PermissionDeniedDialog
@@ -49,6 +50,8 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
     private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
+    private lateinit var statusFilterAdapter: MyTollCountriesFilterAdapter
+
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
@@ -110,7 +113,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         binding.btnSearch.setOnClickListener {
             if (vModel.selectedTags.isEmpty() && !vModel.allTagsSelected) {
                 Toast.makeText(context, R.string.please_select_tag, Toast.LENGTH_SHORT).show()
-            } else if (vModel.selectedCountry.isEmpty()){
+            } else if (vModel.selectedCountry.isEmpty()) {
                 Toast.makeText(context, R.string.please_select_country, Toast.LENGTH_SHORT).show()
             } else {
                 if (vModel.internetAvailable()) {
@@ -158,26 +161,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
 
         binding.txtDateRight.setOnClickListener {
             vModel.showDatePicker(false, requireContext(), franchiseViewModel.franchiseModel.value)
-        }
-
-        binding.buttonSerbia.setOnClickListener {
-            setSelectedButton(binding.buttonSerbia)
-            vModel.selectedCountry = getString(R.string.serbia_rs)
-        }
-
-        binding.buttonMontenegro.setOnClickListener {
-            setSelectedButton(binding.buttonMontenegro)
-            vModel.selectedCountry = getString(R.string.montenegro_me)
-        }
-
-        binding.northMacedonia.setOnClickListener {
-            setSelectedButton(binding.northMacedonia)
-            vModel.selectedCountry = getString(R.string.northmacedonia_mk)
-        }
-
-        binding.buttonCroatia.setOnClickListener {
-            setSelectedButton(binding.buttonCroatia)
-            vModel.selectedCountry = getString(R.string.croatia_hr)
         }
 
         binding.exportBlock.setOnClickListener {
@@ -231,15 +214,6 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
                 binding.chkBox.buttonTintList = colorStateList
             }
         }
-    }
-
-    private fun setSelectedButton(selectedButton: View) = with(binding) {
-        northMacedonia.isSelected = false
-        buttonSerbia.isSelected = false
-        buttonMontenegro.isSelected = false
-        buttonCroatia.isSelected = false
-
-        selectedButton.isSelected = true
     }
 
     private fun triggerUpdate() {
@@ -465,20 +439,52 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         Log.d(TAG, "onSendTag: ${vModel.selectedTags}")
     }
 
-    private fun setVisibleCountries(cardWebModel: CardWebModel) {
-        cardWebModel.data?.let { model ->
-            if (model.showTabHR) {
-                binding.buttonCroatia.visibility = View.VISIBLE
+    private fun setVisibleCountries(cardWebModel: CardWebModel?) {
+        val countryList = ArrayList<String>()
+
+        if (cardWebModel?.data?.showTabHR == true) {
+            countryList.add(getString(R.string.croatia))
+        }
+        if (cardWebModel?.data?.showTabME == true) {
+            countryList.add(getString(R.string.montenegro))
+        }
+        if (cardWebModel?.data?.showTabMK == true) {
+            countryList.add(getString(R.string.macedonia))
+        }
+        if (cardWebModel?.data?.showTabRS == true) {
+            countryList.add(getString(R.string.serbia))
+        }
+
+        statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
+            val selectedCountry = when (selectedStatus) {
+                getString(R.string.croatia) -> {
+                    getString(R.string.croatia_hr)
+                }
+
+                getString(R.string.montenegro) -> {
+                    getString(R.string.montenegro_me)
+                }
+
+                getString(R.string.macedonia) -> {
+                    getString(R.string.northmacedonia_mk)
+                }
+
+                getString(R.string.serbia) -> {
+                    getString(R.string.serbia_rs)
+                }
+
+                else -> ""
             }
-            if (model.showTabRS) {
-                binding.buttonSerbia.visibility = View.VISIBLE
-            }
-            if (model.showTabME) {
-                binding.buttonMontenegro.visibility = View.VISIBLE
-            }
-            if (model.showTabMK) {
-                binding.northMacedonia.visibility = View.VISIBLE
-            }
+
+            Log.d(TAG, "selected country: $selectedCountry")
+
+            vModel.selectedCountry = selectedCountry
+        }
+
+        binding.cyclerTagTypes.adapter = statusFilterAdapter
+
+        statusFilterAdapter.submitList(countryList.reversed()) {
+            statusFilterAdapter.setTabPosition(-1)
         }
     }
 

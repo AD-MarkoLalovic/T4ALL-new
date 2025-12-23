@@ -7,6 +7,6 @@
         android:color="@color/light_orange" />
     <solid android:color="@color/white" />
     <corners
-        android:bottomLeftRadius="@dimen/dimens_29dp"
-        android:bottomRightRadius="@dimen/dimens_29dp" />
+        android:bottomLeftRadius="@dimen/dimens_15dp"
+        android:bottomRightRadius="@dimen/dimens_15dp" />
 </shape>

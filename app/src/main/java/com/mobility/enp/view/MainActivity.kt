@@ -32,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
+import androidx.core.view.isVisible
 
 class MainActivity : AppCompatActivity() {
 
@@ -295,8 +296,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         fun showSnackMessage(message: String, binding: ActivityMainBinding) {
-            Snackbar.make(binding.snackBarContainer, message, Snackbar.LENGTH_LONG)
-                .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE).show()
+            val sb = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+                .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
+
+            if (binding.bottomNavigation.isVisible) {
+                sb.anchorView = binding.bottomNavigation
+            }
+
+            sb.show()
+
         }
 
     }

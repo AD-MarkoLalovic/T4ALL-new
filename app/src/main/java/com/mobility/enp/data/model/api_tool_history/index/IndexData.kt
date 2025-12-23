@@ -17,5 +17,6 @@ data class IndexData(
     val `data`: Data? = Data(),
     @SerializedName("message")
     @Expose
-    val message: String? = ""
+    val message: String? = "",
+    var availableCountries: List<String>?
 )

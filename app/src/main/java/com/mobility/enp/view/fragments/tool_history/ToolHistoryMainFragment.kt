@@ -21,25 +21,34 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
+import com.mobility.enp.view.adapters.tool_history.MyTollCountriesFilterAdapter
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapter
 import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapterCroatia
+import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.SendToFragment,
-    ToolHistoryListingAdapter.SavePassageData, ToolHistoryListingAdapter.PaginationUpdate, ToolHistoryListingPassageAdapterCroatia.SendToFragment {
+    ToolHistoryListingAdapter.SavePassageData, ToolHistoryListingAdapter.PaginationUpdate,
+    ToolHistoryListingPassageAdapterCroatia.SendToFragment {
 
     private var _binding: FragmentPassageHistoryBinding? = null
     private val binding: FragmentPassageHistoryBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
+
+    private lateinit var statusFilterAdapter: MyTollCountriesFilterAdapter
+    private lateinit var toolHistoryListingAdapter: ToolHistoryListingAdapter
+    private var savedDataCheckJob: Job? = null
 
     companion object {
         const val TAG = "ToolHist"
@@ -58,6 +67,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         vModel.nullData()
         vModel.setCsvState()
 
+
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
 
@@ -65,13 +75,31 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
         vModel.getBaseDataAlternativeApi()
 
+        runExistingFilterCheck()
+
         binding.loopIcon.setOnClickListener {
             if (Util.isNetworkAvailable(requireContext())) {
+                vModel.selectedCountry = ""  // should clear for filter fragment
                 findNavController().navigate(ToolHistoryMainFragmentDirections.actionToolHistoryFragmentToToolHistorySearchFragment())
             } else {
                 Toast.makeText(
                     context, context?.getString(R.string.no_internet), Toast.LENGTH_SHORT
                 ).show()
+            }
+        }
+    }
+
+    private fun runExistingFilterCheck() {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+
+            val indexData = vModel.fetchIndexData()   // room
+
+            indexData?.availableCountries?.let { countryList ->
+                if (countryList.isNotEmpty()) {
+                    withContext(Dispatchers.Main){
+                        setAvailableFilters(countryList)
+                    }
+                }
             }
         }
     }
@@ -95,6 +123,41 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
             }
         }
 
+        collectLatestLifecycleFlow(vModel.baseTagDataStateByCountry) { tagIndex ->
+            when (tagIndex) {
+                is SubmitResult.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    setIndexData(tagIndex.data)
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                    runSavedDataCheck()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(tagIndex.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(tagIndex.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {}
+            }
+        }
+
+
         collectLatestLifecycleFlow(vModel.baseTagDataState) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {
@@ -102,11 +165,33 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 }
 
                 is SubmitResult.Success -> {
-                    setIndexData(tagIndex.data.first)
+                    // sets available countries filter and primary adapter
+                    tagIndex.data.second?.let { cardData ->
+                        val countryList = ArrayList<String>()
+
+                        if (cardData.data?.showTabHR == true) {
+                            countryList.add(getString(R.string.croatia))
+                        }
+                        if (cardData.data?.showTabME == true) {
+                            countryList.add(getString(R.string.montenegro))
+                        }
+                        if (cardData.data?.showTabMK == true) {
+                            countryList.add(getString(R.string.macedonia))
+                        }
+                        if (cardData.data?.showTabRS == true) {
+                            countryList.add(getString(R.string.serbia))
+                        }
+
+                        vModel.listOfCountries = countryList
+
+                        setAvailableFilters(countryList)
+                    }
+
+                    setIndexData(tagIndex.data.first) // sets serial tag data
                 }
 
                 is SubmitResult.FailureNoConnection -> {
-                    showNoConnectionState()
+                    showNoInternetDialog()
                     runSavedDataCheck()
                 }
 
@@ -165,8 +250,107 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         }
     }
 
-    private fun runSavedDataCheck() {
-        binding.loopIcon.isEnabled = false
+    private fun setAvailableFilters(countryList: List<String>) {
+        if (countryList.isNotEmpty()) {
+            vModel.selectedCountry = when (countryList.reversed()[0]) {
+                getString(R.string.croatia) -> {
+                    getString(R.string.croatia_hr)
+                }
+
+                getString(R.string.montenegro) -> {
+                    getString(R.string.montenegro_me)
+                }
+
+                getString(R.string.macedonia) -> {
+                    getString(R.string.northmacedonia_mk)
+                }
+
+                getString(R.string.serbia) -> {
+                    getString(R.string.serbia_rs)
+                }
+
+                else -> ""
+            }
+
+            statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
+                val selectedCountry = when (selectedStatus) {
+                    getString(R.string.croatia) -> {
+                        getString(R.string.croatia_hr)
+                    }
+
+                    getString(R.string.montenegro) -> {
+                        getString(R.string.montenegro_me)
+                    }
+
+                    getString(R.string.macedonia) -> {
+                        getString(R.string.northmacedonia_mk)
+                    }
+
+                    getString(R.string.serbia) -> {
+                        getString(R.string.serbia_rs)
+                    }
+
+                    else -> ""
+                }
+
+                vModel.selectedCountry = selectedCountry
+
+                toolHistoryListingAdapter.clearData()
+
+                binding.progBar.visibility = View.VISIBLE
+
+                if (vModel.isNetAvailable()) {
+                    vModel.getBaseDataAlternativeApiForCountriesOnMain()
+                } else {
+                    fetchStoredData()
+                }
+            }
+
+            binding.cyclerTagTypes.adapter = statusFilterAdapter
+
+            statusFilterAdapter.submitList(countryList.reversed()) {
+                statusFilterAdapter.setTabPosition(0)
+            }
+        }
+    }
+
+    private fun funSetRoomStatusFilter(countryList: List<String>) {
+        statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
+            val selectedCountry = when (selectedStatus) {
+                getString(R.string.croatia) -> {
+                    getString(R.string.croatia_hr)
+                }
+
+                getString(R.string.montenegro) -> {
+                    getString(R.string.montenegro_me)
+                }
+
+                getString(R.string.macedonia) -> {
+                    getString(R.string.northmacedonia_mk)
+                }
+
+                getString(R.string.serbia) -> {
+                    getString(R.string.serbia_rs)
+                }
+
+                else -> ""
+            }
+
+            vModel.selectedCountry = selectedCountry
+
+            toolHistoryListingAdapter.clearData()
+        }
+
+        binding.cyclerTagTypes.adapter = statusFilterAdapter
+
+        statusFilterAdapter.submitList(countryList.reversed()) {
+            statusFilterAdapter.setTabPosition(0)
+        }
+
+        fetchStoredData()
+    }
+
+    private fun fetchStoredData() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             val indexData = vModel.fetchIndexData()   // room
@@ -180,20 +364,49 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 )
 
                 vModel.setStateIndex(data)
+            }
+        }
+    }
+
+    private fun runSavedDataCheck() {
+        if (savedDataCheckJob?.isActive == true) return
+
+        binding.loopIcon.isEnabled = false
+
+        savedDataCheckJob = viewLifecycleOwner.lifecycleScope.launch {
+
+            val indexData = vModel.fetchIndexData()   // room
+
+            indexData?.let { data ->
+
+                val bindingMain = (activity as MainActivity).binding
+
+                MainActivity.showSnackMessage(
+                    getString(R.string.offline_using_stored_data), bindingMain
+                )
+
+                vModel.setStateIndex(data)
 
             } ?: run {
+                val navController = findNavController()
+
+                if (navController.currentDestination?.id ==
+                    R.id.noInternetConnectionDialog
+                ) {
+                    return@launch
+                }
+
                 val bundle = Bundle().apply {
-                    putString(
-                        getString(R.string.title), getString(R.string.no_connection_title)
-                    )
+                    putString(getString(R.string.title), getString(R.string.no_connection_title))
                     putString(
                         getString(R.string.subtitle),
                         getString(R.string.please_connect_to_the_internet)
                     )
                 }
 
-                findNavController().navigate(
-                    R.id.action_global_noInternetConnectionDialog, bundle
+                navController.navigate(
+                    R.id.action_global_noInternetConnectionDialog,
+                    bundle
                 )
 
                 val bindingMain = (activity as MainActivity).binding
@@ -203,7 +416,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
                 binding.progBar.visibility = View.VISIBLE
             }
 
-            while (true) {
+            while (isActive) {
                 if (vModel.internetAvailable()) {
                     triggerUpdate()
                     break
@@ -221,6 +434,10 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
         binding.progBar.visibility = View.GONE
 
+        if (vModel.listOfCountries.isNotEmpty()) {
+            indexData.availableCountries = (vModel.listOfCountries)
+        }
+
         CoroutineScope(Dispatchers.IO).launch {
             vModel.insertRoomToolHistoryIndexData(indexData)
         }
@@ -228,14 +445,36 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         vModel.indexData =
             indexData  // filter fragment need some data from here saving here to reduce api calls
 
-        val toolHistoryListingAdapter =
-            ToolHistoryListingAdapter(indexData, vModel, this,this, this, this, this)
+        toolHistoryListingAdapter =
+            ToolHistoryListingAdapter(indexData, vModel, this, this, this, this, this)
 
         binding.cycler.adapter = toolHistoryListingAdapter
         binding.cycler.layoutManager = LinearLayoutManager(requireContext())
 
     }
 
+    private fun showNoInternetDialog() {
+        val navController = findNavController()
+
+        if (navController.currentDestination?.id ==
+            R.id.noInternetConnectionDialog
+        ) {
+            return
+        }
+
+        val bundle = Bundle().apply {
+            putString(getString(R.string.title), getString(R.string.no_connection_title))
+            putString(
+                getString(R.string.subtitle),
+                getString(R.string.please_connect_to_the_internet)
+            )
+        }
+
+        navController.navigate(
+            R.id.action_global_noInternetConnectionDialog,
+            bundle
+        )
+    }
 
     override fun sendComplaintData(complaintBody: ComplaintBody) {
         vModel.postComplaint(complaintBody)
@@ -273,6 +512,13 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     }
 
     override fun croatiaReclamationDialog() {
+        val fm = activity?.supportFragmentManager
+
+        fm?.let { manager ->
+            GeneralMessageDialog.newInstance(
+                getString(R.string.complaint), getString(R.string.croatian_reclamation)
+            ).show(manager, "croatiaDialog")
+        }
     }
 
     override fun psgData(toolHistoryListing: V2HistoryTagResponse) {

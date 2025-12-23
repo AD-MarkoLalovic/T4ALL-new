@@ -88,8 +88,12 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     }
 
     private val _baseTagDataState =
-        MutableStateFlow<SubmitResult<Pair<IndexData, CardWebModel>>>(SubmitResult.Loading)
-    val baseTagDataState: StateFlow<SubmitResult<Pair<IndexData, CardWebModel>>> get() = _baseTagDataState
+        MutableStateFlow<SubmitResult<Pair<IndexData, CardWebModel?>>>(SubmitResult.Loading)
+    val baseTagDataState: StateFlow<SubmitResult<Pair<IndexData, CardWebModel?>>> get() = _baseTagDataState
+
+    private val _baseTagDataStateByCountry =
+        MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)
+    val baseTagDataStateByCountry: StateFlow<SubmitResult<IndexData>> get() = _baseTagDataStateByCountry
 
     private val _csvTable = MutableStateFlow<SubmitResult<CsvModel>>(SubmitResult.Empty)
     val csvTable: StateFlow<SubmitResult<CsvModel>> get() = _csvTable
@@ -107,6 +111,8 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     val complaintObjectionStateFiltered: StateFlow<SubmitResult<LostTagResponse>> get() = _complaintObjectionStateFiltered
 
     fun setStateIndex(indexData: IndexData) { // from room
+        _baseTagDataState.value =
+            SubmitResult.Empty  // needs to be set to empty before using saved data by country filter or it will only work once
         _baseTagDataState.value = SubmitResult.Success(Pair(indexData, CardWebModel(null, null)))
     }
 
@@ -129,8 +135,11 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         selectedCountry = ""
     }
 
-
     private val itemsPerPage = 10
+
+    fun isNetAvailable(): Boolean{
+        return repository.isInternetAvailable()
+    }
 
     fun getBaseDataAlternativeApi() {   // uses faster api call to get serial numbers of tags saving about 10 seconds on server response time
         _baseTagDataState.value = SubmitResult.Loading
@@ -231,6 +240,73 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
                             else -> {
                                 _baseTagDataState.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(
+                                    TAG,
+                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    fun getBaseDataAlternativeApiForCountriesOnMain() {   // uses faster api call to get serial numbers of tags saving about 10 seconds on server response time
+        _baseTagDataStateByCountry.value = SubmitResult.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+
+            val resultTags = async {
+                repository.getTagBaseData(1, 5)
+            }
+
+            val tagResultDeferred = resultTags.await()
+
+            if (tagResultDeferred.isSuccess) {
+
+                val tagsData = tagResultDeferred.getOrNull()
+
+                if (tagsData == null) {
+                    _baseTagDataStateByCountry.value = SubmitResult.Empty
+                } else {
+                    _baseTagDataStateByCountry.value = SubmitResult.Success(tagsData)
+                }
+
+            } else {
+                when (val error = tagResultDeferred.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.e(
+                            "UserPassVM",
+                            "Error while fetching tags data",
+                            error
+                        )
+                        _baseTagDataStateByCountry.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataStateByCountry.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN UserPassViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                _baseTagDataStateByCountry.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _baseTagDataStateByCountry.value =
                                     SubmitResult.FailureApiError(
                                         error.errorResponse.message ?: ""
                                     )
@@ -668,7 +744,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         tagSerialNumber: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.fetchPassageDataBySerialNew(tagSerialNumber)?.let {
+            repository.fetchPassageDataBySerialNew(tagSerialNumber, selectedCountry)?.let {
                 withContext(Dispatchers.Main) {
                     dataInterface.onOk(it)
                 }
@@ -726,6 +802,12 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                     saveCsvLocally(data, nameExtra, context) // <- csv excel export
                 }
             }
+        }
+    }
+
+    fun deletePassageData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteRoomData()
         }
     }
 
@@ -898,18 +980,28 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
+    fun deleteTagSerialData(){
+        _baseTagDataState.value = SubmitResult.Empty
+        _baseTagDataStateByCountry.value = SubmitResult.Empty
+        viewModelScope.launch (Dispatchers.IO) {
+            repository.deleteTagSerialData()
+        }
+    }
+
     private var _data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
     val data: LiveData<IndexData> get() = _data
 
     var selectedTags: ArrayList<Tag> = ArrayList()
     var indexData: IndexData? = null
     var tagForExport: Tag? = null
+    var listOfCountries : List<String> = emptyList()
 
     suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
         repository.insertRoomTagBaseData(indexData)
     }
 
     suspend fun insertPassageData(toolHistoryListing: V2HistoryTagResponse) {
+        toolHistoryListing.countryCode = selectedCountry
         repository.insertPassageDataAdapter(toolHistoryListing)
     }
 

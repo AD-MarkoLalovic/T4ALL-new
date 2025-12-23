@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/title"
             app:layout_constraintStart_toStartOf="parent"
+            android:justificationMode="inter_word"
             android:layout_marginTop="@dimen/dimens_16dp"
             tools:text="subTitle" />
 
