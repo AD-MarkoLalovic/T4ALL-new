@@ -59,20 +59,17 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
             if (isGranted) {
                 // Permission is granted. You can proceed with sending notifications.
                 SharedPreferencesHelper.resetPermissionDenyCount(
-                    requireContext(),
-                    "notification_deny_count"
+                    requireContext(), "notification_deny_count"
                 )
                 userPerm.onPermissionGranted()
                 sendNotification()
             } else {
                 SharedPreferencesHelper.incrementPermissionDenyCount(
-                    requireContext(),
-                    "notification_deny_count"
+                    requireContext(), "notification_deny_count"
                 )
 
                 val denyCount = SharedPreferencesHelper.getPermissionDenyCount(
-                    requireContext(),
-                    "notification_deny_count"
+                    requireContext(), "notification_deny_count"
                 )
                 if (denyCount > 2) {
                     notificationPermissionDeniedDialog()
@@ -231,9 +228,9 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
     private fun setObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vModel.filterList.collect { tagIndex ->
+                vModel.filterList.collect { countryList ->
                     binding.progBar.visibility = View.GONE
-
+                    updateCountriesAdapter(countryList)
                 }
             }
         }
@@ -284,15 +281,12 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
 
-                    csvTable.data.data?.csvContent
-                        ?.takeIf { it.isNotEmpty() }
-                        ?.let { csvContent ->
+                    csvTable.data.data?.csvContent?.takeIf { it.isNotEmpty() }?.let { csvContent ->
                             val nameExtra = UUID.randomUUID().toString().take(8)
                             vModel.processCsvData(csvTable.data, nameExtra, requireContext())
 
                             if (ContextCompat.checkSelfPermission(
-                                    requireContext(),
-                                    Manifest.permission.POST_NOTIFICATIONS
+                                    requireContext(), Manifest.permission.POST_NOTIFICATIONS
                                 ) == PackageManager.PERMISSION_GRANTED
                             ) {
                                 vModel.saveBase64ToCSV(csvContent, nameExtra, requireContext())
@@ -301,9 +295,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
                                 showNotificationPermissionRationale(object : UserPermission {
                                     override fun onPermissionGranted() {
                                         vModel.saveBase64ToCSV(
-                                            csvContent,
-                                            nameExtra,
-                                            requireContext()
+                                            csvContent, nameExtra, requireContext()
                                         )
                                         vModel.setCsvState()
                                     }
@@ -313,14 +305,13 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
                                     }
                                 })
                             }
-                        }
-                        ?: run {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.no_passage_data),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        } ?: run {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.no_passage_data),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -382,12 +373,10 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         lifecycleScope.launch {
             val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
 
-            val dialog = NotificationsRequestDialog
-                .newInstance(
+            val dialog = NotificationsRequestDialog.newInstance(
                     getString(R.string.notification_title),
                     getString(R.string.notification_subtitle)
-                )
-                .setOnButtonClickListener(object : NotificationsRequestDialog.OnButtonClick {
+                ).setOnButtonClickListener(object : NotificationsRequestDialog.OnButtonClick {
                     override fun onClickConfirmed() {
                         userPerm = userPermission
                         requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
@@ -503,6 +492,39 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         }
     }
 
+    private fun updateCountriesAdapter(countryList: List<String>) {
+        statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
+            val selectedCountry = when (selectedStatus) {
+                getString(R.string.croatia) -> {
+                    getString(R.string.croatia_hr)
+                }
+
+                getString(R.string.montenegro) -> {
+                    getString(R.string.montenegro_me)
+                }
+
+                getString(R.string.macedonia) -> {
+                    getString(R.string.northmacedonia_mk)
+                }
+
+                getString(R.string.serbia) -> {
+                    getString(R.string.serbia_rs)
+                }
+
+                else -> ""
+            }
+
+            Log.d(TAG, "selected country: $selectedCountry")
+
+            vModel.selectedCountry = selectedCountry
+        }
+
+        binding.cyclerTagTypes.adapter = statusFilterAdapter
+
+        statusFilterAdapter.submitList(countryList.reversed()) {
+            statusFilterAdapter.setTabPosition(-1)
+        }
+    }
 
     override fun sendDataFillFilterAdapter(
         // updates tags on main adapter
@@ -540,8 +562,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
 
     private fun permissionNotificationDeniedDialogResultListener() {
         parentFragmentManager.setFragmentResultListener(
-            FragmentResultKeys.NOTIFICATION_PERMISSION_RESULT,
-            viewLifecycleOwner
+            FragmentResultKeys.NOTIFICATION_PERMISSION_RESULT, viewLifecycleOwner
         ) { _, bundle ->
             val clickSettings =
                 bundle.getBoolean(FragmentResultKeys.NOTIFICATION_PERMISSION_CONFIRMED, false)
