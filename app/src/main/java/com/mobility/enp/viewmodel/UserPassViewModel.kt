@@ -64,6 +64,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
@@ -94,6 +95,14 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     private val _baseTagDataStateFilterFragment =
         MutableStateFlow<SubmitResult<Pair<IndexData, CardWebModel?>>>(SubmitResult.Loading)
     val baseTagDataStateFilterFragment: StateFlow<SubmitResult<Pair<IndexData, CardWebModel?>>> get() = _baseTagDataStateFilterFragment
+
+
+    private val _filterListFilter = MutableStateFlow<List<String>>(emptyList())
+    val filterList: StateFlow<List<String>> = _filterListFilter.asStateFlow()
+
+    fun setFilterList(newItems: List<String>) {
+        _filterListFilter.value = newItems
+    }
 
     private val _baseTagDataStateByCountry =
         MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)

@@ -18,7 +18,9 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
@@ -227,6 +229,15 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
     }
 
     private fun setObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vModel.filterList.collect { tagIndex ->
+                    binding.progBar.visibility = View.GONE
+
+                }
+            }
+        }
+
         collectLatestLifecycleFlow(vModel.baseTagDataStateFilterFragment) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {
@@ -334,6 +345,8 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
                 is SubmitResult.Empty -> {}
             }
         }
+
+
     }
 
 
@@ -454,6 +467,8 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         if (cardWebModel?.data?.showTabRS == true) {
             countryList.add(getString(R.string.serbia))
         }
+
+        vModel.setFilterList(countryList)
 
         statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
             val selectedCountry = when (selectedStatus) {
