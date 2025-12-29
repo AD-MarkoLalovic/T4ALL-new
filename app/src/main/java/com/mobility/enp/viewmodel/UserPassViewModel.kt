@@ -104,6 +104,13 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         _filterListFilter.value = newItems
     }
 
+    private val _filterListTagData = MutableStateFlow<IndexData?>(null)
+    val filterTagData: StateFlow<IndexData?> = _filterListTagData.asStateFlow()
+
+    fun setFilterTagData(indexData: IndexData) {
+        _filterListTagData.value = indexData
+    }
+
     private val _baseTagDataStateByCountry =
         MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)
     val baseTagDataStateByCountry: StateFlow<SubmitResult<IndexData>> get() = _baseTagDataStateByCountry

@@ -235,6 +235,17 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vModel.filterTagData.collect { index ->
+                    binding.progBar.visibility = View.GONE
+                    index?.let {
+                        updateIndexAdapter(it)
+                    }
+                }
+            }
+        }
+
         collectLatestLifecycleFlow(vModel.baseTagDataStateFilterFragment) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {
@@ -243,7 +254,10 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
 
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
-                    setIndexData(tagIndex.data.first)
+
+                    checkNoPassage(tagIndex.data.first)
+                    vModel.setFilterTagData(tagIndex.data.first)
+
                     setVisibleCountries(tagIndex.data.second)
                 }
 
@@ -282,30 +296,30 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
                     binding.progBar.visibility = View.GONE
 
                     csvTable.data.data?.csvContent?.takeIf { it.isNotEmpty() }?.let { csvContent ->
-                            val nameExtra = UUID.randomUUID().toString().take(8)
-                            vModel.processCsvData(csvTable.data, nameExtra, requireContext())
+                        val nameExtra = UUID.randomUUID().toString().take(8)
+                        vModel.processCsvData(csvTable.data, nameExtra, requireContext())
 
-                            if (ContextCompat.checkSelfPermission(
-                                    requireContext(), Manifest.permission.POST_NOTIFICATIONS
-                                ) == PackageManager.PERMISSION_GRANTED
-                            ) {
-                                vModel.saveBase64ToCSV(csvContent, nameExtra, requireContext())
-                                vModel.setCsvState()
-                            } else {
-                                showNotificationPermissionRationale(object : UserPermission {
-                                    override fun onPermissionGranted() {
-                                        vModel.saveBase64ToCSV(
-                                            csvContent, nameExtra, requireContext()
-                                        )
-                                        vModel.setCsvState()
-                                    }
+                        if (ContextCompat.checkSelfPermission(
+                                requireContext(), Manifest.permission.POST_NOTIFICATIONS
+                            ) == PackageManager.PERMISSION_GRANTED
+                        ) {
+                            vModel.saveBase64ToCSV(csvContent, nameExtra, requireContext())
+                            vModel.setCsvState()
+                        } else {
+                            showNotificationPermissionRationale(object : UserPermission {
+                                override fun onPermissionGranted() {
+                                    vModel.saveBase64ToCSV(
+                                        csvContent, nameExtra, requireContext()
+                                    )
+                                    vModel.setCsvState()
+                                }
 
-                                    override fun onPermissionDenied() {
-                                        vModel.setCsvState()
-                                    }
-                                })
-                            }
-                        } ?: run {
+                                override fun onPermissionDenied() {
+                                    vModel.setCsvState()
+                                }
+                            })
+                        }
+                    } ?: run {
                         Toast.makeText(
                             requireContext(),
                             getString(R.string.no_passage_data),
@@ -338,6 +352,16 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         }
 
 
+    }
+
+    private fun checkNoPassage(indexData: IndexData) {
+        indexData.data?.let { index ->
+            if (index.tags.isNullOrEmpty()) {
+                binding.btnSearch.isEnabled = false
+                binding.noData.visibility = View.VISIBLE
+                Toast.makeText(context, R.string.no_passage_data, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
 
@@ -374,18 +398,17 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
             val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
 
             val dialog = NotificationsRequestDialog.newInstance(
-                    getString(R.string.notification_title),
-                    getString(R.string.notification_subtitle)
-                ).setOnButtonClickListener(object : NotificationsRequestDialog.OnButtonClick {
-                    override fun onClickConfirmed() {
-                        userPerm = userPermission
-                        requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-                    }
+                getString(R.string.notification_title), getString(R.string.notification_subtitle)
+            ).setOnButtonClickListener(object : NotificationsRequestDialog.OnButtonClick {
+                override fun onClickConfirmed() {
+                    userPerm = userPermission
+                    requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                }
 
-                    override fun onClickRejected() {
-                        userPermission.onPermissionDenied()
-                    }
-                })
+                override fun onClickRejected() {
+                    userPermission.onPermissionDenied()
+                }
+            })
 
             dialog.show(fragmentManager, "permDialog")
         }
@@ -396,22 +419,14 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
             .show()
     }
 
-    private fun setIndexData(indexData: IndexData) {
-        indexData.data?.let { index ->
-            if (!index.tags.isNullOrEmpty()) {
-                binding.noData.visibility = View.GONE
+    private fun updateIndexAdapter(indexData: IndexData) {
+        binding.noData.visibility = View.GONE
 
-                val adapter =
-                    ToolHistoryTagsAdapter(this, franchiseViewModel, this, indexData, this, this)
+        val adapter =
+            ToolHistoryTagsAdapter(this, franchiseViewModel, this, indexData, this, this)
 
-                binding.cycler.adapter = adapter
-                binding.cycler.layoutManager = LinearLayoutManager(context)
-            } else {
-                binding.btnSearch.isEnabled = false
-                binding.noData.visibility = View.VISIBLE
-                Toast.makeText(context, R.string.no_passage_data, Toast.LENGTH_SHORT).show()
-            }
-        }
+        binding.cycler.adapter = adapter
+        binding.cycler.layoutManager = LinearLayoutManager(context)
     }
 
     private fun showNoConnectionState() {
