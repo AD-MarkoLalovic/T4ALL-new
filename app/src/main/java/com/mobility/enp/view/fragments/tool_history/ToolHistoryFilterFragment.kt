@@ -105,7 +105,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         binding.progBar.visibility = View.VISIBLE
 
         if (vModel.internetAvailable()) {
-            vModel.getBaseDataAlternativeApi()
+            vModel.getBaseDataAlternativeApiFilterFragment()
         } else {
             checkInternet()
         }
@@ -222,12 +222,12 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
             MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
             binding.progBar.visibility = View.GONE
 
-            vModel.getBaseDataAlternativeApi()
+            vModel.getBaseDataAlternativeApiFilterFragment()
         }
     }
 
     private fun setObservers() {
-        collectLatestLifecycleFlow(vModel.baseTagDataState) { tagIndex ->
+        collectLatestLifecycleFlow(vModel.baseTagDataStateFilterFragment) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {
                     binding.progBar.visibility = View.VISIBLE
