@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.first_screen
+package com.mobility.enp.view.adapters.tool_history.result
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,18 +16,20 @@ import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagRes
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapter
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapterCroatia
 import com.mobility.enp.view.adapters.tool_history.combined.HistoryTotalCostAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class HistorySerialAdapter(
+class HistorySerialAdapterResultScreen(
     private var toolHistoryIndex: IndexData,
     private val viewModel: UserPassViewModel,
-    private val complaintInterface: HistoryPassageAdapter.SendToFragment,
-    private val complaintInterfaceCroatia: HistoryPassageAdapterCroatia.SendToFragment,
+    private val complaintInterface: HistoryPassageAdapterResultScreen.SendToFragment,
+    private val complaintInterfaceCroatia: HistoryPassageAdapterCroatiaResultScreen.SendToFragment,
     val lifecycleOwner: LifecycleOwner,
     val passageData: SavePassageData, val paginationUpdate: PaginationUpdate
-) : RecyclerView.Adapter<HistorySerialAdapter.TagsViewHolder>() {
+) : RecyclerView.Adapter<HistorySerialAdapterResultScreen.TagsViewHolder>() {
 
     var currentPage: Int = toolHistoryIndex.data?.currentPage ?: 0
     var lastPage: Int = toolHistoryIndex.data?.lastPage ?: 0
@@ -36,7 +38,7 @@ class HistorySerialAdapter(
 
     val listOfTags: ArrayList<Tag> = toolHistoryIndex.data?.tags as ArrayList<Tag>
 
-    fun clearData() {
+    fun clearData(){
         toolHistoryIndex = IndexData(0, null, "", null)
         lastPage = 0
         perPage = 0
@@ -134,7 +136,7 @@ class HistorySerialAdapter(
 
                         // croatia passage adapter
                         if (viewModel.selectedCountry == binding.root.context.getString(R.string.croatia_hr)) {
-                            binding.cycler.adapter = HistoryPassageAdapterCroatia(
+                            binding.cycler.adapter = HistoryPassageAdapterCroatiaResultScreen(
                                 toolHistoryListing,
                                 complaintInterfaceCroatia,
                                 lifecycleOwner,
@@ -143,7 +145,7 @@ class HistorySerialAdapter(
                         } else {
                             //record of passages for tag for normal countries
                             //adapter that presents the passages
-                            binding.cycler.adapter = HistoryPassageAdapter(
+                            binding.cycler.adapter = HistoryPassageAdapterResultScreen(
                                 toolHistoryListing,
                                 complaintInterface,
                                 false,
@@ -198,7 +200,7 @@ class HistorySerialAdapter(
             if (viewModel.internetAvailable()) {
                 viewModel.getToolHistoryTransit(indexListing, toolHistoryIndex.serialNumber, 1)
             } else {
-                viewModel.fetchStoredData(contentInterface, toolHistoryIndex.serialNumber)
+                viewModel.fetchStoredDataResultScreen(contentInterface, toolHistoryIndex.serialNumber)
             }
 
             binding.executePendingBindings()

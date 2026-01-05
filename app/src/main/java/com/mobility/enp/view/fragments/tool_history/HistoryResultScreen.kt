@@ -22,9 +22,9 @@ import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
-import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapter
-import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapterCroatia
+import com.mobility.enp.view.adapters.tool_history.result.HistoryPassageAdapterCroatiaResultScreen
+import com.mobility.enp.view.adapters.tool_history.result.HistoryPassageAdapterResultScreen
+import com.mobility.enp.view.adapters.tool_history.result.HistorySerialAdapterResultScreen
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
@@ -34,9 +34,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class HistoryResultScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
-    HistorySerialAdapter.SavePassageData, HistorySerialAdapter.PaginationUpdate,
-    HistoryPassageAdapterCroatia.SendToFragment {
+class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendToFragment,
+    HistorySerialAdapterResultScreen.SavePassageData,
+    HistorySerialAdapterResultScreen.PaginationUpdate,
+    HistoryPassageAdapterCroatiaResultScreen.SendToFragment {
 
     private lateinit var binding: FragmentToolHistorySearchResultBinding
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
@@ -88,7 +89,7 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         when (vModel.allTagsSelected) {
             true -> {  // uses unmodified tag index for adapter to list all possible tags and passages
                 val historySerialAdapter =
-                    HistorySerialAdapter(tagIndex, vModel, this, this, this, this, this)
+                    HistorySerialAdapterResultScreen(tagIndex, vModel, this, this, this, this, this)
                 binding.cycler.adapter = historySerialAdapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
 
@@ -104,7 +105,7 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 tagIndex.data?.lastPage = 1
 
                 val historySerialAdapter =
-                    HistorySerialAdapter(tagIndex, vModel, this, this, this, this, this)
+                    HistorySerialAdapterResultScreen(tagIndex, vModel, this, this, this, this, this)
                 binding.cycler.adapter = historySerialAdapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
 

@@ -58,6 +58,7 @@ import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.CsvActivity
 import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
+import com.mobility.enp.view.adapters.tool_history.result.HistorySerialAdapterResultScreen
 import com.mobility.enp.view.fragments.tool_history.HistoryFilterScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -876,6 +877,19 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     fun fetchStoredData(
         dataInterface: HistorySerialAdapter.PassageDataInterface,
+        tagSerialNumber: String
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.fetchPassageDataBySerialNew(tagSerialNumber, selectedCountry)?.let {
+                withContext(Dispatchers.Main) {
+                    dataInterface.onOk(it)
+                }
+            }
+        }
+    }
+
+    fun fetchStoredDataResultScreen(
+        dataInterface: HistorySerialAdapterResultScreen.PassageDataInterface,
         tagSerialNumber: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {

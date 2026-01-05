@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.first_screen
+package com.mobility.enp.view.adapters.tool_history.combined
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
