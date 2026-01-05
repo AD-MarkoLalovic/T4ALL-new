@@ -190,7 +190,7 @@
 
     <fragment
         android:id="@+id/toolHistoryFragment"
-        android:name="com.mobility.enp.view.fragments.tool_history.ToolHistoryMainFragment"
+        android:name="com.mobility.enp.view.fragments.tool_history.HistoryFirstScreen"
         android:label="ToolHistoryFragment"
         tools:layout="@layout/fragment_passage_history">
         <action
@@ -200,7 +200,7 @@
 
     <fragment
         android:id="@+id/toolHistorySearchFragment"
-        android:name="com.mobility.enp.view.fragments.tool_history.ToolHistoryFilterFragment"
+        android:name="com.mobility.enp.view.fragments.tool_history.HistoryFilterScreen"
         android:label="fragment_tool_history_details"
         tools:layout="@layout/fragment_tool_history_search_query">
 
@@ -211,7 +211,7 @@
 
     <fragment
         android:id="@+id/toolHistorySearchResultFragment"
-        android:name="com.mobility.enp.view.fragments.tool_history.ToolHistoryResultFragment"
+        android:name="com.mobility.enp.view.fragments.tool_history.HistoryResultScreen"
         android:label="fragment_tool_history_search_result"
         tools:layout="@layout/fragment_tool_history_search_result">
         <action

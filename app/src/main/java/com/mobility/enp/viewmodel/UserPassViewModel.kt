@@ -57,8 +57,8 @@ import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.CsvActivity
-import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
-import com.mobility.enp.view.fragments.tool_history.ToolHistoryFilterFragment
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
+import com.mobility.enp.view.fragments.tool_history.HistoryFilterScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -875,7 +875,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     }
 
     fun fetchStoredData(
-        dataInterface: ToolHistoryListingAdapter.PassageDataInterface,
+        dataInterface: HistorySerialAdapter.PassageDataInterface,
         tagSerialNumber: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -997,12 +997,12 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                             outputStream.write(csvBuilder.toString().toByteArray())
                             outputStream.flush()
                             Log.d(
-                                ToolHistoryFilterFragment.TAG,
+                                HistoryFilterScreen.TAG,
                                 "CSV file saved successfully in Documents folder."
                             )
-                        } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to open OutputStream.")
+                        } ?: Log.d(HistoryFilterScreen.TAG, "Failed to open OutputStream.")
                 } ?: Log.d(
-                    ToolHistoryFilterFragment.TAG,
+                    HistoryFilterScreen.TAG,
                     "Failed to create file URI in MediaStore."
                 )
             } catch (e: Exception) {
@@ -1093,12 +1093,12 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                             postNotification()
 
                             Log.d(
-                                ToolHistoryFilterFragment.TAG,
+                                HistoryFilterScreen.TAG,
                                 "PDF file saved successfully in Documents folder."
                             )
-                        } ?: Log.d(ToolHistoryFilterFragment.TAG, "Failed to open OutputStream.")
+                        } ?: Log.d(HistoryFilterScreen.TAG, "Failed to open OutputStream.")
                 } ?: Log.d(
-                    ToolHistoryFilterFragment.TAG,
+                    HistoryFilterScreen.TAG,
                     "Failed to create file URI in MediaStore."
                 )
 

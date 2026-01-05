@@ -22,9 +22,9 @@ import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
-import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapter
-import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapterCroatia
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapter
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapterCroatia
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
@@ -34,9 +34,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.SendToFragment,
-    ToolHistoryListingAdapter.SavePassageData, ToolHistoryListingAdapter.PaginationUpdate,
-    ToolHistoryListingPassageAdapterCroatia.SendToFragment {
+class HistoryResultScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
+    HistorySerialAdapter.SavePassageData, HistorySerialAdapter.PaginationUpdate,
+    HistoryPassageAdapterCroatia.SendToFragment {
 
     private lateinit var binding: FragmentToolHistorySearchResultBinding
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
@@ -87,9 +87,9 @@ class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.S
         binding.progBar.visibility = View.GONE
         when (vModel.allTagsSelected) {
             true -> {  // uses unmodified tag index for adapter to list all possible tags and passages
-                val toolHistoryListingAdapter =
-                    ToolHistoryListingAdapter(tagIndex, vModel, this, this, this, this, this)
-                binding.cycler.adapter = toolHistoryListingAdapter
+                val historySerialAdapter =
+                    HistorySerialAdapter(tagIndex, vModel, this, this, this, this, this)
+                binding.cycler.adapter = historySerialAdapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
 
                 Log.d(TAG, "setIndexData: umodified")
@@ -103,9 +103,9 @@ class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.S
                 tagIndex.data?.perPage = 5
                 tagIndex.data?.lastPage = 1
 
-                val toolHistoryListingAdapter =
-                    ToolHistoryListingAdapter(tagIndex, vModel, this, this, this, this, this)
-                binding.cycler.adapter = toolHistoryListingAdapter
+                val historySerialAdapter =
+                    HistorySerialAdapter(tagIndex, vModel, this, this, this, this, this)
+                binding.cycler.adapter = historySerialAdapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
 
                 Log.d(TAG, "setIndexData: modified")
@@ -188,7 +188,7 @@ class ToolHistoryResultFragment : Fragment(), ToolHistoryListingPassageAdapter.S
 
 
         binding.btnReset.setOnClickListener {
-            findNavController().navigate(ToolHistoryResultFragmentDirections.actionToolHistorySearchResultFragmentToToolHistoryFragment())
+            findNavController().navigate(HistoryResultScreenDirections.actionToolHistorySearchResultFragmentToToolHistoryFragment())
         }
     }
 

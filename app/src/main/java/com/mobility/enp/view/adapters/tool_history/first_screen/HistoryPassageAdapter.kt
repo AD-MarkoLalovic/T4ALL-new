@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.main_and_filter_screen
+package com.mobility.enp.view.adapters.tool_history.first_screen
 
 import android.content.Context
 import android.content.res.Configuration
@@ -27,7 +27,7 @@ import com.mobility.enp.view.dialogs.ObjectionFormDialog
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class ToolHistoryListingPassageAdapter(
+class HistoryPassageAdapter(
     private val data: V2HistoryTagResponse,
     private val complaintInterface: SendToFragment,
     private val hideComplaintButton: Boolean,
@@ -35,7 +35,7 @@ class ToolHistoryListingPassageAdapter(
     private val tagSerialNumber: String,
     private val countryCode: String, private val viewmodel: UserPassViewModel
 ) :
-    RecyclerView.Adapter<ToolHistoryListingPassageAdapter.RelationViewHolder>() {
+    RecyclerView.Adapter<HistoryPassageAdapter.RelationViewHolder>() {
 
     private lateinit var context: Context
 

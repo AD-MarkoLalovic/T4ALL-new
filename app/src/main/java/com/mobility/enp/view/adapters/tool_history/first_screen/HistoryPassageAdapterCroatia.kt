@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.main_and_filter_screen
+package com.mobility.enp.view.adapters.tool_history.first_screen
 
 import android.content.Context
 import android.util.Log
@@ -13,16 +13,15 @@ import com.mobility.enp.databinding.ItemRelationPassageRealCroatiaBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestFlow
-import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class ToolHistoryListingPassageAdapterCroatia(
+class HistoryPassageAdapterCroatia(
     private val data: V2HistoryTagResponse,
     private val complaintInterface: SendToFragment,
     private val lifecycleOwner: LifecycleOwner,
     private val tagSerialNumber: String,
 ) :
-    RecyclerView.Adapter<ToolHistoryListingPassageAdapterCroatia.RelationViewHolder>() {
+    RecyclerView.Adapter<HistoryPassageAdapterCroatia.RelationViewHolder>() {
 
     private lateinit var context: Context
 

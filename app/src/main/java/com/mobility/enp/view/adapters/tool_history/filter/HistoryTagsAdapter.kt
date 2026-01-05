@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.select
+package com.mobility.enp.view.adapters.tool_history.filter
 
 import android.content.res.ColorStateList
 import android.util.Log
@@ -14,11 +14,11 @@ import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.ToolHistoryTagsAdapterBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
-import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapter
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapter
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class ToolHistoryTagsAdapter(
+class HistoryTagsAdapter(
     tagInterface: TagSend,
     private val franchiseModel: FranchiseViewModel,
     private val paginationUpdate: PaginationUpdate,
@@ -26,7 +26,7 @@ class ToolHistoryTagsAdapter(
     private val complaintInterface: SendToFragment,
     val lifecycleOwner: LifecycleOwner,
 ) :
-    RecyclerView.Adapter<ToolHistoryTagsAdapter.ToolHistoryTagsViewHolder>() {
+    RecyclerView.Adapter<HistoryTagsAdapter.ToolHistoryTagsViewHolder>() {
 
     val tagSendInt = tagInterface
     private val listOfTags: ArrayList<Tag> = toolHistoryIndex.data?.tags as ArrayList<Tag>
@@ -164,7 +164,7 @@ class ToolHistoryTagsAdapter(
             paginationUpdate.sendDataFillFilterAdapter(currentPage + 1, perPage, indexListing)
         } else if (lastPage == currentPage && listOfTags[listOfTags.size - 1] == currentItem) {
             Log.d(
-                ToolHistoryListingPassageAdapter.Companion.TAG,
+                HistoryPassageAdapter.Companion.TAG,
                 "last item $currentItem total $total"
             )
         }
