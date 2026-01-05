@@ -158,7 +158,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         }
 
 
-        collectLatestLifecycleFlow(vModel.baseTagDataState) { tagIndex ->
+        collectLatestLifecycleFlow(vModel.baseTagDataStateFirstScreen) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {
                     binding.progBar.visibility = View.VISIBLE

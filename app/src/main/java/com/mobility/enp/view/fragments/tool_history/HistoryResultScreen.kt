@@ -10,7 +10,9 @@ import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
@@ -72,7 +74,7 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendTo
         setObservers()
         setFranchise()
 
-        vModel.getBaseDataAlternativeApi()
+        vModel.getBaseDataAlternativeApiResultScreen()
     }
 
     private fun setFranchise() {
@@ -101,7 +103,7 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendTo
                 tagIndex.data?.tags = vModel.selectedTags
                 tagIndex.data?.currentPage = 1
                 tagIndex.data?.total = 1
-                tagIndex.data?.perPage = 5
+                tagIndex.data?.perPage = 10
                 tagIndex.data?.lastPage = 1
 
                 val historySerialAdapter =
@@ -116,14 +118,26 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendTo
 
     private fun setObservers() {
 
-        collectLatestLifecycleFlow(vModel.baseTagDataState) { tagIndex ->
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vModel.indexDataResultScreen.collect { indexData ->
+                    indexData?.let {
+                        setIndexData(indexData)
+                    }
+                }
+            }
+        }
+
+        collectLatestLifecycleFlow(vModel.baseTagDataStateResultScreen) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {
                     binding.progBar.visibility = View.VISIBLE
                 }
 
                 is SubmitResult.Success -> {
-                    setIndexData(tagIndex.data.first)
+                    tagIndex.data.first?.let {
+                        vModel.setIndexDataResultScreen(it)
+                    }
                 }
 
                 is SubmitResult.FailureNoConnection -> {
