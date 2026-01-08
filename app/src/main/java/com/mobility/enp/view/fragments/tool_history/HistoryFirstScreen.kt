@@ -22,9 +22,9 @@ import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.MyTollCountriesFilterAdapter
-import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
-import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapter
-import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapterCroatia
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapter
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapterCroatia
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
@@ -37,9 +37,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.SendToFragment,
-    ToolHistoryListingAdapter.SavePassageData, ToolHistoryListingAdapter.PaginationUpdate,
-    ToolHistoryListingPassageAdapterCroatia.SendToFragment {
+class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
+    HistorySerialAdapter.SavePassageData, HistorySerialAdapter.PaginationUpdate,
+    HistoryPassageAdapterCroatia.SendToFragment {
 
     private var _binding: FragmentPassageHistoryBinding? = null
     private val binding: FragmentPassageHistoryBinding get() = _binding!!
@@ -47,7 +47,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
 
     private lateinit var statusFilterAdapter: MyTollCountriesFilterAdapter
-    private lateinit var toolHistoryListingAdapter: ToolHistoryListingAdapter
+    private lateinit var historySerialAdapter: HistorySerialAdapter
     private var savedDataCheckJob: Job? = null
 
     companion object {
@@ -80,7 +80,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         binding.loopIcon.setOnClickListener {
             if (Util.isNetworkAvailable(requireContext())) {
                 vModel.selectedCountry = ""  // should clear for filter fragment
-                findNavController().navigate(ToolHistoryMainFragmentDirections.actionToolHistoryFragmentToToolHistorySearchFragment())
+                findNavController().navigate(HistoryFirstScreenDirections.actionToolHistoryFragmentToToolHistorySearchFragment())
             } else {
                 Toast.makeText(
                     context, context?.getString(R.string.no_internet), Toast.LENGTH_SHORT
@@ -158,7 +158,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         }
 
 
-        collectLatestLifecycleFlow(vModel.baseTagDataState) { tagIndex ->
+        collectLatestLifecycleFlow(vModel.baseTagDataStateFirstScreen) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {
                     binding.progBar.visibility = View.VISIBLE
@@ -295,7 +295,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
                 vModel.selectedCountry = selectedCountry
 
-                toolHistoryListingAdapter.clearData()
+                historySerialAdapter.clearData()
 
                 binding.progBar.visibility = View.VISIBLE
 
@@ -338,7 +338,7 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
 
             vModel.selectedCountry = selectedCountry
 
-            toolHistoryListingAdapter.clearData()
+            historySerialAdapter.clearData()
         }
 
         binding.cyclerTagTypes.adapter = statusFilterAdapter
@@ -445,10 +445,10 @@ class ToolHistoryMainFragment : Fragment(), ToolHistoryListingPassageAdapter.Sen
         vModel.indexData =
             indexData  // filter fragment need some data from here saving here to reduce api calls
 
-        toolHistoryListingAdapter =
-            ToolHistoryListingAdapter(indexData, vModel, this, this, this, this, this)
+        historySerialAdapter =
+            HistorySerialAdapter(indexData, vModel, this, this, this, this, this)
 
-        binding.cycler.adapter = toolHistoryListingAdapter
+        binding.cycler.adapter = historySerialAdapter
         binding.cycler.layoutManager = LinearLayoutManager(requireContext())
 
     }

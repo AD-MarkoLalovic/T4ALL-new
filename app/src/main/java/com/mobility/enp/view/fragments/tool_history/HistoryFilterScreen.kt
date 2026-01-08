@@ -34,7 +34,7 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.MyTollCountriesFilterAdapter
-import com.mobility.enp.view.adapters.tool_history.select.ToolHistoryTagsAdapter
+import com.mobility.enp.view.adapters.tool_history.filter.HistoryTagsAdapter
 import com.mobility.enp.view.dialogs.NotificationsRequestDialog
 import com.mobility.enp.view.dialogs.PermissionDeniedDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
@@ -45,8 +45,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
-    ToolHistoryTagsAdapter.PaginationUpdate, ToolHistoryTagsAdapter.SendToFragment {
+class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
+    HistoryTagsAdapter.PaginationUpdate, HistoryTagsAdapter.SendToFragment {
 
     private var _binding: FragmentToolHistorySearchQueryBinding? = null
     private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
@@ -116,7 +116,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
                 Toast.makeText(context, R.string.please_select_country, Toast.LENGTH_SHORT).show()
             } else {
                 if (vModel.internetAvailable()) {
-                    findNavController().navigate(ToolHistoryFilterFragmentDirections.actionToolHistorySearchFragmentToToolHistorySearchResultFragment())
+                    findNavController().navigate(HistoryFilterScreenDirections.actionToolHistorySearchFragmentToToolHistorySearchResultFragment())
                 } else {
                     val bundle = Bundle().apply {
                         putString(
@@ -423,7 +423,7 @@ class ToolHistoryFilterFragment : Fragment(), ToolHistoryTagsAdapter.TagSend,
         binding.noData.visibility = View.GONE
 
         val adapter =
-            ToolHistoryTagsAdapter(this, franchiseViewModel, this, indexData, this, this)
+            HistoryTagsAdapter(this, franchiseViewModel, this, indexData, this, this)
 
         binding.cycler.adapter = adapter
         binding.cycler.layoutManager = LinearLayoutManager(context)

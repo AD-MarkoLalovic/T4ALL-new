@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.main_and_filter_screen
+package com.mobility.enp.view.adapters.tool_history.combined
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.data.model.api_tool_history.v2base_model.SumTag
 import com.mobility.enp.databinding.PassageHistoryTotalPriceBinding
 
-class TotalCostPassageAdapter(private val countries: List<SumTag>?) :
-    RecyclerView.Adapter<TotalCostPassageAdapter.CountryAdapterViewHolder>() {
+class HistoryTotalCostAdapter(private val countries: List<SumTag>?) :
+    RecyclerView.Adapter<HistoryTotalCostAdapter.CountryAdapterViewHolder>() {
 
 
     class CountryAdapterViewHolder(val binding: PassageHistoryTotalPriceBinding) :
