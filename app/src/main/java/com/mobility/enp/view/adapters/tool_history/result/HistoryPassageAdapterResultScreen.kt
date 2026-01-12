@@ -125,12 +125,16 @@ class HistoryPassageAdapterResultScreen(
                             subtitle = binding.root.context.getString(R.string.limit_reclamation)
                         ).show(fragmentManager, "denyComplaint")
                     } else {
-                        val objectionDialog =
-                            ObjectionFormDialog({ objection ->
-                                complaintInterface.sendObjectionData(objection)
-                            }, relation.complaint.id)
-                        objectionDialog.show(fragmentManager, "ObjectionFormDialog")
 
+                        val fragmentManager = (context as AppCompatActivity).supportFragmentManager
+
+                        val dialog = ObjectionFormDialog.newInstance(
+                            relation.complaint.id
+                        ) { complaintBody ->
+                            complaintInterface.sendObjectionData(complaintBody)
+                        }
+
+                        dialog.show(fragmentManager, "ObjectionFormDialog")
                     }
                 }
             }
