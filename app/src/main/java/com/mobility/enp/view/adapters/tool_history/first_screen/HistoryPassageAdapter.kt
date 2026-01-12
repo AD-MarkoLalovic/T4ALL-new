@@ -90,19 +90,24 @@ class HistoryPassageAdapter(
 
                     val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
-                    val complaintFormDialog = ComplaintFormDialog({ complaintBody ->
+                    val dialog = ComplaintFormDialog.newInstance(
+                        relation.id
+                    ) { complaintBody ->
                         complaintInterface.sendComplaintData(complaintBody)
-                    }, relation.id)
+                    }
 
-                    complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
+                    dialog.show(fragmentManager, "ComplaintFormDialog")
+
                 } else if (countryCode.isNotEmpty() && countryCode != "RS") {
                     val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
-                    val complaintFormDialog = ComplaintFormDialogOld({ complaintBody ->
+                    val dialog = ComplaintFormDialogOld.newInstance(
+                        relation.id
+                    ) { complaintBody ->
                         complaintInterface.sendComplaintData(complaintBody)
-                    }, relation.id)
+                    }
 
-                    complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
+                    dialog.show(fragmentManager, "ComplaintFormDialogOld")
                 } else {
                     Toast.makeText(binding.root.context, "Country Code Issue", Toast.LENGTH_SHORT)
                         .show()
@@ -119,12 +124,15 @@ class HistoryPassageAdapter(
                             subtitle = binding.root.context.getString(R.string.limit_reclamation)
                         ).show(fragmentManager, "denyComplaint")
                     } else {
-                        val objectionDialog =
-                            ObjectionFormDialog({ objection ->
-                                complaintInterface.sendObjectionData(objection)
-                            }, relation.complaint.id)
-                        objectionDialog.show(fragmentManager, "ObjectionFormDialog")
+                        val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
+                        val dialog = ObjectionFormDialog.newInstance(
+                            relation.complaint.id
+                        ) { complaintBody ->
+                            complaintInterface.sendObjectionData(complaintBody)
+                        }
+
+                        dialog.show(fragmentManager, "ObjectionFormDialog")
                     }
                 }
             }

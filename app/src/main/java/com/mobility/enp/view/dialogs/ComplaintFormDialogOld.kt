@@ -17,12 +17,33 @@ import com.mobility.enp.databinding.DialogComplaintFormNewOldBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
 
-class ComplaintFormDialogOld(val onConfirmButton: (ComplaintBody) -> Unit, complaintId: Int) :
+class ComplaintFormDialogOld() :
     DialogFragment() {
 
     private lateinit var binding: DialogComplaintFormNewOldBinding
-    private val id: Int = complaintId
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
+
+    private val complaintId: Int by lazy {
+        requireArguments().getInt(ARG_COMPLAINT_ID)
+    }
+
+    private var onConfirmButton: ((ComplaintBody) -> Unit)? = null
+
+    companion object {
+        private const val ARG_COMPLAINT_ID = "complaint_id"
+        fun newInstance(
+            complaintId: Int,
+            onConfirm: (ComplaintBody) -> Unit
+        ): ComplaintFormDialogOld {
+            return ComplaintFormDialogOld().apply {
+                arguments = Bundle().apply {
+                    putInt(ARG_COMPLAINT_ID, complaintId)
+                }
+                onConfirmButton = onConfirm
+            }
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -100,14 +121,14 @@ class ComplaintFormDialogOld(val onConfirmButton: (ComplaintBody) -> Unit, compl
                 dialog?.dismiss()
 
                 val complaintBody = ComplaintBody(
-                    id,
+                    complaintId,
                     reasonForComplaint,
                     null,
                     licencePlate,
                     null, null, null
                 )
 
-                onConfirmButton(complaintBody)
+                onConfirmButton?.invoke(complaintBody)
             } else {
                 showError(getString(R.string.complaint_min_length))
             }
