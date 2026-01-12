@@ -101,11 +101,13 @@ class HistoryPassageAdapter(
                 } else if (countryCode.isNotEmpty() && countryCode != "RS") {
                     val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
-                    val complaintFormDialog = ComplaintFormDialogOld({ complaintBody ->
+                    val dialog = ComplaintFormDialogOld.newInstance(
+                        relation.id
+                    ) { complaintBody ->
                         complaintInterface.sendComplaintData(complaintBody)
-                    }, relation.id)
+                    }
 
-                    complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
+                    dialog.show(fragmentManager, "ComplaintFormDialogOld")
                 } else {
                     Toast.makeText(binding.root.context, "Country Code Issue", Toast.LENGTH_SHORT)
                         .show()
