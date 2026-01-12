@@ -31,14 +31,34 @@ import com.mobility.enp.view.ui_models.BankUIModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.PassageHistoryBanksVm
 
-class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complaintId: Int) :
+class ComplaintFormDialog() :
     DialogFragment() {
 
     private val viewModel: PassageHistoryBanksVm by viewModels { PassageHistoryBanksVm.Factory }
     private lateinit var binding: DialogComplaintFormBinding
-    private val id: Int = complaintId
     private lateinit var bankNames: MutableList<String>
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
+
+    private val complaintId: Int by lazy {
+        requireArguments().getInt(ARG_COMPLAINT_ID)
+    }
+
+    private var onConfirmButton: ((ComplaintBody) -> Unit)? = null
+
+    companion object{
+        private const val ARG_COMPLAINT_ID = "complaint_id"
+        fun newInstance(
+            complaintId: Int,
+            onConfirm: (ComplaintBody) -> Unit
+        ): ComplaintFormDialog {
+            return ComplaintFormDialog().apply {
+                arguments = Bundle().apply {
+                    putInt(ARG_COMPLAINT_ID, complaintId)
+                }
+                onConfirmButton = onConfirm
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -145,14 +165,14 @@ class ComplaintFormDialog(val onConfirmButton: (ComplaintBody) -> Unit, complain
         dialog?.dismiss()
 
         val complaintBody = ComplaintBody(
-            id,
+            complaintId,
             reasonForComplaint,
             selectedBankPosition,
             licencePlate,
             uniqueNumber, centerAccountNumber, rightAccountNumber
         )
 
-        onConfirmButton(complaintBody)
+        onConfirmButton?.invoke(complaintBody)
     }
 
 

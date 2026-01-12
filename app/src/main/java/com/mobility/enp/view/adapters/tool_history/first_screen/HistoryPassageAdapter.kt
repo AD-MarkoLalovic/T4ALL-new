@@ -90,11 +90,14 @@ class HistoryPassageAdapter(
 
                     val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
-                    val complaintFormDialog = ComplaintFormDialog({ complaintBody ->
+                    val dialog = ComplaintFormDialog.newInstance(
+                        relation.id
+                    ) { complaintBody ->
                         complaintInterface.sendComplaintData(complaintBody)
-                    }, relation.id)
+                    }
 
-                    complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
+                    dialog.show(fragmentManager, "ComplaintFormDialog")
+
                 } else if (countryCode.isNotEmpty() && countryCode != "RS") {
                     val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
