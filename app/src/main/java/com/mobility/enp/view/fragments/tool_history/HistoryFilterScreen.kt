@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -421,6 +422,47 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
 
     private fun updateIndexAdapter(indexData: IndexData) {
         binding.noData.visibility = View.GONE
+
+        val orientation = resources.configuration.orientation
+
+        when (orientation) {
+
+            Configuration.ORIENTATION_LANDSCAPE -> {
+
+                val heightInDp = when (indexData.data?.tags?.size ?: 200) {
+
+                    1 -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_one_items_toll
+                    )
+
+                    2 -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_two_items_toll
+                    )
+
+                    3 -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_three_items_toll
+                    )
+
+                    4 -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_four_items_toll
+                    )
+
+                    5 -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_five_items_toll
+                    )
+
+                    else -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_five_items_toll
+                    )
+                }
+
+                binding.cycler.layoutParams.height = heightInDp
+                binding.cycler.requestLayout()
+
+            }
+
+            else -> {}
+        }
 
         val adapter =
             HistoryTagsAdapter(this, franchiseViewModel, this, indexData, this, this)
