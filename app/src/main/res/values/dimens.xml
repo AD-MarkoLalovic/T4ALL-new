@@ -53,6 +53,12 @@
     <dimen name="recycler_view_three_items">450dp</dimen>
     <dimen name="recycler_view_more_items">500dp</dimen>
 
+    <!-- Dimension for recycler in FilterFragment of TollHistory -->
+    <dimen name="recycler_view_one_items_toll">50dp</dimen>
+    <dimen name="recycler_view_two_items_toll">100dp</dimen>
+    <dimen name="recycler_view_three_items_toll">150dp</dimen>
+    <dimen name="recycler_view_four_items_toll">200dp</dimen>
+    <dimen name="recycler_view_five_items_toll">250dp</dimen>
 
     <!-- Dimensions in sp -->
     <dimen name="dimens_4sp">4sp</dimen>
