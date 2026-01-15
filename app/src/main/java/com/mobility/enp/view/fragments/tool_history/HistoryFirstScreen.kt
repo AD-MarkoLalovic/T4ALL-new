@@ -133,10 +133,12 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 vModel.listOfCountriesMainScreen.collect { countriesList ->
                     if (countriesList.isNotEmpty()) {
                         setAvailableFilters(countriesList)
+                        statusFilterAdapter.performClick(vModel.availableCountryAdapterPosition.value)
                     }
                 }
             }
         }
+
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
             franchiseModel?.franchisePrimaryColor?.let {
@@ -292,6 +294,9 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
             }
 
             statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
+
+                vModel.setCountryAdapterPosition(statusFilterAdapter.getTabPosition())
+
                 val selectedCountry = when (selectedStatus) {
                     getString(R.string.croatia) -> {
                         getString(R.string.croatia_hr)
@@ -312,6 +317,8 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                     else -> ""
                 }
 
+                Log.d("Test123", "setAvailableFilters: ${statusFilterAdapter.getTabPosition()}")
+
                 vModel.selectedCountry = selectedCountry
 
                 historySerialAdapter.clearData()
@@ -323,6 +330,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 } else {
                     fetchStoredData()
                 }
+
             }
 
             binding.cyclerTagTypes.adapter = statusFilterAdapter
@@ -331,42 +339,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 statusFilterAdapter.setTabPosition(0)
             }
         }
-    }
-
-    private fun funSetRoomStatusFilter(countryList: List<String>) {
-        statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
-            val selectedCountry = when (selectedStatus) {
-                getString(R.string.croatia) -> {
-                    getString(R.string.croatia_hr)
-                }
-
-                getString(R.string.montenegro) -> {
-                    getString(R.string.montenegro_me)
-                }
-
-                getString(R.string.macedonia) -> {
-                    getString(R.string.northmacedonia_mk)
-                }
-
-                getString(R.string.serbia) -> {
-                    getString(R.string.serbia_rs)
-                }
-
-                else -> ""
-            }
-
-            vModel.selectedCountry = selectedCountry
-
-            historySerialAdapter.clearData()
-        }
-
-        binding.cyclerTagTypes.adapter = statusFilterAdapter
-
-        statusFilterAdapter.submitList(countryList.reversed()) {
-            statusFilterAdapter.setTabPosition(0)
-        }
-
-        fetchStoredData()
     }
 
     private fun fetchStoredData() {

@@ -96,11 +96,22 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         _indexDataMainScreen.value = indexData
     }
 
-    private val _listOfCountriesMain = MutableStateFlow<List<String>> (emptyList())
-    val listOfCountriesMainScreen : StateFlow<List<String>> get() =  _listOfCountriesMain
+    private val _listOfCountriesMain = MutableStateFlow<List<String>>(emptyList())
+    val listOfCountriesMainScreen: StateFlow<List<String>> get() = _listOfCountriesMain
 
-    fun setAvailableCountriesMain(countries : List<String>){
+    fun setAvailableCountriesMain(countries: List<String>) {
         this._listOfCountriesMain.value = countries
+    }
+
+    private val _availableCountryAdapterPosition = MutableStateFlow<Int>(0)
+    val availableCountryAdapterPosition : StateFlow<Int> get() =  _availableCountryAdapterPosition
+
+    fun setCountryAdapterPosition(pos: Int) {
+        _availableCountryAdapterPosition.value = pos
+    }
+
+    fun getCountryAdapterPosition(): Int {
+        return _availableCountryAdapterPosition.value
     }
 
     private val _baseTagDataState =
@@ -324,7 +335,8 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 if (tagsData == null || cardData == null) {
                     _baseTagDataStateResultScreen.value = SubmitResult.Empty
                 } else {
-                    _baseTagDataStateResultScreen.value = SubmitResult.Success(Pair(tagsData, cardData))
+                    _baseTagDataStateResultScreen.value =
+                        SubmitResult.Success(Pair(tagsData, cardData))
                 }
 
             } else {
