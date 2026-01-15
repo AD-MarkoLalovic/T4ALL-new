@@ -89,6 +89,14 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
+    private val _indexDataMainScreen = MutableStateFlow<IndexData?>(null)
+    val indexDataMainScreen: StateFlow<IndexData?> get() = _indexDataMainScreen
+
+    fun setIndexDataMainScreen(indexData: IndexData) {
+        _indexDataMainScreen.value = indexData
+    }
+
+
     private val _baseTagDataState =
         MutableStateFlow<SubmitResult<Pair<IndexData, CardWebModel?>>>(SubmitResult.Loading)
     val baseTagDataStateFirstScreen: StateFlow<SubmitResult<Pair<IndexData, CardWebModel?>>> get() = _baseTagDataState

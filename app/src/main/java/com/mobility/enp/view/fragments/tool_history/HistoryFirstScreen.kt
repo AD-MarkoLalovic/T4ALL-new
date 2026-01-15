@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
@@ -22,9 +24,9 @@ import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.MyTollCountriesFilterAdapter
-import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
 import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapter
 import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapterCroatia
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
@@ -96,7 +98,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
             indexData?.availableCountries?.let { countryList ->
                 if (countryList.isNotEmpty()) {
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         setAvailableFilters(countryList)
                     }
                 }
@@ -116,6 +118,15 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
     }
 
     private fun setObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vModel.indexDataMainScreen.collect { indexData ->
+                    indexData?.let {
+                        setIndexData(it)
+                    }
+                }
+            }
+        }
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
             franchiseModel?.franchisePrimaryColor?.let {
@@ -130,7 +141,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 }
 
                 is SubmitResult.Success -> {
-                    setIndexData(tagIndex.data)
+                    vModel.setIndexDataMainScreen(tagIndex.data)
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -187,7 +198,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                         setAvailableFilters(countryList)
                     }
 
-                    setIndexData(tagIndex.data.first) // sets serial tag data
+                    vModel.setIndexDataMainScreen(tagIndex.data.first)
                 }
 
                 is SubmitResult.FailureNoConnection -> {
