@@ -99,7 +99,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
             indexData?.availableCountries?.let { countryList ->
                 if (countryList.isNotEmpty()) {
                     withContext(Dispatchers.Main) {
-                        setAvailableFilters(countryList)
+                        vModel.setAvailableCountriesMain(countryList)
                     }
                 }
             }
@@ -123,6 +123,16 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 vModel.indexDataMainScreen.collect { indexData ->
                     indexData?.let {
                         setIndexData(it)
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vModel.listOfCountriesMainScreen.collect { countriesList ->
+                    if (countriesList.isNotEmpty()) {
+                        setAvailableFilters(countriesList)
                     }
                 }
             }
@@ -193,9 +203,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                             countryList.add(getString(R.string.serbia))
                         }
 
-                        vModel.listOfCountries = countryList
-
-                        setAvailableFilters(countryList)
+                        vModel.setAvailableCountriesMain(countryList)
                     }
 
                     vModel.setIndexDataMainScreen(tagIndex.data.first)
@@ -445,8 +453,8 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
         binding.progBar.visibility = View.GONE
 
-        if (vModel.listOfCountries.isNotEmpty()) {
-            indexData.availableCountries = (vModel.listOfCountries)
+        if (vModel.listOfCountriesMainScreen.value.isNotEmpty()) {
+            indexData.availableCountries = (vModel.listOfCountriesMainScreen.value)
         }
 
         CoroutineScope(Dispatchers.IO).launch {
