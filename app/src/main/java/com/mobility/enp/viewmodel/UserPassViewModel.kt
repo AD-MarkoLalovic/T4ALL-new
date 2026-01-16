@@ -104,7 +104,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     }
 
     private val _availableCountryAdapterPosition = MutableStateFlow<Int>(0)
-    val availableCountryAdapterPosition : StateFlow<Int> get() =  _availableCountryAdapterPosition
+    val availableCountryAdapterPosition: StateFlow<Int> get() = _availableCountryAdapterPosition
 
     fun setCountryAdapterPosition(pos: Int) {
         _availableCountryAdapterPosition.value = pos
@@ -112,6 +112,18 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     fun getCountryAdapterPosition(): Int {
         return _availableCountryAdapterPosition.value
+    }
+
+
+    private val _availableCountryAdapterPositionFilter = MutableStateFlow<Int>(0)
+    val availableCountryAdapterPositionFilter: StateFlow<Int> get() = _availableCountryAdapterPositionFilter
+
+    fun setCountryAdapterPositionFilter(pos: Int) {
+        _availableCountryAdapterPositionFilter.value = pos
+    }
+
+    fun getCountryAdapterPositionFilter(): Int {
+        return _availableCountryAdapterPositionFilter.value
     }
 
     private val _baseTagDataState =

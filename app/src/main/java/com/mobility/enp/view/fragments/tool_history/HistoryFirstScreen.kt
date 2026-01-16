@@ -317,8 +317,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                     else -> ""
                 }
 
-                Log.d("Test123", "setAvailableFilters: ${statusFilterAdapter.getTabPosition()}")
-
                 vModel.selectedCountry = selectedCountry
 
                 historySerialAdapter.clearData()

@@ -230,8 +230,16 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vModel.filterList.collect { countryList ->
-                    binding.progBar.visibility = View.GONE
-                    updateCountriesAdapter(countryList)
+                    if (countryList.isNotEmpty()) {
+
+                        binding.progBar.visibility = View.GONE
+
+                        updateCountriesAdapter(countryList)
+
+                        statusFilterAdapter.performClick(vModel.availableCountryAdapterPositionFilter.value)
+
+                        Log.d(TAG, "on click: ${vModel.availableCountryAdapterPositionFilter.value}")
+                    }
                 }
             }
         }
@@ -515,42 +523,15 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
         }
 
         vModel.setFilterList(countryList)
-
-        statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
-            val selectedCountry = when (selectedStatus) {
-                getString(R.string.croatia) -> {
-                    getString(R.string.croatia_hr)
-                }
-
-                getString(R.string.montenegro) -> {
-                    getString(R.string.montenegro_me)
-                }
-
-                getString(R.string.macedonia) -> {
-                    getString(R.string.northmacedonia_mk)
-                }
-
-                getString(R.string.serbia) -> {
-                    getString(R.string.serbia_rs)
-                }
-
-                else -> ""
-            }
-
-            Log.d(TAG, "selected country: $selectedCountry")
-
-            vModel.selectedCountry = selectedCountry
-        }
-
-        binding.cyclerTagTypes.adapter = statusFilterAdapter
-
-        statusFilterAdapter.submitList(countryList.reversed()) {
-            statusFilterAdapter.setTabPosition(-1)
-        }
     }
 
     private fun updateCountriesAdapter(countryList: List<String>) {
         statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
+
+            vModel.setCountryAdapterPositionFilter(statusFilterAdapter.getTabPosition())
+
+            Log.d(TAG, "on click: ${statusFilterAdapter.getTabPosition()}")
+
             val selectedCountry = when (selectedStatus) {
                 getString(R.string.croatia) -> {
                     getString(R.string.croatia_hr)
@@ -571,15 +552,13 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
                 else -> ""
             }
 
-            Log.d(TAG, "selected country: $selectedCountry")
-
             vModel.selectedCountry = selectedCountry
         }
 
         binding.cyclerTagTypes.adapter = statusFilterAdapter
 
         statusFilterAdapter.submitList(countryList.reversed()) {
-            statusFilterAdapter.setTabPosition(-1)
+            statusFilterAdapter.setTabPosition(0)
         }
     }
 
