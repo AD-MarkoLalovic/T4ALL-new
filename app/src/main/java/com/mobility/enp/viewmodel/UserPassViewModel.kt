@@ -66,6 +66,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
@@ -87,6 +88,64 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 )
             }
         }
+    }
+
+    private val _indexDataMainScreen = MutableStateFlow<IndexData?>(null)
+    val indexDataMainScreen: StateFlow<IndexData?> get() = _indexDataMainScreen
+
+    fun setIndexDataMainScreen(indexData: IndexData) {
+        _indexDataMainScreen.value = indexData
+    }
+
+    private val _listOfCountriesMain = MutableStateFlow<List<String>>(emptyList())
+    val listOfCountriesMainScreen: StateFlow<List<String>> get() = _listOfCountriesMain
+
+    fun setAvailableCountriesMain(countries: List<String>) {
+        this._listOfCountriesMain.value = countries
+    }
+
+    private val _availableCountryAdapterPosition = MutableStateFlow<Int>(0)
+    val availableCountryAdapterPosition: StateFlow<Int> get() = _availableCountryAdapterPosition
+
+    fun setCountryAdapterPosition(pos: Int) {
+        _availableCountryAdapterPosition.value = pos
+    }
+
+    fun getCountryAdapterPosition(): Int {
+        return _availableCountryAdapterPosition.value
+    }
+
+
+    private val _availableCountryAdapterPositionFilter = MutableStateFlow<Int>(-1)
+    val availableCountryAdapterPositionFilter: StateFlow<Int> get() = _availableCountryAdapterPositionFilter
+
+    fun setCountryAdapterPositionFilter(pos: Int) {
+        _availableCountryAdapterPositionFilter.value = pos
+    }
+
+    fun getCountryAdapterPositionFilter(): Int {
+        return _availableCountryAdapterPositionFilter.value
+    }
+
+    private val _selectedTags =
+        MutableStateFlow<Set<String>>(emptySet())
+
+    val selectedTagsAdapter: StateFlow<Set<String>> = _selectedTags.asStateFlow()
+
+    fun select(tag: Tag) {
+        tag.id?.let { id ->
+            _selectedTags.update { it + id }
+        }
+    }
+
+    fun unselect(tag: Tag) {
+        tag.id?.let { id ->
+            _selectedTags.update { it - id }
+        }
+    }
+
+    fun isSelected(tag: Tag): Boolean {
+        return tag.id?.let { _selectedTags.value.contains(it) } ?: false
     }
 
     private val _baseTagDataState =
@@ -310,7 +369,8 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 if (tagsData == null || cardData == null) {
                     _baseTagDataStateResultScreen.value = SubmitResult.Empty
                 } else {
-                    _baseTagDataStateResultScreen.value = SubmitResult.Success(Pair(tagsData, cardData))
+                    _baseTagDataStateResultScreen.value =
+                        SubmitResult.Success(Pair(tagsData, cardData))
                 }
 
             } else {
@@ -407,7 +467,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         viewModelScope.launch(Dispatchers.IO) {
 
             val resultTags = async {
-                repository.getTagBaseData(1, 5)
+                repository.getTagBaseData(1, 50)
             }
 
             val resultCards = async {
@@ -1269,7 +1329,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     var selectedTags: ArrayList<Tag> = ArrayList()
     var indexData: IndexData? = null
     var tagForExport: Tag? = null
-    var listOfCountries: List<String> = emptyList()
 
     suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
         repository.insertRoomTagBaseData(indexData)
