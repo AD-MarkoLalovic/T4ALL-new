@@ -23,7 +23,7 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.adapters.tool_history.MyTollCountriesFilterAdapter
+import com.mobility.enp.view.adapters.tool_history.MyTollCountriesFirstScreenAdapter
 import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapter
 import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapterCroatia
 import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
@@ -48,7 +48,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
 
-    private lateinit var statusFilterAdapter: MyTollCountriesFilterAdapter
+    private lateinit var statusFilterAdapter: MyTollCountriesFirstScreenAdapter
     private lateinit var historySerialAdapter: HistorySerialAdapter
     private var savedDataCheckJob: Job? = null
 
@@ -69,7 +69,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         vModel.nullData()
         vModel.setCsvState()
 
-
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
 
@@ -89,6 +88,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 ).show()
             }
         }
+
     }
 
     private fun runExistingFilterCheck() {
@@ -293,7 +293,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 else -> ""
             }
 
-            statusFilterAdapter = MyTollCountriesFilterAdapter { selectedStatus ->
+            statusFilterAdapter = MyTollCountriesFirstScreenAdapter { selectedStatus ->
 
                 vModel.setCountryAdapterPosition(statusFilterAdapter.getTabPosition())
 
@@ -379,9 +379,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
             } ?: run {
                 val navController = findNavController()
 
-                if (navController.currentDestination?.id ==
-                    R.id.noInternetConnectionDialog
-                ) {
+                if (navController.currentDestination?.id == R.id.noInternetConnectionDialog) {
                     return@launch
                 }
 
@@ -394,8 +392,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 }
 
                 navController.navigate(
-                    R.id.action_global_noInternetConnectionDialog,
-                    bundle
+                    R.id.action_global_noInternetConnectionDialog, bundle
                 )
 
                 val bindingMain = (activity as MainActivity).binding
@@ -434,8 +431,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         vModel.indexData =
             indexData  // filter fragment need some data from here saving here to reduce api calls
 
-        historySerialAdapter =
-            HistorySerialAdapter(indexData, vModel, this, this, this, this, this)
+        historySerialAdapter = HistorySerialAdapter(indexData, vModel, this, this, this, this, this)
 
         binding.cycler.adapter = historySerialAdapter
         binding.cycler.layoutManager = LinearLayoutManager(requireContext())
@@ -445,23 +441,19 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
     private fun showNoInternetDialog() {
         val navController = findNavController()
 
-        if (navController.currentDestination?.id ==
-            R.id.noInternetConnectionDialog
-        ) {
+        if (navController.currentDestination?.id == R.id.noInternetConnectionDialog) {
             return
         }
 
         val bundle = Bundle().apply {
             putString(getString(R.string.title), getString(R.string.no_connection_title))
             putString(
-                getString(R.string.subtitle),
-                getString(R.string.please_connect_to_the_internet)
+                getString(R.string.subtitle), getString(R.string.please_connect_to_the_internet)
             )
         }
 
         navController.navigate(
-            R.id.action_global_noInternetConnectionDialog,
-            bundle
+            R.id.action_global_noInternetConnectionDialog, bundle
         )
     }
 

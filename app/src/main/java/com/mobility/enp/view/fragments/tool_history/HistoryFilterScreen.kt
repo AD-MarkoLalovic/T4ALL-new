@@ -529,8 +529,6 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
 
             vModel.setCountryAdapterPositionFilter(statusFilterAdapter.getTabPosition())
 
-            Log.d(TAG, "on click: ${statusFilterAdapter.getTabPosition()}")
-
             val selectedCountry = when (selectedStatus) {
                 getString(R.string.croatia) -> {
                     getString(R.string.croatia_hr)
