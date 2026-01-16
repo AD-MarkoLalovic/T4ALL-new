@@ -319,7 +319,9 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                 vModel.selectedCountry = selectedCountry
 
-                historySerialAdapter.clearData()
+                if (::historySerialAdapter.isInitialized) {
+                    historySerialAdapter.clearData()
+                }
 
                 binding.progBar.visibility = View.VISIBLE
 
