@@ -16,6 +16,7 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapter
 import com.mobility.enp.viewmodel.FranchiseViewModel
+import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class HistoryTagsAdapter(
@@ -25,6 +26,7 @@ class HistoryTagsAdapter(
     toolHistoryIndex: IndexData,
     private val complaintInterface: SendToFragment,
     val lifecycleOwner: LifecycleOwner,
+    private val userPassViewModel: UserPassViewModel
 ) :
     RecyclerView.Adapter<HistoryTagsAdapter.ToolHistoryTagsViewHolder>() {
 
@@ -40,6 +42,14 @@ class HistoryTagsAdapter(
 
         fun bind(tag: Tag) {
 
+            val selected = userPassViewModel.isSelected(tag)
+            binding.checkbox.isChecked = selected
+
+            if (selected) {
+                userPassViewModel.selectedTags.add(tag)
+                setCheckboxColors()
+            }
+
             if (tag.registrationPlate.isNullOrEmpty()) { // ignore recommendation android studio is wrong here
                 tag.registrationPlate = tag.serialNumber
                 binding.serialNumber.visibility = View.INVISIBLE
@@ -51,12 +61,13 @@ class HistoryTagsAdapter(
 
             binding.checkbox.setOnClickListener {
                 if (binding.checkbox.isChecked) {
-                    setCheckboxColors()
-                    tagSendInt.onSendTag(tag)
+                    userPassViewModel.select(tag)
+                    userPassViewModel.selectedTags.add(tag)
                 } else {
-                    setCheckboxColors()
-                    tagSendInt.onTagRemove(tag)
+                    userPassViewModel.unselect(tag)
+                    userPassViewModel.selectedTags.remove(tag)
                 }
+                setCheckboxColors()
             }
 
             if (binding.regPlate.text == binding.serialNumber.text) {

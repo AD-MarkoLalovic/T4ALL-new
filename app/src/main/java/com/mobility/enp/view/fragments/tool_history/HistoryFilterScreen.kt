@@ -77,6 +77,7 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
                 }
             }
         }
+
     private lateinit var userPerm: UserPermission
 
     companion object {
@@ -237,8 +238,6 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
                         updateCountriesAdapter(countryList)
 
                         statusFilterAdapter.performClick(vModel.availableCountryAdapterPositionFilter.value)
-
-                        Log.d(TAG, "on click: ${vModel.availableCountryAdapterPositionFilter.value}")
                     }
                 }
             }
@@ -473,7 +472,7 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
         }
 
         val adapter =
-            HistoryTagsAdapter(this, franchiseViewModel, this, indexData, this, this)
+            HistoryTagsAdapter(this, franchiseViewModel, this, indexData, this, this, vModel)
 
         binding.cycler.adapter = adapter
         binding.cycler.layoutManager = LinearLayoutManager(context)
@@ -558,7 +557,7 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
         binding.cyclerTagTypes.adapter = statusFilterAdapter
 
         statusFilterAdapter.submitList(countryList.reversed()) {
-            statusFilterAdapter.setTabPosition(0)
+            statusFilterAdapter.setTabPosition(-1)  // set initially to negative to force country selection
         }
     }
 
