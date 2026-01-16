@@ -18,7 +18,7 @@
     <string name="hint_email">Email</string>
     <string name="hint_password">Lozinka</string>
     <string name="button_confirm">Potvrdi</string>
-    <string name="button_sing_up">Prijava</string>
+    <string name="button_sing_up">Prijavi se</string>
     <string name="button_skip_page">Preskoči</string>
     <string name="back_to_login_page">Nazad na stranicu za prijavu</string>
     <string name="all_rights_reserved">© 2023. Open Balkan ENP. Sva prava zadržana</string>

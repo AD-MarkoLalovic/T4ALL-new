@@ -32,7 +32,7 @@
     <string name="hint_password" translatable="true">Лозинка</string>
     <string name="button_confirm" translatable="true">Потврди</string>
     <string name="button_close" translatable="true">Затвори</string>
-    <string name="button_sing_up" translatable="true">Пријавите се</string>
+    <string name="button_sing_up" translatable="true">Пријави се</string>
     <string name="button_skip_page" translatable="true">Прескочите</string>
     <string name="back_to_login_page" translatable="true">Назад на страну за пријаву.</string>
     <string name="all_rights_reserved" translatable="true">© 2023. Отворени Балкан ЕНП. Сва права задржана</string>
