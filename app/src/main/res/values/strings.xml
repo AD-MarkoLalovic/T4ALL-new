@@ -437,7 +437,7 @@
     <string name="socialNetworksTitle" translatable="false">TOLL4ALL</string>
     <string name="facebook" translatable="false">Facebook</string>
     <string name="instagram" translatable="false">Instagram</string>
-    <string name="jp_putevi_srbije">ЈП Путеви Србије</string>
+    <string name="jp_putevi_srbije">Путеви Србије д.о.о.</string>
     <string name="no_invoices">Нема рачуна за изабрану земљу</string>
     <string name="confirm_serial_number">Потврдите серијски број</string>
     <string name="permission_denied_message">Дозвола је одбијена</string>
