@@ -127,6 +127,7 @@
                         android:focusable="true"
                         android:focusableInTouchMode="true"
                         android:hint="@string/hint_enter_email"
+                        android:imeOptions="actionNext|flagNoExtractUi"
                         android:inputType="textEmailAddress"
                         android:textColor="@color/figmaSplashScreenColor" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -155,9 +156,9 @@
                     app:boxStrokeColor="@color/figmaSplashScreenColor"
                     app:boxStrokeWidth="@dimen/dimens_0dp"
                     app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                    app:endIconDrawable="@drawable/ic_eye_invisible"
                     app:endIconMode="custom"
                     app:hintEnabled="false"
-                    app:endIconDrawable="@drawable/ic_eye_invisible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txPasswordHint">
@@ -169,8 +170,9 @@
                         android:layout_height="wrap_content"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
-                        android:inputType="textPassword"
                         android:hint="@string/enter_your_password"
+                        android:imeOptions="actionGo|flagNoExtractUi"
+                        android:inputType="textPassword"
                         android:textColor="@color/figmaSplashScreenColor" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -277,10 +279,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans_bold"
+                    android:gravity="center_horizontal"
                     android:text="@string/terms_and_conditions"
                     android:textColor="@color/figmaIntroEclipseColorInactive"
                     android:textSize="@dimen/dimens_12sp"
-                    android:gravity="center_horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/centerHorizontal"
                     app:layout_constraintTop_toTopOf="@id/customerSupport" />

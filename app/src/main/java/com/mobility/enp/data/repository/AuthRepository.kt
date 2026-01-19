@@ -38,21 +38,13 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
         database.lastUserDao().upsertLastUser(LastUser(email))
     }
 
-    suspend fun getStoredUser(): UserLoginResponseRoomTable? {
-        return withContext(Dispatchers.IO) {
-            database.loginDao().fetchAllowedUsers()
-        }
-    }
-
     suspend fun writeFcmToken(token: String) {
         database.fcmToken().deleteTable()
         database.fcmToken().insertData(FcmToken(token))
     }
 
-    suspend fun getLanguageKey(): String {
-        return withContext(Dispatchers.IO) {
-            getLangKey()
-        }
+    fun getLanguageKey(): String {
+        return getLangKey()
     }
 
     fun netStateAvailable(): Boolean {
