@@ -3,6 +3,7 @@ package com.mobility.enp.util
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.view.View
 import androidx.core.content.ContextCompat
 import com.mobility.enp.R
 import com.mobility.enp.data.model.franchise.FranchiseModel
@@ -35,6 +36,19 @@ object Util {
         return email.matches(emailPattern.toRegex())
     }
 
+    fun View.animateClickLoginScreen(onEnd: View.() -> Unit) {
+        animate()
+            .scaleX(0.9f)
+            .scaleY(0.9f)
+            .setDuration(100)
+            .withEndAction {
+                animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(100)
+                    .withEndAction { onEnd() }
+            }
+    }
 
     fun franchiseID(portalKey: String, context: Context): FranchiseModel? {
         //#franchise grey color

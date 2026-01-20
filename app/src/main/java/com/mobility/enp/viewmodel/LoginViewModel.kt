@@ -1,8 +1,6 @@
 package com.mobility.enp.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -15,14 +13,12 @@ import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
 import com.mobility.enp.data.repository.AuthRepository
-import com.mobility.enp.data.room.LastUser
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
 import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TOKEN
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -31,20 +27,17 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
 
     private val _fcmResponse =
         MutableStateFlow<SubmitResult<HomePageFcmTokenResponse>>(SubmitResult.Empty)
-    val fcmToken: StateFlow<SubmitResult<HomePageFcmTokenResponse>> get() = _fcmResponse
+    val fcmToken = _fcmResponse.asStateFlow()
 
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
-    val loginState: StateFlow<LoginState> get() = _loginState.asStateFlow()
+    val loginState = _loginState.asStateFlow()
 
-    private val _lastUserEmail: MutableLiveData<LastUser> = MutableLiveData()
-    val lastUserEmail: LiveData<LastUser> get() = _lastUserEmail
+    private val _lastUserEmail = MutableStateFlow<String?>(null)
+    val lastUserEmail = _lastUserEmail.asStateFlow()
 
-    fun getLastUser() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val lastUser = repository.getLastUser()
-            lastUser?.let {
-                _lastUserEmail.postValue(it)
-            }
+    fun loadLastUser() {
+        viewModelScope.launch {
+            _lastUserEmail.value = repository.getLastUser()?.email
         }
     }
 
@@ -136,17 +129,13 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
         }
     }
 
-    suspend fun getUserToken(): UserLoginResponseRoomTable? {
-        return repository.getStoredUser()
-    }
-
     fun writeFcmToken(token: String) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.writeFcmToken(token)
         }
     }
 
-    suspend fun getLanguageKey(): String {
+    fun getLanguageKey(): String {
         val lang = repository.getLanguageKey()
         return "RS/$lang"
     }

@@ -3,13 +3,14 @@ package com.mobility.enp.util
 import android.content.res.Resources
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.IdRes
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavController
 import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -36,8 +37,18 @@ fun Fragment.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(requireContext(), message, duration).show()
 }
 
-fun NavController.safeNavigation(direction: NavDirections) {
-    currentDestination?.getAction(direction.actionId)?.let {
-        navigate(direction)
+fun Fragment.safeNavigate(directions: NavDirections, @IdRes fromDestinationId: Int) {
+
+    if (!lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) return
+
+    val navController = findNavController()
+
+    if (navController.currentDestination?.id != fromDestinationId) return
+
+    val actionExists = navController.currentDestination?.getAction(directions.actionId)
+        ?: navController.graph.getAction(directions.actionId)
+
+    if (actionExists != null) {
+        navController.navigate(directions)
     }
 }

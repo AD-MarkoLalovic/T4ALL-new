@@ -130,6 +130,7 @@
                         android:focusable="true"
                         android:focusableInTouchMode="true"
                         android:hint="@string/hint_enter_email"
+                        android:imeOptions="actionNext|flagNoExtractUi"
                         android:inputType="textEmailAddress"
                         android:textColor="@color/figmaSplashScreenColor" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -171,6 +172,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/enter_your_password"
+                        android:imeOptions="actionGo|flagNoExtractUi"
                         android:inputType="textPassword"
                         android:textColor="@color/figmaSplashScreenColor" />
                 </com.google.android.material.textfield.TextInputLayout>
