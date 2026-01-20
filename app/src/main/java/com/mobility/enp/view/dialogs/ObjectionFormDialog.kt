@@ -30,14 +30,33 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objection: Int) :
+class ObjectionFormDialog() :
     DialogFragment() {
 
     private var _binding: DialogObjectionFormBinding? = null
     private val binding: DialogObjectionFormBinding get() = _binding!!
-
-    private val id: Int = objection
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
+
+    private val complaintId: Int by lazy {
+        requireArguments().getInt(ARG_COMPLAINT_ID)
+    }
+
+    private var onConfirmButton: ((ObjectionBody) -> Unit)? = null
+
+    companion object {
+        private const val ARG_COMPLAINT_ID = "complaint_id"
+        fun newInstance(
+            complaintId: Int,
+            onConfirm: (ObjectionBody) -> Unit
+        ): ObjectionFormDialog {
+            return ObjectionFormDialog().apply {
+                arguments = Bundle().apply {
+                    putInt(ARG_COMPLAINT_ID, complaintId)
+                }
+                onConfirmButton = onConfirm
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,7 +75,7 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
     }
 
     private fun setupUI() {
-        binding.subjectNumberVal.setText(String.format(Locale.getDefault(), "%d", id))
+        binding.subjectNumberVal.setText(String.format(Locale.getDefault(), "%d", complaintId))
         binding.checkbox1.buttonTintList =
             ColorStateList.valueOf(
                 ContextCompat.getColor(
@@ -216,13 +235,13 @@ class ObjectionFormDialog(private val objBody: (ObjectionBody) -> Unit, objectio
         ) {
             val options = buildOptions()
             val objection = ObjectionBody(
-                id,
+                complaintId,
                 binding.subjectNumberVal.text.toString().toBigInteger(),
                 binding.complaintId.text.toString(),
                 options,
                 binding.reasonForComplaintVal.text.toString().trim()
             )
-            objBody(objection)
+            onConfirmButton?.invoke(objection)
             dialog?.dismiss()
         } else {
             showToast(getString(R.string.please_fill_all_required_data))

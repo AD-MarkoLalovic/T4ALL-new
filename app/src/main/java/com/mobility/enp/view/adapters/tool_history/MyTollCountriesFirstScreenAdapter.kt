@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.databinding.ItemTagStatusBinding
 
-class MyTollCountriesFilterAdapter(
+class MyTollCountriesFirstScreenAdapter(
     private var onSelected: (String) -> Unit
 ) :
-    ListAdapter<String, MyTollCountriesFilterAdapter.StatusTagViewHolder>(DIFF_CALLBACK) {
+    ListAdapter<String, MyTollCountriesFirstScreenAdapter.StatusTagViewHolder>(DIFF_CALLBACK) {
     private var selectedStatus = 0
     private var isEnabled: Boolean = true
 
