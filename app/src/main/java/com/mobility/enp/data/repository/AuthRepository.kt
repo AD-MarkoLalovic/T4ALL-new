@@ -47,10 +47,6 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
         return getLangKey()
     }
 
-    fun netStateAvailable(): Boolean {
-        return isNetworkAvailable()
-    }
-
     suspend fun insertLoginToken(userLoginResponseRoomTable: UserLoginResponseRoomTable) {
         database.loginDao().deleteAll()
         database.loginDao().insert(userLoginResponseRoomTable)
@@ -121,17 +117,18 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
 
     suspend fun postForgotPassword(
         email: ForgotPasswordRequest,
-    ): Result<Boolean> {
+    ): Result<Unit> {
         if (!isNetworkAvailable()) {
             return Result.failure(NetworkError.NoConnection)
         }
 
         return try {
-            val response = apiService("").forgotPassword(email)
+            val lang = getLangKey()
+            val response = apiService("").forgotPassword(lang, email)
 
             if (response.isSuccessful) {
                 response.body()?.let { _ ->
-                    Result.success(true)
+                    Result.success(Unit)
                 } ?: Result.failure(NetworkError.ServerError)
             } else {
                 response.errorBody()?.let { errorBody ->
@@ -140,6 +137,7 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
                 } ?: Result.failure(NetworkError.ServerError)
             }
         } catch (e: Exception) {
+            Log.e("PostForgotPassword", "unexpected error: ${e.message}", e)
             Result.failure(NetworkError.ServerError)
         }
     }

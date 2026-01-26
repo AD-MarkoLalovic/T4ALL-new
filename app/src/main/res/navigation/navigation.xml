@@ -394,8 +394,14 @@
         android:label="ForgotPassDialog"
         tools:layout="@layout/dialog_forgot_pass">
         <argument
-            android:name="bool"
-            app:argType="boolean" />
+            android:name="sentSuccessfully"
+            app:argType="boolean"
+            android:defaultValue="false"/>
+        <argument
+            android:name="message"
+            app:argType="string"
+            app:nullable="true"/>
+
         <action
             android:id="@+id/action_forgotPassDialog_to_loginFragment"
             app:destination="@id/loginFragment"
