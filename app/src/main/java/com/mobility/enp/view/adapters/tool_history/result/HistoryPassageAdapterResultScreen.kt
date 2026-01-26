@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.main_and_filter_screen
+package com.mobility.enp.view.adapters.tool_history.result
 
 import android.content.Context
 import android.content.res.Configuration
@@ -27,7 +27,7 @@ import com.mobility.enp.view.dialogs.ObjectionFormDialog
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class ToolHistoryListingPassageAdapter(
+class HistoryPassageAdapterResultScreen(
     private val data: V2HistoryTagResponse,
     private val complaintInterface: SendToFragment,
     private val hideComplaintButton: Boolean,
@@ -35,7 +35,7 @@ class ToolHistoryListingPassageAdapter(
     private val tagSerialNumber: String,
     private val countryCode: String, private val viewmodel: UserPassViewModel
 ) :
-    RecyclerView.Adapter<ToolHistoryListingPassageAdapter.RelationViewHolder>() {
+    RecyclerView.Adapter<HistoryPassageAdapterResultScreen.RelationViewHolder>() {
 
     private lateinit var context: Context
 
@@ -90,19 +90,25 @@ class ToolHistoryListingPassageAdapter(
 
                     val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
-                    val complaintFormDialog = ComplaintFormDialog({ complaintBody ->
+                    val dialog = ComplaintFormDialog.newInstance(
+                        relation.id
+                    ) { complaintBody ->
                         complaintInterface.sendComplaintData(complaintBody)
-                    }, relation.id)
+                    }
 
-                    complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
+                    dialog.show(fragmentManager, "ComplaintFormDialog")
+
                 } else if (countryCode.isNotEmpty() && countryCode != "RS") {
                     val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
-                    val complaintFormDialog = ComplaintFormDialogOld({ complaintBody ->
+                    val dialog = ComplaintFormDialogOld.newInstance(
+                        relation.id
+                    ) { complaintBody ->
                         complaintInterface.sendComplaintData(complaintBody)
-                    }, relation.id)
+                    }
 
-                    complaintFormDialog.show(fragmentManager, "ComplaintFormDialog")
+                    dialog.show(fragmentManager, "ComplaintFormDialogOld")
+
                 } else {
                     Toast.makeText(binding.root.context, "Country Code Issue", Toast.LENGTH_SHORT)
                         .show()
@@ -119,12 +125,16 @@ class ToolHistoryListingPassageAdapter(
                             subtitle = binding.root.context.getString(R.string.limit_reclamation)
                         ).show(fragmentManager, "denyComplaint")
                     } else {
-                        val objectionDialog =
-                            ObjectionFormDialog({ objection ->
-                                complaintInterface.sendObjectionData(objection)
-                            }, relation.complaint.id)
-                        objectionDialog.show(fragmentManager, "ObjectionFormDialog")
 
+                        val fragmentManager = (context as AppCompatActivity).supportFragmentManager
+
+                        val dialog = ObjectionFormDialog.newInstance(
+                            relation.complaint.id
+                        ) { complaintBody ->
+                            complaintInterface.sendObjectionData(complaintBody)
+                        }
+
+                        dialog.show(fragmentManager, "ObjectionFormDialog")
                     }
                 }
             }

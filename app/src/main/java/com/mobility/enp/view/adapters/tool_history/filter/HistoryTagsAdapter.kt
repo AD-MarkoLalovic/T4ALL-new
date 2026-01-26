@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.select
+package com.mobility.enp.view.adapters.tool_history.filter
 
 import android.content.res.ColorStateList
 import android.util.Log
@@ -14,19 +14,21 @@ import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.ToolHistoryTagsAdapterBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
-import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingPassageAdapter
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapter
 import com.mobility.enp.viewmodel.FranchiseViewModel
+import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class ToolHistoryTagsAdapter(
+class HistoryTagsAdapter(
     tagInterface: TagSend,
     private val franchiseModel: FranchiseViewModel,
     private val paginationUpdate: PaginationUpdate,
     toolHistoryIndex: IndexData,
     private val complaintInterface: SendToFragment,
     val lifecycleOwner: LifecycleOwner,
+    private val userPassViewModel: UserPassViewModel
 ) :
-    RecyclerView.Adapter<ToolHistoryTagsAdapter.ToolHistoryTagsViewHolder>() {
+    RecyclerView.Adapter<HistoryTagsAdapter.ToolHistoryTagsViewHolder>() {
 
     val tagSendInt = tagInterface
     private val listOfTags: ArrayList<Tag> = toolHistoryIndex.data?.tags as ArrayList<Tag>
@@ -40,6 +42,14 @@ class ToolHistoryTagsAdapter(
 
         fun bind(tag: Tag) {
 
+            val selected = userPassViewModel.isSelected(tag)
+            binding.checkbox.isChecked = selected
+
+            if (selected) {
+                userPassViewModel.selectedTags.add(tag)
+                setCheckboxColors()
+            }
+
             if (tag.registrationPlate.isNullOrEmpty()) { // ignore recommendation android studio is wrong here
                 tag.registrationPlate = tag.serialNumber
                 binding.serialNumber.visibility = View.INVISIBLE
@@ -51,12 +61,13 @@ class ToolHistoryTagsAdapter(
 
             binding.checkbox.setOnClickListener {
                 if (binding.checkbox.isChecked) {
-                    setCheckboxColors()
-                    tagSendInt.onSendTag(tag)
+                    userPassViewModel.select(tag)
+                    userPassViewModel.selectedTags.add(tag)
                 } else {
-                    setCheckboxColors()
-                    tagSendInt.onTagRemove(tag)
+                    userPassViewModel.unselect(tag)
+                    userPassViewModel.selectedTags.remove(tag)
                 }
+                setCheckboxColors()
             }
 
             if (binding.regPlate.text == binding.serialNumber.text) {
@@ -164,7 +175,7 @@ class ToolHistoryTagsAdapter(
             paginationUpdate.sendDataFillFilterAdapter(currentPage + 1, perPage, indexListing)
         } else if (lastPage == currentPage && listOfTags[listOfTags.size - 1] == currentItem) {
             Log.d(
-                ToolHistoryListingPassageAdapter.Companion.TAG,
+                HistoryPassageAdapter.Companion.TAG,
                 "last item $currentItem total $total"
             )
         }

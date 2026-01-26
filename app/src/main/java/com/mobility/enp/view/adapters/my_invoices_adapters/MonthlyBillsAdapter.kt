@@ -19,7 +19,7 @@ import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.databinding.ItemBillBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
-import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -359,7 +359,7 @@ class MonthlyBillsAdapter(
     }
 
     private fun logError(string: String) {
-        Log.d(ToolHistoryListingAdapter.TAG, "showError: $string")
+        Log.d(HistorySerialAdapter.TAG, "showError: $string")
     }
 
     override fun getItemCount() = monthlyBillsArray.size

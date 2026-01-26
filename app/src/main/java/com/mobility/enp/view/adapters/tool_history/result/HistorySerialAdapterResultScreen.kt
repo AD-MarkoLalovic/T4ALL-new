@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.main_and_filter_screen
+package com.mobility.enp.view.adapters.tool_history.result
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,17 +16,20 @@ import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagRes
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapter
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapterCroatia
+import com.mobility.enp.view.adapters.tool_history.combined.HistoryTotalCostAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class ToolHistoryListingAdapter(
+class HistorySerialAdapterResultScreen(
     private var toolHistoryIndex: IndexData,
     private val viewModel: UserPassViewModel,
-    private val complaintInterface: ToolHistoryListingPassageAdapter.SendToFragment,
-    private val complaintInterfaceCroatia: ToolHistoryListingPassageAdapterCroatia.SendToFragment,
+    private val complaintInterface: HistoryPassageAdapterResultScreen.SendToFragment,
+    private val complaintInterfaceCroatia: HistoryPassageAdapterCroatiaResultScreen.SendToFragment,
     val lifecycleOwner: LifecycleOwner,
     val passageData: SavePassageData, val paginationUpdate: PaginationUpdate
-) : RecyclerView.Adapter<ToolHistoryListingAdapter.TagsViewHolder>() {
+) : RecyclerView.Adapter<HistorySerialAdapterResultScreen.TagsViewHolder>() {
 
     var currentPage: Int = toolHistoryIndex.data?.currentPage ?: 0
     var lastPage: Int = toolHistoryIndex.data?.lastPage ?: 0
@@ -36,7 +39,7 @@ class ToolHistoryListingAdapter(
     val listOfTags: ArrayList<Tag> = toolHistoryIndex.data?.tags as ArrayList<Tag>
 
     fun clearData(){
-        toolHistoryIndex = IndexData(0,null,"",null)
+        toolHistoryIndex = IndexData(0, null, "", null)
         lastPage = 0
         perPage = 0
         total = 0
@@ -88,7 +91,7 @@ class ToolHistoryListingAdapter(
                              * @param takes in a List<SumTag> of costs
                              */
                             binding.cyclerTotalPrice.adapter =
-                                TotalCostPassageAdapter(toolHistoryListing.data.sumTags)
+                                HistoryTotalCostAdapter(toolHistoryListing.data.sumTags)
                             binding.cyclerTotalPrice.layoutManager =
                                 LinearLayoutManager(
                                     binding.root.context,
@@ -133,7 +136,7 @@ class ToolHistoryListingAdapter(
 
                         // croatia passage adapter
                         if (viewModel.selectedCountry == binding.root.context.getString(R.string.croatia_hr)) {
-                            binding.cycler.adapter = ToolHistoryListingPassageAdapterCroatia(
+                            binding.cycler.adapter = HistoryPassageAdapterCroatiaResultScreen(
                                 toolHistoryListing,
                                 complaintInterfaceCroatia,
                                 lifecycleOwner,
@@ -142,7 +145,7 @@ class ToolHistoryListingAdapter(
                         } else {
                             //record of passages for tag for normal countries
                             //adapter that presents the passages
-                            binding.cycler.adapter = ToolHistoryListingPassageAdapter(
+                            binding.cycler.adapter = HistoryPassageAdapterResultScreen(
                                 toolHistoryListing,
                                 complaintInterface,
                                 false,
@@ -197,7 +200,7 @@ class ToolHistoryListingAdapter(
             if (viewModel.internetAvailable()) {
                 viewModel.getToolHistoryTransit(indexListing, toolHistoryIndex.serialNumber, 1)
             } else {
-                viewModel.fetchStoredData(contentInterface, toolHistoryIndex.serialNumber)
+                viewModel.fetchStoredDataResultScreen(contentInterface, toolHistoryIndex.serialNumber)
             }
 
             binding.executePendingBindings()
@@ -293,7 +296,7 @@ class ToolHistoryListingAdapter(
             paginationUpdate.sendDataFillMainAdapter(currentPage + 1, perPage, indexListing)
         } else if (lastPage == currentPage && listOfTags[listOfTags.size - 1] == currentItem) {
             Log.d(
-                ToolHistoryListingPassageAdapter.Companion.TAG,
+                HistoryPassageAdapter.Companion.TAG,
                 "last item $currentItem total $total"
             )
         }

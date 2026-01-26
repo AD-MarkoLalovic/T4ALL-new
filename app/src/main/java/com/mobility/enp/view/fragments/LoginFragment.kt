@@ -3,16 +3,16 @@ package com.mobility.enp.view.fragments
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.messaging.FirebaseMessaging
@@ -23,14 +23,15 @@ import com.mobility.enp.databinding.FragmentLoginBinding
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.Util.animateClickLoginScreen
 import com.mobility.enp.util.collectLatestLifecycleFlow
+import com.mobility.enp.util.safeNavigate
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.view.dialogs.LanguageDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.LoginState
 import com.mobility.enp.viewmodel.LoginViewModel
-import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
@@ -38,126 +39,139 @@ class LoginFragment : Fragment() {
     private val binding: FragmentLoginBinding get() = _binding!!
 
     private val loginViewModel: LoginViewModel by viewModels { LoginViewModel.Factory }
-    private val franchiseViewModel: FranchiseViewModel by activityViewModels() { FranchiseViewModel.Factory }
-
-    private lateinit var userName: String
-    private lateinit var userPassword: String
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
-
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setFcmToken()
-
-        binding.lifecycleOwner = viewLifecycleOwner
-
         setObservers()
 
         passwordVisibility()
+        setupDebugCredentials()
 
+        setupLogin()
+        setupNavigationClicks()
+        setupLanguagePicker()
+        setupImeActions()
+
+        setFcmToken()
+    }
+
+    private fun setupImeActions() {
+        binding.editPassword.setOnEditorActionListener { _, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN)
+            ) {
+                binding.buttonLogin.performClick()
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    private fun setupLanguagePicker() {
+        binding.languagePicker.setOnClickListener {
+            LanguageDialog { languageSelected, canSwitchLanguage ->
+                if (canSwitchLanguage) {
+                    SharedPreferencesHelper.setLanguageChanged(requireContext(), true)
+                    SharedPreferencesHelper.setUserLanguage(requireContext(), languageSelected)
+                    activity?.recreate()
+                } else {
+                    Toast.makeText(requireContext(), "Language not available", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }.show(parentFragmentManager, "languageDialog")
+        }
+    }
+
+    private fun setupLogin() {
+        binding.buttonLogin.setOnClickListener {
+            val userName = binding.editEmail.text.toString()
+            val userPassword = binding.editPassword.text.toString()
+
+            if (userName.isNotEmpty() && userPassword.isNotEmpty()) {
+                loginViewModel.loginUser(LoginBody(userName, userPassword))
+            } else {
+                showEmptyCredentialsError()
+            }
+        }
+    }
+
+    private fun showEmptyCredentialsError() {
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.enter_email_password),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun setupDebugCredentials() {
         if (BuildConfig.DEBUG) {
             binding.editEmail.setText(BuildConfig.TEST_USERNAME)
             binding.editPassword.setText(BuildConfig.TEST_PASSWORD)
         } else {
-            loginViewModel.getLastUser()
+            loginViewModel.loadLastUser()
         }
+    }
 
-        binding.buttonLogin.setOnClickListener {
+    private fun openCustomerSupport(view: View) {
+        view.isEnabled = false
 
-            userName = binding.editEmail.text.toString()
-            userPassword = binding.editPassword.text.toString()
+        val action =
+            LoginFragmentDirections.actionLoginFragmentToLoginContactFormDialog()
 
-            if (userName.isNotEmpty() && userPassword.isNotEmpty()) {
-
-                val body = LoginBody(userName, userPassword)
-                loginViewModel.loginUser(body)
-
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.enter_email_password),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        view.animateClickLoginScreen {
+            safeNavigate(action, R.id.loginFragment)
+            post { isEnabled = true }
         }
+    }
 
-        binding.loginForgetPassword.setOnClickListener {
-            it.animate()
-                .scaleX(0.9f)
-                .scaleY(0.9f)
-                .setDuration(100)
-                .withEndAction {
-                    it.animate()
-                        .scaleX(1f)
-                        .scaleY(1f)
-                        .setDuration(100)
+    private fun openTermsAndPrivacy(view: View) {
+        view.isEnabled = false
 
-                    val action =
-                        LoginFragmentDirections.actionLoginFragmentToForgotPasswordFragment()
-                    findNavController().navigate(action)
-                }
+        val arg = loginViewModel.getLanguageKey()
+        val action =
+            LoginFragmentDirections.actionLoginFragmentToTermsAndPrivacyFragment(arg)
+
+        view.animateClickLoginScreen {
+            safeNavigate(action, R.id.loginFragment)
+            post { isEnabled = true }
+        }
+    }
+
+    private fun openForgotPassword(view: View) {
+        view.isEnabled = false
+        val action = LoginFragmentDirections.actionLoginFragmentToForgotPasswordFragment()
+
+        view.animateClickLoginScreen {
+            safeNavigate(action, R.id.loginFragment)
+            post { isEnabled = true }
+        }
+    }
+
+    private fun setupNavigationClicks() {
+        binding.loginForgetPassword.setOnClickListener { view ->
+            openForgotPassword(view)
         }
 
         binding.createAccount.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_newRegFlow)
         }
 
-        binding.privacyTerms.setOnClickListener {
-
-            it.animate()
-                .scaleX(0.9f)
-                .scaleY(0.9f)
-                .setDuration(100)
-                .withEndAction {
-                    it.animate().scaleX(1f).scaleY(1f).setDuration(100)
-
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        val arg = loginViewModel.getLanguageKey()
-                        val action =
-                            LoginFragmentDirections.actionLoginFragmentToTermsAndPrivacyFragment(arg)
-                        findNavController().navigate(action)
-                    }
-                }
+        binding.privacyTerms.setOnClickListener { view ->
+            openTermsAndPrivacy(view)
         }
 
-        binding.languagePicker.setOnClickListener {
-            val languageDialog = LanguageDialog { languageSelected, canSwitchLanguage ->
-                if (canSwitchLanguage) {
-                    SharedPreferencesHelper.setLanguageChanged(requireContext(), true)
-                    SharedPreferencesHelper.setUserLanguage(requireContext(), languageSelected)
-
-                    activity?.recreate()
-                } else {
-                    Log.d(
-                        TAG,
-                        "data registered : $languageSelected $canSwitchLanguage"
-                    )  // to be implemented
-                    Toast.makeText(requireContext(), "Language not available", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-            languageDialog.show(parentFragmentManager, "languageDialog")
-        }
-
-        binding.customerSupport.setOnClickListener {
-            it.animate()
-                .scaleX(0.9f)
-                .scaleY(0.9f)
-                .setDuration(100)
-                .withEndAction {
-                    it.animate()
-                        .scaleX(1f).scaleY(1f).setDuration(100)
-
-                    findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToLoginContactFormDialog())
-
-                }
+        binding.customerSupport.setOnClickListener { view ->
+            openCustomerSupport(view)
         }
     }
 
@@ -218,9 +232,7 @@ class LoginFragment : Fragment() {
 
     }
 
-
     private fun setObservers() {
-
         collectLatestLifecycleFlow(loginViewModel.loginState) { state ->
             when (state) {
                 is LoginState.Loading -> {
@@ -291,8 +303,8 @@ class LoginFragment : Fragment() {
         }
 
         if (!BuildConfig.DEBUG) {
-            loginViewModel.lastUserEmail.observe(viewLifecycleOwner) { lastUser ->
-                binding.editEmail.setText(lastUser.email)
+            collectLatestLifecycleFlow(loginViewModel.lastUserEmail) { email ->
+                if (!email.isNullOrEmpty()) binding.editEmail.setText(email)
             }
         }
     }

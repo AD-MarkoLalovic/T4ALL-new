@@ -28,7 +28,7 @@ import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
 import com.mobility.enp.databinding.ItemInvoicesBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
-import com.mobility.enp.view.adapters.tool_history.main_and_filter_screen.ToolHistoryListingAdapter
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -383,7 +383,7 @@ class BillsDetailsAdapter(
     }
 
     private fun logError(string: String) {
-        Log.d(ToolHistoryListingAdapter.TAG, "showError: $string")
+        Log.d(HistorySerialAdapter.TAG, "showError: $string")
     }
 
     interface DownloadBillsDetails {
