@@ -1,28 +1,37 @@
 package com.mobility.enp.view.dialogs
 
-import android.content.Context
-import android.content.res.Configuration
+import android.app.Dialog
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.mobility.enp.R
 import com.mobility.enp.databinding.DialogForgotPassBinding
 import com.mobility.enp.util.setDimensionsPercent
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.isVisible
 
 class ForgotPassDialog : DialogFragment() {
+
+    private val args: ForgotPassDialogArgs by navArgs()
 
     private var _binding: DialogForgotPassBinding? = null
     private val binding: DialogForgotPassBinding get() = _binding!!
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return super.onCreateDialog(savedInstanceState).apply {
+            window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+            setCancelable(false)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         _binding = DialogForgotPassBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -30,39 +39,32 @@ class ForgotPassDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val retryMode = arguments?.getBoolean(getString(R.string.bool)) == true
-
-        if (retryMode) {
-            binding.errorDialogForgotPass.visibility = View.GONE
-            binding.subtitleDialogForgotPass.text = getString(R.string.subtitle_forgot_pass)
-            binding.bttDialogForgotPass.text = getString(R.string.confirm)
-        } else {
-            binding.errorDialogForgotPass.visibility = View.VISIBLE
-            binding.subtitleDialogForgotPass.text = getString(R.string.subtitle_dialog_forgot_pass)
-            binding.bttDialogForgotPass.text = getString(R.string.button_try_again)
-        }
+        val isSuccess = args.sentSuccessfully
+        val message = args.message ?: getString(R.string.subtitle_dialog_forgot_pass)
+        render(isSuccess, message)
 
         binding.bttDialogForgotPass.setOnClickListener {
-            if (retryMode) {
-                dialog?.dismiss()
-                findNavController().navigate(R.id.action_global_loginFragment)
-            } else {
-                dialog?.dismiss()
+            dismissAllowingStateLoss()
+            if (isSuccess) {
+                runCatching {
+                    findNavController()
+                        .navigate(R.id.action_global_loginFragment)
+                }
             }
         }
+    }
 
+    private fun render(isSuccess: Boolean, message: String) = with(binding) {
+        errorDialogForgotPass.isVisible = !isSuccess
+        subtitleDialogForgotPass.text =
+            if (isSuccess) getString(R.string.subtitle_forgot_pass) else message
+        bttDialogForgotPass.text =
+            if (isSuccess) getString(R.string.confirm) else getString(R.string.button_try_again)
     }
 
     override fun onStart() {
         super.onStart()
         setDimensionsPercent(95)
-        isCancelable = false
-    }
-
-    private fun isTablet(context: Context): Boolean {
-        val configuration: Configuration = context.resources.configuration
-        val smallestScreenWidthDp = configuration.smallestScreenWidthDp
-        return smallestScreenWidthDp >= 600
     }
 
     override fun onDestroyView() {

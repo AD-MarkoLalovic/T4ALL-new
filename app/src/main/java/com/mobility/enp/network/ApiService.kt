@@ -245,6 +245,7 @@ interface ApiService {
 
     @POST("/api/v1/forgot-password")
     suspend fun forgotPassword(
+        @Query("lang") language: String,
         @Body request: ForgotPasswordRequest
     ): Response<Unit>
 
