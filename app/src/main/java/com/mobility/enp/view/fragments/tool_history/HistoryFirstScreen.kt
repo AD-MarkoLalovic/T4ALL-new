@@ -89,6 +89,12 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
             }
         }
 
+        binding.infoIcon.setOnClickListener {
+            val dialog = GeneralMessageDialog.newInstance(getString(R.string.tool_history), getString(R.string.prolasci_info))
+            dialog.isCancelable = false
+            dialog.show(parentFragmentManager, "infoDialog")
+        }
+
     }
 
     private fun runExistingFilterCheck() {

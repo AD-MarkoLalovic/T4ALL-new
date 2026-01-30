@@ -394,4 +394,5 @@
     <string name="croatian_reclamation">Hırvatistan Cumhuriyeti’ndeki geçiş için şikayeti HAC portalı üzerinden yapmanız gerekmektedir.</string>
     <string name="please_select_country">Lütfen ülke seçiniz</string>
     <string name="limit_reclamation">İtiraz iki defadan fazla gönderilemez. Daha fazla bilgi için 0800 111 004 ücretsiz telefon numarasından Müşteri Hizmetleri Merkezi ile iletişime geçebilirsiniz.</string>
+    <string name="prolasci_info">Son 30 güne ait geçişler gösterilmektedir</string>
 </resources>
