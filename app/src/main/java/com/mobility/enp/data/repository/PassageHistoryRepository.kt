@@ -115,11 +115,11 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
     }
 
     suspend fun insertPassageDataAdapter(data: V2HistoryTagResponse) {
-        database.v2ToolHistoryDao().insertData(data)
+        database.historyPassageDaoV2().insertData(data)
     }
 
     suspend fun deleteRoomData() {
-        database.v2ToolHistoryDao().deleteData()
+        database.historyPassageDaoV2().deleteData()
     }
 
     suspend fun fetchedStoredCsvData(): ByteArray? {
@@ -341,7 +341,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         countyCode: String
     ): V2HistoryTagResponse? {
         return withContext(Dispatchers.IO) {
-            database.v2ToolHistoryDao().fetchPassageBySerial(serial, countyCode)
+            database.historyPassageDaoV2().fetchPassageBySerial(serial, countyCode)
         }
     }
 
