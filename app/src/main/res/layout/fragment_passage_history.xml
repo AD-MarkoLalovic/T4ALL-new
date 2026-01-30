@@ -27,7 +27,7 @@
         android:layout_marginTop="@dimen/dimens_16dp"
         android:layout_marginEnd="@dimen/dimens_16dp"
         android:text="@string/tool_history"
-        app:layout_constraintEnd_toStartOf="@+id/loopIcon"
+        app:layout_constraintEnd_toStartOf="@+id/infoIcon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
