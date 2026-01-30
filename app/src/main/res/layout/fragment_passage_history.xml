@@ -42,6 +42,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/titleTollHistory" />
 
+
+    <ImageView
+        android:id="@+id/infoIcon"
+        android:layout_width="@dimen/dimens_25dp"
+        android:layout_height="@dimen/dimens_25dp"
+        android:layout_marginEnd="@dimen/dimens_10dp"
+        android:background="@drawable/ic_info"
+        android:contentDescription="@string/loop_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/titleTollHistory"
+        app:layout_constraintEnd_toStartOf="@+id/loopIcon"
+        app:layout_constraintTop_toTopOf="@+id/titleTollHistory" />
+
     <View
         android:id="@+id/line"
         android:layout_width="0dp"

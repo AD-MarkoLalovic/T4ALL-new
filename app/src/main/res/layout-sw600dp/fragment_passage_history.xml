@@ -20,6 +20,7 @@
 
 
     <TextView
+        android:id="@+id/titleTollHistory"
         style="@style/H3Tablet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,6 +40,19 @@
         android:contentDescription="@string/loop_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/infoIcon"
+        android:layout_width="@dimen/dimens_30dp"
+        android:layout_height="@dimen/dimens_30dp"
+        android:layout_marginEnd="@dimen/dimens_10dp"
+        android:background="@drawable/ic_info"
+        android:contentDescription="@string/loop_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/titleTollHistory"
+        app:layout_constraintEnd_toStartOf="@+id/loopIcon"
+        app:layout_constraintTop_toTopOf="@+id/titleTollHistory" />
+
 
     <View
         android:id="@+id/line"
