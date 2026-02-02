@@ -25,7 +25,7 @@ class ForgotPassDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return super.onCreateDialog(savedInstanceState).apply {
             window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
-            setCancelable(false)
+            setCanceledOnTouchOutside(false)
         }
     }
 
