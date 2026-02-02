@@ -102,16 +102,6 @@ class LoginFragment : Fragment() {
     private fun setupLanguagePicker() {
         binding.languagePicker.setOnClickListener {
             LanguageDialog().show(parentFragmentManager, "LanguageDialog")
-            /*LanguageDialog { languageSelected, canSwitchLanguage ->
-                if (canSwitchLanguage) {
-                    SharedPreferencesHelper.setLanguageChanged(requireContext(), true)
-                    SharedPreferencesHelper.setUserLanguage(requireContext(), languageSelected)
-                    activity?.recreate()
-                } else {
-                    Toast.makeText(requireContext(), "Language not available", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }.show(parentFragmentManager, "languageDialog")*/
         }
     }
 
