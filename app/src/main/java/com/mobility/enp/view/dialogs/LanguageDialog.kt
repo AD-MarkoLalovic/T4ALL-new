@@ -8,23 +8,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.mobility.enp.R
 import com.mobility.enp.databinding.LanguageDialogLayoutBinding
+import com.mobility.enp.util.FragmentResultKeys
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) : DialogFragment() {
+class LanguageDialog : DialogFragment() {
 
     private var _binding: LanguageDialogLayoutBinding? = null
     private val binding: LanguageDialogLayoutBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
-    private lateinit var previousLanguageCode: String
+    private var previousLanguageCode = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,12 +63,21 @@ class LanguageDialog(private val onLanguageSelected: (String, Boolean) -> Unit) 
                 else -> null
             }
 
-            languageCode?.let {
-                previousLanguageCode = it
+            languageCode?.let { code ->
+                previousLanguageCode = code
 
-                lifecycleScope.launch {
+                viewLifecycleOwner.lifecycleScope.launch {
                     delay(500L)
-                    onLanguageSelected(it, true)
+
+                    parentFragmentManager.setFragmentResult(
+                        FragmentResultKeys.LANGUAGE_DIALOG_RESULT,
+                        bundleOf(
+                            FragmentResultKeys.LANGUAGE_DIALOG_KEY to code,
+                            FragmentResultKeys.LANGUAGE_CAN_SWITCH to true
+                        )
+                    )
+
+                    //onLanguageSelected(code, true)
                     dismiss()
                 }
             }
