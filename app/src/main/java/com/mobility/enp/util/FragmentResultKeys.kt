@@ -11,4 +11,7 @@ object FragmentResultKeys {
     const val NOTIFICATION_PERMISSION_CONFIRMED = "notification_permission_confirmed"
     const val GENERAL_DIALOG_RESULT = "general_dialog_result"
     const val GENERAL_DIALOG_CONFIRMED = "general_dialog_confirmed"
+    const val LANGUAGE_DIALOG_RESULT = "language_dialog_result"
+    const val LANGUAGE_DIALOG_KEY = "language_key"
+    const val LANGUAGE_CAN_SWITCH = "can_switch_language"
 }

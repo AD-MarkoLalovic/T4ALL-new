@@ -7,7 +7,6 @@ import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,12 +20,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentSettingsBinding
+import com.mobility.enp.util.FragmentResultKeys
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.GeneralMessageDialogNotifications
 import com.mobility.enp.view.dialogs.LanguageDialog
 import com.mobility.enp.view.dialogs.NotificationsRequestDialog
-import com.mobility.enp.view.fragments.LoginFragment.Companion.TAG
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.SettingsViewModel
 import kotlinx.coroutines.launch
@@ -62,6 +61,7 @@ class SettingsFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         setFranchise()
+        fragmentResultListener()
 
         val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
 
@@ -95,27 +95,32 @@ class SettingsFragment : Fragment() {
         }
 
         binding.languageIconInSettings.setOnClickListener {
-            val languageDialog = LanguageDialog { languageSelected, canSwitchLanguage ->
-                if (canSwitchLanguage) {
-                    SharedPreferencesHelper.setLanguageChanged(requireContext(), true)
-                    SharedPreferencesHelper.setUserLanguage(requireContext(), languageSelected)
+            LanguageDialog().show(parentFragmentManager, "LanguageDialog")
+        }
+    }
 
-                    activity?.recreate()
+    private fun fragmentResultListener() {
+        parentFragmentManager.setFragmentResultListener(
+            FragmentResultKeys.LANGUAGE_DIALOG_RESULT,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val languageSelected = bundle.getString(FragmentResultKeys.LANGUAGE_DIALOG_KEY)
+                ?: return@setFragmentResultListener
+            val canSwitchLanguage = bundle.getBoolean(FragmentResultKeys.LANGUAGE_CAN_SWITCH, false)
+
+            if (canSwitchLanguage) {
+                SharedPreferencesHelper.setLanguageChanged(requireContext(), true)
+                SharedPreferencesHelper.setUserLanguage(requireContext(), languageSelected)
+
+                viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.sendingLangToServer()
-                } else {
-                    Log.d(
-                        TAG,
-                        "data registered : $languageSelected $canSwitchLanguage"
-                    )  // to be implemented
-                    Toast.makeText(
-                        requireContext(),
-                        "Language not available",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    activity?.recreate()
                 }
+
+            } else {
+                Toast.makeText(requireContext(), "Language not available", Toast.LENGTH_SHORT)
+                    .show()
             }
-            languageDialog.show(parentFragmentManager, "languageDialog")
         }
     }
 

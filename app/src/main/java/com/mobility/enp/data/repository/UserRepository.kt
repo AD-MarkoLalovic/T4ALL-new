@@ -2,6 +2,7 @@ package com.mobility.enp.data.repository
 
 import android.content.Context
 import android.util.Log
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mobility.enp.data.model.api_my_profile.basic_information.entity.BasicInfoEntity
 import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
@@ -281,34 +282,37 @@ class UserRepository(
      * Send language
      */
 
-    suspend fun sendLangKey(): Result<Unit> {
+    suspend fun sendLangKey() {
+        val crashlytics = FirebaseCrashlytics.getInstance()
+        val lang = getLangKey()
+
+        crashlytics.setCustomKey("feature", "UserRepository fun sendLangKey")
+        crashlytics.setCustomKey("language_code", lang)
+
         if (!isNetworkAvailable()) {
-            return Result.failure(NetworkError.NoConnection)
+            return
         }
 
-        val userToken = getUserToken()
+        val token = getUserToken()
+        if (token == null) {
+            crashlytics.recordException(IllegalStateException("Language sync failed: token missing"))
+            return
+        }
 
-        userToken?.let { token ->
-            return try {
-                val sendKeyResponse = apiService(token).changeLanguage(getLangKey())
-                if (sendKeyResponse.isSuccessful) {
-                    sendKeyResponse.body()?.let { response ->
-                        Result.success(response)
-                    } ?: Result.failure(NetworkError.ServerError)
-                } else {
-                    sendKeyResponse.errorBody()?.let { errorBody ->
-                        val apiErrorResponse = parseErrorResponse(sendKeyResponse.code(), errorBody)
-                        Result.failure(NetworkError.ApiError(apiErrorResponse))
-                    } ?: Result.failure(NetworkError.ServerError)
-                }
-            } catch (e: Exception) {
-                Log.e("LANG_KEY", "unexpected error: ${e.message}", e)
-                Result.failure(NetworkError.ServerError)
+        try {
+            val response = apiService(token).changeLanguage(lang)
+
+            if (response.isSuccessful) {
+                crashlytics.log("Language sync success: lang=$lang")
+            } else {
+                val code = response.code()
+                crashlytics.recordException(
+                    RuntimeException("Language sync failed: HTTP $code, lang=$lang")
+                )
             }
+        } catch (e: Exception) {
+            crashlytics.recordException(e)
         }
-
-        return Result.failure(NetworkError.ServerError)
     }
-
 
 }
