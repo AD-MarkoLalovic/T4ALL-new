@@ -76,8 +76,6 @@ class LanguageDialog : DialogFragment() {
                             FragmentResultKeys.LANGUAGE_CAN_SWITCH to true
                         )
                     )
-
-                    //onLanguageSelected(code, true)
                     dismiss()
                 }
             }
