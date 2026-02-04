@@ -27,6 +27,7 @@ class LanguageDialog : DialogFragment() {
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
     private var previousLanguageCode = ""
+    private var isLanguageChanging = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,9 +47,16 @@ class LanguageDialog : DialogFragment() {
         updateSelectedLanguage(previousLanguageCode)
         setFranchise()
 
-        binding.buttonCloseDialog.setOnClickListener { dismiss() }
+        binding.buttonCloseDialog.setOnClickListener {
+            if (!isLanguageChanging) {
+                dismiss()
+            }
+        }
 
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
+
+            if (isLanguageChanging) return@setOnCheckedChangeListener
+
             val languageCode = when (checkedId) {
                 R.id.languageEnglish -> "en"
                 R.id.languageSerbian -> "cyr"
@@ -65,6 +73,9 @@ class LanguageDialog : DialogFragment() {
 
             languageCode?.let { code ->
                 previousLanguageCode = code
+
+                isLanguageChanging = true
+                binding.buttonCloseDialog.isEnabled = false
 
                 viewLifecycleOwner.lifecycleScope.launch {
                     delay(500L)
