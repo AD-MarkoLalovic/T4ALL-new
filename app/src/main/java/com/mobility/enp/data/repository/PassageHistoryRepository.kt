@@ -12,6 +12,10 @@ import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.toCroatianPassage
+import com.mobility.enp.util.toMontenegroPassage
+import com.mobility.enp.util.toNorthMacedonianPassage
+import com.mobility.enp.util.toSerbianPassage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -110,12 +114,24 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         database.toolHistoryDao().insertData(indexData)
     }
 
-    suspend fun deleteTagSerialData(){
-        database.toolHistoryDao().deleteData()
+    suspend fun roomInsertSerbianPassage(data: V2HistoryTagResponse) {
+        val passageData = data.toSerbianPassage()
+        database.historyPassageDaoV2Serbia().insertData(passageData)
     }
 
-    suspend fun insertPassageDataAdapter(data: V2HistoryTagResponse) {
-        database.historyPassageDaoV2().insertData(data)
+    suspend fun roomInsertNorthMacedonianPassage(data: V2HistoryTagResponse) {
+        val passageData = data.toNorthMacedonianPassage()
+        database.historyPassageDaoV2NorthMacedonia().insertData(passageData)
+    }
+
+    suspend fun roomInsertMontenegroPassage(data: V2HistoryTagResponse) {
+        val passageData = data.toMontenegroPassage()
+        database.historyPassageDaoV2Montenegro().insertData(passageData)
+    }
+
+    suspend fun roomInsertCroatianPassage(data: V2HistoryTagResponse) {
+        val passageData = data.toCroatianPassage()
+        database.historyPassageDaoV2Croatia().insertData(passageData)
     }
 
     suspend fun deleteRoomData() {

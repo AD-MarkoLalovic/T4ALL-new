@@ -236,7 +236,7 @@ class HistoryPassageAdapterResultScreen(
     private fun performDataFill(currentItem: Item, bindingAdapterPosition: Int) {
         if (relation[relation.size - 1] == currentItem && lastPage > currentPage) {
             val indexListing =
-                MutableStateFlow<SubmitResult<V2HistoryTagResponse>>(SubmitResult.Loading)
+                MutableStateFlow<SubmitResult<V2HistoryTagResponse?>>(SubmitResult.Loading)
 
             collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
                 complaintInterface.stopSpinner()
@@ -245,11 +245,11 @@ class HistoryPassageAdapterResultScreen(
                         serverResponse.data.let {
                             Log.d(
                                 TAG,
-                                "performDataFill: ${it.data?.records?.pagination?.currentPage} ${it.data?.records?.pagination?.lastPage}"
+                                "performDataFill: ${it?.data?.records?.pagination?.currentPage} ${it?.data?.records?.pagination?.lastPage}"
                             )
-                            currentPage = it.data?.records?.pagination?.currentPage ?: 1
+                            currentPage = it?.data?.records?.pagination?.currentPage ?: 1
 
-                            for (item: Item in it.data?.records?.items ?: emptyList()) {
+                            for (item: Item in it?.data?.records?.items ?: emptyList()) {
                                 relation.add(item)
                                 notifyItemChanged(relation.size - 1)
                                 Log.d(TAG, "dataInserted: $item")
@@ -272,7 +272,7 @@ class HistoryPassageAdapterResultScreen(
         fun sendObjectionData(objectionBody: ObjectionBody)
         fun sendDataFill(
             nextPage: Int,
-            flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
+            flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse?>>,
             tagSerialNumber: String
         )
 

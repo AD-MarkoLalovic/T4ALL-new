@@ -57,8 +57,6 @@ import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.CsvActivity
-import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
-import com.mobility.enp.view.adapters.tool_history.result.HistorySerialAdapterResultScreen
 import com.mobility.enp.view.fragments.tool_history.HistoryFilterScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -461,7 +459,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
-
     fun getBaseDataAlternativeApiFilterFragment() {   // uses faster api call to get serial numbers of tags saving about 10 seconds on server response time
         _baseTagDataStateFilterFragment.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
@@ -576,7 +573,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
             }
         }
     }
-
 
     fun getBaseDataAlternativeApiForCountriesOnMain() {   // uses faster api call to get serial numbers of tags saving about 10 seconds on server response time
         _baseTagDataStateByCountry.value = SubmitResult.Loading
@@ -923,7 +919,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
      * this function fills the initial 10 passages in tool history once we have tag serial data
      */
     fun getToolHistoryTransit(
-        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
+        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse?>>,
         tagSerialNumber: String,
         currentPage: Int
     ) {
@@ -997,7 +993,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
 
     fun getToolHistoryTransitResultFragment(
-        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
+        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse?>>,
         tagSerialNumber: String,
         currentPage: Int
     ) {
@@ -1061,32 +1057,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
-    fun fetchStoredData(
-        dataInterface: HistorySerialAdapter.PassageDataInterface,
-        tagSerialNumber: String
-    ) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.fetchPassageDataBySerialNew(tagSerialNumber, selectedCountry)?.let {
-                withContext(Dispatchers.Main) {
-                    dataInterface.onOk(it)
-                }
-            }
-        }
-    }
-
-    fun fetchStoredDataResultScreen(
-        dataInterface: HistorySerialAdapterResultScreen.PassageDataInterface,
-        tagSerialNumber: String
-    ) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.fetchPassageDataBySerialNew(tagSerialNumber, selectedCountry)?.let {
-                withContext(Dispatchers.Main) {
-                    dataInterface.onOk(it)
-                }
-            }
-        }
-    }
-
     private fun postNotification() {
         val channel = NotificationChannel(
             CHANNEL_ID, "Tool4all", NotificationManager.IMPORTANCE_HIGH
@@ -1140,11 +1110,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
-    fun deletePassageData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteRoomData()
-        }
-    }
 
     private suspend fun saveCsvLocally(encoded: String, nameExtra: String, context: Context) =
         coroutineScope {
@@ -1315,14 +1280,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
-    fun deleteTagSerialData() {
-        _baseTagDataState.value = SubmitResult.Empty
-        _baseTagDataStateByCountry.value = SubmitResult.Empty
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteTagSerialData()
-        }
-    }
-
     private var _data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
     val data: LiveData<IndexData> get() = _data
 
@@ -1332,11 +1289,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
         repository.insertRoomTagBaseData(indexData)
-    }
-
-    suspend fun insertPassageData(toolHistoryListing: V2HistoryTagResponse) {
-        toolHistoryListing.countryCode = selectedCountry
-        repository.insertPassageDataAdapter(toolHistoryListing)
     }
 
     fun showDatePicker(fromDate: Boolean, context: Context, franchiseModel: FranchiseModel?) {
@@ -1439,6 +1391,34 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
                 datePicker.show(fm, "dateSelect")
             }
         }
+    }
+
+    fun roomPassageDataFirstScreen(data: V2HistoryTagResponse, country: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (country) {
+                "HR" -> {
+                    repository.roomInsertCroatianPassage(data)
+                }
+
+                "MK" -> {
+                    repository.roomInsertNorthMacedonianPassage(data)
+                }
+
+                "ME" -> {
+                    repository.roomInsertMontenegroPassage(data)
+                }
+
+                "RS" -> {
+                    repository.roomInsertSerbianPassage(data)
+                }
+
+                else -> {}
+            }
+        }
+    }
+
+    fun roomPassageDataResultScreen(data: V2HistoryTagResponse, country: String) {
+
     }
 
     private fun convertLongToDateString(time: Long): TimeSave {

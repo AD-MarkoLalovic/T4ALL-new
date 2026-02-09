@@ -33,11 +33,9 @@ import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendToFragment,
-    HistorySerialAdapterResultScreen.SavePassageData,
     HistorySerialAdapterResultScreen.PaginationUpdate,
     HistoryPassageAdapterCroatiaResultScreen.SendToFragment {
 
@@ -91,7 +89,7 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendTo
         when (vModel.allTagsSelected) {
             true -> {  // uses unmodified tag index for adapter to list all possible tags and passages
                 val historySerialAdapter =
-                    HistorySerialAdapterResultScreen(tagIndex, vModel, this, this, this, this, this)
+                    HistorySerialAdapterResultScreen(tagIndex, vModel, this, this, this, this)
                 binding.cycler.adapter = historySerialAdapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
 
@@ -107,7 +105,7 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendTo
                 tagIndex.data?.lastPage = 1
 
                 val historySerialAdapter =
-                    HistorySerialAdapterResultScreen(tagIndex, vModel, this, this, this, this, this)
+                    HistorySerialAdapterResultScreen(tagIndex, vModel, this, this, this, this)
                 binding.cycler.adapter = historySerialAdapter
                 binding.cycler.layoutManager = LinearLayoutManager(context)
 
@@ -201,7 +199,6 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendTo
             }
         }
 
-
         binding.btnReset.setOnClickListener {
             findNavController().navigate(HistoryResultScreenDirections.actionToolHistorySearchResultFragmentToToolHistoryFragment())
         }
@@ -217,18 +214,9 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendTo
         vModel.postObjectionFiltered(objectionBody)
     }
 
-
-    override fun psgData(toolHistoryListing: V2HistoryTagResponse) {
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                vModel.insertPassageData(toolHistoryListing)
-            }
-        }
-    }
-
     override fun sendDataFill(
         nextPage: Int,
-        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
+        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse?>>,
         tagSerialNumber: String
     ) {
         binding.progBar.visibility = View.VISIBLE

@@ -3,6 +3,11 @@ package com.mobility.enp.util
 import android.content.Context
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_my_profile.my_tags.response.MyTagsList
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseMontenegro
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseNorthMacedonia
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseSerbia
 import com.mobility.enp.data.model.cards.registration_croatia.RegistrationResponse
 import com.mobility.enp.data.model.cards.tags_for_croatia.Tag
 import com.mobility.enp.data.model.cardsweb.CardWebModel
@@ -107,6 +112,29 @@ fun List<Tag>.toTagsForCroatiaUIList(): List<TagsForCroatiaUI> {
     }
 }
 
+fun V2HistoryTagResponse.toSerbianPassage(): V2HistoryTagResponseSerbia {
+    return V2HistoryTagResponseSerbia(
+        data, message, serial, countryCode
+    )
+}
+
+fun V2HistoryTagResponse.toNorthMacedonianPassage(): V2HistoryTagResponseNorthMacedonia {
+    return V2HistoryTagResponseNorthMacedonia(
+        data, message, serial, countryCode
+    )
+}
+
+fun V2HistoryTagResponse.toCroatianPassage(): V2HistoryTagResponseCroatia {
+    return V2HistoryTagResponseCroatia(
+        data, message, serial, countryCode
+    )
+}
+
+fun V2HistoryTagResponse.toMontenegroPassage(): V2HistoryTagResponseMontenegro {
+    return V2HistoryTagResponseMontenegro(
+        data, message, serial, countryCode
+    )
+}
 
 fun List<MyTagsList>.toTagUiModel(): List<TagUiModel> {
     return this.map { tag ->

@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
-    HistorySerialAdapter.SavePassageData, HistorySerialAdapter.PaginationUpdate,
+    HistorySerialAdapter.PaginationUpdate,
     HistoryPassageAdapterCroatia.SendToFragment {
 
     private var _binding: FragmentPassageHistoryBinding? = null
@@ -440,7 +440,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         vModel.indexData =
             indexData  // filter fragment need some data from here saving here to reduce api calls
 
-        historySerialAdapter = HistorySerialAdapter(indexData, vModel, this, this, this, this, this)
+        historySerialAdapter = HistorySerialAdapter(indexData, vModel, this, this, this, this)
 
         binding.cycler.adapter = historySerialAdapter
         binding.cycler.layoutManager = LinearLayoutManager(requireContext())
@@ -476,10 +476,11 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
     override fun sendDataFill(
         nextPage: Int,
-        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
+        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse?>>,
         tagSerialNumber: String
     ) {
         binding.progBar.visibility = View.VISIBLE
+
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             vModel.getToolHistoryTransit(flow, tagSerialNumber, nextPage)
         }
@@ -508,14 +509,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
             GeneralMessageDialog.newInstance(
                 getString(R.string.complaint), getString(R.string.croatian_reclamation)
             ).show(manager, "croatiaDialog")
-        }
-    }
-
-    override fun psgData(toolHistoryListing: V2HistoryTagResponse) {
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                vModel.insertPassageData(toolHistoryListing)
-            }
         }
     }
 
