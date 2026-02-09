@@ -404,4 +404,6 @@
     <string name="croatian_reclamation">Die Reklamation für die Durchfahrt in der Republik Kroatien müssen Sie auf dem HAC-Portal einreichen.</string>
     <string name="please_select_country">Bitte wählen Sie ein Land aus</string>
     <string name="limit_reclamation">Es ist nicht möglich, eine Beschwerde mehr als zweimal einzureichen. Für weitere Informationen können Sie das Kundenzentrum unter der kostenlosen Telefonnummer 0800 111 004 kontaktieren.</string>
+    <string name="prolasci_info">Die Durchfahrten der letzten 30 Tage wurden angezeigt.\nTippen Sie auf * , um alle Durchfahrten zu filtern.</string>
+    <string name="touch_info">auf</string>
 </resources>

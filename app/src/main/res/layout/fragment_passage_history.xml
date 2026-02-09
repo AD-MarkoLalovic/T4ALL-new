@@ -27,7 +27,7 @@
         android:layout_marginTop="@dimen/dimens_16dp"
         android:layout_marginEnd="@dimen/dimens_16dp"
         android:text="@string/tool_history"
-        app:layout_constraintEnd_toStartOf="@+id/loopIcon"
+        app:layout_constraintEnd_toStartOf="@+id/infoIcon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,6 +40,18 @@
         android:contentDescription="@string/loop_icon"
         app:layout_constraintBottom_toBottomOf="@+id/titleTollHistory"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/titleTollHistory" />
+
+
+    <ImageView
+        android:id="@+id/infoIcon"
+        android:layout_width="@dimen/dimens_25dp"
+        android:layout_height="@dimen/dimens_25dp"
+        android:layout_marginEnd="@dimen/dimens_10dp"
+        android:background="@drawable/ic_info"
+        android:contentDescription="@string/loop_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/titleTollHistory"
+        app:layout_constraintEnd_toStartOf="@+id/loopIcon"
         app:layout_constraintTop_toTopOf="@+id/titleTollHistory" />
 
     <View

@@ -28,6 +28,7 @@ import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAd
 import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapterCroatia
 import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
+import com.mobility.enp.view.dialogs.GeneralMessageDialogInfoButton
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -87,6 +88,12 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                     context, context?.getString(R.string.no_internet), Toast.LENGTH_SHORT
                 ).show()
             }
+        }
+
+        binding.infoIcon.setOnClickListener {
+            val dialog = GeneralMessageDialogInfoButton.newInstance(getString(R.string.tool_history), getString(R.string.prolasci_info))
+            dialog.isCancelable = false
+            dialog.show(parentFragmentManager, "infoDialog")
         }
 
     }
