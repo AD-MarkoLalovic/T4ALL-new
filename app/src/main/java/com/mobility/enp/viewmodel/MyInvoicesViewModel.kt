@@ -339,7 +339,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         }
     }
 
-    fun payBill(billId: String) {
+    fun payBill(billId: String,buttonCompletionListener: BillsDetailsAdapter.onApiCallCompletion) {
         viewModelScope.launch {
             _billPad.value = SubmitResultFold.Loading
 
@@ -347,9 +347,11 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
             result.fold(
                 onSuccess = {
                     _billPad.value = SubmitResultFold.Success(Unit)
+                    buttonCompletionListener.apiCompletedSuccess()
                 },
                 onFailure = { error ->
                     _billPad.value = SubmitResultFold.Failure(error)
+                    buttonCompletionListener.apiCompletedSuccess()
                 }
             )
         }

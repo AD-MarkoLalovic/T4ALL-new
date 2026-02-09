@@ -16,6 +16,7 @@ import android.view.animation.AnimationUtils
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
@@ -31,6 +32,7 @@ import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.serialization.descriptors.StructureKind
 
 class BillsDetailsAdapter(
     private var billData: BillData,
@@ -59,6 +61,7 @@ class BillsDetailsAdapter(
             canDownload = true
         }
     }
+
 
     inner class BillsViewHolder(val binding: ItemInvoicesBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -138,12 +141,31 @@ class BillsDetailsAdapter(
             }
 
             binding.bttPayNow.setOnClickListener {
-                val flashAnimation =
-                    AnimationUtils.loadAnimation(binding.root.context, R.anim.icon_flash_animation)
-                binding.bttPayNow.startAnimation(flashAnimation)
+
+                binding.bttPayNow.backgroundTintList =  AppCompatResources.getColorStateList(
+                    binding.root.context,
+                    R.color.very_light_gray
+                )
+
+                binding.bttPayNow.isEnabled = false
+                binding.bttPayNow.isClickable = false
+
+                val buttonCompletionListener = object : onApiCallCompletion{
+                    override fun apiCompletedSuccess() {
+
+                        binding.bttPayNow.backgroundTintList =  AppCompatResources.getColorStateList(
+                            binding.root.context,
+                            R.color.figmaIntroEclipseColorInactive
+                        )
+
+                        binding.bttPayNow.isEnabled = true
+                        binding.bttPayNow.isClickable = true
+                    }
+
+                }
 
                 spinnerInterface.onStartSpinner()
-                viewModel.payBill(billId)
+                viewModel.payBill(billId,buttonCompletionListener)
             }
 
             binding.executePendingBindings()
@@ -394,6 +416,10 @@ class BillsDetailsAdapter(
     interface UserPermission {
         fun onPermissionGranted()
         fun onPermissionDenied()
+    }
+
+    interface onApiCallCompletion{
+        fun apiCompletedSuccess()
     }
 
 }
