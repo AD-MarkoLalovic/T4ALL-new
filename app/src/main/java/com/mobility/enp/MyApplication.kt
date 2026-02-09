@@ -1,6 +1,7 @@
 package com.mobility.enp
 
 import android.app.Application
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mobility.enp.data.repository.AuthRepository
 import com.mobility.enp.data.repository.BillsRepository
 import com.mobility.enp.data.repository.CardRepository
@@ -46,6 +47,12 @@ class MyApplication : Application() {
         BillsRepository(database, this)
     }
 
+    override fun onCreate() {
+        super.onCreate()
 
+        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled =
+            !BuildConfig.DEBUG
+
+    }
 }
 
