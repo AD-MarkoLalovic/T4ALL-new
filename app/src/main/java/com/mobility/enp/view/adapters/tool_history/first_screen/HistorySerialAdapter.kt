@@ -83,7 +83,11 @@ class HistorySerialAdapter(
                         serverResponse.data?.let { data ->
                             data.serial = itemSerialNumber
                             data.countryCode = viewModel.selectedCountry
-                            roomPassageDataFirstScreen(data,viewModel.selectedCountry) // saves to room passages for this serial
+
+                            roomPassageDataFirstScreen(
+                                data,
+                                viewModel.selectedCountry
+                            ) // saves to room passages for this serial
 
                             binding.cyclerTotalPrice.visibility = View.INVISIBLE
                             binding.noPassage.visibility = View.GONE
@@ -201,8 +205,9 @@ class HistorySerialAdapter(
     private fun roomPassageDataFirstScreen(data: V2HistoryTagResponse, selectedCountry: String) {
         Log.d(
             HistorySerialAdapterResultScreen.Companion.TAG, "data for room: /n " +
-                "$data")
-        viewModel.roomPassageDataFirstScreen(data,selectedCountry)
+                    "$data"
+        )
+        viewModel.roomPassageDataFirstScreen(data, selectedCountry)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsViewHolder {

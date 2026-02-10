@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
 @Keep
 @Entity(
     tableName = "HISTORY_V2_Serbia",
-    primaryKeys = ["serial"]
+    primaryKeys = ["serial","countryCode"]
 ) // composite PK 
 data class V2HistoryTagResponseSerbia(
     @SerializedName("data")

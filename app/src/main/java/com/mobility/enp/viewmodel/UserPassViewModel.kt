@@ -1011,7 +1011,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
      * for result screen
      */
     fun getToolHistoryTransitResultScreen(
-        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
+        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse?>>,
         tagSerialNumber: String,
         currentPage: Int
     ) {
