@@ -71,6 +71,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -583,7 +585,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         viewModelScope.launch(Dispatchers.IO) {
 
             val resultTags = async {
-                repository.getTagBaseData(1, 5)
+                repository.getTagBaseData(1, 20)
             }
 
             val tagResultDeferred = resultTags.await()
@@ -921,8 +923,98 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
     /**
      * this function fills the initial 10 passages in tool history once we have tag serial data
+     * for first screen
+     * uses limited time range and that is the difference
+     * always takes last 30 days , result screen takes user given range
      */
     fun getToolHistoryTransit(
+        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
+        tagSerialNumber: String,
+        currentPage: Int
+    ) {
+        flow.value = SubmitResult.Loading
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val formatter = if (selectedCountry.equals("HR", ignoreCase = true)) {
+                DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            } else {
+                DateTimeFormatter.ofPattern("dd-MM-yyyy")
+            }
+
+            val dateTo = LocalDate.now()
+            val dateFrom = dateTo.minusDays(30)
+
+            val dateToFormatted = dateTo.format(formatter)
+            val dateFromFormatted = dateFrom.format(formatter)
+
+            var result =
+                repository.getAdapterPassageData(
+                    tagSerialNumber,
+                    currentPage,
+                    itemsPerPage,
+                    dateFromFormatted ?: "",
+                    dateToFormatted ?: ""
+                )
+
+            if (!selectedCountry.isEmpty()) {
+                result = repository.getAdapterPassageDataCountryFilter(
+                    tagSerialNumber,
+                    selectedCountry,
+                    currentPage,
+                    itemsPerPage, dateFromFormatted ?: "", dateToFormatted ?: ""
+                )
+            }
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    flow.value = SubmitResult.Empty
+                } else {
+                    flow.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _baseTagDataState.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(TOKEN, "invalid token detected login out user")
+                                _baseTagDataState.value =
+                                    SubmitResult.InvalidApiToken(
+                                        error.errorResponse.code ?: 0,
+                                        error.errorResponse.message ?: ""
+                                    )
+                            }
+
+                            else -> {
+                                _baseTagDataState.value =
+                                    SubmitResult.FailureApiError(
+                                        error.errorResponse.message ?: ""
+                                    )
+                                Log.d(TAG, "api error ${error.errorResponse.message}")
+                            }
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
+
+
+    /**
+     * this function fills the initial 10 passages in tool history once we have tag serial data
+     * for result screen
+     */
+    fun getToolHistoryTransitResultScreen(
         flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
         tagSerialNumber: String,
         currentPage: Int

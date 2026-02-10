@@ -198,7 +198,7 @@ class HistorySerialAdapterResultScreen(
 
 
             if (viewModel.internetAvailable()) {
-                viewModel.getToolHistoryTransit(indexListing, toolHistoryIndex.serialNumber, 1)
+                viewModel.getToolHistoryTransitResultScreen(indexListing, toolHistoryIndex.serialNumber, 1)
             } else {
                 viewModel.fetchStoredDataResultScreen(contentInterface, toolHistoryIndex.serialNumber)
             }
