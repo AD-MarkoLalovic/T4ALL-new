@@ -474,6 +474,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         vModel.postObjection(objectionBody)
     }
 
+    // uses the same interface for both croatia and normal adapter should seperate these
     override fun sendDataFill(
         nextPage: Int,
         flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
