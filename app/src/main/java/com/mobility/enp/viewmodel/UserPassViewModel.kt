@@ -932,9 +932,9 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
         viewModelScope.launch(Dispatchers.IO) {
             val formatter = if (selectedCountry.equals("HR", ignoreCase = true)) {
-                DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
             } else {
-                DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
             }
 
             val dateTo = LocalDate.now()

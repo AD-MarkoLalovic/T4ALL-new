@@ -47,7 +47,6 @@ import com.mobility.enp.data.room.api_related_daos.MyInvoicesDao
 import com.mobility.enp.data.room.api_related_daos.ProfileImageDao
 import com.mobility.enp.data.room.api_related_daos.RefundRequestDao
 import com.mobility.enp.data.room.api_related_daos.TagsRefundRequestDao
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoMontenegro
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoNorthMacedonia
@@ -82,7 +81,6 @@ abstract class DRoom : RoomDatabase() {
     abstract fun basicInfoDao(): BasicInfoDao
     abstract fun homeScreenDao(): HomeScreenDao
     abstract fun homeCardsDao(): HomeCardsDao
-    abstract fun historyPassageDaoV2(): ToolHistoryV2Dao
     abstract fun historyPassageDaoV2Serbia(): ToolHistoryV2DaoSerbia
     abstract fun historyPassageDaoV2Montenegro(): ToolHistoryV2DaoMontenegro
     abstract fun historyPassageDaoV2NorthMacedonia(): ToolHistoryV2DaoNorthMacedonia
@@ -129,7 +127,6 @@ abstract class DRoom : RoomDatabase() {
         tagsRefundRequest().deleteTagsRefundRequest()
         basicInfoDao().deleteBasicInfo()
         homeScreenDao().deleteHomeScreenData()
-        historyPassageDaoV2().deleteData()
         historyPassageDaoV2Croatia().deleteData()
         historyPassageDaoV2Montenegro().deleteData()
         historyPassageDaoV2NorthMacedonia().deleteData()
