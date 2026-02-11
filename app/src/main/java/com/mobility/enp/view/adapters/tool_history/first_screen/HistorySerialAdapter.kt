@@ -143,7 +143,7 @@ class HistorySerialAdapter(
                                 binding.cycler.visibility = View.VISIBLE
 
 
-                                // croatia passage adapter
+                                //region inner passage adapters
                                 if (viewModel.selectedCountry == binding.root.context.getString(R.string.croatia_hr)) {
                                     binding.cycler.adapter = HistoryPassageAdapterCroatia(
                                         data,
@@ -162,6 +162,7 @@ class HistorySerialAdapter(
                                         itemSerialNumber, countryCode, viewModel
                                     )
                                 }
+                                //endregion
 
                                 binding.cycler.layoutManager =
                                     LinearLayoutManager(binding.root.context)
@@ -174,7 +175,6 @@ class HistorySerialAdapter(
                                 binding.cycler.visibility = View.GONE
                             }
                         }
-
                     }
 
                     is SubmitResult.FailureServerError -> {
