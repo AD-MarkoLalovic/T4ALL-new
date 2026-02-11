@@ -394,6 +394,6 @@
     <string name="croatian_reclamation">Reklamaciju za prolazak u Republici Hrvatskoj morate podneti na HAC portalu.</string>
     <string name="please_select_country">Molimo izaberite državu</string>
     <string name="limit_reclamation">Nije moguće poslati prigovor više od dva puta. Za dodatne informacije možete kontaktirati Korisnički centar na besplatnom broju telefona 0800 111 004.</string>
-    <string name="prolasci_info">Prikazani su prolazci za poslednjih 30 dana.\nDodirnite * za filtriranje svih prolazaka.</string>
+    <string name="prolasci_info">Prikazani su prolasci za poslednjih 30 dana.\nDodirnite * za filtriranje svih prolazaka.</string>
     <string name="touch_info">Dodirnite</string>
 </resources>
