@@ -114,25 +114,37 @@ fun List<Tag>.toTagsForCroatiaUIList(): List<TagsForCroatiaUI> {
 
 fun V2HistoryTagResponse.toSerbianPassage(): V2HistoryTagResponseSerbia {
     return V2HistoryTagResponseSerbia(
-        data, message, serial, countryCode
+        data, message, serial, countryCode,
+        data?.records?.pagination?.currentPage ?: 0,
+        data?.records?.pagination?.lastPage ?: 0,
+        data?.records?.pagination?.total ?: 0
     )
 }
 
 fun V2HistoryTagResponse.toNorthMacedonianPassage(): V2HistoryTagResponseNorthMacedonia {
     return V2HistoryTagResponseNorthMacedonia(
-        data, message, serial, countryCode
+        data, message, serial, countryCode,
+        data?.records?.pagination?.currentPage ?: 0,
+        data?.records?.pagination?.lastPage ?: 0,
+        data?.records?.pagination?.total ?: 0
     )
 }
 
 fun V2HistoryTagResponse.toCroatianPassage(): V2HistoryTagResponseCroatia {
     return V2HistoryTagResponseCroatia(
-        data, message, serial, countryCode
+        data, message, serial, countryCode,
+        data?.records?.pagination?.currentPage ?: 0,
+        data?.records?.pagination?.lastPage ?: 0,
+        data?.records?.pagination?.total ?: 0
     )
 }
 
 fun V2HistoryTagResponse.toMontenegroPassage(): V2HistoryTagResponseMontenegro {
     return V2HistoryTagResponseMontenegro(
-        data, message, serial, countryCode
+        data, message, serial, countryCode,
+        data?.records?.pagination?.currentPage ?: 0,
+        data?.records?.pagination?.lastPage ?: 0,
+        data?.records?.pagination?.total ?: 0
     )
 }
 

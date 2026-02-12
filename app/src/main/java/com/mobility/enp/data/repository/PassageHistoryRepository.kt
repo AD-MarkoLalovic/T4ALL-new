@@ -219,6 +219,11 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
                 )
                 if (response.isSuccessful) {
                     response.body()?.let { indexData ->
+
+                        val normalizedTags =
+                            indexData.data?.tags?.sortedBy { it?.serialNumber } ?: emptyList()
+                        indexData.data?.tags = normalizedTags
+
                         Result.success(indexData)
                     } ?: Result.failure(NetworkError.ServerError)
                 } else {

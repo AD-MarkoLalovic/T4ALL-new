@@ -203,10 +203,6 @@ class HistorySerialAdapter(
     }
 
     private fun roomPassageDataFirstScreen(data: V2HistoryTagResponse, selectedCountry: String) {
-        Log.d(
-            HistorySerialAdapterResultScreen.Companion.TAG, "data for room: /n " +
-                    "$data"
-        )
         viewModel.roomPassageDataFirstScreen(data, selectedCountry)
     }
 
