@@ -111,7 +111,6 @@ class UserPassViewModel(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
-
     fun getV2PassagesBySerialPage(
         serialNumber: String, pageNumber: Int
     ): StateFlow<List<V2HistoryTagResponse?>> {

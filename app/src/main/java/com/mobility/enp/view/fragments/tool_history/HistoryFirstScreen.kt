@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
+import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.databinding.FragmentPassageHistoryBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.Util
@@ -40,6 +41,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
     private val binding: FragmentPassageHistoryBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
+    private var listIndexData: List<IndexData> = emptyList()
 
     private lateinit var statusFilterAdapter: MyTollCountriesFirstScreenAdapter
     private lateinit var historySerialAdapter: HistorySerialAdapter
@@ -123,9 +125,9 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                         }
 
                         historySerialAdapter.setAdapterData(indexData[0])
-                    }
 
-                    //todo modify this
+                        listIndexData = indexData
+                    }
                 }
             }
         }
@@ -155,6 +157,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 }
 
                 is SubmitResult.Success -> {
+                    binding.progBar.visibility = View.GONE
                     vModel.saveRoomTagDataFirstScreen(tagIndex.data)
                 }
 
@@ -323,6 +326,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                 if (::historySerialAdapter.isInitialized) {
                     historySerialAdapter.clearData()
+                    historySerialAdapter.setAdapterData(listIndexData[0])
                 }
 
                 binding.progBar.visibility = View.VISIBLE

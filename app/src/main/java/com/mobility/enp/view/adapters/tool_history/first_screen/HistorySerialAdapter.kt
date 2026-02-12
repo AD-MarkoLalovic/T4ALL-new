@@ -46,10 +46,11 @@ class HistorySerialAdapter(
     }
 
     fun clearData() {
-        toolHistoryIndex = IndexData(null, "", null, 0, 0, 0)
+        toolHistoryIndex = null
+        currentPage = 0
         lastPage = 0
-        perPage = 0
         total = 0
+        listOfTags = emptyList()
         notifyDataSetChanged()
     }
 
@@ -96,7 +97,7 @@ class HistorySerialAdapter(
                     complaintInterface,
                     false,
                     lifecycleOwner,
-                    itemSerialNumber, countryCode, viewModel,
+                    itemSerialNumber, viewModel.selectedCountry, viewModel,
                     { size ->
                         binding.progbar.visibility = View.GONE
 
