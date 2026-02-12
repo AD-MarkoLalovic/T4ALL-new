@@ -3,14 +3,15 @@ package com.mobility.enp.data.room.api_related_daos
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseSerbia
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ToolHistoryV2DaoCroatia {
 
     @Upsert
-    suspend fun insertData(data: V2HistoryTagResponseCroatia)
+    suspend fun upsertData(data: V2HistoryTagResponseCroatia)
 
     @Query("DELETE FROM HISTORY_V2_Croatia")
     suspend fun deleteData()
@@ -20,5 +21,8 @@ interface ToolHistoryV2DaoCroatia {
 
     @Query("SELECT * FROM HISTORY_V2_Croatia WHERE serial = :serial AND countryCode = :countryCode")
     fun fetchPassageBySerial(serial: String,countryCode: String): V2HistoryTagResponseCroatia?
+
+    @Query("SELECT * FROM HISTORY_V2_Serbia WHERE serial = :serial AND countryCode = :page")
+    fun observePassageData(serial: String, page: Int): Flow<List<V2HistoryTagResponseCroatia>>?
 
 }

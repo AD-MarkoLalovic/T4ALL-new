@@ -119,22 +119,22 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
     suspend fun roomInsertSerbianPassage(data: V2HistoryTagResponse) {
         val passageData = data.toSerbianPassage()
-        database.historyPassageDaoV2Serbia().insertData(passageData)
+        database.historyPassageDaoV2Serbia().upsert(passageData)
     }
 
     suspend fun roomInsertNorthMacedonianPassage(data: V2HistoryTagResponse) {
         val passageData = data.toNorthMacedonianPassage()
-        database.historyPassageDaoV2NorthMacedonia().insertData(passageData)
+        database.historyPassageDaoV2NorthMacedonia().upsertData(passageData)
     }
 
     suspend fun roomInsertMontenegroPassage(data: V2HistoryTagResponse) {
         val passageData = data.toMontenegroPassage()
-        database.historyPassageDaoV2Montenegro().insertData(passageData)
+        database.historyPassageDaoV2Montenegro().upsertData(passageData)
     }
 
     suspend fun roomInsertCroatianPassage(data: V2HistoryTagResponse) {
         val passageData = data.toCroatianPassage()
-        database.historyPassageDaoV2Croatia().insertData(passageData)
+        database.historyPassageDaoV2Croatia().upsertData(passageData)
     }
 
     suspend fun fetchedStoredCsvData(): ByteArray? {
