@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
@@ -18,7 +19,10 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.adapters.tool_history.combined.HistoryTotalCostAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HistorySerialAdapter(
     private val viewModel: UserPassViewModel,

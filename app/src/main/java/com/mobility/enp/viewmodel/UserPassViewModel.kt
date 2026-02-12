@@ -46,6 +46,7 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseSerbia
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.franchise.FranchiseModel
@@ -117,6 +118,12 @@ class UserPassViewModel(
     val tagFlow = tagsDao.observeIndexData().stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
+
+    fun serSerbianPassageDao(serialNumber: String,pageNumber: Int): StateFlow<List<V2HistoryTagResponseSerbia>>{
+        val serbiaPassageDao = historySerbiaPassageDao.observePassageData(serialNumber,pageNumber).stateIn(
+            viewModelScope, SharingStarted.WhileSubscribed(5000),emptyList()
+        )
+    }
 
     private val _listOfCountriesMain = MutableStateFlow<List<String>>(emptyList())
     val listOfCountriesMainScreen: StateFlow<List<String>> get() = _listOfCountriesMain

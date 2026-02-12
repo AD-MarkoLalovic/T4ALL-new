@@ -25,7 +25,7 @@ interface ToolHistoryV2DaoNorthMacedonia {
         countryCode: String
     ): V2HistoryTagResponseNorthMacedonia?
 
-    @Query("SELECT * FROM HISTORY_V2_Serbia WHERE serial = :serial AND countryCode = :page")
-    fun observePassageData(serial: String, page: Int): Flow<List<V2HistoryTagResponseNorthMacedonia>>?
+    @Query("SELECT * FROM HISTORY_V2_NorthMacedonia WHERE serial = :serial AND pageNumber = :page")
+    fun observePassageData(serial: String, page: Int): Flow<List<V2HistoryTagResponseNorthMacedonia?>>
 
 }
