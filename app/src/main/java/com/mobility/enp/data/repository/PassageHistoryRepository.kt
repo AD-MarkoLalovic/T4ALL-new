@@ -119,7 +119,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
     suspend fun roomInsertSerbianPassage(data: V2HistoryTagResponse) {
         val passageData = data.toSerbianPassage()
-        database.historyPassageDaoV2Serbia().upsert(passageData)
+        database.historyV2PassageDao().upsert(passageData)
     }
 
     suspend fun roomInsertNorthMacedonianPassage(data: V2HistoryTagResponse) {
@@ -366,7 +366,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         countyCode: String
     ): V2HistoryTagResponseSerbia? {
         return withContext(Dispatchers.IO) {
-            database.historyPassageDaoV2Serbia().fetchPassageBySerial(serial, countyCode)
+            database.historyV2PassageDao().fetchPassageBySerial(serial, countyCode)
         }
     }
 

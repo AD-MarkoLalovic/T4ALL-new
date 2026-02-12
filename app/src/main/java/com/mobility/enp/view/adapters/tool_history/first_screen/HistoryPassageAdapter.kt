@@ -19,10 +19,8 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
 import com.mobility.enp.data.model.api_tool_history.v2base_model.SumTag
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseSerbia
 import com.mobility.enp.databinding.ItemRelationPassageRealBinding
 import com.mobility.enp.util.SubmitResult
-import com.mobility.enp.util.toV2Response
 import com.mobility.enp.view.dialogs.ComplaintFormDialog
 import com.mobility.enp.view.dialogs.ComplaintFormDialogOld
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
@@ -48,57 +46,23 @@ class HistoryPassageAdapter(
     init {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                when (countryCode) {
-                    context.getString(R.string.serbia_rs) -> {
-                        viewmodel.getSerbPassagesBySerial(tagSerialNumber).collect { data ->
-                            val list : ArrayList<V2HistoryTagResponse> = arrayListOf()
-                            for (v2 in data) {
-                                val response = v2?.toV2Response()
-                                response?.let { passageData ->
-                                    list.add(passageData)
-                                }
-                            }
-                            setPassageData(list.toList())
+                viewmodel.getV2PassagesBySerialAndCountryCode(tagSerialNumber, countryCode)
+                    .collect { data ->
+                        if (data.isNotEmpty()) { // sum of tags
+                            onSumTags(data[0]?.data?.sumTags ?: emptyList())
+                            onInitDataSize(data[0]?.data?.records?.items?.size ?: 1)
                         }
-                    }
-
-                    context.getString(R.string.northmacedonia_mk) -> {
-                        viewmodel.getNorthMacedoniaPassagesBySerial(tagSerialNumber)
-                            .collect { data ->
-                                viewmodel.getNorthMacedoniaPassagesBySerial(tagSerialNumber).collect { data ->
-                                    val list : ArrayList<V2HistoryTagResponse> = arrayListOf()
-                                    for (v2 in data) {
-                                        val response = v2?.toV2Response()
-                                        response?.let { passageData ->
-                                            list.add(passageData)
-                                        }
-                                    }
-                                    setPassageData(list.toList())
-                                }
-                            }
-                    }
-
-                    context.getString(R.string.montenegro_me) -> {
-                        viewmodel.getMontenegroPassagesBySerial(tagSerialNumber).collect { data ->
-                            viewmodel.getMontenegroPassagesBySerial(tagSerialNumber).collect { data ->
-                                val list : ArrayList<V2HistoryTagResponse> = arrayListOf()
-                                for (v2 in data) {
-                                    val response = v2?.toV2Response()
-                                    response?.let { passageData ->
-                                        list.add(passageData)
-                                    }
-                                }
-                                setPassageData(list.toList())
+                        val listOfPassages: ArrayList<Item> = arrayListOf()
+                        for (passages in data) {
+                            passages?.data?.records?.items?.let { setOfPassages ->
+                                listOfPassages.addAll(setOfPassages)
                             }
                         }
+
+                        relation = listOfPassages.toList()
                     }
-                }
             }
         }
-    }
-
-    private fun setPassageData(data: List<V2HistoryTagResponse>) {
-
     }
 
     companion object {

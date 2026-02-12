@@ -45,10 +45,8 @@ import com.mobility.enp.data.room.api_related_daos.MyInvoicesDao
 import com.mobility.enp.data.room.api_related_daos.ProfileImageDao
 import com.mobility.enp.data.room.api_related_daos.RefundRequestDao
 import com.mobility.enp.data.room.api_related_daos.TagsRefundRequestDao
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoMontenegro
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoNorthMacedonia
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoSerbia
 import com.mobility.enp.data.room.notification.NotificationDao
 
 @Database(
@@ -56,7 +54,7 @@ import com.mobility.enp.data.room.notification.NotificationDao
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class, HomeEntity::class, V2HistoryTagResponse::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class,
         HomeCardsEntity::class, V2HistoryTagResponseCroatia::class, V2HistoryTagResponseSerbia::class, V2HistoryTagResponseMontenegro::class, V2HistoryTagResponseNorthMacedonia::class],
-    version = 234,
+    version = 235,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -78,9 +76,7 @@ abstract class DRoom : RoomDatabase() {
     abstract fun homeScreenDao(): HomeScreenDao
     abstract fun homeCardsDao(): HomeCardsDao
     abstract fun toolHistoryDao(): HistoryV2TagsSerials
-    abstract fun historyPassageDaoV2Serbia(): ToolHistoryV2DaoSerbia
-    abstract fun historyPassageDaoV2Montenegro(): ToolHistoryV2DaoMontenegro
-    abstract fun historyPassageDaoV2NorthMacedonia(): ToolHistoryV2DaoNorthMacedonia
+    abstract fun historyV2PassageDao(): ToolHistoryV2Dao
     abstract fun historyPassageDaoV2Croatia(): ToolHistoryV2DaoCroatia
 
 
@@ -124,9 +120,7 @@ abstract class DRoom : RoomDatabase() {
         basicInfoDao().deleteBasicInfo()
         homeScreenDao().deleteHomeScreenData()
         historyPassageDaoV2Croatia().deleteData()
-        historyPassageDaoV2Montenegro().deleteData()
-        historyPassageDaoV2NorthMacedonia().deleteData()
-        historyPassageDaoV2Serbia().deleteData()
+        historyV2PassageDao().deleteData()
     }
 
 }

@@ -47,19 +47,14 @@ import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseMontenegro
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseNorthMacedonia
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseSerbia
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.room.api_related_daos.HistoryV2TagsSerials
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoMontenegro
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoNorthMacedonia
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoSerbia
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.CHANNEL_ID
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.NOTIFICATION_ID
 import com.mobility.enp.util.NetworkError
@@ -88,10 +83,8 @@ import java.util.Locale
 class UserPassViewModel(
     private val repository: PassageHistoryRepository,
     private val tagsDao: HistoryV2TagsSerials,
-    private val historySerbiaPassageDao: ToolHistoryV2DaoSerbia,
-    private val historyMontenegroPassageDao: ToolHistoryV2DaoMontenegro,
-    private val historyNorthMacedoniaPassageDao: ToolHistoryV2DaoNorthMacedonia,
     private val historyCroatiaPassageDao: ToolHistoryV2DaoCroatia,
+    private val historyV2Dao: ToolHistoryV2Dao
 ) : ViewModel() {
 
     companion object {
@@ -102,17 +95,11 @@ class UserPassViewModel(
             initializer {
                 val myRepository = (this[APPLICATION_KEY] as MyApplication).passageHistoryRepository
                 val tagsDao = (this[APPLICATION_KEY] as MyApplication).v2TagsDao
-                val historySerbiaPassageDao = (this[APPLICATION_KEY] as MyApplication).v2SerbiaDao
-                val historyMontenegroPassageDao =
-                    (this[APPLICATION_KEY] as MyApplication).v2MontenegroDao
-                val historyNorthMacedoniaPassageDao =
-                    (this[APPLICATION_KEY] as MyApplication).v2NorthMacedoniaDao
+                val historyV2PassageDao = (this[APPLICATION_KEY] as MyApplication).v2HistoryDao
                 val historyCroatiaPassageDao = (this[APPLICATION_KEY] as MyApplication).v2CroatiaDao
                 UserPassViewModel(
-                    repository = myRepository, tagsDao, historySerbiaPassageDao,
-                    historyMontenegroPassageDao,
-                    historyNorthMacedoniaPassageDao,
-                    historyCroatiaPassageDao
+                    repository = myRepository, tagsDao,
+                    historyCroatiaPassageDao, historyV2PassageDao
                 )
             }
         }
@@ -122,55 +109,24 @@ class UserPassViewModel(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
-    fun getSerbPassagesBySerialPage(
+
+    fun getV2PassagesBySerialPage(
         serialNumber: String,
         pageNumber: Int
-    ): StateFlow<List<V2HistoryTagResponseSerbia?>> {
-        return historySerbiaPassageDao.observePassageData(serialNumber, pageNumber).stateIn(
+    ): StateFlow<List<V2HistoryTagResponse?>> {
+        return historyV2Dao.observePassageData(serialNumber, pageNumber).stateIn(
             viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
         )
     }
 
-    fun getSerbPassagesBySerial(
+    fun getV2PassagesBySerialAndCountryCode(
         serialNumber: String,
-    ): StateFlow<List<V2HistoryTagResponseSerbia?>> {
-        return historySerbiaPassageDao.observePassageDataBySerial(serialNumber).stateIn(
-            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-        )
-    }
-
-    fun getMontenegroPassagesBySerialPage(
-        serialNumber: String,
-        pageNumber: Int
-    ): StateFlow<List<V2HistoryTagResponseMontenegro?>> {
-        return historyMontenegroPassageDao.observePassageData(serialNumber, pageNumber).stateIn(
-            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-        )
-    }
-
-    fun getMontenegroPassagesBySerial(
-        serialNumber: String,
-    ): StateFlow<List<V2HistoryTagResponseMontenegro?>> {
-        return historyMontenegroPassageDao.observePassageDataBySerial(serialNumber).stateIn(
-            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-        )
-    }
-
-    fun getNorthMacedoniaPassagesBySerialPage(
-        serialNumber: String,
-        pageNumber: Int
-    ): StateFlow<List<V2HistoryTagResponseNorthMacedonia?>> {
-        return historyNorthMacedoniaPassageDao.observePassageData(serialNumber, pageNumber).stateIn(
-            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-        )
-    }
-
-    fun getNorthMacedoniaPassagesBySerial(
-        serialNumber: String,
-    ): StateFlow<List<V2HistoryTagResponseNorthMacedonia?>> {
-        return historyNorthMacedoniaPassageDao.observePassageDataBySerial(serialNumber).stateIn(
-            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-        )
+        countryCode: String
+    ): StateFlow<List<V2HistoryTagResponse?>> {
+        return historyV2Dao.observePassageDataBySerialAndCountryCode(serialNumber, countryCode)
+            .stateIn(
+                viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+            )
     }
 
     fun getCroatiaPassagesBySerialPage(
