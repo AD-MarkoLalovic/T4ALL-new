@@ -195,9 +195,9 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 }
 
                 is SubmitResult.Success -> {
-                    // sets available countries filter and primary adapter
+                    val countryList = ArrayList<String>()
+
                     tagIndex.data.second?.let { cardData ->
-                        val countryList = ArrayList<String>()
 
                         if (cardData.data?.showTabHR == true) {
                             countryList.add(getString(R.string.croatia))
@@ -211,10 +211,10 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                         if (cardData.data?.showTabRS == true) {
                             countryList.add(getString(R.string.serbia))
                         }
-
-                        vModel.setAvailableCountriesMain(countryList)
                     }
 
+                    tagIndex.data.first.availableCountries = countryList
+                    
                     vModel.saveRoomTagDataFirstScreen(tagIndex.data.first)
                 }
 
