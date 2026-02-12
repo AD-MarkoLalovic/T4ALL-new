@@ -48,8 +48,10 @@ class HistoryPassageAdapter(
                 viewmodel.getV2PassagesBySerialAndCountryCode(tagSerialNumber, countryCode)
                     .collect { data ->
 
-                        Log.d(TAG, "flow serial $tagSerialNumber, country Code $countryCode"
-                        +"\n" +"${data.toString()}")
+                        Log.d(
+                            TAG, "flow serial $tagSerialNumber, country Code $countryCode"
+                                    + "\n" + "${data.toString()}"
+                        )
 
                         if (data.isNotEmpty()) { // sum of tags
                             onSumTags(data[0]?.data?.sumTags ?: emptyList())
@@ -67,7 +69,7 @@ class HistoryPassageAdapter(
             }
         }
 
-        viewmodel.getToolHistoryTransit(tagSerialNumber,1)
+        viewmodel.getToolHistoryTransit(tagSerialNumber, 1)
     }
 
     companion object {
