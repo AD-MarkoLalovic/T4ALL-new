@@ -52,6 +52,10 @@ import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.room.api_related_daos.HistoryV2TagsSerials
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoMontenegro
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoNorthMacedonia
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoSerbia
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.CHANNEL_ID
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.NOTIFICATION_ID
 import com.mobility.enp.util.NetworkError
@@ -79,7 +83,11 @@ import java.util.Locale
 
 class UserPassViewModel(
     private val repository: PassageHistoryRepository,
-    private val tagsDao: HistoryV2TagsSerials
+    private val tagsDao: HistoryV2TagsSerials,
+    private val historySerbiaPassageDao: ToolHistoryV2DaoSerbia,
+    private val historyMontenegroPassageDao: ToolHistoryV2DaoMontenegro,
+    private val historyNorthMacedoniaPassageDao: ToolHistoryV2DaoNorthMacedonia,
+    private val historyCroatiaPassageDao: ToolHistoryV2DaoCroatia,
 ) : ViewModel() {
 
     companion object {
@@ -90,8 +98,17 @@ class UserPassViewModel(
             initializer {
                 val myRepository = (this[APPLICATION_KEY] as MyApplication).passageHistoryRepository
                 val tagsDao = (this[APPLICATION_KEY] as MyApplication).v2TagsDao
+                val historySerbiaPassageDao = (this[APPLICATION_KEY] as MyApplication).v2SerbiaDao
+                val historyMontenegroPassageDao =
+                    (this[APPLICATION_KEY] as MyApplication).v2MontenegroDao
+                val historyNorthMacedoniaPassageDao =
+                    (this[APPLICATION_KEY] as MyApplication).v2NorthMacedoniaDao
+                val historyCroatiaPassageDao = (this[APPLICATION_KEY] as MyApplication).v2CroatiaDao
                 UserPassViewModel(
-                    repository = myRepository, tagsDao
+                    repository = myRepository, tagsDao, historySerbiaPassageDao,
+                    historyMontenegroPassageDao,
+                    historyNorthMacedoniaPassageDao,
+                    historyCroatiaPassageDao
                 )
             }
         }
