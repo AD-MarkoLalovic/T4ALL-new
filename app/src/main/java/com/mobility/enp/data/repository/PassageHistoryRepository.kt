@@ -113,9 +113,8 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         }
     }
 
-    suspend fun insertRoomTagBaseData(indexData: IndexData) {
-        database.toolHistoryDao().deleteData()
-        database.toolHistoryDao().insertData(indexData)
+    suspend fun upsertBaseTagData(indexData: IndexData) {
+        database.toolHistoryDao().upsertData(indexData)
     }
 
     suspend fun roomInsertSerbianPassage(data: V2HistoryTagResponse) {

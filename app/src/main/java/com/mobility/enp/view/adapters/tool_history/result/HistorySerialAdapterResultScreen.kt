@@ -38,7 +38,7 @@ class HistorySerialAdapterResultScreen(
     val listOfTags: ArrayList<Tag> = toolHistoryIndex.data?.tags as ArrayList<Tag>
 
     fun clearData() {
-        toolHistoryIndex = IndexData(0, null, "", null)
+        toolHistoryIndex = IndexData(null, "", null,0,0,0)
         lastPage = 0
         perPage = 0
         total = 0

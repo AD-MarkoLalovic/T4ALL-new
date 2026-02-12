@@ -91,7 +91,10 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         }
 
         binding.infoIcon.setOnClickListener {
-            val dialog = GeneralMessageDialogInfoButton.newInstance(getString(R.string.tool_history), getString(R.string.prolasci_info))
+            val dialog = GeneralMessageDialogInfoButton.newInstance(
+                getString(R.string.tool_history),
+                getString(R.string.prolasci_info)
+            )
             dialog.isCancelable = false
             dialog.show(parentFragmentManager, "infoDialog")
         }
@@ -127,16 +130,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
     private fun setObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vModel.indexDataMainScreen.collect { indexData ->
-                    indexData?.let {
-                        setIndexData(it)
-                    }
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vModel.listOfCountriesMainScreen.collect { countriesList ->
                     if (countriesList.isNotEmpty()) {
                         setAvailableFilters(countriesList)
@@ -160,7 +153,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 }
 
                 is SubmitResult.Success -> {
-                    vModel.setIndexDataMainScreen(tagIndex.data)
+                    vModel.saveRoomTagDataFirstScreen(tagIndex.data)
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -215,7 +208,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                         vModel.setAvailableCountriesMain(countryList)
                     }
 
-                    vModel.setIndexDataMainScreen(tagIndex.data.first)
+                    vModel.saveRoomTagDataFirstScreen(tagIndex.data.first)
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -440,11 +433,10 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         vModel.indexData =
             indexData  // filter fragment need some data from here saving here to reduce api calls
 
-        historySerialAdapter = HistorySerialAdapter(indexData, vModel, this, this, this, this)
+        historySerialAdapter = HistorySerialAdapter(vModel, this, this, this, this)
 
         binding.cycler.adapter = historySerialAdapter
         binding.cycler.layoutManager = LinearLayoutManager(requireContext())
-
     }
 
     private fun showNoInternetDialog() {

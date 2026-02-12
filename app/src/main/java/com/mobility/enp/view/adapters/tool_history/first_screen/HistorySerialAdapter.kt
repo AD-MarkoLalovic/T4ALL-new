@@ -17,12 +17,10 @@ import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.adapters.tool_history.combined.HistoryTotalCostAdapter
-import com.mobility.enp.view.adapters.tool_history.result.HistorySerialAdapterResultScreen
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class HistorySerialAdapter(
-    private var toolHistoryIndex: IndexData,
     private val viewModel: UserPassViewModel,
     private val complaintInterface: HistoryPassageAdapter.SendToFragment,
     private val complaintInterfaceCroatia: HistoryPassageAdapterCroatia.SendToFragment,
@@ -30,15 +28,27 @@ class HistorySerialAdapter(
     val paginationUpdate: PaginationUpdate
 ) : RecyclerView.Adapter<HistorySerialAdapter.TagsViewHolder>() {
 
-    var currentPage: Int = toolHistoryIndex.data?.currentPage ?: 0
-    var lastPage: Int = toolHistoryIndex.data?.lastPage ?: 0
-    var perPage: Int = toolHistoryIndex.data?.perPage ?: 0
-    var total: Int = toolHistoryIndex.data?.total ?: 0
+    private var toolHistoryIndex: IndexData? = null
 
-    val listOfTags: ArrayList<Tag> = toolHistoryIndex.data?.tags as ArrayList<Tag>
+    private var currentPage: Int = 0
+    private var lastPage: Int = 0
+    private var perPage: Int = 0
+    private var total: Int = 0
+    private var listOfTags: List<Tag> = emptyList()
+
+    fun setAdapterData(indexData: IndexData) {
+        toolHistoryIndex = indexData
+        currentPage = toolHistoryIndex?.data?.currentPage ?: 0
+        lastPage = toolHistoryIndex?.data?.lastPage ?: 0
+        perPage = toolHistoryIndex?.data?.perPage ?: 0
+        total = toolHistoryIndex?.data?.total ?: 0
+        listOfTags = toolHistoryIndex?.data?.tags ?: emptyList()
+
+        notifyDataSetChanged()
+    }
 
     fun clearData() {
-        toolHistoryIndex = IndexData(0, null, "", null)
+        toolHistoryIndex = IndexData(null, "", null, 0, 0, 0)
         lastPage = 0
         perPage = 0
         total = 0
@@ -218,7 +228,11 @@ class HistorySerialAdapter(
         Log.d(TAG, "showError: $string")
     }
 
-    override fun getItemCount(): Int = toolHistoryIndex.data?.tags?.size ?: 0
+    override fun getItemCount(): Int = if (toolHistoryIndex != null) {
+        toolHistoryIndex?.data?.tags?.size ?: 0
+    } else {
+        0
+    }
 
     override fun onBindViewHolder(holder: TagsViewHolder, position: Int) {
         holder.binding.noPassage.visibility = View.GONE
@@ -244,7 +258,7 @@ class HistorySerialAdapter(
             false
         }
 
-        val country = toolHistoryIndex.data?.tags?.let {
+        val country = toolHistoryIndex?.data?.tags?.let {
             it[holder.bindingAdapterPosition].country?.value
         }
 
@@ -276,7 +290,7 @@ class HistorySerialAdapter(
                             currentPage = it.data?.currentPage ?: 0
 
                             for (item: Tag in it.data?.tags ?: emptyList()) {
-                                listOfTags.add(item)
+//                                listOfTags.add(item) todo update for room
                                 notifyItemChanged(listOfTags.size - 1)
                                 Log.d(
                                     "MainAdapter",

@@ -15,7 +15,6 @@ import com.mobility.enp.data.model.api_my_profile.refund_request.tags.entity.Tag
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseMontenegro
@@ -38,8 +37,7 @@ import com.mobility.enp.data.room.PdfDao
 import com.mobility.enp.data.room.api_related_daos.BankDao
 import com.mobility.enp.data.room.api_related_daos.BasicInfoDao
 import com.mobility.enp.data.room.api_related_daos.FcmTokenDao
-import com.mobility.enp.data.room.api_related_daos.HistoryIndexDao
-import com.mobility.enp.data.room.api_related_daos.HistoryListingDao
+import com.mobility.enp.data.room.api_related_daos.HistoryV2TagsSerials
 import com.mobility.enp.data.room.api_related_daos.HomeCardsDao
 import com.mobility.enp.data.room.api_related_daos.HomeScreenDao
 import com.mobility.enp.data.room.api_related_daos.IntroPageStatusDao
@@ -54,11 +52,11 @@ import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoSerbia
 import com.mobility.enp.data.room.notification.NotificationDao
 
 @Database(
-    entities = [UserLoginResponseRoomTable::class, FcmToken::class, NotificationModel::class, IndexData::class, ToolHistoryListing::class,
+    entities = [UserLoginResponseRoomTable::class, FcmToken::class, NotificationModel::class, IndexData::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class, HomeEntity::class, V2HistoryTagResponse::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class,
         HomeCardsEntity::class, V2HistoryTagResponseCroatia::class, V2HistoryTagResponseSerbia::class, V2HistoryTagResponseMontenegro::class, V2HistoryTagResponseNorthMacedonia::class],
-    version = 230,
+    version = 233,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -67,8 +65,6 @@ abstract class DRoom : RoomDatabase() {
     abstract fun loginDao(): LoginDao // modified for api response
     abstract fun pdfDao(): PdfDao
     abstract fun fcmToken(): FcmTokenDao
-    abstract fun toolHistoryDao(): HistoryIndexDao
-    abstract fun toolListingDao(): HistoryListingDao
     abstract fun introStateDao(): IntroPageStatusDao
     abstract fun profileImageDao(): ProfileImageDao
     abstract fun myInvoicesDao(): MyInvoicesDao
@@ -81,6 +77,7 @@ abstract class DRoom : RoomDatabase() {
     abstract fun basicInfoDao(): BasicInfoDao
     abstract fun homeScreenDao(): HomeScreenDao
     abstract fun homeCardsDao(): HomeCardsDao
+    abstract fun toolHistoryDao(): HistoryV2TagsSerials
     abstract fun historyPassageDaoV2Serbia(): ToolHistoryV2DaoSerbia
     abstract fun historyPassageDaoV2Montenegro(): ToolHistoryV2DaoMontenegro
     abstract fun historyPassageDaoV2NorthMacedonia(): ToolHistoryV2DaoNorthMacedonia
@@ -120,7 +117,6 @@ abstract class DRoom : RoomDatabase() {
         notificationDao().deleteAll()
         fcmToken().deleteTable()
         toolHistoryDao().deleteData()
-        toolListingDao().deleteData()
         myInvoicesDao().deleteDataMonthlyInvoices()
         pdfDao().deleteData()
         refundRequestDao().deleteRefundRequests()

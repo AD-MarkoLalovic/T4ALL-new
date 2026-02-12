@@ -90,13 +90,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
-    private val _indexDataMainScreen = MutableStateFlow<IndexData?>(null)
-    val indexDataMainScreen: StateFlow<IndexData?> get() = _indexDataMainScreen
-
-    fun setIndexDataMainScreen(indexData: IndexData) {
-        _indexDataMainScreen.value = indexData
-    }
-
     private val _listOfCountriesMain = MutableStateFlow<List<String>>(emptyList())
     val listOfCountriesMainScreen: StateFlow<List<String>> get() = _listOfCountriesMain
 
@@ -227,6 +220,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     }
 
     private val itemsPerPage = 10
+    private val tagsPerPage = 25
 
     fun isNetAvailable(): Boolean {
         return repository.isInternetAvailable()
@@ -237,7 +231,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         viewModelScope.launch(Dispatchers.IO) {
 
             val resultTags = async {
-                repository.getTagBaseData(1, 5)
+                repository.getTagBaseData(1, tagsPerPage)
             }
 
             val resultCards = async {
@@ -581,7 +575,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         viewModelScope.launch(Dispatchers.IO) {
 
             val resultTags = async {
-                repository.getTagBaseData(1, 20)
+                repository.getTagBaseData(1, tagsPerPage)
             }
 
             val tagResultDeferred = resultTags.await()
@@ -696,6 +690,19 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
 
                     else -> {}
                 }
+            }
+        }
+    }
+
+    fun saveRoomTagDataFirstScreen(indexData: IndexData) {
+        val currentPage = indexData.data?.currentPage ?: 0
+        val lastPage = indexData.data?.lastPage ?: 0
+        val total = indexData.data?.total ?: 0
+        indexData.setPages(currentPage, lastPage, total)
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.upsertBaseTagData(indexData)
             }
         }
     }
@@ -1380,7 +1387,7 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
     var tagForExport: Tag? = null
 
     suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
-        repository.insertRoomTagBaseData(indexData)
+        repository.upsertBaseTagData(indexData)
     }
 
     fun showDatePicker(fromDate: Boolean, context: Context, franchiseModel: FranchiseModel?) {

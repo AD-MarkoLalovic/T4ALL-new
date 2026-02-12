@@ -6,15 +6,15 @@ import androidx.room.Upsert
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 
 @Dao
-interface HistoryIndexDao {
+interface HistoryV2TagsSerials {
 
     @Upsert
-    suspend fun insertData(toolHistoryIndex: IndexData)
+    suspend fun upsertData(toolHistoryIndex: IndexData)
 
-    @Query("DELETE FROM indexdata")
+    @Query("DELETE FROM HISTORY_V2_TAGS")
     suspend fun deleteData()
 
-    @Query("SELECT * FROM indexdata")
+    @Query("SELECT * FROM HISTORY_V2_TAGS")
     fun fetchData(): IndexData?
 
 }
