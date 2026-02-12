@@ -1,7 +1,6 @@
 package com.mobility.enp.view.fragments.tool_history
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,14 +30,12 @@ import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.view.dialogs.GeneralMessageDialogInfoButton
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
     HistorySerialAdapter.PaginationUpdate,
@@ -73,11 +70,14 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
 
+        historySerialAdapter = HistorySerialAdapter(vModel, this, this, this, this)
+
+        binding.cycler.adapter = historySerialAdapter
+        binding.cycler.layoutManager = LinearLayoutManager(requireContext())
+
         setObservers()
 
         vModel.getBaseDataAlternativeApi()
-
-        runExistingFilterCheck()
 
         binding.loopIcon.setOnClickListener {
             if (Util.isNetworkAvailable(requireContext())) {
@@ -101,21 +101,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
     }
 
-    private fun runExistingFilterCheck() {
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-
-            val indexData = vModel.fetchIndexData()   // room
-
-            indexData?.availableCountries?.let { countryList ->
-                if (countryList.isNotEmpty()) {
-                    withContext(Dispatchers.Main) {
-                        vModel.setAvailableCountriesMain(countryList)
-                    }
-                }
-            }
-        }
-    }
-
     private fun triggerUpdate() {
         val bindingMain = (activity as MainActivity).binding
 
@@ -128,6 +113,28 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
     }
 
     private fun setObservers() {
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vModel.tagFlow.collect { indexData ->
+                    if (!indexData.isEmpty()) {
+
+                        binding.progBar.visibility = View.GONE
+
+                        vModel.indexData = indexData[0] // for filter fragment req data
+
+                        indexData[0].availableCountries?.let { availableCountries ->
+                            vModel.setAvailableCountriesMain(availableCountries)
+                        }
+
+                        historySerialAdapter.setAdapterData(indexData[0])
+                    }
+
+                    //todo modify this
+                }
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vModel.listOfCountriesMainScreen.collect { countriesList ->
@@ -327,8 +334,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                 if (vModel.isNetAvailable()) {
                     vModel.getBaseDataAlternativeApiForCountriesOnMain()
-                } else {
-                    fetchStoredData()
                 }
 
             }
@@ -341,24 +346,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         }
     }
 
-    private fun fetchStoredData() {
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            val indexData = vModel.fetchIndexData()   // room
-
-            indexData?.let { data ->
-
-                val bindingMain = (activity as MainActivity).binding
-
-                MainActivity.showSnackMessage(
-                    getString(R.string.offline_using_stored_data), bindingMain
-                )
-
-                vModel.setStateIndex(data)
-            }
-        }
-    }
-
     private fun runSavedDataCheck() {
         if (savedDataCheckJob?.isActive == true) return
 
@@ -366,43 +353,31 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
         savedDataCheckJob = viewLifecycleOwner.lifecycleScope.launch {
 
-            val indexData = vModel.fetchIndexData()   // room
+            val bindingMain = (activity as MainActivity).binding
 
-            indexData?.let { data ->
+            MainActivity.showSnackMessage(
+                getString(R.string.checking_for_connection), bindingMain
+            )
 
-                val bindingMain = (activity as MainActivity).binding
+            val navController = findNavController()
 
-                MainActivity.showSnackMessage(
-                    getString(R.string.offline_using_stored_data), bindingMain
-                )
-
-                vModel.setStateIndex(data)
-
-            } ?: run {
-                val navController = findNavController()
-
-                if (navController.currentDestination?.id == R.id.noInternetConnectionDialog) {
-                    return@launch
-                }
-
-                val bundle = Bundle().apply {
-                    putString(getString(R.string.title), getString(R.string.no_connection_title))
-                    putString(
-                        getString(R.string.subtitle),
-                        getString(R.string.please_connect_to_the_internet)
-                    )
-                }
-
-                navController.navigate(
-                    R.id.action_global_noInternetConnectionDialog, bundle
-                )
-
-                val bindingMain = (activity as MainActivity).binding
-                MainActivity.showSnackMessage(
-                    getString(R.string.checking_for_connection), bindingMain
-                )
-                binding.progBar.visibility = View.VISIBLE
+            if (navController.currentDestination?.id == R.id.noInternetConnectionDialog) {
+                return@launch
             }
+
+            val bundle = Bundle().apply {
+                putString(getString(R.string.title), getString(R.string.no_connection_title))
+                putString(
+                    getString(R.string.subtitle),
+                    getString(R.string.please_connect_to_the_internet)
+                )
+            }
+
+            navController.navigate(
+                R.id.action_global_noInternetConnectionDialog, bundle
+            )
+
+            binding.progBar.visibility = View.VISIBLE
 
             while (isActive) {
                 if (vModel.internetAvailable()) {
@@ -413,30 +388,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 }
             }
         }
-    }
-
-    private fun setIndexData(indexData: IndexData) {
-        Log.d(TAG, "setIndexData: $indexData")
-
-        binding.loopIcon.isEnabled = true
-
-        binding.progBar.visibility = View.GONE
-
-        if (vModel.listOfCountriesMainScreen.value.isNotEmpty()) {
-            indexData.availableCountries = (vModel.listOfCountriesMainScreen.value)
-        }
-
-        CoroutineScope(Dispatchers.IO).launch {
-            vModel.insertRoomToolHistoryIndexData(indexData)
-        }
-
-        vModel.indexData =
-            indexData  // filter fragment need some data from here saving here to reduce api calls
-
-        historySerialAdapter = HistorySerialAdapter(vModel, this, this, this, this)
-
-        binding.cycler.adapter = historySerialAdapter
-        binding.cycler.layoutManager = LinearLayoutManager(requireContext())
     }
 
     private fun showNoInternetDialog() {

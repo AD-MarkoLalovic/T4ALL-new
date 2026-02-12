@@ -51,6 +51,7 @@ import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.repository.PassageHistoryRepository
+import com.mobility.enp.data.room.api_related_daos.HistoryV2TagsSerials
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.CHANNEL_ID
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.NOTIFICATION_ID
 import com.mobility.enp.util.NetworkError
@@ -62,8 +63,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -74,7 +77,10 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
-class UserPassViewModel(private val repository: PassageHistoryRepository) : ViewModel() {
+class UserPassViewModel(
+    private val repository: PassageHistoryRepository,
+    private val tagsDao: HistoryV2TagsSerials
+) : ViewModel() {
 
     companion object {
         const val TAG = "PassViewModel"
@@ -83,12 +89,17 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val myRepository = (this[APPLICATION_KEY] as MyApplication).passageHistoryRepository
+                val tagsDao = (this[APPLICATION_KEY] as MyApplication).v2TagsDao
                 UserPassViewModel(
-                    repository = myRepository
+                    repository = myRepository, tagsDao
                 )
             }
         }
     }
+
+    val tagFlow = tagsDao.observeIndexData().stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+    )
 
     private val _listOfCountriesMain = MutableStateFlow<List<String>>(emptyList())
     val listOfCountriesMainScreen: StateFlow<List<String>> get() = _listOfCountriesMain
@@ -1372,12 +1383,6 @@ class UserPassViewModel(private val repository: PassageHistoryRepository) : View
         }
     }
 
-
-    suspend fun fetchIndexData(): IndexData? {
-        return withContext(Dispatchers.IO) {
-            repository.getIndexDataRoom()
-        }
-    }
 
     private var _data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
     val data: LiveData<IndexData> get() = _data

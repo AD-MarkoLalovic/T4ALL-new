@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HistoryV2TagsSerials {
@@ -16,5 +17,9 @@ interface HistoryV2TagsSerials {
 
     @Query("SELECT * FROM HISTORY_V2_TAGS")
     fun fetchData(): IndexData?
+
+    @Query("SELECT * FROM HISTORY_V2_TAGS")
+    fun observeIndexData(): Flow<List<IndexData>>
+
 
 }
