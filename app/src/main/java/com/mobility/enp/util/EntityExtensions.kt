@@ -121,12 +121,30 @@ fun V2HistoryTagResponse.toSerbianPassage(): V2HistoryTagResponseSerbia {
     )
 }
 
+fun V2HistoryTagResponseSerbia.toV2Response(): V2HistoryTagResponse {
+    return V2HistoryTagResponse(
+        data, message, serial, countryCode,
+        pageNumber,
+        lastPage,
+        totalPages
+    )
+}
+
 fun V2HistoryTagResponse.toNorthMacedonianPassage(): V2HistoryTagResponseNorthMacedonia {
     return V2HistoryTagResponseNorthMacedonia(
         data, message, serial, countryCode,
         data?.records?.pagination?.currentPage ?: 0,
         data?.records?.pagination?.lastPage ?: 0,
         data?.records?.pagination?.total ?: 0
+    )
+}
+
+fun V2HistoryTagResponseNorthMacedonia.toV2Response(): V2HistoryTagResponse {
+    return V2HistoryTagResponse(
+        data, message, serial, countryCode,
+        pageNumber,
+        lastPage,
+        totalPages
     )
 }
 
@@ -139,6 +157,15 @@ fun V2HistoryTagResponse.toCroatianPassage(): V2HistoryTagResponseCroatia {
     )
 }
 
+fun V2HistoryTagResponseCroatia.toV2Response(): V2HistoryTagResponse {
+    return V2HistoryTagResponse(
+        data, message, serial, countryCode,
+        pageNumber,
+        lastPage,
+        totalPages
+    )
+}
+
 fun V2HistoryTagResponse.toMontenegroPassage(): V2HistoryTagResponseMontenegro {
     return V2HistoryTagResponseMontenegro(
         data, message, serial, countryCode,
@@ -147,6 +174,16 @@ fun V2HistoryTagResponse.toMontenegroPassage(): V2HistoryTagResponseMontenegro {
         data?.records?.pagination?.total ?: 0
     )
 }
+
+fun V2HistoryTagResponseMontenegro.toV2Response(): V2HistoryTagResponse {
+    return V2HistoryTagResponse(
+        data, message, serial, countryCode,
+        pageNumber,
+        lastPage,
+        totalPages
+    )
+}
+
 
 fun List<MyTagsList>.toTagUiModel(): List<TagUiModel> {
     return this.map { tag ->

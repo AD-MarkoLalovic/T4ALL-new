@@ -23,4 +23,7 @@ interface ToolHistoryV2DaoSerbia {
 
     @Query("SELECT * FROM HISTORY_V2_Serbia WHERE serial = :serial AND pageNumber = :page")
     fun observePassageData(serial: String, page: Int): Flow<List<V2HistoryTagResponseSerbia?>>
+
+    @Query("SELECT * FROM HISTORY_V2_Serbia WHERE serial = :serial")
+    fun observePassageDataBySerial(serial: String): Flow<List<V2HistoryTagResponseSerbia?>>
 }

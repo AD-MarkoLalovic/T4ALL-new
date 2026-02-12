@@ -46,6 +46,9 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseMontenegro
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseNorthMacedonia
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseSerbia
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
@@ -119,9 +122,71 @@ class UserPassViewModel(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
-    fun serSerbianPassageDao(serialNumber: String,pageNumber: Int): StateFlow<List<V2HistoryTagResponseSerbia>>{
-        val serbiaPassageDao = historySerbiaPassageDao.observePassageData(serialNumber,pageNumber).stateIn(
-            viewModelScope, SharingStarted.WhileSubscribed(5000),emptyList()
+    fun getSerbPassagesBySerialPage(
+        serialNumber: String,
+        pageNumber: Int
+    ): StateFlow<List<V2HistoryTagResponseSerbia?>> {
+        return historySerbiaPassageDao.observePassageData(serialNumber, pageNumber).stateIn(
+            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+        )
+    }
+
+    fun getSerbPassagesBySerial(
+        serialNumber: String,
+    ): StateFlow<List<V2HistoryTagResponseSerbia?>> {
+        return historySerbiaPassageDao.observePassageDataBySerial(serialNumber).stateIn(
+            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+        )
+    }
+
+    fun getMontenegroPassagesBySerialPage(
+        serialNumber: String,
+        pageNumber: Int
+    ): StateFlow<List<V2HistoryTagResponseMontenegro?>> {
+        return historyMontenegroPassageDao.observePassageData(serialNumber, pageNumber).stateIn(
+            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+        )
+    }
+
+    fun getMontenegroPassagesBySerial(
+        serialNumber: String,
+    ): StateFlow<List<V2HistoryTagResponseMontenegro?>> {
+        return historyMontenegroPassageDao.observePassageDataBySerial(serialNumber).stateIn(
+            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+        )
+    }
+
+    fun getNorthMacedoniaPassagesBySerialPage(
+        serialNumber: String,
+        pageNumber: Int
+    ): StateFlow<List<V2HistoryTagResponseNorthMacedonia?>> {
+        return historyNorthMacedoniaPassageDao.observePassageData(serialNumber, pageNumber).stateIn(
+            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+        )
+    }
+
+    fun getNorthMacedoniaPassagesBySerial(
+        serialNumber: String,
+    ): StateFlow<List<V2HistoryTagResponseNorthMacedonia?>> {
+        return historyNorthMacedoniaPassageDao.observePassageDataBySerial(serialNumber).stateIn(
+            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+        )
+    }
+
+    fun getCroatiaPassagesBySerialPage(
+        serialNumber: String,
+        pageNumber: Int
+    ): StateFlow<List<V2HistoryTagResponseCroatia?>> {
+        return historyCroatiaPassageDao.observePassageData(serialNumber, pageNumber).stateIn(
+            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+        )
+    }
+
+    fun getCroatiaPassagesBySerial(
+        serialNumber: String,
+    ): StateFlow<List<V2HistoryTagResponseCroatia?>> {
+        return historyCroatiaPassageDao.observePassageDataBySerial(serialNumber).stateIn(
+            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
         )
     }
 
@@ -957,7 +1022,6 @@ class UserPassViewModel(
             }
         }
     }
-
 
     /**
      * this function fills the initial 10 passages in tool history once we have tag serial data

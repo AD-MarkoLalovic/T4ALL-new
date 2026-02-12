@@ -21,5 +21,8 @@ data class V2HistoryTagResponse(
     @Expose
     val message: String?,
     var serial: String,
-    var countryCode: String
+    var countryCode: String,
+    val pageNumber: Int,
+    val lastPage: Int,
+    val totalPages: Int
 )

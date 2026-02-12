@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseNorthMacedonia
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseSerbia
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -26,6 +25,12 @@ interface ToolHistoryV2DaoNorthMacedonia {
     ): V2HistoryTagResponseNorthMacedonia?
 
     @Query("SELECT * FROM HISTORY_V2_NorthMacedonia WHERE serial = :serial AND pageNumber = :page")
-    fun observePassageData(serial: String, page: Int): Flow<List<V2HistoryTagResponseNorthMacedonia?>>
+    fun observePassageData(
+        serial: String,
+        page: Int
+    ): Flow<List<V2HistoryTagResponseNorthMacedonia?>>
+
+    @Query("SELECT * FROM HISTORY_V2_NorthMacedonia WHERE serial = :serial")
+    fun observePassageDataBySerial(serial: String): Flow<List<V2HistoryTagResponseNorthMacedonia?>>
 
 }

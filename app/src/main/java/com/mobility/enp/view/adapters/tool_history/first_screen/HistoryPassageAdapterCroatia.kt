@@ -8,6 +8,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
+import com.mobility.enp.data.model.api_tool_history.v2base_model.SumTag
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.ItemRelationPassageRealCroatiaBinding
 import com.mobility.enp.util.SubmitResult
@@ -16,20 +17,16 @@ import com.mobility.enp.util.collectLatestFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class HistoryPassageAdapterCroatia(
-    private val data: V2HistoryTagResponse,
     private val complaintInterface: SendToFragment,
     private val lifecycleOwner: LifecycleOwner,
     private val tagSerialNumber: String,
+    private var onInitDataSize : (Int) -> Unit
 ) :
     RecyclerView.Adapter<HistoryPassageAdapterCroatia.RelationViewHolder>() {
 
     private lateinit var context: Context
 
-    private var currentPage = data.data?.records?.pagination?.currentPage ?: 1
-    private val lastPage = data.data?.records?.pagination?.lastPage ?: 1
-
-    private var relation: ArrayList<Item> =
-        data.data?.records?.items as ArrayList<Item>
+    private var relation: List<Item> =  emptyList()
 
     companion object {
         const val TAG = "PassageAdapter"
@@ -80,44 +77,6 @@ class HistoryPassageAdapterCroatia(
         val currentItem = relation[holder.bindingAdapterPosition]
 
         holder.bind(currentItem)
-
-        if (Util.isNetworkAvailable(context)) {
-            performDataFill(currentItem, holder.bindingAdapterPosition) // paggination
-        }
-    }
-
-    private fun performDataFill(currentItem: Item, bindingAdapterPosition: Int) {
-        if (relation[relation.size - 1] == currentItem && lastPage > currentPage) {
-            val indexListing =
-                MutableStateFlow<SubmitResult<V2HistoryTagResponse?>>(SubmitResult.Loading)
-
-            collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
-                complaintInterface.stopSpinner()
-                when (serverResponse) {
-                    is SubmitResult.Success -> {
-                        serverResponse.data.let {
-                            Log.d(
-                                TAG,
-                                "performDataFill: ${it?.data?.records?.pagination?.currentPage} ${it?.data?.records?.pagination?.lastPage}"
-                            )
-                            currentPage = it?.data?.records?.pagination?.currentPage ?: 1
-
-                            for (item: Item in it?.data?.records?.items ?: emptyList()) {
-                                relation.add(item)
-                                notifyItemChanged(relation.size - 1)
-                                Log.d(TAG, "dataInserted: $item")
-                            }
-                        }
-                    }
-
-                    else -> {}
-                }
-            }
-
-            complaintInterface.sendDataFill(currentPage + 1, indexListing, tagSerialNumber)
-        } else if (lastPage == currentPage && relation[relation.size - 1] == currentItem) {
-            Log.d(TAG, "performDataFill: no more passage data for tag ${data.serial}")
-        }
     }
 
     interface SendToFragment {
