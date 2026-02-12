@@ -80,12 +80,6 @@ class HistoryPassageAdapterCroatia(
     }
 
     interface SendToFragment {
-        fun sendDataFill(
-            nextPage: Int,
-            flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse?>>,
-            tagSerialNumber: String
-        )
-
         fun stopSpinner()
 
         fun croatiaReclamationDialog()

@@ -17,9 +17,6 @@ import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.toCroatianPassage
-import com.mobility.enp.util.toMontenegroPassage
-import com.mobility.enp.util.toNorthMacedonianPassage
-import com.mobility.enp.util.toSerbianPassage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -117,19 +114,8 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         database.toolHistoryDao().upsertData(indexData)
     }
 
-    suspend fun roomInsertSerbianPassage(data: V2HistoryTagResponse) {
-        val passageData = data.toSerbianPassage()
-        database.historyV2PassageDao().upsert(passageData)
-    }
-
-    suspend fun roomInsertNorthMacedonianPassage(data: V2HistoryTagResponse) {
-        val passageData = data.toNorthMacedonianPassage()
-        database.historyPassageDaoV2NorthMacedonia().upsertData(passageData)
-    }
-
-    suspend fun roomInsertMontenegroPassage(data: V2HistoryTagResponse) {
-        val passageData = data.toMontenegroPassage()
-        database.historyPassageDaoV2Montenegro().upsertData(passageData)
+    suspend fun roomUpsertV2Passages(data: V2HistoryTagResponse) {
+        database.historyV2PassageDao().upsert(data)
     }
 
     suspend fun roomInsertCroatianPassage(data: V2HistoryTagResponse) {
@@ -359,33 +345,6 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
     fun isInternetAvailable(): Boolean {
         return isNetworkAvailable()
-    }
-
-    suspend fun fetchPassageDataBySerialSerbia(
-        serial: String,
-        countyCode: String
-    ): V2HistoryTagResponseSerbia? {
-        return withContext(Dispatchers.IO) {
-            database.historyV2PassageDao().fetchPassageBySerial(serial, countyCode)
-        }
-    }
-
-    suspend fun fetchPassageDataBySerialMontenegro(
-        serial: String,
-        countyCode: String
-    ): V2HistoryTagResponseMontenegro? {
-        return withContext(Dispatchers.IO) {
-            database.historyPassageDaoV2Montenegro().fetchPassageBySerial(serial, countyCode)
-        }
-    }
-
-    suspend fun fetchPassageDataBySerialNorthMacedonia(
-        serial: String,
-        countyCode: String
-    ): V2HistoryTagResponseNorthMacedonia? {
-        return withContext(Dispatchers.IO) {
-            database.historyPassageDaoV2NorthMacedonia().fetchPassageBySerial(serial, countyCode)
-        }
     }
 
     suspend fun fetchPassageDataBySerialCroatia(

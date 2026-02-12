@@ -201,7 +201,7 @@ class HistorySerialAdapterResultScreen(
     private fun savePassageDataResultScreen(data: V2HistoryTagResponse, selectedCountry: String) {
         Log.d(TAG, "data for room: /n " +
                 "$data")
-        viewModel.roomPassageDataResultScreen(data, selectedCountry)
+//        viewModel.roomPassageDataResultScreen(data, selectedCountry)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsViewHolder {

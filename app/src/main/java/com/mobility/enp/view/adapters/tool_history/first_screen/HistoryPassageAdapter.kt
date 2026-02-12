@@ -18,15 +18,12 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
 import com.mobility.enp.data.model.api_tool_history.v2base_model.SumTag
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.ItemRelationPassageRealBinding
-import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.view.dialogs.ComplaintFormDialog
 import com.mobility.enp.view.dialogs.ComplaintFormDialogOld
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.view.dialogs.ObjectionFormDialog
 import com.mobility.enp.viewmodel.UserPassViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class HistoryPassageAdapter(
@@ -50,7 +47,7 @@ class HistoryPassageAdapter(
                     .collect { data ->
                         if (data.isNotEmpty()) { // sum of tags
                             onSumTags(data[0]?.data?.sumTags ?: emptyList())
-                            onInitDataSize(data[0]?.data?.records?.items?.size ?: 1)
+                            onInitDataSize(data[0]?.data?.records?.items?.size ?: 0)
                         }
                         val listOfPassages: ArrayList<Item> = arrayListOf()
                         for (passages in data) {
@@ -63,6 +60,8 @@ class HistoryPassageAdapter(
                     }
             }
         }
+
+        viewmodel.getToolHistoryTransit(tagSerialNumber,1)
     }
 
     companion object {
@@ -249,12 +248,6 @@ class HistoryPassageAdapter(
     interface SendToFragment {
         fun sendComplaintData(complaintBody: ComplaintBody)
         fun sendObjectionData(objectionBody: ObjectionBody)
-        fun sendDataFill(
-            nextPage: Int,
-            flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse?>>,
-            tagSerialNumber: String
-        )
-
         fun stopSpinner()
     }
 

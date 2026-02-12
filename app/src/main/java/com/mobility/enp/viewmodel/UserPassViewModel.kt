@@ -98,8 +98,10 @@ class UserPassViewModel(
                 val historyV2PassageDao = (this[APPLICATION_KEY] as MyApplication).v2HistoryDao
                 val historyCroatiaPassageDao = (this[APPLICATION_KEY] as MyApplication).v2CroatiaDao
                 UserPassViewModel(
-                    repository = myRepository, tagsDao,
-                    historyCroatiaPassageDao, historyV2PassageDao
+                    repository = myRepository,
+                    tagsDao,
+                    historyCroatiaPassageDao,
+                    historyV2PassageDao
                 )
             }
         }
@@ -111,8 +113,7 @@ class UserPassViewModel(
 
 
     fun getV2PassagesBySerialPage(
-        serialNumber: String,
-        pageNumber: Int
+        serialNumber: String, pageNumber: Int
     ): StateFlow<List<V2HistoryTagResponse?>> {
         return historyV2Dao.observePassageData(serialNumber, pageNumber).stateIn(
             viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
@@ -120,8 +121,7 @@ class UserPassViewModel(
     }
 
     fun getV2PassagesBySerialAndCountryCode(
-        serialNumber: String,
-        countryCode: String
+        serialNumber: String, countryCode: String
     ): StateFlow<List<V2HistoryTagResponse?>> {
         return historyV2Dao.observePassageDataBySerialAndCountryCode(serialNumber, countryCode)
             .stateIn(
@@ -129,9 +129,9 @@ class UserPassViewModel(
             )
     }
 
+
     fun getCroatiaPassagesBySerialPage(
-        serialNumber: String,
-        pageNumber: Int
+        serialNumber: String, pageNumber: Int
     ): StateFlow<List<V2HistoryTagResponseCroatia?>> {
         return historyCroatiaPassageDao.observePassageData(serialNumber, pageNumber).stateIn(
             viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
@@ -176,8 +176,7 @@ class UserPassViewModel(
         return _availableCountryAdapterPositionFilter.value
     }
 
-    private val _selectedTags =
-        MutableStateFlow<Set<String>>(emptySet())
+    private val _selectedTags = MutableStateFlow<Set<String>>(emptySet())
 
     val selectedTagsAdapter: StateFlow<Set<String>> = _selectedTags.asStateFlow()
 
@@ -275,7 +274,7 @@ class UserPassViewModel(
         selectedCountry = ""
     }
 
-    private val itemsPerPage = 10
+    private val itemsPerPage = 25
     private val tagsPerPage = 25
 
     fun isNetAvailable(): Boolean {
@@ -312,9 +311,7 @@ class UserPassViewModel(
                 when (val error = tagResultDeferred.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.e(
-                            "UserPassVM",
-                            "Error while fetching tags data",
-                            error
+                            "UserPassVM", "Error while fetching tags data", error
                         )
                         _baseTagDataState.value = SubmitResult.FailureServerError
                     }
@@ -330,18 +327,15 @@ class UserPassViewModel(
                                     "API_TOKEN UserPassViewModel",
                                     "invalid token detected login out user"
                                 )
-                                _baseTagDataState.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code, error.errorResponse.message ?: ""
+                                )
                             }
 
                             else -> {
-                                _baseTagDataState.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
                                 Log.d(
                                     TAG,
                                     "UserPassViewModel api error ${error.errorResponse.message}"
@@ -354,9 +348,7 @@ class UserPassViewModel(
                 when (val error = resultCardsDeferred.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.e(
-                            "UserPassVM",
-                            "Error while fetching cards data",
-                            error
+                            "UserPassVM", "Error while fetching cards data", error
                         )
                         _baseTagDataState.value = SubmitResult.FailureServerError
                     }
@@ -372,18 +364,15 @@ class UserPassViewModel(
                                     "API_TOKEN UserPassViewModel",
                                     "invalid token detected login out user"
                                 )
-                                _baseTagDataState.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code, error.errorResponse.message ?: ""
+                                )
                             }
 
                             else -> {
-                                _baseTagDataState.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
                                 Log.d(
                                     TAG,
                                     "UserPassViewModel api error ${error.errorResponse.message}"
@@ -427,9 +416,7 @@ class UserPassViewModel(
                 when (val error = tagResultDeferred.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.e(
-                            "UserPassVM",
-                            "Error while fetching tags data",
-                            error
+                            "UserPassVM", "Error while fetching tags data", error
                         )
                         _baseTagDataStateResultScreen.value = SubmitResult.FailureServerError
                     }
@@ -445,18 +432,15 @@ class UserPassViewModel(
                                     "API_TOKEN UserPassViewModel",
                                     "invalid token detected login out user"
                                 )
-                                _baseTagDataStateResultScreen.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataStateResultScreen.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code, error.errorResponse.message ?: ""
+                                )
                             }
 
                             else -> {
-                                _baseTagDataStateResultScreen.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataStateResultScreen.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
                                 Log.d(
                                     TAG,
                                     "UserPassViewModel api error ${error.errorResponse.message}"
@@ -469,9 +453,7 @@ class UserPassViewModel(
                 when (val error = resultCardsDeferred.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.e(
-                            "UserPassVM",
-                            "Error while fetching cards data",
-                            error
+                            "UserPassVM", "Error while fetching cards data", error
                         )
                         _baseTagDataStateResultScreen.value = SubmitResult.FailureServerError
                     }
@@ -487,18 +469,15 @@ class UserPassViewModel(
                                     "API_TOKEN UserPassViewModel",
                                     "invalid token detected login out user"
                                 )
-                                _baseTagDataStateResultScreen.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataStateResultScreen.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code, error.errorResponse.message ?: ""
+                                )
                             }
 
                             else -> {
-                                _baseTagDataStateResultScreen.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataStateResultScreen.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
                                 Log.d(
                                     TAG,
                                     "UserPassViewModel api error ${error.errorResponse.message}"
@@ -542,9 +521,7 @@ class UserPassViewModel(
                 when (val error = tagResultDeferred.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.e(
-                            "UserPassVM",
-                            "Error while fetching tags data",
-                            error
+                            "UserPassVM", "Error while fetching tags data", error
                         )
                         _baseTagDataStateFilterFragment.value = SubmitResult.FailureServerError
                     }
@@ -562,8 +539,7 @@ class UserPassViewModel(
                                 )
                                 _baseTagDataStateFilterFragment.value =
                                     SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
+                                        error.errorResponse.code, error.errorResponse.message ?: ""
                                     )
                             }
 
@@ -584,9 +560,7 @@ class UserPassViewModel(
                 when (val error = resultCardsDeferred.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.e(
-                            "UserPassVM",
-                            "Error while fetching cards data",
-                            error
+                            "UserPassVM", "Error while fetching cards data", error
                         )
                         _baseTagDataStateFilterFragment.value = SubmitResult.FailureServerError
                     }
@@ -604,8 +578,7 @@ class UserPassViewModel(
                                 )
                                 _baseTagDataStateFilterFragment.value =
                                     SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
+                                        error.errorResponse.code, error.errorResponse.message ?: ""
                                     )
                             }
 
@@ -650,9 +623,7 @@ class UserPassViewModel(
                 when (val error = tagResultDeferred.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.e(
-                            "UserPassVM",
-                            "Error while fetching tags data",
-                            error
+                            "UserPassVM", "Error while fetching tags data", error
                         )
                         _baseTagDataStateByCountry.value = SubmitResult.FailureServerError
                     }
@@ -668,18 +639,15 @@ class UserPassViewModel(
                                     "API_TOKEN UserPassViewModel",
                                     "invalid token detected login out user"
                                 )
-                                _baseTagDataStateByCountry.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataStateByCountry.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code, error.errorResponse.message ?: ""
+                                )
                             }
 
                             else -> {
-                                _baseTagDataStateByCountry.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataStateByCountry.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
                                 Log.d(
                                     TAG,
                                     "UserPassViewModel api error ${error.errorResponse.message}"
@@ -693,9 +661,7 @@ class UserPassViewModel(
     }
 
     fun getBaseTagDataPagination(
-        nextPage: Int,
-        perPage: Int,
-        flow: MutableStateFlow<SubmitResult<IndexData>>
+        nextPage: Int, perPage: Int, flow: MutableStateFlow<SubmitResult<IndexData>>
     ) {
         viewModelScope.launch(Dispatchers.IO) {  // 2 flows success returns to adapter and issues return to fragment
             val result = repository.getTagBaseData(nextPage, perPage)
@@ -724,18 +690,15 @@ class UserPassViewModel(
                                     "API_TOKEN UserPassViewModel",
                                     "invalid token detected login out user"
                                 )
-                                _baseTagDataState.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code, error.errorResponse.message ?: ""
+                                )
                             }
 
                             else -> {
-                                _baseTagDataState.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
                                 Log.d(
                                     "UserPassViewModel",
                                     "UserPassViewModel api error ${error.errorResponse.message}"
@@ -792,18 +755,15 @@ class UserPassViewModel(
                                     "API_TOKEN UserPassViewModel",
                                     "invalid token detected login out user"
                                 )
-                                _baseTagDataState.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code, error.errorResponse.message ?: ""
+                                )
                             }
 
                             else -> {
-                                _baseTagDataState.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
                                 Log.d(
                                     "UserPassViewModel",
                                     "UserPassViewModel api error ${error.errorResponse.message}"
@@ -850,8 +810,7 @@ class UserPassViewModel(
                                 )
                                 _complaintObjectionStateFiltered.value =
                                     SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
+                                        error.errorResponse.code, error.errorResponse.message ?: ""
                                     )
                             }
 
@@ -906,8 +865,7 @@ class UserPassViewModel(
                                 )
                                 _complaintObjectionStateFiltered.value =
                                     SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
+                                        error.errorResponse.code, error.errorResponse.message ?: ""
                                     )
                             }
 
@@ -960,11 +918,9 @@ class UserPassViewModel(
                                     "API_TOKEN UserPassViewModel",
                                     "invalid token detected login out user"
                                 )
-                                _baseTagDataState.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code, error.errorResponse.message ?: ""
+                                )
                             }
 
                             else -> {
@@ -984,14 +940,12 @@ class UserPassViewModel(
      * for first screen
      * uses limited time range and that is the difference
      * always takes last 30 days , result screen takes user given range
+     * saves in room
+     * observes with flow change in adapter
      */
     fun getToolHistoryTransit(
-        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse?>>,
-        tagSerialNumber: String,
-        currentPage: Int
+        tagSerialNumber: String, currentPage: Int
     ) {
-        flow.value = SubmitResult.Loading
-
         viewModelScope.launch(Dispatchers.IO) {
             val formatter = if (selectedCountry.equals("HR", ignoreCase = true)) {
                 DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
@@ -1005,30 +959,37 @@ class UserPassViewModel(
             val dateToFormatted = dateTo.format(formatter)
             val dateFromFormatted = dateFrom.format(formatter)
 
-            var result =
-                repository.getAdapterPassageData(
-                    tagSerialNumber,
-                    currentPage,
-                    itemsPerPage,
-                    dateFromFormatted ?: "",
-                    dateToFormatted ?: ""
-                )
+            var result = repository.getAdapterPassageData(
+                tagSerialNumber,
+                currentPage,
+                itemsPerPage,
+                dateFromFormatted ?: "",
+                dateToFormatted ?: ""
+            )
 
             if (!selectedCountry.isEmpty()) {
                 result = repository.getAdapterPassageDataCountryFilter(
                     tagSerialNumber,
                     selectedCountry,
                     currentPage,
-                    itemsPerPage, dateFromFormatted ?: "", dateToFormatted ?: ""
+                    itemsPerPage,
+                    dateFromFormatted ?: "",
+                    dateToFormatted ?: ""
                 )
             }
             if (result.isSuccess) {
-                val data = result.getOrNull()
-                if (data == null) {
-                    flow.value = SubmitResult.Empty
-                } else {
-                    flow.value = SubmitResult.Success(data)
+                result.getOrNull()?.let { v2HistoryTagResponse ->
+                    v2HistoryTagResponse.countryCode = selectedCountry
+                    v2HistoryTagResponse.serial = tagSerialNumber
+                    v2HistoryTagResponse.pageNumber =
+                        v2HistoryTagResponse.data?.records?.pagination?.currentPage ?: 0
+                    v2HistoryTagResponse.lastPage =
+                        v2HistoryTagResponse.data?.records?.pagination?.lastPage ?: 0
+                    v2HistoryTagResponse.totalPages =
+                        v2HistoryTagResponse.data?.records?.pagination?.total ?: 0
+                    roomPassageDataFirstScreen(v2HistoryTagResponse)
                 }
+
             } else {
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
@@ -1044,18 +1005,15 @@ class UserPassViewModel(
                         when (error.errorResponse.code) {
                             401, 405 -> {
                                 Log.d(TOKEN, "invalid token detected login out user")
-                                _baseTagDataState.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code ?: 0,
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code ?: 0, error.errorResponse.message ?: ""
+                                )
                             }
 
                             else -> {
-                                _baseTagDataState.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
                                 Log.d(TAG, "api error ${error.errorResponse.message}")
                             }
                         }
@@ -1083,21 +1041,18 @@ class UserPassViewModel(
             val dateFrom = startDate.value?.formattedTime
             val dateTo = endDate.value?.formattedTime
 
-            var result =
-                repository.getAdapterPassageData(
-                    tagSerialNumber,
-                    currentPage,
-                    itemsPerPage,
-                    dateFrom ?: "",
-                    dateTo ?: ""
-                )
+            var result = repository.getAdapterPassageData(
+                tagSerialNumber, currentPage, itemsPerPage, dateFrom ?: "", dateTo ?: ""
+            )
 
             if (!selectedCountry.isEmpty()) {
                 result = repository.getAdapterPassageDataCountryFilter(
                     tagSerialNumber,
                     selectedCountry,
                     currentPage,
-                    itemsPerPage, dateFrom ?: "", dateTo ?: ""
+                    itemsPerPage,
+                    dateFrom ?: "",
+                    dateTo ?: ""
                 )
             }
             if (result.isSuccess) {
@@ -1122,18 +1077,15 @@ class UserPassViewModel(
                         when (error.errorResponse.code) {
                             401, 405 -> {
                                 Log.d(TOKEN, "invalid token detected login out user")
-                                _baseTagDataState.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code ?: 0,
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code ?: 0, error.errorResponse.message ?: ""
+                                )
                             }
 
                             else -> {
-                                _baseTagDataState.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
                                 Log.d(TAG, "api error ${error.errorResponse.message}")
                             }
                         }
@@ -1188,18 +1140,15 @@ class UserPassViewModel(
                         when (error.errorResponse.code) {
                             401, 405 -> {
                                 Log.d(TOKEN, "invalid token detected login out user")
-                                _baseTagDataState.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code ?: 0,
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code ?: 0, error.errorResponse.message ?: ""
+                                )
                             }
 
                             else -> {
-                                _baseTagDataState.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
+                                _baseTagDataState.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
                                 Log.d(TAG, "api error ${error.errorResponse.message}")
                             }
                         }
@@ -1221,13 +1170,9 @@ class UserPassViewModel(
         channel.lightColor = Color.BLUE
 
         val intent = Intent(repository.fetchContext(), CsvActivity::class.java)
-        val pendingIntent =
-            PendingIntent.getActivity(
-                repository.fetchContext(),
-                100,
-                intent,
-                PendingIntent.FLAG_IMMUTABLE
-            )
+        val pendingIntent = PendingIntent.getActivity(
+            repository.fetchContext(), 100, intent, PendingIntent.FLAG_IMMUTABLE
+        )
 
         val notificationManager =
             repository.fetchContext().getSystemService(NotificationManager::class.java)
@@ -1321,8 +1266,7 @@ class UserPassViewModel(
                             )
                         } ?: Log.d(HistoryFilterScreen.TAG, "Failed to open OutputStream.")
                 } ?: Log.d(
-                    HistoryFilterScreen.TAG,
-                    "Failed to create file URI in MediaStore."
+                    HistoryFilterScreen.TAG, "Failed to create file URI in MediaStore."
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -1348,10 +1292,7 @@ class UserPassViewModel(
                 val timeOfPassage = ContextCompat.getString(context, R.string.time_of_passage)
 
                 val headers = listOf(
-                    billNumber,
-                    timeOfPassage,
-                    payRamp,
-                    price
+                    billNumber, timeOfPassage, payRamp, price
                 )
 
                 val byteArrayOutputStream = ByteArrayOutputStream()
@@ -1417,8 +1358,7 @@ class UserPassViewModel(
                             )
                         } ?: Log.d(HistoryFilterScreen.TAG, "Failed to open OutputStream.")
                 } ?: Log.d(
-                    HistoryFilterScreen.TAG,
-                    "Failed to create file URI in MediaStore."
+                    HistoryFilterScreen.TAG, "Failed to create file URI in MediaStore."
                 )
 
             } catch (e: Exception) {
@@ -1468,19 +1408,17 @@ class UserPassViewModel(
             config.setLocale(locale)
             context.createConfigurationContext(config)
 
-            val constraintsBuilder = CalendarConstraints.Builder()
-                .setValidator(DateValidatorPointBackward.now())
+            val constraintsBuilder =
+                CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now())
 
 
             franchiseModel?.let { model ->
                 val datePicker = MaterialDatePicker.Builder.datePicker()
                     .setTitleText(context.getString(R.string.select_date))
-                    .setSelection(selectedDate)
-                    .setCalendarConstraints(constraintsBuilder.build())
+                    .setSelection(selectedDate).setCalendarConstraints(constraintsBuilder.build())
                     .setNegativeButtonText(context.getString(R.string.cancel))
                     .setPositiveButtonText(context.getString(R.string.confirm))
-                    .setTheme(model.franchiseCalendarStyle)
-                    .build()
+                    .setTheme(model.franchiseCalendarStyle).build()
 
                 datePicker.addOnPositiveButtonClickListener {// time in long
                     try {
@@ -1508,11 +1446,9 @@ class UserPassViewModel(
             } ?: run {
                 val datePicker = MaterialDatePicker.Builder.datePicker()
                     .setTitleText(context.getString(R.string.select_date))
-                    .setSelection(selectedDate)
-                    .setCalendarConstraints(constraintsBuilder.build())
+                    .setSelection(selectedDate).setCalendarConstraints(constraintsBuilder.build())
                     .setNegativeButtonText(context.getString(R.string.cancel))
-                    .setPositiveButtonText(context.getString(R.string.confirm))
-                    .build()
+                    .setPositiveButtonText(context.getString(R.string.confirm)).build()
 
                 datePicker.addOnPositiveButtonClickListener {// time in long
                     try {
@@ -1541,32 +1477,10 @@ class UserPassViewModel(
         }
     }
 
-    fun roomPassageDataFirstScreen(data: V2HistoryTagResponse, country: String) {
+    fun roomPassageDataFirstScreen(data: V2HistoryTagResponse) {
         viewModelScope.launch(Dispatchers.IO) {
-            when (country) {
-                "HR" -> {
-                    repository.roomInsertCroatianPassage(data)
-                }
-
-                "MK" -> {
-                    repository.roomInsertNorthMacedonianPassage(data)
-                }
-
-                "ME" -> {
-                    repository.roomInsertMontenegroPassage(data)
-                }
-
-                "RS" -> {
-                    repository.roomInsertSerbianPassage(data)
-                }
-
-                else -> {}
-            }
+            repository.roomUpsertV2Passages(data)
         }
-    }
-
-    fun roomPassageDataResultScreen(data: V2HistoryTagResponse, country: String) {
-
     }
 
     private fun convertLongToDateString(time: Long): TimeSave {
@@ -1581,9 +1495,7 @@ class UserPassViewModel(
             if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
                 if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
                     Toast.makeText(
-                        context,
-                        context.getString(R.string.end_date_check),
-                        Toast.LENGTH_SHORT
+                        context, context.getString(R.string.end_date_check), Toast.LENGTH_SHORT
                     ).show()
                     _csvTable.value = SubmitResult.Empty
                 } else {
@@ -1609,10 +1521,7 @@ class UserPassViewModel(
                             }
 
                             val result = repository.getCsvTableData(
-                                tagSerial,
-                                dateStartApi,
-                                dateEndApi,
-                                selectedCountry
+                                tagSerial, dateStartApi, dateEndApi, selectedCountry
                             )
 
                             val body = result.getOrNull()
@@ -1638,18 +1547,16 @@ class UserPassViewModel(
                                                         TOKEN,
                                                         "invalid token detected login out user"
                                                     )
-                                                    _csvTable.value =
-                                                        SubmitResult.InvalidApiToken(
-                                                            error.errorResponse.code ?: 0,
-                                                            error.errorResponse.message ?: ""
-                                                        )
+                                                    _csvTable.value = SubmitResult.InvalidApiToken(
+                                                        error.errorResponse.code ?: 0,
+                                                        error.errorResponse.message ?: ""
+                                                    )
                                                 }
 
                                                 else -> {
-                                                    _csvTable.value =
-                                                        SubmitResult.FailureApiError(
-                                                            error.errorResponse.message ?: ""
-                                                        )
+                                                    _csvTable.value = SubmitResult.FailureApiError(
+                                                        error.errorResponse.message ?: ""
+                                                    )
                                                     Log.d(
                                                         TAG,
                                                         "api error ${error.errorResponse.message}"
@@ -1664,33 +1571,27 @@ class UserPassViewModel(
                             }
 
                         } else {
-                            _csvTable.value =
-                                SubmitResult.FailureApiError(
-                                    ContextCompat.getString(
-                                        context,
-                                        R.string.please_select_one_tag
-                                    )
+                            _csvTable.value = SubmitResult.FailureApiError(
+                                ContextCompat.getString(
+                                    context, R.string.please_select_one_tag
                                 )
+                            )
                         }
                     } catch (e: Exception) {
                         Log.d(TAG, "getCsvData: ${e.message} ${e.cause}")
-                        _csvTable.value =
-                            SubmitResult.FailureApiError(
-                                ContextCompat.getString(
-                                    context,
-                                    R.string.formatting_error
-                                )
+                        _csvTable.value = SubmitResult.FailureApiError(
+                            ContextCompat.getString(
+                                context, R.string.formatting_error
                             )
+                        )
                     }
                 }
             } else {
-                _csvTable.value =
-                    SubmitResult.FailureApiError(
-                        ContextCompat.getString(
-                            context,
-                            R.string.please_select_dates
-                        )
+                _csvTable.value = SubmitResult.FailureApiError(
+                    ContextCompat.getString(
+                        context, R.string.please_select_dates
                     )
+                )
             }
         }
     }

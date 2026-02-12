@@ -2,6 +2,7 @@
 <resources>
 
     <!-- Dimension for recycler in MonthlyBillsAdapter -->
+    <dimen name="recycler_view_one_zero_items">120dp</dimen>
     <dimen name="recycler_view_one_item">210dp</dimen>
     <dimen name="recycler_view_two_items">400dp</dimen>
     <dimen name="recycler_view_three_items">580dp</dimen>

@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
-import com.mobility.enp.data.model.api_tool_history.index.IndexData
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.FragmentPassageHistoryBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.Util
@@ -30,15 +28,12 @@ import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.view.dialogs.GeneralMessageDialogInfoButton
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
-    HistorySerialAdapter.PaginationUpdate,
     HistoryPassageAdapterCroatia.SendToFragment {
 
     private var _binding: FragmentPassageHistoryBinding? = null
@@ -70,7 +65,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
 
-        historySerialAdapter = HistorySerialAdapter(vModel, this, this, this, this)
+        historySerialAdapter = HistorySerialAdapter(vModel, this, this, this)
 
         binding.cycler.adapter = historySerialAdapter
         binding.cycler.layoutManager = LinearLayoutManager(requireContext())
@@ -214,7 +209,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                     }
 
                     tagIndex.data.first.availableCountries = countryList
-                    
+
                     vModel.saveRoomTagDataFirstScreen(tagIndex.data.first)
                 }
 
@@ -415,31 +410,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
     override fun sendObjectionData(objectionBody: ObjectionBody) {
         vModel.postObjection(objectionBody)
-    }
-
-    // uses the same interface for both croatia and normal adapter should seperate these
-    override fun sendDataFill(
-        nextPage: Int,
-        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse?>>,
-        tagSerialNumber: String
-    ) {
-        binding.progBar.visibility = View.VISIBLE
-
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            vModel.getToolHistoryTransit(flow, tagSerialNumber, nextPage)
-        }
-    }
-
-    override fun sendDataFillMainAdapter(
-        // updates tags on main adapter
-        nextPage: Int,
-        perPage: Int,
-        flow: MutableStateFlow<SubmitResult<IndexData>>,
-    ) {
-        binding.progBar.visibility = View.VISIBLE
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            vModel.getBaseTagDataPagination(nextPage, perPage, flow)
-        }
     }
 
     override fun stopSpinner() {

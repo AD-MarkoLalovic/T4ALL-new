@@ -24,7 +24,6 @@ class HistorySerialAdapter(
     private val complaintInterface: HistoryPassageAdapter.SendToFragment,
     private val complaintInterfaceCroatia: HistoryPassageAdapterCroatia.SendToFragment,
     val lifecycleOwner: LifecycleOwner,
-    val paginationUpdate: PaginationUpdate
 ) : RecyclerView.Adapter<HistorySerialAdapter.TagsViewHolder>() {
 
     private var toolHistoryIndex: IndexData? = null
@@ -99,7 +98,21 @@ class HistorySerialAdapter(
                     lifecycleOwner,
                     itemSerialNumber, countryCode, viewModel,
                     { size ->
+                        binding.progbar.visibility = View.GONE
+
+                        when (size) {
+                            0 -> {
+                                binding.noPassage.visibility = View.VISIBLE
+                            }
+
+                            else -> {
+                                binding.noPassage.visibility = View.GONE
+                            }
+                        }
+
                         setViewHeight(binding, size, position)
+                        Log.d(TAG, "bind: $size")
+
                     }, { sumTags ->
                         if (sumTags.isNotEmpty()) {  // sum total of price for passages hr doesn't have this data
                             binding.cyclerTotalPrice.adapter =
@@ -128,6 +141,11 @@ class HistorySerialAdapter(
         binding.position = position
 
         val heightInDp = when (size) {
+
+            0 -> binding.root.context.resources.getDimensionPixelSize(
+                R.dimen.recycler_view_one_zero_items
+            )
+
             1 -> binding.root.context.resources.getDimensionPixelSize(
                 R.dimen.recycler_view_one_item
             )
@@ -248,21 +266,13 @@ class HistorySerialAdapter(
                 }
             }
 
-            paginationUpdate.sendDataFillMainAdapter(currentPage + 1, perPage, indexListing)
+//            paginationUpdate.sendDataFillMainAdapter(currentPage + 1, perPage, indexListing)
         } else if (lastPage == currentPage && listOfTags[listOfTags.size - 1] == currentItem) {
             Log.d(
                 HistoryPassageAdapter.Companion.TAG,
                 "last item $currentItem total $total"
             )
         }
-    }
-
-    interface PaginationUpdate {
-        fun sendDataFillMainAdapter(
-            nextPage: Int,
-            perPage: Int,
-            flow: MutableStateFlow<SubmitResult<IndexData>>,
-        )
     }
 
 }
