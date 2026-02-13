@@ -97,6 +97,9 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
         binding.buttonSignOut.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
+
+                franchiseViewModel.runOnce = true
+
                 // added internet check if no internet just logout without token delete
                 viewModelProfile.deleteFirebaseToken()  // this deletes from server
                 viewModelProfile.postLogoutUser()

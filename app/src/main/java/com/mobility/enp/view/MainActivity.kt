@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val franchiseViewModel: FranchiseViewModel by viewModels { FranchiseViewModel.Factory }
-    private var franchiseModel: FranchiseModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,9 +90,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setObservers() {
         franchiseViewModel.franchiseModel.observe(this) { franchiseModel ->
-            this.franchiseModel = franchiseModel
-
-            if (franchiseViewModel.runOnce){
+            if (franchiseViewModel.runOnce) {
                 franchiseViewModel.runOnce = false
                 setFranchiserLogoVisible(franchiseModel)
             }
@@ -191,6 +188,7 @@ class MainActivity : AppCompatActivity() {
 
                     } else {
                         binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
+                        setFranchiserLogoVisible(franchiseViewModel.franchiseModel.value)
                     }
 
                     binding.bottomNavigation.visibility = View.VISIBLE
