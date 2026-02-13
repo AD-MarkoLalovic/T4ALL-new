@@ -948,10 +948,10 @@ class UserPassViewModel(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val formatter = if (selectedCountry.equals("HR", ignoreCase = true)) {
-                DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+                DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
             } else {
                 DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
-            }
+            }  // they changed it to be the same and didn't notify mobile it was dd/MM/yyyy for croatia
 
             val dateTo = LocalDate.now()
             val dateFrom = dateTo.minusDays(360)
@@ -988,6 +988,76 @@ class UserPassViewModel(
                     v2HistoryTagResponse.totalPages =
                         v2HistoryTagResponse.data?.records?.pagination?.total ?: 0
                     roomPassageDataFirstScreen(v2HistoryTagResponse)
+                }
+
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _baseTagDataState.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(TOKEN, "invalid token detected login out user")
+                                _baseTagDataState.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code ?: 0, error.errorResponse.message ?: ""
+                                )
+                            }
+
+                            else -> {
+                                _baseTagDataState.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
+                                Log.d(TAG, "api error ${error.errorResponse.message}")
+                            }
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
+
+
+    fun getToolHistoryTransitCroatia(
+        tagSerialNumber: String, currentPage: Int
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+            val dateTo = LocalDate.now()
+            val dateFrom = dateTo.minusDays(30)
+
+            val dateToFormatted = dateTo.format(formatter)
+            val dateFromFormatted = dateFrom.format(formatter)
+
+            val result = repository.getAdapterPassageDataCountryFilter(
+                tagSerialNumber,
+                "HR",
+                currentPage,
+                itemsPerPage,
+                dateFromFormatted ?: "",
+                dateToFormatted ?: ""
+            )
+
+
+            if (result.isSuccess) {
+                result.getOrNull()?.let { v2HistoryTagResponse ->
+                    v2HistoryTagResponse.countryCode = selectedCountry
+                    v2HistoryTagResponse.serial = tagSerialNumber
+                    v2HistoryTagResponse.pageNumber =
+                        v2HistoryTagResponse.data?.records?.pagination?.currentPage ?: 0
+                    v2HistoryTagResponse.lastPage =
+                        v2HistoryTagResponse.data?.records?.pagination?.lastPage ?: 0
+                    v2HistoryTagResponse.totalPages =
+                        v2HistoryTagResponse.data?.records?.pagination?.total ?: 0
+                    roomPassageDataFirstScreenCroatia(v2HistoryTagResponse)
                 }
 
             } else {
@@ -1479,14 +1549,13 @@ class UserPassViewModel(
 
     fun roomPassageDataFirstScreen(data: V2HistoryTagResponse) {
         viewModelScope.launch(Dispatchers.IO) {
-            when (selectedCountry) {
-                "HR" -> {
-                    repository.roomUpsertCroatianPassage(data)
-                }  // special country
-                else -> {  // normal countries
-                    repository.roomUpsertV2Passages(data)
-                }
-            }
+            repository.roomUpsertV2Passages(data)
+        }
+    }
+
+    fun roomPassageDataFirstScreenCroatia(data: V2HistoryTagResponse){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.roomUpsertCroatianPassage(data)
         }
     }
 

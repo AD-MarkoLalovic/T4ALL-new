@@ -87,6 +87,15 @@ class HistorySerialAdapter(
                     lifecycleOwner,
                     itemSerialNumber, viewModel, { size ->
                         binding.progbar.visibility = View.GONE
+                        binding.cyclerTotalPrice.adapter =
+                            HistoryTotalCostAdapter(emptyList())
+                        binding.cyclerTotalPrice.layoutManager =
+                            LinearLayoutManager(
+                                binding.root.context,
+                                LinearLayoutManager.VERTICAL,
+                                false
+                            )
+                        binding.cyclerTotalPrice.visibility = View.INVISIBLE
 
                         when (size) {
                             0 -> {

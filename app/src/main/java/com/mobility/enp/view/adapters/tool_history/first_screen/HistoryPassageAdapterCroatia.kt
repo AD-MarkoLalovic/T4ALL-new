@@ -49,7 +49,7 @@ class HistoryPassageAdapterCroatia(
             }
         }
 
-        viewmodel.getToolHistoryTransit(tagSerialNumber, 1)
+        viewmodel.getToolHistoryTransitCroatia(tagSerialNumber, 1)
     }
 
     companion object {
