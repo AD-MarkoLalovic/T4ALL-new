@@ -99,6 +99,7 @@ class HistorySerialAdapter(
                         }
 
                         setViewHeight(binding, size, position)
+                        Log.d(TAG, "bind: $size")
                     }
                 )
                 binding.cyclerTotalPrice.visibility = View.GONE

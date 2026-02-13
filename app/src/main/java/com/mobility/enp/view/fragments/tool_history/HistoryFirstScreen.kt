@@ -189,7 +189,9 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         collectLatestLifecycleFlow(vModel.baseTagDataStateFirstScreen) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {
-                    binding.progBar.visibility = View.VISIBLE
+                    if (listIndexData.isEmpty()){
+                        binding.progBar.visibility = View.VISIBLE
+                    }
                 }
 
                 is SubmitResult.Success -> {
