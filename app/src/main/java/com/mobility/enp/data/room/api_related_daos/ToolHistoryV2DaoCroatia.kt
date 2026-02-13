@@ -15,9 +15,6 @@ interface ToolHistoryV2DaoCroatia {
     @Query("DELETE FROM HISTORY_V2_Croatia")
     suspend fun deleteData()
 
-    @Query("SELECT * FROM HISTORY_V2_Croatia")
-    fun fetchData(): List<V2HistoryTagResponseCroatia>
-
     @Query("SELECT * FROM HISTORY_V2_Croatia WHERE serial = :serial AND countryCode = :country")
     fun observePassageDataBySerialCountry(serial: String, country: String): Flow<List<V2HistoryTagResponseCroatia?>>
 

@@ -954,7 +954,7 @@ class UserPassViewModel(
             }
 
             val dateTo = LocalDate.now()
-            val dateFrom = dateTo.minusDays(30)
+            val dateFrom = dateTo.minusDays(360)
 
             val dateToFormatted = dateTo.format(formatter)
             val dateFromFormatted = dateFrom.format(formatter)
