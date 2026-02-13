@@ -153,7 +153,9 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         collectLatestLifecycleFlow(vModel.baseTagDataStateByCountry) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {
-                    binding.progBar.visibility = View.VISIBLE
+                    if (listIndexData.isEmpty()) {
+                        binding.progBar.visibility = View.VISIBLE
+                    }
                 }
 
                 is SubmitResult.Success -> {
@@ -189,7 +191,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         collectLatestLifecycleFlow(vModel.baseTagDataStateFirstScreen) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {
-                    if (listIndexData.isEmpty()){
+                    if (listIndexData.isEmpty()) {
                         binding.progBar.visibility = View.VISIBLE
                     }
                 }
@@ -331,9 +333,10 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                     historySerialAdapter.setAdapterData(listIndexData[0])
                 }
 
-                binding.progBar.visibility = View.VISIBLE
-
                 if (vModel.isNetAvailable()) {
+                    if (listIndexData.isEmpty()) {
+                        binding.progBar.visibility = View.VISIBLE
+                    }
                     vModel.getBaseDataAlternativeApiForCountriesOnMain()
                 }
 

@@ -259,6 +259,7 @@ class UserPassViewModel(
     var endDate = MutableLiveData<TimeSave>()
     private var userSelectedCalendarStart: Long? = null
     private var userSelectedCalendarEnd: Long? = null
+    private val timeFrameFirstScreen: Long = 30
 
 
     var allTagsSelected = false
@@ -954,7 +955,7 @@ class UserPassViewModel(
             }  // they changed it to be the same and didn't notify mobile it was dd/MM/yyyy for croatia
 
             val dateTo = LocalDate.now()
-            val dateFrom = dateTo.minusDays(360)
+            val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
 
             val dateToFormatted = dateTo.format(formatter)
             val dateFromFormatted = dateFrom.format(formatter)
@@ -1032,7 +1033,7 @@ class UserPassViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
             val dateTo = LocalDate.now()
-            val dateFrom = dateTo.minusDays(30)
+            val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
 
             val dateToFormatted = dateTo.format(formatter)
             val dateFromFormatted = dateFrom.format(formatter)
@@ -1553,7 +1554,7 @@ class UserPassViewModel(
         }
     }
 
-    fun roomPassageDataFirstScreenCroatia(data: V2HistoryTagResponse){
+    fun roomPassageDataFirstScreenCroatia(data: V2HistoryTagResponse) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.roomUpsertCroatianPassage(data)
         }
