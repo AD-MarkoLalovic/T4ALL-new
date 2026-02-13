@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -91,7 +92,10 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         }
 
         binding.infoIcon.setOnClickListener {
-            val dialog = GeneralMessageDialogInfoButton.newInstance(getString(R.string.tool_history), getString(R.string.prolasci_info))
+            val dialog = GeneralMessageDialogInfoButton.newInstance(
+                getString(R.string.tool_history),
+                getString(R.string.prolasci_info)
+            )
             dialog.isCancelable = false
             dialog.show(parentFragmentManager, "infoDialog")
         }
@@ -148,8 +152,16 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
 
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
-            franchiseModel?.franchisePrimaryColor?.let {
+            franchiseModel?.franchisePrimaryColor?.let { color ->
                 binding.loopIcon.setBackgroundResource(franchiseModel.loopIcon)
+
+                val drawable = AppCompatResources
+                    .getDrawable(requireContext(), R.drawable.ic_info)
+                    ?.mutate()
+
+                drawable?.setTint(color)
+
+                binding.infoIcon.setImageDrawable(drawable)
             }
         }
 
