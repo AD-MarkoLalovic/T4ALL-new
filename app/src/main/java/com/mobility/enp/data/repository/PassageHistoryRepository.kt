@@ -6,8 +6,8 @@ import com.mobility.enp.data.model.api_tags.LostTagResponse
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2AllowedCountries
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
@@ -83,6 +83,14 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
     suspend fun roomUpsertV2Passages(data: V2HistoryTagResponse) {
         database.historyV2PassageDao().upsert(data)
+    }
+
+    suspend fun roomUpsertAllowedCountries(data: List<String>) {
+        val list: ArrayList<V2AllowedCountries> = arrayListOf()
+        for (country in data) {
+            list.add(V2AllowedCountries(country))
+        }
+        database.historyV2AllowedCountriesDao().upsert(list.toList())
     }
 
     suspend fun roomUpsertCroatianPassage(data: V2HistoryTagResponse) {

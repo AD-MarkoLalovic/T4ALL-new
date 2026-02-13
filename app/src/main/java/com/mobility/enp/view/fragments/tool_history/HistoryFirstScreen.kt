@@ -113,6 +113,18 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vModel.allowedCountriesFlow.collect { allowedCountries ->
+                    val listOfCountries: ArrayList<String> = arrayListOf()
+                    for (data in allowedCountries) {
+                        listOfCountries.add(data.country)
+                    }
+                    setAvailableFilters(listOfCountries.toList())
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vModel.tagFlow.collect { indexData ->
                     if (!indexData.isEmpty()) {
 
@@ -217,6 +229,9 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                     tagIndex.data.first.availableCountries = countryList
 
+                    if (countryList.isNotEmpty()) {
+                        vModel.saveAllowedCountries(countryList)
+                    }
                     vModel.saveRoomTagDataFirstScreen(tagIndex.data.first)
                 }
 

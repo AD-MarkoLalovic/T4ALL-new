@@ -53,6 +53,7 @@ import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.room.api_related_daos.HistoryV2TagsSerials
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.CHANNEL_ID
@@ -84,7 +85,8 @@ class UserPassViewModel(
     private val repository: PassageHistoryRepository,
     private val tagsDao: HistoryV2TagsSerials,
     private val historyCroatiaPassageDao: ToolHistoryV2DaoCroatia,
-    private val historyV2Dao: ToolHistoryV2Dao
+    private val historyV2Dao: ToolHistoryV2Dao,
+    private val historyV2AllowedCountriesDao: ToolHistoryV2AllowedCountryDao
 ) : ViewModel() {
 
     companion object {
@@ -97,17 +99,23 @@ class UserPassViewModel(
                 val tagsDao = (this[APPLICATION_KEY] as MyApplication).v2TagsDao
                 val historyV2PassageDao = (this[APPLICATION_KEY] as MyApplication).v2HistoryDao
                 val historyCroatiaPassageDao = (this[APPLICATION_KEY] as MyApplication).v2CroatiaDao
+                val historyAllowedCountriesDao =
+                    (this[APPLICATION_KEY] as MyApplication).v2AllowedCountriesDao
                 UserPassViewModel(
                     repository = myRepository,
                     tagsDao,
                     historyCroatiaPassageDao,
-                    historyV2PassageDao
+                    historyV2PassageDao, historyAllowedCountriesDao
                 )
             }
         }
     }
 
     val tagFlow = tagsDao.observeIndexData().stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+    )
+
+    val allowedCountriesFlow = historyV2AllowedCountriesDao.observeAllowedCountries().stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
@@ -723,6 +731,14 @@ class UserPassViewModel(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.upsertBaseTagData(indexData)
+            }
+        }
+    }
+
+    fun saveAllowedCountries(countries : List<String>){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                repository.roomUpsertAllowedCountries(countries)
             }
         }
     }
