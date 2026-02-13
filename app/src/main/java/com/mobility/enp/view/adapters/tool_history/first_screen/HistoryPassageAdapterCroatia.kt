@@ -21,8 +21,7 @@ class HistoryPassageAdapterCroatia(
     private val tagSerialNumber: String,
     private val viewmodel: UserPassViewModel,
     private var onInitDataSize: (Int) -> Unit
-) :
-    RecyclerView.Adapter<HistoryPassageAdapterCroatia.RelationViewHolder>() {
+) : RecyclerView.Adapter<HistoryPassageAdapterCroatia.RelationViewHolder>() {
 
     private lateinit var context: Context
 
@@ -45,6 +44,9 @@ class HistoryPassageAdapterCroatia(
                         }
 
                         relation = listOfPassages.toList()
+                        for (i in relation.indices){
+                            notifyItemChanged(i)
+                        }
                     }
             }
         }
@@ -57,10 +59,8 @@ class HistoryPassageAdapterCroatia(
     }
 
     inner class RelationViewHolder(
-        private val context: Context,
-        private val binding: ItemRelationPassageRealCroatiaBinding
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
+        private val context: Context, private val binding: ItemRelationPassageRealCroatiaBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(relation: Item) {
             Log.d(TAG, "bind: $relation")
@@ -86,11 +86,8 @@ class HistoryPassageAdapterCroatia(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RelationViewHolder {
         context = parent.context
         return RelationViewHolder(
-            context,
-            ItemRelationPassageRealCroatiaBinding.inflate(
-                LayoutInflater.from(context),
-                parent,
-                false
+            context, ItemRelationPassageRealCroatiaBinding.inflate(
+                LayoutInflater.from(context), parent, false
             )
         )
     }

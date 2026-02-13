@@ -2,7 +2,6 @@ package com.mobility.enp.view.adapters.tool_history.first_screen
 
 import android.content.Context
 import android.content.res.Configuration
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,18 +40,11 @@ class HistoryPassageAdapter(
     private lateinit var context: Context
     private var relation: List<Item> = emptyList<Item>()
 
-
     init {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewmodel.getV2PassagesBySerialAndCountryCode(tagSerialNumber, countryCode)
                     .collect { data ->
-
-                        Log.d(
-                            TAG, "flow serial $tagSerialNumber, country Code $countryCode"
-                                    + "\n" + "${data.toString()}"
-                        )
-
                         if (data.isNotEmpty()) { // sum of tags
                             onSumTags(data[0]?.data?.sumTags ?: emptyList())
                             onInitDataSize(data[0]?.data?.records?.items?.size ?: 0)
@@ -65,6 +57,9 @@ class HistoryPassageAdapter(
                         }
 
                         relation = listOfPassages.toList()
+                        for (i in relation.indices) {
+                            notifyItemChanged(i)
+                        }
                     }
             }
         }
