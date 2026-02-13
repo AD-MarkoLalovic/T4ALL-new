@@ -4,29 +4,53 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
-import com.mobility.enp.data.model.api_tool_history.v2base_model.SumTag
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.ItemRelationPassageRealCroatiaBinding
-import com.mobility.enp.util.SubmitResult
-import com.mobility.enp.util.Util
-import com.mobility.enp.util.collectLatestFlow
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.mobility.enp.viewmodel.UserPassViewModel
+import kotlinx.coroutines.launch
 
 class HistoryPassageAdapterCroatia(
     private val complaintInterface: SendToFragment,
     private val lifecycleOwner: LifecycleOwner,
     private val tagSerialNumber: String,
-    private var onInitDataSize : (Int) -> Unit
+    private val viewmodel: UserPassViewModel,
+    private var onInitDataSize: (Int) -> Unit
 ) :
     RecyclerView.Adapter<HistoryPassageAdapterCroatia.RelationViewHolder>() {
 
     private lateinit var context: Context
 
-    private var relation: List<Item> =  emptyList()
+    private var relation: List<Item> = emptyList()
+
+
+    init {
+        lifecycleOwner.lifecycleScope.launch {
+            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewmodel.getCroatiaPassagesBySerialPage(tagSerialNumber, viewmodel.selectedCountry)
+                    .collect { data ->
+                        if (data.isNotEmpty()) {
+                            onInitDataSize(data[0]?.data?.records?.items?.size ?: 0)
+                        }
+                        val listOfPassages: ArrayList<Item> = arrayListOf()
+                        for (passages in data) {
+                            passages?.data?.records?.items?.let { setOfPassages ->
+                                listOfPassages.addAll(setOfPassages)
+                            }
+                        }
+
+                        relation = listOfPassages.toList()
+                    }
+            }
+        }
+
+        viewmodel.getToolHistoryTransit(tagSerialNumber, 1)
+    }
 
     companion object {
         const val TAG = "PassageAdapter"

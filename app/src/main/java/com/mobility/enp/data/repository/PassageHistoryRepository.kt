@@ -115,7 +115,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         database.historyV2PassageDao().upsert(data)
     }
 
-    suspend fun roomInsertCroatianPassage(data: V2HistoryTagResponse) {
+    suspend fun roomUpsertCroatianPassage(data: V2HistoryTagResponse) {
         val passageData = data.toCroatianPassage()
         database.historyPassageDaoV2Croatia().upsertData(passageData)
     }
@@ -342,15 +342,6 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
     fun isInternetAvailable(): Boolean {
         return isNetworkAvailable()
-    }
-
-    suspend fun fetchPassageDataBySerialCroatia(
-        serial: String,
-        countyCode: String
-    ): V2HistoryTagResponseCroatia? {
-        return withContext(Dispatchers.IO) {
-            database.historyPassageDaoV2Croatia().fetchPassageBySerial(serial, countyCode)
-        }
     }
 
 }

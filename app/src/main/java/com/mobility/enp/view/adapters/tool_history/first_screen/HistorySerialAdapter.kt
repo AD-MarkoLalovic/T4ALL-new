@@ -85,7 +85,19 @@ class HistorySerialAdapter(
                 binding.cycler.adapter = HistoryPassageAdapterCroatia(
                     complaintInterfaceCroatia,
                     lifecycleOwner,
-                    itemSerialNumber, { size ->
+                    itemSerialNumber, viewModel, { size ->
+                        binding.progbar.visibility = View.GONE
+
+                        when (size) {
+                            0 -> {
+                                binding.noPassage.visibility = View.VISIBLE
+                            }
+
+                            else -> {
+                                binding.noPassage.visibility = View.GONE
+                            }
+                        }
+
                         setViewHeight(binding, size, position)
                     }
                 )

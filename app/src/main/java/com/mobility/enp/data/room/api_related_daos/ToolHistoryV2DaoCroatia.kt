@@ -18,8 +18,8 @@ interface ToolHistoryV2DaoCroatia {
     @Query("SELECT * FROM HISTORY_V2_Croatia")
     fun fetchData(): List<V2HistoryTagResponseCroatia>
 
-    @Query("SELECT * FROM HISTORY_V2_Croatia WHERE serial = :serial AND countryCode = :countryCode")
-    fun fetchPassageBySerial(serial: String, countryCode: String): V2HistoryTagResponseCroatia?
+    @Query("SELECT * FROM HISTORY_V2_Croatia WHERE serial = :serial AND countryCode = :country")
+    fun observePassageDataBySerialCountry(serial: String, country: String): Flow<List<V2HistoryTagResponseCroatia?>>
 
     @Query("SELECT * FROM HISTORY_V2_Croatia WHERE serial = :serial AND pageNumber = :page")
     fun observePassageData(serial: String, page: Int): Flow<List<V2HistoryTagResponseCroatia?>>

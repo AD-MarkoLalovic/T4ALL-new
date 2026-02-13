@@ -130,11 +130,12 @@ class UserPassViewModel(
 
 
     fun getCroatiaPassagesBySerialPage(
-        serialNumber: String, pageNumber: Int
+        serialNumber: String, countryCode: String
     ): StateFlow<List<V2HistoryTagResponseCroatia?>> {
-        return historyCroatiaPassageDao.observePassageData(serialNumber, pageNumber).stateIn(
-            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-        )
+        return historyCroatiaPassageDao.observePassageDataBySerialCountry(serialNumber, countryCode)
+            .stateIn(
+                viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+            )
     }
 
     fun getCroatiaPassagesBySerial(
@@ -1478,7 +1479,14 @@ class UserPassViewModel(
 
     fun roomPassageDataFirstScreen(data: V2HistoryTagResponse) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.roomUpsertV2Passages(data)
+            when (selectedCountry) {
+                "HR" -> {
+                    repository.roomUpsertCroatianPassage(data)
+                }  // special country
+                else -> {  // normal countries
+                    repository.roomUpsertV2Passages(data)
+                }
+            }
         }
     }
 
