@@ -6,18 +6,23 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.TagUtilCycler
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
+import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.adapters.tool_history.combined.HistoryTotalCostAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HistorySerialAdapter(
     private val viewModel: UserPassViewModel,
@@ -82,36 +87,55 @@ class HistorySerialAdapter(
 
             //region inner passage adapters
             if (viewModel.selectedCountry == binding.root.context.getString(R.string.croatia_hr)) {
-                binding.cycler.adapter = HistoryPassageAdapterCroatia(
-                    complaintInterfaceCroatia,
-                    lifecycleOwner,
-                    itemSerialNumber, viewModel, { size ->
-                        binding.progbar.visibility = View.GONE
-                        binding.cyclerTotalPrice.adapter =
-                            HistoryTotalCostAdapter(emptyList())
-                        binding.cyclerTotalPrice.layoutManager =
-                            LinearLayoutManager(
-                                binding.root.context,
-                                LinearLayoutManager.VERTICAL,
-                                false
-                            )
-                        binding.cyclerTotalPrice.visibility = View.INVISIBLE
 
-                        when (size) {
-                            0 -> {
-                                binding.noPassage.visibility = View.VISIBLE
-                            }
+                lifecycleOwner.lifecycleScope.launch() {
 
-                            else -> {
-                                binding.noPassage.visibility = View.GONE
-                            }
-                        }
-
-                        setViewHeight(binding, size, position)
-                        Log.d(TAG, "bind: $size")
+                    val initLoad = withContext(Dispatchers.IO) {
+                        viewModel.getCroatiaPassagesBySerialPageLoad(
+                            itemSerialNumber,
+                            binding.root.context.getString(R.string.croatia_hr)
+                        )
                     }
-                )
-                binding.cyclerTotalPrice.visibility = View.GONE
+
+                    val listOfPassages: ArrayList<Item> = arrayListOf()
+                    for (passages in initLoad) {
+                        passages?.data?.records?.items?.let { setOfPassages ->
+                            listOfPassages.addAll(setOfPassages)
+                        }
+                    }
+
+                    binding.cycler.adapter = HistoryPassageAdapterCroatia(
+                        listOfPassages,
+                        complaintInterfaceCroatia,
+                        lifecycleOwner,
+                        itemSerialNumber, viewModel, { size ->
+                            binding.progbar.visibility = View.GONE
+                            binding.cyclerTotalPrice.adapter =
+                                HistoryTotalCostAdapter(emptyList())
+                            binding.cyclerTotalPrice.layoutManager =
+                                LinearLayoutManager(
+                                    binding.root.context,
+                                    LinearLayoutManager.VERTICAL,
+                                    false
+                                )
+                            binding.cyclerTotalPrice.visibility = View.INVISIBLE
+
+                            when (size) {
+                                0 -> {
+                                    binding.noPassage.visibility = View.VISIBLE
+                                }
+
+                                else -> {
+                                    binding.noPassage.visibility = View.GONE
+                                }
+                            }
+
+                            setViewHeight(binding, size, position)
+                            Log.d(TAG, "bind: $size")
+                        }
+                    )
+                    binding.cyclerTotalPrice.visibility = View.GONE
+                }
             } else {
                 //record of passages for tag for normal countries
                 //adapter that presents the passages

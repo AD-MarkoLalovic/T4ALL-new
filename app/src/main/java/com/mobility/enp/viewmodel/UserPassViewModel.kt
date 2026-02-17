@@ -146,6 +146,15 @@ class UserPassViewModel(
             )
     }
 
+    fun getCroatiaPassagesBySerialPageLoad(
+        serialNumber: String, countryCode: String
+    ): List<V2HistoryTagResponseCroatia?> {
+        return historyCroatiaPassageDao.observePassageDataBySerialCountryLoad(
+            serialNumber,
+            countryCode
+        )
+    }
+
     fun getCroatiaPassagesBySerial(
         serialNumber: String,
     ): StateFlow<List<V2HistoryTagResponseCroatia?>> {
@@ -735,9 +744,9 @@ class UserPassViewModel(
         }
     }
 
-    fun saveAllowedCountries(countries : List<String>){
+    fun saveAllowedCountries(countries: List<String>) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 repository.roomUpsertAllowedCountries(countries)
             }
         }

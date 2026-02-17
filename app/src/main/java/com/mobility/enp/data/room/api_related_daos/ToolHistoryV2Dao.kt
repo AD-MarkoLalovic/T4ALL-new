@@ -16,6 +16,12 @@ interface ToolHistoryV2Dao {
     suspend fun deleteData()
 
     @Query("SELECT * FROM HISTORY_V2 WHERE serial = :serial AND countryCode = :countryCode")
+    fun observePassageDataBySerialAndCountryCodeLoad(
+        serial: String,
+        countryCode: String
+    ): List<V2HistoryTagResponse?>
+
+    @Query("SELECT * FROM HISTORY_V2 WHERE serial = :serial AND countryCode = :countryCode")
     fun observePassageDataBySerialAndCountryCode(
         serial: String,
         countryCode: String

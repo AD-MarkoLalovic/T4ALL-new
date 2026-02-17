@@ -16,6 +16,7 @@ import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.launch
 
 class HistoryPassageAdapterCroatia(
+    private val listOfPassages: ArrayList<Item>,
     private val complaintInterface: SendToFragment,
     private val lifecycleOwner: LifecycleOwner,
     private val tagSerialNumber: String,
@@ -25,10 +26,12 @@ class HistoryPassageAdapterCroatia(
 
     private lateinit var context: Context
 
-    private var relation: List<Item> = emptyList()
-
+    private var relation: List<Item>
 
     init {
+
+        relation = listOfPassages
+
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewmodel.getCroatiaPassagesBySerialPage(tagSerialNumber, viewmodel.selectedCountry)
