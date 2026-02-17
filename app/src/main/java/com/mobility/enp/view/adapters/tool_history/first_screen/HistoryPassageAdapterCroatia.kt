@@ -43,9 +43,11 @@ class HistoryPassageAdapterCroatia(
                             }
                         }
 
-                        relation = listOfPassages.toList()
-                        for (i in relation.indices){
-                            notifyItemChanged(i)
+                        if (listOfPassages.toList() != relation) {
+                            relation = listOfPassages.toList()
+                            for (i in relation.indices) {
+                                notifyItemChanged(i)
+                            }
                         }
                     }
             }
