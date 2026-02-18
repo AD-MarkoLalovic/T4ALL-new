@@ -52,10 +52,10 @@ import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.repository.PassageHistoryRepository
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.CHANNEL_ID
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.NOTIFICATION_ID
 import com.mobility.enp.util.NetworkError
@@ -1132,6 +1132,17 @@ class UserPassViewModel(
                     }
 
                     else -> {}
+                }
+            }
+        }
+    }
+
+    fun getTagsUpdate(nextPage: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val resultTags = repository.getTagBaseData(nextPage, tagsPerPage)
+            if (resultTags.isSuccess) {
+                resultTags.getOrNull()?.let { indexData ->
+                    repository.upsertBaseTagData(indexData)
                 }
             }
         }

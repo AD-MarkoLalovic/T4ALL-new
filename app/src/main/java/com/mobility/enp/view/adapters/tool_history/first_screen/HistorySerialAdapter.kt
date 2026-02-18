@@ -255,6 +255,18 @@ class HistorySerialAdapter(
             holder,
             country ?: "no data"
         )
+
+        runPaginationCheck(currentTag)
+
+    }
+
+    private fun runPaginationCheck(currentTag: Tag) {
+        if (currentTag == listOfTags[listOfTags.size - 1]) {
+            if (currentPage < lastPage) {
+                // trigger background update with flow
+                viewModel.getTagsUpdate(currentPage + 1)
+            }
+        }
     }
 
 }
