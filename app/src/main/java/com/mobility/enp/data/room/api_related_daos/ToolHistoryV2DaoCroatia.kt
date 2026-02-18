@@ -12,14 +12,23 @@ interface ToolHistoryV2DaoCroatia {
     @Upsert
     suspend fun upsertData(data: V2HistoryTagResponseCroatia)
 
+    @Upsert
+    suspend fun upsertAll(data: List<V2HistoryTagResponseCroatia>)
+
     @Query("DELETE FROM HISTORY_V2_Croatia")
     suspend fun deleteData()
 
     @Query("SELECT * FROM HISTORY_V2_Croatia WHERE serial = :serial AND countryCode = :country")
-    fun observePassageDataBySerialCountryLoad(serial: String, country: String): List<V2HistoryTagResponseCroatia?>
+    fun observePassageDataBySerialCountryLoad(
+        serial: String,
+        country: String
+    ): List<V2HistoryTagResponseCroatia?>
 
     @Query("SELECT * FROM HISTORY_V2_Croatia WHERE serial = :serial AND countryCode = :country")
-    fun observePassageDataBySerialCountry(serial: String, country: String): Flow<List<V2HistoryTagResponseCroatia?>>
+    fun observePassageDataBySerialCountry(
+        serial: String,
+        country: String
+    ): Flow<List<V2HistoryTagResponseCroatia?>>
 
     @Query("SELECT * FROM HISTORY_V2_Croatia WHERE serial = :serial AND currentPage = :page")
     fun observePassageData(serial: String, page: Int): Flow<List<V2HistoryTagResponseCroatia?>>

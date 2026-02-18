@@ -61,6 +61,7 @@ import com.mobility.enp.services.MyFirebaseMessagingService.Companion.NOTIFICATI
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.toCroatianPassage
 import com.mobility.enp.view.CsvActivity
 import com.mobility.enp.view.fragments.tool_history.HistoryFilterScreen
 import kotlinx.coroutines.Dispatchers
@@ -746,6 +747,67 @@ class UserPassViewModel(
 
                 if (result.isNotEmpty()) {
                     repository.roomUpsertAllV2Passages(result)
+                }
+            }
+        }
+    }
+
+    fun getSerialPassageTagDataValidationCroatia(
+        totalPages: Int,
+        tagSerial: String,
+        countryCode: String
+    ) {
+        viewModelScope.launch() {
+            val semaphore = Semaphore(20)
+
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+            val dateTo = LocalDate.now()
+            val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
+
+            val dateToFormatted = dateTo.format(formatter)
+            val dateFromFormatted = dateFrom.format(formatter)
+
+            withContext(Dispatchers.IO) {
+                val result = coroutineScope {
+                    (1..totalPages).map { page ->
+                        async {
+                            semaphore.withPermit {
+                                try {
+                                    val response = repository.getAdapterPassageDataCountryFilter(
+                                        tagSerial,
+                                        countryCode,
+                                        page,
+                                        itemsPerPage,
+                                        dateFromFormatted,
+                                        dateToFormatted
+                                    )
+
+                                    val body = response.getOrNull()
+
+                                    body?.copy(
+                                        serial = tagSerial,
+                                        countryCode = countryCode,
+                                        currentPage = body.data?.records?.pagination?.currentPage
+                                            ?: 0,
+                                        lastPage = body.data?.records?.pagination?.lastPage ?: 0,
+                                        totalRecords = body.data?.records?.pagination?.total ?: 0,
+                                        perPage = body.data?.records?.pagination?.perPage ?: 0
+                                    )
+
+                                } catch (e: Exception) {
+                                    null
+                                }
+                            }
+                        }
+                    }.awaitAll().filterNotNull()
+                }
+
+                if (result.isNotEmpty()) {
+                    val convertedList: ArrayList<V2HistoryTagResponseCroatia> = arrayListOf()
+                    for (data in result) {
+                        convertedList.add(data.toCroatianPassage())
+                    }
+                    repository.roomUpsertAllV2PassagesCroatia(convertedList.toList())
                 }
             }
         }

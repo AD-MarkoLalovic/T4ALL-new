@@ -8,6 +8,7 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2AllowedCountries
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
@@ -87,6 +88,10 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
     suspend fun roomUpsertAllV2Passages(data: List<V2HistoryTagResponse>) {
         database.historyV2PassageDao().upsertAll(data)
+    }
+
+    suspend fun roomUpsertAllV2PassagesCroatia(data: List<V2HistoryTagResponseCroatia>) {
+        database.historyPassageDaoV2Croatia().upsertAll(data)
     }
 
     suspend fun roomUpsertAllowedCountries(data: List<String>) {

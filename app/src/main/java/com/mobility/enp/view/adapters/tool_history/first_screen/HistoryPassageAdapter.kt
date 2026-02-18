@@ -80,6 +80,7 @@ class HistoryPassageAdapter(
         }
 
         viewmodel.getToolHistoryTransit(tagSerialNumber, 1)
+        viewmodel.getSerialPassageTagDataValidation(totalPages,tagSerialNumber,countryCode)
     }
 
     companion object {
