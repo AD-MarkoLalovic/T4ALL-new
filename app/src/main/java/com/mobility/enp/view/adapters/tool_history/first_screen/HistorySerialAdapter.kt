@@ -104,6 +104,8 @@ class HistorySerialAdapter(
                         }
                     }
 
+                    setViewHeight(binding, listOfPassages.size, position)
+
                     binding.cycler.adapter = HistoryPassageAdapterCroatia(
                         listOfPassages,
                         complaintInterfaceCroatia,
@@ -119,17 +121,6 @@ class HistorySerialAdapter(
                                     false
                                 )
                             binding.cyclerTotalPrice.visibility = View.INVISIBLE
-
-                            when (size) {
-                                0 -> {
-                                    binding.noPassage.visibility = View.VISIBLE
-                                }
-
-                                else -> {
-                                    binding.noPassage.visibility = View.GONE
-                                }
-                            }
-
                             setViewHeight(binding, size, position)
                             Log.d(TAG, "bind: $size")
                         }
@@ -156,6 +147,8 @@ class HistorySerialAdapter(
                         }
                     }
 
+                    setViewHeight(binding, listOfPassages.size, position)
+
                     binding.cycler.adapter = HistoryPassageAdapter(
                         listOfPassages,
                         complaintInterface,
@@ -164,17 +157,6 @@ class HistorySerialAdapter(
                         itemSerialNumber, viewModel.selectedCountry, viewModel,
                         { size ->
                             binding.progbar.visibility = View.GONE
-
-                            when (size) {
-                                0 -> {
-                                    binding.noPassage.visibility = View.VISIBLE
-                                }
-
-                                else -> {
-                                    binding.noPassage.visibility = View.GONE
-                                }
-                            }
-
                             setViewHeight(binding, size, position)
                             Log.d(TAG, "bind: $size")
 
@@ -205,6 +187,16 @@ class HistorySerialAdapter(
 
     private fun setViewHeight(binding: ToolHistoryIndexCardBinding, size: Int, position: Int) {
         binding.position = position
+
+        when (size) {
+            0 -> {
+                binding.noPassage.visibility = View.VISIBLE
+            }
+
+            else -> {
+                binding.noPassage.visibility = View.GONE
+            }
+        }
 
         val heightInDp = when (size) {
 
