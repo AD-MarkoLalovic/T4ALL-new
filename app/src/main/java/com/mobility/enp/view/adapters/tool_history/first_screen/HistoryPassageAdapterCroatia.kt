@@ -67,7 +67,13 @@ class HistoryPassageAdapterCroatia(
         }
 
         viewmodel.getToolHistoryTransitCroatia(tagSerialNumber, 1)
-        viewmodel.getSerialPassageTagDataValidationCroatia(totalPages,tagSerialNumber,context.getString(R.string.croatia_hr))
+        if (totalPages > 1) {
+            viewmodel.getSerialPassageTagDataValidationCroatia(
+                totalPages,
+                tagSerialNumber,
+                context.getString(R.string.croatia_hr)
+            )
+        }
     }
 
     companion object {
