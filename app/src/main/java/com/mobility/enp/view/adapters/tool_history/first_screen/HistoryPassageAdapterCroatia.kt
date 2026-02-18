@@ -25,6 +25,7 @@ class HistoryPassageAdapterCroatia(
 ) : RecyclerView.Adapter<HistoryPassageAdapterCroatia.RelationViewHolder>() {
 
     private lateinit var context: Context
+    private var totalPages: Int = 0
 
     private var relation: List<Item>
 
@@ -36,6 +37,8 @@ class HistoryPassageAdapterCroatia(
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewmodel.getCroatiaPassagesBySerialPage(tagSerialNumber, viewmodel.selectedCountry)
                     .collect { data ->
+                        totalPages = data.size
+
                         if (data.isNotEmpty()) {
                             onInitDataSize(data[0]?.data?.records?.items?.size ?: 0)
                         }

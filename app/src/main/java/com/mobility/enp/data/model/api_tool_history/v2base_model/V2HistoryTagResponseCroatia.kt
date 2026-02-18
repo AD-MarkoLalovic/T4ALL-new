@@ -20,7 +20,8 @@ data class V2HistoryTagResponseCroatia(
     val message: String?,
     var serial: String,
     var countryCode: String,
-    val pageNumber: Int,
-    val lastPage: Int,
-    val totalPages: Int,
+    var currentPage: Int,
+    var lastPage: Int,
+    var totalRecords: Int,
+    var perPage : Int
 )

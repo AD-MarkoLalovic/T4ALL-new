@@ -170,6 +170,10 @@ class UserPassViewModel(
         )
     }
 
+    fun getNextPageNormalBySerialAndCountryCode(nextPage: Int, countryCode: String) {
+
+    }
+
     private val _listOfCountriesMain = MutableStateFlow<List<String>>(emptyList())
     val listOfCountriesMainScreen: StateFlow<List<String>> get() = _listOfCountriesMain
 
@@ -299,7 +303,7 @@ class UserPassViewModel(
         selectedCountry = ""
     }
 
-    private val itemsPerPage = 25
+    private val itemsPerPage = 5
     private val tagsPerPage = 25
 
     fun isNetAvailable(): Boolean {
@@ -1014,12 +1018,14 @@ class UserPassViewModel(
                 result.getOrNull()?.let { v2HistoryTagResponse ->
                     v2HistoryTagResponse.countryCode = selectedCountry
                     v2HistoryTagResponse.serial = tagSerialNumber
-                    v2HistoryTagResponse.pageNumber =
+                    v2HistoryTagResponse.currentPage =
                         v2HistoryTagResponse.data?.records?.pagination?.currentPage ?: 0
                     v2HistoryTagResponse.lastPage =
                         v2HistoryTagResponse.data?.records?.pagination?.lastPage ?: 0
-                    v2HistoryTagResponse.totalPages =
+                    v2HistoryTagResponse.totalRecords =
                         v2HistoryTagResponse.data?.records?.pagination?.total ?: 0
+                    v2HistoryTagResponse.perPage =
+                        v2HistoryTagResponse.data?.records?.pagination?.perPage ?: 0
                     roomPassageDataFirstScreen(v2HistoryTagResponse)
                 }
 
@@ -1084,12 +1090,14 @@ class UserPassViewModel(
                 result.getOrNull()?.let { v2HistoryTagResponse ->
                     v2HistoryTagResponse.countryCode = selectedCountry
                     v2HistoryTagResponse.serial = tagSerialNumber
-                    v2HistoryTagResponse.pageNumber =
+                    v2HistoryTagResponse.currentPage =
                         v2HistoryTagResponse.data?.records?.pagination?.currentPage ?: 0
                     v2HistoryTagResponse.lastPage =
                         v2HistoryTagResponse.data?.records?.pagination?.lastPage ?: 0
-                    v2HistoryTagResponse.totalPages =
+                    v2HistoryTagResponse.totalRecords =
                         v2HistoryTagResponse.data?.records?.pagination?.total ?: 0
+                    v2HistoryTagResponse.perPage =
+                        v2HistoryTagResponse.data?.records?.pagination?.perPage ?: 0
                     roomPassageDataFirstScreenCroatia(v2HistoryTagResponse)
                 }
 

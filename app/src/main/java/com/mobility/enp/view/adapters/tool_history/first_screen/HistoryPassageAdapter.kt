@@ -40,6 +40,7 @@ class HistoryPassageAdapter(
 
     private lateinit var context: Context
     private var relation: List<Item>
+    private var totalPages: Int = 0
 
     init {
 
@@ -49,6 +50,8 @@ class HistoryPassageAdapter(
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewmodel.getV2PassagesBySerialAndCountryCode(tagSerialNumber, countryCode)
                     .collect { data ->
+                        totalPages = data.size
+
                         if (data.isNotEmpty()) { // sum of tags
                             onSumTags(data[0]?.data?.sumTags ?: emptyList())
                             onInitDataSize(data[0]?.data?.records?.items?.size ?: 0)
