@@ -306,7 +306,6 @@ class UserPassViewModel(
         userSelectedCalendarStart = null
         userSelectedCalendarEnd = null
         indexData = null
-        selectedCountry = ""
     }
 
     private val itemsPerPage = 50

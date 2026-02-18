@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dimens_16dp"
         android:background="@drawable/loop"
+        android:clickable="true"
         android:contentDescription="@string/loop_icon"
         app:layout_constraintBottom_toBottomOf="@+id/titleTollHistory"
         app:layout_constraintEnd_toEndOf="parent"

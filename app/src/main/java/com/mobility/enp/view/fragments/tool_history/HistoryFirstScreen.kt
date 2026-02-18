@@ -1,6 +1,7 @@
 package com.mobility.enp.view.fragments.tool_history
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,8 +79,8 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         vModel.getBaseDataAlternativeApi()
 
         binding.loopIcon.setOnClickListener {
+            Log.d(TAG, "onViewCreated: ")
             if (Util.isNetworkAvailable(requireContext())) {
-                vModel.selectedCountry = ""  // should clear for filter fragment
                 findNavController().navigate(HistoryFirstScreenDirections.actionToolHistoryFragmentToToolHistorySearchFragment())
             } else {
                 Toast.makeText(
@@ -218,6 +219,9 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 }
 
                 is SubmitResult.Success -> {
+
+                    binding.loopIcon.isEnabled = true
+
                     val countryList = ArrayList<String>()
 
                     tagIndex.data.second?.let { cardData ->
@@ -388,7 +392,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
     private fun runSavedDataCheck() {
         if (savedDataCheckJob?.isActive == true) return
 
-        binding.loopIcon.isEnabled = false
+        binding.loopIcon.isEnabled = true
 
         savedDataCheckJob = viewLifecycleOwner.lifecycleScope.launch {
 
