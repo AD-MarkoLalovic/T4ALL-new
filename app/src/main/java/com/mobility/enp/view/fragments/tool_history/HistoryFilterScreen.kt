@@ -7,7 +7,6 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -92,7 +91,7 @@ class HistoryFilterScreen : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        initSerialAdapter()
+        initSerialAdapter()
         observeStoredData()
         setObservers()
         setFranchiser()
@@ -397,23 +396,13 @@ class HistoryFilterScreen : Fragment() {
                     )
                 }
 
-                binding.cycler.layoutParams.height = 200
+                binding.cycler.layoutParams.height = heightInDp
                 binding.cycler.requestLayout()
 
             }
 
             else -> {}
         }
-
-        serialAdapter =
-            ToolHistoryFilterFragmentSerialAdapter(
-                franchiseViewModel,
-                this,
-                vModel
-            )
-
-        binding.cycler.adapter = serialAdapter
-        binding.cycler.layoutManager = LinearLayoutManager(context)
 
         serialAdapter.setAdapterData(indexData)
     }
