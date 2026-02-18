@@ -7,7 +7,6 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,8 +25,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
-import com.mobility.enp.data.model.api_tool_history.index.Tag
-import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.databinding.FragmentToolHistorySearchQueryBinding
 import com.mobility.enp.util.FragmentResultKeys
 import com.mobility.enp.util.SharedPreferencesHelper
@@ -35,25 +32,23 @@ import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.tool_history.MyTollCountriesFilterAdapter
-import com.mobility.enp.view.adapters.tool_history.filter.HistoryTagsAdapter
+import com.mobility.enp.view.adapters.tool_history.filter.ToolHistoryFilterFragmentSerialAdapter
 import com.mobility.enp.view.dialogs.NotificationsRequestDialog
 import com.mobility.enp.view.dialogs.PermissionDeniedDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
-    HistoryTagsAdapter.PaginationUpdate, HistoryTagsAdapter.SendToFragment {
+class HistoryFilterScreen : Fragment() {
 
     private var _binding: FragmentToolHistorySearchQueryBinding? = null
     private val binding: FragmentToolHistorySearchQueryBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
     private lateinit var statusFilterAdapter: MyTollCountriesFilterAdapter
+    private lateinit var serialAdapter: ToolHistoryFilterFragmentSerialAdapter
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -96,20 +91,15 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initSerialAdapter()
+        observeStoredData()
         setObservers()
         setFranchiser()
         permissionNotificationDeniedDialogResultListener()
 
         vModel.selectedTags.clear()
-        vModel.selectedCountry = ""
 
         binding.progBar.visibility = View.VISIBLE
-
-        if (vModel.internetAvailable()) {
-            vModel.getBaseDataAlternativeApiFilterFragment()
-        } else {
-            checkInternet()
-        }
 
         binding.btnSearch.setOnClickListener {
             if (vModel.selectedTags.isEmpty() && !vModel.allTagsSelected) {
@@ -172,6 +162,64 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
         }
     }
 
+    private fun initSerialAdapter() {
+        serialAdapter =
+            ToolHistoryFilterFragmentSerialAdapter(
+                franchiseViewModel,
+                this,
+                vModel
+            )
+
+        binding.cycler.adapter = serialAdapter
+        binding.cycler.layoutManager = LinearLayoutManager(context)
+    }
+
+    private fun observeStoredData() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vModel.allowedCountriesFlow.collect { allowedCountries ->
+                    val listOfCountries: ArrayList<String> = arrayListOf()
+
+                    for (data in allowedCountries) {
+                        listOfCountries.add(data.country)
+                    }
+
+                    if (listOfCountries.isNotEmpty()) {
+                        updateCountriesAdapter(listOfCountries)
+
+                        statusFilterAdapter.performClick(vModel.availableCountryAdapterPositionFilter.value)
+                    }
+
+                    binding.progBar.visibility = View.GONE
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                vModel.tagFlow.collect { indexData ->
+                    if (!indexData.isEmpty()) {
+                        binding.progBar.visibility = View.GONE
+
+                        checkNoPassage(indexData[0])
+
+                        updateIndexAdapter(indexData)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun checkNoPassage(indexData: IndexData) {
+        indexData.data?.let { index ->
+            if (index.tags.isNullOrEmpty()) {
+                binding.btnSearch.isEnabled = false
+                binding.noData.visibility = View.VISIBLE
+                Toast.makeText(context, R.string.no_passage_data, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun setFranchiser() {
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
             franchiseModel?.franchisePrimaryColor?.let { color ->
@@ -217,83 +265,7 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
         }
     }
 
-    private fun triggerUpdate() {
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-            val bindingMain = (activity as MainActivity).binding
-            MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
-            binding.progBar.visibility = View.GONE
-
-            vModel.getBaseDataAlternativeApiFilterFragment()
-        }
-    }
-
     private fun setObservers() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vModel.filterList.collect { countryList ->
-                    if (countryList.isNotEmpty()) {
-
-                        binding.progBar.visibility = View.GONE
-
-                        updateCountriesAdapter(countryList)
-
-                        statusFilterAdapter.performClick(vModel.availableCountryAdapterPositionFilter.value)
-                    }
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vModel.filterTagData.collect { index ->
-                    binding.progBar.visibility = View.GONE
-                    index?.let {
-                        updateIndexAdapter(it)
-                    }
-                }
-            }
-        }
-
-        collectLatestLifecycleFlow(vModel.baseTagDataStateFilterFragment) { tagIndex ->
-            when (tagIndex) {
-                is SubmitResult.Loading -> {
-                    binding.progBar.visibility = View.VISIBLE
-                }
-
-                is SubmitResult.Success -> {
-                    binding.progBar.visibility = View.GONE
-
-                    checkNoPassage(tagIndex.data.first)
-                    vModel.setFilterTagData(tagIndex.data.first)
-
-                    setVisibleCountries(tagIndex.data.second)
-                }
-
-                is SubmitResult.FailureNoConnection -> {
-                    showNoConnectionState()
-                }
-
-                is SubmitResult.FailureServerError -> {
-                    binding.progBar.visibility = View.GONE
-                    showError(getString(R.string.server_error_msg))
-                }
-
-                is SubmitResult.FailureApiError -> {
-                    binding.progBar.visibility = View.GONE
-                    showError(tagIndex.errorMessage)
-                }
-
-                is SubmitResult.InvalidApiToken -> {
-                    showError(tagIndex.errorMessage)
-                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
-                }
-
-                else -> {
-                    SubmitResult.Empty
-                }
-            }
-        }
-
         collectLatestLifecycleFlow(vModel.csvTable) { csvTable ->
             when (csvTable) {
                 is SubmitResult.Loading -> {
@@ -362,45 +334,6 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
 
     }
 
-    private fun checkNoPassage(indexData: IndexData) {
-        indexData.data?.let { index ->
-            if (index.tags.isNullOrEmpty()) {
-                binding.btnSearch.isEnabled = false
-                binding.noData.visibility = View.VISIBLE
-                Toast.makeText(context, R.string.no_passage_data, Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-
-    private fun checkInternet() {
-        if (!vModel.internetAvailable()) {
-            val bundle = Bundle().apply {
-                putString(getString(R.string.title), getString(R.string.no_connection_title))
-                putString(
-                    getString(R.string.subtitle), getString(R.string.please_connect_to_the_internet)
-                )
-            }
-
-            findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
-
-            val binding = (activity as MainActivity).binding
-            MainActivity.showSnackMessage(getString(R.string.checking_for_connection), binding)
-
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                while (true) {
-                    if (vModel.internetAvailable()) {
-                        triggerUpdate()
-                        break
-                    } else {
-                        delay(1000L)
-                    }
-                }
-            }
-        }
-    }
-
-
     private fun showNotificationPermissionRationale(userPermission: UserPermission) {
         lifecycleScope.launch {
             val fragmentManager = (requireContext() as AppCompatActivity).supportFragmentManager
@@ -427,55 +360,51 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
             .show()
     }
 
-    private fun updateIndexAdapter(indexData: IndexData) {
+    private fun updateIndexAdapter(indexData: List<IndexData>) {
         binding.noData.visibility = View.GONE
 
         val orientation = resources.configuration.orientation
 
         when (orientation) {
-
             Configuration.ORIENTATION_LANDSCAPE -> {
+                if (indexData.isNotEmpty()) {
+                    val heightInDp = when (indexData[0].data?.tags?.size ?: 200) {
 
-                val heightInDp = when (indexData.data?.tags?.size ?: 200) {
+                        1 -> binding.root.context.resources.getDimensionPixelSize(
+                            R.dimen.recycler_view_one_items_toll
+                        )
 
-                    1 -> binding.root.context.resources.getDimensionPixelSize(
-                        R.dimen.recycler_view_one_items_toll
-                    )
+                        2 -> binding.root.context.resources.getDimensionPixelSize(
+                            R.dimen.recycler_view_two_items_toll
+                        )
 
-                    2 -> binding.root.context.resources.getDimensionPixelSize(
-                        R.dimen.recycler_view_two_items_toll
-                    )
+                        3 -> binding.root.context.resources.getDimensionPixelSize(
+                            R.dimen.recycler_view_three_items_toll
+                        )
 
-                    3 -> binding.root.context.resources.getDimensionPixelSize(
-                        R.dimen.recycler_view_three_items_toll
-                    )
+                        4 -> binding.root.context.resources.getDimensionPixelSize(
+                            R.dimen.recycler_view_four_items_toll
+                        )
 
-                    4 -> binding.root.context.resources.getDimensionPixelSize(
-                        R.dimen.recycler_view_four_items_toll
-                    )
+                        5 -> binding.root.context.resources.getDimensionPixelSize(
+                            R.dimen.recycler_view_five_items_toll
+                        )
 
-                    5 -> binding.root.context.resources.getDimensionPixelSize(
-                        R.dimen.recycler_view_five_items_toll
-                    )
+                        else -> binding.root.context.resources.getDimensionPixelSize(
+                            R.dimen.recycler_view_five_items_toll
+                        )
+                    }
 
-                    else -> binding.root.context.resources.getDimensionPixelSize(
-                        R.dimen.recycler_view_five_items_toll
-                    )
+                    binding.cycler.layoutParams.height = heightInDp
+                    binding.cycler.requestLayout()
+
                 }
-
-                binding.cycler.layoutParams.height = heightInDp
-                binding.cycler.requestLayout()
-
             }
 
             else -> {}
         }
 
-        val adapter =
-            HistoryTagsAdapter(this, franchiseViewModel, this, indexData, this, this, vModel)
-
-        binding.cycler.adapter = adapter
-        binding.cycler.layoutManager = LinearLayoutManager(context)
+        serialAdapter.setAdapterData(indexData)
     }
 
     private fun showNoConnectionState() {
@@ -491,37 +420,6 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
     private fun showError(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         vModel.setCsvState()
-    }
-
-
-    override fun onSendTag(tag: Tag) {
-        vModel.selectedTags.add(tag)
-        vModel.tagForExport = tag
-        Log.d(TAG, "onSendTag: ${vModel.selectedTags}")
-    }
-
-    override fun onTagRemove(tag: Tag) {
-        vModel.selectedTags.remove(tag)
-        Log.d(TAG, "onSendTag: ${vModel.selectedTags}")
-    }
-
-    private fun setVisibleCountries(cardWebModel: CardWebModel?) {
-        val countryList = ArrayList<String>()
-
-        if (cardWebModel?.data?.showTabHR == true) {
-            countryList.add(getString(R.string.croatia))
-        }
-        if (cardWebModel?.data?.showTabME == true) {
-            countryList.add(getString(R.string.montenegro))
-        }
-        if (cardWebModel?.data?.showTabMK == true) {
-            countryList.add(getString(R.string.macedonia))
-        }
-        if (cardWebModel?.data?.showTabRS == true) {
-            countryList.add(getString(R.string.serbia))
-        }
-
-        vModel.setFilterList(countryList)
     }
 
     private fun updateCountriesAdapter(countryList: List<String>) {
@@ -559,29 +457,9 @@ class HistoryFilterScreen : Fragment(), HistoryTagsAdapter.TagSend,
         }
     }
 
-    override fun sendDataFillFilterAdapter(
-        // updates tags on main adapter
-        nextPage: Int,
-        perPage: Int,
-        flow: MutableStateFlow<SubmitResult<IndexData>>,
-    ) {
-        binding.progBar.visibility = View.VISIBLE
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            vModel.getBaseTagDataPagination(nextPage, perPage, flow)
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun startSpinner() {
-        binding.progBar.visibility = View.VISIBLE
-    }
-
-    override fun stopSpinner() {
-        binding.progBar.visibility = View.GONE
     }
 
     private fun notificationPermissionDeniedDialog() {

@@ -268,7 +268,6 @@ class HistorySerialAdapter(
         )
 
         runPaginationCheck(currentTag)
-
     }
 
     private fun runPaginationCheck(currentTag: Tag) {

@@ -132,8 +132,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                         binding.progBar.visibility = View.GONE
 
-                        vModel.indexData = indexData[0] // for filter fragment req data
-
                         indexData[0].availableCountries?.let { availableCountries ->
                             vModel.setAvailableCountriesMain(availableCountries)
                         }

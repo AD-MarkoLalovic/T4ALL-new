@@ -237,30 +237,11 @@ class UserPassViewModel(
         MutableStateFlow<SubmitResult<Pair<IndexData?, CardWebModel?>>>(SubmitResult.Loading)
     val baseTagDataStateResultScreen: StateFlow<SubmitResult<Pair<IndexData?, CardWebModel?>>> get() = _baseTagDataStateResultScreen
 
-    private val _baseTagDataStateFilterFragment =
-        MutableStateFlow<SubmitResult<Pair<IndexData, CardWebModel?>>>(SubmitResult.Loading)
-    val baseTagDataStateFilterFragment: StateFlow<SubmitResult<Pair<IndexData, CardWebModel?>>> get() = _baseTagDataStateFilterFragment
-
-
-    private val _filterListFilter = MutableStateFlow<List<String>>(emptyList())
-    val filterList: StateFlow<List<String>> = _filterListFilter.asStateFlow()
-
-    fun setFilterList(newItems: List<String>) {
-        _filterListFilter.value = newItems
-    }
-
     private val _indexDataResultScreen = MutableStateFlow<IndexData?>(null)
     val indexDataResultScreen: StateFlow<IndexData?> get() = _indexDataResultScreen
 
     fun setIndexDataResultScreen(indexData: IndexData) {
         _indexDataResultScreen.value = indexData
-    }
-
-    private val _filterListTagData = MutableStateFlow<IndexData?>(null)
-    val filterTagData: StateFlow<IndexData?> = _filterListTagData.asStateFlow()
-
-    fun setFilterTagData(indexData: IndexData) {
-        _filterListTagData.value = indexData
     }
 
     private val _baseTagDataStateByCountry =
@@ -305,7 +286,6 @@ class UserPassViewModel(
         endDate.value = TimeSave(null, null)
         userSelectedCalendarStart = null
         userSelectedCalendarEnd = null
-        indexData = null
     }
 
     private val itemsPerPage = 50
@@ -512,115 +492,6 @@ class UserPassViewModel(
                                 _baseTagDataStateResultScreen.value = SubmitResult.FailureApiError(
                                     error.errorResponse.message ?: ""
                                 )
-                                Log.d(
-                                    TAG,
-                                    "UserPassViewModel api error ${error.errorResponse.message}"
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    fun getBaseDataAlternativeApiFilterFragment() {   // uses faster api call to get serial numbers of tags saving about 10 seconds on server response time
-        _baseTagDataStateFilterFragment.value = SubmitResult.Loading
-        viewModelScope.launch(Dispatchers.IO) {
-
-            val resultTags = async {
-                repository.getTagBaseData(1, tagsPerPage)
-            }
-
-            val resultCards = async {
-                repository.getCardsFromServer()
-            }
-
-            val tagResultDeferred = resultTags.await()
-            val resultCardsDeferred = resultCards.await()
-
-            if (tagResultDeferred.isSuccess && resultCardsDeferred.isSuccess) {
-
-                val tagsData = tagResultDeferred.getOrNull()
-                val cardData = resultCardsDeferred.getOrNull()
-
-                if (tagsData == null || cardData == null) {
-                    _baseTagDataStateFilterFragment.value = SubmitResult.Empty
-                } else {
-                    _baseTagDataStateFilterFragment.value =
-                        SubmitResult.Success(Pair(tagsData, cardData))
-                }
-
-            } else {
-                when (val error = tagResultDeferred.exceptionOrNull()) {
-                    is NetworkError.ServerError -> {
-                        Log.e(
-                            "UserPassVM", "Error while fetching tags data", error
-                        )
-                        _baseTagDataStateFilterFragment.value = SubmitResult.FailureServerError
-                    }
-
-                    is NetworkError.NoConnection -> {
-                        _baseTagDataStateFilterFragment.value = SubmitResult.FailureNoConnection
-                    }
-
-                    is NetworkError.ApiError -> {
-                        when (error.errorResponse.code) {
-                            401, 405 -> {
-                                Log.d(
-                                    "API_TOKEN UserPassViewModel",
-                                    "invalid token detected login out user"
-                                )
-                                _baseTagDataStateFilterFragment.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code, error.errorResponse.message ?: ""
-                                    )
-                            }
-
-                            else -> {
-                                _baseTagDataStateFilterFragment.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
-                                Log.d(
-                                    TAG,
-                                    "UserPassViewModel api error ${error.errorResponse.message}"
-                                )
-                            }
-                        }
-                    }
-                }
-
-                when (val error = resultCardsDeferred.exceptionOrNull()) {
-                    is NetworkError.ServerError -> {
-                        Log.e(
-                            "UserPassVM", "Error while fetching cards data", error
-                        )
-                        _baseTagDataStateFilterFragment.value = SubmitResult.FailureServerError
-                    }
-
-                    is NetworkError.NoConnection -> {
-                        _baseTagDataStateFilterFragment.value = SubmitResult.FailureNoConnection
-                    }
-
-                    is NetworkError.ApiError -> {
-                        when (error.errorResponse.code) {
-                            401, 405 -> {
-                                Log.d(
-                                    "API_TOKEN UserPassViewModel",
-                                    "invalid token detected login out user"
-                                )
-                                _baseTagDataStateFilterFragment.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code, error.errorResponse.message ?: ""
-                                    )
-                            }
-
-                            else -> {
-                                _baseTagDataStateFilterFragment.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
                                 Log.d(
                                     TAG,
                                     "UserPassViewModel api error ${error.errorResponse.message}"
@@ -1652,7 +1523,6 @@ class UserPassViewModel(
     val data: LiveData<IndexData> get() = _data
 
     var selectedTags: ArrayList<Tag> = ArrayList()
-    var indexData: IndexData? = null
     var tagForExport: Tag? = null
 
     suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
