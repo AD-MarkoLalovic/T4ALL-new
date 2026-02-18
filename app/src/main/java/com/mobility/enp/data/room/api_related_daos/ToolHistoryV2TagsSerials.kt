@@ -12,6 +12,9 @@ interface ToolHistoryV2TagsSerials {
     @Upsert
     suspend fun upsertData(toolHistoryIndex: IndexData)
 
+    @Upsert
+    suspend fun upsertDataAll(toolHistoryIndex: List<IndexData>)
+
     @Query("DELETE FROM HISTORY_V2_TAGS")
     suspend fun deleteData()
 

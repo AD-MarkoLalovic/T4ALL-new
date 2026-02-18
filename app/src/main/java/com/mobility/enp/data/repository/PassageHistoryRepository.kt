@@ -90,6 +90,10 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         database.historyV2PassageDao().upsertAll(data)
     }
 
+    suspend fun roomUpsertAllIndexData(data: List<IndexData>) {
+        database.toolHistoryDaoSerials().upsertDataAll(data)
+    }
+
     suspend fun roomUpsertAllV2PassagesCroatia(data: List<V2HistoryTagResponseCroatia>) {
         database.historyPassageDaoV2Croatia().upsertAll(data)
     }

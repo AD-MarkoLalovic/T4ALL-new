@@ -37,13 +37,17 @@ class HistorySerialAdapter(
         if (indexData.isNotEmpty()) {
             currentPage = indexData[indexData.size - 1].currentPage ?: 0
             lastPage = indexData[indexData.size - 1].lastPage ?: 0
-            total = indexData[indexData.size - 1].totalRecords ?: 0
+            total = indexData.size
         }
 
         listOfTags = indexData.flatMap { it.data?.tags.orEmpty() }
 
         for (i in listOfTags.indices) {
             notifyItemChanged(i)
+        }
+
+        if (total > 1) {
+            viewModel.getSerialDeviceDataValidationSerialAdapter(total)
         }
     }
 

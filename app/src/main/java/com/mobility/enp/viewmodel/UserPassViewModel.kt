@@ -425,7 +425,7 @@ class UserPassViewModel(
         viewModelScope.launch(Dispatchers.IO) {
 
             val resultTags = async {
-                repository.getTagBaseData(1, 5)
+                repository.getTagBaseData(1, tagsPerPage)
             }
 
             val resultCards = async {
@@ -530,7 +530,7 @@ class UserPassViewModel(
         viewModelScope.launch(Dispatchers.IO) {
 
             val resultTags = async {
-                repository.getTagBaseData(1, 50)
+                repository.getTagBaseData(1, tagsPerPage)
             }
 
             val resultCards = async {
@@ -695,8 +695,36 @@ class UserPassViewModel(
         }
     }
 
-    fun getSerialDeviceDataValidationFirstScreen(totalPages: Int) {
+    fun getSerialDeviceDataValidationSerialAdapter(totalPages: Int) {
+        viewModelScope.launch {
+            val semaphore = Semaphore(20)
 
+            withContext(Dispatchers.IO) {
+                val result = coroutineScope {
+                    (1..totalPages).map { page ->
+                        async {
+                            semaphore.withPermit {
+                                try {
+                                    val response = repository.getTagBaseData(page, tagsPerPage)
+
+                                    response.getOrNull()
+                                } catch (e: Exception) {
+                                    Log.d(
+                                        TAG,
+                                        "getSerialDeviceDataValidationFirstScreen: ${e.toString()}"
+                                    )
+                                    null
+                                }
+                            }
+                        }
+                    }
+                }.awaitAll().filterNotNull()
+
+                if (result.isNotEmpty()) {
+                    repository.roomUpsertAllIndexData(result)
+                }
+            }
+        }
     }
 
     fun getSerialPassageTagDataValidation(totalPages: Int, tagSerial: String, countryCode: String) {
@@ -738,6 +766,7 @@ class UserPassViewModel(
                                     )
 
                                 } catch (e: Exception) {
+                                    Log.d(TAG, "getSerialPassageTagDataValidation: ${e.toString()}")
                                     null
                                 }
                             }
@@ -795,6 +824,10 @@ class UserPassViewModel(
                                     )
 
                                 } catch (e: Exception) {
+                                    Log.d(
+                                        TAG,
+                                        "getSerialPassageTagDataValidationCroatia: ${e.toString()}"
+                                    )
                                     null
                                 }
                             }
@@ -817,7 +850,7 @@ class UserPassViewModel(
         nextPage: Int, perPage: Int, flow: MutableStateFlow<SubmitResult<IndexData>>
     ) {
         viewModelScope.launch(Dispatchers.IO) {  // 2 flows success returns to adapter and issues return to fragment
-            val result = repository.getTagBaseData(nextPage, perPage)
+            val result = repository.getTagBaseData(nextPage, tagsPerPage)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
