@@ -41,6 +41,8 @@ class HistoryPassageAdapter(
     private lateinit var context: Context
     private var relation: List<Item>
     private var totalPages: Int = 0
+    private var currentPage: Int = 0
+    private var lastPage: Int = 0
 
     init {
 
@@ -50,23 +52,28 @@ class HistoryPassageAdapter(
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewmodel.getV2PassagesBySerialAndCountryCode(tagSerialNumber, countryCode)
                     .collect { data ->
-                        totalPages = data.size
+                        if (data.isNotEmpty()) {
+                            totalPages = data.size
 
-                        if (data.isNotEmpty()) { // sum of tags
-                            onSumTags(data[0]?.data?.sumTags ?: emptyList())
-                            onInitDataSize(data[0]?.data?.records?.items?.size ?: 0)
-                        }
-                        val listOfPassages: ArrayList<Item> = arrayListOf()
-                        for (passages in data) {
-                            passages?.data?.records?.items?.let { setOfPassages ->
-                                listOfPassages.addAll(setOfPassages)
+                            currentPage = data[data.size - 1]?.currentPage ?: 0
+                            lastPage = data[data.size - 1]?.lastPage ?: 0
+
+                            if (data.isNotEmpty()) { // sum of tags
+                                onSumTags(data[0]?.data?.sumTags ?: emptyList())
+                                onInitDataSize(data[0]?.data?.records?.items?.size ?: 0)
                             }
-                        }
+                            val listOfPassages: ArrayList<Item> = arrayListOf()
+                            for (passages in data) {
+                                passages?.data?.records?.items?.let { setOfPassages ->
+                                    listOfPassages.addAll(setOfPassages)
+                                }
+                            }
 
-                        if (listOfPassages.toList() != relation) {
-                            relation = listOfPassages.toList()
-                            for (i in relation.indices) {
-                                notifyItemChanged(i)
+                            if (listOfPassages.toList() != relation) {
+                                relation = listOfPassages.toList()
+                                for (i in relation.indices) {
+                                    notifyItemChanged(i)
+                                }
                             }
                         }
                     }
@@ -255,6 +262,16 @@ class HistoryPassageAdapter(
     override fun onBindViewHolder(holder: RelationViewHolder, position: Int) {
         val currentItem = relation[holder.bindingAdapterPosition]
         holder.bind(currentItem, complaintInterface)
+        runPaginationCheck(currentItem)
+    }
+
+    private fun runPaginationCheck(currentItem: Item) {
+        if (currentItem == relation[relation.size - 1]) {
+            if (currentPage < lastPage) {
+                // trigger background update with flow
+                viewmodel.getToolHistoryTransit(tagSerialNumber, currentPage + 1)
+            }
+        }
     }
 
     interface SendToFragment {

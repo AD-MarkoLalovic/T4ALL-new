@@ -1026,6 +1026,7 @@ class UserPassViewModel(
                         v2HistoryTagResponse.data?.records?.pagination?.total ?: 0
                     v2HistoryTagResponse.perPage =
                         v2HistoryTagResponse.data?.records?.pagination?.perPage ?: 0
+
                     roomPassageDataFirstScreen(v2HistoryTagResponse)
                 }
 

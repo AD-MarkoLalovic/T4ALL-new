@@ -26,6 +26,8 @@ class HistoryPassageAdapterCroatia(
 
     private lateinit var context: Context
     private var totalPages: Int = 0
+    private var currentPage: Int = 0
+    private var lastPage: Int = 0
 
     private var relation: List<Item>
 
@@ -37,22 +39,27 @@ class HistoryPassageAdapterCroatia(
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewmodel.getCroatiaPassagesBySerialPage(tagSerialNumber, viewmodel.selectedCountry)
                     .collect { data ->
-                        totalPages = data.size
-
                         if (data.isNotEmpty()) {
-                            onInitDataSize(data[0]?.data?.records?.items?.size ?: 0)
-                        }
-                        val listOfPassages: ArrayList<Item> = arrayListOf()
-                        for (passages in data) {
-                            passages?.data?.records?.items?.let { setOfPassages ->
-                                listOfPassages.addAll(setOfPassages)
-                            }
-                        }
+                            totalPages = data.size
 
-                        if (listOfPassages.toList() != relation) {
-                            relation = listOfPassages.toList()
-                            for (i in relation.indices) {
-                                notifyItemChanged(i)
+                            currentPage = data[data.size - 1]?.currentPage ?: 0
+                            lastPage = data[data.size - 1]?.lastPage ?: 0
+
+                            if (data.isNotEmpty()) { // sum of tags
+                                onInitDataSize(data[0]?.data?.records?.items?.size ?: 0)
+                            }
+                            val listOfPassages: ArrayList<Item> = arrayListOf()
+                            for (passages in data) {
+                                passages?.data?.records?.items?.let { setOfPassages ->
+                                    listOfPassages.addAll(setOfPassages)
+                                }
+                            }
+
+                            if (listOfPassages.toList() != relation) {
+                                relation = listOfPassages.toList()
+                                for (i in relation.indices) {
+                                    notifyItemChanged(i)
+                                }
                             }
                         }
                     }
@@ -106,6 +113,16 @@ class HistoryPassageAdapterCroatia(
         val currentItem = relation[holder.bindingAdapterPosition]
 
         holder.bind(currentItem)
+        runPaginationCheck(currentItem)
+    }
+
+    private fun runPaginationCheck(currentItem: Item) {
+        if (currentItem == relation[relation.size - 1]) {
+            if (currentPage < lastPage) {
+                // trigger background update with flow
+                viewmodel.getToolHistoryTransitCroatia(tagSerialNumber, currentPage + 1)
+            }
+        }
     }
 
     interface SendToFragment {
