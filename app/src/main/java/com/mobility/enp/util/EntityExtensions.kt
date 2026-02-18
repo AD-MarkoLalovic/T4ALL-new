@@ -115,16 +115,18 @@ fun V2HistoryTagResponse.toCroatianPassage(): V2HistoryTagResponseCroatia {
         data, message, serial, countryCode,
         data?.records?.pagination?.currentPage ?: 0,
         data?.records?.pagination?.lastPage ?: 0,
-        data?.records?.pagination?.total ?: 0
+        data?.records?.pagination?.total ?: 0,
+        data?.records?.pagination?.perPage ?: 0
     )
 }
 
 fun V2HistoryTagResponseCroatia.toV2Response(): V2HistoryTagResponse {
     return V2HistoryTagResponse(
         data, message, serial, countryCode,
-        pageNumber,
+        currentPage,
         lastPage,
-        totalPages
+        totalRecords,
+        perPage
     )
 }
 

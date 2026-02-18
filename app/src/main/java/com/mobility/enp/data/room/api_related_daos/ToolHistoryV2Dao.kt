@@ -27,7 +27,7 @@ interface ToolHistoryV2Dao {
         countryCode: String
     ): Flow<List<V2HistoryTagResponse?>>
 
-    @Query("SELECT * FROM HISTORY_V2 WHERE serial = :serial AND pageNumber = :page")
+    @Query("SELECT * FROM HISTORY_V2 WHERE serial = :serial AND currentPage = :page")
     fun observePassageData(serial: String, page: Int): Flow<List<V2HistoryTagResponse?>>
 
     @Query("SELECT * FROM HISTORY_V2 WHERE serial = :serial")
