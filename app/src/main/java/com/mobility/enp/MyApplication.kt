@@ -10,7 +10,7 @@ import com.mobility.enp.data.repository.HomeRepository
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.data.repository.UserRepository
-import com.mobility.enp.data.room.api_related_daos.HistoryV2TagsSerials
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
@@ -39,8 +39,8 @@ class MyApplication : Application() {
         PassageHistoryRepository(database, this)
     }
 
-    val v2TagsDao: HistoryV2TagsSerials by lazy {
-        database.toolHistoryDao()
+    val v2TagsDao: ToolHistoryV2TagsSerials by lazy {
+        database.toolHistoryDaoSerials()
     }
     val v2HistoryDao: ToolHistoryV2Dao by lazy {
         database.historyV2PassageDao()

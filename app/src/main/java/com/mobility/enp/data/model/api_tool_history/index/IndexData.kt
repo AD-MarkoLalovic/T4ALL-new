@@ -21,13 +21,13 @@ data class IndexData(
     var availableCountries: List<String>?,
     var currentPage: Int = 0,
     var lastPage: Int = 0,
-    var totalPages: Int = 0
+    var totalRecords: Int = 0
 ){
     fun setPages(currentPage: Int,
                  lastPage: Int,
-                 totalPages: Int){
+                 totalRecords: Int){
         this.currentPage = currentPage
         this.lastPage = lastPage
-        this.totalPages = totalPages
+        this.totalRecords = totalRecords
     }
 }

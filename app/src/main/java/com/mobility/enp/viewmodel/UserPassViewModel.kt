@@ -52,7 +52,7 @@ import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.repository.PassageHistoryRepository
-import com.mobility.enp.data.room.api_related_daos.HistoryV2TagsSerials
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
@@ -83,7 +83,7 @@ import java.util.Locale
 
 class UserPassViewModel(
     private val repository: PassageHistoryRepository,
-    private val tagsDao: HistoryV2TagsSerials,
+    private val tagsDao: ToolHistoryV2TagsSerials,
     private val historyCroatiaPassageDao: ToolHistoryV2DaoCroatia,
     private val historyV2Dao: ToolHistoryV2Dao,
     private val historyV2AllowedCountriesDao: ToolHistoryV2AllowedCountryDao

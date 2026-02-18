@@ -78,7 +78,7 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
     }
 
     suspend fun upsertBaseTagData(indexData: IndexData) {
-        database.toolHistoryDao().upsertData(indexData)
+        database.toolHistoryDaoSerials().upsertData(indexData)
     }
 
     suspend fun roomUpsertV2Passages(data: V2HistoryTagResponse) {

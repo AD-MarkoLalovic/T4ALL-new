@@ -7,7 +7,7 @@ import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface HistoryV2TagsSerials {
+interface ToolHistoryV2TagsSerials {
 
     @Upsert
     suspend fun upsertData(toolHistoryIndex: IndexData)

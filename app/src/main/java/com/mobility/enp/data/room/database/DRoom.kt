@@ -35,7 +35,7 @@ import com.mobility.enp.data.room.PdfDao
 import com.mobility.enp.data.room.api_related_daos.BankDao
 import com.mobility.enp.data.room.api_related_daos.BasicInfoDao
 import com.mobility.enp.data.room.api_related_daos.FcmTokenDao
-import com.mobility.enp.data.room.api_related_daos.HistoryV2TagsSerials
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.data.room.api_related_daos.HomeCardsDao
 import com.mobility.enp.data.room.api_related_daos.HomeScreenDao
 import com.mobility.enp.data.room.api_related_daos.IntroPageStatusDao
@@ -53,7 +53,7 @@ import com.mobility.enp.data.room.notification.NotificationDao
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class, HomeEntity::class, V2HistoryTagResponse::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class,
         HomeCardsEntity::class, V2HistoryTagResponseCroatia::class, V2AllowedCountries::class],
-    version = 243,
+    version = 245,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -74,7 +74,7 @@ abstract class DRoom : RoomDatabase() {
     abstract fun basicInfoDao(): BasicInfoDao
     abstract fun homeScreenDao(): HomeScreenDao
     abstract fun homeCardsDao(): HomeCardsDao
-    abstract fun toolHistoryDao(): HistoryV2TagsSerials
+    abstract fun toolHistoryDaoSerials(): ToolHistoryV2TagsSerials
     abstract fun historyV2PassageDao(): ToolHistoryV2Dao
     abstract fun historyPassageDaoV2Croatia(): ToolHistoryV2DaoCroatia
     abstract fun historyV2AllowedCountriesDao(): ToolHistoryV2AllowedCountryDao
@@ -92,9 +92,9 @@ abstract class DRoom : RoomDatabase() {
             return instance!!
         }
 
-        fun buildDatabase(context: Context): DRoom {  // its a singleton
+        fun buildDatabase(context: Context): DRoom {
             if (instance == null) {
-                synchronized(DRoom::class) {  // factory is cypher for sql
+                synchronized(DRoom::class) {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         DRoom::class.java,
@@ -111,7 +111,7 @@ abstract class DRoom : RoomDatabase() {
         loginDao().deleteAll()
         notificationDao().deleteAll()
         fcmToken().deleteTable()
-        toolHistoryDao().deleteData()
+        toolHistoryDaoSerials().deleteData()
         myInvoicesDao().deleteDataMonthlyInvoices()
         pdfDao().deleteData()
         refundRequestDao().deleteRefundRequests()
