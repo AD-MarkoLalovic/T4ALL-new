@@ -20,6 +20,7 @@ import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.adapters.tool_history.combined.HistoryTotalCostAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -97,12 +98,7 @@ class HistorySerialAdapter(
                         )
                     }
 
-                    val listOfPassages: ArrayList<Item> = arrayListOf()
-                    for (passages in initLoad) {
-                        passages?.data?.records?.items?.let { setOfPassages ->
-                            listOfPassages.addAll(setOfPassages)
-                        }
-                    }
+                    val listOfPassages = initLoad.flatMap { it?.data?.records?.items.orEmpty() }
 
                     setViewHeight(binding, listOfPassages.size, position)
 
@@ -140,12 +136,7 @@ class HistorySerialAdapter(
                         )
                     }
 
-                    val listOfPassages: ArrayList<Item> = arrayListOf()
-                    for (passages in initLoad) {
-                        passages?.data?.records?.items?.let { setOfPassages ->
-                            listOfPassages.addAll(setOfPassages)
-                        }
-                    }
+                    val listOfPassages = initLoad.flatMap { it?.data?.records?.items.orEmpty() }
 
                     setViewHeight(binding, listOfPassages.size, position)
 

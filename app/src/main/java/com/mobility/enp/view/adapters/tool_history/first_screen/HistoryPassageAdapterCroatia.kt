@@ -16,7 +16,7 @@ import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.launch
 
 class HistoryPassageAdapterCroatia(
-    private val listOfPassages: ArrayList<Item>,
+    private val listOfPassages: List<Item>,
     private val complaintInterface: SendToFragment,
     private val lifecycleOwner: LifecycleOwner,
     private val tagSerialNumber: String,
