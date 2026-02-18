@@ -326,45 +326,56 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 else -> ""
             }
 
-            statusFilterAdapter = MyTollCountriesFirstScreenAdapter { selectedStatus ->
+            statusFilterAdapter = MyTollCountriesFirstScreenAdapter(
+                onSelected = { selectedStatus ->
+                    vModel.setCountryAdapterPosition(statusFilterAdapter.getTabPosition())
 
-                vModel.setCountryAdapterPosition(statusFilterAdapter.getTabPosition())
+                    val selectedCountry = when (selectedStatus) {
+                        getString(R.string.croatia) -> {
+                            getString(R.string.croatia_hr)
+                        }
 
-                val selectedCountry = when (selectedStatus) {
-                    getString(R.string.croatia) -> {
-                        getString(R.string.croatia_hr)
+                        getString(R.string.montenegro) -> {
+                            getString(R.string.montenegro_me)
+                        }
+
+                        getString(R.string.macedonia) -> {
+                            getString(R.string.northmacedonia_mk)
+                        }
+
+                        getString(R.string.serbia) -> {
+                            getString(R.string.serbia_rs)
+                        }
+
+                        else -> ""
                     }
 
-                    getString(R.string.montenegro) -> {
-                        getString(R.string.montenegro_me)
+                    vModel.selectedCountry = selectedCountry
+
+                    if (::historySerialAdapter.isInitialized) {
+                        historySerialAdapter.clearData()
+                        historySerialAdapter.setAdapterData(listIndexData[0])
                     }
 
-                    getString(R.string.macedonia) -> {
-                        getString(R.string.northmacedonia_mk)
+                    if (vModel.isNetAvailable()) {
+                        if (listIndexData.isEmpty()) {
+                            binding.progBar.visibility = View.VISIBLE
+                        }
+                        vModel.getBaseDataAlternativeApiForCountriesOnMain()
                     }
+                },
+                onShowSpinner = { showSpinner ->
+                    when (showSpinner) {
+                        false -> {
+                            binding.buttonProgBar.visibility = View.INVISIBLE
+                        }
 
-                    getString(R.string.serbia) -> {
-                        getString(R.string.serbia_rs)
+                        true -> {
+                            binding.buttonProgBar.visibility = View.VISIBLE
+                        }
                     }
-
-                    else -> ""
                 }
-
-                vModel.selectedCountry = selectedCountry
-
-                if (::historySerialAdapter.isInitialized) {
-                    historySerialAdapter.clearData()
-                    historySerialAdapter.setAdapterData(listIndexData[0])
-                }
-
-                if (vModel.isNetAvailable()) {
-                    if (listIndexData.isEmpty()) {
-                        binding.progBar.visibility = View.VISIBLE
-                    }
-                    vModel.getBaseDataAlternativeApiForCountriesOnMain()
-                }
-
-            }
+            )
 
             binding.cyclerTagTypes.adapter = statusFilterAdapter
 
