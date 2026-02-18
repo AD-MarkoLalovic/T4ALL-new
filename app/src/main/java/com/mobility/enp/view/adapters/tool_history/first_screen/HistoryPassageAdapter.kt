@@ -27,6 +27,7 @@ import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.launch
 
 class HistoryPassageAdapter(
+    private val listOfPassages: ArrayList<Item>,
     private val complaintInterface: SendToFragment,
     private val hideComplaintButton: Boolean,
     private val lifecycleOwner: LifecycleOwner,
@@ -38,9 +39,12 @@ class HistoryPassageAdapter(
     RecyclerView.Adapter<HistoryPassageAdapter.RelationViewHolder>() {
 
     private lateinit var context: Context
-    private var relation: List<Item> = emptyList<Item>()
+    private var relation: List<Item>
 
     init {
+
+        relation = listOfPassages
+
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewmodel.getV2PassagesBySerialAndCountryCode(tagSerialNumber, countryCode)

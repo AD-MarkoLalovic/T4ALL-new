@@ -135,52 +135,71 @@ class HistorySerialAdapter(
                         }
                     )
                     binding.cyclerTotalPrice.visibility = View.GONE
+
+                    binding.executePendingBindings()
                 }
             } else {
                 //record of passages for tag for normal countries
                 //adapter that presents the passages
-                binding.cycler.adapter = HistoryPassageAdapter(
-                    complaintInterface,
-                    false,
-                    lifecycleOwner,
-                    itemSerialNumber, viewModel.selectedCountry, viewModel,
-                    { size ->
-                        binding.progbar.visibility = View.GONE
 
-                        when (size) {
-                            0 -> {
-                                binding.noPassage.visibility = View.VISIBLE
-                            }
+                lifecycleOwner.lifecycleScope.launch {
+                    val initLoad = withContext(Dispatchers.IO) {
+                        viewModel.getV2PassagesBySerialAndCountryCodeLoad(
+                            itemSerialNumber, viewModel.selectedCountry
+                        )
+                    }
 
-                            else -> {
-                                binding.noPassage.visibility = View.GONE
-                            }
-                        }
-
-                        setViewHeight(binding, size, position)
-                        Log.d(TAG, "bind: $size")
-
-                    }, { sumTags ->
-                        if (sumTags.isNotEmpty()) {  // sum total of price for passages hr doesn't have this data
-                            binding.cyclerTotalPrice.adapter =
-                                HistoryTotalCostAdapter(sumTags)
-                            binding.cyclerTotalPrice.layoutManager =
-                                LinearLayoutManager(
-                                    binding.root.context,
-                                    LinearLayoutManager.VERTICAL,
-                                    false
-                                )
-
-                            binding.cyclerTotalPrice.visibility = View.VISIBLE
-                        } else {
-                            binding.cyclerTotalPrice.visibility = View.INVISIBLE
+                    val listOfPassages: ArrayList<Item> = arrayListOf()
+                    for (passages in initLoad) {
+                        passages?.data?.records?.items?.let { setOfPassages ->
+                            listOfPassages.addAll(setOfPassages)
                         }
                     }
-                )
+
+                    binding.cycler.adapter = HistoryPassageAdapter(
+                        listOfPassages,
+                        complaintInterface,
+                        false,
+                        lifecycleOwner,
+                        itemSerialNumber, viewModel.selectedCountry, viewModel,
+                        { size ->
+                            binding.progbar.visibility = View.GONE
+
+                            when (size) {
+                                0 -> {
+                                    binding.noPassage.visibility = View.VISIBLE
+                                }
+
+                                else -> {
+                                    binding.noPassage.visibility = View.GONE
+                                }
+                            }
+
+                            setViewHeight(binding, size, position)
+                            Log.d(TAG, "bind: $size")
+
+                        }, { sumTags ->
+                            if (sumTags.isNotEmpty()) {  // sum total of price for passages hr doesn't have this data
+                                binding.cyclerTotalPrice.adapter =
+                                    HistoryTotalCostAdapter(sumTags)
+                                binding.cyclerTotalPrice.layoutManager =
+                                    LinearLayoutManager(
+                                        binding.root.context,
+                                        LinearLayoutManager.VERTICAL,
+                                        false
+                                    )
+
+                                binding.cyclerTotalPrice.visibility = View.VISIBLE
+                            } else {
+                                binding.cyclerTotalPrice.visibility = View.INVISIBLE
+                            }
+                        }
+                    )
+
+                    binding.executePendingBindings()
+                }
             }
             //endregion
-
-            binding.executePendingBindings()
         }
     }
 

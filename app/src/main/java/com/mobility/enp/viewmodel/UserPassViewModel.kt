@@ -136,6 +136,13 @@ class UserPassViewModel(
             )
     }
 
+    fun getV2PassagesBySerialAndCountryCodeLoad(
+        serialNumber: String, countryCode: String
+    ): List<V2HistoryTagResponse?> {
+        return historyV2Dao.observePassageDataBySerialAndCountryCodeLoad(serialNumber, countryCode)
+
+    }
+
 
     fun getCroatiaPassagesBySerialPage(
         serialNumber: String, countryCode: String
