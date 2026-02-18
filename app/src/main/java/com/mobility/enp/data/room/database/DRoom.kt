@@ -35,7 +35,6 @@ import com.mobility.enp.data.room.PdfDao
 import com.mobility.enp.data.room.api_related_daos.BankDao
 import com.mobility.enp.data.room.api_related_daos.BasicInfoDao
 import com.mobility.enp.data.room.api_related_daos.FcmTokenDao
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.data.room.api_related_daos.HomeCardsDao
 import com.mobility.enp.data.room.api_related_daos.HomeScreenDao
 import com.mobility.enp.data.room.api_related_daos.IntroPageStatusDao
@@ -46,6 +45,7 @@ import com.mobility.enp.data.room.api_related_daos.TagsRefundRequestDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.data.room.notification.NotificationDao
 
 @Database(
@@ -53,7 +53,7 @@ import com.mobility.enp.data.room.notification.NotificationDao
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class, HomeEntity::class, V2HistoryTagResponse::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class,
         HomeCardsEntity::class, V2HistoryTagResponseCroatia::class, V2AllowedCountries::class],
-    version = 245,
+    version = 250,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -86,7 +86,6 @@ abstract class DRoom : RoomDatabase() {
             if (instance == null) {
                 synchronized(DRoom::class) {
                     instance = buildDatabase(context)
-                    //prepopulateDatabase(instance!!)
                 }
             }
             return instance!!

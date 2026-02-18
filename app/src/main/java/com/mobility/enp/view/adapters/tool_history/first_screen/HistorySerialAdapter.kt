@@ -34,7 +34,14 @@ class HistorySerialAdapter(
     private var total: Int = 0
 
     fun setAdapterData(indexData: List<IndexData>) {
+        if (indexData.isNotEmpty()) {
+            currentPage = indexData[indexData.size - 1].currentPage ?: 0
+            lastPage = indexData[indexData.size - 1].lastPage ?: 0
+            total = indexData[indexData.size - 1].totalRecords ?: 0
+        }
+
         listOfTags = indexData.flatMap { it.data?.tags.orEmpty() }
+
         for (i in listOfTags.indices) {
             notifyItemChanged(i)
         }

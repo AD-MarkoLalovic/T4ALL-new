@@ -205,6 +205,7 @@ class UserPassViewModel(
     }
 
     private val _selectedTags = MutableStateFlow<Set<String>>(emptySet())
+    private var allowedCountriesForSerialAdapter: List<String> = emptyList()
 
     val selectedTagsAdapter: StateFlow<Set<String>> = _selectedTags.asStateFlow()
 
@@ -285,10 +286,11 @@ class UserPassViewModel(
 
     var startDate = MutableLiveData<TimeSave>()
     var endDate = MutableLiveData<TimeSave>()
+
     private var userSelectedCalendarStart: Long? = null
     private var userSelectedCalendarEnd: Long? = null
-    private val timeFrameFirstScreen: Long = 30
 
+    private val timeFrameFirstScreen: Long = 30
 
     var allTagsSelected = false
 
@@ -303,7 +305,7 @@ class UserPassViewModel(
         selectedCountry = ""
     }
 
-    private val itemsPerPage = 5
+    private val itemsPerPage = 50
     private val tagsPerPage = 25
 
     fun isNetAvailable(): Boolean {
@@ -746,7 +748,7 @@ class UserPassViewModel(
         val currentPage = indexData.data?.currentPage ?: 0
         val lastPage = indexData.data?.lastPage ?: 0
         val total = indexData.data?.total ?: 0
-        indexData.setPages(currentPage, lastPage, total)
+        indexData.setPages(currentPage, lastPage, total, allowedCountriesForSerialAdapter)
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -756,6 +758,7 @@ class UserPassViewModel(
     }
 
     fun saveAllowedCountries(countries: List<String>) {
+        allowedCountriesForSerialAdapter = countries
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.roomUpsertAllowedCountries(countries)
@@ -1142,7 +1145,7 @@ class UserPassViewModel(
             val resultTags = repository.getTagBaseData(nextPage, tagsPerPage)
             if (resultTags.isSuccess) {
                 resultTags.getOrNull()?.let { indexData ->
-                    repository.upsertBaseTagData(indexData)
+                    saveRoomTagDataFirstScreen(indexData)
                 }
             }
         }
