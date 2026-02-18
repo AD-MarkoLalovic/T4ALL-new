@@ -85,6 +85,10 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         database.historyV2PassageDao().upsert(data)
     }
 
+    suspend fun roomUpsertAllV2Passages(data: List<V2HistoryTagResponse>) {
+        database.historyV2PassageDao().upsertAll(data)
+    }
+
     suspend fun roomUpsertAllowedCountries(data: List<String>) {
         val list: ArrayList<V2AllowedCountries> = arrayListOf()
         for (country in data) {

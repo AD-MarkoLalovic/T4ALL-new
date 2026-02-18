@@ -12,6 +12,9 @@ interface ToolHistoryV2Dao {
     @Upsert
     suspend fun upsert(data: V2HistoryTagResponse)
 
+    @Upsert
+    suspend fun upsertAll(data: List<V2HistoryTagResponse>)
+
     @Query("DELETE FROM HISTORY_V2")
     suspend fun deleteData()
 

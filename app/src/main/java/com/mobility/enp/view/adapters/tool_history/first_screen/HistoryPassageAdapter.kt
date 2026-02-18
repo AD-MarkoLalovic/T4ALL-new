@@ -45,7 +45,6 @@ class HistoryPassageAdapter(
     private var lastPage: Int = 0
 
     init {
-
         relation = listOfPassages
 
         lifecycleOwner.lifecycleScope.launch {

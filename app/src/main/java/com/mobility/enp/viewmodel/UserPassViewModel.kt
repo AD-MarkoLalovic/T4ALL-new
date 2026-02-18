@@ -65,6 +65,7 @@ import com.mobility.enp.view.CsvActivity
 import com.mobility.enp.view.fragments.tool_history.HistoryFilterScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -73,6 +74,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
@@ -105,7 +108,8 @@ class UserPassViewModel(
                     repository = myRepository,
                     tagsDao,
                     historyCroatiaPassageDao,
-                    historyV2PassageDao, historyAllowedCountriesDao
+                    historyV2PassageDao,
+                    historyAllowedCountriesDao
                 )
             }
         }
@@ -157,8 +161,7 @@ class UserPassViewModel(
         serialNumber: String, countryCode: String
     ): List<V2HistoryTagResponseCroatia?> {
         return historyCroatiaPassageDao.observePassageDataBySerialCountryLoad(
-            serialNumber,
-            countryCode
+            serialNumber, countryCode
         )
     }
 
@@ -686,6 +689,63 @@ class UserPassViewModel(
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    fun getSerialDeviceDataValidationFirstScreen(totalPages: Int) {
+
+    }
+
+    fun getSerialPassageTagDataValidation(totalPages: Int, tagSerial: String, countryCode: String) {
+        viewModelScope.launch() {
+            val semaphore = Semaphore(20)
+
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+            val dateTo = LocalDate.now()
+            val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
+
+            val dateToFormatted = dateTo.format(formatter)
+            val dateFromFormatted = dateFrom.format(formatter)
+
+            withContext(Dispatchers.IO) {
+                val result = coroutineScope {
+                    (1..totalPages).map { page ->
+                        async {
+                            semaphore.withPermit {
+                                try {
+                                    val response = repository.getAdapterPassageDataCountryFilter(
+                                        tagSerial,
+                                        countryCode,
+                                        page,
+                                        itemsPerPage,
+                                        dateFromFormatted,
+                                        dateToFormatted
+                                    )
+
+                                    val body = response.getOrNull()
+
+                                    body?.copy(
+                                        serial = tagSerial,
+                                        countryCode = countryCode,
+                                        currentPage = body.data?.records?.pagination?.currentPage
+                                            ?: 0,
+                                        lastPage = body.data?.records?.pagination?.lastPage ?: 0,
+                                        totalRecords = body.data?.records?.pagination?.total ?: 0,
+                                        perPage = body.data?.records?.pagination?.perPage ?: 0
+                                    )
+
+                                } catch (e: Exception) {
+                                    null
+                                }
+                            }
+                        }
+                    }.awaitAll().filterNotNull()
+                }
+
+                if (result.isNotEmpty()) {
+                    repository.roomUpsertAllV2Passages(result)
                 }
             }
         }
