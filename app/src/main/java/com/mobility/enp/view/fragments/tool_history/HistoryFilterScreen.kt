@@ -7,6 +7,7 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -91,7 +92,7 @@ class HistoryFilterScreen : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initSerialAdapter()
+//        initSerialAdapter()
         observeStoredData()
         setObservers()
         setFranchiser()
@@ -366,43 +367,53 @@ class HistoryFilterScreen : Fragment() {
         val orientation = resources.configuration.orientation
 
         when (orientation) {
+
             Configuration.ORIENTATION_LANDSCAPE -> {
-                if (indexData.isNotEmpty()) {
-                    val heightInDp = when (indexData[0].data?.tags?.size ?: 200) {
 
-                        1 -> binding.root.context.resources.getDimensionPixelSize(
-                            R.dimen.recycler_view_one_items_toll
-                        )
+                val heightInDp = when (indexData[0].data?.tags?.size ?: 200) {
 
-                        2 -> binding.root.context.resources.getDimensionPixelSize(
-                            R.dimen.recycler_view_two_items_toll
-                        )
+                    1 -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_one_items_toll
+                    )
 
-                        3 -> binding.root.context.resources.getDimensionPixelSize(
-                            R.dimen.recycler_view_three_items_toll
-                        )
+                    2 -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_two_items_toll
+                    )
 
-                        4 -> binding.root.context.resources.getDimensionPixelSize(
-                            R.dimen.recycler_view_four_items_toll
-                        )
+                    3 -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_three_items_toll
+                    )
 
-                        5 -> binding.root.context.resources.getDimensionPixelSize(
-                            R.dimen.recycler_view_five_items_toll
-                        )
+                    4 -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_four_items_toll
+                    )
 
-                        else -> binding.root.context.resources.getDimensionPixelSize(
-                            R.dimen.recycler_view_five_items_toll
-                        )
-                    }
+                    5 -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_five_items_toll
+                    )
 
-                    binding.cycler.layoutParams.height = heightInDp
-                    binding.cycler.requestLayout()
-
+                    else -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_five_items_toll
+                    )
                 }
+
+                binding.cycler.layoutParams.height = 200
+                binding.cycler.requestLayout()
+
             }
 
             else -> {}
         }
+
+        serialAdapter =
+            ToolHistoryFilterFragmentSerialAdapter(
+                franchiseViewModel,
+                this,
+                vModel
+            )
+
+        binding.cycler.adapter = serialAdapter
+        binding.cycler.layoutManager = LinearLayoutManager(context)
 
         serialAdapter.setAdapterData(indexData)
     }
