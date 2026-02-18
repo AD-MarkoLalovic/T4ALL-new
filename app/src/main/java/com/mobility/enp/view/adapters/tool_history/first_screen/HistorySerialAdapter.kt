@@ -13,15 +13,10 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.TagUtilCycler
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
-import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
-import com.mobility.enp.util.SubmitResult
-import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.adapters.tool_history.combined.HistoryTotalCostAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -32,31 +27,24 @@ class HistorySerialAdapter(
     val lifecycleOwner: LifecycleOwner,
 ) : RecyclerView.Adapter<HistorySerialAdapter.TagsViewHolder>() {
 
-    private var toolHistoryIndex: IndexData? = null
+    private var listOfTags: List<Tag> = emptyList()
 
     private var currentPage: Int = 0
     private var lastPage: Int = 0
-    private var perPage: Int = 0
     private var total: Int = 0
-    private var listOfTags: List<Tag> = emptyList()
 
-    fun setAdapterData(indexData: IndexData) {
-        toolHistoryIndex = indexData
-        currentPage = toolHistoryIndex?.data?.currentPage ?: 0
-        lastPage = toolHistoryIndex?.data?.lastPage ?: 0
-        perPage = toolHistoryIndex?.data?.perPage ?: 0
-        total = toolHistoryIndex?.data?.total ?: 0
-        listOfTags = toolHistoryIndex?.data?.tags ?: emptyList()
-
-        notifyDataSetChanged()
+    fun setAdapterData(indexData: List<IndexData>) {
+        listOfTags = indexData.flatMap { it.data?.tags.orEmpty() }
+        for (i in listOfTags.indices) {
+            notifyItemChanged(i)
+        }
     }
 
     fun clearData() {
-        toolHistoryIndex = null
+        listOfTags = emptyList()
         currentPage = 0
         lastPage = 0
         total = 0
-        listOfTags = emptyList()
         notifyDataSetChanged()
     }
 
@@ -233,15 +221,7 @@ class HistorySerialAdapter(
         )
     }
 
-    private fun logError(string: String) {
-        Log.d(TAG, "showError: $string")
-    }
-
-    override fun getItemCount(): Int = if (toolHistoryIndex != null) {
-        toolHistoryIndex?.data?.tags?.size ?: 0
-    } else {
-        0
-    }
+    override fun getItemCount(): Int = listOfTags.size ?: 0
 
     override fun onBindViewHolder(holder: TagsViewHolder, position: Int) {
         holder.binding.noPassage.visibility = View.GONE
@@ -267,9 +247,7 @@ class HistorySerialAdapter(
             false
         }
 
-        val country = toolHistoryIndex?.data?.tags?.let {
-            it[holder.bindingAdapterPosition].country?.value
-        }
+        val country = listOfTags[holder.bindingAdapterPosition].country?.value ?: ""
 
         holder.bind(
             tagUtilCycler,
@@ -277,51 +255,6 @@ class HistorySerialAdapter(
             holder,
             country ?: "no data"
         )
-
-        performDataFill(currentTag)
-    }
-
-
-    private fun performDataFill(currentItem: Tag) {
-        if (listOfTags[listOfTags.size - 1] == currentItem && lastPage > currentPage) {
-            val indexListing =
-                MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)
-
-            collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
-                complaintInterface.stopSpinner()
-                when (serverResponse) {
-                    is SubmitResult.Success -> {
-                        serverResponse.data.let {
-                            Log.d(
-                                "MainAdapter",
-                                "performDataFill: ${it.data?.currentPage} ${it.data?.lastPage}"
-                            )
-                            currentPage = it.data?.currentPage ?: 0
-
-                            for (item: Tag in it.data?.tags ?: emptyList()) {
-//                                listOfTags.add(item) todo update for room
-                                notifyItemChanged(listOfTags.size - 1)
-                                Log.d(
-                                    "MainAdapter",
-                                    "dataInserted: $item"
-                                )
-                            }
-                        }
-                    }
-
-                    else -> {
-                        SubmitResult.Empty
-                    }
-                }
-            }
-
-//            paginationUpdate.sendDataFillMainAdapter(currentPage + 1, perPage, indexListing)
-        } else if (lastPage == currentPage && listOfTags[listOfTags.size - 1] == currentItem) {
-            Log.d(
-                HistoryPassageAdapter.Companion.TAG,
-                "last item $currentItem total $total"
-            )
-        }
     }
 
 }

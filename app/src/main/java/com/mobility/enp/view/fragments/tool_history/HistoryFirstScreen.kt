@@ -137,9 +137,9 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                             vModel.setAvailableCountriesMain(availableCountries)
                         }
 
-                        historySerialAdapter.setAdapterData(indexData[0])
-
                         listIndexData = indexData
+
+                        historySerialAdapter.setAdapterData(indexData)
                     }
                 }
             }
@@ -354,7 +354,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                     if (::historySerialAdapter.isInitialized) {
                         historySerialAdapter.clearData()
-                        historySerialAdapter.setAdapterData(listIndexData[0])
+                        historySerialAdapter.setAdapterData(listIndexData)
                     }
 
                     if (vModel.isNetAvailable()) {
