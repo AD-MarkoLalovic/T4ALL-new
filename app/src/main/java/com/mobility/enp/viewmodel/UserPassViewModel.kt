@@ -134,9 +134,7 @@ class UserPassViewModel(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
-    val tagFlowResult = tagsDao.observeIndexData().stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-    )
+    val tagFlowResult = tagsDao.observeIndexData()
 
     val allowedCountriesFlow = historyV2AllowedCountriesDao.observeAllowedCountries().stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()

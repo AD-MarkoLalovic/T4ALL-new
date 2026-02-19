@@ -81,24 +81,31 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragme
                     if (!indexData.isEmpty()) {
                         binding.progBar.visibility = View.GONE
 
-                        val userSelectedTags = viewModel.getSelectedTagList()
+                        when (viewModel.allTagsSelected) {
+                            true -> {
+                                historySerialAdapter.setAdapterData(indexData)
+                            }
 
-                        val uiList = indexData.map { item ->
-                            if (userSelectedTags.isNotEmpty()) {
-                                item.copy(
-                                    data = item.data?.copy(
-                                        tags = userSelectedTags.toList()
-                                    )
-                                )
-                            } else item
-                        }
+                            false -> {
+                                val userSelectedTags = viewModel.getSelectedTagList()
 
-                        if (userSelectedTags.isNotEmpty() && !viewModel.allTagsSelected) {
-                            val list = indexData[0].copy()
-                            list.data?.tags = userSelectedTags
-                            historySerialAdapter.setAdapterData(uiList)
-                        } else {
-                            historySerialAdapter.setAdapterData(indexData)
+                                val uiList = indexData.map { item ->
+                                    if (userSelectedTags.isNotEmpty()) {
+                                        item.copy(
+                                            data = item.data?.copy(
+                                                tags = userSelectedTags.toList()
+                                            )
+                                        )
+                                    } else item
+                                }
+
+                                if (userSelectedTags.isNotEmpty()) {
+                                    val list = indexData[0].copy()
+                                    list.data?.tags = userSelectedTags
+                                    historySerialAdapter.setAdapterData(uiList)
+                                }
+
+                            }
                         }
                     }
                 }
