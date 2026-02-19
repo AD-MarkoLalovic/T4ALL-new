@@ -1,7 +1,6 @@
 package com.mobility.enp.view.fragments.tool_history
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,32 +17,27 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
-import com.mobility.enp.data.model.api_tool_history.index.IndexData
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
+import com.mobility.enp.data.model.api_tool_history.v2base_model.DataValidation
 import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.adapters.tool_history.result.HistoryPassageAdapterCroatiaResultScreen
-import com.mobility.enp.view.adapters.tool_history.result.HistoryPassageAdapterResultScreen
-import com.mobility.enp.view.adapters.tool_history.result.HistorySerialAdapterResultScreen
+import com.mobility.enp.view.adapters.tool_history.result.HistoryPassageAdapterCroatiaResult
+import com.mobility.enp.view.adapters.tool_history.result.HistoryPassageAdapterResult
+import com.mobility.enp.view.adapters.tool_history.result.HistorySerialAdapterResult
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
-class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendToFragment,
-    HistorySerialAdapterResultScreen.SavePassageData,
-    HistorySerialAdapterResultScreen.PaginationUpdate,
-    HistoryPassageAdapterCroatiaResultScreen.SendToFragment {
+class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragment,
+    HistoryPassageAdapterCroatiaResult.SendToFragment {
 
     private lateinit var binding: FragmentToolHistorySearchResultBinding
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
-    private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
+    private val viewModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
+    private lateinit var historySerialAdapter: HistorySerialAdapterResult
 
     companion object {
         const val TAG = "HistoryResult"
@@ -67,81 +61,69 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendTo
         super.onViewCreated(view, savedInstanceState)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            vModel.selectedTags.clear()
+            viewModel.selectedTags.clear()
             findNavController().popBackStack()
         }
 
-        setObservers()
+        historySerialAdapter = HistorySerialAdapterResult(viewModel, this, this, this)
+
+        binding.cycler.adapter = historySerialAdapter
+        binding.cycler.layoutManager = LinearLayoutManager(requireContext())
+
         setFranchise()
-
-        vModel.getBaseDataAlternativeApiResultScreen()
+        setObserver()
     }
 
-    private fun setFranchise() {
-        //btnReset
-        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
-            franchiseModel?.franchisePrimaryColor?.let { color ->
-                binding.btnReset.setTextColor(color)
-            }
-        }
-    }
-
-    private fun setIndexData(tagIndex: IndexData) {
-        binding.progBar.visibility = View.GONE
-        when (vModel.allTagsSelected) {
-            true -> {  // uses unmodified tag index for adapter to list all possible tags and passages
-                val historySerialAdapter =
-                    HistorySerialAdapterResultScreen(tagIndex, vModel, this, this, this, this, this)
-                binding.cycler.adapter = historySerialAdapter
-                binding.cycler.layoutManager = LinearLayoutManager(context)
-
-                Log.d(TAG, "setIndexData: umodified")
-            }
-
-            false -> {  // modifies tag response so that only the selected tags from user are searched and prevents pagination
-
-                tagIndex.data?.tags = vModel.selectedTags
-                tagIndex.data?.currentPage = 1
-                tagIndex.data?.total = 1
-                tagIndex.data?.perPage = 10
-                tagIndex.data?.lastPage = 1
-
-                val historySerialAdapter =
-                    HistorySerialAdapterResultScreen(tagIndex, vModel, this, this, this, this, this)
-                binding.cycler.adapter = historySerialAdapter
-                binding.cycler.layoutManager = LinearLayoutManager(context)
-
-                Log.d(TAG, "setIndexData: modified")
-            }
-        }
-    }
-
-    private fun setObservers() {
-
+    private fun setObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vModel.indexDataResultScreen.collect { indexData ->
-                    indexData?.let {
-                        setIndexData(indexData)
+                viewModel.tagFlowResult.collect { indexData ->
+                    if (!indexData.isEmpty()) {
+                        binding.progBar.visibility = View.GONE
+
+                        when (viewModel.allTagsSelected) {
+                            true -> {
+                                historySerialAdapter.setAdapterData(indexData)
+                            }
+
+                            false -> {
+                                val userSelectedTags = viewModel.getSelectedTagList()
+
+                                val uiList = indexData.map { item ->
+                                    if (userSelectedTags.isNotEmpty()) {
+                                        item.copy(
+                                            data = item.data?.copy(
+                                                tags = userSelectedTags.toList()
+                                            )
+                                        )
+                                    } else item
+                                }
+
+                                if (userSelectedTags.isNotEmpty()) {
+                                    val list = indexData[0].copy()
+                                    list.data?.tags = userSelectedTags
+                                    historySerialAdapter.setAdapterData(uiList)
+                                }
+
+                            }
+                        }
                     }
                 }
             }
         }
 
-        collectLatestLifecycleFlow(vModel.baseTagDataStateResultScreen) { tagIndex ->
-            when (tagIndex) {
+        collectLatestLifecycleFlow(viewModel.baseApiErrors) { data ->
+            when (data) {
                 is SubmitResult.Loading -> {
                     binding.progBar.visibility = View.VISIBLE
                 }
 
                 is SubmitResult.Success -> {
-                    tagIndex.data.first?.let {
-                        vModel.setIndexDataResultScreen(it)
-                    }
+                    binding.progBar.visibility = View.GONE
                 }
 
                 is SubmitResult.FailureNoConnection -> {
-                    showNoConnectionState()
+                    showNoInternetDialog()
                 }
 
                 is SubmitResult.FailureServerError -> {
@@ -151,21 +133,19 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendTo
 
                 is SubmitResult.FailureApiError -> {
                     binding.progBar.visibility = View.GONE
-                    showError(tagIndex.errorMessage)
+                    showError(data.errorMessage)
                 }
 
                 is SubmitResult.InvalidApiToken -> {
-                    showError(tagIndex.errorMessage)
+                    showError(data.errorMessage)
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
 
-                else -> {
-                    SubmitResult.Empty
-                }
+                else -> {}
             }
         }
 
-        collectLatestLifecycleFlow(vModel.complaintObjectionStateFiltered) { serverResponse ->
+        collectLatestLifecycleFlow(viewModel.complaintObjectionStateResult) { serverResponse ->
             when (serverResponse) {
                 is SubmitResult.Loading -> {
                     binding.progBar.visibility = View.VISIBLE
@@ -173,7 +153,6 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendTo
 
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
-                    vModel.getBaseDataAlternativeApi()
                 }
 
                 is SubmitResult.FailureNoConnection -> {
@@ -195,46 +174,26 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendTo
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
 
-                else -> {
-                    SubmitResult.Empty
-                }
-            }
-        }
-
-
-        binding.btnReset.setOnClickListener {
-            findNavController().navigate(HistoryResultScreenDirections.actionToolHistorySearchResultFragmentToToolHistoryFragment())
-        }
-    }
-
-    override fun sendComplaintData(complaintBody: ComplaintBody) {
-        binding.progBar.visibility = View.VISIBLE
-        vModel.postComplaintFiltered(complaintBody)
-    }
-
-    override fun sendObjectionData(objectionBody: ObjectionBody) {
-        binding.progBar.visibility = View.VISIBLE
-        vModel.postObjectionFiltered(objectionBody)
-    }
-
-
-    override fun psgData(toolHistoryListing: V2HistoryTagResponse) {
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                vModel.insertPassageData(toolHistoryListing)
+                else -> {}
             }
         }
     }
 
-    override fun sendDataFill(
-        nextPage: Int,
-        flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
-        tagSerialNumber: String
-    ) {
-        binding.progBar.visibility = View.VISIBLE
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            vModel.getToolHistoryTransitResultFragment(flow, tagSerialNumber, nextPage)
+    private fun setFranchise() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.btnReset.setTextColor(color)
+            }
         }
+    }
+
+
+    override fun sendComplaintData(complaintBody: ComplaintBody, dataValidation: DataValidation) {
+        viewModel.postComplaintResult(complaintBody, dataValidation)
+    }
+
+    override fun sendObjectionData(objectionBody: ObjectionBody, dataValidation: DataValidation) {
+        viewModel.postObjectionResult(objectionBody, dataValidation)
     }
 
     override fun stopSpinner() {
@@ -252,6 +211,29 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendTo
         }
     }
 
+    private fun showNoInternetDialog() {
+        val navController = findNavController()
+
+        if (navController.currentDestination?.id == R.id.noInternetConnectionDialog) {
+            return
+        }
+
+        val bundle = Bundle().apply {
+            putString(getString(R.string.title), getString(R.string.no_connection_title))
+            putString(
+                getString(R.string.subtitle), getString(R.string.please_connect_to_the_internet)
+            )
+        }
+
+        navController.navigate(
+            R.id.action_global_noInternetConnectionDialog, bundle
+        )
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
     private fun showNoConnectionState() {
         binding.progBar.visibility = View.GONE
         noInternetMessage()
@@ -260,22 +242,6 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendTo
     private fun noInternetMessage() {
         val mainBinding = (activity as MainActivity).binding
         MainActivity.showSnackMessage(getString(R.string.no_internet), mainBinding)
-    }
-
-    override fun sendDataFillMainAdapter(
-        // updates tags on main adapter
-        nextPage: Int,
-        perPage: Int,
-        flow: MutableStateFlow<SubmitResult<IndexData>>,
-    ) {
-        binding.progBar.visibility = View.VISIBLE
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            vModel.getBaseTagDataPagination(nextPage, perPage, flow)
-        }
-    }
-
-    private fun showError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
 }

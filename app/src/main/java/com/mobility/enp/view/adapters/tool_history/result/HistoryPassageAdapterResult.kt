@@ -2,48 +2,93 @@ package com.mobility.enp.view.adapters.tool_history.result
 
 import android.content.Context
 import android.content.res.Configuration
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
+import com.mobility.enp.data.model.api_tool_history.v2base_model.DataValidation
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
+import com.mobility.enp.data.model.api_tool_history.v2base_model.SumTag
 import com.mobility.enp.databinding.ItemRelationPassageRealBinding
-import com.mobility.enp.util.SubmitResult
-import com.mobility.enp.util.Util
-import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.dialogs.ComplaintFormDialog
 import com.mobility.enp.view.dialogs.ComplaintFormDialogOld
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.view.dialogs.ObjectionFormDialog
 import com.mobility.enp.viewmodel.UserPassViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
-class HistoryPassageAdapterResultScreen(
-    private val data: V2HistoryTagResponse,
+class HistoryPassageAdapterResult(
+    private val listOfPassages: List<Item>,
     private val complaintInterface: SendToFragment,
     private val hideComplaintButton: Boolean,
     private val lifecycleOwner: LifecycleOwner,
     private val tagSerialNumber: String,
-    private val countryCode: String, private val viewmodel: UserPassViewModel
+    private val countryCode: String, private val viewmodel: UserPassViewModel,
+    private val onInitDataSize: (Int) -> Unit,
+    private val onSumTags: (List<SumTag>) -> Unit
 ) :
-    RecyclerView.Adapter<HistoryPassageAdapterResultScreen.RelationViewHolder>() {
+    RecyclerView.Adapter<HistoryPassageAdapterResult.RelationViewHolder>() {
 
     private lateinit var context: Context
+    private var relation: List<Item>
+    private var totalPages: Int = 0
+    private var currentPage: Int = 0
+    private var lastPage: Int = 0
 
-    private var currentPage = data.data?.records?.pagination?.currentPage ?: 1
-    private val lastPage = data.data?.records?.pagination?.lastPage ?: 1
+    init {
+        relation = listOfPassages
 
-    private var relation: ArrayList<Item> =
-        data.data?.records?.items as ArrayList<Item>
+        lifecycleOwner.lifecycleScope.launch {
+            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewmodel.getV2PassagesBySerialAndCountryCodeResult(tagSerialNumber, countryCode)
+                    .collect { data ->
+                        if (data.isNotEmpty()) {
+                            totalPages = data.size
+
+                            currentPage = data[data.size - 1]?.currentPage ?: 0
+                            lastPage = data[data.size - 1]?.lastPage ?: 0
+
+                            if (data.isNotEmpty()) { // sum of tags
+                                onSumTags(data[0]?.data?.sumTags ?: emptyList())
+                                onInitDataSize(data[0]?.data?.records?.items?.size ?: 0)
+                            }
+                            val listOfPassages: ArrayList<Item> = arrayListOf()
+                            for (passages in data) {
+                                passages?.data?.records?.items?.let { setOfPassages ->
+                                    listOfPassages.addAll(setOfPassages)
+                                }
+                            }
+
+                            if (listOfPassages.toList() != relation) {
+                                relation = listOfPassages.toList()
+                                for (i in relation.indices) {
+                                    notifyItemChanged(i)
+                                }
+                            }
+                        }
+                    }
+            }
+        }
+
+        viewmodel.getToolHistoryTransitResult(tagSerialNumber, 1)
+        if (totalPages > 1) {
+            viewmodel.getSerialPassageTagDataValidationResult(
+                totalPages,
+                tagSerialNumber,
+                countryCode
+            )
+        }
+    }
 
     companion object {
         const val TAG = "PassageAdapter"
@@ -56,6 +101,10 @@ class HistoryPassageAdapterResultScreen(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(relation: Item, complaintInterface: SendToFragment) {
+
+            val dataValidation = DataValidation(
+                totalPages, tagSerialNumber, countryCode
+            )
 
             binding.objectionsNumber.text = ""
 
@@ -93,7 +142,7 @@ class HistoryPassageAdapterResultScreen(
                     val dialog = ComplaintFormDialog.newInstance(
                         relation.id
                     ) { complaintBody ->
-                        complaintInterface.sendComplaintData(complaintBody)
+                        complaintInterface.sendComplaintData(complaintBody, dataValidation)
                     }
 
                     dialog.show(fragmentManager, "ComplaintFormDialog")
@@ -104,11 +153,10 @@ class HistoryPassageAdapterResultScreen(
                     val dialog = ComplaintFormDialogOld.newInstance(
                         relation.id
                     ) { complaintBody ->
-                        complaintInterface.sendComplaintData(complaintBody)
+                        complaintInterface.sendComplaintData(complaintBody, dataValidation)
                     }
 
                     dialog.show(fragmentManager, "ComplaintFormDialogOld")
-
                 } else {
                     Toast.makeText(binding.root.context, "Country Code Issue", Toast.LENGTH_SHORT)
                         .show()
@@ -125,13 +173,12 @@ class HistoryPassageAdapterResultScreen(
                             subtitle = binding.root.context.getString(R.string.limit_reclamation)
                         ).show(fragmentManager, "denyComplaint")
                     } else {
-
                         val fragmentManager = (context as AppCompatActivity).supportFragmentManager
 
                         val dialog = ObjectionFormDialog.newInstance(
                             relation.complaint.id
                         ) { complaintBody ->
-                            complaintInterface.sendObjectionData(complaintBody)
+                            complaintInterface.sendObjectionData(complaintBody, dataValidation)
                         }
 
                         dialog.show(fragmentManager, "ObjectionFormDialog")
@@ -225,57 +272,22 @@ class HistoryPassageAdapterResultScreen(
 
     override fun onBindViewHolder(holder: RelationViewHolder, position: Int) {
         val currentItem = relation[holder.bindingAdapterPosition]
-
         holder.bind(currentItem, complaintInterface)
-
-        if (Util.isNetworkAvailable(context)) {
-            performDataFill(currentItem, holder.bindingAdapterPosition) // paggination
-        }
+        runPaginationCheck(currentItem)
     }
 
-    private fun performDataFill(currentItem: Item, bindingAdapterPosition: Int) {
-        if (relation[relation.size - 1] == currentItem && lastPage > currentPage) {
-            val indexListing =
-                MutableStateFlow<SubmitResult<V2HistoryTagResponse>>(SubmitResult.Loading)
-
-            collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
-                complaintInterface.stopSpinner()
-                when (serverResponse) {
-                    is SubmitResult.Success -> {
-                        serverResponse.data.let {
-                            Log.d(
-                                TAG,
-                                "performDataFill: ${it.data?.records?.pagination?.currentPage} ${it.data?.records?.pagination?.lastPage}"
-                            )
-                            currentPage = it.data?.records?.pagination?.currentPage ?: 1
-
-                            for (item: Item in it.data?.records?.items ?: emptyList()) {
-                                relation.add(item)
-                                notifyItemChanged(relation.size - 1)
-                                Log.d(TAG, "dataInserted: $item")
-                            }
-                        }
-                    }
-
-                    else -> {}
-                }
+    private fun runPaginationCheck(currentItem: Item) {
+        if (currentItem == relation[relation.size - 1]) {
+            if (currentPage < lastPage) {
+                // trigger background update with flow
+                viewmodel.getToolHistoryTransitResult(tagSerialNumber, currentPage + 1)
             }
-
-            complaintInterface.sendDataFill(currentPage + 1, indexListing, tagSerialNumber)
-        } else if (lastPage == currentPage && relation[relation.size - 1] == currentItem) {
-            Log.d(TAG, "performDataFill: no more passage data for tag ${data.serial}")
         }
     }
 
     interface SendToFragment {
-        fun sendComplaintData(complaintBody: ComplaintBody)
-        fun sendObjectionData(objectionBody: ObjectionBody)
-        fun sendDataFill(
-            nextPage: Int,
-            flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
-            tagSerialNumber: String
-        )
-
+        fun sendComplaintData(complaintBody: ComplaintBody, dataValidation: DataValidation)
+        fun sendObjectionData(objectionBody: ObjectionBody, dataValidation: DataValidation)
         fun stopSpinner()
     }
 

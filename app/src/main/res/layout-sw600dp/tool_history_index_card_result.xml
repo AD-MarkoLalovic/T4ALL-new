@@ -130,7 +130,7 @@
             android:gravity="center_horizontal"
             android:maxLines="3"
             android:scrollHorizontally="true"
-            android:text="@string/no_passage_data"
+            android:text="@string/no_passage_data_special"
             android:textStyle="bold"
             android:visibility="gone" />
 

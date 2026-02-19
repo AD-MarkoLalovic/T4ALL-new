@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.first_screen
+package com.mobility.enp.view.adapters.tool_history.result
 
 import android.content.Context
 import android.util.Log
@@ -10,20 +10,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
-import com.mobility.enp.data.model.api_tool_history.v2base_model.DataValidation
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
 import com.mobility.enp.databinding.ItemRelationPassageRealCroatiaBinding
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.launch
 
-class HistoryPassageAdapterCroatia(
+class HistoryPassageAdapterCroatiaResult(
     private val listOfPassages: List<Item>,
     private val complaintInterface: SendToFragment,
     private val lifecycleOwner: LifecycleOwner,
     private val tagSerialNumber: String,
     private val viewmodel: UserPassViewModel,
     private var onInitDataSize: (Int) -> Unit
-) : RecyclerView.Adapter<HistoryPassageAdapterCroatia.RelationViewHolder>() {
+) : RecyclerView.Adapter<HistoryPassageAdapterCroatiaResult.RelationViewHolder>() {
 
     private lateinit var context: Context
     private var totalPages: Int = 0
@@ -38,7 +37,7 @@ class HistoryPassageAdapterCroatia(
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewmodel.getCroatiaPassagesBySerialPage(tagSerialNumber, viewmodel.selectedCountry)
+                viewmodel.getCroatiaPassagesBySerialPageResult(tagSerialNumber, viewmodel.selectedCountry)
                     .collect { data ->
                         if (data.isNotEmpty()) {
                             totalPages = data.size
@@ -67,9 +66,9 @@ class HistoryPassageAdapterCroatia(
             }
         }
 
-        viewmodel.getToolHistoryTransitCroatia(tagSerialNumber, 1)
+        viewmodel.getToolHistoryTransitCroatiaResult(tagSerialNumber, 1)
         if (totalPages > 1) {
-            viewmodel.getSerialPassageTagDataValidationCroatia(
+            viewmodel.getSerialPassageTagDataValidationCroatiaResult(
                 totalPages,
                 tagSerialNumber,
                 context.getString(R.string.croatia_hr)
@@ -86,6 +85,8 @@ class HistoryPassageAdapterCroatia(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(relation: Item) {
+            Log.d(TAG, "bind: $relation")
+
             with(binding) {
                 carTagNumber.text = relation.amount.toString()
                 carTagCurrency.text = "EUR"
@@ -126,7 +127,7 @@ class HistoryPassageAdapterCroatia(
         if (currentItem == relation[relation.size - 1]) {
             if (currentPage < lastPage) {
                 // trigger background update with flow
-                viewmodel.getToolHistoryTransitCroatia(tagSerialNumber, currentPage + 1)
+                viewmodel.getToolHistoryTransitCroatiaResult(tagSerialNumber, currentPage + 1)
             }
         }
     }

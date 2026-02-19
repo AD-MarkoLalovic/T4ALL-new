@@ -191,7 +191,8 @@
     <string name="objection_content">Şikayetin içeriği: (şikayetin sebeplerini net şekilde yazın)</string>
     <string name="complaint_min_length">Neden alanı en az 10 karakter içermelidir.</string>
     <string name="please_enter_all_required_data">Lütfen gerekli tüm verileri girin</string>
-    <string name="no_passage_data">Geçiş verisi yok</string>
+    <string name="no_passage_data">Son 30 gün içinde geçişiniz yok</string>
+    <string name="no_passage_data_special">Seçilen dönem için geçişiniz yok</string>
     <string name="payment_successfully">Ödeme başarılı bir şekilde gerçekleştirildi.</string>
     <string name="please_select_tag">Lütfen bir etiket seçin.</string>
     <string name="request_recorded">Talebiniz kaydedildi ve daha fazla işleme gönderildi.</string>

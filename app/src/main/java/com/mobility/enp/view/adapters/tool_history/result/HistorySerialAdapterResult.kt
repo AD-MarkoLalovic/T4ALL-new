@@ -1,4 +1,4 @@
-package com.mobility.enp.view.adapters.tool_history.first_screen
+package com.mobility.enp.view.adapters.tool_history.result
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,18 +14,19 @@ import com.mobility.enp.data.model.api_tool_history.TagUtilCycler
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
+import com.mobility.enp.databinding.ToolHistoryIndexCardResultBinding
 import com.mobility.enp.view.adapters.tool_history.combined.HistoryTotalCostAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class HistorySerialAdapter(
+class HistorySerialAdapterResult(
     private val viewModel: UserPassViewModel,
-    private val complaintInterface: HistoryPassageAdapter.SendToFragment,
-    private val complaintInterfaceCroatia: HistoryPassageAdapterCroatia.SendToFragment,
+    private val complaintInterface: HistoryPassageAdapterResult.SendToFragment,
+    private val complaintInterfaceCroatia: HistoryPassageAdapterCroatiaResult.SendToFragment,
     val lifecycleOwner: LifecycleOwner,
-) : RecyclerView.Adapter<HistorySerialAdapter.TagsViewHolder>() {
+) : RecyclerView.Adapter<HistorySerialAdapterResult.TagsViewHolder>() {
 
     private var listOfTags: List<Tag> = emptyList()
 
@@ -64,7 +65,7 @@ class HistorySerialAdapter(
     }
 
     inner class TagsViewHolder(
-        val binding: ToolHistoryIndexCardBinding
+        val binding: ToolHistoryIndexCardResultBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
@@ -91,7 +92,7 @@ class HistorySerialAdapter(
                 lifecycleOwner.lifecycleScope.launch() {
 
                     val initLoad = withContext(Dispatchers.IO) {
-                        viewModel.getCroatiaPassagesBySerialPageLoad(
+                        viewModel.getCroatiaPassagesBySerialPageLoadResult(
                             itemSerialNumber,
                             binding.root.context.getString(R.string.croatia_hr)
                         )
@@ -101,7 +102,7 @@ class HistorySerialAdapter(
 
                     setViewHeight(binding, listOfPassages.size, position)
 
-                    binding.cycler.adapter = HistoryPassageAdapterCroatia(
+                    binding.cycler.adapter = HistoryPassageAdapterCroatiaResult(
                         listOfPassages,
                         complaintInterfaceCroatia,
                         lifecycleOwner,
@@ -130,7 +131,7 @@ class HistorySerialAdapter(
 
                 lifecycleOwner.lifecycleScope.launch {
                     val initLoad = withContext(Dispatchers.IO) {
-                        viewModel.getV2PassagesBySerialAndCountryCodeLoad(
+                        viewModel.getV2PassagesBySerialAndCountryCodeLoadResult(
                             itemSerialNumber, viewModel.selectedCountry
                         )
                     }
@@ -139,7 +140,7 @@ class HistorySerialAdapter(
 
                     setViewHeight(binding, listOfPassages.size, position)
 
-                    binding.cycler.adapter = HistoryPassageAdapter(
+                    binding.cycler.adapter = HistoryPassageAdapterResult(
                         listOfPassages,
                         complaintInterface,
                         false,
@@ -175,7 +176,7 @@ class HistorySerialAdapter(
         }
     }
 
-    private fun setViewHeight(binding: ToolHistoryIndexCardBinding, size: Int, position: Int) {
+    private fun setViewHeight(binding: ToolHistoryIndexCardResultBinding, size: Int, position: Int) {
         binding.position = position
 
         when (size) {
@@ -226,7 +227,7 @@ class HistorySerialAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsViewHolder {
         return TagsViewHolder(
-            ToolHistoryIndexCardBinding.inflate(
+            ToolHistoryIndexCardResultBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )

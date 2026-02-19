@@ -8,10 +8,10 @@ import com.google.gson.annotations.SerializedName
 
 @Keep
 @Entity(
-    tableName = "HISTORY_V2",
-    primaryKeys = ["serial", "countryCode", "currentPage"]
+    tableName = "HISTORY_V2_Croatia",
+    primaryKeys = ["serial","currentPage"]
 ) // composite PK 
-data class V2HistoryTagResponse(
+data class V2HistoryTagResponseCroatia(
     @SerializedName("data")
     @Expose
     val `data`: Data?,

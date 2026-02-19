@@ -57,10 +57,15 @@ class Converters {
     }
 
     @TypeConverter
-    fun toStringList(value: String?): ArrayList<String> {
-        if (value.isNullOrEmpty()) return arrayListOf()
-        val type = object : TypeToken<ArrayList<String>>() {}.type
-        return gson.fromJson(value, type)
+    fun toStringList(value: String?): List<String> {
+        if (value.isNullOrEmpty()) return emptyList()
+
+        return try {
+            val type = object : TypeToken<List<String>>() {}.type
+            gson.fromJson<List<String>>(value, type) ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 
     @TypeConverter
