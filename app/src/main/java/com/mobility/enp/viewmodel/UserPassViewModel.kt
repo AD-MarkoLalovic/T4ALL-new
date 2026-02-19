@@ -47,6 +47,7 @@ import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseResult
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.franchise.FranchiseModel
@@ -55,6 +56,7 @@ import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoResult
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.CHANNEL_ID
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.NOTIFICATION_ID
@@ -90,6 +92,7 @@ class UserPassViewModel(
     private val tagsDao: ToolHistoryV2TagsSerials,
     private val historyCroatiaPassageDao: ToolHistoryV2DaoCroatia,
     private val historyV2Dao: ToolHistoryV2Dao,
+    private val historyV2DaoResult: ToolHistoryV2DaoResult,
     private val historyV2AllowedCountriesDao: ToolHistoryV2AllowedCountryDao
 ) : ViewModel() {
 
@@ -102,6 +105,8 @@ class UserPassViewModel(
                 val myRepository = (this[APPLICATION_KEY] as MyApplication).passageHistoryRepository
                 val tagsDao = (this[APPLICATION_KEY] as MyApplication).v2TagsDao
                 val historyV2PassageDao = (this[APPLICATION_KEY] as MyApplication).v2HistoryDao
+                val historyV2PassageDaoResult =
+                    (this[APPLICATION_KEY] as MyApplication).v2HistoryDaoResult
                 val historyCroatiaPassageDao = (this[APPLICATION_KEY] as MyApplication).v2CroatiaDao
                 val historyAllowedCountriesDao =
                     (this[APPLICATION_KEY] as MyApplication).v2AllowedCountriesDao
@@ -109,7 +114,7 @@ class UserPassViewModel(
                     repository = myRepository,
                     tagsDao,
                     historyCroatiaPassageDao,
-                    historyV2PassageDao,
+                    historyV2PassageDao, historyV2PassageDaoResult,
                     historyAllowedCountriesDao
                 )
             }
@@ -145,9 +150,13 @@ class UserPassViewModel(
         serialNumber: String, countryCode: String
     ): List<V2HistoryTagResponse?> {
         return historyV2Dao.observePassageDataBySerialAndCountryCodeLoad(serialNumber, countryCode)
-
     }
 
+    fun getV2PassagesBySerialAndCountryCodeLoadResult(
+        serialNumber: String, countryCode: String
+    ): List<V2HistoryTagResponseResult?> {
+        return historyV2DaoResult.observePassageDataBySerialAndCountryCodeLoad(serialNumber, countryCode)
+    }
 
     fun getCroatiaPassagesBySerialPage(
         serialNumber: String, countryCode: String

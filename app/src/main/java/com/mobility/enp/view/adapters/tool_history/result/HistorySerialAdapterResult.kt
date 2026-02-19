@@ -15,8 +15,6 @@ import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.view.adapters.tool_history.combined.HistoryTotalCostAdapter
-import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapter
-import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapterCroatia
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -132,7 +130,7 @@ class HistorySerialAdapterResult(
 
                 lifecycleOwner.lifecycleScope.launch {
                     val initLoad = withContext(Dispatchers.IO) {
-                        viewModel.getV2PassagesBySerialAndCountryCodeLoad(
+                        viewModel.getV2PassagesBySerialAndCountryCodeLoadResult(
                             itemSerialNumber, viewModel.selectedCountry
                         )
                     }
