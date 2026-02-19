@@ -190,7 +190,7 @@
     <string name="complaint_min_length">Polje Razlog mora sadržati najmanje
         10 karaktera.</string>
     <string name="please_enter_all_required_data">Unesite sve potrebne podatke</string>
-    <string name="no_passage_data">Nemate prolazaka u posljednjih 30 dana</string>
+    <string name="no_passage_data">Nemate prolazaka u poslednjih 30 dana</string>
     <string name="no_passage_data_special">Nemate prolaske za odabrani period</string>
     <string name="payment_successfully">Plaćanje je uspešno izvršeno.</string>
     <string name="please_select_tag">Molimo odaberite tag.</string>
