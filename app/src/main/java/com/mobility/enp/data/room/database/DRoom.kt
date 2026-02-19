@@ -18,6 +18,7 @@ import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2AllowedCountries
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseResult
 import com.mobility.enp.data.model.banks.entity.BanksEntity
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.entity.HomeEntity
@@ -45,6 +46,7 @@ import com.mobility.enp.data.room.api_related_daos.TagsRefundRequestDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoResult
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.data.room.notification.NotificationDao
 
@@ -52,8 +54,9 @@ import com.mobility.enp.data.room.notification.NotificationDao
     entities = [UserLoginResponseRoomTable::class, FcmToken::class, NotificationModel::class, IndexData::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class, HomeEntity::class, V2HistoryTagResponse::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class,
-        HomeCardsEntity::class, V2HistoryTagResponseCroatia::class, V2AllowedCountries::class],
-    version = 251,
+        HomeCardsEntity::class, V2HistoryTagResponseCroatia::class, V2AllowedCountries::class,
+        V2HistoryTagResponseResult::class],
+    version = 252,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -76,6 +79,7 @@ abstract class DRoom : RoomDatabase() {
     abstract fun homeCardsDao(): HomeCardsDao
     abstract fun toolHistoryDaoSerials(): ToolHistoryV2TagsSerials
     abstract fun historyV2PassageDao(): ToolHistoryV2Dao
+    abstract fun historyV2PassageDaoResult(): ToolHistoryV2DaoResult
     abstract fun historyPassageDaoV2Croatia(): ToolHistoryV2DaoCroatia
     abstract fun historyV2AllowedCountriesDao(): ToolHistoryV2AllowedCountryDao
 
@@ -120,6 +124,7 @@ abstract class DRoom : RoomDatabase() {
         historyPassageDaoV2Croatia().deleteData()
         historyV2PassageDao().deleteData()
         historyV2AllowedCountriesDao().clear()
+        historyV2PassageDaoResult().deleteData()
     }
 
 }
