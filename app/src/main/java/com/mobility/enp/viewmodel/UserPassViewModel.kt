@@ -209,17 +209,21 @@ class UserPassViewModel(
     }
 
     private val _selectedTags = MutableStateFlow<Set<String>>(emptySet())
+    private val _userSelectedTags = MutableStateFlow<Set<Tag>>(emptySet())
+
     private var allowedCountriesForSerialAdapter: List<String> = emptyList()
 
     val selectedTagsAdapter: StateFlow<Set<String>> = _selectedTags.asStateFlow()
 
     fun select(tag: Tag) {
+        _userSelectedTags.update { it + tag }
         tag.id?.let { id ->
             _selectedTags.update { it + id }
         }
     }
 
     fun unselect(tag: Tag) {
+        _userSelectedTags.update { it - tag }
         tag.id?.let { id ->
             _selectedTags.update { it - id }
         }
