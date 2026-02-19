@@ -24,8 +24,8 @@ import kotlinx.coroutines.withContext
 
 class HistorySerialAdapterResult(
     private val viewModel: UserPassViewModel,
-    private val complaintInterface: HistoryPassageAdapter.SendToFragment,
-    private val complaintInterfaceCroatia: HistoryPassageAdapterCroatia.SendToFragment,
+    private val complaintInterface: HistoryPassageAdapterResult.SendToFragment,
+    private val complaintInterfaceCroatia: HistoryPassageAdapterCroatiaResult.SendToFragment,
     val lifecycleOwner: LifecycleOwner,
 ) : RecyclerView.Adapter<HistorySerialAdapterResult.TagsViewHolder>() {
 
@@ -103,7 +103,7 @@ class HistorySerialAdapterResult(
 
                     setViewHeight(binding, listOfPassages.size, position)
 
-                    binding.cycler.adapter = HistoryPassageAdapterCroatia(
+                    binding.cycler.adapter = HistoryPassageAdapterCroatiaResult(
                         listOfPassages,
                         complaintInterfaceCroatia,
                         lifecycleOwner,
@@ -141,7 +141,7 @@ class HistorySerialAdapterResult(
 
                     setViewHeight(binding, listOfPassages.size, position)
 
-                    binding.cycler.adapter = HistoryPassageAdapter(
+                    binding.cycler.adapter = HistoryPassageAdapterResult(
                         listOfPassages,
                         complaintInterface,
                         false,

@@ -17,6 +17,8 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
+import com.mobility.enp.view.adapters.tool_history.result.HistoryPassageAdapterCroatiaResult
+import com.mobility.enp.view.adapters.tool_history.result.HistoryPassageAdapterResult
 import com.mobility.enp.view.adapters.tool_history.result.HistorySerialAdapterResult
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
@@ -24,8 +26,8 @@ import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.launch
 
 
-class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendToFragment,
-    HistoryPassageAdapterCroatiaResultScreen.SendToFragment {
+class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragment,
+    HistoryPassageAdapterCroatiaResult.SendToFragment {
 
     private lateinit var binding: FragmentToolHistorySearchResultBinding
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
@@ -103,6 +105,10 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResultScreen.SendTo
 
     override fun sendObjectionData(objectionBody: ObjectionBody) {
         viewModel.postObjection(objectionBody)
+    }
+
+    override fun stopSpinner() {
+        binding.progBar.visibility = View.GONE
     }
 
     override fun croatiaReclamationDialog() {
