@@ -93,7 +93,7 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragme
                             } else item
                         }
 
-                        if (userSelectedTags.isNotEmpty()) {
+                        if (userSelectedTags.isNotEmpty() && !viewModel.allTagsSelected) {
                             val list = indexData[0].copy()
                             list.data?.tags = userSelectedTags
                             historySerialAdapter.setAdapterData(uiList)
