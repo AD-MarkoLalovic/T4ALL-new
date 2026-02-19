@@ -12,11 +12,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
+import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
 import com.mobility.enp.view.adapters.tool_history.result.HistoryPassageAdapterCroatiaResult
 import com.mobility.enp.view.adapters.tool_history.result.HistoryPassageAdapterResult
 import com.mobility.enp.view.adapters.tool_history.result.HistorySerialAdapterResult
@@ -61,9 +63,13 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragme
             findNavController().popBackStack()
         }
 
+        historySerialAdapter = HistorySerialAdapterResult(viewModel, this, this, this)
+
+        binding.cycler.adapter = historySerialAdapter
+        binding.cycler.layoutManager = LinearLayoutManager(requireContext())
+
         setFranchise()
         setObserver()
-
     }
 
     private fun setObserver() {
