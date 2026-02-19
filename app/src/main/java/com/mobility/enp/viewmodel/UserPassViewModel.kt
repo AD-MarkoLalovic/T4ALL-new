@@ -64,6 +64,7 @@ import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.toCroatianPassage
+import com.mobility.enp.util.toV2HistoryTagResponseResult
 import com.mobility.enp.view.CsvActivity
 import com.mobility.enp.view.fragments.tool_history.HistoryFilterScreen
 import kotlinx.coroutines.Dispatchers
@@ -146,6 +147,18 @@ class UserPassViewModel(
             )
     }
 
+    fun getV2PassagesBySerialAndCountryCodeResult(
+        serialNumber: String, countryCode: String
+    ): StateFlow<List<V2HistoryTagResponseResult?>> {
+        return historyV2DaoResult.observePassageDataBySerialAndCountryCode(
+            serialNumber,
+            countryCode
+        )
+            .stateIn(
+                viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+            )
+    }
+
     fun getV2PassagesBySerialAndCountryCodeLoad(
         serialNumber: String, countryCode: String
     ): List<V2HistoryTagResponse?> {
@@ -155,7 +168,10 @@ class UserPassViewModel(
     fun getV2PassagesBySerialAndCountryCodeLoadResult(
         serialNumber: String, countryCode: String
     ): List<V2HistoryTagResponseResult?> {
-        return historyV2DaoResult.observePassageDataBySerialAndCountryCodeLoad(serialNumber, countryCode)
+        return historyV2DaoResult.observePassageDataBySerialAndCountryCodeLoad(
+            serialNumber,
+            countryCode
+        )
     }
 
     fun getCroatiaPassagesBySerialPage(
@@ -537,6 +553,68 @@ class UserPassViewModel(
         }
     }
 
+    fun getSerialPassageTagDataValidationResult(
+        totalPages: Int,
+        tagSerial: String,
+        countryCode: String
+    ) {
+        viewModelScope.launch() {
+            val semaphore = Semaphore(20)
+
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+            val dateTo = LocalDate.now()
+            val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
+
+            val dateToFormatted = dateTo.format(formatter)
+            val dateFromFormatted = dateFrom.format(formatter)
+
+            withContext(Dispatchers.IO) {
+                val result = coroutineScope {
+                    (1..totalPages).map { page ->
+                        async {
+                            semaphore.withPermit {
+                                try {
+                                    val response = repository.getAdapterPassageDataCountryFilter(
+                                        tagSerial,
+                                        countryCode,
+                                        page,
+                                        itemsPerPage,
+                                        dateFromFormatted,
+                                        dateToFormatted
+                                    )
+
+                                    val body = response.getOrNull()
+
+                                    body?.copy(
+                                        serial = tagSerial,
+                                        countryCode = countryCode,
+                                        currentPage = body.data?.records?.pagination?.currentPage
+                                            ?: 0,
+                                        lastPage = body.data?.records?.pagination?.lastPage ?: 0,
+                                        totalRecords = body.data?.records?.pagination?.total ?: 0,
+                                        perPage = body.data?.records?.pagination?.perPage ?: 0
+                                    )
+
+                                } catch (e: Exception) {
+                                    Log.d(TAG, "getSerialPassageTagDataValidation: ${e.toString()}")
+                                    null
+                                }
+                            }
+                        }
+                    }.awaitAll().filterNotNull()
+                }
+
+                if (result.isNotEmpty()) {
+                    val listTransformed: ArrayList<V2HistoryTagResponseResult> = arrayListOf()
+                    for (data in result) {
+                        listTransformed.add(data.toV2HistoryTagResponseResult())
+                    }
+                    repository.roomUpsertAllV2PassagesResult(listTransformed.toList())
+                }
+            }
+        }
+    }
+
     fun getSerialPassageTagDataValidationCroatia(
         totalPages: Int,
         tagSerial: String,
@@ -779,6 +857,91 @@ class UserPassViewModel(
                         v2HistoryTagResponse.data?.records?.pagination?.perPage ?: 0
 
                     roomPassageDataFirstScreen(v2HistoryTagResponse)
+                }
+
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _baseTagDataState.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(TOKEN, "invalid token detected login out user")
+                                _baseTagDataState.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code ?: 0, error.errorResponse.message ?: ""
+                                )
+                            }
+
+                            else -> {
+                                _baseTagDataState.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
+                                Log.d(TAG, "api error ${error.errorResponse.message}")
+                            }
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    fun getToolHistoryTransitResult(
+        tagSerialNumber: String, currentPage: Int
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val formatter = if (selectedCountry.equals("HR", ignoreCase = true)) {
+                DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+            } else {
+                DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+            }  // they changed it to be the same and didn't notify mobile it was dd/MM/yyyy for croatia
+
+            val dateTo = LocalDate.now()
+            val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
+
+            val dateToFormatted = dateTo.format(formatter)
+            val dateFromFormatted = dateFrom.format(formatter)
+
+            var result = repository.getAdapterPassageData(
+                tagSerialNumber,
+                currentPage,
+                itemsPerPage,
+                dateFromFormatted ?: "",
+                dateToFormatted ?: ""
+            )
+
+            if (!selectedCountry.isEmpty()) {
+                result = repository.getAdapterPassageDataCountryFilter(
+                    tagSerialNumber,
+                    selectedCountry,
+                    currentPage,
+                    itemsPerPage,
+                    dateFromFormatted ?: "",
+                    dateToFormatted ?: ""
+                )
+            }
+            if (result.isSuccess) {
+                result.getOrNull()?.let { v2HistoryTagResponse ->
+                    v2HistoryTagResponse.countryCode = selectedCountry
+                    v2HistoryTagResponse.serial = tagSerialNumber
+                    v2HistoryTagResponse.currentPage =
+                        v2HistoryTagResponse.data?.records?.pagination?.currentPage ?: 0
+                    v2HistoryTagResponse.lastPage =
+                        v2HistoryTagResponse.data?.records?.pagination?.lastPage ?: 0
+                    v2HistoryTagResponse.totalRecords =
+                        v2HistoryTagResponse.data?.records?.pagination?.total ?: 0
+                    v2HistoryTagResponse.perPage =
+                        v2HistoryTagResponse.data?.records?.pagination?.perPage ?: 0
+
+                    roomPassageDataResultScreen(v2HistoryTagResponse)
                 }
 
             } else {
@@ -1216,6 +1379,12 @@ class UserPassViewModel(
     fun roomPassageDataFirstScreen(data: V2HistoryTagResponse) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.roomUpsertV2Passages(data)
+        }
+    }
+
+    fun roomPassageDataResultScreen(data: V2HistoryTagResponse) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.roomUpsertV2PassagesResult(data)
         }
     }
 

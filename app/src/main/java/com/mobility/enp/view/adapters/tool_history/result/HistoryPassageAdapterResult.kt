@@ -49,7 +49,7 @@ class HistoryPassageAdapterResult(
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewmodel.getV2PassagesBySerialAndCountryCode(tagSerialNumber, countryCode)
+                viewmodel.getV2PassagesBySerialAndCountryCodeResult(tagSerialNumber, countryCode)
                     .collect { data ->
                         if (data.isNotEmpty()) {
                             totalPages = data.size
@@ -79,9 +79,13 @@ class HistoryPassageAdapterResult(
             }
         }
 
-        viewmodel.getToolHistoryTransit(tagSerialNumber, 1)
+        viewmodel.getToolHistoryTransitResult(tagSerialNumber, 1)
         if (totalPages > 1) {
-            viewmodel.getSerialPassageTagDataValidation(totalPages, tagSerialNumber, countryCode)
+            viewmodel.getSerialPassageTagDataValidationResult(
+                totalPages,
+                tagSerialNumber,
+                countryCode
+            )
         }
     }
 

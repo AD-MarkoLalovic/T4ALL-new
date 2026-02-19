@@ -9,12 +9,14 @@ import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2AllowedCountries
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseResult
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.toCroatianPassage
+import com.mobility.enp.util.toV2HistoryTagResponseResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -88,6 +90,15 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
     suspend fun roomUpsertAllV2Passages(data: List<V2HistoryTagResponse>) {
         database.historyV2PassageDao().upsertAll(data)
+    }
+
+    suspend fun roomUpsertV2PassagesResult(data: V2HistoryTagResponse) {
+        val passageData = data.toV2HistoryTagResponseResult()
+        database.historyV2PassageDaoResult().upsert(passageData)
+    }
+
+    suspend fun roomUpsertAllV2PassagesResult(data: List<V2HistoryTagResponseResult>) {
+        database.historyV2PassageDaoResult().upsertAll(data)
     }
 
     suspend fun roomUpsertAllIndexData(data: List<IndexData>) {
