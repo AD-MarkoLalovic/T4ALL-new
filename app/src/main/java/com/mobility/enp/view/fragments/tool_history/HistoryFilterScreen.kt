@@ -98,6 +98,7 @@ class HistoryFilterScreen : Fragment() {
         permissionNotificationDeniedDialogResultListener()
 
         vModel.selectedTags.clear()
+        vModel.selectedCountry = ""
 
         binding.progBar.visibility = View.VISIBLE
 

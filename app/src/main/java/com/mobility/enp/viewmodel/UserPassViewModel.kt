@@ -323,6 +323,7 @@ class UserPassViewModel(
         endDate.value = TimeSave(null, null)
         userSelectedCalendarStart = null
         userSelectedCalendarEnd = null
+        selectedCountry = ""
     }
 
     private val itemsPerPage = 50
