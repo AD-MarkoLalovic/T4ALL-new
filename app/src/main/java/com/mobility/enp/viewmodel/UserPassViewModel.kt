@@ -295,6 +295,12 @@ class UserPassViewModel(
         MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)
     val baseTagDataStateByCountry: StateFlow<SubmitResult<IndexData>> get() = _baseTagDataStateByCountry
 
+
+    private val _baseApiErrorsResultScreen =
+        MutableStateFlow<SubmitResult<Unit>>(SubmitResult.Loading)
+    val baseApiErrors: StateFlow<SubmitResult<Unit>> get() = _baseApiErrorsResultScreen
+
+
     private val _csvTable = MutableStateFlow<SubmitResult<CsvModel>>(SubmitResult.Empty)
     val csvTable: StateFlow<SubmitResult<CsvModel>> get() = _csvTable
 
@@ -1018,24 +1024,24 @@ class UserPassViewModel(
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(TAG, "Error while fetching tag serial data")
-                        _baseTagDataState.value = SubmitResult.FailureServerError
+                        _baseApiErrorsResultScreen.value = SubmitResult.FailureServerError
                     }
 
                     is NetworkError.NoConnection -> {
-                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+                        _baseApiErrorsResultScreen.value = SubmitResult.FailureNoConnection
                     }
 
                     is NetworkError.ApiError -> {
                         when (error.errorResponse.code) {
                             401, 405 -> {
                                 Log.d(TOKEN, "invalid token detected login out user")
-                                _baseTagDataState.value = SubmitResult.InvalidApiToken(
+                                _baseApiErrorsResultScreen.value = SubmitResult.InvalidApiToken(
                                     error.errorResponse.code ?: 0, error.errorResponse.message ?: ""
                                 )
                             }
 
                             else -> {
-                                _baseTagDataState.value = SubmitResult.FailureApiError(
+                                _baseApiErrorsResultScreen.value = SubmitResult.FailureApiError(
                                     error.errorResponse.message ?: ""
                                 )
                                 Log.d(TAG, "api error ${error.errorResponse.message}")
@@ -1154,24 +1160,24 @@ class UserPassViewModel(
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
                         Log.d(TAG, "Error while fetching tag serial data")
-                        _baseTagDataState.value = SubmitResult.FailureServerError
+                        _baseApiErrorsResultScreen.value = SubmitResult.FailureServerError
                     }
 
                     is NetworkError.NoConnection -> {
-                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+                        _baseApiErrorsResultScreen.value = SubmitResult.FailureNoConnection
                     }
 
                     is NetworkError.ApiError -> {
                         when (error.errorResponse.code) {
                             401, 405 -> {
                                 Log.d(TOKEN, "invalid token detected login out user")
-                                _baseTagDataState.value = SubmitResult.InvalidApiToken(
+                                _baseApiErrorsResultScreen.value = SubmitResult.InvalidApiToken(
                                     error.errorResponse.code ?: 0, error.errorResponse.message ?: ""
                                 )
                             }
 
                             else -> {
-                                _baseTagDataState.value = SubmitResult.FailureApiError(
+                                _baseApiErrorsResultScreen.value = SubmitResult.FailureApiError(
                                     error.errorResponse.message ?: ""
                                 )
                                 Log.d(TAG, "api error ${error.errorResponse.message}")
