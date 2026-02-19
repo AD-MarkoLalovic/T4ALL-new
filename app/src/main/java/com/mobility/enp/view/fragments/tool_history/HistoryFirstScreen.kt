@@ -18,6 +18,7 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
+import com.mobility.enp.data.model.api_tool_history.v2base_model.DataValidation
 import com.mobility.enp.databinding.FragmentPassageHistoryBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.Util
@@ -273,15 +274,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
         collectLatestLifecycleFlow(viewModel.complaintObjectionState) { serverResponse ->
             when (serverResponse) {
-                is SubmitResult.Loading -> {
-                    binding.progBar.visibility = View.VISIBLE
-                }
-
-                is SubmitResult.Success -> {
-                    binding.progBar.visibility = View.GONE
-                    viewModel.getBaseDataAlternativeApi()
-                }
-
                 is SubmitResult.FailureNoConnection -> {
                     showNoConnectionState()
                 }
@@ -450,11 +442,11 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         )
     }
 
-    override fun sendComplaintData(complaintBody: ComplaintBody) {
+    override fun sendComplaintData(complaintBody: ComplaintBody,dataValidation: DataValidation) {
         viewModel.postComplaint(complaintBody)
     }
 
-    override fun sendObjectionData(objectionBody: ObjectionBody) {
+    override fun sendObjectionData(objectionBody: ObjectionBody,dataValidation: DataValidation) {
         viewModel.postObjection(objectionBody)
     }
 

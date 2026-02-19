@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
+import com.mobility.enp.data.model.api_tool_history.v2base_model.DataValidation
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
 import com.mobility.enp.databinding.ItemRelationPassageRealCroatiaBinding
 import com.mobility.enp.viewmodel.UserPassViewModel
@@ -85,8 +86,6 @@ class HistoryPassageAdapterCroatia(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(relation: Item) {
-            Log.d(TAG, "bind: $relation")
-
             with(binding) {
                 carTagNumber.text = relation.amount.toString()
                 carTagCurrency.text = "EUR"
