@@ -228,6 +228,10 @@ class UserPassViewModel(
             _selectedTags.update { it - id }
         }
     }
+    
+    fun getSelectedTagList(): List<Tag>{
+        return _userSelectedTags.value.toList()
+    }
 
     fun isSelected(tag: Tag): Boolean {
         return tag.id?.let { _selectedTags.value.contains(it) } ?: false
