@@ -14,6 +14,7 @@ import com.mobility.enp.data.model.api_tool_history.TagUtilCycler
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
+import com.mobility.enp.databinding.ToolHistoryIndexCardResultBinding
 import com.mobility.enp.view.adapters.tool_history.combined.HistoryTotalCostAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
@@ -64,7 +65,7 @@ class HistorySerialAdapterResult(
     }
 
     inner class TagsViewHolder(
-        val binding: ToolHistoryIndexCardBinding
+        val binding: ToolHistoryIndexCardResultBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
@@ -175,7 +176,7 @@ class HistorySerialAdapterResult(
         }
     }
 
-    private fun setViewHeight(binding: ToolHistoryIndexCardBinding, size: Int, position: Int) {
+    private fun setViewHeight(binding: ToolHistoryIndexCardResultBinding, size: Int, position: Int) {
         binding.position = position
 
         when (size) {
@@ -226,7 +227,7 @@ class HistorySerialAdapterResult(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsViewHolder {
         return TagsViewHolder(
-            ToolHistoryIndexCardBinding.inflate(
+            ToolHistoryIndexCardResultBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )

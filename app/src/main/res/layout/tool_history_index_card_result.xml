@@ -35,7 +35,6 @@
 
         <TextView
             android:id="@+id/txtTotal"
-            style="@style/CaptionRegularTablet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -46,7 +45,6 @@
 
         <TextView
             android:id="@+id/txtSerial"
-            style="@style/CaptionRegularTablet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/tagSerialNumber"
@@ -57,7 +55,7 @@
 
         <TextView
             android:id="@+id/tagSerialNumber"
-            style="@style/ParagraphMediumTablet"
+            style="@style/ParagraphSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txtTotal"
@@ -81,6 +79,7 @@
             android:layout_marginTop="@dimen/dimens_5dp"
             android:layout_marginEnd="@dimen/dimens_10dp"
             android:minHeight="@dimen/dimens_22dp"
+            android:textAlignment="viewEnd"
             tool:itemCount="3"
             tool:listitem="@layout/passage_history_total_price" />
 
@@ -125,12 +124,13 @@
             android:layout_below="@id/tagSerialNumber"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/dimens_20dp"
             android:layout_marginBottom="@dimen/dimens_20dp"
             android:ellipsize="end"
             android:gravity="center_horizontal"
             android:maxLines="3"
             android:scrollHorizontally="true"
-            android:text="@string/no_passage_data"
+            android:text="@string/no_passage_data_special"
             android:textStyle="bold"
             android:visibility="gone" />
 

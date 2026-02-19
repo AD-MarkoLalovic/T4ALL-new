@@ -182,7 +182,8 @@
     <string name="objection_content">Sadržaj prigovora: (jasno navedite razloge prigovora)</string>
     <string name="complaint_min_length">Polje za žalbu mora sadržavati najmanje 10 znakova</string>
     <string name="please_enter_all_required_data">Molimo unesite sve potrebne podatke</string>
-    <string name="no_passage_data">Nema podataka o prolazu</string>
+    <string name="no_passage_data">Nemate prolazaka u posljednjih 30 dana</string>
+    <string name="no_passage_data_special">Nemate prolazaka za odabrani period</string>
     <string name="payment_successfully">Plaćanje je uspješno završeno.</string>
     <string name="please_select_tag">Molimo odaberite oznaku.</string>
     <string name="request_recorded">Vaš zahtjev je zabilježen i proslijeđen na dalju obradu.</string>

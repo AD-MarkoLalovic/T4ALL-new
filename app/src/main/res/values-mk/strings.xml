@@ -188,7 +188,8 @@
     <string name="objection_content" translatable="true">Содржина на приговорот: (наведете јасни причини за приговорот)</string>
     <string name="complaint_min_length" translatable="true">Поље Разлог мора садржати најмање 10 карактера.</string>
     <string name="please_enter_all_required_data" translatable="true">Ве молиме внесете ги сите потребни податоци</string>
-    <string name="no_passage_data" translatable="true">Нема податоци за премин</string>
+    <string name="no_passage_data" translatable="true">Немате поминувања во последните 30 дена</string>
+    <string name="no_passage_data_special">Немате поминувања за избраниот период</string>
     <string name="payment_successfully" translatable="true">Плаќањето е успешно извршено.</string>
     <string name="please_select_tag" translatable="true">Ве молиме одберете таг.</string>
     <string name="request_recorded" translatable="true">Вашиот барање е евидентирано и испратено на подоцнежно обработување.</string>

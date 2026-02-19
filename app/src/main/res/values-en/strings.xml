@@ -182,7 +182,8 @@
     <string name="objection_content">Content of the objection: (clearly state the reasons for the objection)</string>
     <string name="complaint_min_length">Complaint field must contain at         least 10 characters</string>
     <string name="please_enter_all_required_data">Please enter all required data</string>
-    <string name="no_passage_data">No passage data</string>
+    <string name="no_passage_data">You have no passages in the last 30 days</string>
+    <string name="no_passage_data_special">You have no passages for the selected period</string>
     <string name="payment_successfully">Payment has been successfully completed.</string>
     <string name="please_select_tag">Please select a tag.</string>
     <string name="request_recorded">Your request has been recorded and forwarded for further processing.</string>
