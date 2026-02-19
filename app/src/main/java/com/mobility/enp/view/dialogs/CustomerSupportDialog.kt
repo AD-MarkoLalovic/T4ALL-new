@@ -36,16 +36,21 @@ class CustomerSupportDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         isCancelable = true
-        return dialog
+
+        return super.onCreateDialog(savedInstanceState).apply {
+            window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+            setCanceledOnTouchOutside(false)
+        }
+
     }
 
     override fun onStart() {
         super.onStart()
-        setDimensionsPercent(95)
-        isCancelable = false
+        val isLandscape = resources.configuration.orientation ==
+                android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
+        setDimensionsPercent(if (isLandscape) 85 else 95)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
