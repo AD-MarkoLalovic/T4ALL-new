@@ -46,8 +46,8 @@ class HistorySerialAdapter(
             notifyItemChanged(i)
         }
 
-        if (total > 1) {
-            viewModel.getSerialDeviceDataValidationSerialAdapter(total)
+        if (currentPage < lastPage) {
+            viewModel.getSerialDeviceDataValidationSerialAdapter(lastPage)
         }
     }
 
