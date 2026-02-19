@@ -274,6 +274,15 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
         collectLatestLifecycleFlow(viewModel.complaintObjectionState) { serverResponse ->
             when (serverResponse) {
+
+                is SubmitResult.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.progBar.visibility = View.GONE
+                }
+
                 is SubmitResult.FailureNoConnection -> {
                     showNoConnectionState()
                 }
@@ -443,11 +452,11 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
     }
 
     override fun sendComplaintData(complaintBody: ComplaintBody,dataValidation: DataValidation) {
-        viewModel.postComplaint(complaintBody)
+        viewModel.postComplaint(complaintBody,dataValidation)
     }
 
     override fun sendObjectionData(objectionBody: ObjectionBody,dataValidation: DataValidation) {
-        viewModel.postObjection(objectionBody)
+        viewModel.postObjection(objectionBody,dataValidation)
     }
 
     override fun stopSpinner() {

@@ -137,6 +137,39 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragme
                 else -> {}
             }
         }
+
+        collectLatestLifecycleFlow(viewModel.complaintObjectionStateResult) { serverResponse ->
+            when (serverResponse) {
+                is SubmitResult.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.progBar.visibility = View.GONE
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(serverResponse.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(serverResponse.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {}
+            }
+        }
     }
 
     private fun setFranchise() {
@@ -148,12 +181,12 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragme
     }
 
 
-    override fun sendComplaintData(complaintBody: ComplaintBody,dataValidation: DataValidation) {
-        viewModel.postComplaint(complaintBody)
+    override fun sendComplaintData(complaintBody: ComplaintBody, dataValidation: DataValidation) {
+        viewModel.postComplaint(complaintBody,dataValidation)
     }
 
-    override fun sendObjectionData(objectionBody: ObjectionBody,dataValidation: DataValidation) {
-        viewModel.postObjection(objectionBody)
+    override fun sendObjectionData(objectionBody: ObjectionBody, dataValidation: DataValidation) {
+        viewModel.postObjection(objectionBody,dataValidation)
     }
 
     override fun stopSpinner() {
@@ -192,6 +225,16 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragme
 
     private fun showError(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showNoConnectionState() {
+        binding.progBar.visibility = View.GONE
+        noInternetMessage()
+    }
+
+    private fun noInternetMessage() {
+        val mainBinding = (activity as MainActivity).binding
+        MainActivity.showSnackMessage(getString(R.string.no_internet), mainBinding)
     }
 
 }

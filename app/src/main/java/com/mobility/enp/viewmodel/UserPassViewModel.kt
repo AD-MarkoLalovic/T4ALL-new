@@ -45,6 +45,7 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
+import com.mobility.enp.data.model.api_tool_history.v2base_model.DataValidation
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatiaResult
@@ -74,6 +75,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -311,6 +313,10 @@ class UserPassViewModel(
     private val _complaintObjectionState =
         MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Empty)
     val complaintObjectionState: StateFlow<SubmitResult<LostTagResponse>> get() = _complaintObjectionState
+
+    private val _complaintObjectionStateResult =
+        MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Empty)
+    val complaintObjectionStateResult: StateFlow<SubmitResult<LostTagResponse>> get() = _complaintObjectionStateResult
 
     var startDate = MutableLiveData<TimeSave>()
     var endDate = MutableLiveData<TimeSave>()
@@ -790,7 +796,7 @@ class UserPassViewModel(
         }
     }
 
-    fun postComplaint(complaintBody: ComplaintBody) {
+    fun postComplaint(complaintBody: ComplaintBody, dataValidation: DataValidation) {
         _complaintObjectionState.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.postComplaint(complaintBody)
@@ -799,6 +805,12 @@ class UserPassViewModel(
                 if (data == null) {
                     _complaintObjectionState.value = SubmitResult.Empty
                 } else {
+                    getSerialPassageTagDataValidation(
+                        dataValidation.totalPages,
+                        dataValidation.tagSerialNumber,
+                        dataValidation.countryCode
+                    )
+                    delay(2000)
                     _complaintObjectionState.value = SubmitResult.Success(data)
                 }
             } else {
@@ -842,9 +854,8 @@ class UserPassViewModel(
         }
     }
 
-    fun postObjection(objectionBody: ObjectionBody) {
+    fun postObjection(objectionBody: ObjectionBody, dataValidation: DataValidation) {
         _complaintObjectionState.value = SubmitResult.Loading
-
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.postObjection(objectionBody)
             if (result.isSuccess) {
@@ -852,6 +863,12 @@ class UserPassViewModel(
                 if (data == null) {
                     _complaintObjectionState.value = SubmitResult.Empty
                 } else {
+                    getSerialPassageTagDataValidation(
+                        dataValidation.totalPages,
+                        dataValidation.tagSerialNumber,
+                        dataValidation.countryCode
+                    )
+                    delay(2000)
                     _complaintObjectionState.value = SubmitResult.Success(data)
                 }
             } else {
