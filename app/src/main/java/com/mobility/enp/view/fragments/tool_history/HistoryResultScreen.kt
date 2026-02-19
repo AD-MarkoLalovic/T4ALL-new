@@ -16,9 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
-import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
-import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
 import com.mobility.enp.view.adapters.tool_history.result.HistoryPassageAdapterCroatiaResult
 import com.mobility.enp.view.adapters.tool_history.result.HistoryPassageAdapterResult
 import com.mobility.enp.view.adapters.tool_history.result.HistorySerialAdapterResult
@@ -35,7 +33,6 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragme
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
     private lateinit var historySerialAdapter: HistorySerialAdapterResult
-    private var listIndexData: List<IndexData> = emptyList()
 
     companion object {
         const val TAG = "HistoryResult"
@@ -75,20 +72,29 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragme
     private fun setObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.tagFlow.collect { indexData ->
+                viewModel.tagFlowResult.collect { indexData ->
                     if (!indexData.isEmpty()) {
                         binding.progBar.visibility = View.GONE
 
                         val userSelectedTags = viewModel.getSelectedTagList()
 
+                        val uiList = indexData.map { item ->
+                            if (userSelectedTags.isNotEmpty()) {
+                                item.copy(
+                                    data = item.data?.copy(
+                                        tags = userSelectedTags.toList()
+                                    )
+                                )
+                            } else item
+                        }
+
                         if (userSelectedTags.isNotEmpty()) {
-                            val list = indexData[0]
+                            val list = indexData[0].copy()
                             list.data?.tags = userSelectedTags
-                            listIndexData = listOf(list)
-                            historySerialAdapter.setAdapterData(listOf(list))
+                            historySerialAdapter.setAdapterData(uiList)
                         } else {
-                            listIndexData = indexData
                             historySerialAdapter.setAdapterData(indexData)
+
                         }
                     }
                 }
