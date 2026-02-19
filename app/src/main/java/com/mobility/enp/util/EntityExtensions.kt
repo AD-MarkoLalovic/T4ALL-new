@@ -5,6 +5,7 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.api_my_profile.my_tags.response.MyTagsList
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatiaResult
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseResult
 import com.mobility.enp.data.model.cards.registration_croatia.RegistrationResponse
 import com.mobility.enp.data.model.cards.tags_for_croatia.Tag
@@ -120,6 +121,18 @@ fun V2HistoryTagResponse.toCroatianPassage(): V2HistoryTagResponseCroatia {
         data?.records?.pagination?.perPage ?: 0
     )
 }
+
+
+fun V2HistoryTagResponse.toCroatianPassageResult(): V2HistoryTagResponseCroatiaResult {
+    return V2HistoryTagResponseCroatiaResult(
+        data, message, serial, countryCode,
+        data?.records?.pagination?.currentPage ?: 0,
+        data?.records?.pagination?.lastPage ?: 0,
+        data?.records?.pagination?.total ?: 0,
+        data?.records?.pagination?.perPage ?: 0
+    )
+}
+
 
 fun V2HistoryTagResponse.toV2HistoryTagResponseResult(): V2HistoryTagResponseResult {
     return V2HistoryTagResponseResult(

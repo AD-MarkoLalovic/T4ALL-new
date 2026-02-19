@@ -9,6 +9,7 @@ import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2AllowedCountries
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatiaResult
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseResult
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
@@ -16,6 +17,7 @@ import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.toCroatianPassage
+import com.mobility.enp.util.toCroatianPassageResult
 import com.mobility.enp.util.toV2HistoryTagResponseResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -109,6 +111,10 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         database.historyPassageDaoV2Croatia().upsertAll(data)
     }
 
+    suspend fun roomUpsertAllV2PassagesCroatiaResult(data: List<V2HistoryTagResponseCroatiaResult>) {
+        database.historyPassageDaoV2CroatiaResult().upsertAll(data)
+    }
+
     suspend fun roomUpsertAllowedCountries(data: List<String>) {
         val list: ArrayList<V2AllowedCountries> = arrayListOf()
         for (country in data) {
@@ -120,6 +126,11 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
     suspend fun roomUpsertCroatianPassage(data: V2HistoryTagResponse) {
         val passageData = data.toCroatianPassage()
         database.historyPassageDaoV2Croatia().upsertData(passageData)
+    }
+
+    suspend fun roomUpsertCroatianPassageResult(data: V2HistoryTagResponse) {
+        val passageData = data.toCroatianPassageResult()
+        database.historyPassageDaoV2CroatiaResult().upsertData(passageData)
     }
 
     suspend fun fetchedStoredCsvData(): ByteArray? {

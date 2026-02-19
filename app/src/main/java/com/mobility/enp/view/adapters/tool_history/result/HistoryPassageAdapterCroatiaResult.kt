@@ -37,7 +37,7 @@ class HistoryPassageAdapterCroatiaResult(
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewmodel.getCroatiaPassagesBySerialPage(tagSerialNumber, viewmodel.selectedCountry)
+                viewmodel.getCroatiaPassagesBySerialPageResult(tagSerialNumber, viewmodel.selectedCountry)
                     .collect { data ->
                         if (data.isNotEmpty()) {
                             totalPages = data.size
@@ -66,9 +66,9 @@ class HistoryPassageAdapterCroatiaResult(
             }
         }
 
-        viewmodel.getToolHistoryTransitCroatia(tagSerialNumber, 1)
+        viewmodel.getToolHistoryTransitCroatiaResult(tagSerialNumber, 1)
         if (totalPages > 1) {
-            viewmodel.getSerialPassageTagDataValidationCroatia(
+            viewmodel.getSerialPassageTagDataValidationCroatiaResult(
                 totalPages,
                 tagSerialNumber,
                 context.getString(R.string.croatia_hr)

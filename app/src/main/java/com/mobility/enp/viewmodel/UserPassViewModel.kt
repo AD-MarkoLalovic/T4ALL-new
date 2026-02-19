@@ -47,6 +47,7 @@ import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatiaResult
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseResult
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
@@ -56,6 +57,7 @@ import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatiaResult
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoResult
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.CHANNEL_ID
@@ -64,6 +66,7 @@ import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.toCroatianPassage
+import com.mobility.enp.util.toCroatianPassageResult
 import com.mobility.enp.util.toV2HistoryTagResponseResult
 import com.mobility.enp.view.CsvActivity
 import com.mobility.enp.view.fragments.tool_history.HistoryFilterScreen
@@ -92,6 +95,7 @@ class UserPassViewModel(
     private val repository: PassageHistoryRepository,
     private val tagsDao: ToolHistoryV2TagsSerials,
     private val historyCroatiaPassageDao: ToolHistoryV2DaoCroatia,
+    private val historyCroatiaPassageDaoResult: ToolHistoryV2DaoCroatiaResult,
     private val historyV2Dao: ToolHistoryV2Dao,
     private val historyV2DaoResult: ToolHistoryV2DaoResult,
     private val historyV2AllowedCountriesDao: ToolHistoryV2AllowedCountryDao
@@ -109,12 +113,14 @@ class UserPassViewModel(
                 val historyV2PassageDaoResult =
                     (this[APPLICATION_KEY] as MyApplication).v2HistoryDaoResult
                 val historyCroatiaPassageDao = (this[APPLICATION_KEY] as MyApplication).v2CroatiaDao
+                val historyCroatiaPassageDaoResult =
+                    (this[APPLICATION_KEY] as MyApplication).v2CroatiaDaoResult
                 val historyAllowedCountriesDao =
                     (this[APPLICATION_KEY] as MyApplication).v2AllowedCountriesDao
                 UserPassViewModel(
                     repository = myRepository,
                     tagsDao,
-                    historyCroatiaPassageDao,
+                    historyCroatiaPassageDao, historyCroatiaPassageDaoResult,
                     historyV2PassageDao, historyV2PassageDaoResult,
                     historyAllowedCountriesDao
                 )
@@ -183,10 +189,27 @@ class UserPassViewModel(
             )
     }
 
+    fun getCroatiaPassagesBySerialPageResult(
+        serialNumber: String, countryCode: String
+    ): StateFlow<List<V2HistoryTagResponseCroatiaResult?>> {
+        return historyCroatiaPassageDaoResult.observePassageDataBySerialCountry(serialNumber, countryCode)
+            .stateIn(
+                viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+            )
+    }
+
     fun getCroatiaPassagesBySerialPageLoad(
         serialNumber: String, countryCode: String
     ): List<V2HistoryTagResponseCroatia?> {
         return historyCroatiaPassageDao.observePassageDataBySerialCountryLoad(
+            serialNumber, countryCode
+        )
+    }
+
+    fun getCroatiaPassagesBySerialPageLoadResult(
+        serialNumber: String, countryCode: String
+    ): List<V2HistoryTagResponseCroatiaResult?> {
+        return historyCroatiaPassageDaoResult.observePassageDataBySerialCountryLoad(
             serialNumber, countryCode
         )
     }
@@ -680,6 +703,71 @@ class UserPassViewModel(
         }
     }
 
+    fun getSerialPassageTagDataValidationCroatiaResult(
+        totalPages: Int,
+        tagSerial: String,
+        countryCode: String
+    ) {
+        viewModelScope.launch() {
+            val semaphore = Semaphore(20)
+
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+            val dateTo = LocalDate.now()
+            val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
+
+            val dateToFormatted = dateTo.format(formatter)
+            val dateFromFormatted = dateFrom.format(formatter)
+
+            withContext(Dispatchers.IO) {
+                val result = coroutineScope {
+                    (1..totalPages).map { page ->
+                        async {
+                            semaphore.withPermit {
+                                try {
+                                    val response = repository.getAdapterPassageDataCountryFilter(
+                                        tagSerial,
+                                        countryCode,
+                                        page,
+                                        itemsPerPage,
+                                        dateFromFormatted,
+                                        dateToFormatted
+                                    )
+
+                                    val body = response.getOrNull()
+
+                                    body?.copy(
+                                        serial = tagSerial,
+                                        countryCode = countryCode,
+                                        currentPage = body.data?.records?.pagination?.currentPage
+                                            ?: 0,
+                                        lastPage = body.data?.records?.pagination?.lastPage ?: 0,
+                                        totalRecords = body.data?.records?.pagination?.total ?: 0,
+                                        perPage = body.data?.records?.pagination?.perPage ?: 0
+                                    )
+
+                                } catch (e: Exception) {
+                                    Log.d(
+                                        TAG,
+                                        "getSerialPassageTagDataValidationCroatia: ${e.toString()}"
+                                    )
+                                    null
+                                }
+                            }
+                        }
+                    }.awaitAll().filterNotNull()
+                }
+
+                if (result.isNotEmpty()) {
+                    val convertedList: ArrayList<V2HistoryTagResponseCroatiaResult> = arrayListOf()
+                    for (data in result) {
+                        convertedList.add(data.toCroatianPassageResult())
+                    }
+                    repository.roomUpsertAllV2PassagesCroatiaResult(convertedList.toList())
+                }
+            }
+        }
+    }
+
     fun saveRoomTagDataFirstScreen(indexData: IndexData) {
         val currentPage = indexData.data?.currentPage ?: 0
         val lastPage = indexData.data?.lastPage ?: 0
@@ -1014,6 +1102,77 @@ class UserPassViewModel(
                     v2HistoryTagResponse.perPage =
                         v2HistoryTagResponse.data?.records?.pagination?.perPage ?: 0
                     roomPassageDataFirstScreenCroatia(v2HistoryTagResponse)
+                }
+
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _baseTagDataState.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _baseTagDataState.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(TOKEN, "invalid token detected login out user")
+                                _baseTagDataState.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code ?: 0, error.errorResponse.message ?: ""
+                                )
+                            }
+
+                            else -> {
+                                _baseTagDataState.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
+                                Log.d(TAG, "api error ${error.errorResponse.message}")
+                            }
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    fun getToolHistoryTransitCroatiaResult(
+        tagSerialNumber: String, currentPage: Int
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+            val dateTo = LocalDate.now()
+            val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
+
+            val dateToFormatted = dateTo.format(formatter)
+            val dateFromFormatted = dateFrom.format(formatter)
+
+            val result = repository.getAdapterPassageDataCountryFilter(
+                tagSerialNumber,
+                "HR",
+                currentPage,
+                itemsPerPage,
+                dateFromFormatted ?: "",
+                dateToFormatted ?: ""
+            )
+
+
+            if (result.isSuccess) {
+                result.getOrNull()?.let { v2HistoryTagResponse ->
+                    v2HistoryTagResponse.countryCode = selectedCountry
+                    v2HistoryTagResponse.serial = tagSerialNumber
+                    v2HistoryTagResponse.currentPage =
+                        v2HistoryTagResponse.data?.records?.pagination?.currentPage ?: 0
+                    v2HistoryTagResponse.lastPage =
+                        v2HistoryTagResponse.data?.records?.pagination?.lastPage ?: 0
+                    v2HistoryTagResponse.totalRecords =
+                        v2HistoryTagResponse.data?.records?.pagination?.total ?: 0
+                    v2HistoryTagResponse.perPage =
+                        v2HistoryTagResponse.data?.records?.pagination?.perPage ?: 0
+                    roomPassageDataFirstScreenCroatiaResult(v2HistoryTagResponse)
                 }
 
             } else {
@@ -1391,6 +1550,12 @@ class UserPassViewModel(
     fun roomPassageDataFirstScreenCroatia(data: V2HistoryTagResponse) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.roomUpsertCroatianPassage(data)
+        }
+    }
+
+    fun roomPassageDataFirstScreenCroatiaResult(data: V2HistoryTagResponse) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.roomUpsertCroatianPassageResult(data)
         }
     }
 
