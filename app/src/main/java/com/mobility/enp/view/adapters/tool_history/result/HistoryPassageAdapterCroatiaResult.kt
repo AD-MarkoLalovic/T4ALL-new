@@ -127,7 +127,7 @@ class HistoryPassageAdapterCroatiaResult(
         if (currentItem == relation[relation.size - 1]) {
             if (currentPage < lastPage) {
                 // trigger background update with flow
-                viewmodel.getToolHistoryTransitCroatia(tagSerialNumber, currentPage + 1)
+                viewmodel.getToolHistoryTransitCroatiaResult(tagSerialNumber, currentPage + 1)
             }
         }
     }

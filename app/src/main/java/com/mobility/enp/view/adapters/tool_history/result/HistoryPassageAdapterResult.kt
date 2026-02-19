@@ -275,7 +275,7 @@ class HistoryPassageAdapterResult(
         if (currentItem == relation[relation.size - 1]) {
             if (currentPage < lastPage) {
                 // trigger background update with flow
-                viewmodel.getToolHistoryTransit(tagSerialNumber, currentPage + 1)
+                viewmodel.getToolHistoryTransitResult(tagSerialNumber, currentPage + 1)
             }
         }
     }
