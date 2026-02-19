@@ -906,6 +906,117 @@ class UserPassViewModel(
         }
     }
 
+
+    fun postComplaintResult(complaintBody: ComplaintBody, dataValidation: DataValidation) {
+        _complaintObjectionStateResult.value = SubmitResult.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.postComplaint(complaintBody)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _complaintObjectionStateResult.value = SubmitResult.Empty
+                } else {
+                    getSerialPassageTagDataValidationResult(
+                        dataValidation.totalPages,
+                        dataValidation.tagSerialNumber,
+                        dataValidation.countryCode
+                    )
+                    delay(2000)
+                    _complaintObjectionStateResult.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _baseApiErrorsResultScreen.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _baseApiErrorsResultScreen.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN UserPassViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                _baseApiErrorsResultScreen.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code, error.errorResponse.message ?: ""
+                                )
+                            }
+
+                            else -> {
+                                _baseApiErrorsResultScreen.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
+                                Log.d(
+                                    "UserPassViewModel",
+                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                                )
+                            }
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    fun postObjectionResult(objectionBody: ObjectionBody, dataValidation: DataValidation) {
+        _complaintObjectionStateResult.value = SubmitResult.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.postObjection(objectionBody)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    _complaintObjectionStateResult.value = SubmitResult.Empty
+                } else {
+                    getSerialPassageTagDataValidationResult(
+                        dataValidation.totalPages,
+                        dataValidation.tagSerialNumber,
+                        dataValidation.countryCode
+                    )
+                    delay(2000)
+                    _complaintObjectionStateResult.value = SubmitResult.Success(data)
+                }
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching tag serial data")
+                        _baseApiErrorsResultScreen.value = SubmitResult.FailureServerError
+                    }
+
+                    is NetworkError.NoConnection -> {
+                        _baseApiErrorsResultScreen.value = SubmitResult.FailureNoConnection
+                    }
+
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                Log.d(
+                                    "API_TOKEN UserPassViewModel",
+                                    "invalid token detected login out user"
+                                )
+                                _baseApiErrorsResultScreen.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code, error.errorResponse.message ?: ""
+                                )
+                            }
+
+                            else -> {
+                                _baseApiErrorsResultScreen.value =
+                                    SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                                Log.d(TAG, "api error ${error.errorResponse.message}")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * this function fills the initial 10 passages in tool history once we have tag serial data
      * for first screen

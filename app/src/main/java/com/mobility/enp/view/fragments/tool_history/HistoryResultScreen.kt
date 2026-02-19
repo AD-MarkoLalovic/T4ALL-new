@@ -182,11 +182,11 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragme
 
 
     override fun sendComplaintData(complaintBody: ComplaintBody, dataValidation: DataValidation) {
-        viewModel.postComplaint(complaintBody,dataValidation)
+        viewModel.postComplaintResult(complaintBody, dataValidation)
     }
 
     override fun sendObjectionData(objectionBody: ObjectionBody, dataValidation: DataValidation) {
-        viewModel.postObjection(objectionBody,dataValidation)
+        viewModel.postObjectionResult(objectionBody, dataValidation)
     }
 
     override fun stopSpinner() {
