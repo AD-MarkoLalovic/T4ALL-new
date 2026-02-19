@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
+import com.mobility.enp.data.model.api_tool_history.v2base_model.DataValidation
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
 import com.mobility.enp.data.model.api_tool_history.v2base_model.SumTag
 import com.mobility.enp.databinding.ItemRelationPassageRealBinding
@@ -101,6 +102,10 @@ class HistoryPassageAdapterResult(
 
         fun bind(relation: Item, complaintInterface: SendToFragment) {
 
+            val dataValidation = DataValidation(
+                totalPages, tagSerialNumber, countryCode
+            )
+
             binding.objectionsNumber.text = ""
 
             binding.relation = relation
@@ -137,7 +142,7 @@ class HistoryPassageAdapterResult(
                     val dialog = ComplaintFormDialog.newInstance(
                         relation.id
                     ) { complaintBody ->
-                        complaintInterface.sendComplaintData(complaintBody)
+                        complaintInterface.sendComplaintData(complaintBody, dataValidation)
                     }
 
                     dialog.show(fragmentManager, "ComplaintFormDialog")
@@ -148,7 +153,7 @@ class HistoryPassageAdapterResult(
                     val dialog = ComplaintFormDialogOld.newInstance(
                         relation.id
                     ) { complaintBody ->
-                        complaintInterface.sendComplaintData(complaintBody)
+                        complaintInterface.sendComplaintData(complaintBody, dataValidation)
                     }
 
                     dialog.show(fragmentManager, "ComplaintFormDialogOld")
@@ -173,7 +178,7 @@ class HistoryPassageAdapterResult(
                         val dialog = ObjectionFormDialog.newInstance(
                             relation.complaint.id
                         ) { complaintBody ->
-                            complaintInterface.sendObjectionData(complaintBody)
+                            complaintInterface.sendObjectionData(complaintBody, dataValidation)
                         }
 
                         dialog.show(fragmentManager, "ObjectionFormDialog")
@@ -281,8 +286,8 @@ class HistoryPassageAdapterResult(
     }
 
     interface SendToFragment {
-        fun sendComplaintData(complaintBody: ComplaintBody)
-        fun sendObjectionData(objectionBody: ObjectionBody)
+        fun sendComplaintData(complaintBody: ComplaintBody, dataValidation: DataValidation)
+        fun sendObjectionData(objectionBody: ObjectionBody, dataValidation: DataValidation)
         fun stopSpinner()
     }
 

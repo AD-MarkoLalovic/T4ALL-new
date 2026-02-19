@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
 import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
+import com.mobility.enp.data.model.api_tool_history.v2base_model.DataValidation
 import com.mobility.enp.databinding.FragmentToolHistorySearchResultBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
@@ -147,11 +148,11 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragme
     }
 
 
-    override fun sendComplaintData(complaintBody: ComplaintBody) {
+    override fun sendComplaintData(complaintBody: ComplaintBody,dataValidation: DataValidation) {
         viewModel.postComplaint(complaintBody)
     }
 
-    override fun sendObjectionData(objectionBody: ObjectionBody) {
+    override fun sendObjectionData(objectionBody: ObjectionBody,dataValidation: DataValidation) {
         viewModel.postObjection(objectionBody)
     }
 
