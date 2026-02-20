@@ -466,6 +466,8 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        listIndexData = emptyList()
+        viewModel.setAvailableCountriesMain(emptyList())
     }
 
 
