@@ -78,7 +78,7 @@ class MyTollCountriesFirstScreenAdapter(
             binding.tagStatus.setOnClickListener {
                 if (!clicksEnabled) return@setOnClickListener  // global countdown lock to prevent spamming
                 if (bindingAdapterPosition != RecyclerView.NO_POSITION && bindingAdapterPosition != selectedStatus) {
-                    onShowSpinner(true)
+//                    onShowSpinner(true)
                     clicksEnabled = false
 
                     val oldPosition = selectedStatus
@@ -89,7 +89,7 @@ class MyTollCountriesFirstScreenAdapter(
                     onSelected(status)
                 }
                 binding.root.postDelayed({
-                    onShowSpinner(false)
+//                    onShowSpinner(false)
                     clicksEnabled = true
                 }, 1000)
             }
