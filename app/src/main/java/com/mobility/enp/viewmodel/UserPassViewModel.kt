@@ -140,14 +140,6 @@ class UserPassViewModel(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
-    fun getV2PassagesBySerialPage(
-        serialNumber: String, pageNumber: Int
-    ): StateFlow<List<V2HistoryTagResponse?>> {
-        return historyV2Dao.observePassageData(serialNumber, pageNumber).stateIn(
-            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-        )
-    }
-
     fun getV2PassagesBySerialAndCountryCode(
         serialNumber: String, countryCode: String
     ): StateFlow<List<V2HistoryTagResponse?>> {
@@ -221,14 +213,6 @@ class UserPassViewModel(
         )
     }
 
-    fun getCroatiaPassagesBySerial(
-        serialNumber: String,
-    ): StateFlow<List<V2HistoryTagResponseCroatia?>> {
-        return historyCroatiaPassageDao.observePassageDataBySerial(serialNumber).stateIn(
-            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-        )
-    }
-
     private val _listOfCountriesMain = MutableStateFlow<List<String>>(emptyList())
     val listOfCountriesMainScreen: StateFlow<List<String>> get() = _listOfCountriesMain
 
@@ -243,10 +227,6 @@ class UserPassViewModel(
         _availableCountryAdapterPosition.value = pos
     }
 
-    fun getCountryAdapterPosition(): Int {
-        return _availableCountryAdapterPosition.value
-    }
-
     private val _availableCountryAdapterPositionFilter = MutableStateFlow<Int>(-1)
     val availableCountryAdapterPositionFilter: StateFlow<Int> get() = _availableCountryAdapterPositionFilter
 
@@ -254,16 +234,10 @@ class UserPassViewModel(
         _availableCountryAdapterPositionFilter.value = pos
     }
 
-    fun getCountryAdapterPositionFilter(): Int {
-        return _availableCountryAdapterPositionFilter.value
-    }
-
     private val _selectedTags = MutableStateFlow<Set<String>>(emptySet())
     private val _userSelectedTags = MutableStateFlow<Set<Tag>>(emptySet())
 
     private var allowedCountriesForSerialAdapter: List<String> = emptyList()
-
-    val selectedTagsAdapter: StateFlow<Set<String>> = _selectedTags.asStateFlow()
 
     fun select(tag: Tag) {
         _userSelectedTags.update { it + tag }

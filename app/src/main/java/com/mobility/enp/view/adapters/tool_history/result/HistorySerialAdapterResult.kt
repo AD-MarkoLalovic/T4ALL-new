@@ -13,7 +13,6 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.TagUtilCycler
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
-import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.databinding.ToolHistoryIndexCardResultBinding
 import com.mobility.enp.view.adapters.tool_history.combined.HistoryTotalCostAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
@@ -32,13 +31,11 @@ class HistorySerialAdapterResult(
 
     private var currentPage: Int = 0
     private var lastPage: Int = 0
-    private var total: Int = 0
 
     fun setAdapterData(indexData: List<IndexData>) {
         if (indexData.isNotEmpty()) {
             currentPage = indexData[indexData.size - 1].currentPage ?: 0
             lastPage = indexData[indexData.size - 1].lastPage ?: 0
-            total = indexData.size
         }
 
         listOfTags = indexData.flatMap { it.data?.tags.orEmpty() }
@@ -56,7 +53,6 @@ class HistorySerialAdapterResult(
         listOfTags = emptyList()
         currentPage = 0
         lastPage = 0
-        total = 0
         notifyDataSetChanged()
     }
 
@@ -71,18 +67,15 @@ class HistorySerialAdapterResult(
         fun bind(
             toolHistoryIndex: TagUtilCycler,
             position: Int,
-            holder: TagsViewHolder, countryCode: String
+            holder: TagsViewHolder
         ) {
             // perform initial data fill // for sub adapter
-
             binding.data = toolHistoryIndex
 
-            holder.binding.progbar.visibility = View.VISIBLE
+            holder.binding.progbar.visibility = View.INVISIBLE
             binding.noPassage.visibility = View.GONE
             binding.nsScroll.visibility = View.INVISIBLE
             binding.cycler.visibility = View.INVISIBLE
-            binding.nsScroll.layoutParams.height = 250
-            binding.nsScroll.requestLayout()
 
             val itemSerialNumber = toolHistoryIndex.serialNumber
 
@@ -99,6 +92,10 @@ class HistorySerialAdapterResult(
                     }
 
                     val listOfPassages = initLoad.flatMap { it?.data?.records?.items.orEmpty() }
+
+                    if (listOfPassages.isEmpty()) {
+                        binding.progbar.visibility = View.VISIBLE
+                    }
 
                     setViewHeight(binding, listOfPassages.size, position)
 
@@ -128,7 +125,6 @@ class HistorySerialAdapterResult(
             } else {
                 //record of passages for tag for normal countries
                 //adapter that presents the passages
-
                 lifecycleOwner.lifecycleScope.launch {
                     val initLoad = withContext(Dispatchers.IO) {
                         viewModel.getV2PassagesBySerialAndCountryCodeLoadResult(
@@ -137,6 +133,10 @@ class HistorySerialAdapterResult(
                     }
 
                     val listOfPassages = initLoad.flatMap { it?.data?.records?.items.orEmpty() }
+
+                    if (listOfPassages.isEmpty()) {
+                        binding.progbar.visibility = View.VISIBLE
+                    }
 
                     setViewHeight(binding, listOfPassages.size, position)
 
@@ -176,7 +176,11 @@ class HistorySerialAdapterResult(
         }
     }
 
-    private fun setViewHeight(binding: ToolHistoryIndexCardResultBinding, size: Int, position: Int) {
+    private fun setViewHeight(
+        binding: ToolHistoryIndexCardResultBinding,
+        size: Int,
+        position: Int
+    ) {
         binding.position = position
 
         when (size) {
@@ -259,13 +263,11 @@ class HistorySerialAdapterResult(
             false
         }
 
-        val country = listOfTags[holder.bindingAdapterPosition].country?.value ?: ""
 
         holder.bind(
             tagUtilCycler,
             holder.bindingAdapterPosition,
-            holder,
-            country ?: "no data"
+            holder
         )
 
         runPaginationCheck(currentTag)
