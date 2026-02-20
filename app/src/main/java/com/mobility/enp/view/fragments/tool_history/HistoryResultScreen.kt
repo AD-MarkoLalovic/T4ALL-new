@@ -78,36 +78,30 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragme
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.tagFlowResult.collect { indexData ->
-                    if (!indexData.isEmpty()) {
-                        binding.progBar.visibility = View.GONE
+                    if (indexData.isEmpty()) return@collect
 
-                        when (viewModel.allTagsSelected) {
-                            true -> {
-                                historySerialAdapter.setAdapterData(indexData)
-                            }
+                    binding.progBar.visibility = View.GONE
 
-                            false -> {
-                                val userSelectedTags = viewModel.getSelectedTagList()
-
-                                val uiList = indexData.map { item ->
-                                    if (userSelectedTags.isNotEmpty()) {
-                                        item.copy(
-                                            data = item.data?.copy(
-                                                tags = userSelectedTags.toList()
-                                            )
-                                        )
-                                    } else item
-                                }
-
-                                if (userSelectedTags.isNotEmpty()) {
-                                    val list = indexData[0].copy()
-                                    list.data?.tags = userSelectedTags
-                                    historySerialAdapter.setAdapterData(uiList)
-                                }
-
-                            }
-                        }
+                    if (viewModel.allTagsSelected) {
+                        historySerialAdapter.setAdapterData(indexData)
+                        return@collect
                     }
+
+                    val uiList = indexData.map { item ->
+                        val originalTags = item.data?.tags.orEmpty()
+
+                        val orderedSelectedTags = originalTags.filter { tag ->
+                            viewModel.isSelected(tag)
+                        }
+
+                        item.copy(
+                            data = item.data?.copy(
+                                tags = orderedSelectedTags.ifEmpty { originalTags }
+                            )
+                        )
+                    }
+
+                    historySerialAdapter.setAdapterData(uiList)
                 }
             }
         }
