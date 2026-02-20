@@ -32,7 +32,6 @@ import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.view.dialogs.GeneralMessageDialogInfoButton
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -48,7 +47,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
     private lateinit var statusFilterAdapter: MyTollCountriesFirstScreenAdapter
     private lateinit var historySerialAdapter: HistorySerialAdapter
-    private var savedDataCheckJob: Job? = null
 
     companion object {
         const val TAG = "ToolHist"
@@ -66,6 +64,8 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
         viewModel.nullData()
         viewModel.setCsvState()
+
+        runInternetConnectionCheck()
 
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
@@ -99,17 +99,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
             dialog.show(parentFragmentManager, "infoDialog")
         }
 
-    }
-
-    private fun triggerUpdate() {
-        val bindingMain = (activity as MainActivity).binding
-
-        MainActivity.showSnackMessage(getString(R.string.connection_restored), bindingMain)
-
-        binding.progBar.visibility = View.GONE
-        binding.loopIcon.isEnabled = true
-
-        viewModel.getBaseDataAlternativeApi()
     }
 
     private fun setObservers() {
@@ -186,7 +175,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                 is SubmitResult.FailureNoConnection -> {
                     showNoConnectionState()
-                    runSavedDataCheck()
                 }
 
                 is SubmitResult.FailureServerError -> {
@@ -249,7 +237,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                 is SubmitResult.FailureNoConnection -> {
                     showNoInternetDialog()
-                    runSavedDataCheck()
                 }
 
                 is SubmitResult.FailureServerError -> {
@@ -388,45 +375,34 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         }
     }
 
-    private fun runSavedDataCheck() {
-        if (savedDataCheckJob?.isActive == true) return
+    private fun runInternetConnectionCheck() {
+        binding.loopIcon.isEnabled = false
 
-        binding.loopIcon.isEnabled = true
+        if (!viewModel.isNetAvailable()) {
+            viewLifecycleOwner.lifecycleScope.launch {
 
-        savedDataCheckJob = viewLifecycleOwner.lifecycleScope.launch {
+                val bindingMain = (activity as MainActivity).binding
 
-            val bindingMain = (activity as MainActivity).binding
-
-            MainActivity.showSnackMessage(
-                getString(R.string.checking_for_connection), bindingMain
-            )
-
-            val navController = findNavController()
-
-            if (navController.currentDestination?.id == R.id.noInternetConnectionDialog) {
-                return@launch
-            }
-
-            val bundle = Bundle().apply {
-                putString(getString(R.string.title), getString(R.string.no_connection_title))
-                putString(
-                    getString(R.string.subtitle),
-                    getString(R.string.please_connect_to_the_internet)
+                MainActivity.showSnackMessage(
+                    getString(R.string.checking_for_connection), bindingMain
                 )
-            }
 
-            navController.navigate(
-                R.id.action_global_noInternetConnectionDialog, bundle
-            )
+                showNoInternetDialog()
 
-            binding.progBar.visibility = View.VISIBLE
+                binding.progBar.visibility = View.VISIBLE
 
-            while (isActive) {
-                if (viewModel.internetAvailable()) {
-                    triggerUpdate()
-                    break
-                } else {
-                    delay(1000L)
+                while (isActive) {
+                    if (viewModel.internetAvailable()) {
+                        binding.loopIcon.isEnabled = true
+                        MainActivity.showSnackMessage(
+                            getString(R.string.connection_restored),
+                            bindingMain
+                        )
+                        viewModel.getBaseDataAlternativeApi()
+                        break
+                    } else {
+                        delay(1000L)
+                    }
                 }
             }
         }
