@@ -451,12 +451,12 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         )
     }
 
-    override fun sendComplaintData(complaintBody: ComplaintBody,dataValidation: DataValidation) {
-        viewModel.postComplaint(complaintBody,dataValidation)
+    override fun sendComplaintData(complaintBody: ComplaintBody, dataValidation: DataValidation) {
+        viewModel.postComplaint(complaintBody, dataValidation)
     }
 
-    override fun sendObjectionData(objectionBody: ObjectionBody,dataValidation: DataValidation) {
-        viewModel.postObjection(objectionBody,dataValidation)
+    override fun sendObjectionData(objectionBody: ObjectionBody, dataValidation: DataValidation) {
+        viewModel.postObjection(objectionBody, dataValidation)
     }
 
     override fun stopSpinner() {

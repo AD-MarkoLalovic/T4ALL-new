@@ -31,13 +31,11 @@ class HistorySerialAdapter(
 
     private var currentPage: Int = 0
     private var lastPage: Int = 0
-    private var total: Int = 0
 
     fun setAdapterData(indexData: List<IndexData>) {
         if (indexData.isNotEmpty()) {
             currentPage = indexData[indexData.size - 1].currentPage ?: 0
             lastPage = indexData[indexData.size - 1].lastPage ?: 0
-            total = indexData.size
         }
 
         listOfTags = indexData.flatMap { it.data?.tags.orEmpty() }
@@ -55,7 +53,6 @@ class HistorySerialAdapter(
         listOfTags = emptyList()
         currentPage = 0
         lastPage = 0
-        total = 0
         notifyDataSetChanged()
     }
 
@@ -68,36 +65,32 @@ class HistorySerialAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            toolHistoryIndex: TagUtilCycler,
-            position: Int,
-            holder: TagsViewHolder, countryCode: String
+            toolHistoryIndex: TagUtilCycler, position: Int, holder: TagsViewHolder
         ) {
             // perform initial data fill // for sub adapter
-
             binding.data = toolHistoryIndex
 
-            holder.binding.progbar.visibility = View.VISIBLE
+            holder.binding.progbar.visibility = View.INVISIBLE
             binding.noPassage.visibility = View.GONE
             binding.nsScroll.visibility = View.INVISIBLE
             binding.cycler.visibility = View.INVISIBLE
-            binding.nsScroll.layoutParams.height = 250
-            binding.nsScroll.requestLayout()
 
             val itemSerialNumber = toolHistoryIndex.serialNumber
 
             //region inner passage adapters
             if (viewModel.selectedCountry == binding.root.context.getString(R.string.croatia_hr)) {
-
                 lifecycleOwner.lifecycleScope.launch() {
-
                     val initLoad = withContext(Dispatchers.IO) {
                         viewModel.getCroatiaPassagesBySerialPageLoad(
-                            itemSerialNumber,
-                            binding.root.context.getString(R.string.croatia_hr)
+                            itemSerialNumber, binding.root.context.getString(R.string.croatia_hr)
                         )
                     }
 
                     val listOfPassages = initLoad.flatMap { it?.data?.records?.items.orEmpty() }
+
+                    if (listOfPassages.isEmpty()) {
+                        binding.progbar.visibility = View.VISIBLE
+                    }
 
                     setViewHeight(binding, listOfPassages.size, position)
 
@@ -105,21 +98,18 @@ class HistorySerialAdapter(
                         listOfPassages,
                         complaintInterfaceCroatia,
                         lifecycleOwner,
-                        itemSerialNumber, viewModel, { size ->
+                        itemSerialNumber,
+                        viewModel,
+                        { size ->
                             binding.progbar.visibility = View.GONE
-                            binding.cyclerTotalPrice.adapter =
-                                HistoryTotalCostAdapter(emptyList())
-                            binding.cyclerTotalPrice.layoutManager =
-                                LinearLayoutManager(
-                                    binding.root.context,
-                                    LinearLayoutManager.VERTICAL,
-                                    false
-                                )
+                            binding.cyclerTotalPrice.adapter = HistoryTotalCostAdapter(emptyList())
+                            binding.cyclerTotalPrice.layoutManager = LinearLayoutManager(
+                                binding.root.context, LinearLayoutManager.VERTICAL, false
+                            )
                             binding.cyclerTotalPrice.visibility = View.INVISIBLE
                             setViewHeight(binding, size, position)
                             Log.d(TAG, "bind: $size")
-                        }
-                    )
+                        })
                     binding.cyclerTotalPrice.visibility = View.GONE
 
                     binding.executePendingBindings()
@@ -127,7 +117,6 @@ class HistorySerialAdapter(
             } else {
                 //record of passages for tag for normal countries
                 //adapter that presents the passages
-
                 lifecycleOwner.lifecycleScope.launch {
                     val initLoad = withContext(Dispatchers.IO) {
                         viewModel.getV2PassagesBySerialAndCountryCodeLoad(
@@ -137,6 +126,10 @@ class HistorySerialAdapter(
 
                     val listOfPassages = initLoad.flatMap { it?.data?.records?.items.orEmpty() }
 
+                    if (listOfPassages.isEmpty()) {
+                        binding.progbar.visibility = View.VISIBLE
+                    }
+
                     setViewHeight(binding, listOfPassages.size, position)
 
                     binding.cycler.adapter = HistoryPassageAdapter(
@@ -144,29 +137,27 @@ class HistorySerialAdapter(
                         complaintInterface,
                         false,
                         lifecycleOwner,
-                        itemSerialNumber, viewModel.selectedCountry, viewModel,
+                        itemSerialNumber,
+                        viewModel.selectedCountry,
+                        viewModel,
                         { size ->
                             binding.progbar.visibility = View.GONE
                             setViewHeight(binding, size, position)
                             Log.d(TAG, "bind: $size")
 
-                        }, { sumTags ->
+                        },
+                        { sumTags ->
                             if (sumTags.isNotEmpty()) {  // sum total of price for passages hr doesn't have this data
-                                binding.cyclerTotalPrice.adapter =
-                                    HistoryTotalCostAdapter(sumTags)
-                                binding.cyclerTotalPrice.layoutManager =
-                                    LinearLayoutManager(
-                                        binding.root.context,
-                                        LinearLayoutManager.VERTICAL,
-                                        false
-                                    )
+                                binding.cyclerTotalPrice.adapter = HistoryTotalCostAdapter(sumTags)
+                                binding.cyclerTotalPrice.layoutManager = LinearLayoutManager(
+                                    binding.root.context, LinearLayoutManager.VERTICAL, false
+                                )
 
                                 binding.cyclerTotalPrice.visibility = View.VISIBLE
                             } else {
                                 binding.cyclerTotalPrice.visibility = View.INVISIBLE
                             }
-                        }
-                    )
+                        })
 
                     binding.executePendingBindings()
                 }
@@ -217,8 +208,7 @@ class HistorySerialAdapter(
         binding.nsScroll.visibility = View.VISIBLE
         binding.cycler.visibility = View.VISIBLE
 
-        binding.cycler.layoutManager =
-            LinearLayoutManager(binding.root.context)
+        binding.cycler.layoutManager = LinearLayoutManager(binding.root.context)
 
         binding.executePendingBindings()
     }
@@ -258,13 +248,9 @@ class HistorySerialAdapter(
             false
         }
 
-        val country = listOfTags[holder.bindingAdapterPosition].country?.value ?: ""
 
         holder.bind(
-            tagUtilCycler,
-            holder.bindingAdapterPosition,
-            holder,
-            country ?: "no data"
+            tagUtilCycler, holder.bindingAdapterPosition, holder
         )
 
         runPaginationCheck(currentTag)
