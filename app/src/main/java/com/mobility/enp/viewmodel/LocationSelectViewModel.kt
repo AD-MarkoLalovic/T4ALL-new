@@ -1,6 +1,5 @@
 package com.mobility.enp.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -21,10 +20,6 @@ class LocationSelectViewModel(private val repository: AuthRepository) : ViewMode
 
     fun onCountrySelected(code: String) {
         _selectedCode.value = code
-    }
-
-    fun fetchCountries(context: Context): List<RegistrationCountry> {
-        return repository.getCountries()
     }
 
     companion object {
