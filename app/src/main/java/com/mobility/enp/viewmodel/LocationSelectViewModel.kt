@@ -9,11 +9,22 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.registration.RegistrationCountry
 import com.mobility.enp.data.repository.AuthRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class LocationSelectViewModel(private val repository: AuthRepository) : ViewModel() {
 
+    val countries: List<RegistrationCountry> = repository.getCountries()
+
+    private val _selectedCode = MutableStateFlow("RS")
+    val selectCode = _selectedCode.asStateFlow()
+
+    fun onCountrySelected(code: String) {
+        _selectedCode.value = code
+    }
+
     fun fetchCountries(context: Context): List<RegistrationCountry> {
-        return repository.getCountries(context)
+        return repository.getCountries()
     }
 
     companion object {
