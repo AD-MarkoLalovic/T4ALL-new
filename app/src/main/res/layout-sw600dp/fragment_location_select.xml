@@ -7,81 +7,98 @@
     android:background="@color/white"
     tools:context=".view.fragments.LocationSelectFragment">
 
-    <ImageView
-        android:id="@+id/topLogoImage"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollContainer"
         android:layout_width="@dimen/dimens_0dp"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@null"
-        android:src="@drawable/logo_image_tablet"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/backArrow"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:layout_marginStart="@dimen/dimens_100dp"
-        android:layout_marginTop="@dimen/dimens_22dp"
-        android:background="@drawable/arrow_back"
-        android:contentDescription="@null"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/border_login"
-        android:backgroundTint="@color/primary_light_lightest"
-        android:paddingHorizontal="@dimen/dimens_100dp"
+        android:layout_height="@dimen/dimens_0dp"
+        android:background="@color/primary_light_lightest"
         app:layout_constraintBottom_toTopOf="@+id/secondLineChooseCountry"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topLogoImage">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/txChooseYourCountry"
-            style="@style/H2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimens_34dp"
-            android:text="@string/choose_your_country"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black">
 
-        <View
-            android:id="@+id/lineLocationSelect"
-            android:layout_width="@dimen/dimens_0dp"
-            android:layout_height="@dimen/dimens_2dp"
-            android:layout_marginTop="@dimen/dimens_22dp"
-            android:background="@color/primary_light_light"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txChooseYourCountry" />
+            <ImageView
+                android:id="@+id/topLogoImage"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@null"
+                android:src="@drawable/logo_image_tablet"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvListCountries"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/dimens_22dp"
-            android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lineLocationSelect"
-            tools:itemCount="5"
-            tools:listitem="@layout/card_countries_registration" />
+            <ImageView
+                android:id="@+id/backArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_100dp"
+                android:layout_marginTop="@dimen/dimens_22dp"
+                android:background="@drawable/arrow_back"
+                android:contentDescription="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-30dp"
+                android:background="@drawable/border_login"
+                android:backgroundTint="@color/primary_light_lightest"
+                android:elevation="8dp"
+                android:paddingHorizontal="@dimen/dimens_100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/topLogoImage">
 
+                <TextView
+                    android:id="@+id/txChooseYourCountry"
+                    style="@style/H2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="34dp"
+                    android:text="@string/choose_your_country"
+                    android:textColor="@color/primary_light_darkest"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="@dimen/dimens_2dp"
+                    android:layout_marginTop="@dimen/dimens_16dp"
+                    android:background="@color/primary_light_light"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txChooseYourCountry" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvListCountries"
+                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="38dp"
+                    android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txChooseYourCountry"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/card_countries_registration" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <View
         android:id="@+id/secondLineChooseCountry"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_width="@dimen/dimens_0dp"
+        android:layout_height="@dimen/dimens_1dp"
         android:layout_marginBottom="@dimen/dimens_16dp"
         android:background="@color/primary_light_light"
         app:layout_constraintBottom_toTopOf="@+id/button"
@@ -93,11 +110,13 @@
         style="@style/MyButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="100dp"
+        android:layout_marginHorizontal="@dimen/dimens_16dp"
         android:layout_marginBottom="@dimen/dimens_16dp"
         android:text="@string/confirm"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
