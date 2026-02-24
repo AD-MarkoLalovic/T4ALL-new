@@ -99,6 +99,7 @@ class HistoryFilterScreen : Fragment() {
 
         vModel.selectedTags.clear()
         vModel.selectedCountry = ""
+        vModel.deleteOldResultData()
 
         binding.progBar.visibility = View.VISIBLE
 
@@ -316,11 +317,13 @@ class HistoryFilterScreen : Fragment() {
                 is SubmitResult.FailureServerError -> {
                     binding.progBar.visibility = View.GONE
                     showError(getString(R.string.server_error_msg))
+                    vModel.setCsvState()
                 }
 
                 is SubmitResult.FailureApiError -> {
                     binding.progBar.visibility = View.GONE
                     showError(csvTable.errorMessage)
+                    vModel.setCsvState()
                 }
 
                 is SubmitResult.InvalidApiToken -> {

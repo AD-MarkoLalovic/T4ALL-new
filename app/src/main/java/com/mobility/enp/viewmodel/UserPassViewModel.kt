@@ -79,7 +79,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -759,6 +758,13 @@ class UserPassViewModel(
         }
     }
 
+    fun deleteOldResultData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            historyV2DaoResult.deleteData()
+            historyCroatiaPassageDaoResult.deleteData()
+        }
+    }
+
     fun saveAllowedCountries(countries: List<String>) {
         allowedCountriesForSerialAdapter = countries
         viewModelScope.launch {
@@ -1086,12 +1092,21 @@ class UserPassViewModel(
         tagSerialNumber: String, currentPage: Int
     ) {
         viewModelScope.launch(Dispatchers.IO) {
+
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+            val dateTo = LocalDate.now()
+            val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
+
+            val dateToFormatted = dateTo.format(formatter)
+            val dateFromFormatted = dateFrom.format(formatter)
+
+
             var result = repository.getAdapterPassageData(
                 tagSerialNumber,
                 currentPage,
                 itemsPerPage,
-                startDate.value?.formattedTime ?: "",
-                endDate.value?.formattedTime ?: ""
+                startDate.value?.formattedTime ?: dateFromFormatted,
+                endDate.value?.formattedTime ?: dateToFormatted
             )
 
             if (!selectedCountry.isEmpty()) {
@@ -1100,8 +1115,8 @@ class UserPassViewModel(
                     selectedCountry,
                     currentPage,
                     itemsPerPage,
-                    startDate.value?.formattedTime ?: "",
-                    endDate.value?.formattedTime ?: ""
+                    startDate.value?.formattedTime ?: dateFromFormatted,
+                    endDate.value?.formattedTime ?: dateToFormatted
                 )
             }
             if (result.isSuccess) {
@@ -1231,13 +1246,22 @@ class UserPassViewModel(
         tagSerialNumber: String, currentPage: Int
     ) {
         viewModelScope.launch(Dispatchers.IO) {
+
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+            val dateTo = LocalDate.now()
+            val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
+
+            val dateToFormatted = dateTo.format(formatter)
+            val dateFromFormatted = dateFrom.format(formatter)
+
+
             val result = repository.getAdapterPassageDataCountryFilter(
                 tagSerialNumber,
                 "HR",
                 currentPage,
                 itemsPerPage,
-                startDate.value?.formattedTime ?: "",
-                endDate.value?.formattedTime ?: ""
+                startDate.value?.formattedTime ?: dateFromFormatted,
+                endDate.value?.formattedTime ?: dateToFormatted
             )
 
 
