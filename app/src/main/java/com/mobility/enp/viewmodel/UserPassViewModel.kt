@@ -1092,12 +1092,21 @@ class UserPassViewModel(
         tagSerialNumber: String, currentPage: Int
     ) {
         viewModelScope.launch(Dispatchers.IO) {
+
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+            val dateTo = LocalDate.now()
+            val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
+
+            val dateToFormatted = dateTo.format(formatter)
+            val dateFromFormatted = dateFrom.format(formatter)
+
+
             var result = repository.getAdapterPassageData(
                 tagSerialNumber,
                 currentPage,
                 itemsPerPage,
-                startDate.value?.formattedTime ?: "",
-                endDate.value?.formattedTime ?: ""
+                startDate.value?.formattedTime ?: dateFromFormatted,
+                endDate.value?.formattedTime ?: dateToFormatted
             )
 
             if (!selectedCountry.isEmpty()) {
@@ -1106,8 +1115,8 @@ class UserPassViewModel(
                     selectedCountry,
                     currentPage,
                     itemsPerPage,
-                    startDate.value?.formattedTime ?: "",
-                    endDate.value?.formattedTime ?: ""
+                    startDate.value?.formattedTime ?: dateFromFormatted,
+                    endDate.value?.formattedTime ?: dateToFormatted
                 )
             }
             if (result.isSuccess) {
@@ -1237,13 +1246,22 @@ class UserPassViewModel(
         tagSerialNumber: String, currentPage: Int
     ) {
         viewModelScope.launch(Dispatchers.IO) {
+
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+            val dateTo = LocalDate.now()
+            val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
+
+            val dateToFormatted = dateTo.format(formatter)
+            val dateFromFormatted = dateFrom.format(formatter)
+
+
             val result = repository.getAdapterPassageDataCountryFilter(
                 tagSerialNumber,
                 "HR",
                 currentPage,
                 itemsPerPage,
-                startDate.value?.formattedTime ?: "",
-                endDate.value?.formattedTime ?: ""
+                startDate.value?.formattedTime ?: dateFromFormatted,
+                endDate.value?.formattedTime ?: dateToFormatted
             )
 
 
