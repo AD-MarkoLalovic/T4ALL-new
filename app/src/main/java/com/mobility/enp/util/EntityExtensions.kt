@@ -16,6 +16,9 @@ import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 import com.mobility.enp.view.ui_models.home.HomeTollHistoryUI
 import com.mobility.enp.view.ui_models.my_tags.TagStatusUiModel
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Date
 
 fun TollHistoryHomeEntity.toUIModel(): HomeTollHistoryUI {
     return HomeTollHistoryUI(
@@ -95,6 +98,11 @@ fun CardWebModel.toEntityList(context: Context, user: String): List<HomeCardsEnt
 
     return listCards
 }
+
+fun Date.toLocalDate(): LocalDate =
+    this.toInstant()
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
 
 fun List<Tag>.toTagsForCroatiaUIList(): List<TagsForCroatiaUI> {
     return this.map { tag ->

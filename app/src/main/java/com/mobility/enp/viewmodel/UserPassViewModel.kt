@@ -68,6 +68,7 @@ import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.toCroatianPassage
 import com.mobility.enp.util.toCroatianPassageResult
+import com.mobility.enp.util.toLocalDate
 import com.mobility.enp.util.toV2HistoryTagResponseResult
 import com.mobility.enp.view.CsvActivity
 import com.mobility.enp.view.fragments.tool_history.HistoryFilterScreen
@@ -88,7 +89,6 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
@@ -157,8 +157,8 @@ class UserPassViewModel(
         return historyV2DaoResult.observePassageDataBySerialAndCountryCode(
             serialNumber, countryCode
         ).stateIn(
-                viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-            )
+            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+        )
     }
 
     fun getV2PassagesBySerialAndCountryCodeLoad(
@@ -190,8 +190,8 @@ class UserPassViewModel(
         return historyCroatiaPassageDaoResult.observePassageDataBySerialCountry(
             serialNumber, countryCode
         ).stateIn(
-                viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-            )
+            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+        )
     }
 
     fun getCroatiaPassagesBySerialPageLoad(
@@ -1086,14 +1086,7 @@ class UserPassViewModel(
         viewModelScope.launch(Dispatchers.IO) {
 
             val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
-            val dateTo = if (endDate.value == null) {
-                LocalDate.now()
-            } else {
-                val dateTo: LocalDate =
-                    endDate.value?.inDateForm?.toInstant()?.atZone(ZoneId.systemDefault())
-                        ?.toLocalDate() ?: LocalDate.now()
-                dateTo
-            }
+            val dateTo = endDate.value?.inDateForm?.toLocalDate() ?: LocalDate.now()
             val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
 
             val dateToFormatted = dateTo.format(formatter)
@@ -1247,14 +1240,7 @@ class UserPassViewModel(
         viewModelScope.launch(Dispatchers.IO) {
 
             val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
-            val dateTo = if (endDate.value == null) {
-                LocalDate.now()
-            } else {
-                val dateTo: LocalDate =
-                    endDate.value?.inDateForm?.toInstant()?.atZone(ZoneId.systemDefault())
-                        ?.toLocalDate() ?: LocalDate.now()
-                dateTo
-            }
+            val dateTo = endDate.value?.inDateForm?.toLocalDate() ?: LocalDate.now()
             val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
 
             val dateToFormatted = dateTo.format(formatter)
