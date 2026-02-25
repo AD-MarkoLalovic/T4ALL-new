@@ -15,8 +15,11 @@ import com.mobility.enp.data.model.api_my_profile.refund_request.tags.entity.Tag
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
-import com.mobility.enp.data.model.api_tool_history.listing.ToolHistoryListing
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2AllowedCountries
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatiaResult
+import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseResult
 import com.mobility.enp.data.model.banks.entity.BanksEntity
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.entity.HomeEntity
@@ -34,8 +37,6 @@ import com.mobility.enp.data.room.PdfDao
 import com.mobility.enp.data.room.api_related_daos.BankDao
 import com.mobility.enp.data.room.api_related_daos.BasicInfoDao
 import com.mobility.enp.data.room.api_related_daos.FcmTokenDao
-import com.mobility.enp.data.room.api_related_daos.HistoryIndexDao
-import com.mobility.enp.data.room.api_related_daos.HistoryListingDao
 import com.mobility.enp.data.room.api_related_daos.HomeCardsDao
 import com.mobility.enp.data.room.api_related_daos.HomeScreenDao
 import com.mobility.enp.data.room.api_related_daos.IntroPageStatusDao
@@ -43,14 +44,21 @@ import com.mobility.enp.data.room.api_related_daos.MyInvoicesDao
 import com.mobility.enp.data.room.api_related_daos.ProfileImageDao
 import com.mobility.enp.data.room.api_related_daos.RefundRequestDao
 import com.mobility.enp.data.room.api_related_daos.TagsRefundRequestDao
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatiaResult
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoResult
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.data.room.notification.NotificationDao
 
 @Database(
-    entities = [UserLoginResponseRoomTable::class, FcmToken::class, NotificationModel::class, IndexData::class, ToolHistoryListing::class,
+    entities = [UserLoginResponseRoomTable::class, FcmToken::class, NotificationModel::class, IndexData::class,
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
-        BasicInfoEntity::class, HomeEntity::class, V2HistoryTagResponse::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class, HomeCardsEntity::class],
-    version = 223,
+        BasicInfoEntity::class, HomeEntity::class, V2HistoryTagResponse::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class,
+        HomeCardsEntity::class, V2HistoryTagResponseCroatia::class, V2AllowedCountries::class,
+        V2HistoryTagResponseResult::class, V2HistoryTagResponseCroatiaResult::class],
+    version = 254,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -59,8 +67,6 @@ abstract class DRoom : RoomDatabase() {
     abstract fun loginDao(): LoginDao // modified for api response
     abstract fun pdfDao(): PdfDao
     abstract fun fcmToken(): FcmTokenDao
-    abstract fun toolHistoryDao(): HistoryIndexDao
-    abstract fun toolListingDao(): HistoryListingDao
     abstract fun introStateDao(): IntroPageStatusDao
     abstract fun profileImageDao(): ProfileImageDao
     abstract fun myInvoicesDao(): MyInvoicesDao
@@ -73,8 +79,12 @@ abstract class DRoom : RoomDatabase() {
     abstract fun basicInfoDao(): BasicInfoDao
     abstract fun homeScreenDao(): HomeScreenDao
     abstract fun homeCardsDao(): HomeCardsDao
-    abstract fun v2ToolHistoryDao(): ToolHistoryV2Dao
-
+    abstract fun toolHistoryDaoSerials(): ToolHistoryV2TagsSerials
+    abstract fun historyV2PassageDao(): ToolHistoryV2Dao
+    abstract fun historyV2PassageDaoResult(): ToolHistoryV2DaoResult
+    abstract fun historyPassageDaoV2Croatia(): ToolHistoryV2DaoCroatia
+    abstract fun historyPassageDaoV2CroatiaResult(): ToolHistoryV2DaoCroatiaResult
+    abstract fun historyV2AllowedCountriesDao(): ToolHistoryV2AllowedCountryDao
 
     companion object {
         private var instance: DRoom? = null
@@ -83,15 +93,14 @@ abstract class DRoom : RoomDatabase() {
             if (instance == null) {
                 synchronized(DRoom::class) {
                     instance = buildDatabase(context)
-                    //prepopulateDatabase(instance!!)
                 }
             }
             return instance!!
         }
 
-        fun buildDatabase(context: Context): DRoom {  // its a singleton
+        fun buildDatabase(context: Context): DRoom {
             if (instance == null) {
-                synchronized(DRoom::class) {  // factory is cypher for sql
+                synchronized(DRoom::class) {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         DRoom::class.java,
@@ -108,15 +117,18 @@ abstract class DRoom : RoomDatabase() {
         loginDao().deleteAll()
         notificationDao().deleteAll()
         fcmToken().deleteTable()
-        toolHistoryDao().deleteData()
-        toolListingDao().deleteData()
+        toolHistoryDaoSerials().deleteData()
         myInvoicesDao().deleteDataMonthlyInvoices()
         pdfDao().deleteData()
         refundRequestDao().deleteRefundRequests()
         tagsRefundRequest().deleteTagsRefundRequest()
         basicInfoDao().deleteBasicInfo()
         homeScreenDao().deleteHomeScreenData()
-        v2ToolHistoryDao().deleteData()
+        historyPassageDaoV2Croatia().deleteData()
+        historyV2PassageDao().deleteData()
+        historyV2AllowedCountriesDao().clear()
+        historyV2PassageDaoResult().deleteData()
+        historyPassageDaoV2CroatiaResult().deleteData()
     }
 
 }

@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -32,7 +33,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
-import androidx.core.view.isVisible
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity() {
         setListeners()
         setObservers()
         messageLanguageChanged(this)
-
     }
 
     private fun applyDisplayCutouts() {
@@ -91,8 +90,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setObservers() {
         franchiseViewModel.franchiseModel.observe(this) { franchiseModel ->
-            franchiseModel?.let {
-                setFranchiserLogoVisible(it)
+            if (franchiseViewModel.runOnce) {
+                franchiseViewModel.runOnce = false
+                setFranchiserLogoVisible(franchiseModel)
             }
         }
     }
@@ -162,6 +162,8 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
 
                 R.id.homeFragment -> {
+
+
                     binding.toolbarShared.root.visibility = View.VISIBLE
                     binding.toolbarShared.backArrow.visibility = View.GONE
                     binding.toolbarShared.iconLogo.visibility = View.VISIBLE
@@ -186,6 +188,7 @@ class MainActivity : AppCompatActivity() {
 
                     } else {
                         binding.toolbarShared.franchiserFlavorText.visibility = View.VISIBLE
+                        setFranchiserLogoVisible(franchiseViewModel.franchiseModel.value)
                     }
 
                     binding.bottomNavigation.visibility = View.VISIBLE
@@ -213,6 +216,7 @@ class MainActivity : AppCompatActivity() {
                     binding.toolbarShared.backArrow.visibility = View.VISIBLE
                     binding.toolbarShared.iconLogo.visibility = View.GONE
                     binding.toolbarShared.franchiserFlavorText.visibility = View.GONE
+
                 }
 
                 else -> {

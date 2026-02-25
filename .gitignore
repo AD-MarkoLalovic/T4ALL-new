@@ -11,9 +11,6 @@ dist/
 # Log fajlovi
 *.log
 
-# Paket fajlovi
-*.jar
-
 # Maven
 target/
 
@@ -43,7 +40,7 @@ Thumbs.db
 *.wmv
 
 # Build fajlovi i direktorijumi
-build/
+**/build/
 out/
 .gradle/
 

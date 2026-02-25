@@ -208,7 +208,8 @@
     <string name="complaint_min_length" translatable="true">Унесите разлог
         за приговор, дужина мора бити најмање 10 карактера.</string>
     <string name="please_enter_all_required_data" translatable="true">Унесите све потребне податке</string>
-    <string name="no_passage_data" translatable="true">Нема података о пролазу</string>
+    <string name="no_passage_data" translatable="true">Немате пролазака у последњих 30 дана</string>
+    <string name="no_passage_data_special" translatable="true">Немате проласке за одабрани период</string>
     <string name="payment_successfully" translatable="true">Плаћање је успешно извршено.</string>
     <string name="please_select_tag" translatable="true">Молимо одаберите таг.</string>
     <string name="request_recorded" translatable="true">Ваш захтев је евидентиран и
@@ -459,5 +460,6 @@
     <string name="croatian_reclamation">Рекламацију за пролазак у Републици Хрватској морате поднети на HAC порталу.</string>
     <string name="please_select_country">Молимо изаберите државу</string>
     <string name="limit_reclamation">Није могуће послати приговор више од два пута. За додатне информације можете контактирати Кориснички центар на бесплатном броју телефона 0800 111 004.</string>
-
+    <string name="prolasci_info">Приказани су проласци за последњих 30 дана.\nДодирните * за филтрирање свих пролазака.</string>
+    <string name="touch_info">Додирните</string>
 </resources>

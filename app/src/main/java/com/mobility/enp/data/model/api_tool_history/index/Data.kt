@@ -22,11 +22,4 @@ data class Data(
     @SerializedName("total")
     @Expose
     var total: Int? = 0
-) {
-    fun setPageCount() {
-        this.currentPage = 0
-        this.lastPage = 0
-        this.perPage = 0
-        this.total = 0
-    }
-}
+)

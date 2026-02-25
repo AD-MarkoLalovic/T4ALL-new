@@ -33,8 +33,8 @@ android {
         applicationId = "com.mobility.enp"
         minSdk = 29
         targetSdk = 35
-        versionCode = 231
-        versionName = "1.7.3"
+        versionCode = 236
+        versionName = "1.8"
 
         resourceConfigurations += listOf("en", "sr", "de", "mk", "tr", "b+cnr", "hr", "el", "bs")
 
@@ -67,7 +67,7 @@ android {
             isDefault = true
             buildConfigField("String", "API_URL", "\"https://mobileapitest.toll4all.com/\"")
             buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+8025@gmail.com\"")
-            buildConfigField("String", "TEST_PASSWORD", "\"demodemo\"")
+            buildConfigField("String", "TEST_PASSWORD", "\"Demo!4team\"")
         }
         create("prod") {
             // Prod flavor configuration
@@ -126,7 +126,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.analytics)
-    releaseImplementation(libs.google.firebase.crashlytics)
+    implementation(libs.google.firebase.crashlytics)
     implementation(libs.androidx.makeramen.roundedimageview)
 
     implementation(libs.jakewharton.retrofit2.kotlin.coroutines.adapter)

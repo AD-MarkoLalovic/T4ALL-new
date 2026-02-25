@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.mobility.enp.data.model.api_tool_history.TagUtilCycler" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="sumTotal"
+            type="String" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimens_10dp"
+        android:background="@drawable/tag_history_background"
+        android:gravity="center"
+        android:padding="@dimen/dimens_10dp">
+
+
+        <ProgressBar
+            android:id="@+id/progbar"
+            android:layout_width="@dimen/dimens_50dp"
+            android:layout_height="@dimen/dimens_50dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txtTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/dimens_10dp"
+            android:text="@string/total"
+            android:textColor="@color/figmaIntroEclipseColorInactive" />
+
+        <TextView
+            android:id="@+id/txtSerial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/tagSerialNumber"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="@dimen/dimens_10dp"
+            android:text="@string/serial_number"
+            android:textColor="@color/figmaIntroEclipseColorInactive" />
+
+        <TextView
+            android:id="@+id/tagSerialNumber"
+            style="@style/ParagraphSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtTotal"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="start"
+            android:layout_marginTop="@dimen/dimens_5dp"
+            android:layout_marginEnd="@dimen/dimens_15dp"
+            android:layout_toStartOf="@id/cyclerTotalPrice"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:text='@{data.serialNumber}'
+            tool:text="CE040130628219221" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/cyclerTotalPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtTotal"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/dimens_5dp"
+            android:layout_marginEnd="@dimen/dimens_10dp"
+            android:minHeight="@dimen/dimens_22dp"
+            android:textAlignment="viewEnd"
+            tool:itemCount="3"
+            tool:listitem="@layout/passage_history_total_price" />
+
+        <View
+            android:id="@+id/center"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true" />
+
+        <ScrollView
+            android:id="@+id/nsScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cyclerTotalPrice"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:scrollIndicators="none"
+            android:scrollbarAlwaysDrawVerticalTrack="false"
+            android:scrollbarFadeDuration="0"
+            android:scrollbarSize="0dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="none">
+
+            <com.mobility.enp.view.adapters.my_invoices_adapters.CustomRecyclerView
+                android:id="@+id/cycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fadeScrollbars="false"
+                android:scrollIndicators="none"
+                android:scrollbarAlwaysDrawVerticalTrack="false"
+                android:scrollbarFadeDuration="0"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="none"
+                tool:listitem="@layout/item_relation_passage_real" />
+        </ScrollView>
+
+
+        <TextView
+            android:id="@+id/noPassage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tagSerialNumber"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/dimens_20dp"
+            android:layout_marginBottom="@dimen/dimens_20dp"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:maxLines="3"
+            android:scrollHorizontally="true"
+            android:text="@string/no_passage_data_special"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</layout>

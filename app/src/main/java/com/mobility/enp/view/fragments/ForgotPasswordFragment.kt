@@ -8,11 +8,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.mobility.enp.NavigationDirections
 import com.mobility.enp.R
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.databinding.FragmentForgotPasswordBinding
-import com.mobility.enp.util.SubmitResultCustomerSupport
-import com.mobility.enp.view.MainActivity
+import com.mobility.enp.util.ForgotPasswordUiState
+import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.collectLatestLifecycleFlow
+import com.mobility.enp.util.toast
 import com.mobility.enp.viewmodel.ForgotPasswordViewModel
 
 class ForgotPasswordFragment : Fragment() {
@@ -20,7 +23,6 @@ class ForgotPasswordFragment : Fragment() {
     private var _binding: FragmentForgotPasswordBinding? = null
     private val binding: FragmentForgotPasswordBinding get() = _binding!!
     private val viewModel: ForgotPasswordViewModel by viewModels { ForgotPasswordViewModel.Factory }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -34,7 +36,10 @@ class ForgotPasswordFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setObservers()
+        clickListener()
+    }
 
+    private fun clickListener() {
         binding.backForgotPass.setOnClickListener {
             val action =
                 ForgotPasswordFragmentDirections.actionForgotPasswordFragmentToLoginFragment()
@@ -55,59 +60,72 @@ class ForgotPasswordFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.submitSuccessful.observe(viewLifecycleOwner) { result ->
-
+        collectLatestLifecycleFlow(viewModel.submitSuccessful) { result ->
             when (result) {
-                is SubmitResultCustomerSupport.Success -> {
-                    val bundle = Bundle().apply {
-                        putBoolean(getString(R.string.bool), true)
-                    }
-                    findNavController().navigate(
-                        R.id.action_global_forgotPassDialog, bundle
+                is ForgotPasswordUiState.Loading -> binding.progressBarForgotPass.visibility =
+                    View.VISIBLE
+
+                is ForgotPasswordUiState.Success -> {
+                    binding.progressBarForgotPass.visibility =
+                        View.GONE
+
+                    viewModel.clearState()
+
+                    val action = NavigationDirections.actionGlobalForgotPassDialog(
+                        sentSuccessfully = true,
+                        message = null
                     )
+                    findNavController().navigate(action)
                 }
 
-                is SubmitResultCustomerSupport.Failure -> {
-                    val bundle = Bundle().apply {
-                        putBoolean(getString(R.string.bool), false)
+                is ForgotPasswordUiState.Failure -> {
+                    binding.progressBarForgotPass.visibility =
+                        View.GONE
+
+                    when (result.error) {
+                        is NetworkError.NoConnection -> {
+                            viewModel.clearState()
+                            noInternet()
+                        }
+
+                        is NetworkError.ServerError -> toast(getString(R.string.server_error_msg))
+
+                        is NetworkError.ApiError -> {
+                            viewModel.clearState()
+                            val action = NavigationDirections.actionGlobalForgotPassDialog(
+                                sentSuccessfully = false,
+                                message = result.error.errorResponse.message
+                                    ?: getString(R.string.subtitle_dialog_forgot_pass)
+                            )
+                            findNavController().navigate(action)
+                        }
                     }
-                    findNavController().navigate(
-                        R.id.action_global_forgotPassDialog, bundle
-                    )
                 }
-
-                is SubmitResultCustomerSupport.NoNetwork -> {
-                    val bundle = Bundle().apply {
-                        putString(
-                            getString(R.string.title),
-                            getString(R.string.no_connection_title)
-                        )
-                        putString(
-                            getString(R.string.subtitle),
-                            getString(R.string.please_connect_to_the_internet)
-                        )
-                    }
-
-                    findNavController().navigate(
-                        R.id.action_global_noInternetConnectionDialog,
-                        bundle
-                    )
-
-                    val binding = (activity as MainActivity).binding
-                    MainActivity.showSnackMessage(
-                        getString(R.string.checking_for_connection),
-                        binding
-                    )
-                }
-
-                else -> {}
+                ForgotPasswordUiState.Idle -> {}
             }
-
         }
+    }
+
+    private fun noInternet() {
+        val bundle = Bundle().apply {
+            putString(
+                getString(R.string.title),
+                getString(R.string.no_connection_title)
+            )
+            putString(
+                getString(R.string.subtitle),
+                getString(R.string.please_connect_to_the_internet)
+            )
+        }
+        findNavController().navigate(
+            R.id.action_global_noInternetConnectionDialog,
+            bundle
+        )
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        viewModel.clearState()
         _binding = null
     }
 

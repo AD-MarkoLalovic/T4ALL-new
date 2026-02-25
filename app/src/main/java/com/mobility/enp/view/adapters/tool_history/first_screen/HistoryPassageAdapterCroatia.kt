@@ -4,46 +4,88 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
+import com.mobility.enp.data.model.api_tool_history.v2base_model.DataValidation
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
-import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.databinding.ItemRelationPassageRealCroatiaBinding
-import com.mobility.enp.util.SubmitResult
-import com.mobility.enp.util.Util
-import com.mobility.enp.util.collectLatestFlow
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.mobility.enp.viewmodel.UserPassViewModel
+import kotlinx.coroutines.launch
 
 class HistoryPassageAdapterCroatia(
-    private val data: V2HistoryTagResponse,
+    private val listOfPassages: List<Item>,
     private val complaintInterface: SendToFragment,
     private val lifecycleOwner: LifecycleOwner,
     private val tagSerialNumber: String,
-) :
-    RecyclerView.Adapter<HistoryPassageAdapterCroatia.RelationViewHolder>() {
+    private val viewmodel: UserPassViewModel,
+    private var onInitDataSize: (Int) -> Unit
+) : RecyclerView.Adapter<HistoryPassageAdapterCroatia.RelationViewHolder>() {
 
     private lateinit var context: Context
+    private var totalPages: Int = 0
+    private var currentPage: Int = 0
+    private var lastPage: Int = 0
 
-    private var currentPage = data.data?.records?.pagination?.currentPage ?: 1
-    private val lastPage = data.data?.records?.pagination?.lastPage ?: 1
+    private var relation: List<Item>
 
-    private var relation: ArrayList<Item> =
-        data.data?.records?.items as ArrayList<Item>
+    init {
+
+        relation = listOfPassages
+
+        lifecycleOwner.lifecycleScope.launch {
+            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewmodel.getCroatiaPassagesBySerialPage(tagSerialNumber, viewmodel.selectedCountry)
+                    .collect { data ->
+                        if (data.isNotEmpty()) {
+                            totalPages = data.size
+
+                            currentPage = data[data.size - 1]?.currentPage ?: 0
+                            lastPage = data[data.size - 1]?.lastPage ?: 0
+
+                            if (data.isNotEmpty()) { // sum of tags
+                                onInitDataSize(data[0]?.data?.records?.items?.size ?: 0)
+                            }
+                            val listOfPassages: ArrayList<Item> = arrayListOf()
+                            for (passages in data) {
+                                passages?.data?.records?.items?.let { setOfPassages ->
+                                    listOfPassages.addAll(setOfPassages)
+                                }
+                            }
+
+                            if (listOfPassages.toList() != relation) {
+                                relation = listOfPassages.toList()
+                                for (i in relation.indices) {
+                                    notifyItemChanged(i)
+                                }
+                            }
+                        }
+                    }
+            }
+        }
+
+        viewmodel.getToolHistoryTransitCroatia(tagSerialNumber, 1)
+        if (totalPages > 1) {
+            viewmodel.getSerialPassageTagDataValidationCroatia(
+                totalPages,
+                tagSerialNumber,
+                context.getString(R.string.croatia_hr)
+            )
+        }
+    }
 
     companion object {
         const val TAG = "PassageAdapter"
     }
 
     inner class RelationViewHolder(
-        private val context: Context,
-        private val binding: ItemRelationPassageRealCroatiaBinding
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
+        private val context: Context, private val binding: ItemRelationPassageRealCroatiaBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(relation: Item) {
-            Log.d(TAG, "bind: $relation")
-
             with(binding) {
                 carTagNumber.text = relation.amount.toString()
                 carTagCurrency.text = "EUR"
@@ -65,11 +107,8 @@ class HistoryPassageAdapterCroatia(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RelationViewHolder {
         context = parent.context
         return RelationViewHolder(
-            context,
-            ItemRelationPassageRealCroatiaBinding.inflate(
-                LayoutInflater.from(context),
-                parent,
-                false
+            context, ItemRelationPassageRealCroatiaBinding.inflate(
+                LayoutInflater.from(context), parent, false
             )
         )
     }
@@ -80,53 +119,19 @@ class HistoryPassageAdapterCroatia(
         val currentItem = relation[holder.bindingAdapterPosition]
 
         holder.bind(currentItem)
-
-        if (Util.isNetworkAvailable(context)) {
-            performDataFill(currentItem, holder.bindingAdapterPosition) // paggination
-        }
+        runPaginationCheck(currentItem)
     }
 
-    private fun performDataFill(currentItem: Item, bindingAdapterPosition: Int) {
-        if (relation[relation.size - 1] == currentItem && lastPage > currentPage) {
-            val indexListing =
-                MutableStateFlow<SubmitResult<V2HistoryTagResponse>>(SubmitResult.Loading)
-
-            collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
-                complaintInterface.stopSpinner()
-                when (serverResponse) {
-                    is SubmitResult.Success -> {
-                        serverResponse.data.let {
-                            Log.d(
-                                TAG,
-                                "performDataFill: ${it.data?.records?.pagination?.currentPage} ${it.data?.records?.pagination?.lastPage}"
-                            )
-                            currentPage = it.data?.records?.pagination?.currentPage ?: 1
-
-                            for (item: Item in it.data?.records?.items ?: emptyList()) {
-                                relation.add(item)
-                                notifyItemChanged(relation.size - 1)
-                                Log.d(TAG, "dataInserted: $item")
-                            }
-                        }
-                    }
-
-                    else -> {}
-                }
+    private fun runPaginationCheck(currentItem: Item) {
+        if (currentItem == relation[relation.size - 1]) {
+            if (currentPage < lastPage) {
+                // trigger background update with flow
+                viewmodel.getToolHistoryTransitCroatia(tagSerialNumber, currentPage + 1)
             }
-
-            complaintInterface.sendDataFill(currentPage + 1, indexListing, tagSerialNumber)
-        } else if (lastPage == currentPage && relation[relation.size - 1] == currentItem) {
-            Log.d(TAG, "performDataFill: no more passage data for tag ${data.serial}")
         }
     }
 
     interface SendToFragment {
-        fun sendDataFill(
-            nextPage: Int,
-            flow: MutableStateFlow<SubmitResult<V2HistoryTagResponse>>,
-            tagSerialNumber: String
-        )
-
         fun stopSpinner()
 
         fun croatiaReclamationDialog()

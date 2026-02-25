@@ -1,6 +1,7 @@
 package com.mobility.enp
 
 import android.app.Application
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mobility.enp.data.repository.AuthRepository
 import com.mobility.enp.data.repository.BillsRepository
 import com.mobility.enp.data.repository.CardRepository
@@ -9,6 +10,12 @@ import com.mobility.enp.data.repository.HomeRepository
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.data.repository.UserRepository
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatiaResult
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoResult
 import com.mobility.enp.data.room.database.DRoom
 
 class MyApplication : Application() {
@@ -34,6 +41,29 @@ class MyApplication : Application() {
         PassageHistoryRepository(database, this)
     }
 
+    val v2TagsDao: ToolHistoryV2TagsSerials by lazy {
+        database.toolHistoryDaoSerials()
+    }
+    val v2HistoryDao: ToolHistoryV2Dao by lazy {
+        database.historyV2PassageDao()
+    }
+
+    val v2HistoryDaoResult: ToolHistoryV2DaoResult by lazy {
+        database.historyV2PassageDaoResult()
+    }
+
+    val v2CroatiaDao: ToolHistoryV2DaoCroatia by lazy {
+        database.historyPassageDaoV2Croatia()
+    }
+
+    val v2CroatiaDaoResult: ToolHistoryV2DaoCroatiaResult by lazy {
+        database.historyPassageDaoV2CroatiaResult()
+    }
+
+    val v2AllowedCountriesDao: ToolHistoryV2AllowedCountryDao by lazy {
+        database.historyV2AllowedCountriesDao()
+    }
+
     val franchiseRepository: FranchiserRepository by lazy {
         FranchiserRepository(database, this)
     }
@@ -46,6 +76,12 @@ class MyApplication : Application() {
         BillsRepository(database, this)
     }
 
+    override fun onCreate() {
+        super.onCreate()
 
+        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled =
+            !BuildConfig.DEBUG
+
+    }
 }
 

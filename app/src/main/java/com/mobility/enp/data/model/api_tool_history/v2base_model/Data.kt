@@ -21,7 +21,7 @@ data class Data(
     val sumTags: List<SumTag>,
     @SerializedName("tags")
     @Expose
-    val tags: List<Tag?>?
+    var tags: List<Tag?>?
 ) {
     fun deepImmutableCopy(): Data {
         return Data(

@@ -80,8 +80,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/dimens_5dp"
             android:layout_marginEnd="@dimen/dimens_10dp"
-            tool:itemCount="3"
             android:minHeight="@dimen/dimens_22dp"
+            tool:itemCount="3"
             tool:listitem="@layout/passage_history_total_price" />
 
         <View

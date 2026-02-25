@@ -83,7 +83,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         setObservers()
 
         viewModel.fetchCardFlow()
-
     }
 
     private fun setObservers() {
@@ -241,6 +240,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 val colorStateList = ColorStateList(states, colors)
                 binding.termsConditionsCheckmark.buttonTintList = colorStateList
                 binding.bttRegTagForCroatia.backgroundTintList =
+                    ColorStateList.valueOf(color)
+                binding.bttAddCard.backgroundTintList =
                     ColorStateList.valueOf(color)
             } ?: run {
                 val states = arrayOf(

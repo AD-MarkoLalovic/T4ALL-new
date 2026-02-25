@@ -1,7 +1,6 @@
 package com.mobility.enp.view.adapters.tool_history.filter
 
 import android.content.res.ColorStateList
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,41 +11,50 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.index.Tag
 import com.mobility.enp.databinding.ToolHistoryTagsAdapterBinding
-import com.mobility.enp.util.SubmitResult
-import com.mobility.enp.util.collectLatestFlow
-import com.mobility.enp.view.adapters.tool_history.first_screen.HistoryPassageAdapter
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 
-class HistoryTagsAdapter(
-    tagInterface: TagSend,
+class ToolHistoryFilterFragmentSerialAdapter(
     private val franchiseModel: FranchiseViewModel,
-    private val paginationUpdate: PaginationUpdate,
-    toolHistoryIndex: IndexData,
-    private val complaintInterface: SendToFragment,
     val lifecycleOwner: LifecycleOwner,
-    private val userPassViewModel: UserPassViewModel
+    private val viewModel: UserPassViewModel
 ) :
-    RecyclerView.Adapter<HistoryTagsAdapter.ToolHistoryTagsViewHolder>() {
+    RecyclerView.Adapter<ToolHistoryFilterFragmentSerialAdapter.ToolHistoryTagsViewHolder>() {
 
-    val tagSendInt = tagInterface
-    private val listOfTags: ArrayList<Tag> = toolHistoryIndex.data?.tags as ArrayList<Tag>
-    var currentPage: Int = toolHistoryIndex.data?.currentPage ?: 0
-    val lastPage: Int = toolHistoryIndex.data?.lastPage ?: 0
-    val perPage: Int = toolHistoryIndex.data?.perPage ?: 0
-    val total: Int = toolHistoryIndex.data?.total ?: 0
+    private var listOfTags: List<Tag> = emptyList()
+
+    private var currentPage: Int = 0
+    private var lastPage: Int = 0
+    private var total: Int = 0
+
+    fun setAdapterData(indexData: List<IndexData>) {
+        if (indexData.isNotEmpty()) {
+            currentPage = indexData[indexData.size - 1].currentPage ?: 0
+            lastPage = indexData[indexData.size - 1].lastPage ?: 0
+            total = indexData.size
+        }
+
+        listOfTags = indexData.flatMap { it.data?.tags.orEmpty() }
+
+        for (i in listOfTags.indices) {
+            notifyItemChanged(i)
+        }
+
+        if (total > 1) {
+            viewModel.getSerialDeviceDataValidationSerialAdapter(total)
+        }
+    }
 
     inner class ToolHistoryTagsViewHolder(val binding: ToolHistoryTagsAdapterBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(tag: Tag) {
 
-            val selected = userPassViewModel.isSelected(tag)
+            val selected = viewModel.isSelected(tag)
             binding.checkbox.isChecked = selected
 
             if (selected) {
-                userPassViewModel.selectedTags.add(tag)
+                viewModel.selectedTags.add(tag)
                 setCheckboxColors()
             }
 
@@ -61,11 +69,11 @@ class HistoryTagsAdapter(
 
             binding.checkbox.setOnClickListener {
                 if (binding.checkbox.isChecked) {
-                    userPassViewModel.select(tag)
-                    userPassViewModel.selectedTags.add(tag)
+                    viewModel.select(tag)
+                    viewModel.selectedTags.add(tag)
                 } else {
-                    userPassViewModel.unselect(tag)
-                    userPassViewModel.selectedTags.remove(tag)
+                    viewModel.unselect(tag)
+                    viewModel.selectedTags.remove(tag)
                 }
                 setCheckboxColors()
             }
@@ -139,75 +147,22 @@ class HistoryTagsAdapter(
     }
 
 
-    private fun performDataFill(currentItem: Tag) {
-        if (listOfTags[listOfTags.size - 1] == currentItem && lastPage > currentPage) {
-            val indexListing =
-                MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)
-
-            collectLatestFlow(lifecycleOwner, indexListing) { serverResponse ->
-                complaintInterface.stopSpinner()
-                when (serverResponse) {
-                    is SubmitResult.Success -> {
-                        serverResponse.data.let {
-                            Log.d(
-                                "MainAdapter",
-                                "performDataFill: ${it.data?.currentPage} ${it.data?.lastPage}"
-                            )
-                            currentPage = it.data?.currentPage ?: 0
-
-                            for (item: Tag in it.data?.tags ?: emptyList()) {
-                                listOfTags.add(item)
-                                notifyItemChanged(listOfTags.size - 1)
-                                Log.d(
-                                    "FilterAdapter $currentItem $total",
-                                    "dataInserted: $item"
-                                )
-                            }
-                        }
-                    }
-
-                    else -> {
-                        SubmitResult.Empty
-                    }
-                }
-            }
-            complaintInterface.startSpinner()
-            paginationUpdate.sendDataFillFilterAdapter(currentPage + 1, perPage, indexListing)
-        } else if (lastPage == currentPage && listOfTags[listOfTags.size - 1] == currentItem) {
-            Log.d(
-                HistoryPassageAdapter.Companion.TAG,
-                "last item $currentItem total $total"
-            )
-        }
-    }
-
     override fun getItemCount(): Int {
         return listOfTags.size
     }
 
     override fun onBindViewHolder(holder: ToolHistoryTagsViewHolder, position: Int) {
-        val tag = listOfTags[holder.bindingAdapterPosition]
-
-        holder.bind(tag)
-        performDataFill(tag)
+        val currentTag = listOfTags[holder.bindingAdapterPosition]
+        holder.bind(currentTag)
+        runPaginationCheck(currentTag)
     }
 
-    interface PaginationUpdate {
-        fun sendDataFillFilterAdapter(
-            nextPage: Int,
-            perPage: Int,
-            flow: MutableStateFlow<SubmitResult<IndexData>>,
-        )
+    private fun runPaginationCheck(currentTag: Tag) {
+        if (currentTag == listOfTags[listOfTags.size - 1]) {
+            if (currentPage < lastPage) {
+                // trigger background update with flow
+                viewModel.getTagsUpdate(currentPage + 1)
+            }
+        }
     }
-
-    interface TagSend {
-        fun onSendTag(tag: Tag)
-        fun onTagRemove(tag: Tag)
-    }
-
-    interface SendToFragment {
-        fun startSpinner()
-        fun stopSpinner()
-    }
-
 }

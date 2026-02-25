@@ -20,6 +20,7 @@ import com.mobility.enp.BuildConfig
 import com.mobility.enp.R
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.databinding.FragmentLoginBinding
+import com.mobility.enp.util.FragmentResultKeys
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
@@ -51,7 +52,10 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        franchiseViewModel.runOnce = true
+
         setObservers()
+        fragmentResultListener()
 
         passwordVisibility()
         setupDebugCredentials()
@@ -77,18 +81,29 @@ class LoginFragment : Fragment() {
         }
     }
 
+    private fun fragmentResultListener() {
+        parentFragmentManager.setFragmentResultListener(
+            FragmentResultKeys.LANGUAGE_DIALOG_RESULT,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val languageSelected = bundle.getString(FragmentResultKeys.LANGUAGE_DIALOG_KEY)
+                ?: return@setFragmentResultListener
+            val canSwitchLanguage = bundle.getBoolean(FragmentResultKeys.LANGUAGE_CAN_SWITCH, false)
+
+            if (canSwitchLanguage) {
+                SharedPreferencesHelper.setLanguageChanged(requireContext(), true)
+                SharedPreferencesHelper.setUserLanguage(requireContext(), languageSelected)
+                activity?.recreate()
+            } else {
+                Toast.makeText(requireContext(), "Language not available", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+    }
+
     private fun setupLanguagePicker() {
         binding.languagePicker.setOnClickListener {
-            LanguageDialog { languageSelected, canSwitchLanguage ->
-                if (canSwitchLanguage) {
-                    SharedPreferencesHelper.setLanguageChanged(requireContext(), true)
-                    SharedPreferencesHelper.setUserLanguage(requireContext(), languageSelected)
-                    activity?.recreate()
-                } else {
-                    Toast.makeText(requireContext(), "Language not available", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }.show(parentFragmentManager, "languageDialog")
+            LanguageDialog().show(parentFragmentManager, "LanguageDialog")
         }
     }
 

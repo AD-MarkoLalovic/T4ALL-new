@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
 import com.mobility.enp.databinding.GeneralDialogBinding
 import com.mobility.enp.util.setDimensionsPercent
@@ -37,7 +38,7 @@ class NoInternetConnectionDialog : DialogFragment() {
         binding.subTitle.text = arguments?.getString(getString(R.string.subtitle)) ?: ""
 
         binding.confirmButton.setOnClickListener {
-            dismiss()
+            findNavController().popBackStack()
         }
     }
 
