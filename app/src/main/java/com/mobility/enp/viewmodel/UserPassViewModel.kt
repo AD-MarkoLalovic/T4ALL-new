@@ -68,6 +68,7 @@ import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.toCroatianPassage
 import com.mobility.enp.util.toCroatianPassageResult
+import com.mobility.enp.util.toLocalDate
 import com.mobility.enp.util.toV2HistoryTagResponseResult
 import com.mobility.enp.view.CsvActivity
 import com.mobility.enp.view.fragments.tool_history.HistoryFilterScreen
@@ -121,8 +122,10 @@ class UserPassViewModel(
                 UserPassViewModel(
                     repository = myRepository,
                     tagsDao,
-                    historyCroatiaPassageDao, historyCroatiaPassageDaoResult,
-                    historyV2PassageDao, historyV2PassageDaoResult,
+                    historyCroatiaPassageDao,
+                    historyCroatiaPassageDaoResult,
+                    historyV2PassageDao,
+                    historyV2PassageDaoResult,
                     historyAllowedCountriesDao
                 )
             }
@@ -152,12 +155,10 @@ class UserPassViewModel(
         serialNumber: String, countryCode: String
     ): StateFlow<List<V2HistoryTagResponseResult?>> {
         return historyV2DaoResult.observePassageDataBySerialAndCountryCode(
-            serialNumber,
-            countryCode
+            serialNumber, countryCode
+        ).stateIn(
+            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
         )
-            .stateIn(
-                viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-            )
     }
 
     fun getV2PassagesBySerialAndCountryCodeLoad(
@@ -170,8 +171,7 @@ class UserPassViewModel(
         serialNumber: String, countryCode: String
     ): List<V2HistoryTagResponseResult?> {
         return historyV2DaoResult.observePassageDataBySerialAndCountryCodeLoad(
-            serialNumber,
-            countryCode
+            serialNumber, countryCode
         )
     }
 
@@ -188,12 +188,10 @@ class UserPassViewModel(
         serialNumber: String, countryCode: String
     ): StateFlow<List<V2HistoryTagResponseCroatiaResult?>> {
         return historyCroatiaPassageDaoResult.observePassageDataBySerialCountry(
-            serialNumber,
-            countryCode
+            serialNumber, countryCode
+        ).stateIn(
+            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
         )
-            .stateIn(
-                viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-            )
     }
 
     fun getCroatiaPassagesBySerialPageLoad(
@@ -568,9 +566,7 @@ class UserPassViewModel(
     }
 
     fun getSerialPassageTagDataValidationResult(
-        totalPages: Int,
-        tagSerial: String,
-        countryCode: String
+        totalPages: Int, tagSerial: String, countryCode: String
     ) {
         viewModelScope.launch() {
             val semaphore = Semaphore(20)
@@ -623,9 +619,7 @@ class UserPassViewModel(
     }
 
     fun getSerialPassageTagDataValidationCroatia(
-        totalPages: Int,
-        tagSerial: String,
-        countryCode: String
+        totalPages: Int, tagSerial: String, countryCode: String
     ) {
         viewModelScope.launch() {
             val semaphore = Semaphore(20)
@@ -688,9 +682,7 @@ class UserPassViewModel(
     }
 
     fun getSerialPassageTagDataValidationCroatiaResult(
-        totalPages: Int,
-        tagSerial: String,
-        countryCode: String
+        totalPages: Int, tagSerial: String, countryCode: String
     ) {
         viewModelScope.launch() {
             val semaphore = Semaphore(20)
@@ -1094,7 +1086,7 @@ class UserPassViewModel(
         viewModelScope.launch(Dispatchers.IO) {
 
             val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
-            val dateTo = LocalDate.now()
+            val dateTo = endDate.value?.inDateForm?.toLocalDate() ?: LocalDate.now()
             val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
 
             val dateToFormatted = dateTo.format(formatter)
@@ -1248,7 +1240,7 @@ class UserPassViewModel(
         viewModelScope.launch(Dispatchers.IO) {
 
             val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
-            val dateTo = LocalDate.now()
+            val dateTo = endDate.value?.inDateForm?.toLocalDate() ?: LocalDate.now()
             val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
 
             val dateToFormatted = dateTo.format(formatter)
