@@ -103,7 +103,7 @@
                     android:text="@string/registration_instructions_croatian_tags"
                     android:textColor="@color/primary_light_darkest"
                     android:visibility="gone"
-                    app:drawableStartCompat="@drawable/ic_info"
+                    app:drawableStartCompat="@drawable/ic_info_rotated"
                     tools:visibility="visible" />
 
                 <TextView
@@ -111,10 +111,10 @@
                     style="@style/Paragraph"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
                     android:layout_marginTop="@dimen/dimens_22dp"
+                    android:clickable="true"
                     android:textColor="@color/figmaSplashScreenColor"
-                    tools:text="Пријави се на HAC портал"/>
+                    tools:text="Пријави се на HAC портал" />
 
                 <TextView
                     android:id="@+id/txCroatiaText"
@@ -122,8 +122,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_22dp"
-                    android:lineSpacingExtra="2sp"
                     android:layout_marginEnd="@dimen/dimens_4dp"
+                    android:lineSpacingExtra="2sp"
                     android:text="@string/tag_registration_instruction_hr"
                     android:textColor="@color/primary_light_darkest"
                     android:visibility="gone"
