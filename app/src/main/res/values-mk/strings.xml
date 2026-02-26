@@ -297,7 +297,7 @@
     <string name="account_deactivation_notice">Почитувани корисници, ве молиме користете ја оваа контакт форма исклучиво за целосна деактивација на вашиот кориснички профил. Сите други барања испратени преку оваа форма нема да бидат процесирани.</string>
     <string name="pdf_invoices">PDF Сметки</string>
     <string name="listing_of_passages">Листинг на поминувања</string>
-    <string name="export">Експорт</string>
+    <string name="export">Извоз</string>
     <string name="csv_saved">CSV зачуван во документи</string>
     <string name="bill_number">Број на сметка</string>
     <string name="time_of_passage">Време на премин</string>

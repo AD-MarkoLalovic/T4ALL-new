@@ -1,6 +1,7 @@
 package com.mobility.enp.view.adapters.tool_history.filter
 
 import android.content.res.ColorStateList
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,7 +50,6 @@ class ToolHistoryFilterFragmentSerialAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(tag: Tag) {
-
             val selected = viewModel.isSelected(tag)
             binding.checkbox.isChecked = selected
 
@@ -78,8 +78,10 @@ class ToolHistoryFilterFragmentSerialAdapter(
                 setCheckboxColors()
             }
 
-            if (binding.regPlate.text == binding.serialNumber.text) {
-                binding.serialNumber.visibility = View.INVISIBLE
+            if (tag == listOfTags[listOfTags.size - 1]) {
+                binding.line.visibility = View.INVISIBLE
+            }else{
+                binding.line.visibility = View.VISIBLE
             }
 
             binding.executePendingBindings()

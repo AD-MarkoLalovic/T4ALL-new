@@ -300,7 +300,7 @@
     <string name="account_deactivation_notice">Sayın kullanıcılar, bu iletişim formunu yalnızca kullanıcı hesabınızın tamamen devre dışı bırakılması için kullanmanızı rica ederiz. Bu form aracılığıyla gönderilen diğer talepler işleme alınmayacaktır.</string>
     <string name="pdf_invoices">PDF Faturalar</string>
     <string name="listing_of_passages">Geçişlerin listesi</string>
-    <string name="export">Dışa Aktar</string>
+    <string name="export">İhracat</string>
     <string name="csv_saved">Belgeler\'e CSV kaydedildi</string>
     <string name="bill_number">Fatura numarası</string>
     <string name="time_of_passage">Geçiş zamanı</string>
