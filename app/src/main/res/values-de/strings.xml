@@ -308,7 +308,7 @@
     <string name="account_deactivation_notice">Sehr geehrte Nutzer, bitte verwenden Sie dieses Kontaktformular ausschließlich zum Zwecke der vollständigen Deaktivierung Ihres Benutzerkontos. Alle anderen Anfragen, die über dieses Formular eingereicht werden, werden nicht bearbeitet.</string>
     <string name="pdf_invoices">PDF Rechnungen</string>
     <string name="listing_of_passages">Auflistung der durchgänge</string>
-    <string name="export">Export</string>
+    <string name="export">Exportieren</string>
     <string name="csv_saved">CSV in Dokumenten gespeichert</string>
     <string name="bill_number">Rechnungsnummer</string>
     <string name="time_of_passage">Durchgangszeit</string>
