@@ -78,6 +78,12 @@ class ToolHistoryFilterFragmentSerialAdapter(
                 setCheckboxColors()
             }
 
+            if (tag == listOfTags[listOfTags.size - 1]) {
+                binding.line.visibility = View.INVISIBLE
+            }else{
+                binding.line.visibility = View.VISIBLE
+            }
+
             binding.executePendingBindings()
         }
 

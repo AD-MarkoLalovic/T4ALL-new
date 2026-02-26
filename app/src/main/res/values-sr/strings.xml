@@ -300,7 +300,7 @@
     <string name="account_deactivation_notice">"Poštovani korisnici, molimo vas da ovu kontakt formu koristite isključivo za potrebe potpune deaktivacije vašeg korisničkog naloga. Svi ostali zahtevi upućeni putem ove forme neće biti procesuirani."</string>
     <string name="pdf_invoices">PDF Računi</string>
     <string name="listing_of_passages">Listing prolazaka</string>
-    <string name="export">Eksport</string>
+    <string name="export">Izvoz</string>
     <string name="csv_saved">CSV sačuvan u dokumentima</string>
     <string name="bill_number">Broj računa</string>
     <string name="time_of_passage">Vreme prolaza</string>
