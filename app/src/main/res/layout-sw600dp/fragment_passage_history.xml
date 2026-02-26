@@ -47,7 +47,7 @@
         android:layout_width="@dimen/dimens_30dp"
         android:layout_height="@dimen/dimens_30dp"
         android:layout_marginEnd="@dimen/dimens_10dp"
-        android:background="@drawable/ic_info"
+        android:background="@drawable/ic_info_rotated"
         android:contentDescription="@string/loop_icon"
         app:layout_constraintBottom_toBottomOf="@+id/titleTollHistory"
         app:layout_constraintEnd_toStartOf="@+id/loopIcon"
