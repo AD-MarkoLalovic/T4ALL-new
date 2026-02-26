@@ -9,17 +9,34 @@ import com.mobility.enp.data.model.registration.RegistrationCountry
 import com.mobility.enp.databinding.CardCountriesRegistrationBinding
 
 class SelectCountryAdapter(
-    private val list: List<RegistrationCountry>,
-    private val selectedCountry: (String) -> Unit
+    private val items: List<RegistrationCountry>,
+    selectedCode: String,
+    private val onClick: (String) -> Unit
 ) :
-    RecyclerView.Adapter<SelectCountryAdapter.SelectCountryViewHolder>() {
-    private var selectedPosition = 0
+    RecyclerView.Adapter<SelectCountryAdapter.CountryVH>() {
 
-    class SelectCountryViewHolder(val binding: CardCountriesRegistrationBinding) :
+    private var selectedCodeInternal: String = selectedCode
+
+    fun setSelectedCode(newCode: String) {
+        if (newCode == selectedCodeInternal) return
+
+        val oldIndex = items.indexOfFirst { it.code == selectedCodeInternal }
+        val newIndex = items.indexOfFirst { it.code == newCode }
+
+        selectedCodeInternal = newCode
+
+        if (oldIndex != -1) notifyItemChanged(oldIndex)
+        if (newIndex != -1) notifyItemChanged(newIndex)
+    }
+
+    class CountryVH(val binding: CardCountriesRegistrationBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(county: RegistrationCountry, isSelected: Boolean) {
+
+        fun bind(county: RegistrationCountry, isSelected: Boolean, onClick: (String) -> Unit) {
+            val context = binding.root.context
+
             binding.radioButton.isChecked = isSelected
-            binding.countryTextField.text = county.name
+            binding.countryTextField.text = context.getString(county.name)
             binding.icon.setImageResource(county.flagResId)
 
             val colorStateList = if (isSelected) {
@@ -33,34 +50,33 @@ class SelectCountryAdapter(
 
             binding.radioButton.buttonTintList = colorStateList
             binding.countryTextField.setTextColor(colorStateList)
+
+            binding.root.setOnClickListener {
+                onClick(county.code)
+            }
+
+            binding.radioButton.setOnClickListener {
+                onClick(county.code)
+            }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectCountryViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountryVH {
         val binding = CardCountriesRegistrationBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
-        return SelectCountryViewHolder(binding)
+        return CountryVH(binding)
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return items.size
     }
 
-    override fun onBindViewHolder(holder: SelectCountryViewHolder, position: Int) {
-        val current = list[position]
-        val isSelected = position == selectedPosition
-        holder.bind(current, isSelected)
+    override fun onBindViewHolder(holder: CountryVH, position: Int) {
+        val item = items[position]
+        val isSelected = item.code == selectedCodeInternal
 
-        holder.binding.radioButton.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked && selectedPosition != position) {
-                val previousPosition = selectedPosition
-                selectedPosition = holder.bindingAdapterPosition
-                notifyItemChanged(previousPosition)
-                notifyItemChanged(selectedPosition)
-                selectedCountry(current.code)
-            }
-        }
+        holder.bind(item, isSelected, onClick)
     }
 
 }

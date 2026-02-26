@@ -181,21 +181,21 @@ class AuthRepository(database: DRoom, context: Context) : BaseRepository(databas
     /**
      * Registration
      */
-    fun getCountries(context: Context): List<RegistrationCountry> {
+    fun getCountries(): List<RegistrationCountry> {
         return listOf(
             RegistrationCountry(
-                context.getString(R.string.serbia_country_code),
-                context.getString(R.string.serbia),
+                "RS",
+                R.string.serbia,
                 R.drawable.serbia_flag
             ),
             RegistrationCountry(
-                context.getString(R.string.macedonia_country_code),
-                context.getString(R.string.macedonia),
+                "MK",
+                R.string.macedonia,
                 R.drawable.macedonia_flag
             ),
             RegistrationCountry(
-                context.getString(R.string.montenegro_country_code),
-                context.getString(R.string.montenegro),
+                "ME",
+                R.string.montenegro,
                 R.drawable.montenegro_flag
             )
         )
