@@ -34,9 +34,7 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
     }
 
     suspend fun deleteDatabase() {
-        withContext(Dispatchers.IO) {
-            database.clearAllData()
-        }
+        database.clearAllData()
     }
 
     suspend fun getFcmData(): FcmToken? {
