@@ -20,6 +20,7 @@ import com.mobility.enp.data.model.api_tool_history.v2base_model.DataValidation
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
 import com.mobility.enp.data.model.api_tool_history.v2base_model.SumTag
 import com.mobility.enp.databinding.ItemRelationPassageRealBinding
+import com.mobility.enp.util.toSumTagsByCurrency
 import com.mobility.enp.view.dialogs.ComplaintFormDialog
 import com.mobility.enp.view.dialogs.ComplaintFormDialogOld
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
@@ -59,7 +60,6 @@ class HistoryPassageAdapter(
                             lastPage = data[data.size - 1]?.lastPage ?: 0
 
                             if (data.isNotEmpty()) { // sum of tags
-                                onSumTags(data[0]?.data?.sumTags ?: emptyList())
                                 onInitDataSize(data[0]?.data?.records?.items?.size ?: 0)
                             }
                             val listOfPassages: ArrayList<Item> = arrayListOf()
@@ -75,6 +75,9 @@ class HistoryPassageAdapter(
                                     notifyItemChanged(i)
                                 }
                             }
+
+                            val sumTags = relation.toSumTagsByCurrency()
+                            onSumTags(sumTags)
                         }
                     }
             }

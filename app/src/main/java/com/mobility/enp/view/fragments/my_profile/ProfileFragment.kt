@@ -109,6 +109,8 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
                 (requireContext() as MainActivity).resetToDefault()
 
+                viewModelStore.clear()
+
                 val options = NavOptions.Builder()
                     .setPopUpTo(R.id.navigation, true)
                     .setEnterAnim(R.anim.slide_in_left)
