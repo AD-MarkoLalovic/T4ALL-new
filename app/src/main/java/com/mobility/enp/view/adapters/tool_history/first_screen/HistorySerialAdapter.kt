@@ -108,7 +108,7 @@ class HistorySerialAdapter(
                             )
                             binding.cyclerTotalPrice.visibility = View.INVISIBLE
                             setViewHeight(binding, size, position)
-                            Log.d(TAG, "bind: $size")
+                            setNoPassage(binding, size)
                         })
                     binding.cyclerTotalPrice.visibility = View.GONE
 
@@ -143,8 +143,7 @@ class HistorySerialAdapter(
                         { size ->
                             binding.progbar.visibility = View.GONE
                             setViewHeight(binding, size, position)
-                            Log.d(TAG, "bind: $size")
-
+                            setNoPassage(binding, size)
                         },
                         { sumTags ->
                             if (sumTags.isNotEmpty()) {  // sum total of price for passages hr doesn't have this data
@@ -168,16 +167,6 @@ class HistorySerialAdapter(
 
     private fun setViewHeight(binding: ToolHistoryIndexCardBinding, size: Int, position: Int) {
         binding.position = position
-
-        when (size) {
-            0 -> {
-                binding.noPassage.visibility = View.VISIBLE
-            }
-
-            else -> {
-                binding.noPassage.visibility = View.GONE
-            }
-        }
 
         val heightInDp = when (size) {
 
@@ -213,6 +202,17 @@ class HistorySerialAdapter(
         binding.executePendingBindings()
     }
 
+    private fun setNoPassage(binding: ToolHistoryIndexCardBinding, size: Int) {
+        when (size) {
+            0 -> {
+                binding.noPassage.visibility = View.VISIBLE
+            }
+
+            else -> {
+                binding.noPassage.visibility = View.GONE
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsViewHolder {
         return TagsViewHolder(
