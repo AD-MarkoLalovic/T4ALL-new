@@ -74,6 +74,7 @@ class HistorySerialAdapter(
             binding.noPassage.visibility = View.GONE
             binding.nsScroll.visibility = View.INVISIBLE
             binding.cycler.visibility = View.INVISIBLE
+            binding.cyclerTotalPrice.visibility = View.INVISIBLE
 
             val itemSerialNumber = toolHistoryIndex.serialNumber
 

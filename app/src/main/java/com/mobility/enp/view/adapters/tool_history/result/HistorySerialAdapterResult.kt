@@ -76,6 +76,7 @@ class HistorySerialAdapterResult(
             binding.noPassage.visibility = View.GONE
             binding.nsScroll.visibility = View.INVISIBLE
             binding.cycler.visibility = View.INVISIBLE
+            binding.cyclerTotalPrice.visibility = View.INVISIBLE
 
             val itemSerialNumber = toolHistoryIndex.serialNumber
 
@@ -105,8 +106,10 @@ class HistorySerialAdapterResult(
                         lifecycleOwner,
                         itemSerialNumber, viewModel, { size ->
                             binding.progbar.visibility = View.GONE
+
                             binding.cyclerTotalPrice.adapter =
                                 HistoryTotalCostAdapter(emptyList())
+
                             binding.cyclerTotalPrice.layoutManager =
                                 LinearLayoutManager(
                                     binding.root.context,
@@ -114,6 +117,7 @@ class HistorySerialAdapterResult(
                                     false
                                 )
                             binding.cyclerTotalPrice.visibility = View.INVISIBLE
+
                             setViewHeight(binding, size, position)
                             setNoPassage(binding, size)
                         }
@@ -155,6 +159,7 @@ class HistorySerialAdapterResult(
                             if (sumTags.isNotEmpty()) {  // sum total of price for passages hr doesn't have this data
                                 binding.cyclerTotalPrice.adapter =
                                     HistoryTotalCostAdapter(sumTags)
+
                                 binding.cyclerTotalPrice.layoutManager =
                                     LinearLayoutManager(
                                         binding.root.context,
