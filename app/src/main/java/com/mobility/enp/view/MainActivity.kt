@@ -18,6 +18,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
@@ -28,6 +29,7 @@ import com.mobility.enp.databinding.ActivityMainBinding
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.Util
 import com.mobility.enp.viewmodel.FranchiseViewModel
+import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,6 +41,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val franchiseViewModel: FranchiseViewModel by viewModels { FranchiseViewModel.Factory }
+    private val userPassViewModel: UserPassViewModel by viewModels { UserPassViewModel.Factory }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,6 +89,23 @@ class MainActivity : AppCompatActivity() {
             @Suppress("DEPRECATION")
             window.navigationBarColor = ContextCompat.getColor(this, R.color.white)
         }
+    }
+
+    fun resetHistoryViewModel() {
+        userPassViewModel.resetAllState()
+
+        val options = NavOptions.Builder()
+            .setPopUpTo(R.id.navigation, true)
+            .setEnterAnim(R.anim.slide_in_left)
+            .setExitAnim(R.anim.slide_out_right)
+            .build()
+
+        navController.popBackStack(
+            R.id.navigation,
+            false
+        )
+
+        navController.navigate(R.id.loginFragment, null, options)
     }
 
 
