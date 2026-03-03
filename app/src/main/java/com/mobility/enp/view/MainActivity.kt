@@ -1,6 +1,7 @@
 package com.mobility.enp.view
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -28,6 +29,7 @@ import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.databinding.ActivityMainBinding
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.Util
+import com.mobility.enp.view.fragments.LoginFragment
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -94,18 +96,11 @@ class MainActivity : AppCompatActivity() {
     fun resetHistoryViewModel() {
         userPassViewModel.resetAllState()
 
-        val options = NavOptions.Builder()
-            .setPopUpTo(R.id.navigation, true)
-            .setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_out_right)
-            .build()
-
-        navController.popBackStack(
-            R.id.navigation,
-            false
-        )
-
-        navController.navigate(R.id.loginFragment, null, options)
+        // recreates the activity and resets all states / view models
+        // required because of .stateIn that is used for cached data on screen config change
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
 
