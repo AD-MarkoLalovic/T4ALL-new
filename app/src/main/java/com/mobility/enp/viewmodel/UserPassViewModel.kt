@@ -138,7 +138,9 @@ class UserPassViewModel(
 
     val tagFlowResult = tagsDao.observeIndexData()
 
-    val allowedCountriesFlow = historyV2AllowedCountriesDao.observeAllowedCountries()
+    val allowedCountriesFlow = historyV2AllowedCountriesDao.observeAllowedCountries().stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+    )
 
     suspend fun clearRoomData(){
         tagsDao.deleteData()
