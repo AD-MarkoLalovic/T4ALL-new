@@ -3,6 +3,8 @@ package com.mobility.enp.util
 import android.content.Context
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_my_profile.my_tags.response.MyTagsList
+import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
+import com.mobility.enp.data.model.api_tool_history.v2base_model.SumTag
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatiaResult
@@ -16,9 +18,12 @@ import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 import com.mobility.enp.view.ui_models.home.HomeTollHistoryUI
 import com.mobility.enp.view.ui_models.my_tags.TagStatusUiModel
 import com.mobility.enp.view.ui_models.my_tags.TagUiModel
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
+import java.util.Locale
 
 fun TollHistoryHomeEntity.toUIModel(): HomeTollHistoryUI {
     return HomeTollHistoryUI(
@@ -185,6 +190,29 @@ fun List<MyTagsList>.toTagUiModel(): List<TagUiModel> {
             showButtonDeactivateTag = tag.showButtonDeactivateTag
         )
     }
+}
+
+fun List<Item>.toSumTagsByCurrency(): List<SumTag> {
+    val symbols = DecimalFormatSymbols(Locale("sr", "RS")).apply {
+        decimalSeparator = ','
+        groupingSeparator = '.'
+    }
+    val formatter = DecimalFormat("#,##0.00", symbols)
+
+    return this
+        .groupBy { it.currency?.uppercase() ?: "UNKNOWN" }
+        .map { (currency, itemsInCurrency) ->
+
+            val total = itemsInCurrency.sumOf { item ->
+                item.amount ?: 0.0
+            }
+
+            SumTag(
+                currency = currency,
+                tagSerialNumber = itemsInCurrency.firstOrNull()?.tagsSerialNumber,
+                total = formatter.format(total)
+            )
+        }
 }
 
 fun RegistrationResponse.getRedirectWithToken(): String {

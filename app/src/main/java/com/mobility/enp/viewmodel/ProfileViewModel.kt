@@ -67,10 +67,8 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
         }
     }
 
-    fun logout() {
-        viewModelScope.launch {
-            repository.deleteDatabase()
-        }
+    suspend fun logout() {
+        repository.deleteDatabase()
     }
 
     fun setRefundRequestVisibility() {

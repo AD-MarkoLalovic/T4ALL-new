@@ -1,6 +1,7 @@
 package com.mobility.enp.view
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -28,6 +29,7 @@ import com.mobility.enp.databinding.ActivityMainBinding
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.Util
 import com.mobility.enp.viewmodel.FranchiseViewModel
+import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,6 +41,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val franchiseViewModel: FranchiseViewModel by viewModels { FranchiseViewModel.Factory }
+    private val userPassViewModel: UserPassViewModel by viewModels { UserPassViewModel.Factory }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +91,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun resetHistoryViewModel() {
+        userPassViewModel.resetAllState()
+
+        // recreates the activity and resets all states / view models
+        // required because of .stateIn that is used for cached data on screen config change
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+    }
+
 
     private fun setObservers() {
         franchiseViewModel.franchiseModel.observe(this) { franchiseModel ->
@@ -95,6 +109,10 @@ class MainActivity : AppCompatActivity() {
                 setFranchiserLogoVisible(franchiseModel)
             }
         }
+    }
+
+    suspend fun clearRoomDataWhenLanguageSwitching() {
+        userPassViewModel.clearRoomData()
     }
 
     fun logoFix(portalKey: String) {

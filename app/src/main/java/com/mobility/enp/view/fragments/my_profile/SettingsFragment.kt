@@ -114,6 +114,7 @@ class SettingsFragment : Fragment() {
 
                 viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.sendingLangToServer()
+                    (activity as MainActivity).clearRoomDataWhenLanguageSwitching()
                     activity?.recreate()
                 }
 

@@ -1,5 +1,6 @@
 package com.mobility.enp.view.dialogs
 
+import android.app.Dialog
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -45,12 +46,19 @@ class GeneralMessageDialog() : DialogFragment() {
         }
     }
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        isCancelable = false
+        return super.onCreateDialog(savedInstanceState).apply {
+            window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+            setCanceledOnTouchOutside(false)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = GeneralDialogBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -85,8 +93,10 @@ class GeneralMessageDialog() : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDimensionsPercent(95)
-        isCancelable = false
+        val isLandscape = resources.configuration.orientation ==
+            android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
+        setDimensionsPercent(if (isLandscape) 85 else 95)
     }
 
     override fun onDestroyView() {

@@ -142,6 +142,15 @@ class UserPassViewModel(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
+    suspend fun clearRoomData(){
+        tagsDao.deleteData()
+        historyV2Dao.deleteData()
+        historyV2DaoResult.deleteData()
+        historyCroatiaPassageDao.deleteData()
+        historyCroatiaPassageDaoResult.deleteData()
+        historyV2AllowedCountriesDao.clear()
+    }
+
     fun getV2PassagesBySerialAndCountryCode(
         serialNumber: String, countryCode: String
     ): StateFlow<List<V2HistoryTagResponse?>> {
@@ -305,6 +314,41 @@ class UserPassViewModel(
         userSelectedCalendarStart = null
         userSelectedCalendarEnd = null
         selectedCountry = ""
+    }
+
+    //logout view model data clear
+
+    fun resetUiState() {
+        _baseTagDataState.value = SubmitResult.Empty
+        _baseTagDataStateByCountry.value = SubmitResult.Empty
+        _baseApiErrorsResultScreen.value = SubmitResult.Empty
+        _csvTable.value = SubmitResult.Empty
+        _complaintObjectionState.value = SubmitResult.Empty
+        _complaintObjectionStateResult.value = SubmitResult.Empty
+    }
+
+    fun resetFilters() {
+        _selectedTags.value = emptySet()
+        _userSelectedTags.value = emptySet()
+        selectedCountry = ""
+        allTagsSelected = false
+        _availableCountryAdapterPosition.value = -1
+        _availableCountryAdapterPositionFilter.value = -1
+    }
+
+    fun resetDates() {
+        startDate.value = TimeSave(null, null)
+        endDate.value = TimeSave(null, null)
+        userSelectedCalendarStart = null
+        userSelectedCalendarEnd = null
+    }
+
+    fun resetAllState() {
+        resetUiState()
+        resetFilters()
+        resetDates()
+        _listOfCountriesMain.value = emptyList()
+        allowedCountriesForSerialAdapter = emptyList()
     }
 
     private val itemsPerPage = 50
