@@ -142,6 +142,15 @@ class UserPassViewModel(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
+    suspend fun clearRoomData(){
+        tagsDao.deleteData()
+        historyV2Dao.deleteData()
+        historyV2DaoResult.deleteData()
+        historyCroatiaPassageDao.deleteData()
+        historyCroatiaPassageDaoResult.deleteData()
+        historyV2AllowedCountriesDao.clear()
+    }
+
     fun getV2PassagesBySerialAndCountryCode(
         serialNumber: String, countryCode: String
     ): StateFlow<List<V2HistoryTagResponse?>> {

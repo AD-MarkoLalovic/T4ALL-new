@@ -19,7 +19,6 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
@@ -29,7 +28,6 @@ import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.databinding.ActivityMainBinding
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.Util
-import com.mobility.enp.view.fragments.LoginFragment
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -111,6 +109,10 @@ class MainActivity : AppCompatActivity() {
                 setFranchiserLogoVisible(franchiseModel)
             }
         }
+    }
+
+    suspend fun clearRoomDataWhenLanguageSwitching() {
+        userPassViewModel.clearRoomData()
     }
 
     fun logoFix(portalKey: String) {
