@@ -24,13 +24,13 @@ data class Item(
     val checkDate: String?,
     @SerializedName("check_in_date")
     @Expose
-    val checkInDate: String?,
+    var checkInDate: String?,
     @SerializedName("check_in_toll_plaza")
     @Expose
     val checkInTollPlaza: Int?,
     @SerializedName("check_out_date")
     @Expose
-    val checkOutDate: String?,
+    var checkOutDate: String?,
     @SerializedName("check_out_toll_plaza")
     @Expose
     val checkOutTollPlaza: Int?,

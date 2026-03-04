@@ -89,7 +89,9 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.Date
 import java.util.Locale
 
@@ -142,7 +144,7 @@ class UserPassViewModel(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
-    suspend fun clearRoomData(){
+    suspend fun clearRoomData() {
         tagsDao.deleteData()
         historyV2Dao.deleteData()
         historyV2DaoResult.deleteData()
@@ -1359,6 +1361,28 @@ class UserPassViewModel(
                     saveRoomTagDataFirstScreen(indexData)
                 }
             }
+        }
+    }
+
+    fun formatPassageDate(checkInDate: String?): String? {
+        if (checkInDate.isNullOrBlank()) return null
+
+        return try {
+            val inputFormatter = DateTimeFormatter.ofPattern(
+                "yyyy-MM-dd HH:mm:ss",
+                Locale.ENGLISH
+            )
+
+            val outputFormatter = DateTimeFormatter.ofPattern(
+                "dd.MM.yyyy. HH:mm",
+                Locale.ENGLISH
+            )
+
+            val dateTime = LocalDateTime.parse(checkInDate, inputFormatter)
+            dateTime.format(outputFormatter)
+
+        } catch (e: DateTimeParseException) {
+            null
         }
     }
 
