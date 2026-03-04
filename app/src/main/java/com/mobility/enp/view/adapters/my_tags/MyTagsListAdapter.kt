@@ -1,6 +1,5 @@
 package com.mobility.enp.view.adapters.my_tags
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,8 +42,6 @@ class MyTagsListAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(tag: TagUiModel) = with(binding) {
-
-            Log.d("UIError", "$tag")
 
             txTagSerialNumber.text = tag.serialNumber
 
@@ -94,10 +91,19 @@ class MyTagsListAdapter(
                 val showActivateButton = foundTag[0].showButtonActivateTag
                 val showDeactivateButton = foundTag[0].showButtonDeactivateTag
 
-                buttonActivateTag.visibility =
-                    if (showActivateButton == true && selectedCountry != "SRB") View.VISIBLE else View.GONE
-                buttonDeactivateTag.visibility =
-                    if (showDeactivateButton == true && selectedCountry != "SRB") View.VISIBLE else View.GONE
+
+                if (selectedCountry == "HRV") {
+                    binding.buttonActivateTag.visibility = View.GONE
+                    binding.buttonDeactivateTag.visibility = View.GONE
+                    binding.buttonLostTag.visibility = View.GONE
+                    binding.buttonFoundTag.visibility = View.GONE
+                } else {
+                    buttonActivateTag.visibility =
+                        if (showActivateButton == true && selectedCountry != "SRB") View.VISIBLE else View.GONE
+                    buttonDeactivateTag.visibility =
+                        if (showDeactivateButton == true && selectedCountry != "SRB") View.VISIBLE else View.GONE
+
+                }
             }
 
             // Ako nema registracije, prikaži "Serijski broj"
@@ -129,6 +135,7 @@ class MyTagsListAdapter(
                 onFoundClicked(tag.serialNumber)
             }
 
+            binding.executePendingBindings()
         }
 
         private fun setStatusAppearance(countryCode: String, statuses: List<TagStatusUiModel>) =
