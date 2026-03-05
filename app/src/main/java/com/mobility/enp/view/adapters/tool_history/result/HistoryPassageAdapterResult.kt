@@ -105,6 +105,14 @@ class HistoryPassageAdapterResult(
 
         fun bind(relation: Item, complaintInterface: SendToFragment) {
 
+            val formatedCheckInDate = viewmodel.formatPassageDate(relation.checkInDate)
+            val formatedCheckOutDate = viewmodel.formatPassageDate(relation.checkOutDate)
+
+            if (!formatedCheckInDate.isNullOrEmpty() && !formatedCheckOutDate.isNullOrEmpty()) {
+                relation.checkInDate = formatedCheckInDate
+                relation.checkOutDate = formatedCheckOutDate
+            }
+
             val dataValidation = DataValidation(
                 totalPages, tagSerialNumber, countryCode
             )
