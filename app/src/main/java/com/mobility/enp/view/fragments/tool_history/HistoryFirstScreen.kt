@@ -32,6 +32,7 @@ import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.view.dialogs.GeneralMessageDialogInfoButton
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -189,7 +190,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                 is SubmitResult.InvalidApiToken -> {
                     showError(tagIndex.errorMessage)
-                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                    clearDataThenLogout()
                 }
 
                 else -> {}
@@ -251,7 +252,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                 is SubmitResult.InvalidApiToken -> {
                     showError(tagIndex.errorMessage)
-                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                    clearDataThenLogout()
                 }
 
                 else -> {}
@@ -286,11 +287,19 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                 is SubmitResult.InvalidApiToken -> {
                     showError(serverResponse.errorMessage)
-                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                    clearDataThenLogout()
                 }
 
                 else -> {}
             }
+        }
+    }
+
+    private fun clearDataThenLogout() {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.clearRoomData()
+            viewModel.resetUiState()
+            MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
         }
     }
 
