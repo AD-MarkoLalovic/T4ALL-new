@@ -144,8 +144,7 @@ class HistorySerialAdapterResult(
 
                     setViewHeight(binding, listOfPassages.size, position)
 
-                    binding.cycler.adapter = HistoryPassageAdapterResult(
-                        listOfPassages,
+                    val adapter = HistoryPassageAdapterResult(
                         complaintInterface,
                         false,
                         lifecycleOwner,
@@ -173,6 +172,10 @@ class HistorySerialAdapterResult(
                             }
                         }
                     )
+
+                    binding.cycler.adapter = adapter
+
+                    adapter.submitList(listOfPassages)
 
                     binding.executePendingBindings()
                 }
