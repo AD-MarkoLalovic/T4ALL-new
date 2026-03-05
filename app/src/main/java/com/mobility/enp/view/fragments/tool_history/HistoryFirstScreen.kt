@@ -342,10 +342,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                     viewModel.selectedCountry = selectedCountry
 
-                    if (::historySerialAdapter.isInitialized) {
-                        binding.cycler.adapter = null
-                    }
-
                     historySerialAdapter = HistorySerialAdapter(viewModel, this, this, this)
                     binding.cycler.adapter = historySerialAdapter
                     historySerialAdapter.setAdapterData(listIndexData)
