@@ -95,8 +95,7 @@ class HistorySerialAdapter(
 
                     setViewHeight(binding, listOfPassages.size, position)
 
-                    binding.cycler.adapter = HistoryPassageAdapterCroatia(
-                        listOfPassages,
+                    val adapter = HistoryPassageAdapterCroatia(
                         complaintInterfaceCroatia,
                         lifecycleOwner,
                         itemSerialNumber,
@@ -111,6 +110,11 @@ class HistorySerialAdapter(
                             setViewHeight(binding, size, position)
                             setNoPassage(binding, size)
                         })
+
+                    binding.cycler.adapter = adapter
+
+                    adapter.submitList(listOfPassages)
+
                     binding.cyclerTotalPrice.visibility = View.GONE
 
                     binding.executePendingBindings()
