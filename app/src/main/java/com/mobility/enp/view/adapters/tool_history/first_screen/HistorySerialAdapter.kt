@@ -118,23 +118,20 @@ class HistorySerialAdapter(
             } else {
                 //record of passages for tag for normal countries
                 //adapter that presents the passages
+
                 lifecycleOwner.lifecycleScope.launch {
                     val initLoad = withContext(Dispatchers.IO) {
                         viewModel.getV2PassagesBySerialAndCountryCodeLoad(
                             itemSerialNumber, viewModel.selectedCountry
                         )
                     }
-
                     val listOfPassages = initLoad.flatMap { it?.data?.records?.items.orEmpty() }
 
                     if (listOfPassages.isEmpty()) {
                         binding.progbar.visibility = View.VISIBLE
                     }
 
-                    setViewHeight(binding, listOfPassages.size, position)
-
-                    binding.cycler.adapter = HistoryPassageAdapter(
-                        listOfPassages,
+                    val adapter = HistoryPassageAdapter(
                         complaintInterface,
                         false,
                         lifecycleOwner,
@@ -147,17 +144,27 @@ class HistorySerialAdapter(
                             setNoPassage(binding, size)
                         },
                         { sumTags ->
-                            if (sumTags.isNotEmpty()) {  // sum total of price for passages hr doesn't have this data
+                            if (sumTags.isNotEmpty()) {
                                 binding.cyclerTotalPrice.adapter = HistoryTotalCostAdapter(sumTags)
-                                binding.cyclerTotalPrice.layoutManager = LinearLayoutManager(
-                                    binding.root.context, LinearLayoutManager.VERTICAL, false
-                                )
+                                binding.cyclerTotalPrice.layoutManager =
+                                    LinearLayoutManager(
+                                        binding.root.context,
+                                        LinearLayoutManager.VERTICAL,
+                                        false
+                                    )
 
                                 binding.cyclerTotalPrice.visibility = View.VISIBLE
                             } else {
                                 binding.cyclerTotalPrice.visibility = View.INVISIBLE
                             }
-                        })
+                        }
+                    )
+
+                    binding.cycler.adapter = adapter
+
+                    setViewHeight(binding, listOfPassages.size, position)
+
+                    adapter.submitList(listOfPassages)
 
                     binding.executePendingBindings()
                 }

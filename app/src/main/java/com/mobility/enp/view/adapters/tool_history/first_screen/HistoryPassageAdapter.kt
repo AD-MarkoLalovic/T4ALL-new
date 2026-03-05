@@ -12,6 +12,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.complaint.ComplaintBody
@@ -29,7 +31,6 @@ import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.launch
 
 class HistoryPassageAdapter(
-    private val listOfPassages: List<Item>,
     private val complaintInterface: SendToFragment,
     private val hideComplaintButton: Boolean,
     private val lifecycleOwner: LifecycleOwner,
@@ -37,17 +38,14 @@ class HistoryPassageAdapter(
     private val countryCode: String, private val viewmodel: UserPassViewModel,
     private val onInitDataSize: (Int) -> Unit,
     private val onSumTags: (List<SumTag>) -> Unit
-) :
-    RecyclerView.Adapter<HistoryPassageAdapter.RelationViewHolder>() {
+) : ListAdapter<Item, HistoryPassageAdapter.RelationViewHolder>(DIFF_CALLBACK) {
 
     private lateinit var context: Context
-    private var relation: List<Item>
     private var totalPages: Int = 0
     private var currentPage: Int = 0
     private var lastPage: Int = 0
 
     init {
-        relation = listOfPassages
 
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -62,22 +60,18 @@ class HistoryPassageAdapter(
                             if (data.isNotEmpty()) { // sum of tags
                                 onInitDataSize(data[0]?.data?.records?.items?.size ?: 0)
                             }
-                            val listOfPassages: ArrayList<Item> = arrayListOf()
-                            for (passages in data) {
-                                passages?.data?.records?.items?.let { setOfPassages ->
-                                    listOfPassages.addAll(setOfPassages)
+
+                            val newList = buildList {
+                                data.forEach { passage ->
+                                    passage?.data?.records?.items?.let {
+                                        addAll(it)
+                                    }
                                 }
                             }
 
-                            if (listOfPassages.toList() != relation) {
-                                relation = listOfPassages.toList()
-                                for (i in relation.indices) {
-                                    notifyItemChanged(i)
-                                }
-                            }
+                            submitList(newList)
 
-                            val sumTags = relation.toSumTagsByCurrency()
-                            onSumTags(sumTags)
+                            onSumTags(newList.toSumTagsByCurrency())
                         }
                     }
             }
@@ -91,6 +85,17 @@ class HistoryPassageAdapter(
 
     companion object {
         const val TAG = "PassageAdapter"
+
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Item>() {
+
+            override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 
     inner class RelationViewHolder(
@@ -274,16 +279,14 @@ class HistoryPassageAdapter(
         )
     }
 
-    override fun getItemCount() = relation.size
-
     override fun onBindViewHolder(holder: RelationViewHolder, position: Int) {
-        val currentItem = relation[holder.bindingAdapterPosition]
+        val currentItem = getItem(position)
         holder.bind(currentItem, complaintInterface)
         runPaginationCheck(currentItem)
     }
 
     private fun runPaginationCheck(currentItem: Item) {
-        if (currentItem == relation[relation.size - 1]) {
+        if (currentItem == getItem(itemCount - 1)) {
             if (currentPage < lastPage) {
                 // trigger background update with flow
                 viewmodel.getToolHistoryTransit(tagSerialNumber, currentPage + 1)
