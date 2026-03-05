@@ -91,7 +91,7 @@ class MyTollCountriesFirstScreenAdapter(
                 binding.root.postDelayed({
 //                    onShowSpinner(false)
                     clicksEnabled = true
-                }, 1000)
+                }, 2000)
             }
 
         }
