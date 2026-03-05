@@ -134,12 +134,14 @@ class UserPassViewModel(
         }
     }
 
+    //important do not change .stateIn required for config changes so changes to ui persist
     val tagFlow = tagsDao.observeIndexData().stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
 
     val tagFlowResult = tagsDao.observeIndexData()
 
+    //important do not change .stateIn
     val allowedCountriesFlow = historyV2AllowedCountriesDao.observeAllowedCountries().stateIn(
         viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
     )
@@ -153,6 +155,7 @@ class UserPassViewModel(
         historyV2AllowedCountriesDao.clear()
     }
 
+    //important do not change .stateIn
     fun getV2PassagesBySerialAndCountryCode(
         serialNumber: String, countryCode: String
     ): StateFlow<List<V2HistoryTagResponse?>> {
@@ -162,6 +165,7 @@ class UserPassViewModel(
             )
     }
 
+    //important do not change .stateIn
     fun getV2PassagesBySerialAndCountryCodeResult(
         serialNumber: String, countryCode: String
     ): StateFlow<List<V2HistoryTagResponseResult?>> {
@@ -186,6 +190,7 @@ class UserPassViewModel(
         )
     }
 
+    //important do not change .stateIn
     fun getCroatiaPassagesBySerialPage(
         serialNumber: String, countryCode: String
     ): StateFlow<List<V2HistoryTagResponseCroatia?>> {
@@ -195,6 +200,8 @@ class UserPassViewModel(
             )
     }
 
+
+    //important do not change .stateIn
     fun getCroatiaPassagesBySerialPageResult(
         serialNumber: String, countryCode: String
     ): StateFlow<List<V2HistoryTagResponseCroatiaResult?>> {
