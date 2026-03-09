@@ -24,6 +24,7 @@ import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.fragments.my_profile.ProfileFragment
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.SupportViewModel
+import androidx.core.graphics.drawable.toDrawable
 
 class DeactivateAccountDialog : DialogFragment() {
 
@@ -39,7 +40,7 @@ class DeactivateAccountDialog : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = DeactivateDialogBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -81,7 +82,7 @@ class DeactivateAccountDialog : DialogFragment() {
 
     private fun setFranchise() {
         franchiseViewModel.franchiseModel.value?.let { franchiseModel ->
-            franchiseModel.franchiseCloseButton.let { closeButton ->
+            franchiseModel.franchiseCloseButton.let {
                 binding.deactivateAccountDialogClose.setBackgroundResource(franchiseModel.franchiseCloseButton)
             }
 
@@ -173,12 +174,16 @@ class DeactivateAccountDialog : DialogFragment() {
 
     private fun logMessage(message: String) {
         binding.progBar.visibility = View.GONE
-        Log.d(ProfileFragment.Companion.TAG, "deactivateAccountMsg: $message")
+        Log.d(ProfileFragment.TAG, "deactivateAccountMsg: $message")
     }
 
     override fun onStart() {
         super.onStart()
-        setDimensionsPercent(95)
+        val isLandscape =
+            resources.configuration.orientation ==
+                    android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
+        setDimensionsPercent(if (isLandscape) 85 else 95)
         isCancelable = false
     }
 
