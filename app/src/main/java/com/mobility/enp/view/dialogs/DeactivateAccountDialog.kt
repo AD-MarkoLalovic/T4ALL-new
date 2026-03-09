@@ -178,7 +178,11 @@ class DeactivateAccountDialog : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDimensionsPercent(95)
+        val isLandscape =
+            resources.configuration.orientation ==
+                    android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
+        setDimensionsPercent(if (isLandscape) 85 else 95)
         isCancelable = false
     }
 
