@@ -462,4 +462,8 @@
     <string name="limit_reclamation">Није могуће послати приговор више од два пута. За додатне информације можете контактирати Кориснички центар на бесплатном броју телефона 0800 111 004.</string>
     <string name="prolasci_info">Приказани су проласци за последњих 30 дана.\nДодирните * за филтрирање свих пролазака.</string>
     <string name="touch_info">Додирните</string>
+    <string name="buy_tag_online">Купи Таг онлајн</string>
+    <string name="buy_tag_online_title">КУПИ ТАГ ОНЛАЈН</string>
+    <string name="tag_purchase_online_description">Таг за електронску наплату путарине сада можете једноставно купити и онлајн.</string>
+    <string name="buy_tag">Купи Таг</string>
 </resources>

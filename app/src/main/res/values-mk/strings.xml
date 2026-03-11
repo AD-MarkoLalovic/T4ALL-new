@@ -395,5 +395,9 @@
     <string name="limit_reclamation">Не е можно да се испрати приговор повеќе од два пати. За дополнителни информации можете да го контактирате Корисничкиот центар на бесплатниот телефонски број 0800 111 004.</string>
     <string name="prolasci_info">Прикажани се поминувањата за последните 30 дена.\nДопрете * за филтрирање на сите поминувања.</string>
     <string name="touch_info">Допрете</string>
+    <string name="buy_tag_online">Купи Tag онлајн</string>
+    <string name="buy_tag_online_title">КУПИ TAG ОНЛАЈН</string>
+    <string name="tag_purchase_online_description">Таг за електронска наплата на патарини сега можете едноставно да го купите и онлајн.</string>
+    <string name="buy_tag">Купи Tag</string>
 
 </resources>

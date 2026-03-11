@@ -388,4 +388,8 @@
     <string name="limit_reclamation">It is not possible to submit a complaint more than two times. For additional information, you can contact the Customer Service Center at the toll-free phone number 0800 111 004.</string>
     <string name="prolasci_info">Passages from the last 30 days have been displayed.\nTap * to filter all passages.</string>
     <string name="touch_info">Tap</string>
+    <string name="buy_tag_online">Buy Tag online</string>
+    <string name="buy_tag_online_title">BUY TAG ONLINE</string>
+    <string name="tag_purchase_online_description">The electronic toll collection tag can now be easily purchased online.</string>
+    <string name="buy_tag">Buy Tag</string>
 </resources>
