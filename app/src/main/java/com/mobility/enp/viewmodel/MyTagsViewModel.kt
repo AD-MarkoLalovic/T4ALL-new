@@ -274,6 +274,14 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
         }
     }
 
+    fun clearMyTags() {
+        _reportTag.value = SubmitResultFold.Idle
+        _deactivateActivateTag.value = SubmitResultFold.Idle
+        _myTags.value = SubmitResultMyTags.Idle
+        _paginationData.value = SubmitResultMyTags.Idle
+        _initialData.value = SubmitResultMyTags.Idle
+    }
+
     sealed class SubmitResultMyTags<out T> {
         data class Success<T>(val data: T) : SubmitResultMyTags<T>()
         data class Filtered<T>(val data: T) : SubmitResultMyTags<T>()
