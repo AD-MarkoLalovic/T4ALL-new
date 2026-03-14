@@ -388,7 +388,7 @@
     <string name="limit_reclamation">Nije moguće poslati prigovor više od dva puta. Za dodatne informacije možete kontaktirati Korisnički centar na besplatnom broju telefona 0800 111 004.</string>
     <string name="prolasci_info">Prikazani su prolasci za posljednjih 30 dana.\nDodirnite * za filtriranje svih prolazaka.</string>
     <string name="touch_info">Dodirnite</string>
-    <string name="buy_tag_online">Kupi Tag online</string>
+    <string name="buy_tag_online">Kupi tag online</string>
     <string name="buy_tag_online_title">KUPI TAG ONLINE</string>
     <string name="tag_purchase_online_description">Tag za elektronsku naplatu cestarine sada možete jednostavno kupiti i online.</string>
     <string name="buy_tag">Kupi Tag</string>
