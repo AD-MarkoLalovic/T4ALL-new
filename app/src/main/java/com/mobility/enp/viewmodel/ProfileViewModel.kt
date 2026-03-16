@@ -9,7 +9,10 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.google.gson.Gson
+import com.mobility.enp.BuildConfig
 import com.mobility.enp.MyApplication
+import com.mobility.enp.data.model.TagOrderInputs
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
@@ -18,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.HttpUrl.Companion.toHttpUrl
 
 class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() {
 
@@ -219,5 +223,37 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
     fun isNetworkAvailable(): Boolean {
         return repository.isNetworkAvail()
     }
+
+    suspend fun buildTagOrderUrl(): String = withContext(Dispatchers.IO) {
+        val user = repository.getLocalBasicInfo()
+
+        if (user != null) {
+            val isCompany = user.customerType == 2
+            val inputs = TagOrderInputs(
+                customerType = user.customerType,
+                city = user.city,
+                postalCode = user.postalCode,
+                email = user.email,
+                phone = user.phone,
+                firstName = user.firstName.takeIf { !isCompany },
+                lastName = user.lastName.takeIf { !isCompany },
+                companyName = user.companyName.takeIf { isCompany },
+                mb = user.mb.takeIf { isCompany },
+                pib = user.pib.takeIf { isCompany }
+            )
+
+            val json = Gson().toJson(inputs)
+            BuildConfig.TAG_ORDER_BASE_URL
+                .toHttpUrl()
+                .newBuilder()
+                .addQueryParameter("inputs", json)
+                .build()
+                .toString()
+        } else {
+            BuildConfig.TAG_ORDER_BASE_URL
+        }
+    }
+
+    fun fetchCountryCode(): String? = repository.getCountryCode()
 
 }

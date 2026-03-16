@@ -7,19 +7,26 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.google.gson.Gson
+import com.mobility.enp.BuildConfig
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.ProfileImage
+import com.mobility.enp.data.model.TagOrderInputs
+import com.mobility.enp.data.model.home.HomeCardsWithCountry
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.data.repository.HomeRepository
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.view.ui_models.home.HomeTollHistoryUI
 import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import okhttp3.HttpUrl.Companion.toHttpUrl
 
 class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
 
@@ -35,9 +42,49 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
     private val _profileImage = MutableStateFlow<ProfileImage?>(null)
     val profileImage: StateFlow<ProfileImage?> get() = _profileImage
 
-    private val _homeCards = MutableStateFlow<List<HomeCardsEntity>?>(null)
-    val homeCards: StateFlow<List<HomeCardsEntity>?> get() = _homeCards
+    private val _homeCards = MutableStateFlow<HomeCardsWithCountry?>(null)
+    val homeCards: StateFlow<HomeCardsWithCountry?> get() = _homeCards
 
+    private val _tagOrderUrl = MutableStateFlow<SubmitResultFold<String>>(SubmitResultFold.Idle)
+    val tagOrderUrl = _tagOrderUrl.asStateFlow()
+
+    fun loadTagOrderUrl() {
+        viewModelScope.launch {
+            _tagOrderUrl.value = SubmitResultFold.Loading
+
+            val user = repositoryHome.getOrFetchUserInfo()
+            if (user == null) {
+                val url = BuildConfig.TAG_ORDER_BASE_URL
+                _tagOrderUrl.value = SubmitResultFold.Success(url)
+                return@launch
+            }
+
+            val isCompany = user.customerType == 2
+
+            val inputs = TagOrderInputs(
+                customerType = user.customerType,
+                city = user.city,
+                postalCode = user.postalCode,
+                email = user.email,
+                phone = user.phone,
+                firstName = user.firstName.takeIf { !isCompany },
+                lastName = user.lastName.takeIf { !isCompany },
+                companyName = user.companyName.takeIf { isCompany },
+                mb = user.mb.takeIf { isCompany },
+                pib = user.pib.takeIf { isCompany }
+            )
+
+            val json = Gson().toJson(inputs)
+            val url = BuildConfig.TAG_ORDER_BASE_URL
+                .toHttpUrl()
+                .newBuilder()
+                .addQueryParameter("inputs", json)
+                .build()
+
+            _tagOrderUrl.value = SubmitResultFold.Success(url.toString())
+        }
+    }
+    fun clearTagOrderUrl() { _tagOrderUrl.value = SubmitResultFold.Idle }
 
     fun fetchHomeData() {
         viewModelScope.launch {
@@ -48,7 +95,11 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
             localHomeData?.let { updateHomeData(it) }
 
             val user = repositoryHome.getUserForPromotion()
-            _homeCards.value = repositoryHome.getHomeCards(user)
+            val localCountry = localHomeData?.home?.countryCode
+            _homeCards.value = HomeCardsWithCountry(
+                card = repositoryHome.getHomeCards(user),
+                countryCode = localCountry
+            )
 
             val homeDataDeferred = async { repositoryHome.getHomeDataFromServer() }
             val homeCardsDeferred = async { repositoryHome.getCardsFromServer() }
@@ -58,7 +109,7 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
 
             if (homeDataResult.isSuccess) {
                 val homeEntity = homeDataResult.getOrNull()
-
+                homeEntity?.let { updateHomeData(it) }
                 if (homeEntity == null) {
                     _homeData.value = SubmitResult.Empty
                 } else {
@@ -106,8 +157,12 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
             }
 
             if (homeCardsResult.isSuccess) {
-                val homeCardsEntity = homeCardsResult.getOrNull()
-                _homeCards.value = homeCardsEntity
+                val homeCardsEntity = homeCardsResult.getOrNull() ?: emptyList()
+                val serverCountry = _homeDetails.value?.home?.countryCode
+                _homeCards.value = HomeCardsWithCountry(
+                    card = homeCardsEntity,
+                    countryCode = serverCountry
+                )
             }
 
         }
