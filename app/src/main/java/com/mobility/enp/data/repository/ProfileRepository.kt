@@ -4,11 +4,13 @@ import android.content.Context
 import android.util.Log
 import com.mobility.enp.data.model.ProfileImage
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
+import com.mobility.enp.data.model.api_my_profile.basic_information.entity.BasicInfoEntity
 import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.model.api_my_profile.my_tags.response.Pagination
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
+import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
@@ -41,6 +43,10 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
         return withContext(Dispatchers.IO) {
             database.fcmToken().getTableData()
         }
+    }
+
+    suspend fun getLocalAllHomeData(): HomeWithDetails? {
+        return database.homeScreenDao().getHomeWithDetails()
     }
 
     suspend fun deleteProfilePicture() {
@@ -124,9 +130,11 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
         return try {
             val response = apiService(userToken).getUserData()
             if (response.isSuccessful) {
-                response.body()?.let { data ->
-                    SharedPreferencesHelper.saveUserCountryCode(context, data.data.country.code)
-                    Result.success(data)
+                response.body()?.let { responseBody ->
+                    SharedPreferencesHelper.saveUserCountryCode(context, responseBody.data.country.code)
+                    val entity = responseBody.data.toEntity()
+                    database.basicInfoDao().insertBasicInfo(entity)
+                    Result.success(responseBody)
                 } ?: Result.failure(NetworkError.ServerError)
             } else {
                 response.errorBody()?.let { errorBody ->
@@ -485,6 +493,10 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
 
     fun getCountryCode(): String? {
         return SharedPreferencesHelper.getCountryCode(context)
+    }
+
+    suspend fun getLocalBasicInfo(): BasicInfoEntity? {
+        return database.basicInfoDao().getBasicInfo()
     }
 
 }
