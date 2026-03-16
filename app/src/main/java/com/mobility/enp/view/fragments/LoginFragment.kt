@@ -24,6 +24,7 @@ import com.mobility.enp.util.FragmentResultKeys
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.Util
 import com.mobility.enp.util.Util.animateClickLoginScreen
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.util.safeNavigate
@@ -187,6 +188,16 @@ class LoginFragment : Fragment() {
 
         binding.customerSupport.setOnClickListener { view ->
             openCustomerSupport(view)
+        }
+
+        binding.buyTagLogin?.setOnClickListener {
+            if (Util.isNetworkAvailable(requireContext())) {
+                val url = BuildConfig.TAG_ORDER_BASE_URL
+                val action = LoginFragmentDirections.actionLoginFragmentToTagOrderWebFragment(url)
+                findNavController().navigate(action)
+            } else {
+                showNoInternetDialog()
+            }
         }
     }
 

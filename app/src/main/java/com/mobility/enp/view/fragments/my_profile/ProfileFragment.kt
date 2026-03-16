@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -24,6 +25,7 @@ import com.mobility.enp.databinding.FragmentProfileBinding
 import com.mobility.enp.util.ImageRepository
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
@@ -132,6 +134,19 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
         binding.buttonDeactivateAccount.setOnClickListener {
             findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToDeactivateAccountDialog())
         }
+
+        binding.buyTagProfile?.setOnClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                if (Util.isNetworkAvailable(requireContext())) {
+                    val url = viewModelProfile.buildTagOrderUrl()
+                    val action =
+                        ProfileFragmentDirections.actionProfileFragmentToTagOrderWebFragment(url)
+                    findNavController().navigate(action)
+                } else {
+                    showNoInternetDialog()
+                }
+            }
+        }
     }
 
     private fun setCurrentVersion() {
@@ -235,6 +250,11 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 binding.bttChangeProfilePicture.setImageResource(model.franchisePlusButton)
                 binding.imageProfile.setBackgroundResource(data.franchiseProfilePictureResource)
                 binding.userName.setTextColor(data.homePageWelcomeTextColor)
+
+                binding.buyTagProfile?.visibility = View.GONE
+            } ?: run {
+                val countryCode = viewModelProfile.fetchCountryCode()
+                binding.buyTagProfile?.isInvisible = countryCode != "RS"
             }
         }
 

@@ -28,6 +28,7 @@ import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.databinding.FragmentHomeWelcomeBinding
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.util.safeNavigate
@@ -65,9 +66,9 @@ class HomeFragment : Fragment() {
 
         franchiseViewModel.getFranchiseModel(requireContext())  // removed check enabled for stage and prod now
 
-        setupObservers()
         setupBinding()
         setupAdapters()
+        setupObservers()
         setupClickListeners()
 
         (activity as MainActivity).showNavBar()
@@ -90,6 +91,84 @@ class HomeFragment : Fragment() {
 
         homePassageAdapter = HomePassageAdapter()
         binding.recyclerLastPassages.adapter = homePassageAdapter
+
+        homePromotionsAdapter = HomePromotionsAdapter(
+            onItemClicked = { card ->
+                if (card.additionEnabled == true) {
+                    val action =
+                        HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment(
+                            card.code
+                        )
+                    safeNavigate(action, R.id.homeFragment)
+                } else if (card.isSocialNetworks) {
+
+                    when (card.code) {
+                        "facebook" -> {
+                            openFacebookPage()
+                        }
+
+                        "instagram" -> {
+                            openInstagramProfile()
+                        }
+
+                        "tag" -> {
+                            if (Util.isNetworkAvailable(requireContext())) {
+                                viewModel.loadTagOrderUrl()
+                            } else {
+                                showNoInternetDialog()
+                            }
+                        }
+                    }
+                } else {
+                    val action =
+                        HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment("RS")
+                    safeNavigate(action, R.id.homeFragment)
+                }
+
+            },
+            onDeleteClicked = { card ->
+                binding.progBar.visibility = View.VISIBLE
+                viewModel.updateDeleteHomeCard(card)
+                val newList =
+                    homePromotionsAdapter.currentList.toMutableList().apply { remove(card) }
+                homePromotionsAdapter.submitList(newList)
+
+                adapterProgress.submitList(newList.indices.toList()) {
+                    if (newList.isNotEmpty()) {
+                        val newCheckedPosition =
+                            if (adapterProgress.checkedPosition >= newList.size) {
+                                newList.lastIndex
+                            } else {
+                                adapterProgress.checkedPosition
+                            }
+                        adapterProgress.setCurrentDot(newCheckedPosition)
+                    }
+                }
+
+                binding.progBar.visibility = View.GONE
+            }, franchiseViewModel.franchiseModel.value
+        )
+
+        adapterProgress = HomeProgressAdapter(franchiseViewModel.franchiseModel.value)
+        binding.cyclerPromotions.adapter = homePromotionsAdapter
+        binding.cyclerProgress.adapter = adapterProgress
+        binding.cyclerProgress.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        binding.cyclerPromotions.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val currentCompletelyVisiblePosition =
+                    (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                // Pozivam setCurrentDot samo kada se pozicija stvarno promeni
+                if (currentCompletelyVisiblePosition != RecyclerView.NO_POSITION &&
+                    currentCompletelyVisiblePosition != adapterProgress.checkedPosition
+                ) {
+                    adapterProgress.setCurrentDot(currentCompletelyVisiblePosition)
+                }
+            }
+        })
+
     }
 
     private fun setupObservers() {
@@ -104,7 +183,7 @@ class HomeFragment : Fragment() {
         }
         collectLatestLifecycleFlow(viewModel.homeCards) { cards ->
             cards?.let {
-                setHomeCardsAdapter(it)
+                setHomeCardsAdapter(it.card, it.countryCode)
             }
         }
         collectLatestLifecycleFlow(viewModel.homeTollHistory) { tollHistory ->
@@ -121,6 +200,25 @@ class HomeFragment : Fragment() {
                 binding.homeUserName.setTextColor(data.homePageWelcomeTextColor)
                 binding.tvWelcomeBack.setTextColor(data.homePageWelcomeTextColor)
             }
+        }
+
+        collectLatestLifecycleFlow(viewModel.tagOrderUrl) { result ->
+            when (result) {
+                is SubmitResultFold.Failure -> {}
+                SubmitResultFold.Idle -> {}
+                SubmitResultFold.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
+
+                is SubmitResultFold.Success -> {
+                    binding.progBar.visibility = View.GONE
+                    val action =
+                        HomeFragmentDirections.actionHomeFragmentToTagOrderWebFragment(result.data)
+                    findNavController().navigate(action)
+                    viewModel.clearTagOrderUrl()  // resetujem da se ne navigira ponovo pri rotaciji
+                }
+            }
+
         }
     }
 
@@ -156,9 +254,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun handleSuccess(result: SubmitResult.Success<HomeWithDetails>) {
-        viewModel.homeCards.value?.let {
-            setHomeCardsAdapter(it)
-        }
 
         result.data.home.displayName.let { viewModel.loadProfileImage(it) }
         val invoiceDetails = result.data.invoice
@@ -213,7 +308,7 @@ class HomeFragment : Fragment() {
             .into(imageView)
     }
 
-    private fun setHomeCardsAdapter(cardsList: List<HomeCardsEntity>) {
+    private fun setHomeCardsAdapter(cardsList: List<HomeCardsEntity>, countryCode: String?) {
         val filteredList = mutableListOf<HomeCardsEntity>()
 
         cardsList.forEach { card ->
@@ -230,78 +325,39 @@ class HomeFragment : Fragment() {
             }
         }
 
-        homePromotionsAdapter = HomePromotionsAdapter(
-            onItemClicked = { card ->
-                if (card.additionEnabled == true) {
-                    val action =
-                        HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment(
-                            card.code
-                        )
-                    safeNavigate(action, R.id.homeFragment)
-                } else if (card.isSocialNetworks) {
 
-                    when (card.code) {
-                        "facebook" -> {
-                            openFacebookPage()
-                        }
-
-                        "instagram" -> {
-                            openInstagramProfile()
-                        }
-                    }
-                } else {
-                    val action =
-                        HomeFragmentDirections.actionHomeFragmentToPaymentAndPassageFragment("RS")
-                    safeNavigate(action, R.id.homeFragment)
-                }
-
-            },
-            onDeleteClicked = { card ->
-                binding.progBar.visibility = View.VISIBLE
-                viewModel.updateDeleteHomeCard(card)
-                val newList =
-                    homePromotionsAdapter.currentList.toMutableList().apply { remove(card) }
-                homePromotionsAdapter.submitList(newList)
-
-                adapterProgress.submitList(newList.indices.toList()) {
-                    if (newList.isNotEmpty()) {
-                        val newCheckedPosition =
-                            if (adapterProgress.checkedPosition >= newList.size) {
-                                newList.lastIndex
-                            } else {
-                                adapterProgress.checkedPosition
-                            }
-                        adapterProgress.setCurrentDot(newCheckedPosition)
-                    }
-                }
-
-                binding.progBar.visibility = View.GONE
-            }, franchiseViewModel.franchiseModel.value
+        val priority = mapOf(
+            "RS" to 0,
+            "ME" to 1,
+            "MK" to 2,
+            "tag" to 3,
+            "facebook" to 4,
+            "instagram" to 5
         )
-
-        adapterProgress = HomeProgressAdapter(franchiseViewModel.franchiseModel.value)
-        binding.cyclerPromotions.adapter = homePromotionsAdapter
-        binding.cyclerProgress.adapter = adapterProgress
-        binding.cyclerProgress.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        val sortedList = filteredList.sortedWith(compareByDescending<HomeCardsEntity> {
-            it.code == "RS"
-        }.thenBy { it.code })
+        var sortedList = filteredList.sortedBy { priority[it.code] ?: 100 }
+        sortedList = if (franchiseViewModel.franchiseModel.value != null || countryCode != "RS") {
+            sortedList.filter { it.code != "tag" }
+        } else {
+            sortedList
+        }
 
         // fixes promotion card description not translating because its hardcoded in room and not correct when language is changed
         for (entity: HomeCardsEntity in sortedList) {
             when (entity.code) {
                 "RS" -> {
+                    entity.title = requireContext().getString(R.string.serbian_passage)
                     entity.description =
                         requireContext().getString(R.string.tag_device_payment_method_serbia)
                 }
 
                 "ME" -> {
+                    entity.title = requireContext().getString(R.string.montenegro_passage)
                     entity.description =
                         requireContext().getString(R.string.tag_device_payment_method_montenegro)
                 }
 
                 "MK" -> {
+                    entity.title = requireContext().getString(R.string.north_macedonian_passage)
                     entity.description =
                         requireContext().getString(R.string.tag_device_payment_method_north_macedonia)
                 }
@@ -313,30 +369,22 @@ class HomeFragment : Fragment() {
                 "instagram" -> {
                     entity.description = requireContext().getString(R.string.instagram_text)
                 }
+
+                "tag" -> {
+                    entity.title = requireContext().getString(R.string.buy_tag_online_title)
+                    entity.description =
+                        requireContext().getString(R.string.tag_purchase_online_description)
+                }
             }
         }
 
         homePromotionsAdapter.submitList(sortedList)
-        adapterProgress.submitList(filteredList.indices.toList())
+        adapterProgress.submitList(sortedList.indices.toList())
 
         binding.cyclerPromotions.scrollToPosition(0)
         binding.cyclerProgress.scrollToPosition(0)
 
-        if (filteredList.isNotEmpty()) {
-            binding.cyclerPromotions.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    val currentCompletelyVisiblePosition =
-                        (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
-                    // Pozivam setCurrentDot samo kada se pozicija stvarno promeni
-                    if (currentCompletelyVisiblePosition != RecyclerView.NO_POSITION &&
-                        currentCompletelyVisiblePosition != adapterProgress.checkedPosition
-                    ) {
-                        adapterProgress.setCurrentDot(currentCompletelyVisiblePosition)
-                    }
-                }
-            })
-        }
+
     }
 
     override fun onDestroyView() {
