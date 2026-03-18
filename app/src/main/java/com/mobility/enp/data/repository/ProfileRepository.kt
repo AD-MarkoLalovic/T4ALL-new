@@ -495,6 +495,10 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
         return SharedPreferencesHelper.getCountryCode(context)
     }
 
+    fun getIsFranchiser(): Boolean {
+        return SharedPreferencesHelper.getIsFranchiser(context)
+    }
+
     suspend fun getLocalBasicInfo(): BasicInfoEntity? {
         return database.basicInfoDao().getBasicInfo()
     }

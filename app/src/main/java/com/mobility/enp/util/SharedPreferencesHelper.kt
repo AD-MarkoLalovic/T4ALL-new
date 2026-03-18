@@ -99,6 +99,16 @@ object SharedPreferencesHelper {
         return getPreferences(context).getInt(key, 0)
     }
 
+    fun saveIsFranchiser(context: Context, isFranchiser: Boolean) {
+        getPreferences(context).edit {
+            putBoolean("is_franchiser", isFranchiser)
+        }
+    }
+
+    fun getIsFranchiser(context: Context): Boolean {
+        return getPreferences(context).getBoolean("is_franchiser", false)
+    }
+
 }
 
 

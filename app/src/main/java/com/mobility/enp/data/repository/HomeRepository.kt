@@ -96,6 +96,7 @@ class HomeRepository(
             homeDao.insertInvoiceCurrencies(data.toHomeInvoiceCurrencies(invoiceId = 1))
 
             data.customer.countryCode?.let { SharedPreferencesHelper.saveUserCountryCode(context, it) }
+            data.customer.isFranchiser?.let { SharedPreferencesHelper.saveIsFranchiser(context, it) }
             Log.d("HomeScreen Database", "Svi podaci uspešno sačuvani")
         } catch (e: Exception) {
             Log.e(
