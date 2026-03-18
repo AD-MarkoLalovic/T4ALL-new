@@ -386,4 +386,8 @@
     <string name="limit_reclamation">Δεν είναι δυνατή η υποβολή ένστασης περισσότερες από δύο φορές. Για περισσότερες πληροφορίες μπορείτε να επικοινωνήσετε με το Κέντρο Εξυπηρέτησης Πελατών στον δωρεάν αριθμό 0800 111 004.</string>
     <string name="prolasci_info">Έχουν εμφανιστεί οι διελεύσεις των τελευταίων 30 ημερών.\nΠατήστε * για φιλτράρισμα όλων των διελεύσεων.</string>
     <string name="touch_info">Πατήστε</string>
+    <string name="buy_tag_online">Αγοράστε tag online</string>
+    <string name="buy_tag_online_title">ΑΓΟΡΑΣΤΕ TAG ONLINE</string>
+    <string name="tag_purchase_online_description">Το Tag για ηλεκτρονική πληρωμή διοδίων μπορείτε πλέον εύκολα να το αγοράσετε και online.</string>
+    <string name="buy_tag">Αγοράστε Tag</string>
 </resources>

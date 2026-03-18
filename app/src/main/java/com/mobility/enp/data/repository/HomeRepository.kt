@@ -3,12 +3,14 @@ package com.mobility.enp.data.repository
 import android.content.Context
 import android.util.Log
 import com.mobility.enp.data.model.ProfileImage
+import com.mobility.enp.data.model.api_my_profile.basic_information.entity.BasicInfoEntity
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.data.model.home.response.Data
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.toEntityList
 
 /**
@@ -58,6 +60,31 @@ class HomeRepository(
 
     }
 
+    suspend fun getLocalBasicInfo(): BasicInfoEntity? {
+        return database.basicInfoDao().getBasicInfo()
+    }
+
+    suspend fun getOrFetchUserInfo(): BasicInfoEntity? {
+        getLocalBasicInfo()?.let { return it }
+
+        val userToken = getUserToken() ?: return null
+
+        return try {
+            val response = apiService(userToken).getUserData()
+            if (response.isSuccessful) {
+                response.body()?.let { responseBody ->
+                    val entity = responseBody.data.toEntity()
+                    database.basicInfoDao().insertBasicInfo(entity)
+                    getLocalBasicInfo()
+                }
+            } else null
+        } catch (e: Exception) {
+            Log.e("HomeRepository", "Greška pri preuzimanju basic info: ${e.message}", e)
+            null
+        }
+
+    }
+
 
     private suspend fun saveAllHomeData(data: Data) {
         val homeDao = database.homeScreenDao()
@@ -67,6 +94,9 @@ class HomeRepository(
             homeDao.insertTollHistory(data.toHomeTollHistory(homeId = 1))
             homeDao.insertInvoices(data.toHomeInvoices(homeId = 1))
             homeDao.insertInvoiceCurrencies(data.toHomeInvoiceCurrencies(invoiceId = 1))
+
+            data.customer.countryCode?.let { SharedPreferencesHelper.saveUserCountryCode(context, it) }
+            data.customer.isFranchiser?.let { SharedPreferencesHelper.saveIsFranchiser(context, it) }
             Log.d("HomeScreen Database", "Svi podaci uspešno sačuvani")
         } catch (e: Exception) {
             Log.e(
@@ -132,7 +162,7 @@ class HomeRepository(
     }
 
     suspend fun getUserForPromotion(): String {
-        return database.lastUserDao().getLastUser()?.email ?:""
+        return database.lastUserDao().getLastUser()?.email ?: ""
     }
 
     suspend fun updateHomeCard(card: HomeCardsEntity) {

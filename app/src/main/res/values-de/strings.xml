@@ -407,4 +407,8 @@
     <string name="limit_reclamation">Es ist nicht möglich, eine Beschwerde mehr als zweimal einzureichen. Für weitere Informationen können Sie das Kundenzentrum unter der kostenlosen Telefonnummer 0800 111 004 kontaktieren.</string>
     <string name="prolasci_info">Die Durchfahrten der letzten 30 Tage wurden angezeigt.\nTippen Sie auf * , um alle Durchfahrten zu filtern.</string>
     <string name="touch_info">auf</string>
+    <string name="buy_tag_online">Tag online kaufen</string>
+    <string name="buy_tag_online_title">TAG ONLINE KAUFEN</string>
+    <string name="tag_purchase_online_description">Den Tag für die elektronische Mauterhebung können Sie jetzt ganz einfach online kaufen.</string>
+    <string name="buy_tag">Tag online</string>
 </resources>

@@ -15,6 +15,7 @@ import com.mobility.enp.data.model.banks.entity.BanksEntity
 import com.mobility.enp.data.model.banks.response.BanksResponse
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
+import kotlinx.coroutines.CancellationException
 
 /**
  * Odgovornost: Upravljanje podacima korisnika, uključujući profilne informacije, podesavanje
@@ -310,6 +311,8 @@ class UserRepository(
                     RuntimeException("Language sync failed: HTTP $code, lang=$lang")
                 )
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             crashlytics.recordException(e)
         }

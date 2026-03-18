@@ -24,6 +24,7 @@ import com.mobility.enp.databinding.FragmentProfileBinding
 import com.mobility.enp.util.ImageRepository
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
+import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
@@ -62,6 +63,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
         setObserver()
         setCurrentVersion()
+        setBuyTagVisibility()
 
         viewModelProfile.setRefundRequestVisibility()
         SharedPreferencesHelper.setCurrentTab(requireContext(), 0)
@@ -131,6 +133,19 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
         binding.buttonDeactivateAccount.setOnClickListener {
             findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToDeactivateAccountDialog())
+        }
+
+        binding.buyTagProfile?.setOnClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                if (Util.isNetworkAvailable(requireContext())) {
+                    val url = viewModelProfile.buildTagOrderUrl()
+                    val action =
+                        ProfileFragmentDirections.actionProfileFragmentToTagOrderWebFragment(url)
+                    findNavController().navigate(action)
+                } else {
+                    showNoInternetDialog()
+                }
+            }
         }
     }
 
@@ -337,6 +352,13 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
             )
         }
         findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
+    }
+
+    private fun setBuyTagVisibility() {
+        val countryCode = viewModelProfile.fetchCountryCode()
+        val isFranchiser = viewModelProfile.fetchIsFranchiser()
+        binding.buyTagProfile?.visibility =
+            if (isFranchiser || countryCode != "RS") View.GONE else View.VISIBLE
     }
 
     private fun logMessage(message: String) {

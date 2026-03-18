@@ -67,6 +67,14 @@ class HomePromotionsAdapter(
 
                 }
 
+                "tag" -> {
+                    binding.backgroundImage.setImageResource(R.drawable.buy_tag_online)
+                    binding.btnObjection.text = binding.root.context.getString(R.string.buy_tag)
+                    binding.btnSocialNetworks.visibility = View.VISIBLE
+                    binding.btnObjection.icon = null
+
+                }
+
                 else -> {
                     binding.btnObjection.icon = null
                     binding.btnSocialNetworks.visibility = View.GONE
