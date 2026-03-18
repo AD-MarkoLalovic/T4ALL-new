@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_loginFragment_to_termsAndPrivacyFragment"
             app:destination="@id/termsAndPrivacyFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_tagOrderWebFragment"
+            app:destination="@id/tagOrderWebFragment" />
     </fragment>
 
     <fragment
@@ -251,6 +254,19 @@
         <action
             android:id="@+id/action_homeFragment_to_paymentAndPassageFragment"
             app:destination="@id/paymentAndPassageFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_tagOrderWebFragment"
+            app:destination="@id/tagOrderWebFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tagOrderWebFragment"
+        android:name="com.mobility.enp.view.fragments.my_profile.TagOrderWebFragment"
+        android:label="TagOrderWebFragment"
+        tools:layout="@layout/fragment_tag_order_web">
+        <argument
+            android:name="url"
+            app:argType="string" />
     </fragment>
 
     <action
@@ -295,6 +311,9 @@
         <action
             android:id="@+id/action_profileFragment_to_deactivateAccountDialog"
             app:destination="@id/deactivateAccountDialog" />
+        <action
+            android:id="@+id/action_profileFragment_to_tagOrderWebFragment"
+            app:destination="@id/tagOrderWebFragment" />
     </fragment>
 
     <fragment

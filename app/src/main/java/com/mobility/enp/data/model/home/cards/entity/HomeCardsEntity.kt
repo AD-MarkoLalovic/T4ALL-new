@@ -9,7 +9,7 @@ import androidx.room.Entity
 data class HomeCardsEntity(
     val email: String,
     val code: String,
-    val title: String,
+    var title: String,
     var description: String,
     val additionEnabled: Boolean?,
     var deletedByUser: Boolean = false,

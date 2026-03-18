@@ -190,6 +190,17 @@
                         app:layout_constraintTop_toBottomOf="@id/buttonMyInvoices" />
 
                     <Button
+                        android:id="@+id/buyTagProfile"
+                        style="@style/MyOutlinedButtonStyle"
+                        android:layout_width="@dimen/dimens_0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_8dp"
+                        android:text="@string/buy_tag_online"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/buttonMyTags" />
+
+                    <Button
                         android:id="@+id/buttonRefundRequest"
                         style="@style/MyOutlinedButtonStyle"
                         android:layout_width="@dimen/dimens_0dp"
@@ -198,7 +209,7 @@
                         android:text="@string/refund_request"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/buttonMyTags" />
+                        app:layout_constraintTop_toBottomOf="@id/buyTagProfile" />
 
 
                     <Button
