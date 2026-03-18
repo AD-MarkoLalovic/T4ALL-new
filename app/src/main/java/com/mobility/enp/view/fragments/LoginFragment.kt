@@ -190,7 +190,7 @@ class LoginFragment : Fragment() {
             openCustomerSupport(view)
         }
 
-        binding.buyTagLogin?.setOnClickListener {
+        binding.buyTagLogin.setOnClickListener {
             if (Util.isNetworkAvailable(requireContext())) {
                 val url = BuildConfig.TAG_ORDER_BASE_URL
                 val action = LoginFragmentDirections.actionLoginFragmentToTagOrderWebFragment(url)
