@@ -18,6 +18,7 @@ data class Data(
             lastName = customer.lastName,
             displayName = customer.displayName,
             countryCode = customer.countryCode,
+            isFranchiser = customer.isFranchiser,
             customerType = customer.customerType.type,
             portalKey = customer.portalKey
         )
