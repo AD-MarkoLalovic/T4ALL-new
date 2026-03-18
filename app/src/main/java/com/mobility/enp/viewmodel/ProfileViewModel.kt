@@ -255,5 +255,6 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
     }
 
     fun fetchCountryCode(): String? = repository.getCountryCode()
+    fun fetchIsFranchiser(): Boolean = repository.getIsFranchiser()
 
 }

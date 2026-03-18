@@ -183,7 +183,7 @@ class HomeFragment : Fragment() {
         }
         collectLatestLifecycleFlow(viewModel.homeCards) { cards ->
             cards?.let {
-                setHomeCardsAdapter(it.card, it.countryCode)
+                setHomeCardsAdapter(it.card, it.countryCode, it.isFranchiser)
             }
         }
         collectLatestLifecycleFlow(viewModel.homeTollHistory) { tollHistory ->
@@ -308,7 +308,7 @@ class HomeFragment : Fragment() {
             .into(imageView)
     }
 
-    private fun setHomeCardsAdapter(cardsList: List<HomeCardsEntity>, countryCode: String?) {
+    private fun setHomeCardsAdapter(cardsList: List<HomeCardsEntity>, countryCode: String?, isFranchiser: Boolean?) {
         val filteredList = mutableListOf<HomeCardsEntity>()
 
         cardsList.forEach { card ->
@@ -335,7 +335,7 @@ class HomeFragment : Fragment() {
             "instagram" to 5
         )
         var sortedList = filteredList.sortedBy { priority[it.code] ?: 100 }
-        sortedList = if (franchiseViewModel.franchiseModel.value != null || countryCode != "RS") {
+        sortedList = if (isFranchiser == true || countryCode != "RS") {
             sortedList.filter { it.code != "tag" }
         } else {
             sortedList

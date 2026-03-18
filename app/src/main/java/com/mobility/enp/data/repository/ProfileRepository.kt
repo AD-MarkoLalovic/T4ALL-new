@@ -45,10 +45,6 @@ class ProfileRepository(database: DRoom, context: Context) : BaseRepository(data
         }
     }
 
-    suspend fun getLocalAllHomeData(): HomeWithDetails? {
-        return database.homeScreenDao().getHomeWithDetails()
-    }
-
     suspend fun deleteProfilePicture() {
         database.profileImageDao().deleteAll()
     }

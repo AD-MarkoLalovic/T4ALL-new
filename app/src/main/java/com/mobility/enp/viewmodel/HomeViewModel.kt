@@ -96,9 +96,11 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
 
             val user = repositoryHome.getUserForPromotion()
             val localCountry = localHomeData?.home?.countryCode
+            val localIsFranchiser = localHomeData?.home?.isFranchiser
             _homeCards.value = HomeCardsWithCountry(
                 card = repositoryHome.getHomeCards(user),
-                countryCode = localCountry
+                countryCode = localCountry,
+                isFranchiser = localIsFranchiser
             )
 
             val homeDataDeferred = async { repositoryHome.getHomeDataFromServer() }
@@ -159,9 +161,11 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
             if (homeCardsResult.isSuccess) {
                 val homeCardsEntity = homeCardsResult.getOrNull() ?: emptyList()
                 val serverCountry = _homeDetails.value?.home?.countryCode
+                val serverIsFranchiser = _homeDetails.value?.home?.isFranchiser
                 _homeCards.value = HomeCardsWithCountry(
                     card = homeCardsEntity,
-                    countryCode = serverCountry
+                    countryCode = serverCountry,
+                    isFranchiser = serverIsFranchiser
                 )
             }
 

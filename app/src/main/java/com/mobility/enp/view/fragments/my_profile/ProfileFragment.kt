@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
-import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -64,6 +63,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
         setObserver()
         setCurrentVersion()
+        setBuyTagVisibility()
 
         viewModelProfile.setRefundRequestVisibility()
         SharedPreferencesHelper.setCurrentTab(requireContext(), 0)
@@ -250,11 +250,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 binding.bttChangeProfilePicture.setImageResource(model.franchisePlusButton)
                 binding.imageProfile.setBackgroundResource(data.franchiseProfilePictureResource)
                 binding.userName.setTextColor(data.homePageWelcomeTextColor)
-
-                binding.buyTagProfile?.visibility = View.GONE
-            } ?: run {
-                val countryCode = viewModelProfile.fetchCountryCode()
-                binding.buyTagProfile?.isInvisible = countryCode != "RS"
             }
         }
 
@@ -357,6 +352,13 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
             )
         }
         findNavController().navigate(R.id.action_global_noInternetConnectionDialog, bundle)
+    }
+
+    private fun setBuyTagVisibility() {
+        val countryCode = viewModelProfile.fetchCountryCode()
+        val isFranchiser = viewModelProfile.fetchIsFranchiser()
+        binding.buyTagProfile?.visibility =
+            if (isFranchiser || countryCode != "RS") View.GONE else View.VISIBLE
     }
 
     private fun logMessage(message: String) {
