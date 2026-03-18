@@ -101,6 +101,17 @@ fun CardWebModel.toEntityList(context: Context, user: String): List<HomeCardsEnt
 
     listCards.add(instagramCard)
 
+    val tagOrderCard = HomeCardsEntity(
+        email = user,
+        code = "tag",
+        title = context.getString(R.string.buy_tag_online_title),
+        description = context.getString(R.string.tag_purchase_online_description),
+        additionEnabled = false,
+        isSocialNetworks = true
+    )
+
+    listCards.add(tagOrderCard)
+
     return listCards
 }
 

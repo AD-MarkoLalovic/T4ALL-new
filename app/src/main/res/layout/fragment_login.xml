@@ -50,9 +50,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="-20dp"
-            android:elevation="8dp"
             android:background="@drawable/border_login"
             android:backgroundTint="@color/primary_light_lightest"
+            android:elevation="8dp"
             android:padding="@dimen/dimens_16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -235,6 +235,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/subtitleNewAccount" />
 
+            <Button
+                android:id="@+id/buyTagLogin"
+                style="@style/MyOutlinedButtonStyle"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:text="@string/buy_tag_online"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/createAccount" />
+
             <View
                 android:id="@+id/seperatorBottomFinal"
                 android:layout_width="match_parent"
@@ -243,7 +254,7 @@
                 android:background="@color/primary_light_light"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/createAccount" />
+                app:layout_constraintTop_toBottomOf="@id/buyTagLogin" />
 
             <View
                 android:id="@+id/center"

@@ -96,11 +96,15 @@ class MyTagsFragment : Fragment() {
         collectLatestLifecycleFlow(viewModel.deactivateActivateTag) { result ->
             when (result) {
                 is SubmitResultFold.Failure -> {
+                    binding.touchInterceptOverlay.visibility = View.GONE
                     handleError(result.error)
                 }
 
                 SubmitResultFold.Idle -> {}
-                SubmitResultFold.Loading -> binding.progbar.visibility = View.VISIBLE
+                SubmitResultFold.Loading -> {
+                    binding.progbar.visibility = View.VISIBLE
+                    binding.touchInterceptOverlay.visibility = View.VISIBLE
+                }
 
                 is SubmitResultFold.Success<*> -> {
                     val type = result.reportType
@@ -283,10 +287,11 @@ class MyTagsFragment : Fragment() {
                         }
 
                         //users with less then 1 page
-                        when(pagination.lastPage == 1){
+                        when (pagination.lastPage == 1) {
                             true -> {
                                 binding.constraintLayoutPage.visibility = View.GONE
                             }
+
                             false -> {
                                 binding.constraintLayoutPage.visibility = View.VISIBLE
                             }
@@ -306,11 +311,16 @@ class MyTagsFragment : Fragment() {
         collectLatestLifecycleFlow(viewModel.reportTag) { result ->
             when (result) {
                 is SubmitResultFold.Failure -> {
+                    binding.touchInterceptOverlay.visibility = View.GONE
                     handleError(result.error)
                 }
 
                 SubmitResultFold.Idle -> {}
-                SubmitResultFold.Loading -> binding.progbar.visibility = View.VISIBLE
+                SubmitResultFold.Loading -> {
+                    binding.progbar.visibility = View.VISIBLE
+                    binding.touchInterceptOverlay.visibility = View.VISIBLE
+                }
+
                 is SubmitResultFold.Success<*> -> {
                     val type = result.reportType
                     val message = when (type) {
@@ -325,7 +335,7 @@ class MyTagsFragment : Fragment() {
                     binding.progbar.visibility = View.VISIBLE
 
                     viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                        delay(2000)
+                        delay(4500)
                         withContext(Dispatchers.Main) {
                             resetFragment()
                         }
@@ -337,6 +347,7 @@ class MyTagsFragment : Fragment() {
 
     // forces fragment to reset
     private fun resetFragment() {
+        viewModel.clearMyTags()
         findNavController().popBackStack(
             R.id.myTagsFragment2,
             true
@@ -370,7 +381,7 @@ class MyTagsFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 when (s?.length) {
-                    11 , 16-> {
+                    11, 16 -> {
                         binding.searchMark.setImageDrawable(
                             AppCompatResources.getDrawable(
                                 requireContext(),

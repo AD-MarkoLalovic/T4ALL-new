@@ -311,6 +311,14 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <View
+        android:id="@+id/touchInterceptOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone" />
+
     <ProgressBar
         android:id="@+id/progbar"
         android:layout_width="wrap_content"

@@ -9,6 +9,8 @@ data class HomeEntity(
     val firstName: String?,
     val lastName: String?,
     val displayName: String,
+    val countryCode: String?,
+    val isFranchiser: Boolean?,
     val customerType: Int,
     var portalKey: String?
 )

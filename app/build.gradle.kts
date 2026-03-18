@@ -33,8 +33,8 @@ android {
         applicationId = "com.mobility.enp"
         minSdk = 29
         targetSdk = 35
-        versionCode = 247
-        versionName = "1.8.2"
+        versionCode = 249
+        versionName = "1.9.0"
 
         resourceConfigurations += listOf("en", "sr", "de", "mk", "tr", "b+cnr", "hr", "el", "bs")
 
@@ -68,6 +68,11 @@ android {
             buildConfigField("String", "API_URL", "\"https://mobileapitest.toll4all.com/\"")
             buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+8025@gmail.com\"")
             buildConfigField("String", "TEST_PASSWORD", "\"Demo!4team\"")
+            buildConfigField(
+                "String",
+                "TAG_ORDER_BASE_URL",
+                "\"https://test.toll4all.com/tag-narucivanje\""
+            )
         }
         create("prod") {
             // Prod flavor configuration
@@ -76,6 +81,11 @@ android {
             buildConfigField("String", "API_URL", "\"https://mobileapi.toll4all.com/\"")
             buildConfigField("String", "TEST_USERNAME", "\"cok.brb.11@gmail.com\"")
             buildConfigField("String", "TEST_PASSWORD", "\"testiranje1!\"")
+            buildConfigField(
+                "String",
+                "TAG_ORDER_BASE_URL",
+                "\"https://toll4all.com/tag-narucivanje\""
+            )
         }
     }
 

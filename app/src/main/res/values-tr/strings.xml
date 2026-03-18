@@ -397,4 +397,8 @@
     <string name="limit_reclamation">İtiraz iki defadan fazla gönderilemez. Daha fazla bilgi için 0800 111 004 ücretsiz telefon numarasından Müşteri Hizmetleri Merkezi ile iletişime geçebilirsiniz.</string>
     <string name="prolasci_info">Son 30 güne ait geçişler gösterilmiştir.\nTüm geçişleri filtrelemek için * dokunun.</string>
     <string name="touch_info">için</string>
+    <string name="buy_tag_online">Tag online satın al</string>
+    <string name="buy_tag_online_title">TAG ONLINE SATIN AL</string>
+    <string name="tag_purchase_online_description">Elektronik otoyol ücret ödeme etiketi artık kolayca online satın alınabilir.</string>
+    <string name="buy_tag">Tag satın al</string>
 </resources>
