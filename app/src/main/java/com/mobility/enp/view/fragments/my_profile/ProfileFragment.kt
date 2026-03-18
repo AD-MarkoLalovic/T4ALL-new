@@ -357,7 +357,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
     private fun setBuyTagVisibility() {
         val countryCode = viewModelProfile.fetchCountryCode()
         val isFranchiser = viewModelProfile.fetchIsFranchiser()
-        binding.buyTagProfile?.visibility =
+        binding.buyTagProfile.visibility =
             if (isFranchiser || countryCode != "RS") View.GONE else View.VISIBLE
     }
 
