@@ -10,7 +10,6 @@ import com.mobility.enp.data.model.api_my_profile.my_tags.response.Pagination
 import com.mobility.enp.data.model.api_room_models.FcmToken
 import com.mobility.enp.data.model.api_tags.ActivateDeactivateTagModel
 import com.mobility.enp.data.model.deactivation.DeactivateAccountModel
-import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
