@@ -135,7 +135,7 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
             findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToDeactivateAccountDialog())
         }
 
-        binding.buyTagProfile?.setOnClickListener {
+        binding.buyTagProfile.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 if (Util.isNetworkAvailable(requireContext())) {
                     val url = viewModelProfile.buildTagOrderUrl()
