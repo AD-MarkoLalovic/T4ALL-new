@@ -69,14 +69,19 @@ class SettingsFragment : Fragment() {
             if (isPermissionGranted()) {
                 // Permission is granted, allow the switch to change its state
                 binding.notificationSwitch.isChecked = true
-                val generalMessageDialog = GeneralMessageDialogNotifications(
+                val generalMessageDialog = GeneralMessageDialogNotifications.newInstance(
                     getString(com.mobility.enp.R.string.permissions_title),
-                    getString(com.mobility.enp.R.string.permission_subtitle),
-                    object : GeneralMessageDialogNotifications.OnButtonClick {
-                        override fun onClickConfirmed() {
-                            openAppSettings()
-                        }
-                    })
+                    getString(com.mobility.enp.R.string.permission_subtitle)
+                )
+
+
+                generalMessageDialog.setOnButtonClickListener(object :
+                    GeneralMessageDialogNotifications.OnButtonClick {
+                    override fun onClickConfirmed() {
+                        openAppSettings()
+                    }
+                })
+
                 generalMessageDialog.show(fragmentManager, "NotificationDialog")
             } else {
                 when {
