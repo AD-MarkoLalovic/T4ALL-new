@@ -86,7 +86,7 @@ class GeneralMessageDialogNotifications : DialogFragment {
 
     override fun onStart() {
         super.onStart()
-        setDimensionsPercent(95)
+        setDimensionsPercent(85)
         isCancelable = false
     }
 
