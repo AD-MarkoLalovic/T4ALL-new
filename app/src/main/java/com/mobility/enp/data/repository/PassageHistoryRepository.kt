@@ -140,6 +140,12 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         }
     }
 
+    suspend fun fetchedStoredPDFData(): ByteArray? {
+        return withContext(Dispatchers.IO) {
+            database.pdfHistoryTableDao().fetchData()?.pdfData
+        }
+    }
+
     suspend fun getAdapterPassageData(
         tagSerialNumber: String,
         page: Int,

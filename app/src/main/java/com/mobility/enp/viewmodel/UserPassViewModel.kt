@@ -73,6 +73,7 @@ import com.mobility.enp.util.toCroatianPassageResult
 import com.mobility.enp.util.toLocalDate
 import com.mobility.enp.util.toV2HistoryTagResponseResult
 import com.mobility.enp.view.CsvActivity
+import com.mobility.enp.view.PdfHistoryActivity
 import com.mobility.enp.view.fragments.tool_history.HistoryFilterScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -157,6 +158,7 @@ class UserPassViewModel(
         historyCroatiaPassageDao.deleteData()
         historyCroatiaPassageDaoResult.deleteData()
         historyV2AllowedCountriesDao.clear()
+        pdfExportDao.deleteData()
     }
 
     fun getV2PassagesBySerialAndCountryCode(
@@ -327,9 +329,10 @@ class UserPassViewModel(
         userSelectedCalendarStart = null
         userSelectedCalendarEnd = null
         selectedCountry = ""
+        viewModelScope.launch {
+            pdfExportDao.deleteData()
+        }
     }
-
-    //logout view model data clear
 
     fun resetUiState() {
         _baseTagDataState.value = SubmitResult.Empty
@@ -1434,6 +1437,44 @@ class UserPassViewModel(
 
     }
 
+
+    fun postNotificationPDF() {
+        val channel = NotificationChannel(
+            CHANNEL_ID, "Tool4all", NotificationManager.IMPORTANCE_HIGH
+        )
+        channel.description = "Tool4all"
+        channel.enableLights(true)
+        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+        channel.lightColor = Color.BLUE
+
+        val intent = Intent(repository.fetchContext(), PdfHistoryActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            repository.fetchContext(), 100, intent, PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notificationManager =
+            repository.fetchContext().getSystemService(NotificationManager::class.java)
+        notificationManager.createNotificationChannel(channel)
+
+        val builder = NotificationCompat.Builder(
+            repository.fetchContext(), CHANNEL_ID
+        ).setSmallIcon(R.drawable.splash_logo)
+            .setContentTitle(repository.fetchContext().getString(R.string.export_pdf))
+            .setContentIntent(pendingIntent)
+            .setContentText(repository.fetchContext().getString(R.string.export_pdf))
+            .setAutoCancel(true)
+
+        if (ActivityCompat.checkSelfPermission(
+                repository.fetchContext(), Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        NotificationManagerCompat.from(repository.fetchContext())
+            .notify(NOTIFICATION_ID, builder.build())
+
+    }
+
     fun processCsvData(csvModel: CsvModel, nameExtra: String, context: Context) {
         Log.d(TAG, "csv data: $csvModel")
 
@@ -1958,9 +1999,12 @@ class UserPassViewModel(
         }
     }
 
-
     suspend fun fetchCsvData(): ByteArray? {
         return repository.fetchedStoredCsvData()
+    }
+
+    suspend fun fetchPDFData(): ByteArray? {
+        return repository.fetchedStoredPDFData()
     }
 
     fun internetAvailable(): Boolean {

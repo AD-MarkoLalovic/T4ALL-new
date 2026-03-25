@@ -7,7 +7,6 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -346,7 +345,24 @@ class HistoryFilterScreen : Fragment() {
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
 
-                    Log.d(TAG, "api response ${data.data.size} ")
+                    if (ContextCompat.checkSelfPermission(
+                            requireContext(), Manifest.permission.POST_NOTIFICATIONS
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        vModel.postNotificationPDF()
+                        vModel.nullFlowState()
+                    } else {
+                        showNotificationPermissionRationale(object : UserPermission {
+                            override fun onPermissionGranted() {
+                                vModel.postNotificationPDF()
+                                vModel.nullFlowState()
+                            }
+
+                            override fun onPermissionDenied() {
+                                vModel.nullFlowState()
+                            }
+                        })
+                    }
                 }
 
                 is SubmitResult.FailureNoConnection -> {
