@@ -286,9 +286,14 @@ class UserPassViewModel(
     private val _csvTable = MutableStateFlow<SubmitResult<CsvModel>>(SubmitResult.Empty)
     val csvTable: StateFlow<SubmitResult<CsvModel>> get() = _csvTable
 
-    fun setCsvState() {
+    fun nullFlowState() {
         _csvTable.value = SubmitResult.Empty
+        _pdfTable.value = SubmitResult.Empty
     }
+
+    private val _pdfTable = MutableStateFlow<SubmitResult<ByteArray>>(SubmitResult.Empty)
+    val pdfTable: StateFlow<SubmitResult<ByteArray>> get() = _pdfTable
+
 
     private val _complaintObjectionState =
         MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Empty)
@@ -1836,6 +1841,113 @@ class UserPassViewModel(
             }
         }
     }
+
+    fun getPDFData(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
+                if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
+                    Toast.makeText(
+                        context, context.getString(R.string.end_date_check), Toast.LENGTH_SHORT
+                    ).show()
+                    _pdfTable.value = SubmitResult.Empty
+                } else {
+                    try {
+                        _pdfTable.value = SubmitResult.Loading
+                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+
+                        val dateStart = Date(userSelectedCalendarStart ?: 0)
+                        val dateEnd = Date(userSelectedCalendarEnd ?: 0)
+
+                        val dateStartApi = sdf.format(dateStart)
+                        val dateEndApi = sdf.format(dateEnd)
+
+                        Log.d(TAG, "startDate: $dateStartApi endDate $dateEndApi")
+
+                        if (selectedTags.isNotEmpty() && selectedTags.size == 1 || allTagsSelected) {
+
+                            val tagSerial = if (allTagsSelected) {
+                                ""
+                            } else {
+                                tagForExport?.serialNumber
+                                    ?: ""  // if one item last selected tag is added
+                            }
+
+                            val result = repository.getPDFTableData(
+                                tagSerial, dateStartApi, dateEndApi, selectedCountry
+                            )
+
+                            val body = result.getOrNull()
+                            body?.let { data ->
+
+                                if (result.isSuccess) {
+                                    _pdfTable.value = SubmitResult.Success(data)
+                                } else {
+                                    when (val error = result.exceptionOrNull()) {
+                                        is NetworkError.ServerError -> {
+                                            Log.d(TAG, "Error while fetching tag serial data")
+                                            _pdfTable.value = SubmitResult.FailureServerError
+                                        }
+
+                                        is NetworkError.NoConnection -> {
+                                            _pdfTable.value = SubmitResult.FailureNoConnection
+                                        }
+
+                                        is NetworkError.ApiError -> {
+                                            when (error.errorResponse.code) {
+                                                401, 405 -> {
+                                                    Log.d(
+                                                        TOKEN,
+                                                        "invalid token detected login out user"
+                                                    )
+                                                    _pdfTable.value = SubmitResult.InvalidApiToken(
+                                                        error.errorResponse.code ?: 0,
+                                                        error.errorResponse.message ?: ""
+                                                    )
+                                                }
+
+                                                else -> {
+                                                    _pdfTable.value = SubmitResult.FailureApiError(
+                                                        error.errorResponse.message ?: ""
+                                                    )
+                                                    Log.d(
+                                                        TAG,
+                                                        "api error ${error.errorResponse.message}"
+                                                    )
+                                                }
+                                            }
+                                        }
+
+                                        else -> {}
+                                    }
+                                }
+                            }
+
+                        } else {
+                            _pdfTable.value = SubmitResult.FailureApiError(
+                                ContextCompat.getString(
+                                    context, R.string.please_select_one_tag
+                                )
+                            )
+                        }
+                    } catch (e: Exception) {
+                        Log.d(TAG, "getCsvData: ${e.message} ${e.cause}")
+                        _pdfTable.value = SubmitResult.FailureApiError(
+                            ContextCompat.getString(
+                                context, R.string.formatting_error
+                            )
+                        )
+                    }
+                }
+            } else {
+                _pdfTable.value = SubmitResult.FailureApiError(
+                    ContextCompat.getString(
+                        context, R.string.please_select_dates
+                    )
+                )
+            }
+        }
+    }
+
 
     suspend fun fetchCsvData(): ByteArray? {
         return repository.fetchedStoredCsvData()

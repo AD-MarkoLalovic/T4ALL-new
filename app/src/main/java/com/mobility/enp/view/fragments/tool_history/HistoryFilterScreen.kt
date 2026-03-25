@@ -7,6 +7,7 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -287,18 +288,18 @@ class HistoryFilterScreen : Fragment() {
                             ) == PackageManager.PERMISSION_GRANTED
                         ) {
                             vModel.saveBase64ToCSV(csvContent, nameExtra, requireContext())
-                            vModel.setCsvState()
+                            vModel.nullFlowState()
                         } else {
                             showNotificationPermissionRationale(object : UserPermission {
                                 override fun onPermissionGranted() {
                                     vModel.saveBase64ToCSV(
                                         csvContent, nameExtra, requireContext()
                                     )
-                                    vModel.setCsvState()
+                                    vModel.nullFlowState()
                                 }
 
                                 override fun onPermissionDenied() {
-                                    vModel.setCsvState()
+                                    vModel.nullFlowState()
                                 }
                             })
                         }
@@ -318,13 +319,13 @@ class HistoryFilterScreen : Fragment() {
                 is SubmitResult.FailureServerError -> {
                     binding.progBar.visibility = View.GONE
                     showError(getString(R.string.server_error_msg))
-                    vModel.setCsvState()
+                    vModel.nullFlowState()
                 }
 
                 is SubmitResult.FailureApiError -> {
                     binding.progBar.visibility = View.GONE
                     showError(csvTable.errorMessage)
-                    vModel.setCsvState()
+                    vModel.nullFlowState()
                 }
 
                 is SubmitResult.InvalidApiToken -> {
@@ -336,7 +337,42 @@ class HistoryFilterScreen : Fragment() {
             }
         }
 
+        collectLatestLifecycleFlow(vModel.pdfTable) { data ->
+            when (data) {
+                is SubmitResult.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
 
+                is SubmitResult.Success -> {
+                    binding.progBar.visibility = View.GONE
+
+                    Log.d(TAG, "api response $data ")
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                    vModel.nullFlowState()
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(data.errorMessage)
+                    vModel.nullFlowState()
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(data.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                is SubmitResult.Empty -> {}
+            }
+        }
     }
 
     private fun showNotificationPermissionRationale(userPermission: UserPermission) {
@@ -424,7 +460,7 @@ class HistoryFilterScreen : Fragment() {
 
     private fun showError(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-        vModel.setCsvState()
+        vModel.nullFlowState()
     }
 
     private fun updateCountriesAdapter(countryList: List<String>) {
@@ -523,6 +559,10 @@ class HistoryFilterScreen : Fragment() {
                 }
                 true
             } else if (isPdf) {
+                binding.progBar.visibility = View.VISIBLE
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                    vModel.getPDFData(requireContext())
+                }
                 true
             } else {
                 false

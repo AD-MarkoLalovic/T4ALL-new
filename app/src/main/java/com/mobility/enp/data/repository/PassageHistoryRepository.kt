@@ -21,6 +21,7 @@ import com.mobility.enp.util.toCroatianPassageResult
 import com.mobility.enp.util.toV2HistoryTagResponseResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.ResponseBody
 
 
 class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, context) {
@@ -271,6 +272,43 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "getIndexData: ${e.message} ${e.cause}")
+                Result.failure(NetworkError.ServerError)
+            }
+        }
+
+        return Result.failure(NetworkError.ServerError)
+    }
+
+    suspend fun getPDFTableData(
+        tagSerial: String,
+        dateStartApi: String,
+        dateEndApi: String,
+        country: String,
+
+        ): Result<ByteArray> {
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+        val userToken = getUserToken()
+
+        userToken?.let {
+            return try {
+                val response = apiService(it).getPDFData(
+                    tagSerial, getLangKey(), dateStartApi, dateEndApi, country
+                )
+
+                if (response.isSuccessful) {
+                    response.body()?.let { data ->
+                        Result.success(data.bytes())
+                    } ?: Result.failure(NetworkError.ServerError)
+                } else {
+                    response.errorBody()?.let { errorBody ->
+                        val errorResponse = parseErrorResponse(response.code(), errorBody)
+                        Result.failure(NetworkError.ApiError(errorResponse))
+                    } ?: Result.failure(NetworkError.ServerError)
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "data: ${e.message} ${e.cause}")
                 Result.failure(NetworkError.ServerError)
             }
         }
