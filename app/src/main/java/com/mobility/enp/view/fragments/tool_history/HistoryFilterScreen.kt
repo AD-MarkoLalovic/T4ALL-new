@@ -346,7 +346,7 @@ class HistoryFilterScreen : Fragment() {
                 is SubmitResult.Success -> {
                     binding.progBar.visibility = View.GONE
 
-                    Log.d(TAG, "api response $data ")
+                    Log.d(TAG, "api response ${data.data.size} ")
                 }
 
                 is SubmitResult.FailureNoConnection -> {

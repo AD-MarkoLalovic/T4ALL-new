@@ -10,6 +10,7 @@ import com.mobility.enp.data.repository.HomeRepository
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.data.repository.UserRepository
+import com.mobility.enp.data.room.PdfDaoHistory
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
@@ -62,6 +63,10 @@ class MyApplication : Application() {
 
     val v2AllowedCountriesDao: ToolHistoryV2AllowedCountryDao by lazy {
         database.historyV2AllowedCountriesDao()
+    }
+
+    val pdfExportDao: PdfDaoHistory by lazy {
+        database.pdfHistoryTableDao()
     }
 
     val franchiseRepository: FranchiserRepository by lazy {

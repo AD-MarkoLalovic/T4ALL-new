@@ -54,7 +54,9 @@ import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
+import com.mobility.enp.data.model.pdf_table.FILTERPDF
 import com.mobility.enp.data.repository.PassageHistoryRepository
+import com.mobility.enp.data.room.PdfDaoHistory
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
@@ -102,7 +104,8 @@ class UserPassViewModel(
     private val historyCroatiaPassageDaoResult: ToolHistoryV2DaoCroatiaResult,
     private val historyV2Dao: ToolHistoryV2Dao,
     private val historyV2DaoResult: ToolHistoryV2DaoResult,
-    private val historyV2AllowedCountriesDao: ToolHistoryV2AllowedCountryDao
+    private val historyV2AllowedCountriesDao: ToolHistoryV2AllowedCountryDao,
+    private val pdfExportDao: PdfDaoHistory
 ) : ViewModel() {
 
     companion object {
@@ -121,6 +124,8 @@ class UserPassViewModel(
                     (this[APPLICATION_KEY] as MyApplication).v2CroatiaDaoResult
                 val historyAllowedCountriesDao =
                     (this[APPLICATION_KEY] as MyApplication).v2AllowedCountriesDao
+                val pdfExportDao =
+                    (this[APPLICATION_KEY] as MyApplication).pdfExportDao
                 UserPassViewModel(
                     repository = myRepository,
                     tagsDao,
@@ -128,7 +133,8 @@ class UserPassViewModel(
                     historyCroatiaPassageDaoResult,
                     historyV2PassageDao,
                     historyV2PassageDaoResult,
-                    historyAllowedCountriesDao
+                    historyAllowedCountriesDao,
+                    pdfExportDao
                 )
             }
         }
@@ -1881,6 +1887,10 @@ class UserPassViewModel(
 
                                 if (result.isSuccess) {
                                     _pdfTable.value = SubmitResult.Success(data)
+
+                                    pdfExportDao.deleteData()
+                                    pdfExportDao.upsertData(FILTERPDF(0, "my_pdf", data))
+
                                 } else {
                                     when (val error = result.exceptionOrNull()) {
                                         is NetworkError.ServerError -> {
