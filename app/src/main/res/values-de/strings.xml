@@ -411,4 +411,6 @@
     <string name="buy_tag_online_title">TAG ONLINE KAUFEN</string>
     <string name="tag_purchase_online_description">Den Tag für die elektronische Mauterhebung können Sie jetzt ganz einfach online kaufen.</string>
     <string name="buy_tag">Tag online</string>
+    <string name="export_pdf">PDF exportieren</string>
+    <string name="export_csv">CSV exportieren</string>
 </resources>

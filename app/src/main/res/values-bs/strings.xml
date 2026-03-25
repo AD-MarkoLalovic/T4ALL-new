@@ -292,6 +292,8 @@
     <string name="pdf_invoices">PDF Računi</string>
     <string name="listing_of_passages">Listing prolazaka</string>
     <string name="export">Izvoz</string>
+    <string name="export_pdf">Izvoz PDF-a</string>
+    <string name="export_csv">Izvoz CSV-a</string>
     <string name="csv_saved">CSV spremljen u dokumentima</string>
     <string name="bill_number">Broj računa</string>
     <string name="time_of_passage">Vrijeme prolaza</string>

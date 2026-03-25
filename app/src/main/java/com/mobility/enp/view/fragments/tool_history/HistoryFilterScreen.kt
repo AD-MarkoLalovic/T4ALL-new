@@ -7,9 +7,12 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.view.ContextThemeWrapper
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -158,10 +161,7 @@ class HistoryFilterScreen : Fragment() {
         }
 
         binding.exportBlock.setOnClickListener {
-            binding.progBar.visibility = View.VISIBLE
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                vModel.getCsvData(requireContext())
-            }
+            setDropdownMenu(it)
         }
     }
 
@@ -488,6 +488,48 @@ class HistoryFilterScreen : Fragment() {
                 startActivity(intent)
             }
         }
+    }
+
+    private fun setDropdownMenu(view: View) {
+        binding.exportBlock.backgroundTintList = ColorStateList.valueOf(
+            ContextCompat.getColor(
+                binding.root.context,
+                R.color.popup_menu
+            )
+        )
+
+        val context = ContextThemeWrapper(view.context, R.style.CustomPopupMenuStyle)
+        val popupMenu = PopupMenu(context, view, Gravity.END, 0, 0)
+        popupMenu.menuInflater.inflate(R.menu.fitler_menu, popupMenu.menu)
+        popupMenu.setForceShowIcon(true)
+
+        popupMenu.setOnDismissListener {
+            binding.exportBlock.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(
+                    binding.root.context,
+                    R.color.transparent
+                )
+            )
+        }
+
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            val isCSV = menuItem.itemId == R.id.csvDownload
+            val isPdf = menuItem.itemId == R.id.pdfDownload
+
+            if (isCSV) {
+                binding.progBar.visibility = View.VISIBLE
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                    vModel.getCsvData(requireContext())
+                }
+                true
+            } else if (isPdf) {
+                true
+            } else {
+                false
+            }
+        }
+
+        popupMenu.show()
     }
 
     interface UserPermission {
