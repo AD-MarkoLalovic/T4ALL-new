@@ -54,7 +54,7 @@ import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
-import com.mobility.enp.data.model.pdf_table.FILTERPDF
+import com.mobility.enp.data.model.pdf_table.FilterPdf
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.room.PdfDaoHistory
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
@@ -1930,7 +1930,7 @@ class UserPassViewModel(
                                     _pdfTable.value = SubmitResult.Success(data)
 
                                     pdfExportDao.deleteData()
-                                    pdfExportDao.upsertData(FILTERPDF(0, "my_pdf", data))
+                                    pdfExportDao.upsertData(FilterPdf(0, "my_pdf", data))
 
                                 } else {
                                     when (val error = result.exceptionOrNull()) {

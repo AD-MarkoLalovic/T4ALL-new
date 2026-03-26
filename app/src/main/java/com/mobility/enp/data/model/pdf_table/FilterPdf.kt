@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "pdf_table_history")
-data class FILTERPDF(
+data class FilterPdf(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val name: String,
