@@ -28,12 +28,14 @@ import com.mobility.enp.data.model.home.entity.InvoiceHomeTotalCurrencyEntity
 import com.mobility.enp.data.model.home.entity.TollHistoryHomeEntity
 import com.mobility.enp.data.model.notification.NotificationModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
+import com.mobility.enp.data.model.pdf_table.FilterPdf
 import com.mobility.enp.data.model.pdf_table.PdfTable
 import com.mobility.enp.data.room.CsvDao
 import com.mobility.enp.data.room.LastUser
 import com.mobility.enp.data.room.LastUserDao
 import com.mobility.enp.data.room.LoginDao
 import com.mobility.enp.data.room.PdfDao
+import com.mobility.enp.data.room.PdfDaoHistory
 import com.mobility.enp.data.room.api_related_daos.BankDao
 import com.mobility.enp.data.room.api_related_daos.BasicInfoDao
 import com.mobility.enp.data.room.api_related_daos.FcmTokenDao
@@ -57,8 +59,8 @@ import com.mobility.enp.data.room.notification.NotificationDao
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class, HomeEntity::class, V2HistoryTagResponse::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class,
         HomeCardsEntity::class, V2HistoryTagResponseCroatia::class, V2AllowedCountries::class,
-        V2HistoryTagResponseResult::class, V2HistoryTagResponseCroatiaResult::class],
-    version = 261,
+        V2HistoryTagResponseResult::class, V2HistoryTagResponseCroatiaResult::class, FilterPdf::class],
+    version = 262,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)
@@ -85,6 +87,7 @@ abstract class DRoom : RoomDatabase() {
     abstract fun historyPassageDaoV2Croatia(): ToolHistoryV2DaoCroatia
     abstract fun historyPassageDaoV2CroatiaResult(): ToolHistoryV2DaoCroatiaResult
     abstract fun historyV2AllowedCountriesDao(): ToolHistoryV2AllowedCountryDao
+    abstract fun pdfHistoryTableDao(): PdfDaoHistory
 
     companion object {
         private var instance: DRoom? = null

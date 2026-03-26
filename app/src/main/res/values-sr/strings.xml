@@ -401,4 +401,6 @@
     <string name="buy_tag_online_title">KUPI TAG ONLINE</string>
     <string name="tag_purchase_online_description">Tag za elektronsku naplatu putarine sada možete jednostavno kupiti i online.</string>
     <string name="buy_tag">Kupi Tag</string>
+    <string name="export_pdf">Izvoz PDF-a</string>
+    <string name="export_csv">Izvoz CSV-a</string>
 </resources>

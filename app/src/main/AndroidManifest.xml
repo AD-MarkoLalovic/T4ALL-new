@@ -30,6 +30,9 @@
         android:theme="@style/Base.Theme.OpenBalkanETC"
         tools:targetApi="31">
         <activity
+            android:name=".view.PdfHistoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.CsvActivity"
             android:exported="false" />
         <activity

@@ -63,7 +63,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.nullData()
-        viewModel.setCsvState()
+        viewModel.nullFlowState()
 
         runInternetConnectionCheck()
 
