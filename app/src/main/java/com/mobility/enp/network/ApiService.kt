@@ -31,6 +31,7 @@ import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -291,6 +292,15 @@ interface ApiService {
         @Query(value = "date_to") dateTo: String,
         @Query(value = "country") country: String
     ): Response<CsvModel>
+
+    @GET("/api/v1/history/export/pdf")
+    suspend fun getPDFData(
+        @Query(value = "serial_number") serialNumber: String,
+        @Query(value = "locale") locale: String,
+        @Query(value = "date_from") dateFrom: String,
+        @Query(value = "date_to") dateTo: String,
+        @Query(value = "country") country: String
+    ): Response<ResponseBody>
 
     @GET("/api/v1/banks")
     suspend fun getBanks(): Response<BanksResponse>

@@ -401,4 +401,6 @@
     <string name="buy_tag_online_title">TAG ONLINE SATIN AL</string>
     <string name="tag_purchase_online_description">Elektronik otoyol ücret ödeme etiketi artık kolayca online satın alınabilir.</string>
     <string name="buy_tag">Tag satın al</string>
+    <string name="export_pdf">PDF dışa aktar</string>
+    <string name="export_csv">Εξαγωγή CSV</string>
 </resources>

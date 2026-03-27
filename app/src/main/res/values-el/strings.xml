@@ -390,4 +390,6 @@
     <string name="buy_tag_online_title">ΑΓΟΡΑΣΤΕ TAG ONLINE</string>
     <string name="tag_purchase_online_description">Το Tag για ηλεκτρονική πληρωμή διοδίων μπορείτε πλέον εύκολα να το αγοράσετε και online.</string>
     <string name="buy_tag">Αγοράστε Tag</string>
+    <string name="export_pdf">Εξαγωγή PDF</string>
+    <string name="export_csv">Εξαγωγή CSV</string>
 </resources>
