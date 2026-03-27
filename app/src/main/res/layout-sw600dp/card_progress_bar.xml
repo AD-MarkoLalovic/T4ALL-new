@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingEnd="@dimen/dimens_8dp">
+    android:paddingEnd="@dimen/dimens_12dp">
 
     <ImageView
         android:id="@+id/dot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dimens_9dp"
+        android:layout_height="@dimen/dimens_9dp"
         android:background="@drawable/dot_unchecked"
         android:contentDescription="@null" />
 </RelativeLayout>
