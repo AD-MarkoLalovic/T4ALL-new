@@ -7,9 +7,12 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.view.ContextThemeWrapper
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -158,10 +161,7 @@ class HistoryFilterScreen : Fragment() {
         }
 
         binding.exportBlock.setOnClickListener {
-            binding.progBar.visibility = View.VISIBLE
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                vModel.getCsvData(requireContext())
-            }
+            setDropdownMenu(it)
         }
     }
 
@@ -287,18 +287,18 @@ class HistoryFilterScreen : Fragment() {
                             ) == PackageManager.PERMISSION_GRANTED
                         ) {
                             vModel.saveBase64ToCSV(csvContent, nameExtra, requireContext())
-                            vModel.setCsvState()
+                            vModel.nullFlowState()
                         } else {
                             showNotificationPermissionRationale(object : UserPermission {
                                 override fun onPermissionGranted() {
                                     vModel.saveBase64ToCSV(
                                         csvContent, nameExtra, requireContext()
                                     )
-                                    vModel.setCsvState()
+                                    vModel.nullFlowState()
                                 }
 
                                 override fun onPermissionDenied() {
-                                    vModel.setCsvState()
+                                    vModel.nullFlowState()
                                 }
                             })
                         }
@@ -318,13 +318,13 @@ class HistoryFilterScreen : Fragment() {
                 is SubmitResult.FailureServerError -> {
                     binding.progBar.visibility = View.GONE
                     showError(getString(R.string.server_error_msg))
-                    vModel.setCsvState()
+                    vModel.nullFlowState()
                 }
 
                 is SubmitResult.FailureApiError -> {
                     binding.progBar.visibility = View.GONE
                     showError(csvTable.errorMessage)
-                    vModel.setCsvState()
+                    vModel.nullFlowState()
                 }
 
                 is SubmitResult.InvalidApiToken -> {
@@ -336,7 +336,59 @@ class HistoryFilterScreen : Fragment() {
             }
         }
 
+        collectLatestLifecycleFlow(vModel.pdfTable) { data ->
+            when (data) {
+                is SubmitResult.Loading -> {
+                    binding.progBar.visibility = View.VISIBLE
+                }
 
+                is SubmitResult.Success -> {
+                    binding.progBar.visibility = View.GONE
+
+                    if (ContextCompat.checkSelfPermission(
+                            requireContext(), Manifest.permission.POST_NOTIFICATIONS
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        vModel.postNotificationPDF()
+                        vModel.nullFlowState()
+                    } else {
+                        showNotificationPermissionRationale(object : UserPermission {
+                            override fun onPermissionGranted() {
+                                vModel.postNotificationPDF()
+                                vModel.nullFlowState()
+                            }
+
+                            override fun onPermissionDenied() {
+                                vModel.nullFlowState()
+                            }
+                        })
+                    }
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                    vModel.nullFlowState()
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.progBar.visibility = View.GONE
+                    showError(data.errorMessage)
+                    vModel.nullFlowState()
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(data.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                is SubmitResult.Empty -> {}
+            }
+        }
     }
 
     private fun showNotificationPermissionRationale(userPermission: UserPermission) {
@@ -424,7 +476,7 @@ class HistoryFilterScreen : Fragment() {
 
     private fun showError(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-        vModel.setCsvState()
+        vModel.nullFlowState()
     }
 
     private fun updateCountriesAdapter(countryList: List<String>) {
@@ -488,6 +540,52 @@ class HistoryFilterScreen : Fragment() {
                 startActivity(intent)
             }
         }
+    }
+
+    private fun setDropdownMenu(view: View) {
+        binding.exportBlock.backgroundTintList = ColorStateList.valueOf(
+            ContextCompat.getColor(
+                binding.root.context,
+                R.color.popup_menu
+            )
+        )
+
+        val context = ContextThemeWrapper(view.context, R.style.CustomPopupMenuStyle)
+        val popupMenu = PopupMenu(context, view, Gravity.END, 0, 0)
+        popupMenu.menuInflater.inflate(R.menu.fitler_menu, popupMenu.menu)
+        popupMenu.setForceShowIcon(true)
+
+        popupMenu.setOnDismissListener {
+            binding.exportBlock.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(
+                    binding.root.context,
+                    R.color.transparent
+                )
+            )
+        }
+
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            val isCSV = menuItem.itemId == R.id.csvDownload
+            val isPdf = menuItem.itemId == R.id.pdfDownload
+
+            if (isCSV) {
+                binding.progBar.visibility = View.VISIBLE
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                    vModel.getCsvData(requireContext())
+                }
+                true
+            } else if (isPdf) {
+                binding.progBar.visibility = View.VISIBLE
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                    vModel.getPDFData(requireContext())
+                }
+                true
+            } else {
+                false
+            }
+        }
+
+        popupMenu.show()
     }
 
     interface UserPermission {
