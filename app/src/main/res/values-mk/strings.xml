@@ -230,7 +230,7 @@
     <string name="offline_using_stored_data">Моментално не сте поврзани на интернет. Се прикажуваат зачуваните податоци.</string>
     <string name="multiple_payment_cards_for_country">Можете да користите повеќе различни платежни картички за една земја.</string>
     <string name="tag_device_payment_method_north_macedonia">Ако сакате да го користите вашиот уред TAG на патиштата во Северној Македонији, ве молиме додадете валидна платежна картичка</string>
-    <string name="tag_device_payment_method_serbia">Ако сакате да го користите вашиот уред TAG на патиштата во Србији, ве молиме додадете валидна платежна картичка</string>
+    <string name="tag_device_payment_method_serbia">Ако сакате да го користите вашиот уред TAG на патиштата во Србији, ве молиме додадете валидна платежна картичка.</string>
     <string name="tag_device_payment_method_montenegro">Ако сакате да го користите вашиот уред TAG на патиштата во Црна Гора, ве молиме додадете валидна платежна картичка</string>
     <string name="text_no_refund_tags">Немате тагови за кои можете да поднесете барање за враќање на средствата.</string>
     <string name="text_no_my_tags">Моментално немате додадено тагови. Ве молиме додадете го вашиот таг.</string>

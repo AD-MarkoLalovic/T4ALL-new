@@ -1,18 +1,10 @@
 <resources>
     <string name="app_name" translatable="false">Toll4All</string>
     <string name="marko_lalovic" translatable="false">Марко ЛаловиЋ</string>
-    <string name="lorem_ipsum_placeholder" translatable="false">Lorem ipsum dolor sit amet,
-        consectetur adipiscing elit. Maecenas viverra lacinia finibus. Pellentesque habitant
-        morbi tristique senectus et netus et malesuada fames ac turpis egestas.</string>
     <string name="lorem" translatable="false">Adding a card is a mandatory part of account
         creation. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas viverra lacinia
         finibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</string>
     <string name="cvc" translatable="false">CVC</string>
-    <string name="lorem_1" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Maecenas viverra lacinia finibus. Pellentesque habitant morbi tristique senectus et netus et
-        malesuada fames ac turpis egestas.</string>
-    <string name="lorem_2" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Maecenas viverra lacinia finibus. </string>
 
     <string name="ime" translatable="true">Име</string>
     <string name="surname" translatable="true">Презиме</string>
@@ -254,7 +246,7 @@
     <string name="multiple_payment_cards_for_country">Можете користити више различитих платних картица за једну земљу.</string>
     <string name="tag_device_payment_method_north_macedonia">Уколико желите да Ваш ТАГ уређај користите на путевима у Северној Македонији, молимо Вас да додате валидну платну картицу.</string>
     <string name="tag_device_payment_method_serbia">Уколико желите да Ваш ТАГ уређај користите на путевима у Србији, молимо вас да додате важећу платну картицу.</string>
-    <string name="tag_device_payment_method_montenegro">Уколико желите да Ваш ТАГ уређај користите на путевима у Црној Гори молимо Вас да додате валидну платну картицу</string>
+    <string name="tag_device_payment_method_montenegro">Уколико желите да Ваш ТАГ уређај користите на путевима у Црној Гори молимо Вас да додате валидну платну картицу.</string>
     <string name="text_no_refund_tags">Немате тагове за које можете да поднесете захтев за повраћај средстава.</string>
     <string name="text_no_my_tags">Тренутно немате додатих тагова. Молимо ваc додајте таг.</string>
     <string name="no_tool_history">Ваши проласци ће бити приказани овде.</string>

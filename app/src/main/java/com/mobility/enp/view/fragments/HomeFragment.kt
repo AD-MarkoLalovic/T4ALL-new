@@ -16,6 +16,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
@@ -49,6 +50,8 @@ class HomeFragment : Fragment() {
     private lateinit var homePassageAdapter: HomePassageAdapter
     private lateinit var homePromotionsAdapter: HomePromotionsAdapter
     private lateinit var adapterProgress: HomeProgressAdapter
+
+    private val promotionsSnapHelper = PagerSnapHelper()
 
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
@@ -104,13 +107,19 @@ class HomeFragment : Fragment() {
 
                     when (card.code) {
                         "facebook" -> {
-                            openFacebookPage()
+                            if (Util.isNetworkAvailable(requireContext())) {
+                                openFacebookPage()
+                            } else {
+                                showNoInternetDialog()
+                            }
                         }
-
                         "instagram" -> {
-                            openInstagramProfile()
+                            if (Util.isNetworkAvailable(requireContext())) {
+                                openInstagramProfile()
+                            } else {
+                                showNoInternetDialog()
+                            }
                         }
-
                         "tag" -> {
                             if (Util.isNetworkAvailable(requireContext())) {
                                 viewModel.loadTagOrderUrl()
@@ -142,6 +151,7 @@ class HomeFragment : Fragment() {
                                 adapterProgress.checkedPosition
                             }
                         adapterProgress.setCurrentDot(newCheckedPosition)
+                        binding.cyclerProgress.smoothScrollToPosition(newCheckedPosition)
                     }
                 }
 
@@ -155,20 +165,19 @@ class HomeFragment : Fragment() {
         binding.cyclerProgress.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
+        promotionsSnapHelper.attachToRecyclerView(binding.cyclerPromotions)
+
         binding.cyclerPromotions.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val currentCompletelyVisiblePosition =
-                    (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
-                // Pozivam setCurrentDot samo kada se pozicija stvarno promeni
-                if (currentCompletelyVisiblePosition != RecyclerView.NO_POSITION &&
-                    currentCompletelyVisiblePosition != adapterProgress.checkedPosition
-                ) {
-                    adapterProgress.setCurrentDot(currentCompletelyVisiblePosition)
-                }
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState != RecyclerView.SCROLL_STATE_IDLE) return
+                val lm = recyclerView.layoutManager as? LinearLayoutManager ?: return
+                val snapView = promotionsSnapHelper.findSnapView(lm) ?: return
+                val pos = lm.getPosition(snapView)
+                if (pos == RecyclerView.NO_POSITION || pos == adapterProgress.checkedPosition) return
+                adapterProgress.setCurrentDot(pos)
+                binding.cyclerProgress.smoothScrollToPosition(pos)
             }
         })
-
     }
 
     private fun setupObservers() {
