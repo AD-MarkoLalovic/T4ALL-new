@@ -28,7 +28,6 @@
                 android:id="@+id/firstConstraintLayoutHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dimens_16dp"
                 android:layout_marginTop="@dimen/dimens_4dp">
 
                 <androidx.cardview.widget.CardView
@@ -41,6 +40,7 @@
                     android:visibility="gone"
                     app:cardCornerRadius="@dimen/dimens_26dp"
                     app:cardElevation="@dimen/dimens_4dp"
+                    android:layout_marginHorizontal="@dimen/dimens_16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -115,6 +115,9 @@
                         android:id="@+id/cyclerPromotions"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:clipToPadding="false"
                         android:orientation="horizontal"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:listitem="@layout/card_flags_promotion_home" />
@@ -124,6 +127,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/dimens_8dp"
                         android:importantForAccessibility="no"
                         android:orientation="horizontal"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -136,6 +140,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/my_invoices"
+                        android:layout_marginTop="@dimen/dimens_22dp"
+                        android:layout_marginStart="@dimen/dimens_16dp"
                         android:textColor="@color/primary_light_darkest" />
 
                     <TextView
@@ -144,13 +150,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimens_10dp"
+                        android:layout_marginHorizontal="@dimen/dimens_16dp"
                         android:text="@string/no_invoices"
                         android:visibility="gone" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/invoicesContainerHome"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/dimens_16dp">
 
                         <TextView
                             android:id="@+id/txtInvoiceMonth"
@@ -196,6 +204,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimens_34dp"
+                        android:layout_marginStart="@dimen/dimens_16dp"
                         android:text="@string/tool_history"
                         android:textColor="@color/primary_light_darkest" />
 
@@ -204,6 +213,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimens_10dp"
+                        android:layout_marginHorizontal="@dimen/dimens_16dp"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:itemCount="5"
                         tools:listitem="@layout/item_relation_home" />
@@ -215,6 +225,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimens_10dp"
                         android:layout_marginBottom="@dimen/dimens_10dp"
+                        android:layout_marginHorizontal="@dimen/dimens_16dp"
                         android:text="@string/no_tool_history"
                         android:visibility="gone" />
                 </LinearLayout>

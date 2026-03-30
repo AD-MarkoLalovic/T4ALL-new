@@ -10,96 +10,110 @@
             type="com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity" />
     </data>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/dimens_5dp"
-        android:layout_marginEnd="@dimen/dimens_15dp">
+        android:layout_marginEnd="@dimen/dimens_16dp">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="@dimen/dimens_400dp"
-            android:layout_height="@dimen/dimens_200dp"
+            android:layout_width="0dp"
+            android:layout_height="245dp"
             android:elevation="10dp"
-            app:cardCornerRadius="@dimen/dimens_25dp">
+            app:cardCornerRadius="36dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/backgroundImage"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                tools:src="@drawable/flag_home_macedonian" />
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/cardTitle"
-                style="@style/H3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dimens_16dp"
-                android:layout_marginTop="@dimen/dimens_10dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:text="@{data.title}"
-                android:textColor="@color/white"
-                tools:text="North Macedonian passage" />
+                <ImageView
+                    android:id="@+id/backgroundImage"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/flag_home_macedonian" />
 
-            <TextView
-                android:id="@+id/cardSubtitle"
-                style="@style/CaptionRegularTablet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dimens_16dp"
-                android:layout_marginTop="@dimen/dimens_50dp"
-                android:ellipsize="end"
-                android:lineSpacingExtra="@dimen/dimens_4sp"
-                android:maxLines="2"
-                android:scrollHorizontally="true"
-                android:text="@{data.description}"
-                android:textColor="@color/white"
-                tools:text="@string/lorem" />
+                <TextView
+                    android:id="@+id/cardTitle"
+                    style="@style/H3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimens_16dp"
+                    android:layout_marginTop="@dimen/dimens_5dp"
+                    android:layout_marginEnd="@dimen/dimens_16dp"
+                    android:text="@{data.title}"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/closeButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/closeButton"
+                    tools:text="North Macedonian passage" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom">
+                <TextView
+                    android:id="@+id/cardSubtitle"
+                    style="@style/Paragraph"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/dimens_16dp"
+                    android:layout_marginTop="@dimen/dimens_12dp"
+                    android:layout_marginEnd="@dimen/dimens_16dp"
+                    android:layout_marginBottom="12dp"
+                    android:lineSpacingExtra="1dp"
+                    android:text="@{data.description}"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toTopOf="@+id/btnObjection"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardTitle"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:text="@string/tag_device_payment_method_north_macedonia" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnObjection"
                     style="@style/MyButtonStyleSmall"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimens_45dp"
-                    android:layout_gravity="bottom"
-                    android:layout_marginStart="@dimen/dimens_20dp"
-                    android:layout_marginBottom="@dimen/dimens_10dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="32dp"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/dimens_0dp"
                     android:text="@string/add_card_home"
-                    android:textSize="@dimen/dimens_10sp" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <ImageView
                     android:id="@+id/btnSocialNetworks"
-                    android:layout_width="@dimen/dimens_50dp"
-                    android:layout_height="45dp"
-                    android:layout_marginBottom="@dimen/dimens_10dp"
-                    android:layout_toEndOf="@id/btnObjection"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/arrow_background_social_networks"
                     android:contentDescription="@string/facebook"
-                    android:textSize="@dimen/dimens_10sp"
                     android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/btnObjection"
+                    app:layout_constraintStart_toEndOf="@id/btnObjection"
+                    app:layout_constraintTop_toTopOf="@+id/btnObjection"
                     tools:visibility="visible" />
-            </RelativeLayout>
 
+                <ImageView
+                    android:id="@+id/closeButton"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_marginTop="@dimen/dimens_16dp"
+                    android:layout_marginEnd="@dimen/dimens_16dp"
+                    android:contentDescription="@string/button_close"
+                    android:elevation="@dimen/dimens_10dp"
+                    android:src="@drawable/close_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/closeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_margin="@dimen/dimens_10dp"
-                android:contentDescription="@string/button_close"
-                android:elevation="@dimen/dimens_10dp"
-                android:src="@drawable/close_button" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
