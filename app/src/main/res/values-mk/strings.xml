@@ -399,5 +399,7 @@
     <string name="buy_tag_online_title">КУПИ TAG ОНЛАЈН</string>
     <string name="tag_purchase_online_description">Таг за електронска наплата на патарини сега можете едноставно да го купите и онлајн.</string>
     <string name="buy_tag">Купи Tag</string>
+    <string name="export_pdf">Извоз на PDF</string>
+    <string name="export_csv">Извоз на CSV</string>
 
 </resources>

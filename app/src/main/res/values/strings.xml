@@ -466,4 +466,6 @@
     <string name="buy_tag_online_title">КУПИ ТАГ ОНЛАЈН</string>
     <string name="tag_purchase_online_description">Таг за електронску наплату путарине сада можете једноставно купити и онлајн.</string>
     <string name="buy_tag">Купи Таг</string>
+    <string name="export_pdf">Извоз PDF-а</string>
+    <string name="export_csv">Извоз CSV-а</string>
 </resources>
