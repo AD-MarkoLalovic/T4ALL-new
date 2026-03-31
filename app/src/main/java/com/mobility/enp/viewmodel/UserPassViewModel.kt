@@ -1655,11 +1655,6 @@ class UserPassViewModel(
     val data: LiveData<IndexData> get() = _data
 
     var selectedTags: ArrayList<Tag> = ArrayList()
-    var tagForExport: Tag? = null
-
-    suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
-        repository.upsertBaseTagData(indexData)
-    }
 
     fun showDatePicker(fromDate: Boolean, context: Context, franchiseModel: FranchiseModel?) {
         viewModelScope.launch {
@@ -1792,6 +1787,7 @@ class UserPassViewModel(
 
     fun getCsvData(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
+            _csvTable.value = SubmitResult.Empty
             if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
                 if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
                     Toast.makeText(
@@ -1811,13 +1807,12 @@ class UserPassViewModel(
 
                         Log.d(TAG, "startDate: $dateStartApi endDate $dateEndApi")
 
-                        if (selectedTags.isNotEmpty() && selectedTags.size == 1 || allTagsSelected) {
+                        if (selectedTags.isNotEmpty() && _userSelectedTags.value.size == 1 || allTagsSelected) {
 
                             val tagSerial = if (allTagsSelected) {
                                 ""
                             } else {
-                                tagForExport?.serialNumber
-                                    ?: ""  // if one item last selected tag is added
+                                _userSelectedTags.value.first().serialNumber ?: ""
                             }
 
                             val result = repository.getCsvTableData(
@@ -1898,6 +1893,8 @@ class UserPassViewModel(
 
     fun getPDFData(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
+            _pdfTable.value = SubmitResult.Empty
+            pdfExportDao.deleteData()
             if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
                 if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
                     Toast.makeText(
@@ -1917,13 +1914,12 @@ class UserPassViewModel(
 
                         Log.d(TAG, "startDate: $dateStartApi endDate $dateEndApi")
 
-                        if (selectedTags.isNotEmpty() && selectedTags.size == 1 || allTagsSelected) {
+                        if (selectedTags.isNotEmpty() && _userSelectedTags.value.size == 1 || allTagsSelected) {
 
                             val tagSerial = if (allTagsSelected) {
                                 ""
                             } else {
-                                tagForExport?.serialNumber
-                                    ?: ""  // if one item last selected tag is added
+                                _userSelectedTags.value.first().serialNumber ?: ""
                             }
 
                             val result = repository.getPDFTableData(
@@ -1934,11 +1930,8 @@ class UserPassViewModel(
                             body?.let { data ->
 
                                 if (result.isSuccess) {
-                                    _pdfTable.value = SubmitResult.Success(data)
-
-                                    pdfExportDao.deleteData()
                                     pdfExportDao.upsertData(FilterPdf(0, "my_pdf", data))
-
+                                    _pdfTable.value = SubmitResult.Success(data)
                                 } else {
                                     when (val error = result.exceptionOrNull()) {
                                         is NetworkError.ServerError -> {

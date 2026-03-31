@@ -293,13 +293,13 @@ interface ApiService {
         @Query(value = "country") country: String
     ): Response<CsvModel>
 
-    @GET("/api/v1/history/export/pdf")
-    suspend fun getPDFData(
-        @Query(value = "serial_number") serialNumber: String,
-        @Query(value = "locale") locale: String,
-        @Query(value = "date_from") dateFrom: String,
-        @Query(value = "date_to") dateTo: String,
-        @Query(value = "country") country: String
+    @GET("api/v1/history/export/pdf")
+    suspend fun downloadPdf(
+        @Query("filter[serial_number]") serial: String,
+        @Query("filter[date_from]") dateFrom: String,
+        @Query("filter[date_to]") dateTo: String,
+        @Query("filter[country]") country: String,
+        @Query("locale") locale: String
     ): Response<ResponseBody>
 
     @GET("/api/v1/banks")
