@@ -12,6 +12,7 @@ import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.toEntityList
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Odgovornost: Upravljanje podacima i funkcijama za početni ekran aplikacije.
@@ -163,6 +164,10 @@ class HomeRepository(
 
     suspend fun getUserForPromotion(): String {
         return database.lastUserDao().getLastUser()?.email ?: ""
+    }
+
+    fun observerHomeCard(user: String): Flow<List<HomeCardsEntity>> {
+        return database.homeCardsDao().observeHomeCardsList(user)
     }
 
     suspend fun updateHomeCard(card: HomeCardsEntity) {
