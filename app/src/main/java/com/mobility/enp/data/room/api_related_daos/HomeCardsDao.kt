@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HomeCardsDao {
@@ -19,6 +20,9 @@ interface HomeCardsDao {
 
     @Query("SELECT * FROM home_cards WHERE email = :userEmail")
     suspend fun getHomeCardsList(userEmail: String): List<HomeCardsEntity>
+
+    @Query("SELECT * FROM home_cards WHERE email = :userEmail")
+    fun observeHomeCardsList(userEmail: String): Flow<List<HomeCardsEntity>>
 
     @Query("DELETE FROM home_cards WHERE email = :email AND code = :code")
     suspend fun cardAdded(email: String, code: String)

@@ -138,22 +138,6 @@ class HomeFragment : Fragment() {
             onDeleteClicked = { card ->
                 binding.progBar.visibility = View.VISIBLE
                 viewModel.updateDeleteHomeCard(card)
-                val newList =
-                    homePromotionsAdapter.currentList.toMutableList().apply { remove(card) }
-                homePromotionsAdapter.submitList(newList)
-
-                adapterProgress.submitList(newList.indices.toList()) {
-                    if (newList.isNotEmpty()) {
-                        val newCheckedPosition =
-                            if (adapterProgress.checkedPosition >= newList.size) {
-                                newList.lastIndex
-                            } else {
-                                adapterProgress.checkedPosition
-                            }
-                        adapterProgress.setCurrentDot(newCheckedPosition)
-                        binding.cyclerProgress.smoothScrollToPosition(newCheckedPosition)
-                    }
-                }
 
                 binding.progBar.visibility = View.GONE
             }, franchiseViewModel.franchiseModel.value
