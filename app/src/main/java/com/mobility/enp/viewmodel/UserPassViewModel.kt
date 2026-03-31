@@ -1648,11 +1648,6 @@ class UserPassViewModel(
     val data: LiveData<IndexData> get() = _data
 
     var selectedTags: ArrayList<Tag> = ArrayList()
-    var tagForExport: Tag? = null
-
-    suspend fun insertRoomToolHistoryIndexData(indexData: IndexData) {
-        repository.upsertBaseTagData(indexData)
-    }
 
     fun showDatePicker(fromDate: Boolean, context: Context, franchiseModel: FranchiseModel?) {
         viewModelScope.launch {
@@ -1804,13 +1799,12 @@ class UserPassViewModel(
 
                         Log.d(TAG, "startDate: $dateStartApi endDate $dateEndApi")
 
-                        if (selectedTags.isNotEmpty() && selectedTags.size == 1 || allTagsSelected) {
+                        if (selectedTags.isNotEmpty() && _userSelectedTags.value.size == 1 || allTagsSelected) {
 
                             val tagSerial = if (allTagsSelected) {
                                 ""
                             } else {
-                                tagForExport?.serialNumber
-                                    ?: ""  // if one item last selected tag is added
+                                _userSelectedTags.value.first().serialNumber ?: ""
                             }
 
                             val result = repository.getCsvTableData(
@@ -1910,13 +1904,12 @@ class UserPassViewModel(
 
                         Log.d(TAG, "startDate: $dateStartApi endDate $dateEndApi")
 
-                        if (selectedTags.isNotEmpty() && selectedTags.size == 1 || allTagsSelected) {
+                        if (selectedTags.isNotEmpty() && _userSelectedTags.value.size == 1 || allTagsSelected) {
 
                             val tagSerial = if (allTagsSelected) {
                                 ""
                             } else {
-                                tagForExport?.serialNumber
-                                    ?: ""  // if one item last selected tag is added
+                                _userSelectedTags.value.first().serialNumber ?: ""
                             }
 
                             val result = repository.getPDFTableData(
