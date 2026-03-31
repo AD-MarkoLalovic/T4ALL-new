@@ -1780,6 +1780,7 @@ class UserPassViewModel(
 
     fun getCsvData(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
+            _csvTable.value = SubmitResult.Empty
             if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
                 if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
                     Toast.makeText(
@@ -1885,6 +1886,8 @@ class UserPassViewModel(
 
     fun getPDFData(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
+            _pdfTable.value = SubmitResult.Empty
+            pdfExportDao.deleteData()
             if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
                 if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
                     Toast.makeText(
@@ -1920,11 +1923,8 @@ class UserPassViewModel(
                             body?.let { data ->
 
                                 if (result.isSuccess) {
-                                    _pdfTable.value = SubmitResult.Success(data)
-
-                                    pdfExportDao.deleteData()
                                     pdfExportDao.upsertData(FilterPdf(0, "my_pdf", data))
-
+                                    _pdfTable.value = SubmitResult.Success(data)
                                 } else {
                                     when (val error = result.exceptionOrNull()) {
                                         is NetworkError.ServerError -> {

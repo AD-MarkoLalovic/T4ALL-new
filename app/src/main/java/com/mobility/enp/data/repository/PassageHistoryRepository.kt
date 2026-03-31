@@ -299,8 +299,8 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
 
         userToken?.let {
             return try {
-                val response = apiService(it).getPDFData(
-                    tagSerial, getLangKey(), dateStartApi, dateEndApi, country
+                val response = apiService(it).downloadPdf(
+                    tagSerial, dateStartApi, dateEndApi, country, getLangKey()
                 )
 
                 if (response.isSuccessful) {
