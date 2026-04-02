@@ -93,6 +93,28 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         database.historyV2AllowedCountriesDao().clear()
     }
 
+    fun getV2PassagesBySerialAndCountryCodeResult(
+        serialNumber: String,
+        countryCode: String
+    ): Flow<List<V2HistoryTagResponseResult?>> {
+        return database.historyV2PassageDaoResult().observePassageDataBySerialAndCountryCode(
+            serialNumber,
+            countryCode
+        )
+    }
+
+    fun getV2PassagesBySerialAndCountryCodeLoadResult(
+        serialNumber: String,
+        countryCode: String
+    ): List<V2HistoryTagResponseResult?> {
+        return database.historyV2PassageDaoResult()
+            .observePassageDataBySerialAndCountryCodeLoad(serialNumber, countryCode)
+    }
+
+    suspend fun deleteV2DaoResult() {
+        database.historyV2PassageDaoResult().deleteData()
+    }
+
 
     suspend fun deletePdfExportData() {
         database.pdfHistoryTableDao().deleteData()

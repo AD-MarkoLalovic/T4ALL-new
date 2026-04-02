@@ -134,7 +134,7 @@ class HistorySerialAdapterResult(
                 //adapter that presents the passages
                 lifecycleOwner.lifecycleScope.launch {
                     val initLoad = withContext(Dispatchers.IO) {
-                        viewModel.getV2PassagesBySerialAndCountryCodeLoadResult(
+                        viewModel.getPassageBySerialNumberCode(
                             itemSerialNumber, viewModel.selectedCountry
                         )
                     }
