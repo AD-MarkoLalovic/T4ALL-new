@@ -82,7 +82,7 @@ class HistorySerialAdapter(
             if (viewModel.selectedCountry == binding.root.context.getString(R.string.croatia_hr)) {
                 lifecycleOwner.lifecycleScope.launch() {
                     val initLoad = withContext(Dispatchers.IO) {
-                        viewModel.getCroatiaPassagesBySerialPageLoad(
+                        viewModel.getCPassagesBySerialCountry(
                             itemSerialNumber, binding.root.context.getString(R.string.croatia_hr)
                         )
                     }
@@ -125,7 +125,7 @@ class HistorySerialAdapter(
 
                 lifecycleOwner.lifecycleScope.launch {
                     val initLoad = withContext(Dispatchers.IO) {
-                        viewModel.getV2PassagesBySerialAndCountryCodeLoad(
+                        viewModel.getPassageBySerialCodeCountry(
                             itemSerialNumber, viewModel.selectedCountry
                         )
                     }
