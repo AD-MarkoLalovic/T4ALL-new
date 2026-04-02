@@ -1,4 +1,4 @@
-package com.mobility.enp.data.model.new_toll_history.entity
+package com.mobility.enp.data.model.new_toll_history.local.entity
 
 import androidx.room.Entity
 
@@ -10,4 +10,5 @@ data class SumTagEntity(
     val tagSerialNumber: String,
     val currency: String,
     val total: String,
+    val position: Int
 )

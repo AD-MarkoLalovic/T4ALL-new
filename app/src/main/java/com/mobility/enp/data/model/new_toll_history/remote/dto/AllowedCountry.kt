@@ -1,4 +1,4 @@
-package com.mobility.enp.data.model.new_toll_history.response
+package com.mobility.enp.data.model.new_toll_history.remote.dto
 
 data class AllowedCountry(
     val name: String?,

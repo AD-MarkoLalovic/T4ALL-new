@@ -1,4 +1,4 @@
-package com.mobility.enp.data.model.new_toll_history.entity
+package com.mobility.enp.data.model.new_toll_history.local.entity
 
 data class TollHistoryEntities(
     val countries: List<AllowedCountryEntity>,

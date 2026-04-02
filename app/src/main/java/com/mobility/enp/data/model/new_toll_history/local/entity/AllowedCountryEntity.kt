@@ -1,4 +1,4 @@
-package com.mobility.enp.data.model.new_toll_history.entity
+package com.mobility.enp.data.model.new_toll_history.local.entity
 
 import androidx.room.Entity
 
@@ -8,6 +8,6 @@ import androidx.room.Entity
 )
 data class AllowedCountryEntity(
     val value: String,
-    val name: String?,
+    val name: String,
     val position: Int
 )
