@@ -14,11 +14,6 @@ import com.mobility.enp.data.model.cards.tags_for_croatia.Tag
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.entity.TollHistoryHomeEntity
-import com.mobility.enp.data.model.new_toll_history.entity.AllowedCountryEntity
-import com.mobility.enp.data.model.new_toll_history.entity.SumTagEntity
-import com.mobility.enp.data.model.new_toll_history.entity.TollHistoryEntities
-import com.mobility.enp.data.model.new_toll_history.entity.TollHistoryItemEntity
-import com.mobility.enp.data.model.new_toll_history.response.TollHistoryResponse
 import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 import com.mobility.enp.view.ui_models.home.HomeTollHistoryUI
 import com.mobility.enp.view.ui_models.my_tags.TagStatusUiModel
@@ -235,46 +230,4 @@ fun RegistrationResponse.getRedirectWithToken(): String {
     return "${this.data.redirectUrl}/${this.data.token}"
 }
 
-fun TollHistoryResponse.toEntities(countryFilter: String): TollHistoryEntities {
 
-    val countries = data?.allowedCountries
-        ?.mapIndexedNotNull { index, country ->
-            country?.let {
-                AllowedCountryEntity(
-                    value = it.value.orEmpty(),
-                    name = it.name.orEmpty(),
-                    position = index
-                )
-            }
-        }
-        ?: emptyList()
-
-    val sumTags = data?.sumTags?.filterNotNull()?.map {
-        SumTagEntity(
-            tagSerialNumber = it.tagSerialNumber ?: "",
-            currency = it.currency ?: "",
-            total = it.total ?: ""
-        )
-    } ?: emptyList()
-
-    val items = data?.records?.items?.filterNotNull()?.map { item ->
-        TollHistoryItemEntity(
-            id = item.id ?: 0,
-            tagsSerialNumber = item.tagsSerialNumber ?: "",
-            tollPlaza = item.tollPlaza ?: "",
-            checkInDate = item.checkInDate,
-            checkOutDate = item.checkOutDate,
-            isPaid = item.isPaid ?: false,
-            amountWithOutDiscount = item.amountWithOutDiscount,
-            currency = item.currency,
-            billFinal = item.bill?.billFinal,
-            hasComplaint = item.complaint != null,
-            complaintId = item.complaint?.id,
-            countryCode = countryFilter
-        )
-    } ?: emptyList()
-
-    return TollHistoryEntities(countries, sumTags, items)
-
-
-}
