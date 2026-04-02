@@ -162,4 +162,7 @@ dependencies {
     implementation(libs.moshi.kotlin)       // Kotlin ekstenzije i podrška za Kotlin specifične tipove
     ksp(libs.moshi.kotlin.codegen)          // KSP codegen za automatsko generisanje adaptera bez refleksije
 
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.room.paging)
+
 }
