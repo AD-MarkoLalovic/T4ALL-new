@@ -3,7 +3,7 @@ package com.mobility.enp.data.room.toll_history_dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
-import com.mobility.enp.data.model.new_toll_history.entity.AllowedCountryEntity
+import com.mobility.enp.data.model.new_toll_history.local.entity.AllowedCountryEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

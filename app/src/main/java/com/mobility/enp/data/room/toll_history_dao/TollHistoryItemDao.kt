@@ -1,9 +1,10 @@
 package com.mobility.enp.data.room.toll_history_dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
-import com.mobility.enp.data.model.new_toll_history.entity.TollHistoryItemEntity
+import com.mobility.enp.data.model.new_toll_history.local.entity.TollHistoryItemEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,7 +16,7 @@ interface TollHistoryItemDao {
     @Query("""
         SELECT * FROM new_toll_history_items 
         WHERE tagsSerialNumber = :serial 
-        AND countryCode = :country
+        AND filterCountry = :country
         ORDER BY checkOutDate DESC
     """)
     fun observeBySerialAndCountry(
@@ -25,6 +26,14 @@ interface TollHistoryItemDao {
 
     @Query("DELETE FROM new_toll_history_items")
     suspend fun clear()
+
+    @Query("""
+        SELECT * FROM new_toll_history_items 
+        WHERE tagsSerialNumber = :serial AND filterCountry = :country
+        ORDER BY checkOutDate DESC
+    """)
+    fun pagingSource(serial: String, country: String): PagingSource<Int, TollHistoryItemEntity>
+
 
 
     @Query("""
