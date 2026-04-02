@@ -103,6 +103,27 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         )
     }
 
+    fun getV2PassagesBySerialAndCountryCode(
+        serialNumber: String,
+        countryCode: String
+    ): Flow<List<V2HistoryTagResponse?>> {
+        return database.historyV2PassageDao().observePassageDataBySerialAndCountryCode(
+            serialNumber,
+            countryCode
+        )
+    }
+
+    fun getV2PassagesBySerialAndCountryCodeLoad(
+        serialNumber: String, countryCode: String
+    ): List<V2HistoryTagResponse?> {
+        return database.historyV2PassageDao()
+            .observePassageDataBySerialAndCountryCodeLoad(serialNumber, countryCode)
+    }
+
+    suspend fun deleteV2PassageData() {
+        database.historyV2PassageDao().deleteData()
+    }
+
     fun getV2PassagesBySerialAndCountryCodeLoadResult(
         serialNumber: String,
         countryCode: String

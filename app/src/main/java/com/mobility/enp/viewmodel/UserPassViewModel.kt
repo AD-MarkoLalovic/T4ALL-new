@@ -56,7 +56,6 @@ import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.model.pdf_table.FilterPdf
 import com.mobility.enp.data.repository.PassageHistoryRepository
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatiaResult
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
@@ -100,7 +99,6 @@ class UserPassViewModel(
     private val tagsDao: ToolHistoryV2TagsSerials,
     private val historyCroatiaPassageDao: ToolHistoryV2DaoCroatia,
     private val historyCroatiaPassageDaoResult: ToolHistoryV2DaoCroatiaResult,
-    private val historyV2Dao: ToolHistoryV2Dao,
 ) : ViewModel() {
 
     companion object {
@@ -111,7 +109,6 @@ class UserPassViewModel(
             initializer {
                 val myRepository = (this[APPLICATION_KEY] as MyApplication).passageHistoryRepository
                 val tagsDao = (this[APPLICATION_KEY] as MyApplication).v2TagsDao
-                val historyV2PassageDao = (this[APPLICATION_KEY] as MyApplication).v2HistoryDao
                 val historyCroatiaPassageDao = (this[APPLICATION_KEY] as MyApplication).v2CroatiaDao
                 val historyCroatiaPassageDaoResult =
                     (this[APPLICATION_KEY] as MyApplication).v2CroatiaDaoResult
@@ -120,7 +117,6 @@ class UserPassViewModel(
                     tagsDao,
                     historyCroatiaPassageDao,
                     historyCroatiaPassageDaoResult,
-                    historyV2PassageDao,
                 )
             }
         }
@@ -143,23 +139,28 @@ class UserPassViewModel(
     suspend fun clearRoomData() {
         viewModelScope.launch(Dispatchers.IO) {
             tagsDao.deleteData()
-            historyV2Dao.deleteData()
             historyCroatiaPassageDao.deleteData()
             historyCroatiaPassageDaoResult.deleteData()
             repository.clearAllowedCountriesFlow()
             repository.deletePdfExportData()
             repository.deleteV2DaoResult()
+            repository.deleteV2PassageData()
         }
     }
 
-    //important do not change .stateIn
+
     fun getV2PassagesBySerialAndCountryCode(
-        serialNumber: String, countryCode: String
+        serialNumber: String,
+        countryCode: String
     ): StateFlow<List<V2HistoryTagResponse?>> {
-        return historyV2Dao.observePassageDataBySerialAndCountryCode(serialNumber, countryCode)
-            .stateIn(
-                viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-            )
+        return repository.getV2PassagesBySerialAndCountryCode(
+            serialNumber,
+            countryCode
+        ).stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
+        )
     }
 
     fun getV2PassagesBySerialAndCountryCodeResult(
@@ -176,10 +177,10 @@ class UserPassViewModel(
         )
     }
 
-    fun getV2PassagesBySerialAndCountryCodeLoad(
+    fun getPassageBySerialCodeCountry(
         serialNumber: String, countryCode: String
     ): List<V2HistoryTagResponse?> {
-        return historyV2Dao.observePassageDataBySerialAndCountryCodeLoad(serialNumber, countryCode)
+        return repository.getV2PassagesBySerialAndCountryCodeLoad(serialNumber, countryCode)
     }
 
     fun getPassageBySerialNumberCode(
