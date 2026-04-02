@@ -58,7 +58,6 @@ import com.mobility.enp.data.model.pdf_table.FilterPdf
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatiaResult
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.CHANNEL_ID
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.NOTIFICATION_ID
 import com.mobility.enp.util.NetworkError
@@ -96,7 +95,6 @@ import java.util.Locale
 
 class UserPassViewModel(
     private val repository: PassageHistoryRepository,
-    private val tagsDao: ToolHistoryV2TagsSerials,
     private val historyCroatiaPassageDao: ToolHistoryV2DaoCroatia,
     private val historyCroatiaPassageDaoResult: ToolHistoryV2DaoCroatiaResult,
 ) : ViewModel() {
@@ -108,13 +106,11 @@ class UserPassViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val myRepository = (this[APPLICATION_KEY] as MyApplication).passageHistoryRepository
-                val tagsDao = (this[APPLICATION_KEY] as MyApplication).v2TagsDao
                 val historyCroatiaPassageDao = (this[APPLICATION_KEY] as MyApplication).v2CroatiaDao
                 val historyCroatiaPassageDaoResult =
                     (this[APPLICATION_KEY] as MyApplication).v2CroatiaDaoResult
                 UserPassViewModel(
                     repository = myRepository,
-                    tagsDao,
                     historyCroatiaPassageDao,
                     historyCroatiaPassageDaoResult,
                 )
@@ -123,11 +119,14 @@ class UserPassViewModel(
     }
 
     //important do not change .stateIn required for config changes so changes to ui persist
-    val tagFlow = tagsDao.observeIndexData().stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-    )
+    val tagFlow = repository.getTagFlow()
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
+        )
 
-    val tagFlowResult = tagsDao.observeIndexData()
+    val tagFlowResult = repository.getTagFlow()
 
     val allowedCountriesFlow = repository.getAllowedCountriesFlow()
         .stateIn(
@@ -138,7 +137,7 @@ class UserPassViewModel(
 
     suspend fun clearRoomData() {
         viewModelScope.launch(Dispatchers.IO) {
-            tagsDao.deleteData()
+            repository.deleteTagData()
             historyCroatiaPassageDao.deleteData()
             historyCroatiaPassageDaoResult.deleteData()
             repository.clearAllowedCountriesFlow()

@@ -124,6 +124,14 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         database.historyV2PassageDao().deleteData()
     }
 
+    fun getTagFlow(): Flow<List<IndexData>> {
+        return database.toolHistoryDaoSerials().observeIndexData()
+    }
+
+    suspend fun deleteTagData() {
+        database.toolHistoryDaoSerials().deleteData()
+    }
+
     fun getV2PassagesBySerialAndCountryCodeLoadResult(
         serialNumber: String,
         countryCode: String
