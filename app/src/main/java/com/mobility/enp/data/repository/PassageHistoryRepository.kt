@@ -14,6 +14,7 @@ import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagRes
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
+import com.mobility.enp.data.model.pdf_table.FilterPdf
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.toCroatianPassage
@@ -21,7 +22,6 @@ import com.mobility.enp.util.toCroatianPassageResult
 import com.mobility.enp.util.toV2HistoryTagResponseResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.ResponseBody
 
 
 class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, context) {
@@ -81,6 +81,14 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
             Log.e("HomeRepository getCards", "Greška pri preuzimanju kartica: ${e.message}", e)
             Result.failure(NetworkError.ServerError)
         }
+    }
+
+    suspend fun deletePdfExportData() {
+        database.pdfHistoryTableDao().deleteData()
+    }
+
+    suspend fun upsertPdfExportData(filterPdf: FilterPdf) {
+        database.pdfHistoryTableDao().upsertData(filterPdf)
     }
 
     suspend fun upsertBaseTagData(indexData: IndexData) {

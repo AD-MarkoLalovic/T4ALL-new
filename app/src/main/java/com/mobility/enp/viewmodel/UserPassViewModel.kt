@@ -56,7 +56,6 @@ import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.model.pdf_table.FilterPdf
 import com.mobility.enp.data.repository.PassageHistoryRepository
-import com.mobility.enp.data.room.PdfDaoHistory
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
@@ -106,7 +105,6 @@ class UserPassViewModel(
     private val historyV2Dao: ToolHistoryV2Dao,
     private val historyV2DaoResult: ToolHistoryV2DaoResult,
     private val historyV2AllowedCountriesDao: ToolHistoryV2AllowedCountryDao,
-    private val pdfExportDao: PdfDaoHistory
 ) : ViewModel() {
 
     companion object {
@@ -135,7 +133,6 @@ class UserPassViewModel(
                     historyV2PassageDao,
                     historyV2PassageDaoResult,
                     historyAllowedCountriesDao,
-                    pdfExportDao
                 )
             }
         }
@@ -160,7 +157,7 @@ class UserPassViewModel(
         historyCroatiaPassageDao.deleteData()
         historyCroatiaPassageDaoResult.deleteData()
         historyV2AllowedCountriesDao.clear()
-        pdfExportDao.deleteData()
+        repository.deletePdfExportData()
     }
 
     //important do not change .stateIn
@@ -337,7 +334,7 @@ class UserPassViewModel(
         userSelectedCalendarEnd = null
         selectedCountry = ""
         viewModelScope.launch {
-            pdfExportDao.deleteData()
+            repository.deletePdfExportData()
         }
     }
 
@@ -1894,7 +1891,7 @@ class UserPassViewModel(
     fun getPDFData(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             _pdfTable.value = SubmitResult.Empty
-            pdfExportDao.deleteData()
+            repository.deletePdfExportData()
             if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
                 if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
                     Toast.makeText(
@@ -1930,7 +1927,7 @@ class UserPassViewModel(
                             body?.let { data ->
 
                                 if (result.isSuccess) {
-                                    pdfExportDao.upsertData(FilterPdf(0, "my_pdf", data))
+                                    repository.upsertPdfExportData(FilterPdf(0, "my_pdf", data))
                                     _pdfTable.value = SubmitResult.Success(data)
                                 } else {
                                     when (val error = result.exceptionOrNull()) {
