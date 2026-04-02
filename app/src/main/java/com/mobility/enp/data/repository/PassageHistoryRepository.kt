@@ -124,6 +124,28 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
         database.historyV2PassageDao().deleteData()
     }
 
+    fun getCroatiaPassagesBySerialPage(
+        serialNumber: String,
+        countryCode: String
+    ): Flow<List<V2HistoryTagResponseCroatia?>> {
+        return database.historyPassageDaoV2Croatia().observePassageDataBySerialCountry(
+            serialNumber,
+            countryCode
+        )
+    }
+
+    fun getCroatiaPassagesBySerialPageLoad(
+        serialNumber: String, countryCode: String
+    ): List<V2HistoryTagResponseCroatia?> {
+        return database.historyPassageDaoV2Croatia().observePassageDataBySerialCountryLoad(
+            serialNumber, countryCode
+        )
+    }
+
+    suspend fun deleteCroatiaPassages() {
+        database.historyPassageDaoV2Croatia().deleteData()
+    }
+
     fun getTagFlow(): Flow<List<IndexData>> {
         return database.toolHistoryDaoSerials().observeIndexData()
     }
