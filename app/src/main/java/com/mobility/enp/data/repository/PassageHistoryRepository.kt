@@ -21,6 +21,7 @@ import com.mobility.enp.util.toCroatianPassage
 import com.mobility.enp.util.toCroatianPassageResult
 import com.mobility.enp.util.toV2HistoryTagResponseResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 
@@ -82,6 +83,16 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
             Result.failure(NetworkError.ServerError)
         }
     }
+
+
+    fun getAllowedCountriesFlow(): Flow<List<V2AllowedCountries>> {
+        return database.historyV2AllowedCountriesDao().observeAllowedCountries()
+    }
+
+    suspend fun clearAllowedCountriesFlow() {
+        database.historyV2AllowedCountriesDao().clear()
+    }
+
 
     suspend fun deletePdfExportData() {
         database.pdfHistoryTableDao().deleteData()

@@ -65,10 +65,6 @@ class MyApplication : Application() {
         database.historyV2AllowedCountriesDao()
     }
 
-    val pdfExportDao: PdfDaoHistory by lazy {
-        database.pdfHistoryTableDao()
-    }
-
     val franchiseRepository: FranchiserRepository by lazy {
         FranchiserRepository(database, this)
     }

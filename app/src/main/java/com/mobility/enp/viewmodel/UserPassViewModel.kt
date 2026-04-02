@@ -104,7 +104,6 @@ class UserPassViewModel(
     private val historyCroatiaPassageDaoResult: ToolHistoryV2DaoCroatiaResult,
     private val historyV2Dao: ToolHistoryV2Dao,
     private val historyV2DaoResult: ToolHistoryV2DaoResult,
-    private val historyV2AllowedCountriesDao: ToolHistoryV2AllowedCountryDao,
 ) : ViewModel() {
 
     companion object {
@@ -123,8 +122,6 @@ class UserPassViewModel(
                     (this[APPLICATION_KEY] as MyApplication).v2CroatiaDaoResult
                 val historyAllowedCountriesDao =
                     (this[APPLICATION_KEY] as MyApplication).v2AllowedCountriesDao
-                val pdfExportDao =
-                    (this[APPLICATION_KEY] as MyApplication).pdfExportDao
                 UserPassViewModel(
                     repository = myRepository,
                     tagsDao,
@@ -132,7 +129,6 @@ class UserPassViewModel(
                     historyCroatiaPassageDaoResult,
                     historyV2PassageDao,
                     historyV2PassageDaoResult,
-                    historyAllowedCountriesDao,
                 )
             }
         }
@@ -145,19 +141,23 @@ class UserPassViewModel(
 
     val tagFlowResult = tagsDao.observeIndexData()
 
-    //important do not change .stateIn
-    val allowedCountriesFlow = historyV2AllowedCountriesDao.observeAllowedCountries().stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-    )
+    val allowedCountriesFlow = repository.getAllowedCountriesFlow()
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
+        )
 
     suspend fun clearRoomData() {
-        tagsDao.deleteData()
-        historyV2Dao.deleteData()
-        historyV2DaoResult.deleteData()
-        historyCroatiaPassageDao.deleteData()
-        historyCroatiaPassageDaoResult.deleteData()
-        historyV2AllowedCountriesDao.clear()
-        repository.deletePdfExportData()
+        viewModelScope.launch(Dispatchers.IO) {
+            tagsDao.deleteData()
+            historyV2Dao.deleteData()
+            historyV2DaoResult.deleteData()
+            historyCroatiaPassageDao.deleteData()
+            historyCroatiaPassageDaoResult.deleteData()
+            repository.clearAllowedCountriesFlow()
+            repository.deletePdfExportData()
+        }
     }
 
     //important do not change .stateIn
