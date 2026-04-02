@@ -56,7 +56,6 @@ import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.model.pdf_table.FilterPdf
 import com.mobility.enp.data.repository.PassageHistoryRepository
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatiaResult
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.CHANNEL_ID
 import com.mobility.enp.services.MyFirebaseMessagingService.Companion.NOTIFICATION_ID
 import com.mobility.enp.util.NetworkError
@@ -94,7 +93,6 @@ import java.util.Locale
 
 class UserPassViewModel(
     private val repository: PassageHistoryRepository,
-    private val historyCroatiaPassageDaoResult: ToolHistoryV2DaoCroatiaResult,
 ) : ViewModel() {
 
     companion object {
@@ -104,11 +102,8 @@ class UserPassViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val repository = (this[APPLICATION_KEY] as MyApplication).passageHistoryRepository
-                val historyCroatiaPassageDaoResult =
-                    (this[APPLICATION_KEY] as MyApplication).v2CroatiaDaoResult
                 UserPassViewModel(
                     repository = repository,
-                    historyCroatiaPassageDaoResult,
                 )
             }
         }
@@ -131,11 +126,11 @@ class UserPassViewModel(
             emptyList()
         )
 
-    suspend fun clearRoomData() {
+    fun clearRoomData() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteTagData()
             repository.deleteCroatiaPassages()
-            historyCroatiaPassageDaoResult.deleteData()
+            repository.deleteCroatiaResult()
             repository.clearAllowedCountriesFlow()
             repository.deletePdfExportData()
             repository.deleteV2DaoResult()
@@ -198,14 +193,17 @@ class UserPassViewModel(
         )
     }
 
-    //important do not change .stateIn
     fun getCroatiaPassagesBySerialPageResult(
-        serialNumber: String, countryCode: String
+        serialNumber: String,
+        countryCode: String
     ): StateFlow<List<V2HistoryTagResponseCroatiaResult?>> {
-        return historyCroatiaPassageDaoResult.observePassageDataBySerialCountry(
-            serialNumber, countryCode
+        return repository.getCroatiaPassagesBySerialPageResult(
+            serialNumber,
+            countryCode
         ).stateIn(
-            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
         )
     }
 
@@ -215,12 +213,10 @@ class UserPassViewModel(
         return repository.getCroatiaPassagesBySerialPageLoad(serialNumber, countryCode)
     }
 
-    fun getCroatiaPassagesBySerialPageLoadResult(
+    fun getCPassagesResultBySerialCode(
         serialNumber: String, countryCode: String
     ): List<V2HistoryTagResponseCroatiaResult?> {
-        return historyCroatiaPassageDaoResult.observePassageDataBySerialCountryLoad(
-            serialNumber, countryCode
-        )
+        return repository.getCroatiaPassagesBySerialPageLoadResult(serialNumber, countryCode)
     }
 
     private val _listOfCountriesMain = MutableStateFlow<List<String>>(emptyList())
@@ -807,7 +803,7 @@ class UserPassViewModel(
     fun deleteOldResultData() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteV2DaoResult()
-            historyCroatiaPassageDaoResult.deleteData()
+            repository.deleteCroatiaResult()
         }
     }
 

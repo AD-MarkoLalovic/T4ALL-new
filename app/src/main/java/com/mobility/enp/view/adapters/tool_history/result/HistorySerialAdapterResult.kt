@@ -86,7 +86,7 @@ class HistorySerialAdapterResult(
                 lifecycleOwner.lifecycleScope.launch() {
 
                     val initLoad = withContext(Dispatchers.IO) {
-                        viewModel.getCroatiaPassagesBySerialPageLoadResult(
+                        viewModel.getCPassagesResultBySerialCode(
                             itemSerialNumber,
                             binding.root.context.getString(R.string.croatia_hr)
                         )
