@@ -1,6 +1,5 @@
 package com.mobility.enp.data.room.toll_history_dao
 
-import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert

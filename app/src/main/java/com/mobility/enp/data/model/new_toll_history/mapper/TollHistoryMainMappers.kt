@@ -50,16 +50,27 @@ fun Long?.toDisplayDate(): String {
 data class TollHistoryMappedData(
     val countries: List<AllowedCountryEntity>,
     val sumTags: List<SumTagEntity>,
-    val item: List<TollHistoryItemEntity>
+    val items: List<TollHistoryItemEntity>
 )
 
 fun TollHistoryDto.toMappedData(filterCountry: String): TollHistoryMappedData {
+    val sumTagMap: Map<String, SumTag> =
+        data?.sumTags?.filterNotNull()?.associateBy { it.tagSerialNumber ?: "" } ?: emptyMap()
+
     val countries = data?.allowedCountries?.filterNotNull()
         ?.mapIndexed { index, country -> country.totoEntity(index) } ?: emptyList()
+
     val sumTags = data?.sumTags?.filterNotNull()?.mapIndexed { index, tag -> tag.toEntity(index) }
         ?: emptyList()
+
     val items =
-        data?.records?.items?.filterNotNull()?.map { it.totoEntity(filterCountry) } ?: emptyList()
+        data?.records?.items?.filterNotNull()?.map { item ->
+            val matchingSumTag = sumTagMap[item.tagsSerialNumber]
+            item.totoEntity(
+                filterCountry = filterCountry,
+                tagTotal = matchingSumTag?.total ?: "",
+                tagCurrency = matchingSumTag?.currency ?: ""
+            ) } ?: emptyList()
 
     return TollHistoryMappedData(countries, sumTags, items)
 }
@@ -98,7 +109,7 @@ fun SumTagEntity.toUi(): SumTagUi {
     )
 }
 
-fun Item.totoEntity(filterCountry: String): TollHistoryItemEntity {
+fun Item.totoEntity(filterCountry: String, tagTotal: String, tagCurrency: String): TollHistoryItemEntity {
     return TollHistoryItemEntity(
         id = id ?: 0,
         tagsSerialNumber = tagsSerialNumberSame ?: "",
@@ -111,13 +122,16 @@ fun Item.totoEntity(filterCountry: String): TollHistoryItemEntity {
         billFinal = bill?.billFinal ?: "",
         complaintId = complaint?.id,
         objectionCount = complaint?.objections?.filterNotNull()?.size ?: 0,
-        filterCountry = filterCountry
+        filterCountry = filterCountry,
+        tagTotal = tagTotal,
+        tagCurrency = tagCurrency
     )
 }
 
 fun TollHistoryItemEntity.toUi(): TollHistoryItemUi {
     return TollHistoryItemUi(
         id = id,
+        tagsSerialNumber = tagsSerialNumber,
         billFinal = billFinal,
         amountDisplay = amountWithOutDiscount,
         currencyDisplay = currency,
@@ -127,7 +141,9 @@ fun TollHistoryItemEntity.toUi(): TollHistoryItemUi {
         isPaid = isPaid,
         complaintId = complaintId,
         objectionCount = objectionCount,
-        maxObjectionsReached = objectionCount >= 2
+        maxObjectionsReached = objectionCount >= 2,
+        tagTotal = tagTotal,
+        tagCurrency = tagCurrency
     )
 }
 
