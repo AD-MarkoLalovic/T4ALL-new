@@ -14,7 +14,7 @@ interface SumTagDao {
     suspend fun upsert(items: List<SumTagEntity>)
 
     @Query("SELECT * FROM  new_sum_tags ORDER BY position ASC")
-    fun pagingSource(): PagingSource<Int, SumTagEntity>
+    fun observeAll(): Flow<List<SumTagEntity>>
 
     @Query("DELETE FROM new_sum_tags")
     suspend fun clear()

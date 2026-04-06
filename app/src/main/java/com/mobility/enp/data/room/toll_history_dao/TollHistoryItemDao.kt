@@ -13,6 +13,23 @@ interface TollHistoryItemDao {
     @Upsert
     suspend fun upsertAll(items: List<TollHistoryItemEntity>)
 
+    @Query("DELETE FROM new_toll_history_items")
+    suspend fun clear()
+
+    @Query("""
+        SELECT * FROM new_toll_history_items 
+        WHERE filterCountry = :country
+        ORDER BY tagsSerialNumber ASC,  checkOutDate DESC
+    """)
+    fun pagingSource(country: String): PagingSource<Int, TollHistoryItemEntity>
+
+    @Query("DELETE FROM new_toll_history_items WHERE filterCountry = :country")
+    suspend fun deleteByQuery(country: String)
+
+
+
+
+
     @Query("""
         SELECT * FROM new_toll_history_items 
         WHERE tagsSerialNumber = :serial 
@@ -24,17 +41,6 @@ interface TollHistoryItemDao {
         country: String
     ): Flow<List<TollHistoryItemEntity>>
 
-    @Query("DELETE FROM new_toll_history_items")
-    suspend fun clear()
-
-    @Query("""
-        SELECT * FROM new_toll_history_items 
-        WHERE tagsSerialNumber = :serial AND filterCountry = :country
-        ORDER BY checkOutDate DESC
-    """)
-    fun pagingSource(serial: String, country: String): PagingSource<Int, TollHistoryItemEntity>
-
-
 
     @Query("""
         SELECT * FROM new_toll_history_items 
@@ -43,6 +49,6 @@ interface TollHistoryItemDao {
     """)
     fun observeBySerial(serial: String): Flow<List<TollHistoryItemEntity>>
 
-    @Query("DELETE FROM new_toll_history_items WHERE tagsSerialNumber = :serial")
-    suspend fun deleteBySerial(serial: String)
+
+
 }

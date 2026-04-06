@@ -18,5 +18,7 @@ data class TollHistoryItemEntity(
     val billFinal: String,         // "737995/2026-web" (iz bill objekta)
     val objectionCount: Int,
     val complaintId: Int?,          // complaint?.id
-    val filterCountry: String         // country filter koji sam koristio pri fetchu
+    val filterCountry: String,      // country filter koji sam koristio pri fetchu
+    val tagTotal: String,
+    val tagCurrency: String
     )

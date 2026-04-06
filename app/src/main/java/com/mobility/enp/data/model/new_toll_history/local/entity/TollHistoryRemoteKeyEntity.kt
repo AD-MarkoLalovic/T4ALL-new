@@ -8,5 +8,5 @@ import androidx.room.Entity
 )
 data class TollHistoryRemoteKeyEntity(
     val queryKey: String,
-    val nextPage: String
+    val nextPage: Int?
 )
