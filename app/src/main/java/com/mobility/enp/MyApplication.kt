@@ -7,6 +7,7 @@ import com.mobility.enp.data.repository.BillsRepository
 import com.mobility.enp.data.repository.CardRepository
 import com.mobility.enp.data.repository.FranchiserRepository
 import com.mobility.enp.data.repository.HomeRepository
+import com.mobility.enp.data.repository.NewTollHistoryRepository
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.data.repository.UserRepository
@@ -40,6 +41,10 @@ class MyApplication : Application() {
 
     val passageHistoryRepository: PassageHistoryRepository by lazy {
         PassageHistoryRepository(database, this)
+    }
+
+    val newTollHistoryRepository: NewTollHistoryRepository by lazy {
+        NewTollHistoryRepository(database, applicationContext)
     }
 
     val v2TagsDao: ToolHistoryV2TagsSerials by lazy {

@@ -20,8 +20,13 @@ class TollHistoryRemoteMediator(
     private val dateTo: String,
     private val language: String,
     private val apiService: ApiService,
-    private val database: DRoom
+    private val database: DRoom,
+    private val onUnauthorized: (http: Int) -> Unit = {}
 ) : RemoteMediator<Int, TollHistoryItemEntity>() {
+
+    private companion object {
+        val UNAUTHORIZED_CODES = intArrayOf(401, 405)
+    }
 
     private val queryKey = "$filterCountry|$dateFrom|$dateTo"
 
@@ -54,6 +59,10 @@ class TollHistoryRemoteMediator(
             )
 
             if (!response.isSuccessful) {
+                val code = response.code()
+                if (code in UNAUTHORIZED_CODES) {
+                    onUnauthorized(code)
+                }
                 return MediatorResult.Error(
                     IOException("API error: ${response.code()} ${response.message()}")
                 )
@@ -91,6 +100,10 @@ class TollHistoryRemoteMediator(
         } catch (e: IOException) {
             MediatorResult.Error(e)
         } catch (e: HttpException) {
+            val code = e.code()
+            if (code in UNAUTHORIZED_CODES) {
+                onUnauthorized(code)
+            }
             MediatorResult.Error(e)
         }
     }
