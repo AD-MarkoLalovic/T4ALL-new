@@ -31,6 +31,7 @@ import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
+import com.mobility.enp.data.model.new_toll_history.remote.dto.TollHistoryDto
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -307,4 +308,14 @@ interface ApiService {
 
     @PUT("api/v1/personal-data/change-language")
     suspend fun changeLanguage(@Query("language") languageCode: String): Response<Unit>
+
+    @GET("api/v2/history")
+    suspend fun getNewTollHistory(
+        @Query("filter[country]") country: String,
+        @Query("page") page: String,
+        @Query("perPage") perPage: String,
+        @Query("lang") language: String,
+        @Query("filter[date_from]") dataFrom: String,
+        @Query("filter[date_to]") dateTo: String
+    ): Response<TollHistoryDto>
 }
