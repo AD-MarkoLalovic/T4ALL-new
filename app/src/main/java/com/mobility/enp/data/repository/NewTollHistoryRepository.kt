@@ -20,7 +20,7 @@ class NewTollHistoryRepository(
     @OptIn(ExperimentalPagingApi::class)
     suspend fun getPagedHistory(
         filterCountry: String,
-        dataFrom: String,
+        dateFrom: String,
         dateTo: String,
         onUnauthorized: (httpCode: Int) -> Unit
     ): Flow<PagingData<TollHistoryItemEntity>> {
@@ -35,7 +35,7 @@ class NewTollHistoryRepository(
             ),
             remoteMediator = TollHistoryRemoteMediator(
                 filterCountry = filterCountry,
-                dateFrom = dataFrom,
+                dateFrom = dateFrom,
                 dateTo = dateTo,
                 language = lang,
                 apiService= apiService(token),
@@ -48,11 +48,11 @@ class NewTollHistoryRepository(
         ).flow
     }
 
-    fun observeAllowedCountry(): Flow<List<AllowedCountryEntity>> {
+    fun observeAllowedCountries(): Flow<List<AllowedCountryEntity>> {
         return database.newAllowedCountryDao().observeAll()
     }
 
-    fun observeSumTag(): Flow<List<SumTagEntity>> {
+    fun observeSumTags(): Flow<List<SumTagEntity>> {
         return database.newSumTagDao().observeAll()
     }
 
