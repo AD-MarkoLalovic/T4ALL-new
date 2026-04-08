@@ -477,6 +477,4 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         listIndexData = emptyList()
         viewModel.setAvailableCountriesMain(emptyList())
     }
-
-
 }
