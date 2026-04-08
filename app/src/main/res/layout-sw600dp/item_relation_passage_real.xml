@@ -88,8 +88,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="@dimen/dimens_17dp"
                 android:layout_marginEnd="@dimen/dimens_15dp"
+                android:layout_centerVertical="true"
                 android:layout_toStartOf="@id/toolHistoryStatus"
                 android:ellipsize="end"
                 android:gravity="center"
@@ -100,23 +100,6 @@
                 android:textStyle="bold"
                 tools:text="RSD" />
 
-            <TextView
-                android:id="@+id/tagBillCountry"
-                style="@style/CaptionRegularTablet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/carTagCurrency"
-                android:layout_marginTop="@dimen/dimens_5dp"
-                android:layout_marginEnd="@dimen/dimens_15dp"
-                android:layout_toStartOf="@id/toolHistoryStatus"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:text='@{relation.currency}'
-                android:textSize="@dimen/dimens_8sp"
-                android:textStyle="bold"
-                tools:text="SRB" />
         </RelativeLayout>
 
         <RelativeLayout

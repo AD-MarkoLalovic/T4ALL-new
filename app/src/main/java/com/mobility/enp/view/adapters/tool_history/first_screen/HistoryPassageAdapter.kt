@@ -123,27 +123,6 @@ class HistoryPassageAdapter(
             binding.relation = relation
             binding.viewShade.background = null
 
-            when (relation.bill.countryCode) {
-                "RS" -> {
-                    binding.tagBillCountry.text = "SRB"
-                }
-
-                "ME" -> {
-                    binding.tagBillCountry.text = "MNE"
-                }
-
-                "MK" -> {
-                    binding.tagBillCountry.text = "MKD"
-                }
-
-                "HR" -> {
-                    binding.tagBillCountry.text = "HRV"
-                }
-
-                else -> {
-                    binding.tagBillCountry.text = ""
-                }
-            }
 
             binding.btnComplaint.setOnClickListener {
                 if (countryCode.isNotEmpty() && countryCode == "RS") {

@@ -84,34 +84,20 @@
                 android:id="@+id/carTagCurrency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="@dimen/dimens_17dp"
                 android:layout_marginEnd="@dimen/dimens_15dp"
                 android:layout_toStartOf="@id/toolHistoryStatus"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="@dimen/dimens_17dp"
                 android:scrollHorizontally="true"
                 android:text='@{relation.currency}'
                 android:textSize="@dimen/dimens_8sp"
                 android:textStyle="bold"
                 tools:text="RSD" />
 
-            <TextView
-                android:id="@+id/tagBillCountry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/carTagCurrency"
-                android:layout_marginEnd="@dimen/dimens_15dp"
-                android:layout_toStartOf="@id/toolHistoryStatus"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/dimens_5dp"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:textSize="@dimen/dimens_8sp"
-                android:textStyle="bold"
-                tools:text="SRB" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -160,11 +146,11 @@
                     android:id="@+id/viewShade"
                     android:layout_width="@dimen/dimens_20dp"
                     android:layout_height="@dimen/dimens_20dp"
-                    android:layout_alignParentEnd="true"
                     android:layout_alignTop="@+id/btnObjection"
                     android:layout_alignBottom="@+id/btnObjection"
-                    android:layout_marginVertical="7dp"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginVertical="7dp"
                     android:layout_marginEnd="@dimen/dimens_10dp"
                     android:background="@drawable/figma_objection_background"
                     android:gravity="center_vertical|center_horizontal">
