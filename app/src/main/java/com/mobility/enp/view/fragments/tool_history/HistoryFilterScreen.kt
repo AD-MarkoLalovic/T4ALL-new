@@ -88,6 +88,7 @@ class HistoryFilterScreen : Fragment() {
         _binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_tool_history_search_query, container, false
         )
+        vModel.clearSelectedTags()
         return binding.root
     }
 
@@ -189,8 +190,7 @@ class HistoryFilterScreen : Fragment() {
 
                     if (listOfCountries.isNotEmpty()) {
                         updateCountriesAdapter(listOfCountries)
-
-                        statusFilterAdapter.performClick(vModel.availableCountryAdapterPositionFilter.value)
+                        statusFilterAdapter.performClick(-1)
                     }
 
                     binding.progBar.visibility = View.GONE

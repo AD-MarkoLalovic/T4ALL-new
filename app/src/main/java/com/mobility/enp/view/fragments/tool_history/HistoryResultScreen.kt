@@ -72,6 +72,7 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragme
 
         setFranchise()
         setObserver()
+        setListener()
     }
 
     private fun setObserver() {
@@ -178,6 +179,12 @@ class HistoryResultScreen : Fragment(), HistoryPassageAdapterResult.SendToFragme
             franchiseModel?.franchisePrimaryColor?.let { color ->
                 binding.btnReset.setTextColor(color)
             }
+        }
+    }
+
+    private fun setListener(){
+        binding.btnReset.setOnClickListener {
+            findNavController().navigate(HistoryResultScreenDirections.actionToolHistorySearchResultFragmentToToolHistoryFragment())
         }
     }
 
