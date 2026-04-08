@@ -226,13 +226,6 @@ class UserPassViewModel(
         this._listOfCountriesMain.value = countries
     }
 
-    private val _availableCountryAdapterPosition = MutableStateFlow<Int>(0)
-    val availableCountryAdapterPosition: StateFlow<Int> get() = _availableCountryAdapterPosition
-
-    fun setCountryAdapterPosition(pos: Int) {
-        _availableCountryAdapterPosition.value = pos
-    }
-
     private val _availableCountryAdapterPositionFilter = MutableStateFlow<Int>(-1)
     val availableCountryAdapterPositionFilter: StateFlow<Int> get() = _availableCountryAdapterPositionFilter
 
@@ -342,7 +335,6 @@ class UserPassViewModel(
         _userSelectedTags.value = emptySet()
         selectedCountry = ""
         allTagsSelected = false
-        _availableCountryAdapterPosition.value = -1
         _availableCountryAdapterPositionFilter.value = -1
     }
 

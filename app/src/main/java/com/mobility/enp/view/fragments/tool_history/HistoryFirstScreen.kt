@@ -140,7 +140,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 viewModel.listOfCountriesMainScreen.collect { countriesList ->
                     if (countriesList.isNotEmpty()) {
                         setAvailableFilters(countriesList)
-                        statusFilterAdapter.performClick(viewModel.availableCountryAdapterPosition.value)
+                        statusFilterAdapter.performClick(0)
                     }
                 }
             }
@@ -327,8 +327,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
             statusFilterAdapter = MyTollCountriesFirstScreenAdapter(
                 onSelected = { selectedStatus ->
-                    viewModel.setCountryAdapterPosition(statusFilterAdapter.getTabPosition())
-
                     val selectedCountry = when (selectedStatus) {
                         getString(R.string.croatia) -> {
                             getString(R.string.croatia_hr)
@@ -476,5 +474,9 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         _binding = null
         listIndexData = emptyList()
         viewModel.setAvailableCountriesMain(emptyList())
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 }
