@@ -81,6 +81,16 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
                         null
                     }
                 }
+                .insertSeparators { before, after ->
+                    (before as? TollHistoryListItem.PassageItem)?.passage
+                        ?: return@insertSeparators null
+
+                    if (after == null || after is TollHistoryListItem.TagHeader) {
+                        TollHistoryListItem.GroupEnd
+                    } else {
+                        null
+                    }
+                }
         }
         .cachedIn(viewModelScope)
 

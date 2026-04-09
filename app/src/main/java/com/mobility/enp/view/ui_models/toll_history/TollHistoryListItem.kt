@@ -12,4 +12,6 @@ sealed interface TollHistoryListItem {
         val passage: TollHistoryItemUi
     ) : TollHistoryListItem
 
+    data object GroupEnd : TollHistoryListItem
+
 }
