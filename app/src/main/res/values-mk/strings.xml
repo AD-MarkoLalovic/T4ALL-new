@@ -401,5 +401,6 @@
     <string name="buy_tag">Купи Tag</string>
     <string name="export_pdf">Извоз на PDF</string>
     <string name="export_csv">Извоз на CSV</string>
+    <string name="complaint_number_label">Бр. рекламација %d</string>
 
 </resources>

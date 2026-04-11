@@ -393,4 +393,5 @@
     <string name="buy_tag">Kupi Tag</string>
     <string name="export_pdf">Izvoz PDF-a</string>
     <string name="export_csv">Izvoz CSV-a</string>
+    <string name="complaint_number_label">Br. reklamacije %d</string>
 </resources>
