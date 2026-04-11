@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- SELECTED -->
+    <item android:state_selected="true">
+        <inset android:inset="@dimen/dimens_2dp">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/primary_light_dark" />
+                <corners android:radius="44dp" />
+                <padding android:left="@dimen/dimens_16dp" android:right="@dimen/dimens_16dp" />
+
+            </shape>
+
+        </inset>
+
+    </item>
+
+    <!-- DEFAULT -->
+    <item>
+        <inset android:inset="@dimen/dimens_2dp">
+            <shape android:shape="rectangle">
+                <corners android:radius="44dp" />
+                <solid android:color="@color/transparent" />
+                <stroke android:width="@dimen/dimens_1dp" android:color="@color/primary_light_dark" />
+                <padding android:left="@dimen/dimens_16dp" android:right="@dimen/dimens_16dp" />
+            </shape>
+        </inset>
+
+    </item>
+</selector>
