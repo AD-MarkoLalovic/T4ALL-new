@@ -7,7 +7,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.mobility.enp.data.model.new_toll_history.local.entity.AllowedCountryEntity
-import com.mobility.enp.data.model.new_toll_history.local.entity.SumTagEntity
 import com.mobility.enp.data.model.new_toll_history.local.entity.TollHistoryItemEntity
 import com.mobility.enp.data.paging.TollHistoryRemoteMediator
 import com.mobility.enp.data.room.database.DRoom

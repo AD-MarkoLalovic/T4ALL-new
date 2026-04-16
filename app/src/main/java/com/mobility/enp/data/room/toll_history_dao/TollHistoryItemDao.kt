@@ -5,7 +5,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.mobility.enp.data.model.new_toll_history.local.entity.TollHistoryItemEntity
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TollHistoryItemDao {
