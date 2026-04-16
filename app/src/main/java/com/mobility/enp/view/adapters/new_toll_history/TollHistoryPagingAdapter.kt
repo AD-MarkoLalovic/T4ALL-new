@@ -3,6 +3,7 @@ package com.mobility.enp.view.adapters.new_toll_history
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -76,49 +77,91 @@ class TollHistoryPagingAdapter(
     class TagHeaderViewHolder(private val binding: ItemTagHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(header: TollHistoryListItem.TagHeader) {
-            binding.tvSerialNumberValue.text = header.tagSerialNumber
-            binding.tvTotalAmount.text = header.total
-            binding.tvCurrency.text = header.currency
+        fun bind(header: TollHistoryListItem.TagHeader) = with(binding) {
+            tvSerialNumberValue.text = header.tagSerialNumber
+
+            val hasTotal = header.total.isNotBlank()
+            tvTotalLabel.isVisible = hasTotal
+            tvTotalAmount.isVisible = hasTotal
+            tvTotalAmount.text = header.total
+
+            val hasCurrency = header.currency.isNotBlank()
+            tvCurrency.isVisible = hasCurrency
+            tvCurrency.text = header.currency
         }
 
     }
 
-    inner class PassageViewHolder(private val binding: ItemNewTollHistoryBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class PassageViewHolder(
+        private val binding: ItemNewTollHistoryBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: TollHistoryItemUi) {
-            binding.tvPassageInvoiceNumber.text = item.billFinal
-            binding.tvPassageTotalAmount.text = item.amountDisplay
-            binding.tvPassageCurrency.text = item.currencyDisplay
-            binding.tvRoute.text = item.tollPlaza
-            binding.tvCheckIn.text = item.checkInFormatted
-            binding.tvCheckOut.text = item.checkOutFormatted
+        fun bind(item: TollHistoryItemUi) = with(binding) {
+            val context = root.context
+
+            val (colorRes, iconRes) = when {
+                !item.ticketUid.isNullOrBlank() -> {
+                    R.color.primary_light_light to R.drawable.status_icon_light
+                }
+
+                item.isPaid -> {
+                    R.color.figmaToolHistoryPaidBackground to R.drawable.status_icon_green
+                }
+
+                else -> {
+                    R.color.figmaToolHistoryUnpaidBackground to R.drawable.status_icon_red
+                }
+            }
+
+            val color = ContextCompat.getColor(context, colorRes)
+
+            cardPassageContainer.strokeColor = color
+            containerPassageAmount.setBackgroundColor(color)
+            viewStatusIndicator.setImageResource(iconRes)
+
+            val hasInvoice = item.billFinal.isNotBlank()
+            tvPassageInvoiceNumber.isVisible = hasInvoice
+            tvPassageInvoiceNumber.text = if (hasInvoice) item.billFinal else ""
+
+            tvPassageTotalAmount.text = item.amountDisplay
+            tvPassageCurrency.text =
+                item.currencyDisplay.ifBlank { context.getString(R.string.euro_currency) }
+            tvRoute.text = item.tollPlaza
+            tvCheckIn.text = item.checkInFormatted.ifBlank { item.entryTime }
+            tvCheckOut.text = item.checkOutFormatted.ifBlank { item.exitTime }
 
             val hasComplaint = item.complaintId != null
 
-            binding.btnPassageComplaint.isVisible = !hasComplaint
-            binding.layoutObjection.isVisible = hasComplaint
+            btnPassageComplaint.isVisible = !hasComplaint
+            layoutObjection.isVisible = hasComplaint
+
+            btnPassageComplaint.setOnClickListener(null)
+            btnPassageObjection.setOnClickListener(null)
 
             if (hasComplaint) {
-                binding.tvComplaintId.text = binding.root.context.getString(
-                    R.string.complaint_number_label, item.complaintId
+                tvComplaintId.text = context.getString(
+                    R.string.complaint_number_label,
+                    item.complaintId
                 )
-                binding.tvObjectionCount.apply {
-                    val count = item.objectionCount
-                    isVisible = count > 0
-                    if (count > 0) {
-                        text = count.toString()
-                    }
-                }
-                binding.btnPassageObjection.setOnClickListener {
+
+                val count = item.objectionCount
+                tvObjectionCount.isVisible = count > 0
+                tvObjectionCount.text = if (count > 0) count.toString() else ""
+
+                btnPassageObjection.setOnClickListener {
                     onObjectionClick(
                         item.complaintId,
                         item.maxObjectionsReached
                     )
                 }
             } else {
-                binding.btnPassageComplaint.setOnClickListener { onComplaintClick(item.id) }
+                tvComplaintId.text = ""
+                tvObjectionCount.isVisible = false
+                tvObjectionCount.text = ""
+
+                btnPassageComplaint.setOnClickListener {
+                    onComplaintClick(item.id)
+                }
             }
         }
     }

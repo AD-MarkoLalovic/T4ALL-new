@@ -65,9 +65,9 @@ import com.mobility.enp.data.room.toll_history_dao.TollHistoryRemoteKeyDao
         IntroPageStatus::class, ProfileImage::class, MyInvoicesResponse::class, PdfTable::class, LastUser::class, BanksEntity::class, DataRefundRequestEntity::class, CsvTable::class, TagsRefundRequestEntity::class,
         BasicInfoEntity::class, HomeEntity::class, V2HistoryTagResponse::class, TollHistoryHomeEntity::class, InvoiceHomeEntity::class, InvoiceHomeTotalCurrencyEntity::class,
         HomeCardsEntity::class, V2HistoryTagResponseCroatia::class, V2AllowedCountries::class,
-        V2HistoryTagResponseResult::class, V2HistoryTagResponseCroatiaResult::class, FilterPdf::class, TollHistoryHomeEntity::class, AllowedCountryEntity::class,
-        TollHistoryHomeEntity::class],
-    version = 267,
+        V2HistoryTagResponseResult::class, V2HistoryTagResponseCroatiaResult::class, FilterPdf::class, TollHistoryItemEntity::class, AllowedCountryEntity::class,
+        TollHistoryRemoteKeyEntity::class],
+    version = 268,
     exportSchema = false
 )  // changes on tables require  version of database to be incremented  // also requires database data destruction or migration
 @TypeConverters(Converters::class)

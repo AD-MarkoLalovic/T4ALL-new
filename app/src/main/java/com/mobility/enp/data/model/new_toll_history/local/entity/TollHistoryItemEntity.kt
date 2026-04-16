@@ -23,7 +23,10 @@ data class TollHistoryItemEntity(
     val complaintId: Int?,
     val filterCountry: String,
     val tagTotal: String,
-    val tagCurrency: String
+    val tagCurrency: String,
+    val entryTime: String?,
+    val exitTime: String?,
+    val ticketUid: String?
     ) {
 
     companion object{

@@ -10,6 +10,7 @@
     android:paddingTop="@dimen/dimens_8dp">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardPassageContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="@dimen/dimens_0dp"
@@ -148,13 +149,13 @@
 
                 <LinearLayout
                     android:id="@+id/btnPassageComplaint"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_btn_objection_complaint"
                     android:minHeight="31dp"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="@dimen/dimens_22dp"
-                    android:paddingVertical="@dimen/dimens_6dp"
+                    android:gravity="center"
+                    android:layout_marginStart="@dimen/dimens_4dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1"
@@ -174,8 +175,7 @@
                     android:id="@+id/layoutObjection"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/dimens_8dp"
-                    android:minHeight="31dp"
+                    android:layout_marginStart="@dimen/dimens_4dp"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -195,14 +195,14 @@
 
                     <LinearLayout
                         android:id="@+id/btnPassageObjection"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimens_8dp"
+                        android:minHeight="31dp"
                         android:background="@drawable/bg_btn_objection_complaint"
-                        android:gravity="center_vertical"
+                        android:gravity="center"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="@dimen/dimens_22dp"
-                        android:paddingVertical="@dimen/dimens_6dp"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvComplaintId"

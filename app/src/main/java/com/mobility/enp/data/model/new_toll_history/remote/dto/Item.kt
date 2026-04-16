@@ -26,5 +26,9 @@ data class Item(
     val tagsSerialNumber: String?,
     @SerializedName("tags_serial_number")
     val tagsSerialNumberSame: String?,
-    val tollPlaza: String?
+    val tollPlaza: String?,
+    val entryTime: String?,
+    val exitTime: String?,
+    val serialNumber: String?,
+    val ticketUid: String?
 )

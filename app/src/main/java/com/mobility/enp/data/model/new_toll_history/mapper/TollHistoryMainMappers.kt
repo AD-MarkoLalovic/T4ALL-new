@@ -24,7 +24,7 @@ private val apiDateFormatter: DateTimeFormatter =
     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 
 private val displayDataFormatter: DateTimeFormatter =
-    DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm", Locale.ENGLISH)
+    DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss", Locale.ENGLISH)
 
 fun String?.toEpochMillis(): Long? {
     if (this.isNullOrBlank()) return null
@@ -180,7 +180,10 @@ private fun buildRowsBySumTagsOrder(
                 objectionCount = 0,
                 complaintId = null,
                 tagTotal = tagTotal,
-                tagCurrency = tagCurrency
+                tagCurrency = tagCurrency,
+                entryTime = "",
+                exitTime = "",
+                ticketUid = null
             )
         )
 
@@ -215,7 +218,10 @@ private fun buildRowsBySumTagsOrder(
                 objectionCount = 0,
                 complaintId = null,
                 tagTotal = tagTotal,
-                tagCurrency = tagCurrency
+                tagCurrency = tagCurrency,
+                entryTime = "",
+                exitTime = "",
+                ticketUid = null
             )
         )
     }
@@ -231,8 +237,13 @@ private fun passageEntity(
     tagTotal: String,
     tagCurrency: String
 ): TollHistoryItemEntity {
+    val rowSuffix = when {
+        item.id != null -> item.id.toString()
+        !item.ticketUid.isNullOrBlank() -> item.ticketUid
+        else -> 0
+    }
     return TollHistoryItemEntity(
-        rowId = "P|${item.id}|$filterCountry",
+        rowId = "P|$rowSuffix|$filterCountry",
         rowType = TollHistoryItemEntity.ROW_TYPE_PASSAGE,
         sortIndex = sortIndex,
         filterCountry = filterCountry,
@@ -248,7 +259,10 @@ private fun passageEntity(
         complaintId = item.complaint?.id,
         objectionCount = item.complaint?.objections?.filterNotNull()?.size ?: 0,
         tagTotal = tagTotal,
-        tagCurrency = tagCurrency
+        tagCurrency = tagCurrency,
+        entryTime = item.entryTime ?: "",
+        exitTime = item.exitTime ?: "",
+        ticketUid = item.ticketUid
     )
 }
 
@@ -269,7 +283,7 @@ private fun buildRowsByApiItemOrder(
     fun groupEndRowId(serial: String) = "G|$serial|$filterCountry|p$page|s$segmentIndex"
 
     for (item in ordered) {
-        val serial = item.tagsSerialNumberSame ?: ""
+        val serial = item.serialNumber ?: item.tagsSerialNumber ?: ""
         val matchingSumTag = sumTagMap[serial]
         val tagTotal = matchingSumTag?.total ?: ""
         val tagCurrency = matchingSumTag?.currency ?: ""
@@ -295,7 +309,10 @@ private fun buildRowsByApiItemOrder(
                         objectionCount = 0,
                         complaintId = null,
                         tagTotal = closedTag?.total ?: "",
-                        tagCurrency = closedTag?.currency ?: ""
+                        tagCurrency = closedTag?.currency ?: "",
+                        entryTime = item.entryTime ?: "",
+                        exitTime = item.exitTime ?: "",
+                        ticketUid = item.ticketUid
                     )
                 )
             }
@@ -319,7 +336,10 @@ private fun buildRowsByApiItemOrder(
                     objectionCount = 0,
                     complaintId = null,
                     tagTotal = tagTotal,
-                    tagCurrency = tagCurrency
+                    tagCurrency = tagCurrency,
+                    entryTime = null,
+                    exitTime = null,
+                    ticketUid = null
                 )
             )
         }
@@ -356,7 +376,10 @@ private fun buildRowsByApiItemOrder(
                 objectionCount = 0,
                 complaintId = null,
                 tagTotal = matchingSumTag?.total ?: "",
-                tagCurrency = matchingSumTag?.currency ?: ""
+                tagCurrency = matchingSumTag?.currency ?: "",
+                entryTime = null,
+                exitTime = null,
+                ticketUid = null
             )
         )
     }
@@ -379,7 +402,10 @@ fun TollHistoryItemEntity.toUi(): TollHistoryItemUi {
         objectionCount = objectionCount,
         maxObjectionsReached = objectionCount >= 2,
         tagTotal = tagTotal,
-        tagCurrency = tagCurrency
+        tagCurrency = tagCurrency,
+        entryTime = entryTime,
+        exitTime = exitTime,
+        ticketUid = ticketUid
     )
 }
 

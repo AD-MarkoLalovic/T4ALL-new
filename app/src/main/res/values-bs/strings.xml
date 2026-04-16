@@ -395,5 +395,6 @@
     <string name="tag_purchase_online_description">Tag za elektronsku naplatu cestarine sada možete jednostavno kupiti i online.</string>
     <string name="buy_tag">Kupi Tag</string>
     <string name="complaint_number_label">Br. reklamacije %d</string>
+    <string name="euro_currency">ЕUR</string>
 
 </resources>

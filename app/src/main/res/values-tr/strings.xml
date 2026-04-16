@@ -404,4 +404,5 @@
     <string name="export_pdf">PDF dışa aktar</string>
     <string name="export_csv">Εξαγωγή CSV</string>
     <string name="complaint_number_label">Şikayet No. %d</string>
+    <string name="euro_currency">ЕUR</string>
 </resources>
