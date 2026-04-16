@@ -8,6 +8,5 @@ import androidx.room.Entity
 )
 data class AllowedCountryEntity(
     val value: String,
-    val name: String,
     val position: Int
 )

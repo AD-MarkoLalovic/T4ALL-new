@@ -3,7 +3,7 @@ package com.mobility.enp.data.model.new_toll_history.remote.dto
 import com.google.gson.annotations.SerializedName
 
 data class Item(
-    val amount: Int?,
+    val amount: Double?,
     val amountWithDiscount: String?,
     val amountWithOutDiscount: String?,
     val bill: Bill?,

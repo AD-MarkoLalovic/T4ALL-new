@@ -1,6 +1,7 @@
 package com.mobility.enp.data.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -26,11 +27,16 @@ class NewTollHistoryRepository(
     ): Flow<PagingData<TollHistoryItemEntity>> {
         val token = getUserToken().orEmpty()
         val lang = getLangKey()
-
+        Log.d("MARKO", "getPagedHistory")
+        Log.d(
+            "MARKO",
+            "getPagedHistory params country=$filterCountry dateFrom=$dateFrom dateTo=$dateTo"
+        )
         return Pager(
             config = PagingConfig(
                 pageSize = 15,
                 enablePlaceholders = false,
+                initialLoadSize = 15,
                 prefetchDistance = 5
             ),
             remoteMediator = TollHistoryRemoteMediator(
@@ -50,10 +56,6 @@ class NewTollHistoryRepository(
 
     fun observeAllowedCountries(): Flow<List<AllowedCountryEntity>> {
         return database.newAllowedCountryDao().observeAll()
-    }
-
-    fun observeSumTags(): Flow<List<SumTagEntity>> {
-        return database.newSumTagDao().observeAll()
     }
 
     fun isOnline(): Boolean {

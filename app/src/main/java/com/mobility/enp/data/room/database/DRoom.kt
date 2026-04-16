@@ -27,6 +27,8 @@ import com.mobility.enp.data.model.home.entity.InvoiceHomeEntity
 import com.mobility.enp.data.model.home.entity.InvoiceHomeTotalCurrencyEntity
 import com.mobility.enp.data.model.home.entity.TollHistoryHomeEntity
 import com.mobility.enp.data.model.new_toll_history.local.entity.AllowedCountryEntity
+import com.mobility.enp.data.model.new_toll_history.local.entity.TollHistoryItemEntity
+import com.mobility.enp.data.model.new_toll_history.local.entity.TollHistoryRemoteKeyEntity
 import com.mobility.enp.data.model.notification.NotificationModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
 import com.mobility.enp.data.model.pdf_table.FilterPdf
@@ -140,6 +142,9 @@ abstract class DRoom : RoomDatabase() {
         historyV2AllowedCountriesDao().clear()
         historyV2PassageDaoResult().deleteData()
         historyPassageDaoV2CroatiaResult().deleteData()
+        newAllowedCountryDao().clear()
+        newTollHistoryItemDao().clear()
+        newRemoteKeyDao().clearAll()
     }
 
 }

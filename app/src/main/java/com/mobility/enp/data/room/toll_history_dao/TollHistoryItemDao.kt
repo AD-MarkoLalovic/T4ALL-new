@@ -17,38 +17,22 @@ interface TollHistoryItemDao {
     suspend fun clear()
 
     @Query("""
-        SELECT * FROM new_toll_history_items 
+        SELECT * FROM new_toll_history_items
         WHERE filterCountry = :country
-        ORDER BY tagsSerialNumber ASC,  checkOutDate DESC
+        ORDER BY sortIndex ASC
     """)
     fun pagingSource(country: String): PagingSource<Int, TollHistoryItemEntity>
 
     @Query("DELETE FROM new_toll_history_items WHERE filterCountry = :country")
     suspend fun deleteByQuery(country: String)
 
-
-
-
-
-    @Query("""
-        SELECT * FROM new_toll_history_items 
-        WHERE tagsSerialNumber = :serial 
-        AND filterCountry = :country
-        ORDER BY checkOutDate DESC
-    """)
-    fun observeBySerialAndCountry(
-        serial: String,
-        country: String
-    ): Flow<List<TollHistoryItemEntity>>
-
-
-    @Query("""
-        SELECT * FROM new_toll_history_items 
-        WHERE tagsSerialNumber = :serial
-        ORDER BY checkOutDate DESC
-    """)
-    fun observeBySerial(serial: String): Flow<List<TollHistoryItemEntity>>
-
-
+    @Query(
+        """
+    SELECT COALESCE(MAX(sortIndex), -1)
+    FROM new_toll_history_items
+    WHERE filterCountry = :country
+    """
+    )
+    suspend fun maxSortIndexForCountry(country: String): Int
 
 }

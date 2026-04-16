@@ -30,6 +30,15 @@ class TollHistoryRemoteMediator(
 
     private val queryKey = "$filterCountry|$dateFrom|$dateTo"
 
+    /*override suspend fun initialize(): InitializeAction {
+        val remoteKey = database.newRemoteKeyDao().getByKey(queryKey)
+        return if (remoteKey != null) {
+            InitializeAction.SKIP_INITIAL_REFRESH
+        } else {
+            InitializeAction.LAUNCH_INITIAL_REFRESH
+        }
+    }*/
+
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, TollHistoryItemEntity>
@@ -71,16 +80,18 @@ class TollHistoryRemoteMediator(
                 ?: return MediatorResult.Error(IOException("Empty response body"))
             val lastPage = body.data?.records?.pagination?.lastPage ?: 1
             val endReached = page >= lastPage
-            val mapped = body.toMappedData(filterCountry)
+            val startSortIndex = when (loadType) {
+                LoadType.REFRESH -> 0
+                LoadType.APPEND ->
+                    database.newTollHistoryItemDao().maxSortIndexForCountry(filterCountry) + 1
+                else -> 0
+            }
+            val mapped = body.toMappedData(filterCountry, startSortIndex, page)
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     database.newTollHistoryItemDao().deleteByQuery(filterCountry)
                     database.newRemoteKeyDao().deleteByKey(queryKey)
-                    if (mapped.countries.isNotEmpty()) {
-                        database.newAllowedCountryDao().clear()
-                        database.newAllowedCountryDao().upsert(mapped.countries)
-                    }
                 }
                 if (mapped.sumTags.isNotEmpty()) {
                     database.newSumTagDao().clear()
