@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mobility.enp.data.model.new_toll_history.mapper.toDisplayName
 import com.mobility.enp.databinding.ItemCountryFilterBinding
 import com.mobility.enp.view.ui_models.toll_history.AllowedCountryUi
 
@@ -15,13 +16,16 @@ class AllowedCountryFilterAdapter(
     inner class CountryViewHolder(private val binding: ItemCountryFilterBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: AllowedCountryUi) {
-            binding.selectedCountryFilter.text = item.name
+            binding.selectedCountryFilter.text = item.value.toDisplayName(binding.root.context)
             binding.selectedCountryFilter.isSelected = item.isSelected
 
+            binding.root.isEnabled = !item.isSelected
+
             binding.root.setOnClickListener {
-                if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                    onCountrySelected(item.value)
-                }
+                val pos = bindingAdapterPosition
+                if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
+                if (item.isSelected) return@setOnClickListener
+                onCountrySelected(item.value)
             }
         }
     }

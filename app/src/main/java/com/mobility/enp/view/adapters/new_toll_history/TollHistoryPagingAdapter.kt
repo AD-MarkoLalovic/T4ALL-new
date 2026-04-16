@@ -1,5 +1,6 @@
 package com.mobility.enp.view.adapters.new_toll_history
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -32,12 +33,12 @@ class TollHistoryPagingAdapter(
     ): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            VIEW_TYPE_PASSAGE -> {
-                PassageViewHolder(ItemNewTollHistoryBinding.inflate(inflater, parent, false))
-            }
-
             VIEW_TYPE_HEADER -> {
                 TagHeaderViewHolder(ItemTagHeaderBinding.inflate(inflater, parent, false))
+            }
+
+            VIEW_TYPE_PASSAGE -> {
+                PassageViewHolder(ItemNewTollHistoryBinding.inflate(inflater, parent, false))
             }
 
             VIEW_TYPE_GROUP_END -> {
@@ -53,13 +54,19 @@ class TollHistoryPagingAdapter(
         position: Int
     ) {
         val item = getItem(position)
+        Log.d("MARKO 1", "bind position=$position item=$item")
+        // Redosled onBind poziva ≠ redosled u listi: getItem(0) je uvek "glava" liste u adapteru.
+        Log.d(
+            "MARKO 0",
+            "bind pos=$position listHead=${getItem(0)} holder=${holder.javaClass.simpleName}"
+        )
         when (holder) {
-            is PassageViewHolder -> {
-                (item as? TollHistoryListItem.PassageItem)?.let { holder.bind(it.passage) }
-            }
-
             is TagHeaderViewHolder -> {
                 (item as? TollHistoryListItem.TagHeader)?.let { holder.bind(it) }
+            }
+
+            is PassageViewHolder -> {
+                (item as? TollHistoryListItem.PassageItem)?.let { holder.bind(it.passage) }
             }
 
             is GroupEndViewHolder -> Unit
@@ -132,7 +139,7 @@ class TollHistoryPagingAdapter(
                 return when (oldItem) {
                     is TollHistoryListItem.TagHeader ->
                         newItem is TollHistoryListItem.TagHeader &&
-                                oldItem.tagSerialNumber == newItem.tagSerialNumber
+                                oldItem.uniqueKey == newItem.uniqueKey
 
                     is TollHistoryListItem.PassageItem -> {
                         newItem is TollHistoryListItem.PassageItem &&
@@ -140,7 +147,8 @@ class TollHistoryPagingAdapter(
                     }
 
                     is TollHistoryListItem.GroupEnd ->
-                        newItem is TollHistoryListItem.GroupEnd
+                        newItem is TollHistoryListItem.GroupEnd &&
+                                oldItem.uniqueKey == newItem.uniqueKey
                 }
             }
 

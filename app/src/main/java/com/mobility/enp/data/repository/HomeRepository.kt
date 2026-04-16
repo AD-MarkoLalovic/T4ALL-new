@@ -8,6 +8,8 @@ import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.home.cards.entity.HomeCardsEntity
 import com.mobility.enp.data.model.home.relation.HomeWithDetails
 import com.mobility.enp.data.model.home.response.Data
+import com.mobility.enp.data.model.new_toll_history.local.entity.AllowedCountryEntity
+import com.mobility.enp.data.model.new_toll_history.mapper.countriesToEntity
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SharedPreferencesHelper
@@ -132,6 +134,8 @@ class HomeRepository(
             if (remoteData.isSuccessful) {
                 remoteData.body()?.let { responseBody ->
                     saveHomeCards(context, user, responseBody)
+                    val allowedCountry = responseBody.data?.countriesToEntity()
+                    saveAllowedCountry(allowedCountry)
 
                     Result.success(getHomeCards(user))
                 } ?: Result.failure(NetworkError.ServerError)
@@ -172,6 +176,13 @@ class HomeRepository(
 
     suspend fun updateHomeCard(card: HomeCardsEntity) {
         database.homeCardsDao().updatePromotionCard(card)
+    }
+
+    suspend fun saveAllowedCountry(data: List<AllowedCountryEntity>?) {
+        data?.let {
+            database.newAllowedCountryDao().upsert(data)
+        }
+
     }
 
 }

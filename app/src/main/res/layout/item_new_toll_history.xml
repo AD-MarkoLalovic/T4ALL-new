@@ -7,7 +7,7 @@
     android:background="@drawable/bg_card_group_middle"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/dimens_8dp"
-    android:paddingBottom="@dimen/dimens_8dp">
+    android:paddingTop="@dimen/dimens_8dp">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"

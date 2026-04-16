@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bg_card_group_top"
     android:paddingHorizontal="@dimen/dimens_8dp"
-    android:paddingVertical="@dimen/dimens_20dp">
+    android:paddingTop="@dimen/dimens_20dp"
+    android:paddingBottom="@dimen/dimens_12dp">
 
     <TextView
         android:id="@+id/tvSerialNumberLabel"

@@ -1,5 +1,6 @@
 package com.mobility.enp.viewmodel.toll_history
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -8,13 +9,12 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.insertSeparators
 import androidx.paging.map
 import com.mobility.enp.MyApplication
+import com.mobility.enp.data.model.new_toll_history.local.entity.TollHistoryItemEntity
 import com.mobility.enp.data.model.new_toll_history.mapper.toUi
 import com.mobility.enp.data.repository.NewTollHistoryRepository
 import com.mobility.enp.view.ui_models.toll_history.AllowedCountryUi
-import com.mobility.enp.view.ui_models.toll_history.SumTagUi
 import com.mobility.enp.view.ui_models.toll_history.TollHistoryListItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -23,11 +23,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -50,7 +52,10 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
     val logoutEvent: Flow<Int> = _logoutEvent.receiveAsFlow()
 
     val pagingFlow: Flow<PagingData<TollHistoryListItem>> = _filter
+        .filter { it.country.isNotEmpty() }
         .flatMapLatest { filter ->
+            Log.d("MARKO", "flatMapLatest filter=$filter vm=${this@NewTollHistoryViewModel.hashCode()}")
+            Log.d("MARKO", "pagingFlow: repo.getPagedHistory start country=${filter.country}")
             repo.getPagedHistory(
                 filterCountry = filter.country,
                 dateFrom = filter.dateFrom,
@@ -63,45 +68,21 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
         .map { pagingData ->
             pagingData
                 .map { entity ->
-                    TollHistoryListItem.PassageItem(entity.toUi()) as TollHistoryListItem
-                }
-                .insertSeparators { before, after ->
-                    val afterPassage =
-                        (after as? TollHistoryListItem.PassageItem)?.passage
-                            ?: return@insertSeparators null
-                    val beforePassage = (before as? TollHistoryListItem.PassageItem)?.passage
-
-                    if (beforePassage == null || beforePassage.tagsSerialNumber != afterPassage.tagsSerialNumber) {
-                        TollHistoryListItem.TagHeader(
-                            tagSerialNumber = afterPassage.tagsSerialNumber,
-                            total = afterPassage.tagTotal,
-                            currency = afterPassage.tagCurrency
+                    when (entity.rowType) {
+                        TollHistoryItemEntity.ROW_TYPE_HEADER -> TollHistoryListItem.TagHeader(
+                            tagSerialNumber = entity.tagsSerialNumber,
+                            total = entity.tagTotal,
+                            currency = entity.tagCurrency
                         )
-                    } else {
-                        null
-                    }
-                }
-                .insertSeparators { before, after ->
-                    (before as? TollHistoryListItem.PassageItem)?.passage
-                        ?: return@insertSeparators null
-
-                    if (after == null || after is TollHistoryListItem.TagHeader) {
-                        TollHistoryListItem.GroupEnd
-                    } else {
-                        null
+                        TollHistoryItemEntity.ROW_TYPE_GROUP_END -> TollHistoryListItem.GroupEnd(
+                            currency = entity.tagCurrency,
+                            afterTagSerialNumber = entity.tagsSerialNumber
+                        )
+                        else -> TollHistoryListItem.PassageItem(entity.toUi())
                     }
                 }
         }
         .cachedIn(viewModelScope)
-
-    val sumTags: StateFlow<List<SumTagUi>> = repo.observeSumTags().map { entities ->
-        entities.map { it.toUi() }
-    }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
 
     val allowedCountriesUi: StateFlow<List<AllowedCountryUi>> = combine(
         repo.observeAllowedCountries(),
@@ -116,17 +97,38 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
             initialValue = emptyList()
         )
 
-    fun initialize(country: String) {
+    init {
+        Log.d("MARKO", "VM CREATED ${this.hashCode()}")
+        initializeFilter()
+        observeDefaultCountry()
+    }
+
+    private fun initializeFilter() {
         val now = LocalDate.now()
-        val thirtyDaysAgo = now.minusDays(30)
+        val twoHundredDaysAgo = now.minusDays(167)
+
         _filter.value = HistoryFilter(
-            country = country,
-            dateFrom = thirtyDaysAgo.format(dateFormatter),
+            dateFrom = twoHundredDaysAgo.format(dateFormatter),
             dateTo = now.format(dateFormatter)
         )
     }
 
+    private fun observeDefaultCountry() {
+        viewModelScope.launch {
+            repo.observeAllowedCountries().collect { countries ->
+                val firstCode = countries.minByOrNull { it.position }?.value ?: return@collect
+
+                _filter.update { currentFilter ->
+                    if (currentFilter.country.isNotEmpty()) currentFilter
+                    else currentFilter.copy(country = firstCode)
+                }
+            }
+        }
+    }
+
+
     fun onCountrySelected(countryCode: String) {
+        Log.d("MARKO", "onCountrySelected to=$countryCode from=${_filter.value.country}")
         _filter.update { it.copy(country = countryCode) }
     }
 
