@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
@@ -31,7 +33,7 @@ class MonthlyBillsAdapter(
     val lifecycleOwner: LifecycleOwner,
     private val montYearListener: MontYearListener,
     private val franchiserResource: FranchiseModel?
-) : RecyclerView.Adapter<MonthlyBillsAdapter.MonthlyBillsViewHolder>() {
+) : ListAdapter<Month, MonthlyBillsAdapter.MonthlyBillsViewHolder>(DIFF_CALLBACK) {
 
     private val monthlyBillsArray: ArrayList<Month> = ArrayList(data.months)
 
@@ -42,16 +44,30 @@ class MonthlyBillsAdapter(
 
     private val itemStateMap: MutableMap<Int, Boolean> = mutableMapOf()
 
-    fun resetAdapter() {
-        monthlyBillsArray.clear()
-        currentPage = 0
-        lastPage = 0
-        itemStateMap.clear()
-        notifyDataSetChanged()
+    init {
+        submitList(data.months.toList())
     }
 
     companion object {
         const val TAG = "MonthlyBillsAdapter"
+
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Month>() {
+            override fun areItemsTheSame(oldItem: Month, newItem: Month): Boolean {
+                return oldItem.month?.value == newItem.month?.value &&
+                        oldItem.year == newItem.year
+            }
+
+            override fun areContentsTheSame(oldItem: Month, newItem: Month): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
+
+    fun resetAdapter() {
+        submitList(emptyList())
+        currentPage = 0
+        lastPage = 0
+        itemStateMap.clear()
     }
 
     inner class MonthlyBillsViewHolder(
@@ -287,7 +303,7 @@ class MonthlyBillsAdapter(
     }
 
     override fun onBindViewHolder(holder: MonthlyBillsViewHolder, position: Int) {
-        val currentBill = monthlyBillsArray[holder.bindingAdapterPosition]
+        val currentBill = getItem(holder.bindingAdapterPosition)
 
         holder.reset()
 
@@ -318,7 +334,7 @@ class MonthlyBillsAdapter(
             TAG,
             "onBindViewHolder: adapter pos $position arrayTotal ${monthlyBillsArray.size - 1} totalItems ${data.total}"
         )
-        if (monthlyBillsArray[monthlyBillsArray.size - 1] == currentBill && lastPage > currentPage) {
+        if (currentList.lastOrNull() == currentBill && lastPage > currentPage) {
 
             val paginationUpdate =
                 MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Loading)
@@ -330,10 +346,9 @@ class MonthlyBillsAdapter(
                         serverResponse?.let { response ->
                             currentPage = response.data.data?.currentPage ?: 0
 
-                            for (month: Month in response.data.data!!.months) {
-                                monthlyBillsArray.add(month)
-                                notifyItemChanged(monthlyBillsArray.size - 1)
-                            }
+                            val newList = currentList.toMutableList()
+                            newList.addAll(response.data.data!!.months)
+                            submitList(newList)
                         }
                     }
 
@@ -361,8 +376,6 @@ class MonthlyBillsAdapter(
     private fun logError(string: String) {
         Log.d(HistorySerialAdapter.TAG, "showError: $string")
     }
-
-    override fun getItemCount() = monthlyBillsArray.size
 
     interface TriggerSpinner {
         fun onStartSpinner()
