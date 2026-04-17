@@ -114,6 +114,16 @@ class MonthlyBillsAdapter(
             val isExpanded = itemStateMap[bindingAdapterPosition] ?: false
             updateUI(isExpanded)
 
+            val savedData = viewModel.getSavedBillDetails(montYear)
+
+            if (savedData != null) {
+                val newState = !(itemStateMap[bindingAdapterPosition] ?: false)
+                itemStateMap[bindingAdapterPosition] = newState
+                updateUI(newState)
+
+                setAdapterData(savedData, availableCurrency.toString())
+            }
+
             // Klik na strelicu za otvaranje/zatvaranje
             binding.arrowDown.setOnClickListener {
                 val newState = !(itemStateMap[bindingAdapterPosition] ?: false)
@@ -134,47 +144,8 @@ class MonthlyBillsAdapter(
                                     spinnerInterface.onStopSpinner()
 
                                     serverResponse.data.let { data ->
-
-                                        val billsDetailsAdapter = BillsDetailsAdapter(
-                                            data.data,
-                                            viewModel,
-                                            lifecycleOwner,
-                                            spinnerInt,
-                                            availableCurrency.toString()
-                                        )
-                                        binding.recyclerViewMonthlyBills.adapter =
-                                            billsDetailsAdapter
-                                        billsDetailsAdapter.submitList(data.data)
-
-                                        if (data.data
-                                                .bills.isNotEmpty()
-                                        ) {
-                                            val heightInDp: Int = when (data.data.bills.size) {
-                                                1 -> binding.root.context.resources.getDimensionPixelSize(
-                                                    R.dimen.recycler_view_one_item
-                                                )
-
-                                                2 -> binding.root.context.resources.getDimensionPixelSize(
-                                                    R.dimen.recycler_view_two_items
-                                                )
-
-                                                3 -> binding.root.context.resources.getDimensionPixelSize(
-                                                    R.dimen.recycler_view_three_items
-                                                )
-
-                                                else -> binding.root.context.resources.getDimensionPixelSize(
-                                                    R.dimen.recycler_view_more_items
-                                                )
-                                            }
-                                            binding.scrollView.layoutParams.height = heightInDp
-                                            binding.scrollView.requestLayout()
-
-                                            binding.recyclerViewMonthlyBills.visibility =
-                                                View.VISIBLE
-                                            binding.scrollView.visibility = View.VISIBLE
-                                        }
-                                        spinnerInt.onStopSpinner()
-
+                                        viewModel.saveBill(montYear, data)
+                                        setAdapterData(data, availableCurrency.toString())
                                     }
 
                                 }
@@ -254,6 +225,47 @@ class MonthlyBillsAdapter(
             updateUI(false)
         }
 
+        private fun setAdapterData(data: BillsDetailsResponse, availableCurrency: String) {
+            val billsDetailsAdapter = BillsDetailsAdapter(
+                data.data,
+                viewModel,
+                lifecycleOwner,
+                spinnerInt,
+                availableCurrency.toString()
+            )
+            binding.recyclerViewMonthlyBills.adapter =
+                billsDetailsAdapter
+            billsDetailsAdapter.submitList(data.data)
+
+            if (data.data
+                    .bills.isNotEmpty()
+            ) {
+                val heightInDp: Int = when (data.data.bills.size) {
+                    1 -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_one_item
+                    )
+
+                    2 -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_two_items
+                    )
+
+                    3 -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_three_items
+                    )
+
+                    else -> binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_more_items
+                    )
+                }
+                binding.scrollView.layoutParams.height = heightInDp
+                binding.scrollView.requestLayout()
+
+                binding.recyclerViewMonthlyBills.visibility =
+                    View.VISIBLE
+                binding.scrollView.visibility = View.VISIBLE
+            }
+            spinnerInt.onStopSpinner()
+        }
 
         private fun updateUI(isExpanded: Boolean) {
             if (isExpanded) {

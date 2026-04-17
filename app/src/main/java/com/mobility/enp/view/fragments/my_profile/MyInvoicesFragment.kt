@@ -94,7 +94,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!viewModel.firstLoad){
+        if (!viewModel.firstLoad) {
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.firstLoad = true
         }
@@ -121,6 +121,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                         when (selectedStatus) {
 
                             getString(R.string.all) -> {
+                                viewModel.clearSavedBills()
                                 binding.textNoBills.visibility = View.GONE
                                 if (::adapterMonthly.isInitialized) {
                                     adapterMonthly.resetAdapter()
@@ -132,6 +133,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                             }
 
                             getString(R.string.croatia) -> {
+                                viewModel.clearSavedBills()
                                 binding.textNoBills.visibility = View.GONE
                                 if (::adapterMonthly.isInitialized) {
                                     adapterMonthly.resetAdapter()
@@ -143,6 +145,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                             }
 
                             getString(R.string.montenegro) -> {
+                                viewModel.clearSavedBills()
                                 binding.textNoBills.visibility = View.GONE
                                 if (::adapterMonthly.isInitialized) {
                                     adapterMonthly.resetAdapter()
@@ -154,6 +157,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                             }
 
                             getString(R.string.north_macedonian_passage) -> {
+                                viewModel.clearSavedBills()
                                 binding.textNoBills.visibility = View.GONE
                                 if (::adapterMonthly.isInitialized) {
                                     adapterMonthly.resetAdapter()
@@ -165,6 +169,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                             }
 
                             getString(R.string.serbia) -> {
+                                viewModel.clearSavedBills()
                                 binding.textNoBills.visibility = View.GONE
                                 if (::adapterMonthly.isInitialized) {
                                     adapterMonthly.resetAdapter()

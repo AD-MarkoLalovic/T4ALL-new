@@ -76,7 +76,8 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     private val _allowedCountries = MutableStateFlow<List<String>>(emptyList())
     private val _savedData = MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Empty)
 
-    val savedData = _savedData.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SubmitResult.Empty)
+    val savedData =
+        _savedData.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SubmitResult.Empty)
 
     fun setSavedData(data: SubmitResult<MyInvoicesResponse>) {
         _savedData.value = data
@@ -95,6 +96,20 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         }
     }
 
+    private val _savedBills: MutableMap<String, BillsDetailsResponse> = mutableMapOf()
+
+    fun clearSavedBills() {
+        _savedBills.clear()
+    }
+
+    fun saveBill(key: String, bill: BillsDetailsResponse) {
+        _savedBills[key] = bill
+        Log.d("sdasdasd", "saveBill: $_savedBills")
+    }
+
+    fun getSavedBillDetails(key: String): BillsDetailsResponse? {
+        return _savedBills[key]
+    }
 
     fun setSelectedCountry(country: String) {
         this.selectedCountry = country
