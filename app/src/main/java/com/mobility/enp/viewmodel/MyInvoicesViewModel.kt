@@ -104,7 +104,6 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
 
     fun saveBill(key: String, bill: BillsDetailsResponse) {
         _savedBills[key] = bill
-        Log.d("sdasdasd", "saveBill: $_savedBills")
     }
 
     fun getSavedBillDetails(key: String): BillsDetailsResponse? {
@@ -647,11 +646,6 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                 }
             }
         }
-    }
-
-    fun resetState() {
-        _myInvoices.value = SubmitResult.Empty
-        selectedCountry = ""
     }
 
     companion object {
