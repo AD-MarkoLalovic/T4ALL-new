@@ -94,6 +94,11 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (!viewModel.firstLoad){
+            binding.invoicesLoadingView.visibility = View.VISIBLE
+            viewModel.firstLoad = true
+        }
+
         setObservers()
 
         setupNetworkObserver()
@@ -110,6 +115,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.allowedCountriesFlow.collect { finalList ->
+                    binding.valueTitle.visibility = View.VISIBLE
                     adapterCountries = MyInvoicesCountriesAdapter { selectedStatus ->
 
                         when (selectedStatus) {
@@ -183,10 +189,43 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.savedData.collect { response ->
+                    when (response) {
+                        is SubmitResult.Success -> {
+                            if (response.data.data!!.months.isEmpty()) {
+                                binding.textNoBills.visibility = View.VISIBLE
+                            } else {
+                                dataExists = response.data.data
+
+                                binding.textNoBills.visibility = View.GONE
+                                binding.recyclerViewBills.visibility = View.VISIBLE
+                                adapterMonthly = MonthlyBillsAdapter(
+                                    response.data.data,
+                                    viewModel,
+                                    this@MyInvoicesFragment,
+                                    viewLifecycleOwner,
+                                    this@MyInvoicesFragment,
+                                    franchiseViewModel.franchiseModel.value
+                                )
+                                binding.recyclerViewBills.adapter = adapterMonthly
+                                binding.recyclerViewBills.layoutManager =
+                                    LinearLayoutManager(requireContext())
+                            }
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+
         collectLatestLifecycleFlow(viewModel.myInvoices) { serverResponse ->
             when (serverResponse) {
                 is SubmitResult.Loading -> {
                     binding.invoicesLoadingView.visibility = View.VISIBLE
+                    binding.recyclerViewBills.visibility = View.VISIBLE
                 }
 
                 is SubmitResult.Success -> {
@@ -304,31 +343,10 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                 listOfCountries.clear()
 
                 viewModel.setAllowedCountries(finalList)
+                viewModel.setSavedData(response)
             }
 
         }
-
-        if (response.data.data!!.months.isEmpty()) {
-            binding.textNoBills.visibility = View.VISIBLE
-        } else {
-            dataExists = response.data.data
-
-            binding.textNoBills.visibility = View.GONE
-            binding.recyclerViewBills.visibility = View.VISIBLE
-            adapterMonthly = MonthlyBillsAdapter(
-                response.data.data,
-                viewModel,
-                this,
-                this,
-                this,
-                franchiseViewModel.franchiseModel.value
-            )
-            binding.recyclerViewBills.adapter = adapterMonthly
-            binding.recyclerViewBills.layoutManager = LinearLayoutManager(requireContext())
-
-            viewModel.setLocalData(response.data)
-        }
-
     }
 
     private fun handleError(error: Throwable) {

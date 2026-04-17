@@ -70,9 +70,17 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
 
     private var selectedCountry: String = ""
     private var countriesPosition: Int = 0
+    var firstLoad: Boolean = false
 
 
     private val _allowedCountries = MutableStateFlow<List<String>>(emptyList())
+    private val _savedData = MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Empty)
+
+    val savedData = _savedData.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SubmitResult.Empty)
+
+    fun setSavedData(data: SubmitResult<MyInvoicesResponse>) {
+        _savedData.value = data
+    }
 
     val allowedCountriesFlow = _allowedCountries
         .stateIn(
@@ -106,7 +114,8 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
 
 
     fun fetchMonthlyInvoices() {
-        _myInvoices.value = SubmitResult.Loading
+        _myInvoices.value = SubmitResult.Empty
+        _savedData.value = SubmitResult.Empty
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getInvoicesData(perPage, selectedCountry)
             if (result.isSuccess) {
@@ -221,25 +230,6 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                     else -> {}
                 }
             }
-        }
-    }
-
-    fun setLocalData(bills: MyInvoicesResponse) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.setLocalBillsData(bills)
-        }
-    }
-
-    suspend fun checkBills() = withContext(Dispatchers.IO) {
-        repository.fetchSavedBillsData()
-    }
-
-    fun fetchLocalData() {
-        viewModelScope.launch {
-            val data = withContext(Dispatchers.IO) {
-                repository.fetchSavedBillsData()
-            }
-            _myInvoices.value = SubmitResult.Success(data)
         }
     }
 
