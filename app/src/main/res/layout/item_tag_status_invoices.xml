@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tagStatus"
+    style="@style/CaptionMedium"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/dimens_6dp"
+    android:background="@drawable/rounded_status_unmarked_border_"
+    android:clickable="true"
+    android:paddingHorizontal="18dp"
+    android:paddingVertical="@dimen/dimens_10dp"
+    android:textColor="@color/primary_light_dark"
+    tools:text="Unformed" />
+
