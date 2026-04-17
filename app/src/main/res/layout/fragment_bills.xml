@@ -63,30 +63,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/firstLineMyInvoices" />
 
-            <HorizontalScrollView
-                android:id="@+id/horizontalScrollView"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cyclerInvoicesCountries"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginHorizontal="@dimen/dimens_16dp"
                 android:layout_marginTop="@dimen/dimens_16dp"
-                android:scrollbars="none"
+                android:nestedScrollingEnabled="false"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/valueTitle">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/cyclerInvoicesCountries"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="@dimen/dimens_16dp"
-                    android:nestedScrollingEnabled="false"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="@+id/rlRight"
-                    app:layout_constraintStart_toStartOf="@+id/valueTitle"
-                    app:layout_constraintTop_toBottomOf="@id/valueTitle"
-                    tools:listitem="@layout/item_tag_status" />
-            </HorizontalScrollView>
+                app:layout_constraintTop_toBottomOf="@id/valueTitle"
+                tools:listitem="@layout/item_tag_status" />
 
             <TextView
                 android:id="@+id/textNoBills"
@@ -100,7 +89,7 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+                app:layout_constraintTop_toBottomOf="@+id/cyclerInvoicesCountries" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewBills"
@@ -112,7 +101,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
+                app:layout_constraintTop_toBottomOf="@+id/cyclerInvoicesCountries"
                 tools:itemCount="3"
                 tools:listitem="@layout/item_bill"
                 tools:visibility="visible" />
