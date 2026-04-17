@@ -67,6 +67,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     val openDialogForNoPdfData: LiveData<Boolean> get() = _openDialogForNoPdfData
 
     private var selectedCountry: String = ""
+    private var countriesPosition: Int = 0
 
     fun setSelectedCountry(country: String) {
         this.selectedCountry = country
@@ -75,6 +76,15 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     fun isNetworkAvailable(): Boolean {
         return repository.isNetworkPresent()
     }
+
+    fun setPosition(position: Int) {
+        countriesPosition = position
+    }
+
+    fun getPosition(): Int {
+        return countriesPosition
+    }
+
 
     fun fetchMonthlyInvoices() {
         _myInvoices.value = SubmitResult.Loading

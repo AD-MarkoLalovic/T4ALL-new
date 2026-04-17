@@ -236,6 +236,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                             }
                             binding.invoicesLoadingView.visibility = View.VISIBLE
                             viewModel.setSelectedCountry("")
+                            viewModel.setPosition(adapterCountries.getTabPosition())
                             viewModel.fetchMonthlyInvoices()
                         }
 
@@ -246,6 +247,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                             }
                             binding.invoicesLoadingView.visibility = View.VISIBLE
                             viewModel.setSelectedCountry("HR")
+                            viewModel.setPosition(adapterCountries.getTabPosition())
                             viewModel.fetchMonthlyInvoices()
                         }
 
@@ -256,6 +258,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                             }
                             binding.invoicesLoadingView.visibility = View.VISIBLE
                             viewModel.setSelectedCountry("ME")
+                            viewModel.setPosition(adapterCountries.getTabPosition())
                             viewModel.fetchMonthlyInvoices()
                         }
 
@@ -266,6 +269,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                             }
                             binding.invoicesLoadingView.visibility = View.VISIBLE
                             viewModel.setSelectedCountry("MK")
+                            viewModel.setPosition(adapterCountries.getTabPosition())
                             viewModel.fetchMonthlyInvoices()
                         }
 
@@ -276,6 +280,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                             }
                             binding.invoicesLoadingView.visibility = View.VISIBLE
                             viewModel.setSelectedCountry("RS")
+                            viewModel.setPosition(adapterCountries.getTabPosition())
                             viewModel.fetchMonthlyInvoices()
                         }
 
@@ -287,7 +292,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                 binding.cyclerInvoicesCountries.adapter = adapterCountries
 
                 adapterCountries.submitList(finalList) {
-                    adapterCountries.setTabPosition(0)  // set initially to negative to force country selection
+                    adapterCountries.setTabPosition(viewModel.getPosition())
                 }
             }
 
@@ -447,7 +452,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     override fun onDestroyView() {
         super.onDestroyView()
         networkObserver.stop()
-        viewModel.resetState()
         _binding = null
     }
 
