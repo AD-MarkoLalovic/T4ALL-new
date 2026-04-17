@@ -94,7 +94,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
         setObservers()
 
-        setListener()
         setupNetworkObserver()
         permissionNotificationDeniedDialogResultListener()
 
@@ -197,32 +196,87 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         response.data.data?.allowedCountries?.let { allowedCountry ->
             binding.valueTitle.visibility = View.VISIBLE
 
-            val listOfCountries: ArrayList<String> = arrayListOf()
+            if (!::adapterCountries.isInitialized) {  // perform adapter setting only once if its not already intialized
 
-            for (data in allowedCountry) {
-                data.value?.let {
-                    listOfCountries.add(it)
+                val listOfCountries: ArrayList<String> = arrayListOf()
+
+                listOfCountries.add(getString(R.string.all))  // because we have all "button"
+
+                for (data in allowedCountry) {
+                    when (data.value) {
+                        getString(R.string.croatia_hr) -> {
+                            listOfCountries.add(getString(R.string.croatia))
+                        }
+
+                        getString(R.string.montenegro_me) -> {
+                            listOfCountries.add(getString(R.string.montenegro))
+                        }
+
+                        getString(R.string.northmacedonia_mk) -> {
+                            listOfCountries.add(getString(R.string.north_macedonian_passage))
+                        }
+
+                        getString(R.string.serbia_rs) -> {
+                            listOfCountries.add(getString(R.string.serbia))
+                        }
+                    }
                 }
-            }
 
-            if (!::adapterCountries.isInitialized) {
+                val finalList: List<String> = listOfCountries.distinct()
+                listOfCountries.clear()
+
                 adapterCountries = MyInvoicesCountriesAdapter { selectedStatus ->
 
-                    val selectedCountry = when (selectedStatus) {
+                    when (selectedStatus) {
+
+                        getString(R.string.all) -> {
+                            binding.textNoBills.visibility = View.GONE
+                            if (::adapterMonthly.isInitialized) {
+                                adapterMonthly.resetAdapter()
+                            }
+                            binding.invoicesLoadingView.visibility = View.VISIBLE
+                            viewModel.setSelectedCountry("")
+                            viewModel.fetchMonthlyInvoices()
+                        }
+
                         getString(R.string.croatia) -> {
-                            getString(R.string.croatia_hr)
+                            binding.textNoBills.visibility = View.GONE
+                            if (::adapterMonthly.isInitialized) {
+                                adapterMonthly.resetAdapter()
+                            }
+                            binding.invoicesLoadingView.visibility = View.VISIBLE
+                            viewModel.setSelectedCountry("HR")
+                            viewModel.fetchMonthlyInvoices()
                         }
 
                         getString(R.string.montenegro) -> {
-                            getString(R.string.montenegro_me)
+                            binding.textNoBills.visibility = View.GONE
+                            if (::adapterMonthly.isInitialized) {
+                                adapterMonthly.resetAdapter()
+                            }
+                            binding.invoicesLoadingView.visibility = View.VISIBLE
+                            viewModel.setSelectedCountry("ME")
+                            viewModel.fetchMonthlyInvoices()
                         }
 
-                        getString(R.string.macedonia) -> {
-                            getString(R.string.northmacedonia_mk)
+                        getString(R.string.north_macedonian_passage) -> {
+                            binding.textNoBills.visibility = View.GONE
+                            if (::adapterMonthly.isInitialized) {
+                                adapterMonthly.resetAdapter()
+                            }
+                            binding.invoicesLoadingView.visibility = View.VISIBLE
+                            viewModel.setSelectedCountry("MK")
+                            viewModel.fetchMonthlyInvoices()
                         }
 
                         getString(R.string.serbia) -> {
-                            getString(R.string.serbia_rs)
+                            binding.textNoBills.visibility = View.GONE
+                            if (::adapterMonthly.isInitialized) {
+                                adapterMonthly.resetAdapter()
+                            }
+                            binding.invoicesLoadingView.visibility = View.VISIBLE
+                            viewModel.setSelectedCountry("RS")
+                            viewModel.fetchMonthlyInvoices()
                         }
 
                         else -> ""
@@ -230,10 +284,10 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
                 }
 
-                binding.cyclerTagTypes.adapter = adapterCountries
+                binding.cyclerInvoicesCountries.adapter = adapterCountries
 
-                adapterCountries.submitList(listOfCountries.reversed()) {
-                    adapterCountries.setTabPosition(-1)  // set initially to negative to force country selection
+                adapterCountries.submitList(finalList) {
+                    adapterCountries.setTabPosition(0)  // set initially to negative to force country selection
                 }
             }
 
@@ -281,59 +335,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     private fun sendNotification() {
         Toast.makeText(requireContext(), getString(R.string.permission_granted), Toast.LENGTH_SHORT)
             .show()
-    }
-
-    private fun setListener() {
-        binding.buttonAll.setOnClickListener {
-            binding.textNoBills.visibility = View.GONE
-            if (::adapterMonthly.isInitialized) {
-                adapterMonthly.resetAdapter()
-            }
-            binding.invoicesLoadingView.visibility = View.VISIBLE
-            viewModel.setSelectedCountry("")
-            viewModel.fetchMonthlyInvoices()
-        }
-
-        binding.buttonCroatia.setOnClickListener {
-            binding.textNoBills.visibility = View.GONE
-            if (::adapterMonthly.isInitialized) {
-                adapterMonthly.resetAdapter()
-            }
-            binding.invoicesLoadingView.visibility = View.VISIBLE
-            viewModel.setSelectedCountry("HR")
-            viewModel.fetchMonthlyInvoices()
-        }
-
-        binding.northMacedonia.setOnClickListener {
-            binding.textNoBills.visibility = View.GONE
-            if (::adapterMonthly.isInitialized) {
-                adapterMonthly.resetAdapter()
-            }
-            binding.invoicesLoadingView.visibility = View.VISIBLE
-            viewModel.setSelectedCountry("MK")
-            viewModel.fetchMonthlyInvoices()
-        }
-
-        binding.buttonMontenegro.setOnClickListener {
-            binding.textNoBills.visibility = View.GONE
-            if (::adapterMonthly.isInitialized) {
-                adapterMonthly.resetAdapter()
-            }
-            binding.invoicesLoadingView.visibility = View.VISIBLE
-            viewModel.setSelectedCountry("ME")
-            viewModel.fetchMonthlyInvoices()
-        }
-
-        binding.buttonSerbia.setOnClickListener {
-            binding.textNoBills.visibility = View.GONE
-            if (::adapterMonthly.isInitialized) {
-                adapterMonthly.resetAdapter()
-            }
-            binding.invoicesLoadingView.visibility = View.VISIBLE
-            viewModel.setSelectedCountry("RS")
-            viewModel.fetchMonthlyInvoices()
-        }
-
     }
 
     override fun onStartSpinner() {

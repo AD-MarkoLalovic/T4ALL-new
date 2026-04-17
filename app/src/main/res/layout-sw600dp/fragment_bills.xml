@@ -64,7 +64,7 @@
                 app:layout_constraintTop_toBottomOf="@id/firstLineMyInvoices" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/cyclerTagTypes"
+                android:id="@+id/cyclerInvoicesCountries"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginHorizontal="@dimen/dimens_100dp"
