@@ -39,8 +39,10 @@ import com.mobility.enp.view.PdfViewActivity
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
@@ -68,6 +70,23 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
 
     private var selectedCountry: String = ""
     private var countriesPosition: Int = 0
+
+
+    private val _allowedCountries = MutableStateFlow<List<String>>(emptyList())
+
+    val allowedCountriesFlow = _allowedCountries
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
+        )
+
+    fun setAllowedCountries(countries: List<String>) {
+        if (_allowedCountries.value.isEmpty()) {
+            _allowedCountries.value = countries
+        }
+    }
+
 
     fun setSelectedCountry(country: String) {
         this.selectedCountry = country
@@ -349,7 +368,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         }
     }
 
-    fun payBill(billId: String,buttonCompletionListener: BillsDetailsAdapter.onApiCallCompletion) {
+    fun payBill(billId: String, buttonCompletionListener: BillsDetailsAdapter.onApiCallCompletion) {
         viewModelScope.launch {
             _billPad.value = SubmitResultFold.Loading
 
