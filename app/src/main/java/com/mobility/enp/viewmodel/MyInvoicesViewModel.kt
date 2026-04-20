@@ -43,6 +43,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -69,20 +70,43 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     private val _openDialogForNoPdfData = MutableLiveData<Boolean>()
     val openDialogForNoPdfData: LiveData<Boolean> get() = _openDialogForNoPdfData
 
-    private var selectedCountry: String = ""
+    private val _selectedCountry = MutableStateFlow("all")
+
+    fun setSelectedCountry(country: String) {
+        _selectedCountry.value = country
+    }
+
     private var countriesPosition: Int = 0
     var firstLoad: Boolean = false
     var recyclerState: Parcelable? = null
 
     private val _allowedCountries = MutableStateFlow<List<String>>(emptyList())
-    private val _savedData = MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Empty)
-
-    val savedData =
-        _savedData.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SubmitResult.Empty)
+    private val _savedData =
+        MutableStateFlow<Map<String, SubmitResult<MyInvoicesResponse>>>(emptyMap())
 
     fun setSavedData(data: SubmitResult<MyInvoicesResponse>) {
-        _savedData.value = data
+
+        when (data is SubmitResult.Success) {
+            true -> {
+                val key = _selectedCountry.value.ifEmpty { "all" }
+                data.data.country = key
+                _savedData.value = _savedData.value.toMutableMap().apply {
+                    this[key] = data
+                }
+            }
+
+            false -> {}
+        }
     }
+
+    val currentData =
+        combine(_savedData, _selectedCountry) { map, country ->
+            map[country] ?: SubmitResult.Empty
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            SubmitResult.Empty
+        )
 
     val allowedCountriesFlow = _allowedCountries
         .stateIn(
@@ -111,10 +135,6 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         return _savedBills[key]
     }
 
-    fun setSelectedCountry(country: String) {
-        this.selectedCountry = country
-    }
-
     fun isNetworkAvailable(): Boolean {
         return repository.isNetworkPresent()
     }
@@ -130,9 +150,14 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
 
     fun fetchMonthlyInvoices() {
         _myInvoices.value = SubmitResult.Empty
-        _savedData.value = SubmitResult.Empty
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getInvoicesData(perPage, selectedCountry)
+
+            var sc = _selectedCountry.value
+            if (sc == "all") {
+                sc = ""
+            }
+
+            val result = repository.getInvoicesData(perPage, sc)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -193,7 +218,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     ) {
         flow.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getInvoicesDataPaging(page, perPage, selectedCountry)
+            val result = repository.getInvoicesDataPaging(page, perPage, _selectedCountry.value)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -254,7 +279,8 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         currency: String,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getBillDetails(yearMonth, currency, perPage, selectedCountry)
+            val result =
+                repository.getBillDetails(yearMonth, currency, perPage, _selectedCountry.value)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -318,7 +344,13 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val result =
-                repository.getBillDetailsPaging(yearMonth, currency, perPage, selectedCountry, page)
+                repository.getBillDetailsPaging(
+                    yearMonth,
+                    currency,
+                    perPage,
+                    _selectedCountry.value,
+                    page
+                )
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {

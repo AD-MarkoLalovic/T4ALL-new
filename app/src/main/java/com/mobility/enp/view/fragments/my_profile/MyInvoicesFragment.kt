@@ -3,6 +3,7 @@ package com.mobility.enp.view.fragments.my_profile
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -107,7 +108,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         if (!Util.isNetworkAvailable(requireContext())) {
             binding.txNoInternet.visibility = View.VISIBLE
             showNoConnectionState()
-
         }
     }
 
@@ -127,7 +127,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                                     adapterMonthly.resetAdapter()
                                 }
                                 binding.invoicesLoadingView.visibility = View.VISIBLE
-                                viewModel.setSelectedCountry("")
+                                viewModel.setSelectedCountry("all")
                                 viewModel.setPosition(adapterCountries.getTabPosition())
                                 viewModel.recyclerState = null
                                 viewModel.fetchMonthlyInvoices()
@@ -201,7 +201,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.savedData.collect { response ->
+                viewModel.currentData.collect { response ->
                     when (response) {
                         is SubmitResult.Success -> {
                             if (response.data.data!!.months.isEmpty()) {
