@@ -17,15 +17,6 @@ class BillsRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, co
         return isNetworkAvailable()
     }
 
-    suspend fun setLocalBillsData(bills: MyInvoicesResponse) {
-        database.myInvoicesDao().deleteDataMonthlyInvoices()
-        database.myInvoicesDao().insertMonthlyInvoices(bills)
-    }
-
-    suspend fun fetchSavedBillsData(): MyInvoicesResponse {
-        return database.myInvoicesDao().fetchDataMonthlyInvoices()
-    }
-
     suspend fun savePdfData(decodedData: ByteArray) {
         database.pdfDao().deleteData()
         database.pdfDao().upsertData(PdfTable(0, decodedData))
