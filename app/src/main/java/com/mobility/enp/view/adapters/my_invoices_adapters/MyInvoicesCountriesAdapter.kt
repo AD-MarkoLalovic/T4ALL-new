@@ -15,6 +15,7 @@ class MyInvoicesCountriesAdapter(
     ListAdapter<String, MyInvoicesCountriesAdapter.StatusTagViewHolder>(DIFF_CALLBACK) {
     private var selectedStatus = 0
     private var isEnabled: Boolean = true
+    private var clicksEnabled: Boolean = true
 
     fun setStatus(position: Int) {
         clearStatus()
@@ -74,7 +75,11 @@ class MyInvoicesCountriesAdapter(
             }
 
             binding.tagStatus.setOnClickListener {
+                if (!clicksEnabled) return@setOnClickListener  // global countdown lock to prevent spamming
+
                 if (bindingAdapterPosition != RecyclerView.NO_POSITION && bindingAdapterPosition != selectedStatus) {
+                    clicksEnabled = false
+
                     val oldPosition = selectedStatus
                     selectedStatus = bindingAdapterPosition
                     notifyItemChanged(oldPosition)
@@ -82,6 +87,10 @@ class MyInvoicesCountriesAdapter(
 
                     onSelected(status)
                 }
+
+                binding.root.postDelayed({
+                    clicksEnabled = true
+                }, 1500)
             }
 
         }
