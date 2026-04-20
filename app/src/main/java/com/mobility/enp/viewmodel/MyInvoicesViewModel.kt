@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Environment
+import android.os.Parcelable
 import android.util.Base64
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -71,7 +72,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     private var selectedCountry: String = ""
     private var countriesPosition: Int = 0
     var firstLoad: Boolean = false
-
+    var recyclerState: Parcelable? = null
 
     private val _allowedCountries = MutableStateFlow<List<String>>(emptyList())
     private val _savedData = MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Empty)

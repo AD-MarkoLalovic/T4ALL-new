@@ -32,7 +32,7 @@ class MonthlyBillsAdapter(
     private val spinnerInterface: TriggerSpinner,
     val lifecycleOwner: LifecycleOwner,
     private val montYearListener: MontYearListener,
-    private val franchiserResource: FranchiseModel?
+    private val franchiserResource: FranchiseModel?, private val state: (Unit) -> Unit
 ) : ListAdapter<Month, MonthlyBillsAdapter.MonthlyBillsViewHolder>(DIFF_CALLBACK) {
 
     private val monthlyBillsArray: ArrayList<Month> = ArrayList(data.months)
@@ -82,6 +82,8 @@ class MonthlyBillsAdapter(
         ) {
             // Povezivanje meseca sa layout-om
             binding.monthly = month
+
+            state(Unit)
 
             // Kreiranje stringa sa dostupnim valutama
             val availableCurrency = StringBuilder()
