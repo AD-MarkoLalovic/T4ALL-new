@@ -24,15 +24,17 @@ class HistorySerialAdapter(
     private val viewModel: UserPassViewModel,
     private val complaintInterface: HistoryPassageAdapter.SendToFragment,
     private val complaintInterfaceCroatia: HistoryPassageAdapterCroatia.SendToFragment,
-    val lifecycleOwner: LifecycleOwner,
+    val lifecycleOwner: LifecycleOwner, private val noPassages: (Boolean) -> Unit
 ) : RecyclerView.Adapter<HistorySerialAdapter.TagsViewHolder>() {
 
     private var listOfTags: List<Tag> = emptyList()
 
     private var currentPage: Int = 0
     private var lastPage: Int = 0
+    private var hasPassages: Boolean = true
 
     fun setAdapterData(indexData: List<IndexData>) {
+        hasPassages = true
         if (indexData.isNotEmpty()) {
             currentPage = indexData[indexData.size - 1].currentPage ?: 0
             lastPage = indexData[indexData.size - 1].lastPage ?: 0
@@ -49,13 +51,6 @@ class HistorySerialAdapter(
         }
     }
 
-    fun clearData() {
-        listOfTags = emptyList()
-        currentPage = 0
-        lastPage = 0
-        notifyDataSetChanged()
-    }
-
     companion object {
         const val TAG = "PrimaryPassageAdapter"
     }
@@ -65,16 +60,13 @@ class HistorySerialAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            toolHistoryIndex: TagUtilCycler, position: Int, holder: TagsViewHolder
+            toolHistoryIndex: TagUtilCycler, position: Int, holder: TagsViewHolder, currentTag: Tag
         ) {
+            hideViews(binding)
+
+            setViewHeight(binding, 0, position)
             // perform initial data fill // for sub adapter
             binding.data = toolHistoryIndex
-
-            holder.binding.progbar.visibility = View.INVISIBLE
-            binding.noPassage.visibility = View.GONE
-            binding.nsScroll.visibility = View.INVISIBLE
-            binding.cycler.visibility = View.INVISIBLE
-            binding.cyclerTotalPrice.visibility = View.INVISIBLE
 
             val itemSerialNumber = toolHistoryIndex.serialNumber
 
@@ -93,6 +85,10 @@ class HistorySerialAdapter(
                         binding.progbar.visibility = View.VISIBLE
                     }
 
+                    if (currentTag == listOfTags.lastOrNull()) {
+                        viewModel.setNoPassages(hasPassages)
+                    }
+
                     setViewHeight(binding, listOfPassages.size, position)
 
                     val adapter = HistoryPassageAdapterCroatia(
@@ -106,9 +102,15 @@ class HistorySerialAdapter(
                             binding.cyclerTotalPrice.layoutManager = LinearLayoutManager(
                                 binding.root.context, LinearLayoutManager.VERTICAL, false
                             )
-                            binding.cyclerTotalPrice.visibility = View.INVISIBLE
+                            binding.cyclerTotalPrice.visibility = View.GONE
                             setViewHeight(binding, size, position)
                             setNoPassage(binding, size)
+
+                            if (currentTag == listOfTags.lastOrNull()) {
+                                viewModel.setNoPassages(hasPassages)
+                            }
+
+                            binding.executePendingBindings()
                         })
 
                     binding.cycler.adapter = adapter
@@ -146,6 +148,12 @@ class HistorySerialAdapter(
                             binding.progbar.visibility = View.GONE
                             setViewHeight(binding, size, position)
                             setNoPassage(binding, size)
+
+                            if (currentTag == listOfTags.lastOrNull()) {
+                                viewModel.setNoPassages(hasPassages)
+                            }
+
+                            binding.executePendingBindings()
                         },
                         { sumTags ->
                             if (sumTags.isNotEmpty()) {
@@ -159,14 +167,12 @@ class HistorySerialAdapter(
 
                                 binding.cyclerTotalPrice.visibility = View.VISIBLE
                             } else {
-                                binding.cyclerTotalPrice.visibility = View.INVISIBLE
+                                binding.cyclerTotalPrice.visibility = View.GONE
                             }
                         }
                     )
 
                     binding.cycler.adapter = adapter
-
-                    setViewHeight(binding, listOfPassages.size, position)
 
                     adapter.submitList(listOfPassages)
 
@@ -182,16 +188,19 @@ class HistorySerialAdapter(
 
         val heightInDp = when (size) {
 
-            0 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_one_zero_items
-            )
+            0 -> {
+                binding.nsScroll.layoutParams.height = 0
+                binding.nsScroll.visibility = View.GONE
+                binding.cycler.visibility = View.GONE
+                return
+            }
 
             1 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_one_item
+                R.dimen.recycler_view_two_items
             )
 
             2 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_two_items
+                R.dimen.recycler_view_two_items_modified
             )
 
             3 -> binding.root.context.resources.getDimensionPixelSize(
@@ -204,6 +213,7 @@ class HistorySerialAdapter(
         }
 
         binding.nsScroll.layoutParams.height = heightInDp
+        binding.cycler.isNestedScrollingEnabled = true
         binding.nsScroll.requestLayout()
 
         binding.nsScroll.visibility = View.VISIBLE
@@ -217,11 +227,21 @@ class HistorySerialAdapter(
     private fun setNoPassage(binding: ToolHistoryIndexCardBinding, size: Int) {
         when (size) {
             0 -> {
-                binding.noPassage.visibility = View.VISIBLE
+                hasPassages = false
+                hideViews(binding)
             }
 
             else -> {
+                hasPassages = true
                 binding.noPassage.visibility = View.GONE
+                binding.relativeTop.visibility = View.VISIBLE
+                binding.txtSerial.visibility = View.VISIBLE
+                binding.txtTotal.visibility = View.VISIBLE
+                binding.cyclerTotalPrice.visibility = View.VISIBLE
+                binding.center.visibility = View.VISIBLE
+                binding.tagSerialNumber.visibility = View.VISIBLE
+                binding.txtSerial.visibility = View.VISIBLE
+                binding.txtTotal.visibility = View.VISIBLE
             }
         }
     }
@@ -232,6 +252,20 @@ class HistorySerialAdapter(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
+    }
+
+    private fun hideViews(binding: ToolHistoryIndexCardBinding) {
+        binding.noPassage.visibility = View.GONE
+        binding.relativeTop.visibility = View.GONE
+        binding.txtSerial.visibility = View.GONE
+        binding.txtTotal.visibility = View.GONE
+        binding.progbar.visibility = View.GONE
+        binding.cyclerTotalPrice.visibility = View.GONE
+        binding.center.visibility = View.GONE
+        binding.noPassage.visibility = View.GONE
+        binding.txtSerial.visibility = View.GONE
+        binding.txtTotal.visibility = View.GONE
+        binding.tagSerialNumber.visibility = View.GONE
     }
 
     override fun getItemCount(): Int = listOfTags.size ?: 0
@@ -262,7 +296,7 @@ class HistorySerialAdapter(
 
 
         holder.bind(
-            tagUtilCycler, holder.bindingAdapterPosition, holder
+            tagUtilCycler, holder.bindingAdapterPosition, holder, currentTag
         )
 
         runPaginationCheck(currentTag)

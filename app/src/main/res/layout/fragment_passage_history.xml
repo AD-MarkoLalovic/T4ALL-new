@@ -111,12 +111,31 @@
             android:scrollbarAlwaysDrawVerticalTrack="false"
             android:scrollbarFadeDuration="0"
             android:scrollbarStyle="insideInset"
-            android:scrollbars="vertical"
+            android:scrollbars="none"
             app:layoutManager="LinearLayoutManager"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             tools:listitem="@layout/tool_history_index_card" />
 
     </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/noPassage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimens_20dp"
+        android:layout_marginBottom="@dimen/dimens_20dp"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:maxLines="3"
+        android:scrollHorizontally="true"
+        android:text="@string/no_passage_data"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <View
         android:layout_width="match_parent"

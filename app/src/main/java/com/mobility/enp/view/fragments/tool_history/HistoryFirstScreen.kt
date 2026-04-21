@@ -71,7 +71,9 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
 
-        historySerialAdapter = HistorySerialAdapter(viewModel, this, this, this)
+
+        historySerialAdapter = HistorySerialAdapter(viewModel, this, this, this, {
+        })
 
         binding.cycler.adapter = historySerialAdapter
         binding.cycler.layoutManager = LinearLayoutManager(requireContext())
@@ -103,6 +105,15 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
     }
 
     private fun setObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.noPassages.observe(viewLifecycleOwner) { hasPassages ->
+                Log.d(TAG, "setObservers: $hasPassages")
+                if (hasPassages != null) {
+                    binding.noPassage.visibility = View.GONE
+                    binding.noPassage.visibility = if (hasPassages) View.GONE else View.VISIBLE
+                }
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -129,7 +140,15 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                         listIndexData = indexData
 
+                        if (listIndexData.size > 1) {
+                            binding.cycler.isVerticalScrollBarEnabled = true
+                            binding.cycler.isVerticalFadingEdgeEnabled = true
+                        }
+
                         historySerialAdapter.setAdapterData(indexData)
+
+                        (binding.cycler.layoutManager as LinearLayoutManager)
+                            .scrollToPositionWithOffset(0, 0)
                     }
                 }
             }
@@ -349,8 +368,17 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                     viewModel.selectedCountry = selectedCountry
 
-                    historySerialAdapter = HistorySerialAdapter(viewModel, this, this, this)
+                    historySerialAdapter =
+                        HistorySerialAdapter(viewModel, this, this, this, {
+                        })
+
                     binding.cycler.adapter = historySerialAdapter
+
+                    if (listIndexData.size > 1) {
+                        binding.cycler.isVerticalScrollBarEnabled = true
+                        binding.cycler.isVerticalFadingEdgeEnabled = true
+                    }
+
                     historySerialAdapter.setAdapterData(listIndexData)
 
                     if (viewModel.isNetAvailable()) {
@@ -478,5 +506,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
     override fun onResume() {
         super.onResume()
+        binding.noPassage.visibility = View.GONE
     }
 }

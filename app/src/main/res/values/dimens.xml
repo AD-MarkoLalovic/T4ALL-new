@@ -51,6 +51,7 @@
     <dimen name="recycler_view_one_zero_items">80dp</dimen>
     <dimen name="recycler_view_one_item">150dp</dimen>
     <dimen name="recycler_view_two_items">300dp</dimen>
+    <dimen name="recycler_view_two_items_modified">340dp</dimen>
     <dimen name="recycler_view_three_items">450dp</dimen>
     <dimen name="recycler_view_more_items">500dp</dimen>
 
