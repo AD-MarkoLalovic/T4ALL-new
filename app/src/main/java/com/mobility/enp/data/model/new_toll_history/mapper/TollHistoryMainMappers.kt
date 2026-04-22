@@ -1,24 +1,20 @@
 package com.mobility.enp.data.model.new_toll_history.mapper
 
-import android.content.Context
+import  android.content.Context
 import com.mobility.enp.R
 import com.mobility.enp.data.model.cardsweb.Data
 import com.mobility.enp.data.model.new_toll_history.local.entity.AllowedCountryEntity
-import com.mobility.enp.data.model.new_toll_history.local.entity.SumTagEntity
 import com.mobility.enp.data.model.new_toll_history.local.entity.TollHistoryItemEntity
 import com.mobility.enp.data.model.new_toll_history.remote.dto.Item
 import com.mobility.enp.data.model.new_toll_history.remote.dto.SumTag
 import com.mobility.enp.data.model.new_toll_history.remote.dto.TollHistoryDto
 import com.mobility.enp.view.ui_models.toll_history.AllowedCountryUi
-import com.mobility.enp.view.ui_models.toll_history.SumTagUi
 import com.mobility.enp.view.ui_models.toll_history.TollHistoryItemUi
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.time.Instant
-
-
 
 private val apiDateFormatter: DateTimeFormatter =
     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
@@ -51,29 +47,12 @@ fun Long?.toDisplayDate(): String {
     }
 }
 
-data class TollHistoryMappedData(
-    //val countries: List<AllowedCountryEntity>,
-    val sumTags: List<SumTagEntity>,
-    val items: List<TollHistoryItemEntity>
-)
-
-fun TollHistoryDto.toMappedData(
-    filterCountry: String,
-    startSortIndex: Int = 0,
-    page: Int = 1
-): TollHistoryMappedData {
-    val sumTags = data?.sumTags?.filterNotNull()
-        ?.mapIndexed { index, tag -> tag.toEntity(index) } ?: emptyList()
-    val items = toAllRows(filterCountry, startSortIndex, page)
-    return TollHistoryMappedData(sumTags, items)
-}
-
 fun Data.countriesToEntity(): List<AllowedCountryEntity> {
     return buildList {
-        if (showTabRS) add(AllowedCountryEntity("RS",size))
-        if (showTabME) add(AllowedCountryEntity("ME",size))
-        if (showTabMK) add(AllowedCountryEntity("MK",size))
-        if (showTabHR) add(AllowedCountryEntity("HR",size))
+        if (showTabRS) add(AllowedCountryEntity("RS", size))
+        if (showTabME) add(AllowedCountryEntity("ME", size))
+        if (showTabMK) add(AllowedCountryEntity("MK", size))
+        if (showTabHR) add(AllowedCountryEntity("HR", size))
     }
 }
 
@@ -95,29 +74,7 @@ fun String.toDisplayName(context: Context): String {
     }
 }
 
-fun SumTag.toEntity(positon: Int): SumTagEntity {
-    return SumTagEntity(
-        tagSerialNumber = tagSerialNumber ?: "",
-        currency = currency ?: "",
-        total = total ?: "",
-        position = positon
-    )
-}
-
-fun SumTagEntity.toUi(): SumTagUi {
-    return SumTagUi(
-        tagSerialNumber = tagSerialNumber,
-        totalDisplay = total,
-        currencyDisplay = currency
-    )
-}
-
-/**
- * Sekcije u redosledu [sumTags] iz API odgovora; unutar grupe prolazi u redosledu kao u [items].
- * Prazne grupe (nema prolaza za taj tag na strani) se preskaču. Svaka stranica ima svoje total-e u sumTags.
- * Fallback: ako nema sumTags, redosled je kao u [items] (promena taga u nizu).
- */
-fun TollHistoryDto.toAllRows(
+fun TollHistoryDto.toTollHistoryEntities(
     filterCountry: String,
     startSortIndex: Int = 0,
     page: Int = 1
@@ -163,27 +120,14 @@ private fun buildRowsBySumTagsOrder(
         val tagCurrency = sumTag.currency ?: ""
 
         result.add(
-            TollHistoryItemEntity(
-                rowId = "H|$serial|$filterCountry|p$page|s$segmentIndex",
-                rowType = TollHistoryItemEntity.ROW_TYPE_HEADER,
-                sortIndex = sortIndex++,
+            createHeaderEntity(
+                serial = serial,
                 filterCountry = filterCountry,
-                id = 0,
-                tagsSerialNumber = serial,
-                tollPlaza = "",
-                isPaid = false,
-                checkInDate = null,
-                checkOutDate = null,
-                amountWithOutDiscount = "",
-                currency = "",
-                billFinal = "",
-                objectionCount = 0,
-                complaintId = null,
+                sortIndex = sortIndex++,
                 tagTotal = tagTotal,
                 tagCurrency = tagCurrency,
-                entryTime = "",
-                exitTime = "",
-                ticketUid = null
+                page = page,
+                segmentIndex = segmentIndex
             )
         )
 
@@ -201,33 +145,81 @@ private fun buildRowsBySumTagsOrder(
         }
 
         result.add(
-            TollHistoryItemEntity(
-                rowId = "G|$serial|$filterCountry|p$page|s$segmentIndex",
-                rowType = TollHistoryItemEntity.ROW_TYPE_GROUP_END,
-                sortIndex = sortIndex++,
+            createGroupEndEntity(
+                serial = serial,
                 filterCountry = filterCountry,
-                id = 0,
-                tagsSerialNumber = serial,
-                tollPlaza = "",
-                isPaid = false,
-                checkInDate = null,
-                checkOutDate = null,
-                amountWithOutDiscount = "",
-                currency = "",
-                billFinal = "",
-                objectionCount = 0,
-                complaintId = null,
+                sortIndex = sortIndex++,
                 tagTotal = tagTotal,
                 tagCurrency = tagCurrency,
-                entryTime = "",
-                exitTime = "",
-                ticketUid = null
+                page = page,
+                segmentIndex = segmentIndex
             )
         )
     }
-
     return result
 }
+
+private fun createHeaderEntity(
+    serial: String,
+    filterCountry: String,
+    sortIndex: Int,
+    tagTotal: String,
+    tagCurrency: String,
+    page: Int,
+    segmentIndex: Int
+): TollHistoryItemEntity = TollHistoryItemEntity(
+    rowId = "H|$serial|$filterCountry|p$page|s$segmentIndex",
+    rowType = TollHistoryItemEntity.ROW_TYPE_HEADER,
+    sortIndex = sortIndex,
+    filterCountry = filterCountry,
+    id = 0,
+    tagsSerialNumber = serial,
+    tollPlaza = "",
+    isPaid = false,
+    checkInDate = null,
+    checkOutDate = null,
+    amountWithOutDiscount = "",
+    currency = "",
+    billFinal = "",
+    objectionCount = 0,
+    complaintId = null,
+    tagTotal = tagTotal,
+    tagCurrency = tagCurrency,
+    entryTime = null,
+    exitTime = null,
+    ticketUid = null
+)
+
+private fun createGroupEndEntity(
+    serial: String,
+    filterCountry: String,
+    sortIndex: Int,
+    tagTotal: String,
+    tagCurrency: String,
+    page: Int,
+    segmentIndex: Int
+): TollHistoryItemEntity = TollHistoryItemEntity(
+    rowId = "G|$serial|$filterCountry|p$page|s$segmentIndex",
+    rowType = TollHistoryItemEntity.ROW_TYPE_GROUP_END,
+    sortIndex = sortIndex,
+    filterCountry = filterCountry,
+    id = 0,
+    tagsSerialNumber = serial,
+    tollPlaza = "",
+    isPaid = false,
+    checkInDate = null,
+    checkOutDate = null,
+    amountWithOutDiscount = "",
+    currency = "",
+    billFinal = "",
+    objectionCount = 0,
+    complaintId = null,
+    tagTotal = tagTotal,
+    tagCurrency = tagCurrency,
+    entryTime = null,
+    exitTime = null,
+    ticketUid = null
+)
 
 private fun passageEntity(
     item: Item,
@@ -266,7 +258,6 @@ private fun passageEntity(
     )
 }
 
-/** Fallback kad API ne pošalje sumTags: redosled kao u [items], promena taga otvara novu grupu. */
 private fun buildRowsByApiItemOrder(
     filterCountry: String,
     startSortIndex: Int,
@@ -279,9 +270,6 @@ private fun buildRowsByApiItemOrder(
     var currentSerial: String? = null
     var segmentIndex = 0
 
-    fun headerRowId(serial: String) = "H|$serial|$filterCountry|p$page|s$segmentIndex"
-    fun groupEndRowId(serial: String) = "G|$serial|$filterCountry|p$page|s$segmentIndex"
-
     for (item in ordered) {
         val serial = item.serialNumber ?: item.tagsSerialNumber ?: ""
         val matchingSumTag = sumTagMap[serial]
@@ -292,54 +280,28 @@ private fun buildRowsByApiItemOrder(
             if (currentSerial != null) {
                 val closedTag = sumTagMap[currentSerial]
                 result.add(
-                    TollHistoryItemEntity(
-                        rowId = groupEndRowId(currentSerial),
-                        rowType = TollHistoryItemEntity.ROW_TYPE_GROUP_END,
-                        sortIndex = sortIndex++,
+                    createGroupEndEntity(
+                        serial = currentSerial,
                         filterCountry = filterCountry,
-                        id = 0,
-                        tagsSerialNumber = currentSerial,
-                        tollPlaza = "",
-                        isPaid = false,
-                        checkInDate = null,
-                        checkOutDate = null,
-                        amountWithOutDiscount = "",
-                        currency = "",
-                        billFinal = "",
-                        objectionCount = 0,
-                        complaintId = null,
+                        sortIndex = sortIndex++,
                         tagTotal = closedTag?.total ?: "",
                         tagCurrency = closedTag?.currency ?: "",
-                        entryTime = item.entryTime ?: "",
-                        exitTime = item.exitTime ?: "",
-                        ticketUid = item.ticketUid
+                        page = page,
+                        segmentIndex = segmentIndex
                     )
                 )
             }
             currentSerial = serial
             segmentIndex++
             result.add(
-                TollHistoryItemEntity(
-                    rowId = headerRowId(serial),
-                    rowType = TollHistoryItemEntity.ROW_TYPE_HEADER,
-                    sortIndex = sortIndex++,
+                createHeaderEntity(
+                    serial = currentSerial,
                     filterCountry = filterCountry,
-                    id = 0,
-                    tagsSerialNumber = serial,
-                    tollPlaza = "",
-                    isPaid = false,
-                    checkInDate = null,
-                    checkOutDate = null,
-                    amountWithOutDiscount = "",
-                    currency = "",
-                    billFinal = "",
-                    objectionCount = 0,
-                    complaintId = null,
+                    sortIndex = sortIndex++,
                     tagTotal = tagTotal,
                     tagCurrency = tagCurrency,
-                    entryTime = null,
-                    exitTime = null,
-                    ticketUid = null
+                    page = page,
+                    segmentIndex = segmentIndex
                 )
             )
         }
@@ -359,27 +321,14 @@ private fun buildRowsByApiItemOrder(
     if (currentSerial != null) {
         val matchingSumTag = sumTagMap[currentSerial]
         result.add(
-            TollHistoryItemEntity(
-                rowId = "G|$currentSerial|$filterCountry|p$page|s$segmentIndex",
-                rowType = TollHistoryItemEntity.ROW_TYPE_GROUP_END,
-                sortIndex = sortIndex,
+            createGroupEndEntity(
+                serial = currentSerial,
                 filterCountry = filterCountry,
-                id = 0,
-                tagsSerialNumber = currentSerial,
-                tollPlaza = "",
-                isPaid = false,
-                checkInDate = null,
-                checkOutDate = null,
-                amountWithOutDiscount = "",
-                currency = "",
-                billFinal = "",
-                objectionCount = 0,
-                complaintId = null,
+                sortIndex = sortIndex,
                 tagTotal = matchingSumTag?.total ?: "",
                 tagCurrency = matchingSumTag?.currency ?: "",
-                entryTime = null,
-                exitTime = null,
-                ticketUid = null
+                page = page,
+                segmentIndex = segmentIndex
             )
         )
     }
@@ -408,37 +357,3 @@ fun TollHistoryItemEntity.toUi(): TollHistoryItemUi {
         ticketUid = ticketUid
     )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

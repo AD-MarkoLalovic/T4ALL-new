@@ -39,6 +39,7 @@ class NewTollHistoryRepository(
                 prefetchDistance = 5
             ),
             remoteMediator = TollHistoryRemoteMediator(
+                context = context.applicationContext,
                 filterCountry = filterCountry,
                 dateFrom = dateFrom,
                 dateTo = dateTo,
