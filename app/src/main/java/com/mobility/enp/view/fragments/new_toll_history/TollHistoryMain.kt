@@ -46,7 +46,8 @@ class TollHistoryMain : Fragment() {
     private var appendErrorSnackbar: Snackbar? = null
 
     private var shouldRetryOnNetworkBack = false
-    private var hasSeenLoadingForCurrentFilter = false
+    private var mediatorWasLoadingForCurrentFilter = false
+    private var mediatorRefreshCompletedForCurrentFilter = false
 
     private lateinit var connectivityManager: ConnectivityManager
     private var networkCallback: ConnectivityManager.NetworkCallback? = null
@@ -120,7 +121,10 @@ class TollHistoryMain : Fragment() {
                 "MARKO",
                 "submitData: filter=${viewModel.currentFilter.value} pagingData=${pagingData.hashCode()}"
             )
-            hasSeenLoadingForCurrentFilter = false
+            mediatorWasLoadingForCurrentFilter = false
+            mediatorRefreshCompletedForCurrentFilter = false
+            binding.txNoPassage.isVisible = false
+
             pagingAdapter.submitData(pagingData)
         }
     }
@@ -135,35 +139,52 @@ class TollHistoryMain : Fragment() {
         }
     }
 
-
     private fun observeLoadStates() {
         collectLatestLifecycleFlow(pagingAdapter.loadStateFlow) { loadStates ->
-            val refreshState = loadStates.refresh
+            val sourceRefresh = loadStates.source.refresh
+            val mediatorRefresh = loadStates.mediator?.refresh
             val appendState = loadStates.append
             val itemCount = pagingAdapter.itemCount
 
-            val isAnyRefreshLoading =
-                refreshState is LoadState.Loading ||
-                        loadStates.mediator?.refresh is LoadState.Loading
+            when (mediatorRefresh) {
+                is LoadState.Loading -> mediatorWasLoadingForCurrentFilter = true
+                is LoadState.NotLoading -> {
+                    if (mediatorWasLoadingForCurrentFilter) {
+                        mediatorRefreshCompletedForCurrentFilter = true
+                    }
+                }
 
-            if (isAnyRefreshLoading) {
-                hasSeenLoadingForCurrentFilter = true
+                else -> Unit
             }
 
-            binding.progressTollHistory.isVisible =
-                isAnyRefreshLoading && itemCount == 0
+            val isAnyRefreshLoading =
+                sourceRefresh is LoadState.Loading ||
+                        mediatorRefresh is LoadState.Loading
 
-            val showTextNoPassage = hasSeenLoadingForCurrentFilter &&
-                    !isAnyRefreshLoading &&
-                    refreshState is LoadState.NotLoading &&
-                    itemCount == 0
+            binding.progressTollHistory.isVisible =
+                !mediatorRefreshCompletedForCurrentFilter &&
+                        itemCount == 0 &&
+                        mediatorRefresh !is LoadState.Error &&
+                        sourceRefresh !is LoadState.Error
+
+            val showTextNoPassage =
+                mediatorRefreshCompletedForCurrentFilter &&
+                        !isAnyRefreshLoading &&
+                        sourceRefresh is LoadState.NotLoading &&
+                        mediatorRefresh !is LoadState.Error &&
+                        itemCount == 0
 
             binding.txNoPassage.isVisible = showTextNoPassage
 
-            if (refreshState is LoadState.Error) {
-                if (refreshState.error !== lastShownRefreshError) {
-                    lastShownRefreshError = refreshState.error
-                    handleRefreshError(refreshState.error, itemCount)
+            if (sourceRefresh is LoadState.Error) {
+                if (sourceRefresh.error !== lastShownRefreshError) {
+                    lastShownRefreshError = sourceRefresh.error
+                    handleRefreshError(sourceRefresh.error, itemCount)
+                }
+            } else if (mediatorRefresh is LoadState.Error) {
+                if (mediatorRefresh.error !== lastShownRefreshError) {
+                    lastShownRefreshError = mediatorRefresh.error
+                    handleRefreshError(mediatorRefresh.error, itemCount)
                 }
             } else {
                 lastShownRefreshError = null
@@ -277,7 +298,6 @@ class TollHistoryMain : Fragment() {
         }
         networkCallback = null
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
