@@ -18,12 +18,11 @@
     </data>
 
     <RelativeLayout
+        android:id="@+id/relative_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimens_10dp"
         android:background="@drawable/tag_history_background"
-        android:gravity="center"
-        android:padding="@dimen/dimens_10dp">
+        android:gravity="center">
 
 
         <ProgressBar
@@ -35,29 +34,30 @@
 
         <TextView
             android:id="@+id/txtTotal"
-            style="@style/CaptionRegularTablet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/dimens_10dp"
+            android:layout_marginTop="@dimen/dimens_5dp"
+            android:paddingEnd="@dimen/dimens_5dp"
             android:text="@string/total"
             android:textColor="@color/figmaIntroEclipseColorInactive" />
 
         <TextView
             android:id="@+id/txtSerial"
-            style="@style/CaptionRegularTablet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/tagSerialNumber"
             android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/dimens_5dp"
             android:layout_marginEnd="@dimen/dimens_10dp"
             android:text="@string/serial_number"
             android:textColor="@color/figmaIntroEclipseColorInactive" />
 
         <TextView
             android:id="@+id/tagSerialNumber"
-            style="@style/ParagraphMediumTablet"
+            style="@style/ParagraphSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txtTotal"
@@ -65,6 +65,7 @@
             android:layout_gravity="start"
             android:layout_marginTop="@dimen/dimens_5dp"
             android:layout_marginEnd="@dimen/dimens_15dp"
+            android:layout_marginStart="@dimen/dimens_10dp"
             android:layout_toStartOf="@id/cyclerTotalPrice"
             android:ellipsize="end"
             android:maxLines="1"
@@ -81,6 +82,8 @@
             android:layout_marginTop="@dimen/dimens_5dp"
             android:layout_marginEnd="@dimen/dimens_10dp"
             android:minHeight="@dimen/dimens_22dp"
+            android:paddingEnd="@dimen/dimens_5dp"
+            android:textAlignment="viewEnd"
             tool:itemCount="3"
             tool:listitem="@layout/passage_history_total_price" />
 
@@ -97,6 +100,7 @@
             android:layout_below="@id/cyclerTotalPrice"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
+            android:padding="@dimen/dimens_10dp"
             android:scrollIndicators="none"
             android:scrollbarAlwaysDrawVerticalTrack="false"
             android:scrollbarFadeDuration="0"
@@ -125,6 +129,7 @@
             android:layout_below="@id/tagSerialNumber"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/dimens_20dp"
             android:layout_marginBottom="@dimen/dimens_20dp"
             android:ellipsize="end"
             android:gravity="center_horizontal"

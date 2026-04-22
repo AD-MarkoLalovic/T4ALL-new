@@ -286,6 +286,13 @@ class UserPassViewModel(
         _pdfTable.value = SubmitResult.Empty
     }
 
+    private val _noPassages = MutableLiveData<Boolean?>(null)
+    val noPassages: LiveData<Boolean?> get() = _noPassages
+
+    fun setNoPassages(noPassages: Boolean) {
+        _noPassages.value = noPassages
+    }
+
     private val _pdfTable = MutableStateFlow<SubmitResult<ByteArray>>(SubmitResult.Empty)
     val pdfTable: StateFlow<SubmitResult<ByteArray>> get() = _pdfTable
 
@@ -319,6 +326,7 @@ class UserPassViewModel(
         viewModelScope.launch {
             repository.deletePdfExportData()
         }
+        _noPassages.value = null
     }
 
     fun resetUiState() {
