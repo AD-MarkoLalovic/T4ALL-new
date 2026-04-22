@@ -196,7 +196,7 @@
     <string name="complaint_min_length">Das Feld „Grund“ muss mindestens 10
         Zeichen enthalten.</string>
     <string name="please_enter_all_required_data">Bitte geben Sie alle erforderlichen Daten ein</string>
-    <string name="no_passage_data">Sie haben in den letzten 30 Tagen keine Durchfahrten</string>
+    <string name="no_passage_data">Sie haben in den letzten 30 Tagen keine Durchfahrten.</string>
     <string name="no_passage_data_special">Sie haben keine Durchfahrten für den ausgewählten Zeitraum</string>
     <string name="payment_successfully">Die Zahlung wurde erfolgreich durchgeführt.</string>
     <string name="please_select_tag">Bitte wählen Sie ein Tag aus.</string>
@@ -415,4 +415,5 @@
     <string name="export_csv">CSV exportieren</string>
     <string name="complaint_number_label">Reklamations-Nr. %d</string>
     <string name="euro_currency">ЕUR</string>
+    <string name="action_retry">ERNEUT</string>
 </resources>

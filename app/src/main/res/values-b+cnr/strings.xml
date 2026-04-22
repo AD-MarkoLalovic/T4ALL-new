@@ -181,7 +181,7 @@
     <string name="complaint_min_length">Polje za žalbu mora sadržati
     najmanje 10 karaktera</string>
     <string name="please_enter_all_required_data">Molimo unesite sva obavezna polja</string>
-    <string name="no_passage_data">Nemate prolazaka u poslednjih 30 dana</string>
+    <string name="no_passage_data">Nemate prolazaka u poslednjih 30 dana.</string>
     <string name="no_passage_data_special">Nemate prolazaka za odabrani period</string>
     <string name="payment_successfully">Plaćanje je uspješno izvršeno.</string>
     <string name="please_select_tag">Molimo izaberite oznaku.</string>
@@ -395,4 +395,5 @@
     <string name="export_csv">Izvoz CSV-a</string>
     <string name="complaint_number_label">Br. reklamacije %d</string>
     <string name="euro_currency">ЕUR</string>
+    <string name="action_retry">PONOVI</string>
 </resources>

@@ -183,7 +183,7 @@
     <string name="complaint_min_length">Polje za prigovor mora sadržavati
     najmanje 10 znakova</string>
     <string name="please_enter_all_required_data">Molimo unesite sve potrebne podatke</string>
-    <string name="no_passage_data">Nemate prolazaka u posljednjih 30 dana</string>
+    <string name="no_passage_data">Nemate prolazaka u posljednjih 30 dana.</string>
     <string name="no_passage_data_special">Nemate prolazaka za odabrani period</string>
     <string name="payment_successfully">Plaćanje je uspješno završeno.</string>
     <string name="please_select_tag">Molimo odaberite tag.</string>
@@ -400,5 +400,6 @@
     <string name="export_csv">Izvoz CSV-a</string>
     <string name="complaint_number_label">Br. reklamacije %d</string>
     <string name="euro_currency">ЕUR</string>
+    <string name="action_retry">PONOVI</string>
 
 </resources>

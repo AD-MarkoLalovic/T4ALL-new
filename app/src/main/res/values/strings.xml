@@ -200,7 +200,7 @@
     <string name="complaint_min_length" translatable="true">Унесите разлог
         за приговор, дужина мора бити најмање 10 карактера.</string>
     <string name="please_enter_all_required_data" translatable="true">Унесите све потребне податке</string>
-    <string name="no_passage_data" translatable="true">Немате пролазака у последњих 30 дана</string>
+    <string name="no_passage_data" translatable="true">Немате пролазака у последњих 30 дана.</string>
     <string name="no_passage_data_special" translatable="true">Немате проласке за одабрани период</string>
     <string name="payment_successfully" translatable="true">Плаћање је успешно извршено.</string>
     <string name="please_select_tag" translatable="true">Молимо одаберите таг.</string>
@@ -462,4 +462,5 @@
     <string name="export_csv">Извоз CSV-а</string>
     <string name="complaint_number_label">Бр. рекламације %d</string>
     <string name="euro_currency">ЕУР</string>
+    <string name="action_retry">ПОНОВИ</string>
 </resources>

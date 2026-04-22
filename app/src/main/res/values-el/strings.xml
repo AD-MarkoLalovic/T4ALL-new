@@ -182,7 +182,7 @@
     <string name="objection_content">Περιεχόμενο ένστασης: (αναφέρετε με σαφήνεια τους λόγους της ένστασης)</string>
     <string name="complaint_min_length">Το πεδίο παραπόνου πρέπει να περιέχει τουλάχιστον 10 χαρακτήρες</string>
     <string name="please_enter_all_required_data">Παρακαλώ εισάγετε όλα τα απαιτούμενα δεδομένα</string>
-    <string name="no_passage_data">Δεν έχετε διελεύσεις τις τελευταίες 30 ημέρες</string>
+    <string name="no_passage_data">Δεν έχετε διελεύσεις τις τελευταίες 30 ημέρες.</string>
     <string name="no_passage_data_special">Δεν έχετε διελεύσεις για την επιλεγμένη περίοδο</string>
     <string name="payment_successfully">Η πληρωμή ολοκληρώθηκε επιτυχώς.</string>
     <string name="please_select_tag">Παρακαλώ επιλέξτε ετικέτα.</string>
@@ -394,4 +394,5 @@
     <string name="export_csv">Εξαγωγή CSV</string>
     <string name="complaint_number_label">Αρ. καταγγελίας %d</string>
     <string name="euro_currency">ЕUR</string>
+    <string name="action_retry">ΞΑΝΑ</string>
 </resources>
