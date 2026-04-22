@@ -15,7 +15,8 @@ sealed interface TollHistoryListItem {
         val passage: TollHistoryItemUi
     ) : TollHistoryListItem
 
-    data class GroupEnd(val currency: String, val afterTagSerialNumber: String) : TollHistoryListItem {
+    data class GroupEnd(val currency: String, val afterTagSerialNumber: String) :
+        TollHistoryListItem {
         val uniqueKey: String
             get() = "$currency-$afterTagSerialNumber"
     }

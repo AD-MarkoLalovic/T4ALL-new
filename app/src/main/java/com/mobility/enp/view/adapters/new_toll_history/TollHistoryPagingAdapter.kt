@@ -39,7 +39,11 @@ class TollHistoryPagingAdapter(
             }
 
             VIEW_TYPE_PASSAGE -> {
-                PassageViewHolder(ItemNewTollHistoryBinding.inflate(inflater, parent, false))
+                PassageViewHolder(
+                    ItemNewTollHistoryBinding.inflate(inflater, parent, false),
+                    onComplaintClick = onComplaintClick,
+                    onObjectionClick = onObjectionClick
+                )
             }
 
             VIEW_TYPE_GROUP_END -> {
@@ -92,8 +96,10 @@ class TollHistoryPagingAdapter(
 
     }
 
-    inner class PassageViewHolder(
-        private val binding: ItemNewTollHistoryBinding
+    class PassageViewHolder(
+        private val binding: ItemNewTollHistoryBinding,
+        private val onComplaintClick: (itemId: Int) -> Unit,
+        private val onObjectionClick: (complaintId: Int, maxReached: Boolean) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: TollHistoryItemUi) = with(binding) {

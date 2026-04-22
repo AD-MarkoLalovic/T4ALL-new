@@ -57,8 +57,4 @@ class NewTollHistoryRepository(
     fun observeAllowedCountries(): Flow<List<AllowedCountryEntity>> {
         return database.newAllowedCountryDao().observeAll()
     }
-
-    fun isOnline(): Boolean {
-        return isNetworkAvailable()
-    }
 }

@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -54,7 +55,10 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
     val pagingFlow: Flow<PagingData<TollHistoryListItem>> = _filter
         .filter { it.country.isNotEmpty() }
         .flatMapLatest { filter ->
-            Log.d("MARKO", "flatMapLatest filter=$filter vm=${this@NewTollHistoryViewModel.hashCode()}")
+            Log.d(
+                "MARKO",
+                "flatMapLatest filter=$filter vm=${this@NewTollHistoryViewModel.hashCode()}"
+            )
             Log.d("MARKO", "pagingFlow: repo.getPagedHistory start country=${filter.country}")
             repo.getPagedHistory(
                 filterCountry = filter.country,
@@ -74,10 +78,12 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
                             total = entity.tagTotal,
                             currency = entity.tagCurrency
                         )
+
                         TollHistoryItemEntity.ROW_TYPE_GROUP_END -> TollHistoryListItem.GroupEnd(
                             currency = entity.tagCurrency,
                             afterTagSerialNumber = entity.tagsSerialNumber
                         )
+
                         else -> TollHistoryListItem.PassageItem(entity.toUi())
                     }
                 }
@@ -98,14 +104,13 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
         )
 
     init {
-        Log.d("MARKO", "VM CREATED ${this.hashCode()}")
         initializeFilter()
         observeDefaultCountry()
     }
 
     private fun initializeFilter() {
         val now = LocalDate.now()
-        val twoHundredDaysAgo = now.minusDays(167)
+        val twoHundredDaysAgo = now.minusDays(109) //167 za HR
 
         _filter.value = HistoryFilter(
             dateFrom = twoHundredDaysAgo.format(dateFormatter),
@@ -115,14 +120,17 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
 
     private fun observeDefaultCountry() {
         viewModelScope.launch {
-            repo.observeAllowedCountries().collect { countries ->
-                val firstCode = countries.minByOrNull { it.position }?.value ?: return@collect
-
-                _filter.update { currentFilter ->
-                    if (currentFilter.country.isNotEmpty()) currentFilter
-                    else currentFilter.copy(country = firstCode)
+            repo.observeAllowedCountries()
+                .filter { it.isNotEmpty() }
+                .first()
+                .minByOrNull { it.position }
+                ?.value
+                ?.let { firstCode ->
+                    _filter.update { current ->
+                        if (current.country.isNotEmpty()) current
+                        else current.copy(country = firstCode)
+                    }
                 }
-            }
         }
     }
 

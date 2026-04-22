@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_card_group_top"
     android:paddingHorizontal="@dimen/dimens_8dp"
-    android:paddingTop="@dimen/dimens_20dp"
+    android:paddingTop="@dimen/dimens_16dp"
     android:paddingBottom="@dimen/dimens_12dp">
 
     <TextView
@@ -24,6 +24,7 @@
 
     <TextView
         android:id="@+id/tvTotalLabel"
+        style="@style/CaptionRegular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:lineSpacingExtra="@dimen/dimens_0dp"
