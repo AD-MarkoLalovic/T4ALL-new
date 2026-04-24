@@ -218,7 +218,13 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     ) {
         flow.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getInvoicesDataPaging(page, perPage, _selectedCountry.value)
+
+            var sc = _selectedCountry.value
+            if (sc == "all") {
+                sc = ""
+            }
+
+            val result = repository.getInvoicesDataPaging(page, perPage, sc)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -279,8 +285,14 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         currency: String,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
+
+            var sc = _selectedCountry.value
+            if (sc == "all") {
+                sc = ""
+            }
+
             val result =
-                repository.getBillDetails(yearMonth, currency, perPage, _selectedCountry.value)
+                repository.getBillDetails(yearMonth, currency, perPage, sc)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -343,12 +355,17 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         page: Int
     ) {
         viewModelScope.launch(Dispatchers.IO) {
+            var sc = _selectedCountry.value
+            if (sc == "all") {
+                sc = ""
+            }
+
             val result =
                 repository.getBillDetailsPaging(
                     yearMonth,
                     currency,
                     perPage,
-                    _selectedCountry.value,
+                    sc,
                     page
                 )
             if (result.isSuccess) {
