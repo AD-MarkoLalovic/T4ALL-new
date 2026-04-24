@@ -127,12 +127,14 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         _savedBills.clear()
     }
 
-    fun saveBill(key: String, bill: BillsDetailsResponse) {
-        _savedBills[key] = bill
+    fun saveBill(key: String, bill: BillsDetailsResponse) {   // month year //extra key country
+        val keyExtra = _selectedCountry.value.ifEmpty { "all" }
+        _savedBills[key + keyExtra] = bill
     }
 
     fun getSavedBillDetails(key: String): BillsDetailsResponse? {
-        return _savedBills[key]
+        val keyExtra = _selectedCountry.value.ifEmpty { "all" }
+        return _savedBills[key + keyExtra]
     }
 
     fun isNetworkAvailable(): Boolean {
@@ -218,7 +220,13 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     ) {
         flow.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getInvoicesDataPaging(page, perPage, _selectedCountry.value)
+
+            var sc = _selectedCountry.value
+            if (sc == "all") {
+                sc = ""
+            }
+
+            val result = repository.getInvoicesDataPaging(page, perPage, sc)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -279,8 +287,14 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         currency: String,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
+
+            var sc = _selectedCountry.value
+            if (sc == "all") {
+                sc = ""
+            }
+
             val result =
-                repository.getBillDetails(yearMonth, currency, perPage, _selectedCountry.value)
+                repository.getBillDetails(yearMonth, currency, perPage, sc)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -343,12 +357,17 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         page: Int
     ) {
         viewModelScope.launch(Dispatchers.IO) {
+            var sc = _selectedCountry.value
+            if (sc == "all") {
+                sc = ""
+            }
+
             val result =
                 repository.getBillDetailsPaging(
                     yearMonth,
                     currency,
                     perPage,
-                    _selectedCountry.value,
+                    sc,
                     page
                 )
             if (result.isSuccess) {

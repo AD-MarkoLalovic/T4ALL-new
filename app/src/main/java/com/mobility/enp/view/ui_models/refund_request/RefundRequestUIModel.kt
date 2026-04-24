@@ -4,7 +4,7 @@ data class RefundRequestUIModel(
     val id: Int,
     val serialNumber: String,
     val displayAmount: String,
-    val registrationPlate: String,
+    val registrationPlate: String?,
     val statusText: String,
     val statusValue: Int,
     val bankAccount: String,

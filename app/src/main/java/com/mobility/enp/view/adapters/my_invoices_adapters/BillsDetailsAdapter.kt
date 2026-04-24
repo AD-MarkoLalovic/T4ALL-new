@@ -12,7 +12,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -20,6 +19,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_my_invoices.Bill
@@ -32,7 +32,6 @@ import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.serialization.descriptors.StructureKind
 
 class BillsDetailsAdapter(
     private var billData: BillData,
@@ -40,12 +39,11 @@ class BillsDetailsAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val spinnerInterface: MonthlyBillsAdapter.TriggerSpinner,
     private val availableCurrencies: String
-) :
-    RecyclerView.Adapter<BillsDetailsAdapter.BillsViewHolder>() {
+) : ListAdapter<Bill, BillsDetailsAdapter.BillsViewHolder>(DiffCallback()) {
 
     private var billsArray: ArrayList<Bill> = ArrayList(billData.bills)
     private var currentPage = billData.currentPage
-    private val lastPage = billData.lastPage
+    private var lastPage = billData.lastPage
     private var canDownload: Boolean = true
 
     companion object {
@@ -62,6 +60,22 @@ class BillsDetailsAdapter(
         }
     }
 
+    class DiffCallback : DiffUtil.ItemCallback<Bill>() {
+
+        override fun areItemsTheSame(oldItem: Bill, newItem: Bill): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Bill, newItem: Bill): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    fun submitInitialData(data: BillData) {
+        currentPage = data.currentPage
+        lastPage = data.lastPage
+        submitList(data.bills)
+    }
 
     inner class BillsViewHolder(val binding: ItemInvoicesBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -98,6 +112,7 @@ class BillsDetailsAdapter(
                     binding.secondContainerInvoices.setBackgroundResource(R.color.white)
 
                 }
+
                 7 -> {
                     binding.bttPayNow.apply {
                         visibility = View.INVISIBLE
@@ -119,6 +134,7 @@ class BillsDetailsAdapter(
                     binding.firstContainerInvoice.setBackgroundResource(R.color.light_orange)
                     binding.secondContainerInvoices.setBackgroundResource(R.color.white)
                 }
+
                 else -> {
                     binding.invoicesCardView.strokeColor = ContextCompat.getColor(
                         binding.invoicesCardView.context,
@@ -142,7 +158,7 @@ class BillsDetailsAdapter(
 
             binding.bttPayNow.setOnClickListener {
 
-                binding.bttPayNow.backgroundTintList =  AppCompatResources.getColorStateList(
+                binding.bttPayNow.backgroundTintList = AppCompatResources.getColorStateList(
                     binding.root.context,
                     R.color.very_light_gray
                 )
@@ -150,10 +166,10 @@ class BillsDetailsAdapter(
                 binding.bttPayNow.isEnabled = false
                 binding.bttPayNow.isClickable = false
 
-                val buttonCompletionListener = object : onApiCallCompletion{
+                val buttonCompletionListener = object : onApiCallCompletion {
                     override fun apiCompletedSuccess() {
 
-                        binding.bttPayNow.backgroundTintList =  AppCompatResources.getColorStateList(
+                        binding.bttPayNow.backgroundTintList = AppCompatResources.getColorStateList(
                             binding.root.context,
                             R.color.figmaIntroEclipseColorInactive
                         )
@@ -165,7 +181,7 @@ class BillsDetailsAdapter(
                 }
 
                 spinnerInterface.onStartSpinner()
-                viewModel.payBill(billId,buttonCompletionListener)
+                viewModel.payBill(billId, buttonCompletionListener)
             }
 
             binding.executePendingBindings()
@@ -315,18 +331,14 @@ class BillsDetailsAdapter(
     override fun getItemCount() = billsArray.size
 
     override fun onBindViewHolder(holder: BillsViewHolder, position: Int) {
-        val current = billsArray[holder.bindingAdapterPosition]
+        val current = getItem(position)
         holder.bind(current, viewModel)
-        checkDataFill(holder.bindingAdapterPosition, current, holder.binding.root.context)
+
+        checkDataFill(position, current, holder.binding.root.context)
     }
 
     private fun checkDataFill(position: Int, currentBill: Bill, context: Context) {
-        Log.d(
-            "BillsDetailsAdapter",
-            "onBindViewHolder: adapter pos $position arrayTotal ${billsArray.size - 1} totalItems ${billData.total}"
-        )
-        if (billsArray[billsArray.size - 1] == currentBill && lastPage > currentPage) {
-
+        if (position == currentList.lastIndex && lastPage > currentPage) {
 
             val billDetailsFlow =
                 MutableStateFlow<SubmitResult<BillsDetailsResponse>>(SubmitResult.Loading)
@@ -336,72 +348,33 @@ class BillsDetailsAdapter(
                     is SubmitResult.Success -> {
                         spinnerInterface.onStopSpinner()
 
-                        serverResponse.data.let { data ->
-                            spinnerInterface.onStopSpinner()
+                        val data = serverResponse.data.data
+                        currentPage = data.currentPage
+                        lastPage = data.lastPage
 
-                            currentPage = data.data.currentPage
+                        val updatedList = currentList.toMutableList()
+                        updatedList.addAll(data.bills)
 
-                            for (month: Bill in data.data.bills) {
-                                billsArray.add(month)
-                                notifyItemChanged(billsArray.size - 1)
-                            }
-                        }
+                        submitList(updatedList)
                     }
 
                     is SubmitResult.FailureServerError -> {
                         spinnerInterface.onStopSpinner()
-                        logError(context.resources.getString(R.string.server_error_msg))
+                        logError(context.getString(R.string.server_error_msg))
                     }
 
                     is SubmitResult.FailureApiError -> {
                         spinnerInterface.onStopSpinner()
-                        logError(context.resources.getString(R.string.api_call_error))
+                        logError(context.getString(R.string.api_call_error))
                     }
 
-                    else -> {
-                        spinnerInterface.onStopSpinner()
-                    }
+                    else -> spinnerInterface.onStopSpinner()
                 }
             }
 
             spinnerInterface.onStartSpinner()
             spinnerInterface.pagingUpdateBill(currentPage + 1, billDetailsFlow, availableCurrencies)
         }
-    }
-
-    fun submitList(data: BillData) {
-        val newList: List<Bill> = data.bills
-        val oldList = billsArray
-        val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(
-            InvoicesItemDiffCallback(
-                oldList,
-                newList
-            )
-        )
-        billsArray = newList as ArrayList<Bill>
-        diffResult.dispatchUpdatesTo(this)
-    }
-
-    class InvoicesItemDiffCallback(
-        private var oldInvoicesList: List<Bill>,
-        private var newInvoicesList: List<Bill>
-    ) : DiffUtil.Callback() {
-        override fun getOldListSize(): Int {
-            return oldInvoicesList.size
-        }
-
-        override fun getNewListSize(): Int {
-            return newInvoicesList.size
-        }
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return (oldInvoicesList[oldItemPosition].billFinal == newInvoicesList[newItemPosition].billFinal)
-        }
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldInvoicesList[oldItemPosition].equals(newInvoicesList[newItemPosition])
-        }
-
     }
 
     private fun logError(string: String) {
@@ -418,7 +391,7 @@ class BillsDetailsAdapter(
         fun onPermissionDenied()
     }
 
-    interface onApiCallCompletion{
+    interface onApiCallCompletion {
         fun apiCompletedSuccess()
     }
 

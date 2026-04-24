@@ -233,11 +233,11 @@ class MonthlyBillsAdapter(
                 viewModel,
                 lifecycleOwner,
                 spinnerInt,
-                availableCurrency.toString()
+                availableCurrency
             )
             binding.recyclerViewMonthlyBills.adapter =
                 billsDetailsAdapter
-            billsDetailsAdapter.submitList(data.data)
+            billsDetailsAdapter.submitInitialData(data.data)
 
             if (data.data
                     .bills.isNotEmpty()

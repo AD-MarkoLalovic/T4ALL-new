@@ -15,7 +15,7 @@ import com.mobility.enp.databinding.FragmentRefundRequestBinding
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.view.MainActivity
-import com.mobility.enp.view.adapters.refund_request_adapters.RefundRequestsCreatedAdapter
+import com.mobility.enp.view.adapters.refund_request_adapters.diff_util.RefundRequestsCreatedAdapter
 import com.mobility.enp.view.ui_models.refund_request.RefundRequestUIModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.RefundRequestViewModel
@@ -51,7 +51,8 @@ class RefundRequestFragment : Fragment() {
         }
 
         if (!::adapter.isInitialized) {
-            adapter = RefundRequestsCreatedAdapter(emptyList())
+            adapter = RefundRequestsCreatedAdapter()
+            adapter.submitList(emptyList())
             binding.rvRefundRequest.adapter = adapter
         }
     }
@@ -87,7 +88,8 @@ class RefundRequestFragment : Fragment() {
     }
 
     private fun showSuccessState(data: List<RefundRequestUIModel>) {
-        adapter = RefundRequestsCreatedAdapter(data)
+        adapter = RefundRequestsCreatedAdapter()
+        adapter.submitList(data)
         binding.rvRefundRequest.adapter = adapter
 
         binding.apply {
