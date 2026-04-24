@@ -127,12 +127,14 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         _savedBills.clear()
     }
 
-    fun saveBill(key: String, bill: BillsDetailsResponse) {
-        _savedBills[key] = bill
+    fun saveBill(key: String, bill: BillsDetailsResponse) {   // month year //extra key country
+        val keyExtra = _selectedCountry.value.ifEmpty { "all" }
+        _savedBills[key + keyExtra] = bill
     }
 
     fun getSavedBillDetails(key: String): BillsDetailsResponse? {
-        return _savedBills[key]
+        val keyExtra = _selectedCountry.value.ifEmpty { "all" }
+        return _savedBills[key + keyExtra]
     }
 
     fun isNetworkAvailable(): Boolean {
