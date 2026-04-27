@@ -17,7 +17,7 @@ data class DataRefundRequestEntity(
     val currencyText: String,
     val statusValue: Int,
     val statusText: String,
-    val registrationPlate: String
+    val registrationPlate: String?
 ) {
     fun toUIModel(): RefundRequestUIModel {
         return RefundRequestUIModel(
