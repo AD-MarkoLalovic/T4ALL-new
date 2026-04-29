@@ -98,11 +98,6 @@ interface ApiService {
         @Path("card_id") cardId: String
     ): Response<Unit>
 
-    /**
-     * possible filter
-     * Allowed filter(s) are `date_from, date_to, serial_number, currency, country`."
-     * example filter["country"] without ""
-     */
     @GET("/api/v2/history")
     suspend fun getToolHistoryTransitV2(
         @Query("filter[serial_number]") serialNumbers: String,
