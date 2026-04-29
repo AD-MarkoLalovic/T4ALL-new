@@ -269,6 +269,43 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             }
         }
 
+        collectLatestLifecycleFlow(viewModel.myInvoicesPaging) { serverResponse ->
+            when (serverResponse) {
+                is SubmitResult.Loading -> {
+                    binding.invoicesLoadingView.visibility = View.VISIBLE
+                    binding.recyclerViewBills.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    if (::adapterMonthly.isInitialized) {
+                        adapterMonthly.updateAdapter(serverResponse.data)
+                    }
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    showError(serverResponse.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(serverResponse.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {}
+            }
+        }
+
         collectLatestLifecycleFlow(viewModel.billPad) { result ->
             when (result) {
                 is SubmitResultFold.Failure -> {
@@ -425,17 +462,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         }
     }
 
-
-    override fun pagingUpdate(
-        nextPage: Int,
-        flow: MutableStateFlow<SubmitResult<MyInvoicesResponse>>
-    ) {
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.fetchMonthlyInvoicesPaging(
-                nextPage, flow
-            )
-        }
-    }
 
     override fun pagingUpdateBill(
         nextPage: Int,
