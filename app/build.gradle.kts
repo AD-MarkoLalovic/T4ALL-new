@@ -61,7 +61,7 @@ android {
         create("stage") {
             dimension = "mode"
             applicationIdSuffix = ".stage"
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
             versionNameSuffix = "-stage"
             multiDexEnabled = true
             isDefault = true
