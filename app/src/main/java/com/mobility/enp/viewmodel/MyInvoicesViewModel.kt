@@ -72,6 +72,11 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
 
     private val _selectedCountry = MutableStateFlow("all")
 
+    private val _billDetailsFlow =
+        MutableStateFlow<SubmitResult<BillsDetailsResponse>>(SubmitResult.Loading)
+
+    val billDetailsFlow: StateFlow<SubmitResult<BillsDetailsResponse>> get() = _billDetailsFlow
+
     fun setSelectedCountry(country: String) {
         _selectedCountry.value = country
     }
@@ -281,72 +286,72 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         }
     }
 
-    fun fetchBillDetailsNew(
-        flow: MutableStateFlow<SubmitResult<BillsDetailsResponse>>,
+
+    suspend fun fetchBillDetailsNew(
         yearMonth: String,
         currency: String,
-    ) {
-        viewModelScope.launch(Dispatchers.IO) {
+    ): BillsDetailsResponse? {
+        var sc = _selectedCountry.value
+        if (sc == "all") {
+            sc = ""
+        }
 
-            var sc = _selectedCountry.value
-            if (sc == "all") {
-                sc = ""
-            }
-
-            val result =
-                repository.getBillDetails(yearMonth, currency, perPage, sc)
-            if (result.isSuccess) {
-                val data = result.getOrNull()
-                if (data == null) {
-                    flow.value = SubmitResult.Empty
-                } else {
-                    flow.value = SubmitResult.Success(data)
-                }
+        val result =
+            repository.getBillDetails(yearMonth, currency, perPage, sc)
+        if (result.isSuccess) {
+            val data = result.getOrNull()
+            if (data == null) {
+                _billDetailsFlow.value = SubmitResult.Empty
+                return null
             } else {
-                when (val error = result.exceptionOrNull()) {
-                    is NetworkError.ServerError -> {
-                        Log.d(
-                            UserPassViewModel.TAG,
-                            "Error while fetching bill details"
-                        )
-                        flow.value = SubmitResult.FailureServerError
-                    }
+                _billDetailsFlow.value = SubmitResult.Success(data)
+                return data
+            }
+        } else {
+            when (val error = result.exceptionOrNull()) {
+                is NetworkError.ServerError -> {
+                    Log.d(
+                        UserPassViewModel.TAG,
+                        "Error while fetching bill details"
+                    )
+                    _billDetailsFlow.value = SubmitResult.FailureServerError
+                }
 
-                    is NetworkError.NoConnection -> {
-                        flow.value = SubmitResult.FailureNoConnection
-                    }
+                is NetworkError.NoConnection -> {
+                    _billDetailsFlow.value = SubmitResult.FailureNoConnection
+                }
 
-                    is NetworkError.ApiError -> {
-                        when (error.errorResponse.code) {
-                            401, 405 -> {
-                                Log.d(
-                                    "API_TOKEN UserPassViewModel",
-                                    "invalid token detected login out user"
+                is NetworkError.ApiError -> {
+                    when (error.errorResponse.code) {
+                        401, 405 -> {
+                            Log.d(
+                                "API_TOKEN UserPassViewModel",
+                                "invalid token detected login out user"
+                            )
+                            _billDetailsFlow.value =
+                                SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code,
+                                    error.errorResponse.message ?: ""
                                 )
-                                flow.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
-                                    )
-                            }
+                        }
 
-                            else -> {
-                                flow.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
-                                Log.d(
-                                    "UserPassViewModel",
-                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                        else -> {
+                            _billDetailsFlow.value =
+                                SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
                                 )
-                            }
+                            Log.d(
+                                "UserPassViewModel",
+                                "UserPassViewModel api error ${error.errorResponse.message}"
+                            )
                         }
                     }
-
-                    else -> {}
                 }
+
+                else -> {}
             }
         }
+        return null
     }
 
 

@@ -292,6 +292,39 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             }
         }
 
+        collectLatestLifecycleFlow(viewModel.billDetailsFlow) { serverResponse ->
+            when (serverResponse) {
+                is SubmitResult.Loading -> {
+                    binding.invoicesLoadingView.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    showError(serverResponse.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(serverResponse.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {}
+            }
+        }
+
     }
 
     private fun notificationPermissionDeniedDialog() {

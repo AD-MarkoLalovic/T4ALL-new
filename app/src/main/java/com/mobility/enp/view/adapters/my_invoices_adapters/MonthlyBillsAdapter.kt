@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +25,7 @@ import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 //First ADAPTER
 class MonthlyBillsAdapter(
@@ -137,45 +139,17 @@ class MonthlyBillsAdapter(
                     if (viewModel.isNetworkAvailable()) {
                         montYearListener.onMontYearSelected(montYear)
 
-                        val billDetailsFlow =
-                            MutableStateFlow<SubmitResult<BillsDetailsResponse>>(SubmitResult.Loading)
+                        lifecycleOwner.lifecycleScope.launch {
+                            val data = viewModel.fetchBillDetailsNew(
+                                montYear,
+                                availableCurrency.toString()
+                            )
 
-                        collectLatestFlow(lifecycleOwner, billDetailsFlow) { serverResponse ->
-                            when (serverResponse) {
-                                is SubmitResult.Success -> {
-                                    spinnerInterface.onStopSpinner()
-
-                                    serverResponse.data.let { data ->
-                                        viewModel.saveBill(montYear, data)
-                                        setAdapterData(data, availableCurrency.toString())
-                                    }
-
-                                }
-
-                                is SubmitResult.FailureServerError -> {
-                                    spinnerInterface.onStopSpinner()
-                                    logError(binding.root.context.resources.getString(R.string.server_error_msg))
-                                }
-
-                                is SubmitResult.FailureApiError -> {
-                                    spinnerInterface.onStopSpinner()
-                                    logError(binding.root.context.resources.getString(R.string.api_call_error))
-                                }
-
-                                else -> {
-                                    spinnerInterface.onStopSpinner()
-                                }
+                            data?.let {
+                                viewModel.saveBill(montYear, data)
+                                setAdapterData(data, availableCurrency.toString())
                             }
-                            binding.executePendingBindings()
                         }
-
-
-                        spinnerInterface.onStartSpinner()
-                        viewModel.fetchBillDetailsNew(
-                            billDetailsFlow,
-                            montYear,
-                            availableCurrency.toString()
-                        )
 
                         franchiserResource?.let { data ->
                             binding.arrowDown.setImageDrawable(
