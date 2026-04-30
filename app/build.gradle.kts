@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.gms.google.services)
-    alias(libs.plugins.ksp)
+    id("com.google.devtools.ksp") version "2.3.6"
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.firebase.crashlytics")
     id("kotlin-parcelize")
@@ -27,12 +27,12 @@ android {
     }
 
     namespace = "com.mobility.enp"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.mobility.enp"
         minSdk = 29
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 253
         versionName = "1.10.3"
 
@@ -94,15 +94,17 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     buildFeatures {
         dataBinding = true
         viewBinding = true
     }
 
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+    }
 }
 
 dependencies {
