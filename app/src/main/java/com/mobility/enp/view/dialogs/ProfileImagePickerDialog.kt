@@ -17,16 +17,16 @@ import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import com.mobility.enp.databinding.DialogChangeProfilePictureBinding
-import com.mobility.enp.util.setDimensionsPercent
-import com.mobility.enp.viewmodel.FranchiseViewModel
-import androidx.core.graphics.drawable.toDrawable
 import com.mobility.enp.R
+import com.mobility.enp.databinding.DialogChangeProfilePictureBinding
 import com.mobility.enp.util.FragmentResultKeys
 import com.mobility.enp.util.SharedPreferencesHelper
+import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.util.toast
+import com.mobility.enp.viewmodel.FranchiseViewModel
 
 class ProfileImagePickerDialog(
     private val imageSelectionListener: ImagePickDialogListener,
