@@ -383,14 +383,6 @@
         android:label="SupportDialog"
         tools:layout="@layout/dialog_support" />
     <dialog
-        android:id="@+id/notificationDialog"
-        android:name="com.mobility.enp.view.dialogs.NotificationDialog"
-        android:label="NotificationDialog"
-        tools:layout="@layout/notification_dialog_layout" />
-    <action
-        android:id="@+id/action_global_notificationDialog"
-        app:destination="@id/notificationDialog" />
-    <dialog
         android:id="@+id/noInternetConnectionDialog"
         android:name="com.mobility.enp.view.dialogs.NoInternetConnectionDialog"
         android:label="NoInternetConnectionDialog"
