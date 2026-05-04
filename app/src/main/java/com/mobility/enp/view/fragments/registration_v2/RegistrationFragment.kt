@@ -12,7 +12,6 @@ import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
-import com.mobility.enp.databinding.FragmentTosBinding
 import com.mobility.enp.databinding.UserRegistrationLoginBinding
 
 class RegistrationFragment : Fragment() {

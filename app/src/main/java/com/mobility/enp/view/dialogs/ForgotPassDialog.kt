@@ -6,14 +6,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mobility.enp.R
 import com.mobility.enp.databinding.DialogForgotPassBinding
 import com.mobility.enp.util.setDimensionsPercent
-import androidx.core.graphics.drawable.toDrawable
-import androidx.core.view.isVisible
 
 class ForgotPassDialog : DialogFragment() {
 

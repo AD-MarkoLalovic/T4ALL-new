@@ -15,7 +15,6 @@ import androidx.fragment.app.setFragmentResult
 import com.mobility.enp.databinding.DialogPermissionDeniedBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
-import kotlin.getValue
 
 
 class PermissionDeniedDialog : DialogFragment() {

@@ -61,6 +61,10 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     private val _myInvoices = MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Empty)
     val myInvoices: StateFlow<SubmitResult<MyInvoicesResponse>> get() = _myInvoices
 
+    private val _myInvoicesPaging =
+        MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Empty)
+    val myInvoicesPaging: StateFlow<SubmitResult<MyInvoicesResponse>> get() = _myInvoicesPaging
+
     private val _billPad = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
     val billPad = _billPad.asStateFlow()
 
@@ -71,6 +75,11 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     val openDialogForNoPdfData: LiveData<Boolean> get() = _openDialogForNoPdfData
 
     private val _selectedCountry = MutableStateFlow("all")
+
+    private val _billDetailsFlow =
+        MutableStateFlow<SubmitResult<BillsDetailsResponse>>(SubmitResult.Loading)
+
+    val billDetailsFlow: StateFlow<SubmitResult<BillsDetailsResponse>> get() = _billDetailsFlow
 
     fun setSelectedCountry(country: String) {
         _selectedCountry.value = country
@@ -216,9 +225,8 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
 
     fun fetchMonthlyInvoicesPaging(
         page: Int,
-        flow: MutableStateFlow<SubmitResult<MyInvoicesResponse>>
     ) {
-        flow.value = SubmitResult.Loading
+        _myInvoicesPaging.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
 
             var sc = _selectedCountry.value
@@ -230,32 +238,24 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
-                    flow.value = SubmitResult.Empty
+                    _myInvoicesPaging.value = SubmitResult.Empty
                 } else {
-                    flow.value = SubmitResult.Success(data)
+                    _myInvoicesPaging.value = SubmitResult.Success(data)
                 }
             } else {
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
-                        Log.d(
-                            UserPassViewModel.TAG,
-                            "Error while fetching my invoices data"
-                        )
-                        flow.value = SubmitResult.FailureServerError
+                        _myInvoicesPaging.value = SubmitResult.FailureServerError
                     }
 
                     is NetworkError.NoConnection -> {
-                        flow.value = SubmitResult.FailureNoConnection
+                        _myInvoicesPaging.value = SubmitResult.FailureNoConnection
                     }
 
                     is NetworkError.ApiError -> {
                         when (error.errorResponse.code) {
                             401, 405 -> {
-                                Log.d(
-                                    "API_TOKEN UserPassViewModel",
-                                    "invalid token detected login out user"
-                                )
-                                flow.value =
+                                _myInvoicesPaging.value =
                                     SubmitResult.InvalidApiToken(
                                         error.errorResponse.code,
                                         error.errorResponse.message ?: ""
@@ -263,14 +263,10 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                             }
 
                             else -> {
-                                flow.value =
+                                _myInvoicesPaging.value =
                                     SubmitResult.FailureApiError(
                                         error.errorResponse.message ?: ""
                                     )
-                                Log.d(
-                                    "UserPassViewModel",
-                                    "UserPassViewModel api error ${error.errorResponse.message}"
-                                )
                             }
                         }
                     }
@@ -281,72 +277,72 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         }
     }
 
-    fun fetchBillDetailsNew(
-        flow: MutableStateFlow<SubmitResult<BillsDetailsResponse>>,
+
+    suspend fun fetchBillDetailsNew(
         yearMonth: String,
         currency: String,
-    ) {
-        viewModelScope.launch(Dispatchers.IO) {
+    ): BillsDetailsResponse? {
+        var sc = _selectedCountry.value
+        if (sc == "all") {
+            sc = ""
+        }
 
-            var sc = _selectedCountry.value
-            if (sc == "all") {
-                sc = ""
-            }
-
-            val result =
-                repository.getBillDetails(yearMonth, currency, perPage, sc)
-            if (result.isSuccess) {
-                val data = result.getOrNull()
-                if (data == null) {
-                    flow.value = SubmitResult.Empty
-                } else {
-                    flow.value = SubmitResult.Success(data)
-                }
+        val result =
+            repository.getBillDetails(yearMonth, currency, perPage, sc)
+        if (result.isSuccess) {
+            val data = result.getOrNull()
+            if (data == null) {
+                _billDetailsFlow.value = SubmitResult.Empty
+                return null
             } else {
-                when (val error = result.exceptionOrNull()) {
-                    is NetworkError.ServerError -> {
-                        Log.d(
-                            UserPassViewModel.TAG,
-                            "Error while fetching bill details"
-                        )
-                        flow.value = SubmitResult.FailureServerError
-                    }
+                _billDetailsFlow.value = SubmitResult.Success(data)
+                return data
+            }
+        } else {
+            when (val error = result.exceptionOrNull()) {
+                is NetworkError.ServerError -> {
+                    Log.d(
+                        UserPassViewModel.TAG,
+                        "Error while fetching bill details"
+                    )
+                    _billDetailsFlow.value = SubmitResult.FailureServerError
+                }
 
-                    is NetworkError.NoConnection -> {
-                        flow.value = SubmitResult.FailureNoConnection
-                    }
+                is NetworkError.NoConnection -> {
+                    _billDetailsFlow.value = SubmitResult.FailureNoConnection
+                }
 
-                    is NetworkError.ApiError -> {
-                        when (error.errorResponse.code) {
-                            401, 405 -> {
-                                Log.d(
-                                    "API_TOKEN UserPassViewModel",
-                                    "invalid token detected login out user"
+                is NetworkError.ApiError -> {
+                    when (error.errorResponse.code) {
+                        401, 405 -> {
+                            Log.d(
+                                "API_TOKEN UserPassViewModel",
+                                "invalid token detected login out user"
+                            )
+                            _billDetailsFlow.value =
+                                SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code,
+                                    error.errorResponse.message ?: ""
                                 )
-                                flow.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
-                                    )
-                            }
+                        }
 
-                            else -> {
-                                flow.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
-                                Log.d(
-                                    "UserPassViewModel",
-                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                        else -> {
+                            _billDetailsFlow.value =
+                                SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
                                 )
-                            }
+                            Log.d(
+                                "UserPassViewModel",
+                                "UserPassViewModel api error ${error.errorResponse.message}"
+                            )
                         }
                     }
-
-                    else -> {}
                 }
+
+                else -> {}
             }
         }
+        return null
     }
 
 

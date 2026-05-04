@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -20,10 +21,9 @@ import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.databinding.ItemBillBinding
 import com.mobility.enp.util.SubmitResult
-import com.mobility.enp.util.collectLatestFlow
-import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 //First ADAPTER
 class MonthlyBillsAdapter(
@@ -61,6 +61,14 @@ class MonthlyBillsAdapter(
                 return oldItem == newItem
             }
         }
+    }
+
+    fun updateAdapter(myInvoicesUpdate: MyInvoicesResponse) {
+        currentPage = data.currentPage ?: 0
+
+        val newList = currentList.toMutableList()
+        newList.addAll(myInvoicesUpdate.data?.months ?: emptyList())
+        submitList(newList)
     }
 
     fun resetAdapter() {
@@ -137,45 +145,17 @@ class MonthlyBillsAdapter(
                     if (viewModel.isNetworkAvailable()) {
                         montYearListener.onMontYearSelected(montYear)
 
-                        val billDetailsFlow =
-                            MutableStateFlow<SubmitResult<BillsDetailsResponse>>(SubmitResult.Loading)
+                        lifecycleOwner.lifecycleScope.launch {
+                            val data = viewModel.fetchBillDetailsNew(
+                                montYear,
+                                availableCurrency.toString()
+                            )
 
-                        collectLatestFlow(lifecycleOwner, billDetailsFlow) { serverResponse ->
-                            when (serverResponse) {
-                                is SubmitResult.Success -> {
-                                    spinnerInterface.onStopSpinner()
-
-                                    serverResponse.data.let { data ->
-                                        viewModel.saveBill(montYear, data)
-                                        setAdapterData(data, availableCurrency.toString())
-                                    }
-
-                                }
-
-                                is SubmitResult.FailureServerError -> {
-                                    spinnerInterface.onStopSpinner()
-                                    logError(binding.root.context.resources.getString(R.string.server_error_msg))
-                                }
-
-                                is SubmitResult.FailureApiError -> {
-                                    spinnerInterface.onStopSpinner()
-                                    logError(binding.root.context.resources.getString(R.string.api_call_error))
-                                }
-
-                                else -> {
-                                    spinnerInterface.onStopSpinner()
-                                }
+                            data?.let {
+                                viewModel.saveBill(montYear, data)
+                                setAdapterData(data, availableCurrency.toString())
                             }
-                            binding.executePendingBindings()
                         }
-
-
-                        spinnerInterface.onStartSpinner()
-                        viewModel.fetchBillDetailsNew(
-                            billDetailsFlow,
-                            montYear,
-                            availableCurrency.toString()
-                        )
 
                         franchiserResource?.let { data ->
                             binding.arrowDown.setImageDrawable(
@@ -340,61 +320,20 @@ class MonthlyBillsAdapter(
         holder.bind(
             currentBill, viewModel, spinnerInt, montYearListener
         )
-        checkDataFill(holder.bindingAdapterPosition, currentBill, holder.binding.root.context)
+
+        checkDataFill(currentBill, holder.binding.root.context)
     }
 
-    private fun checkDataFill(position: Int, currentBill: Month, context: Context) {
-        Log.d(
-            TAG,
-            "onBindViewHolder: adapter pos $position arrayTotal ${monthlyBillsArray.size - 1} totalItems ${data.total}"
-        )
+    private fun checkDataFill(currentBill: Month, context: Context) {
         if (currentList.lastOrNull() == currentBill && lastPage > currentPage) {
-
-            val paginationUpdate =
-                MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Loading)
-
-            collectLatestFlow(lifecycleOwner, paginationUpdate) { serverResponse ->
-                when (serverResponse) {
-                    is SubmitResult.Success -> {
-                        spinnerInterface.onStopSpinner()
-                        serverResponse?.let { response ->
-                            currentPage = response.data.data?.currentPage ?: 0
-
-                            val newList = currentList.toMutableList()
-                            newList.addAll(response.data.data!!.months)
-                            submitList(newList)
-                        }
-                    }
-
-                    is SubmitResult.FailureServerError -> {
-                        spinnerInterface.onStopSpinner()
-                        logError(context.resources.getString(R.string.server_error_msg))
-                    }
-
-                    is SubmitResult.FailureApiError -> {
-                        spinnerInterface.onStopSpinner()
-                        logError(context.resources.getString(R.string.api_call_error))
-                    }
-
-                    else -> {
-                        spinnerInterface.onStopSpinner()
-                    }
-                }
-            }
-
-            spinnerInterface.onStartSpinner()
-            spinnerInterface.pagingUpdate(currentPage + 1, paginationUpdate)
+            viewModel.fetchMonthlyInvoicesPaging(currentPage + 1)
         }
     }
 
-    private fun logError(string: String) {
-        Log.d(HistorySerialAdapter.TAG, "showError: $string")
-    }
 
     interface TriggerSpinner {
         fun onStartSpinner()
         fun onStopSpinner()
-        fun pagingUpdate(nextPage: Int, flow: MutableStateFlow<SubmitResult<MyInvoicesResponse>>)
         fun pagingUpdateBill(
             nextPage: Int,
             flow: MutableStateFlow<SubmitResult<BillsDetailsResponse>>,
