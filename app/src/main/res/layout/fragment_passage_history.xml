@@ -15,7 +15,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
 
     <TextView
@@ -78,14 +79,6 @@
         app:layout_constraintTop_toBottomOf="@id/line"
         tools:listitem="@layout/item_tag_status" />
 
-    <ProgressBar
-        android:id="@+id/buttonProgBar"
-        android:layout_width="@dimen/dimens_15dp"
-        android:layout_height="@dimen/dimens_15dp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@id/cyclerTagTypes"
-        app:layout_constraintTop_toBottomOf="@id/cyclerTagTypes"
-        tools:visibility="visible" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"

@@ -14,6 +14,8 @@ import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.v2base_model.Item
 import com.mobility.enp.databinding.ItemRelationPassageRealCroatiaBinding
 import com.mobility.enp.viewmodel.UserPassViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class HistoryPassageAdapterCroatia(
@@ -28,12 +30,13 @@ class HistoryPassageAdapterCroatia(
     private var totalPages: Int = 0
     private var currentPage: Int = 0
     private var lastPage: Int = 0
+    private var collectionJob: Job? = null
 
     init {
-        lifecycleOwner.lifecycleScope.launch {
+        collectionJob = lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewmodel.getCroatiaPassagesBySerialPage(tagSerialNumber, viewmodel.selectedCountry)
-                    .collect { data ->
+                    .collectLatest { data ->
                         if (data.isNotEmpty()) {
                             totalPages = data.size
 
@@ -129,6 +132,10 @@ class HistoryPassageAdapterCroatia(
                 viewmodel.getToolHistoryTransitCroatia(tagSerialNumber, currentPage + 1)
             }
         }
+    }
+
+    fun cancelJob() {
+        collectionJob?.cancel()
     }
 
     interface SendToFragment {

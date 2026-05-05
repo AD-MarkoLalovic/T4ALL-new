@@ -34,6 +34,7 @@ import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
@@ -47,6 +48,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
     private var listIndexData: List<IndexData> = emptyList()
 
     private lateinit var statusFilterAdapter: MyTollCountriesFirstScreenAdapter
+
     private lateinit var historySerialAdapter: HistorySerialAdapter
 
     companion object {
@@ -63,6 +65,13 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        historySerialAdapter = HistorySerialAdapter(viewModel, this, this, this, {
+            stopSpinner()
+        }, { data -> setNoPassageData(data) })
+
+        binding.cycler.adapter = historySerialAdapter
+        binding.cycler.layoutManager = LinearLayoutManager(requireContext())
+
         viewModel.nullData()
         viewModel.nullFlowState()
 
@@ -70,13 +79,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
         binding.progBar.visibility = View.VISIBLE
         binding.loopIcon.isEnabled = false
-
-
-        historySerialAdapter = HistorySerialAdapter(viewModel, this, this, this, {
-        })
-
-        binding.cycler.adapter = historySerialAdapter
-        binding.cycler.layoutManager = LinearLayoutManager(requireContext())
 
         setObservers()
 
@@ -109,7 +111,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
             viewModel.noPassages.observe(viewLifecycleOwner) { hasPassages ->
                 Log.d(TAG, "setObservers: $hasPassages")
                 if (hasPassages != null) {
-                    binding.noPassage.visibility = View.GONE
                     binding.noPassage.visibility = if (hasPassages) View.GONE else View.VISIBLE
                 }
             }
@@ -117,7 +118,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.allowedCountriesFlow.collect { allowedCountries ->
+                viewModel.allowedCountriesFlow.collectLatest { allowedCountries ->
                     val listOfCountries: ArrayList<String> = arrayListOf()
                     for (data in allowedCountries) {
                         listOfCountries.add(data.country)
@@ -129,10 +130,8 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.tagFlow.collect { indexData ->
+                viewModel.tagFlow.collectLatest { indexData ->
                     if (!indexData.isEmpty()) {
-
-                        binding.progBar.visibility = View.GONE
 
                         indexData[0].availableCountries?.let { availableCountries ->
                             viewModel.setAvailableCountriesMain(availableCountries)
@@ -156,7 +155,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.listOfCountriesMainScreen.collect { countriesList ->
+                viewModel.listOfCountriesMainScreen.collectLatest { countriesList ->
                     if (countriesList.isNotEmpty()) {
                         setAvailableFilters(countriesList)
                         statusFilterAdapter.performClick(0)
@@ -183,13 +182,10 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         collectLatestLifecycleFlow(viewModel.baseTagDataStateByCountry) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {
-                    if (listIndexData.isEmpty()) {
-                        binding.progBar.visibility = View.VISIBLE
-                    }
+                    binding.progBar.visibility = View.VISIBLE
                 }
 
                 is SubmitResult.Success -> {
-                    binding.progBar.visibility = View.GONE
                     viewModel.saveRoomTagDataFirstScreen(tagIndex.data)
                 }
 
@@ -220,9 +216,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
         collectLatestLifecycleFlow(viewModel.baseTagDataStateFirstScreen) { tagIndex ->
             when (tagIndex) {
                 is SubmitResult.Loading -> {
-                    if (listIndexData.isEmpty()) {
-                        binding.progBar.visibility = View.VISIBLE
-                    }
+                    binding.progBar.visibility = View.VISIBLE
                 }
 
                 is SubmitResult.Success -> {
@@ -366,13 +360,10 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                         else -> ""
                     }
 
+                    binding.progBar.visibility = View.VISIBLE
+                    binding.noPassage.visibility = View.GONE
+
                     viewModel.selectedCountry = selectedCountry
-
-                    historySerialAdapter =
-                        HistorySerialAdapter(viewModel, this, this, this, {
-                        })
-
-                    binding.cycler.adapter = historySerialAdapter
 
                     if (listIndexData.size > 1) {
                         binding.cycler.isVerticalScrollBarEnabled = true
@@ -387,17 +378,6 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                         }
                         viewModel.getBaseDataAlternativeApiForCountriesOnMain()
                     }
-                },
-                onShowSpinner = { showSpinner ->
-                    when (showSpinner) {
-                        false -> {
-                            binding.buttonProgBar.visibility = View.INVISIBLE
-                        }
-
-                        true -> {
-                            binding.buttonProgBar.visibility = View.VISIBLE
-                        }
-                    }
                 }
             )
 
@@ -405,6 +385,22 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
             statusFilterAdapter.submitList(countryList.reversed()) {
                 statusFilterAdapter.setTabPosition(0)
+            }
+        }
+    }
+
+    private fun setNoPassageData(data: ArrayList<Boolean>) {
+        when (data.contains(true)) {
+            true -> {
+                if (isAdded){
+                    binding.noPassage.visibility = View.GONE
+                }
+            }
+
+            false -> {
+                if (isAdded){
+                    binding.noPassage.visibility = View.VISIBLE
+                }
             }
         }
     }
@@ -470,7 +466,9 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
     }
 
     override fun stopSpinner() {
-        binding.progBar.visibility = View.GONE
+        if (isAdded) {
+            _binding?.progBar?.visibility = View.GONE
+        }
     }
 
     override fun croatiaReclamationDialog() {

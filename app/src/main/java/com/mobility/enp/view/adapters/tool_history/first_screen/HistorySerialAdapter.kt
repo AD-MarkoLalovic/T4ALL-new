@@ -17,6 +17,8 @@ import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.view.adapters.tool_history.combined.HistoryTotalCostAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -24,17 +26,35 @@ class HistorySerialAdapter(
     private val viewModel: UserPassViewModel,
     private val complaintInterface: HistoryPassageAdapter.SendToFragment,
     private val complaintInterfaceCroatia: HistoryPassageAdapterCroatia.SendToFragment,
-    val lifecycleOwner: LifecycleOwner, private val noPassages: (Boolean) -> Unit
+    val lifecycleOwner: LifecycleOwner,
+    private val stopSpinner: (Unit) -> Unit,
+    private val hasPassages: (ArrayList<Boolean>) -> Unit
 ) : RecyclerView.Adapter<HistorySerialAdapter.TagsViewHolder>() {
 
     private var listOfTags: List<Tag> = emptyList()
-
     private var currentPage: Int = 0
     private var lastPage: Int = 0
-    private var hasPassages: Boolean = true
+    private val listOfPassages: ArrayList<Boolean> = arrayListOf()
+    private var paginationJob: Job? = null
+
+    override fun onViewRecycled(holder: TagsViewHolder) {
+        super.onViewRecycled(holder)
+        holder.job?.cancel()
+        (holder.binding.cycler.adapter as? HistoryPassageAdapter)?.cancelJob()
+        (holder.binding.cycler.adapter as? HistoryPassageAdapterCroatia)?.cancelJob()
+    }
+
+    fun clearAdapter(){
+        paginationJob?.cancel()
+        listOfTags = emptyList()
+        currentPage = 0
+        lastPage = 0
+        listOfPassages.clear()
+        notifyDataSetChanged()
+    }
 
     fun setAdapterData(indexData: List<IndexData>) {
-        hasPassages = true
+        listOfPassages.clear()
         if (indexData.isNotEmpty()) {
             currentPage = indexData[indexData.size - 1].currentPage ?: 0
             lastPage = indexData[indexData.size - 1].lastPage ?: 0
@@ -42,12 +62,12 @@ class HistorySerialAdapter(
 
         listOfTags = indexData.flatMap { it.data?.tags.orEmpty() }
 
-        for (i in listOfTags.indices) {
-            notifyItemChanged(i)
-        }
-
         if (currentPage < lastPage) {
             viewModel.getSerialDeviceDataValidationSerialAdapter(lastPage)
+        }
+
+        for (tag in listOfTags.indices){
+            notifyItemChanged(tag)
         }
     }
 
@@ -58,10 +78,15 @@ class HistorySerialAdapter(
     inner class TagsViewHolder(
         val binding: ToolHistoryIndexCardBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        var job: Job? = null
 
         fun bind(
             toolHistoryIndex: TagUtilCycler, position: Int, holder: TagsViewHolder, currentTag: Tag
         ) {
+            job?.cancel()
+            (binding.cycler.adapter as? HistoryPassageAdapter)?.cancelJob()
+            (binding.cycler.adapter as? HistoryPassageAdapterCroatia)?.cancelJob()
+
             hideViews(binding)
 
             setViewHeight(binding, 0, position)
@@ -72,7 +97,8 @@ class HistorySerialAdapter(
 
             //region inner passage adapters
             if (viewModel.selectedCountry == binding.root.context.getString(R.string.croatia_hr)) {
-                lifecycleOwner.lifecycleScope.launch() {
+
+                job = lifecycleOwner.lifecycleScope.launch() {
                     val initLoad = withContext(Dispatchers.IO) {
                         viewModel.getCPassagesBySerialCountry(
                             itemSerialNumber, binding.root.context.getString(R.string.croatia_hr)
@@ -83,10 +109,6 @@ class HistorySerialAdapter(
 
                     if (listOfPassages.isEmpty()) {
                         binding.progbar.visibility = View.VISIBLE
-                    }
-
-                    if (currentTag == listOfTags.lastOrNull()) {
-                        viewModel.setNoPassages(hasPassages)
                     }
 
                     setViewHeight(binding, listOfPassages.size, position)
@@ -106,10 +128,6 @@ class HistorySerialAdapter(
                             setViewHeight(binding, size, position)
                             setNoPassage(binding, size)
 
-                            if (currentTag == listOfTags.lastOrNull()) {
-                                viewModel.setNoPassages(hasPassages)
-                            }
-
                             binding.executePendingBindings()
                         })
 
@@ -125,7 +143,7 @@ class HistorySerialAdapter(
                 //record of passages for tag for normal countries
                 //adapter that presents the passages
 
-                lifecycleOwner.lifecycleScope.launch {
+                job = lifecycleOwner.lifecycleScope.launch {
                     val initLoad = withContext(Dispatchers.IO) {
                         viewModel.getPassageBySerialCodeCountry(
                             itemSerialNumber, viewModel.selectedCountry
@@ -149,10 +167,6 @@ class HistorySerialAdapter(
                             setViewHeight(binding, size, position)
                             setNoPassage(binding, size)
 
-                            if (currentTag == listOfTags.lastOrNull()) {
-                                viewModel.setNoPassages(hasPassages)
-                            }
-
                             binding.executePendingBindings()
                         },
                         { sumTags ->
@@ -172,8 +186,10 @@ class HistorySerialAdapter(
                         }
                     )
 
+
                     binding.cycler.adapter = adapter
 
+                    adapter.submitList(emptyList())
                     adapter.submitList(listOfPassages)
 
                     binding.executePendingBindings()
@@ -227,12 +243,15 @@ class HistorySerialAdapter(
     private fun setNoPassage(binding: ToolHistoryIndexCardBinding, size: Int) {
         when (size) {
             0 -> {
-                hasPassages = false
+                listOfPassages.add(false)
+
                 hideViews(binding)
             }
 
             else -> {
-                hasPassages = true
+                listOfPassages.add(true)
+                hasPassages(listOfPassages)
+
                 binding.noPassage.visibility = View.GONE
                 binding.relativeTop.visibility = View.VISIBLE
                 binding.txtSerial.visibility = View.VISIBLE
@@ -242,6 +261,8 @@ class HistorySerialAdapter(
                 binding.tagSerialNumber.visibility = View.VISIBLE
                 binding.txtSerial.visibility = View.VISIBLE
                 binding.txtTotal.visibility = View.VISIBLE
+
+                stopSpinner(Unit)
             }
         }
     }
@@ -255,6 +276,8 @@ class HistorySerialAdapter(
     }
 
     private fun hideViews(binding: ToolHistoryIndexCardBinding) {
+        binding.cycler.adapter = null
+        binding.cyclerTotalPrice.adapter = null
         binding.noPassage.visibility = View.GONE
         binding.relativeTop.visibility = View.GONE
         binding.txtSerial.visibility = View.GONE
@@ -304,9 +327,15 @@ class HistorySerialAdapter(
 
     private fun runPaginationCheck(currentTag: Tag) {
         if (currentTag == listOfTags[listOfTags.size - 1]) {
-            if (currentPage < lastPage) {
-                // trigger background update with flow
-                viewModel.getTagsUpdate(currentPage + 1)
+            paginationJob?.cancel()
+            paginationJob = lifecycleOwner.lifecycleScope.launch {
+                delay(2000)
+                stopSpinner(Unit)
+                hasPassages(listOfPassages)
+                if (currentPage < lastPage) {
+                    // trigger background update with flow
+                    viewModel.getTagsUpdate(currentPage + 1)
+                }
             }
         }
     }
