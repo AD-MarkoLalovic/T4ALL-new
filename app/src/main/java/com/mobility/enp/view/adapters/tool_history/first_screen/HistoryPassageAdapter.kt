@@ -28,6 +28,8 @@ import com.mobility.enp.view.dialogs.ComplaintFormDialogOld
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.view.dialogs.ObjectionFormDialog
 import com.mobility.enp.viewmodel.UserPassViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class HistoryPassageAdapter(
@@ -44,13 +46,13 @@ class HistoryPassageAdapter(
     private var totalPages: Int = 0
     private var currentPage: Int = 0
     private var lastPage: Int = 0
+    private var collectionJob: Job? = null
 
     init {
-
-        lifecycleOwner.lifecycleScope.launch {
+        collectionJob = lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewmodel.getV2PassagesBySerialAndCountryCode(tagSerialNumber, countryCode)
-                    .collect { data ->
+                    .collectLatest { data ->
                         if (data.isNotEmpty()) {
                             totalPages = data.size
 
@@ -283,6 +285,10 @@ class HistoryPassageAdapter(
         val config: Configuration = context.resources.configuration
         val smallestScreenWidthDp: Int = config.smallestScreenWidthDp
         return smallestScreenWidthDp >= 600 // min layout with for tablet
+    }
+
+    fun cancelJob() {
+        collectionJob?.cancel()
     }
 
 

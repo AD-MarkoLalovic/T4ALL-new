@@ -11,7 +11,6 @@ import com.mobility.enp.databinding.ItemTagStatusBinding
 
 class MyTollCountriesFirstScreenAdapter(
     private var onSelected: (String) -> Unit,
-    private var onShowSpinner: (Boolean) -> Unit
 ) :
     ListAdapter<String, MyTollCountriesFirstScreenAdapter.StatusTagViewHolder>(DIFF_CALLBACK) {
     private var selectedStatus = 0
@@ -78,7 +77,6 @@ class MyTollCountriesFirstScreenAdapter(
             binding.tagStatus.setOnClickListener {
                 if (!clicksEnabled) return@setOnClickListener  // global countdown lock to prevent spamming
                 if (bindingAdapterPosition != RecyclerView.NO_POSITION && bindingAdapterPosition != selectedStatus) {
-//                    onShowSpinner(true)
                     clicksEnabled = false
 
                     val oldPosition = selectedStatus
@@ -89,9 +87,8 @@ class MyTollCountriesFirstScreenAdapter(
                     onSelected(status)
                 }
                 binding.root.postDelayed({
-//                    onShowSpinner(false)
                     clicksEnabled = true
-                }, 2000)
+                }, 4000)
             }
 
         }
