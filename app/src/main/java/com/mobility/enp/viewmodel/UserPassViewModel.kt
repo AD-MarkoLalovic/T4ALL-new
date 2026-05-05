@@ -111,20 +111,10 @@ class UserPassViewModel(
 
     //important do not change .stateIn required for config changes so changes to ui persist
     val tagFlow = repository.getTagFlow()
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            emptyList()
-        )
 
     val tagFlowResult = repository.getTagFlow()
 
     val allowedCountriesFlow = repository.getAllowedCountriesFlow()
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            emptyList()
-        )
 
     fun clearRoomData() {
         viewModelScope.launch(Dispatchers.IO) {
