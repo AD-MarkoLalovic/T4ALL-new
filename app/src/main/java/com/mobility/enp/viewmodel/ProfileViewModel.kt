@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import com.mobility.enp.BuildConfig
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.TagOrderInputs
+import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
@@ -65,6 +66,10 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
     private val _displayName = MutableLiveData<String>()
     val displayName: LiveData<String> = _displayName
 
+    private val _basicBodyData =
+        MutableStateFlow<SubmitResult<BasicInfoResponse>>(SubmitResult.Empty)
+    val basicBodyData: StateFlow<SubmitResult<BasicInfoResponse>> get() = _basicBodyData
+
     private suspend fun getUserToken(): String? {
         return withContext(Dispatchers.IO) {
             repository.userToken()
@@ -79,32 +84,13 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
         if (isNetworkAvailable()) {
             _isLoading.value = true
             viewModelScope.launch {
-                try {
-                    val result = repository.getBasicUserInformation()
-                    result.fold(onSuccess = { body ->
-                        _displayName.value = body.data.displayName
-                        val userCountry = body.data.country.code
-                        val userType = body.data.customerType.type
-                        val isFranchiser = body.data.isFranchiser
-
-                        // Postavljanje vrednosti za _showRefundCard
-
-                        _showRefundCard.value =
-                            ((userCountry == "RS" || userType == 3) && !isFranchiser)
-                    }, onFailure = {
-                        _showRefundCard.value = false
-                        _isLoading.value = false
-                    })
-                } catch (e: Exception) {
-                    Log.e("ProfileViewModel", "Error fetching user data", e)
-                    _showRefundCard.value = false
-                } finally {
-                    _isLoading.value = false
-                }
+                val result = repository.getBasicUserInformation()
+                result.fold(onSuccess = { body ->
+                    _basicBodyData.value = SubmitResult.Success(body)
+                }, onFailure = {
+                    _basicBodyData.value = SubmitResult.Empty
+                })
             }
-        } else {
-            _checkNet.value = false
-            _showRefundCard.value = false
         }
     }
 

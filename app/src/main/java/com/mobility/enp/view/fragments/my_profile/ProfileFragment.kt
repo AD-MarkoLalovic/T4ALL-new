@@ -12,7 +12,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
@@ -222,6 +224,13 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 else -> {
                     SubmitResult.Empty
                 }
+            }
+        }
+
+        collectLatestLifecycleFlow(viewModelProfile.basicBodyData){ data ->
+            when(data){
+                is SubmitResult.Success -> {}
+                is SubmitResult.FailureApiError ->{}
             }
         }
 
