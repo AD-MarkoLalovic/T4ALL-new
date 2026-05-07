@@ -96,8 +96,15 @@ class RegistrationFragment : Fragment() {
         @JavascriptInterface
         fun onBackIconClick() {  // it gets detected here
             // Notify fragment or perform any action
-            binding.webView.post {  // fixes a navigation issue.
-                findNavController().navigate(R.id.action_tosFragment_to_loginFragment)
+            binding.webView.post {  // added extra security
+                if (!isAdded || _binding == null) return@post
+
+                val navController = runCatching { findNavController() }.getOrNull()
+                    ?: return@post
+
+                if (navController.currentDestination?.id == R.id.tosFragment) {
+                    navController.navigate(R.id.action_tosFragment_to_loginFragment)
+                }
             }
         }
     }
