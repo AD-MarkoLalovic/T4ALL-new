@@ -57,15 +57,6 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
     private val _deletePic = MutableLiveData<Boolean>()
     val deletePic: LiveData<Boolean> get() = _deletePic
 
-    private val _showRefundCard = MutableLiveData<Boolean>()
-    val showRefundCard: LiveData<Boolean> get() = _showRefundCard
-
-    private var _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> get() = _isLoading
-
-    private val _displayName = MutableLiveData<String>()
-    val displayName: LiveData<String> = _displayName
-
     private val _basicBodyData =
         MutableStateFlow<SubmitResult<BasicInfoResponse>>(SubmitResult.Empty)
     val basicBodyData: StateFlow<SubmitResult<BasicInfoResponse>> get() = _basicBodyData
@@ -82,13 +73,27 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
 
     fun setRefundRequestVisibility() {
         if (isNetworkAvailable()) {
-            _isLoading.value = true
             viewModelScope.launch {
                 val result = repository.getBasicUserInformation()
                 result.fold(onSuccess = { body ->
                     _basicBodyData.value = SubmitResult.Success(body)
                 }, onFailure = {
-                    _basicBodyData.value = SubmitResult.Empty
+                    when (val error = result.exceptionOrNull()) {
+                        is NetworkError.ServerError -> {
+                            _basicBodyData.value = SubmitResult.FailureServerError
+                        }
+
+                        is NetworkError.NoConnection -> {
+                            _basicBodyData.value = SubmitResult.FailureNoConnection
+                        }
+
+                        is NetworkError.ApiError -> {
+                            _basicBodyData.value =
+                                SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                        }
+
+                        else -> {}
+                    }
                 })
             }
         }
