@@ -44,7 +44,7 @@ class HistorySerialAdapter(
         (holder.binding.cycler.adapter as? HistoryPassageAdapterCroatia)?.cancelJob()
     }
 
-    fun clearAdapter(){
+    fun clearAdapter() {
         paginationJob?.cancel()
         listOfTags = emptyList()
         currentPage = 0
@@ -66,7 +66,7 @@ class HistorySerialAdapter(
             viewModel.getSerialDeviceDataValidationSerialAdapter(lastPage)
         }
 
-        for (tag in listOfTags.indices){
+        for (tag in listOfTags.indices) {
             notifyItemChanged(tag)
         }
     }
@@ -212,11 +212,11 @@ class HistorySerialAdapter(
             }
 
             1 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_two_items
+                R.dimen.recycler_view_one_item
             )
 
             2 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_two_items_modified
+                R.dimen.recycler_view_two_items
             )
 
             3 -> binding.root.context.resources.getDimensionPixelSize(
