@@ -16,7 +16,7 @@ class AllowedCountryFilterAdapter(
     inner class CountryViewHolder(private val binding: ItemCountryFilterBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: AllowedCountryUi) {
-            binding.selectedCountryFilter.text = item.value.toDisplayName(binding.root.context)
+            binding.txSelectCountry.text = item.value.toDisplayName(binding.root.context)
             binding.selectedCountryFilter.isSelected = item.isSelected
 
             binding.root.isEnabled = !item.isSelected

@@ -1,6 +1,5 @@
 package com.mobility.enp.view.adapters.new_toll_history
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -59,12 +58,7 @@ class TollHistoryPagingAdapter(
         position: Int
     ) {
         val item = getItem(position)
-        Log.d("MARKO 1", "bind position=$position item=$item")
-        // Redosled onBind poziva ≠ redosled u listi: getItem(0) je uvek "glava" liste u adapteru.
-        Log.d(
-            "MARKO 0",
-            "bind pos=$position listHead=${getItem(0)} holder=${holder.javaClass.simpleName}"
-        )
+
         when (holder) {
             is TagHeaderViewHolder -> {
                 (item as? TollHistoryListItem.TagHeader)?.let { holder.bind(it) }
@@ -209,5 +203,4 @@ class TollHistoryPagingAdapter(
             }
         }
     }
-
 }

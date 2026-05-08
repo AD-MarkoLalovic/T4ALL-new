@@ -196,7 +196,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                R.id.paymentAndPassageFragment, R.id.toolHistoryFragment, R.id.profileFragment, R.id.supportDialog, R.id.deactivateAccountDialog, R.id.pdfViewDialog, R.id.noInternetConnectionDialog -> {
+                R.id.paymentAndPassageFragment, R.id.toolHistoryFragment, R.id.profileFragment, R.id.supportDialog, R.id.deactivateAccountDialog, R.id.pdfViewDialog, R.id.noInternetConnectionDialog,
+                     R.id.tollHistoryMain-> {
                     // Ako je destinacija neki od ovih fragmenata, prikaži BottomNavigationView
 
                     if (franchiseViewModel.franchiseModel.value == null) {
