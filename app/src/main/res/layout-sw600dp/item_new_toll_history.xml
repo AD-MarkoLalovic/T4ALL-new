@@ -149,15 +149,17 @@
 
                 <LinearLayout
                     android:id="@+id/btnPassageComplaint"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_btn_objection_complaint"
                     android:minHeight="33dp"
+                    android:minWidth="140dp"
                     android:orientation="horizontal"
                     android:gravity="center"
                     android:layout_marginStart="@dimen/dimens_4dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1"
                     app:layout_constraintStart_toEndOf="@id/passageGuideline"
                     tools:visibility="gone">
 
@@ -194,13 +196,15 @@
 
                     <LinearLayout
                         android:id="@+id/btnPassageObjection"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimens_8dp"
                         android:minHeight="33dp"
+                        android:minWidth="140dp"
                         android:background="@drawable/bg_btn_objection_complaint"
                         android:gravity="center"
                         android:orientation="horizontal"
+                        app:layout_constraintHorizontal_bias="1"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
