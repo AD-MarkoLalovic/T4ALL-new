@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:paddingTop="@dimen/dimens_30dp">
+        tools:context=".view.fragments.my_profile.ProfileFragment">
 
         <ProgressBar
             android:id="@+id/profileProgressBar"
@@ -22,17 +22,19 @@
             android:id="@+id/profileContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            tools:context=".view.fragments.my_profile.ProfileFragment">
+            android:background="@color/white">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dimens_100dp">
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginEnd="@dimen/dimens_16dp"
+                android:paddingTop="@dimen/dimens_16dp">
+
 
                 <TextView
                     android:id="@+id/txMyProfile"
-                    style="@style/H2"
+                    style="@style/H3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_profile"
@@ -41,13 +43,39 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardViewProfile"
-                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_16dp"
-                    app:layout_constraintBottom_toTopOf="@+id/containerMyProfile"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/txMyProfile">
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.35" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.65" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_percent="0.43" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.51" />
 
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:id="@+id/rectangleProfilePicture"
@@ -61,28 +89,27 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:riv_corner_radius="37dp" />
+                        app:riv_corner_radius="25dip" />
 
                     <ImageView
                         android:id="@+id/imageProfile"
-                        android:layout_width="@dimen/dimens_120dp"
-                        android:layout_height="@dimen/dimens_120dp"
+                        android:layout_width="@dimen/dimens_100dp"
+                        android:layout_height="@dimen/dimens_0dp"
+                        android:background="@drawable/default_user_picture"
                         android:contentDescription="@null"
-                        android:src="@drawable/default_user_picture"
                         android:translationZ="@dimen/dimens_6dp"
                         app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="@id/guideline2"
+                        app:layout_constraintStart_toStartOf="@id/guideline"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/userName"
-                        style="@style/H1"
+                        style="@style/H3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/dimens_22dp"
-                        android:layout_marginTop="@dimen/dimens_16dp"
-                        android:layout_marginBottom="@dimen/dimens_24dp"
+                        android:layout_marginHorizontal="@dimen/dimens_16dp"
+                        android:layout_marginBottom="@dimen/dimens_8dp"
                         android:ellipsize="end"
                         android:gravity="center_horizontal"
                         android:maxLines="1"
@@ -93,41 +120,30 @@
                         app:layout_constraintTop_toBottomOf="@+id/imageProfile"
                         tools:text="@string/marko_lalovic" />
 
-                    <GridLayout
-                        android:id="@+id/gridLine"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.55"
-                        tools:ignore="MissingConstraints" />
-
-                    <GridLayout
-                        android:id="@+id/gridLine2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.39"
-                        tools:ignore="MissingConstraints" />
-
                     <ImageButton
                         android:id="@+id/bttChangeProfilePicture"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginTop="@dimen/dimens_6dp"
                         android:background="@color/transparent"
                         android:contentDescription="@null"
                         android:src="@drawable/plus_ic"
                         android:translationZ="@dimen/dimens_6dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageProfile"
-                        app:layout_constraintStart_toEndOf="@+id/gridLine" />
+                        app:layout_constraintBottom_toBottomOf="@id/imageProfile"
+                        app:layout_constraintEnd_toEndOf="@id/guideline2"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toStartOf="@id/guideline4"
+                        app:layout_constraintTop_toBottomOf="@id/guideline3" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/containerMyProfile"
                     android:layout_width="@dimen/dimens_0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_30dp"
+                    android:layout_marginTop="@dimen/dimens_16dp"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/dimens_16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cardViewProfile">
@@ -147,8 +163,7 @@
                         style="@style/MyOutlinedButtonStyle"
                         android:layout_width="@dimen/dimens_0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimens_22dp"
-                        android:backgroundTint="@color/primary_light_lightest"
+                        android:layout_marginTop="@dimen/dimens_8dp"
                         android:text="@string/change_password"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -159,8 +174,7 @@
                         style="@style/MyOutlinedButtonStyle"
                         android:layout_width="@dimen/dimens_0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimens_22dp"
-                        android:backgroundTint="@color/primary_light_lightest"
+                        android:layout_marginTop="@dimen/dimens_8dp"
                         android:text="@string/my_invoices"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -171,8 +185,7 @@
                         style="@style/MyOutlinedButtonStyle"
                         android:layout_width="@dimen/dimens_0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimens_22dp"
-                        android:backgroundTint="@color/primary_light_lightest"
+                        android:layout_marginTop="@dimen/dimens_8dp"
                         android:text="@string/my_tags"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -183,7 +196,7 @@
                         style="@style/MyOutlinedButtonStyle"
                         android:layout_width="@dimen/dimens_0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimens_22dp"
+                        android:layout_marginTop="@dimen/dimens_8dp"
                         android:text="@string/buy_tag_online"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -194,8 +207,7 @@
                         style="@style/MyOutlinedButtonStyle"
                         android:layout_width="@dimen/dimens_0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimens_22dp"
-                        android:backgroundTint="@color/primary_light_lightest"
+                        android:layout_marginTop="@dimen/dimens_8dp"
                         android:text="@string/refund_request"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -207,8 +219,7 @@
                         style="@style/MyOutlinedButtonStyle"
                         android:layout_width="@dimen/dimens_0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimens_22dp"
-                        android:backgroundTint="@color/primary_light_lightest"
+                        android:layout_marginTop="@dimen/dimens_8dp"
                         android:text="@string/support_text"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -219,8 +230,7 @@
                         style="@style/MyOutlinedButtonStyle"
                         android:layout_width="@dimen/dimens_0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimens_22dp"
-                        android:backgroundTint="@color/primary_light_lightest"
+                        android:layout_marginTop="@dimen/dimens_8dp"
                         android:text="@string/settings"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -232,8 +242,7 @@
                         style="@style/MyOutlinedButtonStyle"
                         android:layout_width="@dimen/dimens_0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimens_22dp"
-                        android:backgroundTint="@color/primary_light_lightest"
+                        android:layout_marginTop="@dimen/dimens_8dp"
                         android:text="@string/terms_and_conditions"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -263,17 +272,17 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/buttonDeactivateAccount" />
 
+
                     <TextView
                         android:id="@+id/versionCode"
-                        app:layout_constraintTop_toBottomOf="@id/buttonSignOut"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimens_16dp"
-                        tools:text="Version 1.0.0"
                         android:textColor="@color/figmaIntroDarkColorReduced"
-                        />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/buttonSignOut"
+                        tools:text="Version 1.0.0" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -281,7 +290,7 @@
 
         <View
             android:layout_width="@dimen/dimens_0dp"
-            android:layout_height="2dp"
+            android:layout_height="@dimen/dimens_1dp"
             android:background="@color/primary_light_light"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
