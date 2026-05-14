@@ -22,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/tag_history_background"
-        android:gravity="center">
-
+        android:gravity="top">
 
         <ProgressBar
             android:id="@+id/progbar"
@@ -100,8 +99,12 @@
             android:layout_below="@id/cyclerTotalPrice"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:padding="@dimen/dimens_10dp"
+            android:layout_alignParentBottom="true"
             android:scrollIndicators="none"
+            android:paddingTop="@dimen/dimens_10dp"
+            android:paddingLeft="@dimen/dimens_10dp"
+            android:paddingRight="@dimen/dimens_10dp"
+            android:nestedScrollingEnabled="false"
             android:scrollbarAlwaysDrawVerticalTrack="false"
             android:scrollbarFadeDuration="0"
             android:scrollbarSize="0dp"

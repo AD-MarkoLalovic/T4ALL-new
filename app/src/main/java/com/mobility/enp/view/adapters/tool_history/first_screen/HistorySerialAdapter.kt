@@ -44,7 +44,7 @@ class HistorySerialAdapter(
         (holder.binding.cycler.adapter as? HistoryPassageAdapterCroatia)?.cancelJob()
     }
 
-    fun clearAdapter(){
+    fun clearAdapter() {
         paginationJob?.cancel()
         listOfTags = emptyList()
         currentPage = 0
@@ -66,7 +66,7 @@ class HistorySerialAdapter(
             viewModel.getSerialDeviceDataValidationSerialAdapter(lastPage)
         }
 
-        for (tag in listOfTags.indices){
+        for (tag in listOfTags.indices) {
             notifyItemChanged(tag)
         }
     }
@@ -83,6 +83,10 @@ class HistorySerialAdapter(
         fun bind(
             toolHistoryIndex: TagUtilCycler, position: Int, holder: TagsViewHolder, currentTag: Tag
         ) {
+
+            binding.cycler.layoutManager = LinearLayoutManager(binding.root.context)
+            binding.cycler.isNestedScrollingEnabled = true
+
             job?.cancel()
             (binding.cycler.adapter as? HistoryPassageAdapter)?.cancelJob()
             (binding.cycler.adapter as? HistoryPassageAdapterCroatia)?.cancelJob()
@@ -137,7 +141,6 @@ class HistorySerialAdapter(
 
                     binding.cyclerTotalPrice.visibility = View.GONE
 
-                    binding.executePendingBindings()
                 }
             } else {
                 //record of passages for tag for normal countries
@@ -192,10 +195,11 @@ class HistorySerialAdapter(
                     adapter.submitList(emptyList())
                     adapter.submitList(listOfPassages)
 
-                    binding.executePendingBindings()
                 }
             }
             //endregion
+
+            binding.executePendingBindings()
         }
     }
 
@@ -205,39 +209,75 @@ class HistorySerialAdapter(
         val heightInDp = when (size) {
 
             0 -> {
+                setMargin(binding, 0)
                 binding.nsScroll.layoutParams.height = 0
                 binding.nsScroll.visibility = View.GONE
                 binding.cycler.visibility = View.GONE
                 return
             }
 
-            1 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_two_items
-            )
+            1 -> {
+                setMargin(binding, 20)
+                setParamsHeight(binding,binding.root.context.resources.getDimensionPixelSize(
+                    R.dimen.recycler_view_one_item
+                ))
+                binding.root.context.resources.getDimensionPixelSize(
+                    R.dimen.recycler_view_one_item
+                )
+            }
 
-            2 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_two_items_modified
-            )
+            2 -> {
+                setMargin(binding, 20)
+                setParamsHeight(binding,binding.root.context.resources.getDimensionPixelSize(
+                    R.dimen.recycler_view_two_items
+                ))
+                binding.root.context.resources.getDimensionPixelSize(
+                    R.dimen.recycler_view_two_items
+                )
+            }
 
-            3 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_three_items
-            )
+            3 -> {
+                setMargin(binding, 20)
+                setParamsHeight(binding,binding.root.context.resources.getDimensionPixelSize(
+                    R.dimen.recycler_view_three_items
+                ))
+
+                binding.root.context.resources.getDimensionPixelSize(
+                    R.dimen.recycler_view_three_items
+                )
+            }
 
             else -> binding.root.context.resources.getDimensionPixelSize(
                 R.dimen.recycler_view_more_items
             )
         }
 
-        binding.nsScroll.layoutParams.height = heightInDp
-        binding.cycler.isNestedScrollingEnabled = true
-        binding.nsScroll.requestLayout()
+
+        val params = binding.nsScroll.layoutParams
+        params.height = heightInDp
+
+        binding.nsScroll.layoutParams = params
 
         binding.nsScroll.visibility = View.VISIBLE
         binding.cycler.visibility = View.VISIBLE
 
-        binding.cycler.layoutManager = LinearLayoutManager(binding.root.context)
-
         binding.executePendingBindings()
+    }
+
+    private fun setParamsHeight(binding: ToolHistoryIndexCardBinding, heightInDp: Int){
+        val paramsContainer = binding.relativeTop.layoutParams
+        paramsContainer.height = heightInDp + 250
+
+        binding.relativeTop.layoutParams = paramsContainer
+    }
+
+    private fun setMargin(binding: ToolHistoryIndexCardBinding, margin: Int) {
+        val scale = binding.root.context.resources.displayMetrics.density
+        val marginInPx = (margin * scale).toInt()
+
+        val params = binding.relativeTop.layoutParams as ViewGroup.MarginLayoutParams
+        params.bottomMargin = marginInPx
+        binding.relativeTop.layoutParams = params
     }
 
     private fun setNoPassage(binding: ToolHistoryIndexCardBinding, size: Int) {
