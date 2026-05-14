@@ -14,4 +14,6 @@ object FragmentResultKeys {
     const val LANGUAGE_DIALOG_RESULT = "language_dialog_result"
     const val LANGUAGE_DIALOG_KEY = "language_key"
     const val LANGUAGE_CAN_SWITCH = "can_switch_language"
+    const val NO_INTERNET_RESULT = "no_internet_result"
+    const val NO_INTERNET_CONFIRMED = "no_internet_confirmed"
 }

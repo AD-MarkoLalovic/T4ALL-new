@@ -66,7 +66,7 @@ android {
             multiDexEnabled = true
             isDefault = true
             buildConfigField("String", "API_URL", "\"https://mobileapitest.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+8025@gmail.com\"")
+            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+101693@gmail.com\"")
             buildConfigField("String", "TEST_PASSWORD", "\"Demo!4team\"")
             buildConfigField(
                 "String",
@@ -163,5 +163,8 @@ dependencies {
     implementation(libs.moshi)              // Glavna Moshi biblioteka za JSON parsiranje
     implementation(libs.moshi.kotlin)       // Kotlin ekstenzije i podrška za Kotlin specifične tipove
     ksp(libs.moshi.kotlin.codegen)          // KSP codegen za automatsko generisanje adaptera bez refleksije
+
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.room.paging)
 
 }

@@ -229,3 +229,5 @@ fun List<Item>.toSumTagsByCurrency(): List<SumTag> {
 fun RegistrationResponse.getRedirectWithToken(): String {
     return "${this.data.redirectUrl}/${this.data.token}"
 }
+
+
