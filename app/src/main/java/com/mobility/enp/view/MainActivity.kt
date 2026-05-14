@@ -310,8 +310,7 @@ class MainActivity : AppCompatActivity() {
         fun logoutOnInvalidToken(context: Context, navController: NavController) {
             CoroutineScope(Dispatchers.IO).launch {
                 val database = DRoom.getRoomInstance(context)
-               // database.loginDao().deleteAll()
-                database.clearAllData()
+                database.loginDao().deleteAll()
 
                 withContext(Dispatchers.Main) {
                     navController.navigate(R.id.action_global_loginFragment)
