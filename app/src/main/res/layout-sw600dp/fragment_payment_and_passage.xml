@@ -129,6 +129,31 @@
                     android:visibility="gone"
                     tools:visibility="visible" />
 
+                <RelativeLayout
+                    android:id="@+id/hac_relativeLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/dimens_5dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <CheckBox
+                        android:id="@+id/hac_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true" />
+
+                    <TextView
+                        android:id="@+id/hac_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/hac_checkbox"
+                        android:text="@string/cards_hac_checkbox" />
+
+                </RelativeLayout>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvTagsForCroatia"
                     android:layout_width="match_parent"
