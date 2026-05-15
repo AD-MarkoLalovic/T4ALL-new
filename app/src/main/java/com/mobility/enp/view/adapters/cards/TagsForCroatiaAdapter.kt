@@ -19,6 +19,13 @@ class TagsForCroatiaAdapter(
 
     private val serialNumbers = mutableListOf<String>()
 
+    private var checkboxesEnabled = true
+
+    fun setCheckboxesEnabled(enabled: Boolean) {
+        checkboxesEnabled = enabled
+        notifyDataSetChanged()
+    }
+
     inner class TagsViewHolder(private val binding: ItemTagForCroatiaBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(tag: TagsForCroatiaUI) {
@@ -27,6 +34,9 @@ class TagsForCroatiaAdapter(
 
             binding.checkBox.setOnCheckedChangeListener(null)
             binding.checkBox.isChecked = tag.selected
+
+            binding.checkBox.isEnabled = checkboxesEnabled
+            binding.checkBox.alpha = if (checkboxesEnabled) 1f else 0.5f
 
             updateColors(tag.selected)
 

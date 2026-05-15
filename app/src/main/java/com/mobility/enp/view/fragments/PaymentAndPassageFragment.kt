@@ -103,6 +103,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     if (viewModel.saveSelectCountry != "HR") {
                         binding.rvCreditCard.visibility = View.VISIBLE
                         binding.bttAddCard.visibility = View.VISIBLE
+                        binding.hacRelativeLayout.visibility = View.GONE
                     } else {
                         setCountryListener("HR")
                         binding.rvCreditCard.visibility = View.GONE
@@ -273,6 +274,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 is SubmitResultFold.Success -> {
                     binding.loadingCards.visibility = View.GONE
+                    binding.hacRelativeLayout.visibility = View.VISIBLE
 
                     val tagsList = result.data.filter { it.status == 11 }
                     if (tagsList.isNotEmpty()) {
@@ -536,6 +538,17 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewerFragment()
             findNavController().navigate(action)
         }
+        binding.hacCheckbox.setOnCheckedChangeListener { button, _ ->
+            when (button.isChecked) {
+                true -> {
+                    tagsForCroatiaAdapter.setCheckboxesEnabled(true)
+                }
+
+                false -> {
+                    tagsForCroatiaAdapter.setCheckboxesEnabled(false)
+                }
+            }
+        }
     }
 
     private fun internetReconnectMethod() {
@@ -584,7 +597,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     override fun setPrimaryCard(cardId: Int) {
         LostTagDialog.newInstance(
             title = getString(R.string.choose_primary_card),
-            subtitle = getString(R.string.confirm_change_primary_card),
+            subtitle =
+                getString(R.string.confirm_change_primary_card),
             onButtonClick = {
                 viewModel.setNewPrimaryCard(cardId)
             }
@@ -614,6 +628,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setCardVisibility(true)
                 makeCardClickable(true)
                 binding.bttRegTagForCroatia.visibility = View.GONE
+                binding.hacRelativeLayout.visibility = View.GONE
             }
 
             "MK" -> {
@@ -624,6 +639,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 makeCardClickable(false)
                 binding.termsConditionsCheckmark.isChecked = false
                 binding.bttRegTagForCroatia.visibility = View.GONE
+                binding.hacRelativeLayout.visibility = View.GONE
             }
 
             "ME" -> {
@@ -634,6 +650,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 makeCardClickable(false)
                 binding.termsConditionsCheckmark.isChecked = false
                 binding.bttRegTagForCroatia.visibility = View.GONE
+                binding.hacRelativeLayout.visibility = View.GONE
             }
 
             "HR" -> {
