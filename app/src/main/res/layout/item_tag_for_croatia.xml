@@ -37,6 +37,7 @@
         android:focusableInTouchMode="false"
         android:minWidth="0dp"
         android:minHeight="0dp"
+        android:padding="7dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

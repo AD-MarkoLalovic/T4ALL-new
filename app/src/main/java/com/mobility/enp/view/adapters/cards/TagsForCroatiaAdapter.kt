@@ -36,6 +36,8 @@ class TagsForCroatiaAdapter(
 
             binding.checkBox.isEnabled = checkboxesEnabled
             binding.checkBox.alpha = if (checkboxesEnabled) 1f else 0.5f
+            binding.serialNumberTextView.alpha = if (checkboxesEnabled) 1f else 0.5f
+            binding.registrationPlateTextView.alpha = if (checkboxesEnabled) 1f else 0.5f
 
             updateColors(tag.selected)
 

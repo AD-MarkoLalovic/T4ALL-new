@@ -141,17 +141,17 @@
                         android:id="@+id/hac_checkbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true" />
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true" />
 
                     <TextView
                         android:id="@+id/hac_text"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/hac_checkbox"
+                        android:layout_toStartOf="@id/hac_checkbox"
                         android:text="@string/cards_hac_checkbox" />
-
                 </RelativeLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
