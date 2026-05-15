@@ -14,10 +14,16 @@ import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 
 class TagsForCroatiaAdapter(
     private val onCheckChange: (SerialNumberRequest) -> Unit,
-    private val franchisePrimaryColor: Int?
+    private val franchisePrimaryColor: Int?,
+    private var checkboxesEnabled: Boolean
 ) : ListAdapter<TagsForCroatiaUI, TagsForCroatiaAdapter.TagsViewHolder>(TagsForCroatiaDiffCallback) {
 
     private val serialNumbers = mutableListOf<String>()
+
+    fun setCheckboxesEnabled(enabled: Boolean) {
+        checkboxesEnabled = enabled
+        notifyDataSetChanged()
+    }
 
     inner class TagsViewHolder(private val binding: ItemTagForCroatiaBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -27,6 +33,11 @@ class TagsForCroatiaAdapter(
 
             binding.checkBox.setOnCheckedChangeListener(null)
             binding.checkBox.isChecked = tag.selected
+
+            binding.checkBox.isEnabled = checkboxesEnabled
+            binding.checkBox.alpha = if (checkboxesEnabled) 1f else 0.5f
+            binding.serialNumberTextView.alpha = if (checkboxesEnabled) 1f else 0.5f
+            binding.registrationPlateTextView.alpha = if (checkboxesEnabled) 1f else 0.5f
 
             updateColors(tag.selected)
 

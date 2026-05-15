@@ -401,5 +401,9 @@
     <string name="buy_tag">Купи Tag</string>
     <string name="export_pdf">Извоз на PDF</string>
     <string name="export_csv">Извоз на CSV</string>
+    <string name="complaint_number_label">Бр. рекламација %d</string>
+    <string name="euro_currency">ЕУР</string>
+    <string name="action_retry">ПОВТОРИ</string>
+    <string name="cards_hac_checkbox">Се согласувам моите лични податоци да бидат проследени до HAC со цел продолжување на процесот на регистрација на TAG уредот.</string>
 
 </resources>
