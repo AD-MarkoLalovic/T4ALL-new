@@ -14,12 +14,11 @@ import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 
 class TagsForCroatiaAdapter(
     private val onCheckChange: (SerialNumberRequest) -> Unit,
-    private val franchisePrimaryColor: Int?
+    private val franchisePrimaryColor: Int?,
+    private var checkboxesEnabled: Boolean
 ) : ListAdapter<TagsForCroatiaUI, TagsForCroatiaAdapter.TagsViewHolder>(TagsForCroatiaDiffCallback) {
 
     private val serialNumbers = mutableListOf<String>()
-
-    private var checkboxesEnabled = true
 
     fun setCheckboxesEnabled(enabled: Boolean) {
         checkboxesEnabled = enabled

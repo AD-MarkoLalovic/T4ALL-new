@@ -26,6 +26,7 @@ import com.mobility.enp.data.model.cards.response.Country
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.databinding.FragmentPaymentAndPassageBinding
 import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.collectLatestLifecycleFlow
@@ -378,7 +379,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         val franchiseColor = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
         tagsForCroatiaAdapter = TagsForCroatiaAdapter(
             { serialNumbers -> viewModel.onCheckChanged(serialNumbers) },
-            franchiseColor
+            franchiseColor, SharedPreferencesHelper.wasCheckboxEverChecked(requireContext())
         )
 
         binding.rvTagsForCroatia.adapter = tagsForCroatiaAdapter
