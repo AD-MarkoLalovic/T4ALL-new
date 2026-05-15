@@ -275,7 +275,9 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 is SubmitResultFold.Success -> {
                     binding.loadingCards.visibility = View.GONE
-                    binding.hacRelativeLayout.visibility = View.VISIBLE
+                    if (!SharedPreferencesHelper.wasCheckboxEverChecked(requireContext())) {
+                        binding.hacRelativeLayout.visibility = View.VISIBLE
+                    }
 
                     val tagsList = result.data.filter { it.status == 11 }
                     if (tagsList.isNotEmpty()) {
@@ -543,6 +545,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             when (button.isChecked) {
                 true -> {
                     tagsForCroatiaAdapter.setCheckboxesEnabled(true)
+                    binding.hacRelativeLayout.visibility = View.GONE
+                    SharedPreferencesHelper.setCheckboxEverChecked(requireContext())
                 }
 
                 false -> {
