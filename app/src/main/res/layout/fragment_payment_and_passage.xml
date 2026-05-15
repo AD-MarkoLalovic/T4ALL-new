@@ -149,6 +149,8 @@
 
                     <TextView
                         android:id="@+id/hac_text"
+                        style="@style/SubtitlesRegular"
+                        android:textColor="@color/primary_light_darkest"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
