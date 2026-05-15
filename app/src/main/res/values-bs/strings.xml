@@ -394,5 +394,9 @@
     <string name="buy_tag_online_title">KUPI TAG ONLINE</string>
     <string name="tag_purchase_online_description">Tag za elektronsku naplatu cestarine sada možete jednostavno kupiti i online.</string>
     <string name="buy_tag">Kupi Tag</string>
+    <string name="complaint_number_label">Br. reklamacije %d</string>
+    <string name="euro_currency">ЕUR</string>
+    <string name="action_retry">PONOVI</string>
+    <string name="cards_hac_checkbox">Saglasan/Saglasna sam da se moji lični podaci proslijede HAC-u u cilju nastavka procesa registracije TAG uređaja.</string>
 
 </resources>
