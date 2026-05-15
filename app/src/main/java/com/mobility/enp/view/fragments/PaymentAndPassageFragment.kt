@@ -275,8 +275,16 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 is SubmitResultFold.Success -> {
                     binding.loadingCards.visibility = View.GONE
-                    if (!SharedPreferencesHelper.wasCheckboxEverChecked(requireContext())) {
-                        binding.hacRelativeLayout.visibility = View.VISIBLE
+
+                    val hasActiveStatus = result.data.any { it.status == 4 }
+
+                    if (hasActiveStatus) {
+                        binding.hacRelativeLayout.visibility = View.GONE
+                        SharedPreferencesHelper.setCheckboxEverChecked(requireContext())
+                    } else {
+                        if (!SharedPreferencesHelper.wasCheckboxEverChecked(requireContext())) {
+                            binding.hacRelativeLayout.visibility = View.VISIBLE
+                        }
                     }
 
                     val tagsList = result.data.filter { it.status == 11 }
