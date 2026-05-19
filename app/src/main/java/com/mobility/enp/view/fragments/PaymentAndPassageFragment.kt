@@ -284,6 +284,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     } else {
                         if (!SharedPreferencesHelper.wasCheckboxEverChecked(requireContext())) {
                             binding.hacRelativeLayout.visibility = View.VISIBLE
+                            binding.bttRegTagForCroatia.isEnabled = false
+                            binding.bttRegTagForCroatia.isClickable = false
                         }
                     }
 
@@ -389,7 +391,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         val franchiseColor = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
         tagsForCroatiaAdapter = TagsForCroatiaAdapter(
             { serialNumbers -> viewModel.onCheckChanged(serialNumbers) },
-            franchiseColor, SharedPreferencesHelper.wasCheckboxEverChecked(requireContext())
+            franchiseColor,
+            SharedPreferencesHelper.wasCheckboxEverChecked(requireContext())
         )
 
         binding.rvTagsForCroatia.adapter = tagsForCroatiaAdapter
@@ -555,10 +558,14 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     tagsForCroatiaAdapter.setCheckboxesEnabled(true)
                     binding.hacRelativeLayout.visibility = View.GONE
                     SharedPreferencesHelper.setCheckboxEverChecked(requireContext())
+                    binding.bttRegTagForCroatia.isEnabled = true
+                    binding.bttRegTagForCroatia.isClickable = true
                 }
 
                 false -> {
                     tagsForCroatiaAdapter.setCheckboxesEnabled(false)
+                    binding.bttRegTagForCroatia.isEnabled = true
+                    binding.bttRegTagForCroatia.isClickable = true
                 }
             }
         }
