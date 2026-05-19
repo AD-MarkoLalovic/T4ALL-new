@@ -4,5 +4,5 @@ data class TagsForCroatiaUI(
     val serialNumberUI: String,
     val registrationPlateUI: String,
     val status: Int?,
-    val selected: Boolean = false
+    var selected: Boolean = false
 )
