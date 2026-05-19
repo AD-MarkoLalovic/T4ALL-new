@@ -564,8 +564,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 false -> {
                     tagsForCroatiaAdapter.setCheckboxesEnabled(false)
-                    binding.bttRegTagForCroatia.isEnabled = true
-                    binding.bttRegTagForCroatia.isClickable = true
+                    binding.bttRegTagForCroatia.isEnabled = false
+                    binding.bttRegTagForCroatia.isClickable = false
                 }
             }
         }
