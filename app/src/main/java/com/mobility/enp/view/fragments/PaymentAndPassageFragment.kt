@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -284,6 +285,14 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     } else {
                         if (!SharedPreferencesHelper.wasCheckboxEverChecked(requireContext())) {
                             binding.hacRelativeLayout.visibility = View.VISIBLE
+                            binding.bttRegTagForCroatia.isEnabled = false
+                            binding.bttRegTagForCroatia.isClickable = false
+
+                            binding.bttRegTagForCroatia.backgroundTintList =
+                                AppCompatResources.getColorStateList(
+                                    binding.root.context,
+                                    R.color.button_not_enabled_web
+                                )
                         }
                     }
 
@@ -389,7 +398,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         val franchiseColor = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
         tagsForCroatiaAdapter = TagsForCroatiaAdapter(
             { serialNumbers -> viewModel.onCheckChanged(serialNumbers) },
-            franchiseColor, SharedPreferencesHelper.wasCheckboxEverChecked(requireContext())
+            franchiseColor,
+            SharedPreferencesHelper.wasCheckboxEverChecked(requireContext())
         )
 
         binding.rvTagsForCroatia.adapter = tagsForCroatiaAdapter
@@ -555,10 +565,19 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     tagsForCroatiaAdapter.setCheckboxesEnabled(true)
                     binding.hacRelativeLayout.visibility = View.GONE
                     SharedPreferencesHelper.setCheckboxEverChecked(requireContext())
+                    binding.bttRegTagForCroatia.isEnabled = true
+                    binding.bttRegTagForCroatia.isClickable = true
+                    binding.bttRegTagForCroatia.backgroundTintList =
+                        AppCompatResources.getColorStateList(
+                            binding.root.context,
+                            R.color.figmaSplashScreenColor
+                        )
                 }
 
                 false -> {
                     tagsForCroatiaAdapter.setCheckboxesEnabled(false)
+                    binding.bttRegTagForCroatia.isEnabled = false
+                    binding.bttRegTagForCroatia.isClickable = false
                 }
             }
         }

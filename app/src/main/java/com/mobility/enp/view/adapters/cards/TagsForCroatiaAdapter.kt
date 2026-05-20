@@ -22,6 +22,19 @@ class TagsForCroatiaAdapter(
 
     fun setCheckboxesEnabled(enabled: Boolean) {
         checkboxesEnabled = enabled
+
+        if (enabled && currentList.size == 1) {
+            val item = currentList.first()
+            if (!item.selected) {
+                serialNumbers.add(item.serialNumberUI)
+
+                onCheckChange(
+                    SerialNumberRequest(serialNumbers)
+                )
+            }
+            currentList.first().selected = true
+        }
+
         notifyDataSetChanged()
     }
 
@@ -33,7 +46,6 @@ class TagsForCroatiaAdapter(
 
             binding.checkBox.setOnCheckedChangeListener(null)
             binding.checkBox.isChecked = tag.selected
-
             binding.checkBox.isEnabled = checkboxesEnabled
             binding.checkBox.alpha = if (checkboxesEnabled) 1f else 0.5f
             binding.serialNumberTextView.alpha = if (checkboxesEnabled) 1f else 0.5f
