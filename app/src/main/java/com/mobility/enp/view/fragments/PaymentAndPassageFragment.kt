@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -286,6 +287,12 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                             binding.hacRelativeLayout.visibility = View.VISIBLE
                             binding.bttRegTagForCroatia.isEnabled = false
                             binding.bttRegTagForCroatia.isClickable = false
+
+                            binding.bttRegTagForCroatia.backgroundTintList =
+                                AppCompatResources.getColorStateList(
+                                    binding.root.context,
+                                    R.color.button_not_enabled_web
+                                )
                         }
                     }
 
@@ -560,6 +567,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     SharedPreferencesHelper.setCheckboxEverChecked(requireContext())
                     binding.bttRegTagForCroatia.isEnabled = true
                     binding.bttRegTagForCroatia.isClickable = true
+                    binding.bttRegTagForCroatia.backgroundTintList =
+                        AppCompatResources.getColorStateList(
+                            binding.root.context,
+                            R.color.figmaSplashScreenColor
+                        )
                 }
 
                 false -> {
