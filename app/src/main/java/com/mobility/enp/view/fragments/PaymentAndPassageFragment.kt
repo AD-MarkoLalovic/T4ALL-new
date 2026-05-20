@@ -1,6 +1,7 @@
 package com.mobility.enp.view.fragments
 
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.text.SpannableString
@@ -15,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -57,6 +59,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private lateinit var adapter: PaymentAndPassageAdapter
     private lateinit var cardsCountryAdapter: CardsCountryAdapter
     private lateinit var tagsForCroatiaAdapter: TagsForCroatiaAdapter
+    private var colorFranchiser: Int? = null
 
     private var allCards: List<Card> = emptyList()
     private var showLoginToHac = false
@@ -228,6 +231,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
 
             franchiseModel?.franchisePrimaryColor?.let { color ->
+                colorFranchiser = color
+
                 val states = arrayOf(
                     intArrayOf(android.R.attr.state_checked),  // When switch is ON
                     intArrayOf(-android.R.attr.state_checked) // When switch is OFF
@@ -288,11 +293,18 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                             binding.bttRegTagForCroatia.isEnabled = false
                             binding.bttRegTagForCroatia.isClickable = false
 
-                            binding.bttRegTagForCroatia.backgroundTintList =
-                                AppCompatResources.getColorStateList(
-                                    binding.root.context,
-                                    R.color.button_not_enabled_web
-                                )
+                            colorFranchiser?.let { color ->
+                                val halfColor = ColorUtils.setAlphaComponent(color, 128) // 50% alpha
+                                binding.bttRegTagForCroatia.backgroundTintList =
+                                    ColorStateList.valueOf(halfColor)
+                            } ?: run {
+                                binding.bttRegTagForCroatia.backgroundTintList =
+                                    AppCompatResources.getColorStateList(
+                                        binding.root.context,
+                                        R.color.button_not_enabled_web
+                                    )
+
+                            }
                         }
                     }
 
@@ -567,11 +579,18 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     SharedPreferencesHelper.setCheckboxEverChecked(requireContext())
                     binding.bttRegTagForCroatia.isEnabled = true
                     binding.bttRegTagForCroatia.isClickable = true
-                    binding.bttRegTagForCroatia.backgroundTintList =
-                        AppCompatResources.getColorStateList(
-                            binding.root.context,
-                            R.color.figmaSplashScreenColor
-                        )
+                    colorFranchiser?.let { color ->
+                        val halfColor = ColorUtils.setAlphaComponent(color, 255) // 50% alpha
+                        binding.bttRegTagForCroatia.backgroundTintList =
+                            ColorStateList.valueOf(halfColor)
+                    } ?: run {
+                        binding.bttRegTagForCroatia.backgroundTintList =
+                            AppCompatResources.getColorStateList(
+                                binding.root.context,
+                                R.color.figmaSplashScreenColor
+                            )
+
+                    }
                 }
 
                 false -> {
