@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:visibility="gone"
-        app:itemActiveIndicatorStyle="@color/transparent"
+        app:itemActiveIndicatorStyle="@style/TransparentActiveIndicator"
         app:itemBackground="@color/transparent"
         app:itemIconTint="@drawable/bottom_nav_color"
         app:labelVisibilityMode="unlabeled"
