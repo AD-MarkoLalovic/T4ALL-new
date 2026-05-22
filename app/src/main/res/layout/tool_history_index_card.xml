@@ -83,7 +83,7 @@
             android:minHeight="@dimen/dimens_22dp"
             android:paddingEnd="@dimen/dimens_5dp"
             android:textAlignment="viewEnd"
-            tool:itemCount="3"
+            tool:itemCount="1"
             tool:listitem="@layout/passage_history_total_price" />
 
         <View

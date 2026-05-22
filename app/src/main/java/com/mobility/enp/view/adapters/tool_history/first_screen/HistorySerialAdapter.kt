@@ -93,7 +93,6 @@ class HistorySerialAdapter(
 
             hideViews(binding)
 
-            setViewHeight(binding, 0, position)
             // perform initial data fill // for sub adapter
             binding.data = toolHistoryIndex
 
@@ -115,8 +114,6 @@ class HistorySerialAdapter(
                         binding.progbar.visibility = View.VISIBLE
                     }
 
-                    setViewHeight(binding, listOfPassages.size, position)
-
                     val adapter = HistoryPassageAdapterCroatia(
                         complaintInterfaceCroatia,
                         lifecycleOwner,
@@ -129,7 +126,6 @@ class HistorySerialAdapter(
                                 binding.root.context, LinearLayoutManager.VERTICAL, false
                             )
                             binding.cyclerTotalPrice.visibility = View.GONE
-                            setViewHeight(binding, size, position)
                             setNoPassage(binding, size)
 
                             binding.executePendingBindings()
@@ -167,7 +163,6 @@ class HistorySerialAdapter(
                         viewModel,
                         { size ->
                             binding.progbar.visibility = View.GONE
-                            setViewHeight(binding, size, position)
                             setNoPassage(binding, size)
 
                             binding.executePendingBindings()
@@ -201,83 +196,6 @@ class HistorySerialAdapter(
 
             binding.executePendingBindings()
         }
-    }
-
-    private fun setViewHeight(binding: ToolHistoryIndexCardBinding, size: Int, position: Int) {
-        binding.position = position
-
-        val heightInDp = when (size) {
-
-            0 -> {
-                setMargin(binding, 0)
-                binding.nsScroll.layoutParams.height = 0
-                binding.nsScroll.visibility = View.GONE
-                binding.cycler.visibility = View.GONE
-                return
-            }
-
-            1 -> {
-                setMargin(binding, 20)
-                setParamsHeight(binding,binding.root.context.resources.getDimensionPixelSize(
-                    R.dimen.recycler_view_one_item
-                ))
-                binding.root.context.resources.getDimensionPixelSize(
-                    R.dimen.recycler_view_one_item
-                )
-            }
-
-            2 -> {
-                setMargin(binding, 20)
-                setParamsHeight(binding,binding.root.context.resources.getDimensionPixelSize(
-                    R.dimen.recycler_view_two_items
-                ))
-                binding.root.context.resources.getDimensionPixelSize(
-                    R.dimen.recycler_view_two_items
-                )
-            }
-
-            3 -> {
-                setMargin(binding, 20)
-                setParamsHeight(binding,binding.root.context.resources.getDimensionPixelSize(
-                    R.dimen.recycler_view_three_items
-                ))
-
-                binding.root.context.resources.getDimensionPixelSize(
-                    R.dimen.recycler_view_three_items
-                )
-            }
-
-            else -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_more_items
-            )
-        }
-
-
-        val params = binding.nsScroll.layoutParams
-        params.height = heightInDp
-
-        binding.nsScroll.layoutParams = params
-
-        binding.nsScroll.visibility = View.VISIBLE
-        binding.cycler.visibility = View.VISIBLE
-
-        binding.executePendingBindings()
-    }
-
-    private fun setParamsHeight(binding: ToolHistoryIndexCardBinding, heightInDp: Int){
-        val paramsContainer = binding.relativeTop.layoutParams
-        paramsContainer.height = heightInDp + 250
-
-        binding.relativeTop.layoutParams = paramsContainer
-    }
-
-    private fun setMargin(binding: ToolHistoryIndexCardBinding, margin: Int) {
-        val scale = binding.root.context.resources.displayMetrics.density
-        val marginInPx = (margin * scale).toInt()
-
-        val params = binding.relativeTop.layoutParams as ViewGroup.MarginLayoutParams
-        params.bottomMargin = marginInPx
-        binding.relativeTop.layoutParams = params
     }
 
     private fun setNoPassage(binding: ToolHistoryIndexCardBinding, size: Int) {
