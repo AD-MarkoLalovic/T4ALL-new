@@ -127,6 +127,7 @@ class HistorySerialAdapter(
                             )
                             binding.cyclerTotalPrice.visibility = View.GONE
                             setNoPassage(binding, size)
+                            updateCyclerHeight(binding,size)
 
                             binding.executePendingBindings()
                         })
@@ -164,7 +165,7 @@ class HistorySerialAdapter(
                         { size ->
                             binding.progbar.visibility = View.GONE
                             setNoPassage(binding, size)
-
+                            updateCyclerHeight(binding,size)
                             binding.executePendingBindings()
                         },
                         { sumTags ->
@@ -222,6 +223,46 @@ class HistorySerialAdapter(
 
                 stopSpinner(Unit)
             }
+        }
+    }
+
+    private fun updateCyclerHeight(binding: ToolHistoryIndexCardBinding, size: Int) {
+        val maxItems = 3
+        val params = binding.nsScroll.layoutParams
+
+        binding.cycler.isNestedScrollingEnabled = true
+        binding.nsScroll.isNestedScrollingEnabled = true
+
+        val density = binding.root.context.resources.displayMetrics.density
+        val paddingVertical = (5 * density).toInt()
+        val paddingHorizontal = (10 * density).toInt()
+        binding.cycler.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
+        binding.cycler.clipToPadding = false
+
+        if (size == 0) {
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            binding.nsScroll.layoutParams = params
+            return
+        }
+
+        binding.cycler.post {
+            val child = binding.cycler.getChildAt(0)
+
+            val itemHeight = if (child != null) {
+                val lp = child.layoutParams as? ViewGroup.MarginLayoutParams
+                child.height + (lp?.topMargin ?: 0) + (lp?.bottomMargin ?: 0)
+            } else {
+                (140 * density).toInt()
+            }
+
+            if (size > maxItems) {
+                params.height = (itemHeight * maxItems) + (paddingVertical * 2)
+            } else {
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            }
+
+            binding.nsScroll.layoutParams = params
+            binding.nsScroll.requestLayout()
         }
     }
 
