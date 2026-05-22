@@ -1,5 +1,6 @@
 package com.mobility.enp.view.adapters.cards
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,14 +11,39 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
 import com.mobility.enp.databinding.ItemTagForCroatiaBinding
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 
 class TagsForCroatiaAdapter(
     private val onCheckChange: (SerialNumberRequest) -> Unit,
-    private val franchisePrimaryColor: Int?
+    private val franchisePrimaryColor: Int?,
+    private val context: Context
 ) : ListAdapter<TagsForCroatiaUI, TagsForCroatiaAdapter.TagsViewHolder>(TagsForCroatiaDiffCallback) {
 
     private val serialNumbers = mutableListOf<String>()
+    private var hasCheckboxEnabled = SharedPreferencesHelper.wasCheckboxEverChecked(context)
+
+    fun setCheckBoxEnabled(bool: Boolean){
+        this.hasCheckboxEnabled = bool
+    }
+
+    fun oneTagCheck() {
+        if (hasCheckboxEnabled && currentList.size == 1) {
+            val item = currentList.first()
+            if (!item.selected) {
+                serialNumbers.add(item.serialNumberUI)
+
+                onCheckChange(
+                    SerialNumberRequest(serialNumbers)
+                )
+            }
+            currentList.first().selected = true
+        }
+
+        notifyDataSetChanged()
+    }
+
+
 
     inner class TagsViewHolder(private val binding: ItemTagForCroatiaBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -27,6 +53,10 @@ class TagsForCroatiaAdapter(
 
             binding.checkBox.setOnCheckedChangeListener(null)
             binding.checkBox.isChecked = tag.selected
+            binding.checkBox.isEnabled = hasCheckboxEnabled
+            binding.checkBox.alpha = if (hasCheckboxEnabled) 1f else 0.5f
+            binding.serialNumberTextView.alpha = if (hasCheckboxEnabled) 1f else 0.5f
+            binding.registrationPlateTextView.alpha = if (hasCheckboxEnabled) 1f else 0.5f
 
             updateColors(tag.selected)
 

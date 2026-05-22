@@ -463,4 +463,5 @@
     <string name="complaint_number_label">Бр. рекламације %d</string>
     <string name="euro_currency">ЕУР</string>
     <string name="action_retry">ПОНОВИ</string>
+    <string name="cards_hac_checkbox">Сагласан/Сагласна сам да се моји лични подаци проследе HAC-у у циљу наставка процеса регистрације TAG уређаја.</string>
 </resources>

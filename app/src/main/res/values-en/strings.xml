@@ -397,4 +397,5 @@
     <string name="complaint_number_label">Complaint No. %d</string>
     <string name="euro_currency">ЕUR</string>
     <string name="action_retry">RETRY</string>
+    <string name="cards_hac_checkbox">I agree that my personal data may be forwarded to HAC for the purpose of continuing the TAG device registration process.</string>
 </resources>
