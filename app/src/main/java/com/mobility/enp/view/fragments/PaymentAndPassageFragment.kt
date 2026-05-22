@@ -1,7 +1,6 @@
 package com.mobility.enp.view.fragments
 
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.text.SpannableString
@@ -294,7 +293,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                             binding.bttRegTagForCroatia.isClickable = false
 
                             colorFranchiser?.let { color ->
-                                val halfColor = ColorUtils.setAlphaComponent(color, 128) // 50% alpha
+                                val halfColor =
+                                    ColorUtils.setAlphaComponent(color, 128) // 50% alpha
                                 binding.bttRegTagForCroatia.backgroundTintList =
                                     ColorStateList.valueOf(halfColor)
                             } ?: run {
@@ -315,6 +315,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                         visibleCroatianComponents(true)
                         binding.bttRegTagForCroatia.visibility = View.VISIBLE
 
+                        tagsForCroatiaAdapter.setCheckBoxEnabled(SharedPreferencesHelper.wasCheckboxEverChecked(requireContext()))
                         tagsForCroatiaAdapter.submitList(tagsList)
                     } else {
                         visibleCroatianComponents(true)
@@ -411,7 +412,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         tagsForCroatiaAdapter = TagsForCroatiaAdapter(
             { serialNumbers -> viewModel.onCheckChanged(serialNumbers) },
             franchiseColor,
-            SharedPreferencesHelper.wasCheckboxEverChecked(requireContext())
+            requireContext()
         )
 
         binding.rvTagsForCroatia.adapter = tagsForCroatiaAdapter
@@ -574,7 +575,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         binding.hacCheckbox.setOnCheckedChangeListener { button, _ ->
             when (button.isChecked) {
                 true -> {
-                    tagsForCroatiaAdapter.setCheckboxesEnabled(true)
+                    tagsForCroatiaAdapter.oneTagCheck()
                     binding.hacRelativeLayout.visibility = View.GONE
                     SharedPreferencesHelper.setCheckboxEverChecked(requireContext())
                     binding.bttRegTagForCroatia.isEnabled = true
@@ -594,7 +595,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 }
 
                 false -> {
-                    tagsForCroatiaAdapter.setCheckboxesEnabled(false)
                     binding.bttRegTagForCroatia.isEnabled = false
                     binding.bttRegTagForCroatia.isClickable = false
                 }
