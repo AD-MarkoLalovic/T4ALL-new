@@ -12,7 +12,7 @@ object SharedPreferencesHelper {
     fun setCheckboxEverChecked(context: Context) {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit {
-                putBoolean(KEY_CHECKBOX_EVER_CHECKED, true).commit()
+                putBoolean(KEY_CHECKBOX_EVER_CHECKED, true)
             }
     }
 
