@@ -13,7 +13,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -26,6 +28,7 @@ import com.mobility.enp.data.model.cards.response.Country
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.databinding.FragmentPaymentAndPassageBinding
 import com.mobility.enp.util.NetworkError
+import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.collectLatestLifecycleFlow
@@ -55,6 +58,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private lateinit var adapter: PaymentAndPassageAdapter
     private lateinit var cardsCountryAdapter: CardsCountryAdapter
     private lateinit var tagsForCroatiaAdapter: TagsForCroatiaAdapter
+    private var colorFranchiser: Int? = null
 
     private var allCards: List<Card> = emptyList()
     private var showLoginToHac = false
@@ -103,6 +107,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     if (viewModel.saveSelectCountry != "HR") {
                         binding.rvCreditCard.visibility = View.VISIBLE
                         binding.bttAddCard.visibility = View.VISIBLE
+                        binding.hacRelativeLayout.visibility = View.GONE
                     } else {
                         setCountryListener("HR")
                         binding.rvCreditCard.visibility = View.GONE
@@ -225,6 +230,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
 
             franchiseModel?.franchisePrimaryColor?.let { color ->
+                colorFranchiser = color
+
                 val states = arrayOf(
                     intArrayOf(android.R.attr.state_checked),  // When switch is ON
                     intArrayOf(-android.R.attr.state_checked) // When switch is OFF
@@ -274,6 +281,33 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 is SubmitResultFold.Success -> {
                     binding.loadingCards.visibility = View.GONE
 
+                    val hasActiveStatus = result.data.any { it.status == 4 }
+
+                    if (hasActiveStatus) {
+                        binding.hacRelativeLayout.visibility = View.GONE
+                        SharedPreferencesHelper.setCheckboxEverChecked(requireContext())
+                    } else {
+                        if (!SharedPreferencesHelper.wasCheckboxEverChecked(requireContext())) {
+                            binding.hacRelativeLayout.visibility = View.VISIBLE
+                            binding.bttRegTagForCroatia.isEnabled = false
+                            binding.bttRegTagForCroatia.isClickable = false
+
+                            colorFranchiser?.let { color ->
+                                val halfColor =
+                                    ColorUtils.setAlphaComponent(color, 128) // 50% alpha
+                                binding.bttRegTagForCroatia.backgroundTintList =
+                                    ColorStateList.valueOf(halfColor)
+                            } ?: run {
+                                binding.bttRegTagForCroatia.backgroundTintList =
+                                    AppCompatResources.getColorStateList(
+                                        binding.root.context,
+                                        R.color.button_not_enabled_web
+                                    )
+
+                            }
+                        }
+                    }
+
                     val tagsList = result.data.filter { it.status == 11 }
                     if (tagsList.isNotEmpty()) {
                         binding.txCroatiaText.text =
@@ -281,6 +315,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                         visibleCroatianComponents(true)
                         binding.bttRegTagForCroatia.visibility = View.VISIBLE
 
+                        tagsForCroatiaAdapter.setCheckBoxEnabled(SharedPreferencesHelper.wasCheckboxEverChecked(requireContext()))
                         tagsForCroatiaAdapter.submitList(tagsList)
                     } else {
                         visibleCroatianComponents(true)
@@ -376,7 +411,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         val franchiseColor = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
         tagsForCroatiaAdapter = TagsForCroatiaAdapter(
             { serialNumbers -> viewModel.onCheckChanged(serialNumbers) },
-            franchiseColor
+            franchiseColor,
+            requireContext()
         )
 
         binding.rvTagsForCroatia.adapter = tagsForCroatiaAdapter
@@ -536,6 +572,34 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToPdfViewerFragment()
             findNavController().navigate(action)
         }
+        binding.hacCheckbox.setOnCheckedChangeListener { button, _ ->
+            when (button.isChecked) {
+                true -> {
+                    tagsForCroatiaAdapter.oneTagCheck()
+                    binding.hacRelativeLayout.visibility = View.GONE
+                    SharedPreferencesHelper.setCheckboxEverChecked(requireContext())
+                    binding.bttRegTagForCroatia.isEnabled = true
+                    binding.bttRegTagForCroatia.isClickable = true
+                    colorFranchiser?.let { color ->
+                        val halfColor = ColorUtils.setAlphaComponent(color, 255) // 50% alpha
+                        binding.bttRegTagForCroatia.backgroundTintList =
+                            ColorStateList.valueOf(halfColor)
+                    } ?: run {
+                        binding.bttRegTagForCroatia.backgroundTintList =
+                            AppCompatResources.getColorStateList(
+                                binding.root.context,
+                                R.color.figmaSplashScreenColor
+                            )
+
+                    }
+                }
+
+                false -> {
+                    binding.bttRegTagForCroatia.isEnabled = false
+                    binding.bttRegTagForCroatia.isClickable = false
+                }
+            }
+        }
     }
 
     private fun internetReconnectMethod() {
@@ -584,7 +648,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     override fun setPrimaryCard(cardId: Int) {
         LostTagDialog.newInstance(
             title = getString(R.string.choose_primary_card),
-            subtitle = getString(R.string.confirm_change_primary_card),
+            subtitle =
+                getString(R.string.confirm_change_primary_card),
             onButtonClick = {
                 viewModel.setNewPrimaryCard(cardId)
             }
@@ -614,6 +679,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setCardVisibility(true)
                 makeCardClickable(true)
                 binding.bttRegTagForCroatia.visibility = View.GONE
+                binding.hacRelativeLayout.visibility = View.GONE
             }
 
             "MK" -> {
@@ -624,6 +690,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 makeCardClickable(false)
                 binding.termsConditionsCheckmark.isChecked = false
                 binding.bttRegTagForCroatia.visibility = View.GONE
+                binding.hacRelativeLayout.visibility = View.GONE
             }
 
             "ME" -> {
@@ -634,6 +701,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 makeCardClickable(false)
                 binding.termsConditionsCheckmark.isChecked = false
                 binding.bttRegTagForCroatia.visibility = View.GONE
+                binding.hacRelativeLayout.visibility = View.GONE
             }
 
             "HR" -> {
