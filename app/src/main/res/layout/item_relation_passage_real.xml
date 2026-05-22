@@ -20,7 +20,8 @@
             android:id="@+id/topContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dimens_10dp">
+            android:padding="@dimen/dimens_10dp"
+            >
 
             <TextView
                 android:id="@+id/txtAccountNumber"
