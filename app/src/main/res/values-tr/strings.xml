@@ -406,4 +406,5 @@
     <string name="complaint_number_label">Şikayet No. %d</string>
     <string name="euro_currency">ЕUR</string>
     <string name="action_retry">TEKRARLA</string>
+    <string name="cards_hac_checkbox">TAG cihazı kayıt sürecinin devamı amacıyla kişisel verilerimin HAC’a iletilmesini kabul ediyorum.</string>
 </resources>

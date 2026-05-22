@@ -37,7 +37,6 @@
         <item name="android:textAlignment">center</item>
         <item name="android:gravity">center</item>
         <item name="android:lineSpacingExtra">@dimen/dimens_4sp</item>
-        <item name="android:translateY">2</item>
     </style>
 
     <style name="MyOutlinedButtonSmall" parent="Widget.Material3.Button">
@@ -51,7 +50,6 @@
         <item name="android:textAlignment">center</item>
         <item name="android:gravity">center</item>
         <item name="android:lineSpacingExtra">@dimen/dimens_4sp</item>
-        <item name="android:translateY">6</item>
     </style>
 
     <style name="Paragraph">
@@ -337,6 +335,10 @@
 
     <style name="EuroPetrolHeader" parent="@style/Widget.Material3.MaterialCalendar.HeaderLayout">
         <item name="android:background">@color/franchiser_euro_petrol</item>
+    </style>
+
+    <style name="TransparentActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@android:color/transparent</item>
     </style>
 
 </resources>

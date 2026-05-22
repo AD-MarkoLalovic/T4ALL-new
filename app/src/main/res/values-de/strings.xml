@@ -416,4 +416,5 @@
     <string name="complaint_number_label">Reklamations-Nr. %d</string>
     <string name="euro_currency">ЕUR</string>
     <string name="action_retry">ERNEUT</string>
+    <string name="cards_hac_checkbox">Ich stimme zu, dass meine persönlichen Daten an HAC weitergeleitet werden, um den Registrierungsprozess des TAG-Geräts fortzusetzen.</string>
 </resources>

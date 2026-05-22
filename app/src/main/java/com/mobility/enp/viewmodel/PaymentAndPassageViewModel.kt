@@ -232,10 +232,12 @@ class PaymentAndPassageViewModel(
     }
 
     fun onCheckChanged(serialNumbers: SerialNumberRequest) {
+        Log.d(TAG, "onCheckChanged: $serialNumbers")
         selectedSerialNumbers = serialNumbers
     }
 
     fun registrationTagsForHr() {
+        Log.d(TAG, "onCheckChanged: $selectedSerialNumbers")
         viewModelScope.launch {
             _registrationHr.value = SubmitResultFold.Loading
 

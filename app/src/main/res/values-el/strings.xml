@@ -395,4 +395,5 @@
     <string name="complaint_number_label">Αρ. καταγγελίας %d</string>
     <string name="euro_currency">ЕUR</string>
     <string name="action_retry">ΞΑΝΑ</string>
+    <string name="cards_hac_checkbox">Συμφωνώ να προωθηθούν τα προσωπικά μου δεδομένα στην HAC με σκοπό τη συνέχιση της διαδικασίας εγγραφής της συσκευής TAG.</string>
 </resources>
