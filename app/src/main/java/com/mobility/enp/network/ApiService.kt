@@ -31,6 +31,7 @@ import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
+import com.mobility.enp.data.model.new_toll_history.complaint.ComplaintBodyNew
 import com.mobility.enp.data.model.new_toll_history.remote.dto.TollHistoryDto
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -201,6 +202,11 @@ interface ApiService {
     suspend fun postComplaintN(
         @Body complaintBody: ComplaintBody
     ): Response<LostTagResponse>
+
+    @POST("/api/v1/history/complaint")
+    suspend fun postComplaintNew(
+        @Body complaintBody: ComplaintBodyNew
+    ): Response<Unit>
 
     @POST("/api/v1/history/objection")
     suspend fun postObjectionN(

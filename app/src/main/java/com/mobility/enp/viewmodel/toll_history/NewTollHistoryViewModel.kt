@@ -103,6 +103,8 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
             initialValue = emptyList()
         )
 
+    val customerCountry: StateFlow<String?> = repo.customerCountry
+
     init {
         initializeFilter()
         observeDefaultCountry()
@@ -110,7 +112,7 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
 
     private fun initializeFilter() {
         val now = LocalDate.now()
-        val twoHundredDaysAgo = now.minusDays(109) //167 za HR
+        val twoHundredDaysAgo = now.minusDays(139) //167 za HR
 
         _filter.value = HistoryFilter(
             dateFrom = twoHundredDaysAgo.format(dateFormatter),
@@ -138,10 +140,6 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
     fun onCountrySelected(countryCode: String) {
         Log.d("MARKO", "onCountrySelected to=$countryCode from=${_filter.value.country}")
         _filter.update { it.copy(country = countryCode) }
-    }
-
-    fun onDateRangeChanged(dateFrom: String, dateTo: String) {
-        _filter.update { it.copy(dateFrom = dateFrom, dateTo = dateTo) }
     }
 
     companion object {

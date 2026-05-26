@@ -26,7 +26,8 @@ class TollHistoryRemoteMediator(
     private val language: String,
     private val apiService: ApiService,
     private val database: DRoom,
-    private val onUnauthorized: (http: Int) -> Unit = {}
+    private val onUnauthorized: (http: Int) -> Unit = {},
+    private val onCustomerCountry: (String?) -> Unit = {}
 ) : RemoteMediator<Int, TollHistoryItemEntity>() {
 
     private companion object {
@@ -110,6 +111,8 @@ class TollHistoryRemoteMediator(
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
+                    val country = body.data?.customer?.country?.takeIf { it.isNotBlank() }
+                    onCustomerCountry(country)
                     database.newTollHistoryItemDao().deleteByQuery(filterCountry)
                     database.newRemoteKeyDao().deleteByKey(queryKey)
                 }
@@ -120,7 +123,7 @@ class TollHistoryRemoteMediator(
                         nextPage = if (endReached) null else page + 1
                     )
                 )
-                if (entities .isNotEmpty()) {
+                if (entities.isNotEmpty()) {
                     database.newTollHistoryItemDao().upsertAll(entities )
                 }
             }
