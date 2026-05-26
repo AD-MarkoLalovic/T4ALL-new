@@ -6,7 +6,6 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,9 @@ import com.mobility.enp.R
 import com.mobility.enp.databinding.FragmentTollHistoryMainBinding
 import com.mobility.enp.network.error.ApiMessageException
 import com.mobility.enp.util.FragmentResultKeys
+import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
+import com.mobility.enp.util.safeNavigate
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.new_toll_history.AllowedCountryFilterAdapter
 import com.mobility.enp.view.adapters.new_toll_history.TollHistoryPagingAdapter
@@ -72,8 +73,8 @@ class TollHistoryMain : Fragment() {
         observeCountries()
         observeLoadStates()
         observeLogoutEvent()
+        observeFragmentResults()
 
-        //viewModel.initialize("RS")
     }
 
     override fun onStart() {
@@ -90,7 +91,17 @@ class TollHistoryMain : Fragment() {
     private fun setupAdapters() {
         pagingAdapter = TollHistoryPagingAdapter(
             onComplaintClick = { itemId ->
-                //navigateToComplaint(itemId)
+                if (!Util.isNetworkAvailable(requireContext())) {
+                    showNoInternetDialog()
+                    return@TollHistoryPagingAdapter
+                }
+                val country = viewModel.customerCountry.value ?: return@TollHistoryPagingAdapter
+                val showBankForm = country == "RS"
+                val action =
+                    TollHistoryMainDirections.actionTollHistoryMainToComplaintFormNewDialog(
+                        showBankForm = showBankForm, itemId = itemId
+                    )
+                safeNavigate(action, R.id.tollHistoryMain)
             },
             onObjectionClick = { complaintId, maxReached ->
                 if (maxReached) {
@@ -100,7 +111,6 @@ class TollHistoryMain : Fragment() {
                 }
             }
         )
-
 
         binding.recyclerPassage.adapter = pagingAdapter
         binding.recyclerPassage.layoutManager = LinearLayoutManager(requireContext())
@@ -117,10 +127,7 @@ class TollHistoryMain : Fragment() {
 
     private fun observePagingData() {
         collectLatestLifecycleFlow(viewModel.pagingFlow) { pagingData ->
-            Log.d(
-                "MARKO",
-                "submitData: filter=${viewModel.currentFilter.value} pagingData=${pagingData.hashCode()}"
-            )
+
             mediatorWasLoadingForCurrentFilter = false
             mediatorRefreshCompletedForCurrentFilter = false
             binding.txNoPassage.isVisible = false
@@ -297,6 +304,17 @@ class TollHistoryMain : Fragment() {
             }
         }
         networkCallback = null
+    }
+
+    private fun observeFragmentResults() {
+        parentFragmentManager.setFragmentResultListener(
+            FragmentResultKeys.COMPLAINT_SUBMITTED_RESULT,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            if (bundle.getBoolean(FragmentResultKeys.COMPLAINT_SUBMITTED_KEY)) {
+                pagingAdapter.refresh()
+            }
+        }
     }
 
     override fun onDestroyView() {
