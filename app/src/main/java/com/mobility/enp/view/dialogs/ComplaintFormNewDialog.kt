@@ -36,6 +36,7 @@ import com.mobility.enp.util.toast
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.ui_models.BankUIModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
+import com.mobility.enp.viewmodel.toll_history.ComplaintValidationResult
 import com.mobility.enp.viewmodel.toll_history.ComplaintViewModel
 import kotlin.getValue
 
@@ -200,45 +201,39 @@ class ComplaintFormNewDialog : DialogFragment() {
     }
 
     private fun handleComplaintFormSubmission(complaintId: Int, showBankForm: Boolean) {
-        val licencePlate = binding.licencePlateVal.text.toString().trim()
-        val reasonForComplaint = binding.reasonForComplaintVal.text.toString().trim()
+        val licencePlate        = binding.licencePlateVal.text.toString().trim()
+        val reasonForComplaint  = binding.reasonForComplaintVal.text.toString().trim()
+        val selectedBankPosition = binding.bankSpinner.selectedItemPosition
+        val uniqueNumber        = binding.uniqueNumbersSpinner.selectedItem?.toString()?.trim() ?: ""
+        val centerAccountNumber = binding.etCenterAccountNumber.text.toString().trim()
+        val rightAccountNumber  = binding.etRightAccountNumber.text.toString().trim()
 
-        if (licencePlate.isEmpty() || reasonForComplaint.isEmpty()) {
-            toast(getString(R.string.please_enter_all_required_data))
+        val validation = viewModel.validate(
+            licencePlate        = licencePlate,
+            reasonForComplaint  = reasonForComplaint,
+            showBankForm        = showBankForm,
+            selectedBankPosition = selectedBankPosition,
+            uniqueNumber        = uniqueNumber,
+            centerAccountNumber = centerAccountNumber,
+            rightAccountNumber  = rightAccountNumber
+        )
+
+        val errorRes = when (validation) {
+            ComplaintValidationResult.Valid                -> null
+            ComplaintValidationResult.EmptyRequiredFields  -> R.string.please_enter_all_required_data
+            ComplaintValidationResult.ReasonTooShort       -> R.string.complaint_min_length
+            ComplaintValidationResult.NoBankSelected       -> R.string.enter_name_bank
+            ComplaintValidationResult.MissingBankFields    -> R.string.enter_bank_account
+            ComplaintValidationResult.InvalidAccountNumber -> R.string.invalid_account_number
+        }
+
+        if (errorRes != null) {
+            toast(getString(errorRes))
             return
         }
 
-        // Provera minimalne dužine razloga žalbe
-        if (reasonForComplaint.length <= 10) {
-            toast(getString(R.string.complaint_min_length))
-            return
-        }
-
-        if (showBankForm) {
-            val selectedItem = binding.uniqueNumbersSpinner.selectedItem
-            val uniqueNumber = selectedItem?.toString()?.trim() ?: ""
-            val centerAccountNumber = binding.etCenterAccountNumber.text.toString().trim()
-            val rightAccountNumber = binding.etRightAccountNumber.text.toString().trim()
-            val selectedBankPosition = binding.bankSpinner.selectedItemPosition
-
-            if (selectedBankPosition == 0) {
-                toast(getString(R.string.enter_name_bank))
-                return
-            }
-
-            if (uniqueNumber.isEmpty() || centerAccountNumber.isEmpty() || rightAccountNumber.isEmpty()) {
-                toast(getString(R.string.enter_bank_account))
-                return
-            }
-
-            // Provera dužine brojeva računa
-            val isValidAccount = centerAccountNumber.length == 13 && rightAccountNumber.length == 2
-            if (!isValidAccount) {
-                toast(getString(R.string.invalid_account_number))
-                return
-            }
-
-            val complaintBody = ComplaintBodyNew(
+        val body = if (showBankForm) {
+            ComplaintBodyNew(
                 itemId = complaintId,
                 complaintRegistration = licencePlate,
                 complaintText = reasonForComplaint,
@@ -247,15 +242,15 @@ class ComplaintFormNewDialog : DialogFragment() {
                 accountZr2 = centerAccountNumber,
                 accountZr3 = rightAccountNumber
             )
-            viewModel.submitComplaint(complaintBody)
         } else {
-            val complaintBody = ComplaintBodyNew(
+            ComplaintBodyNew(
                 itemId = complaintId,
-                complaintText = reasonForComplaint,
-                complaintRegistration = licencePlate
+                complaintRegistration = licencePlate,
+                complaintText = reasonForComplaint
             )
-            viewModel.submitComplaint(complaintBody)
         }
+
+        viewModel.submitComplaint(body)
     }
 
     private fun setupUniqueNumberSpinner(uniqueNumbers: List<Int>) {
