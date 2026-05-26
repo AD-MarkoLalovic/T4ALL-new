@@ -16,4 +16,6 @@ object FragmentResultKeys {
     const val LANGUAGE_CAN_SWITCH = "can_switch_language"
     const val NO_INTERNET_RESULT = "no_internet_result"
     const val NO_INTERNET_CONFIRMED = "no_internet_confirmed"
+    const val COMPLAINT_SUBMITTED_RESULT = "complaint_submitted_result"
+    const val COMPLAINT_SUBMITTED_KEY    = "complaint_submitted_key"
 }
