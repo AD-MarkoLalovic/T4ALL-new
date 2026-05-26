@@ -11,11 +11,16 @@ import com.mobility.enp.data.model.new_toll_history.local.entity.TollHistoryItem
 import com.mobility.enp.data.paging.TollHistoryRemoteMediator
 import com.mobility.enp.data.room.database.DRoom
 import kotlinx.coroutines.flow.Flow
-
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 class NewTollHistoryRepository(
     database: DRoom,
     context: Context
 ) : BaseRepository(database, context){
+
+    private val _customerCountry = MutableStateFlow<String?>(null)
+    val customerCountry: StateFlow<String?> = _customerCountry.asStateFlow()
 
     @OptIn(ExperimentalPagingApi::class)
     suspend fun getPagedHistory(
@@ -46,7 +51,8 @@ class NewTollHistoryRepository(
                 language = lang,
                 apiService= apiService(token),
                 database = database,
-                onUnauthorized = onUnauthorized
+                onUnauthorized = onUnauthorized,
+                onCustomerCountry = { code -> _customerCountry.value = code}
             ),
             pagingSourceFactory = {
                 database.newTollHistoryItemDao().pagingSource(filterCountry)
