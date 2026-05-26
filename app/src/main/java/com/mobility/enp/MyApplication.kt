@@ -5,6 +5,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mobility.enp.data.repository.AuthRepository
 import com.mobility.enp.data.repository.BillsRepository
 import com.mobility.enp.data.repository.CardRepository
+import com.mobility.enp.data.repository.ComplaintAndObjectionRepository
 import com.mobility.enp.data.repository.FranchiserRepository
 import com.mobility.enp.data.repository.HomeRepository
 import com.mobility.enp.data.repository.NewTollHistoryRepository
@@ -44,6 +45,10 @@ class MyApplication : Application() {
 
     val newTollHistoryRepository: NewTollHistoryRepository by lazy {
         NewTollHistoryRepository(database, applicationContext)
+    }
+
+    val complaintAndObjectionRepository: ComplaintAndObjectionRepository by lazy {
+        ComplaintAndObjectionRepository(database, this)
     }
 
     val v2TagsDao: ToolHistoryV2TagsSerials by lazy {
