@@ -417,4 +417,7 @@
     <string name="euro_currency">ЕUR</string>
     <string name="action_retry">ERNEUT</string>
     <string name="cards_hac_checkbox">Ich stimme zu, dass meine persönlichen Daten an HAC weitergeleitet werden, um den Registrierungsprozess des TAG-Geräts fortzusetzen.</string>
+    <string name="contact_person">"Kontaktperson "</string>
+    <string name="field_contact_person_name_required">Das Feld „Name der Kontaktperson“ ist erforderlich.</string>
+    <string name="field_contact_person_surname_required">Das Feld „Nachname der Kontaktperson“ ist erforderlich.</string>
 </resources>

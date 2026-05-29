@@ -24,7 +24,9 @@ data class BasicInfoEntity(
     val mb: String?,
     val phone: String,
     val postalCode: String?,
-    val pib: String?
+    val pib: String?,
+    val cpFirstName: String?,
+    val cpLastName: String?
 ) {
     fun toUIModel(): BasicInfoUIModel {
         return BasicInfoUIModel(
@@ -40,7 +42,9 @@ data class BasicInfoEntity(
             mb = mb,
             phone = phone,
             postalCode = postalCode,
-            pib = pib
+            pib = pib,
+            cpFirstName= cpFirstName,
+            cpLastName = cpLastName
         )
     }
 }

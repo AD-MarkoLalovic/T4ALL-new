@@ -472,4 +472,7 @@
     <string name="euro_currency">ЕУР</string>
     <string name="action_retry">ПОНОВИ</string>
     <string name="cards_hac_checkbox">Сагласан/Сагласна сам да се моји лични подаци проследе HAC-у у циљу наставка процеса регистрације TAG уређаја.</string>
+    <string name="contact_person">Контакт особа</string>
+    <string name="field_contact_person_name_required">Поље Име контакт особе је обавезно.</string>
+    <string name="field_contact_person_surname_required">Поље Презиме контакт особе је обавезно.</string>
 </resources>
