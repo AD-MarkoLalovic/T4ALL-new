@@ -499,6 +499,8 @@
                                     android:layout_height="wrap_content"
                                     android:hint="@string/ime"
                                     android:imeOptions="actionNext"
+                                    android:inputType="textPersonName"
+                                    android:maxLines="1"
                                     android:textColor="@color/figmaSplashScreenColor" />
                             </com.google.android.material.textfield.TextInputLayout>
 
@@ -524,7 +526,9 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:hint="@string/surname"
-                                    android:imeOptions="actionNext"
+                                    android:imeOptions="actionDone"
+                                    android:inputType="textPersonName"
+                                    android:maxLines="1"
                                     android:textColor="@color/figmaSplashScreenColor" />
                             </com.google.android.material.textfield.TextInputLayout>
 
