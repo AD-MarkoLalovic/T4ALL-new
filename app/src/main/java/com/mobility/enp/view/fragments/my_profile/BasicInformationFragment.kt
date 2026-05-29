@@ -213,6 +213,7 @@ class BasicInformationFragment : Fragment() {
             inputBasicCompanyName.isVisible = isBusiness || isBusinessForeign
             txBasicInfoPib.isVisible = isBusiness || isBusinessForeign
             inputBasicInfoPib.isVisible = isBusiness || isBusinessForeign
+            containerContactPerson.isVisible = isBusiness || isBusinessForeign
 
             txBasicInfoRegistrationNumber.isVisible = isBusiness
             inputBasicInfoRegistrationNumber.isVisible = isBusiness
@@ -242,6 +243,8 @@ class BasicInformationFragment : Fragment() {
         val companyName = binding.editCompanyName.text.toString().trim()
         val mb = binding.editRegistrationNumber.text.toString().trim()
         val pib = binding.editPib.text.toString().trim()
+        val contactPersonName = binding.contactPersonEdit.text.toString().trim()
+        val contactPersonSurname = binding.contactPersonSurnameEdit.text.toString().trim()
 
         // Provera svakog polja pojedinačno
         when {
@@ -296,6 +299,16 @@ class BasicInformationFragment : Fragment() {
                 return
             }
 
+            (customerType == 2 || customerType == 3) && contactPersonName.isBlank() -> {
+                showFieldError(R.string.field_contact_person_name_required)
+                return
+            }
+
+            (customerType == 2 || customerType == 3) && contactPersonSurname.isBlank() -> {
+                showFieldError(R.string.field_contact_person_surname_required)
+                return
+            }
+
             else -> {
                 // Ako su sva polja popunjena, kreiramo zahtev za ažuriranje
                 try {
@@ -316,7 +329,9 @@ class BasicInformationFragment : Fragment() {
                             mb = mb,
                             phone = phone,
                             postalCode = postalCode,
-                            pib = pib
+                            pib = pib,
+                            cpFirstName = contactPersonName,
+                            cpLastName = contactPersonSurname
                         )
 
                         3 -> UpdateUserDataRequest(
@@ -325,7 +340,9 @@ class BasicInformationFragment : Fragment() {
                             companyName = companyName,
                             phone = phone,
                             postalCode = postalCode,
-                            pib = pib
+                            pib = pib,
+                            cpFirstName = contactPersonName,
+                            cpLastName = contactPersonSurname
                         )
 
                         else -> throw IllegalArgumentException("Invalid customer type in BasicInformationFragment: $customerType")
@@ -361,6 +378,8 @@ class BasicInformationFragment : Fragment() {
         binding.editZipCode.setText(data.postalCode)
         binding.editCountry.setText(data.countryName)
         binding.editPib.setText(data.pib)
+        binding.contactPersonEdit.setText(data.cpFirstName)
+        binding.contactPersonSurnameEdit.setText(data.cpLastName)
     }
 
     /**

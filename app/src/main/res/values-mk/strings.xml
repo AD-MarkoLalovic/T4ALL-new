@@ -405,5 +405,8 @@
     <string name="euro_currency">ЕУР</string>
     <string name="action_retry">ПОВТОРИ</string>
     <string name="cards_hac_checkbox">Се согласувам моите лични податоци да бидат проследени до HAC со цел продолжување на процесот на регистрација на TAG уредот.</string>
+    <string name="contact_person">"Контакт лице "</string>
+    <string name="field_contact_person_name_required">Полето Име на контакт лице е задолжително.</string>
+    <string name="field_contact_person_surname_required">Полето Презиме на контакт лице е задолжително.</string>
 
 </resources>

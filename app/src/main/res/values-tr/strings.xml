@@ -407,4 +407,7 @@
     <string name="euro_currency">ЕUR</string>
     <string name="action_retry">TEKRARLA</string>
     <string name="cards_hac_checkbox">TAG cihazı kayıt sürecinin devamı amacıyla kişisel verilerimin HAC’a iletilmesini kabul ediyorum.</string>
+    <string name="contact_person">"İrtibat kişisi "</string>
+    <string name="field_contact_person_name_required">İletişim Kişisi Adı alanı zorunludur.</string>
+    <string name="field_contact_person_surname_required">İletişim Kişisi Soyadı alanı zorunludur.</string>
 </resources>
