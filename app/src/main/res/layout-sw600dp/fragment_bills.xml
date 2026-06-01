@@ -154,6 +154,20 @@
                         android:visibility="gone"
                         tools:visibility="visible" />
 
+                    <TextView
+                        android:id="@+id/buttonRepublicSerbia"
+                        style="@style/CaptionMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimens_40dp"
+                        android:layout_marginEnd="@dimen/dimens_6dp"
+                        android:background="@drawable/currency_selector"
+                        android:gravity="center"
+                        android:paddingHorizontal="@dimen/dimens_16dp"
+                        android:text="@string/republic_of_srpska"
+                        android:textColor="@color/text_color_selector"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
                 </LinearLayout>
             </HorizontalScrollView>
 

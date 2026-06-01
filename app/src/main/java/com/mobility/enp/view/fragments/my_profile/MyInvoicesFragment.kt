@@ -214,6 +214,10 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                     "HR" -> {
                         binding.buttonCroatia.visibility = View.VISIBLE
                     }
+
+                    "BA_RS" -> {
+                        binding.buttonRepublicSerbia.visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -324,6 +328,18 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             viewModel.fetchMonthlyInvoices()
         }
 
+        binding.buttonRepublicSerbia.setOnClickListener {
+            binding.textNoBills.visibility = View.GONE
+            setSelectedButton(it)
+            if (::adapterMonthly.isInitialized) {
+                adapterMonthly.resetAdapter()
+            }
+            binding.invoicesLoadingView.visibility = View.VISIBLE
+            viewModel.setSelectedCountry("BA_RS")
+            setButtonsEnabled(false)
+            viewModel.fetchMonthlyInvoices()
+        }
+
     }
 
     private fun setButtonsEnabled(enabled: Boolean) { // to prevent button spam until data is fetched from api
@@ -332,6 +348,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         binding.buttonMontenegro.isEnabled = enabled
         binding.northMacedonia.isEnabled = enabled
         binding.buttonSerbia.isEnabled = enabled
+        binding.buttonRepublicSerbia.isEnabled = enabled
     }
 
     override fun onStartSpinner() {
@@ -404,7 +421,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         buttonMontenegro.isSelected = false
         buttonCroatia.isSelected = false
         buttonAll.isSelected = false
-
+        buttonRepublicSerbia.isSelected = false
         selectedButton.isSelected = true
     }
 
