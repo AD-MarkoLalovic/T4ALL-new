@@ -411,4 +411,7 @@
     <string name="field_contact_person_name_required">İletişim Kişisi Adı alanı zorunludur.</string>
     <string name="field_contact_person_surname_required">İletişim Kişisi Soyadı alanı zorunludur.</string>
     <string name="republica_srpska">S. Cumhuriyeti</string>
+    <string name="republic_of_srpska">Sırpska Cumhuriyeti</string>
+    <string name="notes_serbian_tag_in_republic_serbia">Sırp TAG\'inin Sırp Cumhuriyeti\'nde (Republika Srpska) kullanımı hakkında notlar</string>
+    <string name="click_registration_republic_serbia">TAG cihazının kaydı, ödeme kartının eklenmesi, geçiş ücretlerinin tahsilatı ve itirazlar Autoputevi RS DOO Banja Luka şirketinin yetki alanındadır. Şikâyetler/sorular/talepler +387 51 893 995 numaralı telefondan veya korisnicka.podrska@autoputevirs.com.\n\nSırp Cumhuriyeti\'nde TAG kullanımı için ödeme kartının başarıyla eklenmesinin ardından, müşteri portalında Sırp Cumhuriyeti TAG durumunun Aktif olarak değişmesi 15 dakikaya kadar sürebilir.</string>
 </resources>

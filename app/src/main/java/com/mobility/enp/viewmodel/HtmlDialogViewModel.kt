@@ -26,6 +26,7 @@ class HtmlDialogViewModel(private val repository: CardRepository) : ViewModel() 
             val folderPath = when (countryCode) {
                 "ME" -> "montenegro"
                 "MK" -> "north_macedonia"
+                "BA_RS" -> "republic_of_serbia"
                 else -> throw IllegalArgumentException("Invalid country code: $countryCode")
             }
 

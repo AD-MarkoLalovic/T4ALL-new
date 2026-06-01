@@ -38,6 +38,7 @@ import com.mobility.enp.view.adapters.cards.PaymentAndPassageAdapter
 import com.mobility.enp.view.adapters.cards.TagsForCroatiaAdapter
 import com.mobility.enp.view.dialogs.ConfirmRemovalCardDialog
 import com.mobility.enp.view.dialogs.LostTagDialog
+import com.mobility.enp.view.dialogs.RepublicSerbiaTagDialog
 import com.mobility.enp.view.dialogs.SerbianTagInCroatiaDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
@@ -456,13 +457,17 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             if (cardWebResponse.data?.isFranchiser == false) {  // if serbia is not a franshizer then it gets shown
                 availableCountries.add("RS")
             }
+            if (cardWebResponse.data?.showTabARS == true) {
+                availableCountries.add("BA_RS")
+            }
 
             // Mapiranje kodova zemalja u string resurse
             val countryMapping = mapOf(
                 "RS" to R.string.serbia,
                 "MK" to R.string.macedonia,
                 "ME" to R.string.montenegro,
-                "HR" to R.string.croatia
+                "HR" to R.string.croatia,
+                "BA_RS" to R.string.republic_of_srpska
             )
 
             // Filtrirajte zemlje koje postoje u availableCountries
@@ -537,6 +542,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         binding.txCroatiaCardsNote.setOnClickListener {
             SerbianTagInCroatiaDialog().show(parentFragmentManager, "SerbianTagInCroatia")
         }
+
+        binding.txRepublicSerbiaCardsNote.setOnClickListener {
+            RepublicSerbiaTagDialog().show(parentFragmentManager, "RepublicSerbiaTag")
+        }
+
         binding.termsConditionsCheckmark.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 makeCardClickable(true)
@@ -680,6 +690,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 makeCardClickable(true)
                 binding.bttRegTagForCroatia.visibility = View.GONE
                 binding.hacRelativeLayout.visibility = View.GONE
+                binding.txRepublicSerbiaCardsNote.visibility = View.GONE
             }
 
             "MK" -> {
@@ -691,6 +702,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 binding.termsConditionsCheckmark.isChecked = false
                 binding.bttRegTagForCroatia.visibility = View.GONE
                 binding.hacRelativeLayout.visibility = View.GONE
+                binding.txRepublicSerbiaCardsNote.visibility = View.GONE
             }
 
             "ME" -> {
@@ -702,6 +714,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 binding.termsConditionsCheckmark.isChecked = false
                 binding.bttRegTagForCroatia.visibility = View.GONE
                 binding.hacRelativeLayout.visibility = View.GONE
+                binding.txRepublicSerbiaCardsNote.visibility = View.GONE
             }
 
             "HR" -> {
@@ -711,7 +724,20 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 binding.txNoCards.visibility = View.GONE
                 binding.termsConditionsCheckmark.isChecked = false
                 binding.rvCreditCard.visibility = View.GONE
+                binding.txRepublicSerbiaCardsNote.visibility = View.GONE
                 viewModel.fetchTagsForCroatia()
+            }
+
+            "BA_RS" -> {
+                visibleCroatianComponents(false)
+                filterCardsByCountry("BA_RS")
+                setBlockVisibility(true)
+                setCardVisibility(true)
+                makeCardClickable(false)
+                binding.txRepublicSerbiaCardsNote.visibility = View.VISIBLE
+                binding.termsConditionsCheckmark.isChecked = false
+                binding.bttRegTagForCroatia.visibility = View.GONE
+                binding.hacRelativeLayout.visibility = View.GONE
             }
         }
         cardsCountryAdapter.setSelectedCountry(country)  // Dodato za ažuriranje selektovane zemlje u adapteru

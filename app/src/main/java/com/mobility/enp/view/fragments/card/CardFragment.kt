@@ -68,11 +68,12 @@ class CardFragment : Fragment() {
         val countryUrls = mapOf(
             "MK" to "mk",
             "ME" to "me",
-            "RS" to "rs"
+            "RS" to "rs",
+            "BA_RS" to "BA_RS"
         )
 
         val finalUrl = baseUrl + (countryUrls[countryCode] ?: "rs") // Ako nema u mapi, koristi "rs"
-
+        Log.d("MARKO", "onViewCreated: $finalUrl")
         initializeWebViewSettings(finalUrl)
         fetchAndLoadUrl(finalUrl)
     }

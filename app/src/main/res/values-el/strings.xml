@@ -400,4 +400,7 @@
     <string name="field_contact_person_name_required">İletişim Kişisi Adı alanı zorunludur.</string>
     <string name="field_contact_person_surname_required">Το πεδίο «Επώνυμο ατόμου επικοινωνίας» είναι υποχρεωτικό.</string>
     <string name="republica_srpska">Δ. Σέρπσκα</string>
+    <string name="republic_of_srpska">Δημοκρατία Σέρπσκα</string>
+    <string name="notes_serbian_tag_in_republic_serbia">Σημειώσεις για τη χρήση του σερβικού TAG στη Δημοκρατία Σέρπσκα (Republika Srpska)</string>
+    <string name="click_registration_republic_serbia">Η εγγραφή της συσκευής TAG, η προσθήκη κάρτας πληρωμής, η χρέωση διελεύσεων και η διαχείριση παραπόνων εμπίπτουν στην αρμοδιότητα της εταιρείας Autoputevi RS DOO Banja Luka. Παράπονα/ερωτήσεις/αιτήματα μπορείτε να υποβάλετε τηλεφωνικά στο +387 51 893 995 ή μέσω email στο korisnicka.podrska@autoputevirs.com.\n\nΜετά την επιτυχή προσθήκη κάρτας πληρωμής για τη χρήση της συσκευής TAG στη Δημοκρατία της Σερπσκά, μπορεί να χρειαστούν έως και 15 λεπτά για να αλλάξει η κατάσταση του tag για τη Δημοκρατία της Σερπσκά στην πύλη πελατών σε Ενεργό.</string>
 </resources>

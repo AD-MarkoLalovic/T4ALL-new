@@ -406,5 +406,8 @@
     <string name="field_contact_person_name_required">Polje Ime kontakt osobe je obavezno.</string>
     <string name="field_contact_person_surname_required">Polje Prezime kontakt osobe je obavezno.</string>
     <string name="republica_srpska">R. Srpska</string>
+    <string name="republic_of_srpska">" Republika Srpska"</string>
+    <string name="notes_serbian_tag_in_republic_serbia">Napomene za korištenje srpskog TAG-a u Republici Srpskoj</string>
+    <string name="click_registration_republic_serbia">Registracija TAG uređaja, dodavanje platne kartice, naplata prolazaka i reklamacije su u nadležnosti kompanije Autoputevi RS DOO Banja Luka. Prigovor/pitanja/reklamacije možete uputiti na telefon +387 51 893 995 ili na e-mail: korisnicka.podrska@autoputevirs.com.\n\nNakon uspešnog dodavanja platne kartice za korišćenje TAG-a u Republici Srpskoj, potrebno je do 15 min da se status taga za Republiku Srpsku na korisničkom portalu promeni u Aktivan.</string>
 
 </resources>

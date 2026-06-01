@@ -477,4 +477,7 @@
     <string name="field_contact_person_name_required">Поље Име контакт особе је обавезно.</string>
     <string name="field_contact_person_surname_required">Поље Презиме контакт особе је обавезно.</string>
     <string name="republica_srpska">Р. Српска</string>
+    <string name="republic_of_srpska">Република Српска</string>
+    <string name="notes_serbian_tag_in_republic_serbia">Напомене за коришћење српског ТАГ-а у Републици Српској</string>
+    <string name="click_registration_republic_serbia">Регистрација ТАГ уређаја, додавање платне картице, наплата пролазака и рекламације су у надлежности компаније Аутопутеви РС д.о.о. Бања Лука. Приговоре/питања/рекламације можете упутити на телефон +387 51 893 995 или на е-пошту: korisnicka.podrska@autoputevirs.com.\n\nНакон успешног додавања платне картице за коришћење ТАГ-а у Републици Српској, потребно је до 15 мин да се статус тага за Републику Српску на корисничком порталу промени у Активан.</string>
 </resources>
