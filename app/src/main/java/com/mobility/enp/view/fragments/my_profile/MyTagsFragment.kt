@@ -150,6 +150,7 @@ class MyTagsFragment : Fragment() {
                                     "MK" -> "MKD"
                                     "ME" -> "MNE"
                                     "HR" -> "HRV"
+                                    "BA_RS" -> "RS"
                                     else -> code
                                 }
                             }
@@ -165,6 +166,7 @@ class MyTagsFragment : Fragment() {
                             "MNE" -> "ME"
                             "HRV" -> "HR"
                             "SRB" -> "RS"
+                            "RS" -> "BA_RS"
                             else -> ""
                         }
 
