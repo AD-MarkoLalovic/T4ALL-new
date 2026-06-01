@@ -25,6 +25,7 @@ import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.Util.isTablet
 import com.mobility.enp.util.collectLatestLifecycleFlow
+import com.mobility.enp.util.toast
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.my_tags.MyTagsListAdapter
 import com.mobility.enp.view.adapters.my_tags.MyTagsStatusFilterAdapter
@@ -489,6 +490,7 @@ class MyTagsFragment : Fragment() {
         binding.cyclerTagTypes.adapter = statusFilterAdapter
 
         allowedCountriesAdapter = MyTagsStatusFilterAdapter { selectedCountry ->
+
             viewModel.nullPagination()
 
             clearSearchFieldFocusAndKeyboard()
