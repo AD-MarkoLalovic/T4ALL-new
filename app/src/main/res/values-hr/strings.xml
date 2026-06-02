@@ -405,5 +405,6 @@
     <string name="contact_person">"Kontakt osoba "</string>
     <string name="field_contact_person_name_required">Polje Ime kontakt osobe je obavezno.</string>
     <string name="field_contact_person_surname_required">Polje Prezime kontakt osobe je obavezno.</string>
+    <string name="republica_srpska">R. Srpska</string>
 
 </resources>

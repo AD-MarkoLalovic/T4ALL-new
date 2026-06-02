@@ -66,7 +66,7 @@ android {
             multiDexEnabled = true
             isDefault = true
             buildConfigField("String", "API_URL", "\"https://mobileapitest.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"testt4a1@mailinator.com\"")
+            buildConfigField("String", "TEST_USERNAME", "\"podrska.aprsenp@pupin.rs\"")
             buildConfigField("String", "TEST_PASSWORD", "\"Demo!4team\"")
             buildConfigField(
                 "String",
@@ -79,8 +79,8 @@ android {
             dimension = "mode"
             signingConfig = signingConfigs.getByName("release")
             buildConfigField("String", "API_URL", "\"https://mobileapi.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"cok.brb.11@gmail.com\"")
-            buildConfigField("String", "TEST_PASSWORD", "\"testiranje1!\"")
+            buildConfigField("String", "TEST_USERNAME", "\"nemanja.karanovic@gmail.com\"")
+            buildConfigField("String", "TEST_PASSWORD", "\"Autoputevi2026^\"")
             buildConfigField(
                 "String",
                 "TAG_ORDER_BASE_URL",

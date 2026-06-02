@@ -278,8 +278,8 @@ class UserPassViewModel(
     }
 
     private val _baseTagDataState =
-        MutableStateFlow<SubmitResult<Pair<IndexData, CardWebModel?>>>(SubmitResult.Loading)
-    val baseTagDataStateFirstScreen: StateFlow<SubmitResult<Pair<IndexData, CardWebModel?>>> get() = _baseTagDataState
+        MutableStateFlow<SubmitResult<Pair<IndexData, V2HistoryTagResponse?>>>(SubmitResult.Loading)
+    val baseTagDataStateFirstScreen: StateFlow<SubmitResult<Pair<IndexData, V2HistoryTagResponse?>>> get() = _baseTagDataState
 
     private val _baseTagDataStateByCountry =
         MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)
@@ -378,12 +378,24 @@ class UserPassViewModel(
         _baseTagDataState.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
 
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+            val dateTo = LocalDate.now()
+            val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
+
+            val dateToFormatted = dateTo.format(formatter)
+            val dateFromFormatted = dateFrom.format(formatter)
+
             val resultTags = async {
                 repository.getTagBaseData(1, tagsPerPage)
             }
 
             val resultCards = async {
-                repository.getCardsFromServer()
+                repository.getAdapterAllowedCountries(
+                    1,
+                    itemsPerPage,
+                    dateFromFormatted,
+                    dateToFormatted
+                )
             }
 
             val tagResultDeferred = resultTags.await()
@@ -392,12 +404,12 @@ class UserPassViewModel(
             if (tagResultDeferred.isSuccess && resultCardsDeferred.isSuccess) {
 
                 val tagsData = tagResultDeferred.getOrNull()
-                val cardData = resultCardsDeferred.getOrNull()
+                val v2Response = resultCardsDeferred.getOrNull()
 
-                if (tagsData == null || cardData == null) {
+                if (tagsData == null || v2Response == null) {
                     _baseTagDataState.value = SubmitResult.Empty
                 } else {
-                    _baseTagDataState.value = SubmitResult.Success(Pair(tagsData, cardData))
+                    _baseTagDataState.value = SubmitResult.Success(Pair(tagsData, v2Response))
                 }
 
             } else {

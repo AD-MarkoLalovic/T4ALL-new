@@ -21,7 +21,6 @@ import com.mobility.enp.util.toCroatianPassageResult
 import com.mobility.enp.util.toV2HistoryTagResponseResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.ResponseBody
 
 
 class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, context) {
@@ -162,6 +161,52 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
             return try {
                 val response = apiService(token).getToolHistoryTransitV2(
                     tagSerialNumber,
+                    page.toString(),
+                    perPage.toString(),
+                    getLangKey(),
+                    dateFrom,
+                    dateTo
+                )
+                if (response.isSuccessful) {
+                    response.body()?.let { indexData ->
+
+                        val normalizedTags =
+                            indexData.data?.tags?.sortedBy { it?.serialNumber } ?: emptyList()
+                        indexData.data?.tags = normalizedTags
+
+                        Result.success(indexData)
+                    } ?: Result.failure(NetworkError.ServerError)
+                } else {
+                    response.errorBody()?.let { errorBody ->
+                        val errorResponse = parseErrorResponse(response.code(), errorBody)
+                        Result.failure(NetworkError.ApiError(errorResponse))
+                    } ?: Result.failure(NetworkError.ServerError)
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "getIndexData: ${e.message} ${e.cause}")
+                Result.failure(NetworkError.ServerError)
+            }
+        }
+
+        return Result.failure(NetworkError.ServerError)
+
+    }
+
+
+    suspend fun getAdapterAllowedCountries(
+        page: Int,
+        perPage: Int, dateFrom: String, dateTo: String
+    ): Result<V2HistoryTagResponse> {
+
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken()
+
+        userToken?.let { token ->
+            return try {
+                val response = apiService(token).getToolHistoryAllowedCountries(
                     page.toString(),
                     perPage.toString(),
                     getLangKey(),

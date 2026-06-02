@@ -401,4 +401,5 @@
     <string name="contact_person">"Contact person "</string>
     <string name="field_contact_person_name_required">The Contact Person Name field is required.</string>
     <string name="field_contact_person_surname_required">The Contact Person Surname field is required.</string>
+    <string name="republica_srpska">R. Srpska</string>
 </resources>

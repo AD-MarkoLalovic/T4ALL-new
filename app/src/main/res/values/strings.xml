@@ -296,6 +296,7 @@
     <string name="what_is_toll_for_all_system">Шта је Toll For All систем?</string>
     <string name="croatia_eng" translatable="false">Croatia</string>
     <string name="serbia_rs" translatable="false">RS</string>
+    <string name="republica_srpska_code" translatable="false">BA_RS</string>
     <string name="montenegro_me" translatable="false">ME</string>
     <string name="northmacedonia_mk" translatable="false">MK</string>
     <string name="croatia_hr" translatable="false">HR</string>
@@ -475,4 +476,5 @@
     <string name="contact_person">Контакт особа</string>
     <string name="field_contact_person_name_required">Поље Име контакт особе је обавезно.</string>
     <string name="field_contact_person_surname_required">Поље Презиме контакт особе је обавезно.</string>
+    <string name="republica_srpska">Р. Српска</string>
 </resources>

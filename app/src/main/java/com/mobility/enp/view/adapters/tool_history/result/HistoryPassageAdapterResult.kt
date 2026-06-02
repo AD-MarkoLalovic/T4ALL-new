@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 class HistoryPassageAdapterResult(
     private val listOfPassages: List<Item>,
     private val complaintInterface: SendToFragment,
-    private val hideComplaintButton: Boolean,
+    private var hideComplaintButton: Boolean,
     private val lifecycleOwner: LifecycleOwner,
     private val tagSerialNumber: String,
     private val countryCode: String, private val viewmodel: UserPassViewModel,
@@ -113,6 +113,8 @@ class HistoryPassageAdapterResult(
                 relation.checkOutDate = formatedCheckOutDate
             }
 
+            binding.checkDateAlternative.visibility = View.GONE
+
             val dataValidation = DataValidation(
                 totalPages, tagSerialNumber, countryCode
             )
@@ -122,7 +124,7 @@ class HistoryPassageAdapterResult(
             binding.relation = relation
             binding.viewShade.background = null
 
-            when (relation.bill.countryCode) {
+            when (relation.bill?.countryCode) {
                 "RS" -> {
                     binding.tagBillCountry.text = "SRB"
                 }
@@ -137,6 +139,10 @@ class HistoryPassageAdapterResult(
 
                 "HR" -> {
                     binding.tagBillCountry.text = "HRV"
+                }
+
+                "BA_RS" -> {
+                    binding.tagBillCountry.text = "RS"
                 }
 
                 else -> {
@@ -235,7 +241,7 @@ class HistoryPassageAdapterResult(
                 binding.btnComplaint.visibility = View.VISIBLE
             }
 
-            when (relation.bill.paid.toInt()) {
+            when (relation.bill?.paid?.toInt()) {
                 1 -> {
                     binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_green)
                     binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_green)
@@ -260,6 +266,22 @@ class HistoryPassageAdapterResult(
                     }
                 }
             }
+
+            if (relation.bill == null) {
+                if (relation.isPaid) {
+                    binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_green)
+                    binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_green)
+                    binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_green)
+                } else {
+                    binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_red)
+                    binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_red)
+                    binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_red)
+                }
+                hideComplaintButton = true
+
+                binding.checkDateAlternative.visibility = View.VISIBLE
+            }
+
 
             if (hideComplaintButton) {
                 binding.btnComplaint.visibility = View.GONE

@@ -410,4 +410,5 @@
     <string name="contact_person">"İrtibat kişisi "</string>
     <string name="field_contact_person_name_required">İletişim Kişisi Adı alanı zorunludur.</string>
     <string name="field_contact_person_surname_required">İletişim Kişisi Soyadı alanı zorunludur.</string>
+    <string name="republica_srpska">S. Cumhuriyeti</string>
 </resources>
