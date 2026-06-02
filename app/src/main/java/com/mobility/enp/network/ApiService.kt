@@ -97,6 +97,16 @@ interface ApiService {
         @Path("card_id") cardId: String
     ): Response<Unit>
 
+
+    @GET("/api/v2/history")
+    suspend fun getToolHistoryAllowedCountries(
+        @Query("page") page: String, // current page
+        @Query("perPage") perPage: String, // fixed
+        @Query("lang") language: String,
+        @Query("filter[date_from]") dateFrom: String,
+        @Query("filter[date_to]") dateTo: String
+    ): Response<V2HistoryTagResponse>
+
     /**
      * possible filter
      * Allowed filter(s) are `date_from, date_to, serial_number, currency, country`."

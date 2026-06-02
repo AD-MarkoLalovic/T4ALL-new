@@ -408,5 +408,6 @@
     <string name="contact_person">"Контакт лице "</string>
     <string name="field_contact_person_name_required">Полето Име на контакт лице е задолжително.</string>
     <string name="field_contact_person_surname_required">Полето Презиме на контакт лице е задолжително.</string>
+    <string name="republica_srpska">Р. Српска</string>
 
 </resources>

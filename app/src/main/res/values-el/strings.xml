@@ -399,4 +399,5 @@
     <string name="contact_person">Επικοινωνία</string>
     <string name="field_contact_person_name_required">İletişim Kişisi Adı alanı zorunludur.</string>
     <string name="field_contact_person_surname_required">Το πεδίο «Επώνυμο ατόμου επικοινωνίας» είναι υποχρεωτικό.</string>
+    <string name="republica_srpska">Δ. Σέρπσκα</string>
 </resources>

@@ -169,6 +169,7 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                 }
 
                 is SubmitResult.Success -> {
+
                     binding.progBar.visibility = View.GONE
                     viewModel.saveRoomTagDataFirstScreen(tagIndex.data)
                 }
@@ -211,26 +212,37 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                     val countryList = ArrayList<String>()
 
-                    tagIndex.data.second?.let { cardData ->
+                    tagIndex.data.second?.let { v2Data ->
 
-                        if (cardData.data?.showTabHR == true) {
-                            countryList.add(getString(R.string.croatia))
-                        }
-                        if (cardData.data?.showTabME == true) {
-                            countryList.add(getString(R.string.montenegro))
-                        }
-                        if (cardData.data?.showTabMK == true) {
-                            countryList.add(getString(R.string.macedonia))
-                        }
-                        if (cardData.data?.showTabRS == true) {
+                        val allowedCountries =
+                            v2Data.data?.allowedCountries?.mapNotNull { it?.value } ?: emptyList()
+
+                        if (allowedCountries.contains("RS")) {
                             countryList.add(getString(R.string.serbia))
                         }
+
+                        if (allowedCountries.contains("ME")) {
+                            countryList.add(getString(R.string.montenegro))
+                        }
+
+                        if (allowedCountries.contains("MK")) {
+                            countryList.add(getString(R.string.macedonia))
+                        }
+
+                        if (allowedCountries.contains("HR")) {
+                            countryList.add(getString(R.string.croatia))
+                        }
+
+                        if (allowedCountries.contains("BA_RS")) {
+                            countryList.add(getString(R.string.republica_srpska))
+                        }
+
                     }
 
-                    tagIndex.data.first.availableCountries = countryList
+                    tagIndex.data.first.availableCountries = countryList.reversed()
 
                     if (countryList.isNotEmpty()) {
-                        viewModel.saveAllowedCountries(countryList)
+                        viewModel.saveAllowedCountries(countryList.reversed())
                     }
                     viewModel.saveRoomTagDataFirstScreen(tagIndex.data.first)
                 }

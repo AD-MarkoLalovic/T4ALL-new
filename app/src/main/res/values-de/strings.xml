@@ -420,4 +420,5 @@
     <string name="contact_person">"Kontaktperson "</string>
     <string name="field_contact_person_name_required">Das Feld „Name der Kontaktperson“ ist erforderlich.</string>
     <string name="field_contact_person_surname_required">Das Feld „Nachname der Kontaktperson“ ist erforderlich.</string>
+    <string name="republica_srpska">R. Srpska</string>
 </resources>
