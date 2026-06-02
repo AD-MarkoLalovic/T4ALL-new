@@ -69,7 +69,7 @@ class CardFragment : Fragment() {
             "MK" to "mk",
             "ME" to "me",
             "RS" to "rs",
-            "BA_RS" to "BA_RS"
+            "BA_RS" to "ba_rs"
         )
 
         val finalUrl = baseUrl + (countryUrls[countryCode] ?: "rs") // Ako nema u mapi, koristi "rs"

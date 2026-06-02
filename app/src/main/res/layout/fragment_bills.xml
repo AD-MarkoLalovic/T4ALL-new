@@ -161,7 +161,7 @@
                         android:background="@drawable/currency_selector"
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/republic_of_srpska"
+                        android:text="@string/republic_of_serbia"
                         android:textColor="@color/text_color_selector"
                         android:visibility="gone"
                         tools:visibility="visible" />
