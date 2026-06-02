@@ -325,6 +325,10 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                     getString(R.string.serbia_rs)
                 }
 
+                getString(R.string.republica_srpska) -> {
+                    getString(R.string.republica_srpska_code)
+                }
+
                 else -> ""
             }
 
@@ -347,6 +351,10 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
 
                         getString(R.string.serbia) -> {
                             getString(R.string.serbia_rs)
+                        }
+
+                        getString(R.string.republica_srpska) -> {
+                            getString(R.string.republica_srpska_code)
                         }
 
                         else -> ""
