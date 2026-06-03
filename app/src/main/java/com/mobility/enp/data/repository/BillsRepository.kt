@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
+import com.mobility.enp.data.model.api_my_invoices.RsBillsResponse
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.pdf_table.PdfTable
 import com.mobility.enp.data.repository.PassageHistoryRepository.Companion.TAG
@@ -136,6 +137,26 @@ class BillsRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, co
         return Result.failure(NetworkError.ServerError)
     }
 
+    suspend fun downloadPassageDataRs(billId: String): Result<BillDownload> {
+        if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val response = apiService(userToken).getPdfListingPassesRs(billId)
+            if (response.isSuccessful) {
+                response.body()?.let { Result.success(it) } ?: Result.failure(NetworkError.ServerError)
+            } else {
+                response.errorBody()?.let { errorBody ->
+                    Result.failure(NetworkError.ApiError(parseErrorResponse(response.code(), errorBody)))
+                } ?: Result.failure(NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "downloadPassageDataRs: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
     suspend fun getInvoicesDataPaging(
         page: Int,
         perPage: Int,
@@ -262,6 +283,47 @@ class BillsRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, co
         }
 
         return Result.failure(NetworkError.ServerError)
+    }
+
+    suspend fun getRepublicSerbiaBills(country: String): Result<RsBillsResponse> {
+        if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val response = apiService(userToken).getBillsRepublicSerbia(country)
+            if (response.isSuccessful) {
+                response.body()?.let { Result.success(it) } ?: Result.failure(NetworkError.ServerError)
+            } else {
+                response.errorBody()?.let { errorBody ->
+                    Result.failure(NetworkError.ApiError(parseErrorResponse(response.code(), errorBody)))
+                } ?: Result.failure(NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "getRepublicSerbiaBills: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
+    }
+
+    suspend fun sendBillToEmail(billId: String): Result<Unit> {
+        if (!isNetworkAvailable()) return Result.failure(NetworkError.NoConnection)
+
+        val userToken = getUserToken() ?: return Result.failure(NetworkError.ServerError)
+
+        return try {
+            val lang = getLangKey()
+            val response = apiService(userToken).sendBillToEmail(billId, lang)
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                response.errorBody()?.let { errorBody ->
+                    Result.failure(NetworkError.ApiError(parseErrorResponse(response.code(), errorBody)))
+                } ?: Result.failure(NetworkError.ServerError)
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "sendBillToEmail: ${e.message} ${e.cause}")
+            Result.failure(NetworkError.ServerError)
+        }
     }
 
     suspend fun postPayBill(bill: String): Result<Unit> {
