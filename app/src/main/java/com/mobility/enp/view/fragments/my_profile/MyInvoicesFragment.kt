@@ -15,8 +15,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
+import com.mobility.enp.data.model.api_my_invoices.BillData
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
+import com.mobility.enp.data.model.api_my_invoices.RsBillsResponse
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
+import com.mobility.enp.data.model.api_my_invoices.toBillData
 import com.mobility.enp.databinding.FragmentBillsBinding
 import com.mobility.enp.util.FragmentResultKeys
 import com.mobility.enp.util.NetworkError
@@ -48,8 +51,10 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     private val viewModel: MyInvoicesViewModel by activityViewModels { MyInvoicesViewModel.Factory }
 
     private lateinit var adapterMonthly: MonthlyBillsAdapter
+    private lateinit var adapterRsBills: BillsDetailsAdapter
     private lateinit var networkObserver: NetworkObserver
     private var dataExists: Data? = null
+    private var rsDataExists: BillData? = null
 
     private var month = ""
     private val requestPermissionLauncher =
@@ -92,7 +97,8 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
         setObservers()
 
-        setSelectedButton(binding.buttonAll)
+        viewModel.setSelectedCountry("RS")
+        setSelectedButton(binding.buttonSerbia)
         setButtonsEnabled(true)
 
         setListener()
@@ -144,6 +150,36 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             }
         }
 
+        collectLatestLifecycleFlow(viewModel.rsBills) { serverResponse ->
+            when (serverResponse) {
+                is SubmitResult.Loading -> {
+                    binding.invoicesLoadingView.visibility = View.VISIBLE
+                }
+                is SubmitResult.Success -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    binding.txNoInternet.visibility = View.GONE
+                    binding.recyclerViewBills.visibility = View.VISIBLE
+                    loadRsData(serverResponse.data)
+                }
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+                is SubmitResult.FailureServerError -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+                is SubmitResult.FailureApiError -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    showError(serverResponse.errorMessage)
+                }
+                is SubmitResult.InvalidApiToken -> {
+                    showError(serverResponse.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+                else -> {}
+            }
+        }
+
         collectLatestLifecycleFlow(viewModel.billPad) { result ->
             when(result) {
                 is SubmitResultFold.Failure -> {
@@ -159,7 +195,11 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                     binding.invoicesLoadingView.visibility = View.GONE
 
                     toast(getString(R.string.payment_successfully))
-                    viewModel.fetchMonthlyInvoices()
+                    if (viewModel.isRepublicSerbiaMode) {
+                        viewModel.fetchRepublicSerbiaBills()
+                    } else {
+                        viewModel.fetchMonthlyInvoices()
+                    }
                     viewModel.resetBillPad()
                 }
             }
@@ -192,9 +232,9 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     }
 
     private fun loadData(response: SubmitResult.Success<MyInvoicesResponse>) {
+        rsDataExists = null
 
         response.data.data?.allowedCountries?.let { allowedCountry ->
-            binding.buttonAll.visibility = View.VISIBLE
             binding.valueTitle.visibility = View.VISIBLE
 
             for (country in allowedCountry) {
@@ -248,6 +288,42 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
     }
 
+    private fun loadRsData(response: RsBillsResponse) {
+        /*response.data?.allowedCountries?.let { allowedCountry ->
+            binding.valueTitle.visibility = View.VISIBLE
+            for (country in allowedCountry) {
+                when (country.value) {
+                    "RS" -> binding.buttonSerbia.visibility = View.VISIBLE
+                    "ME" -> binding.buttonMontenegro.visibility = View.VISIBLE
+                    "MK" -> binding.northMacedonia.visibility = View.VISIBLE
+                    "HR" -> binding.buttonCroatia.visibility = View.VISIBLE
+                    "BA_RS" -> binding.buttonRepublicSerbia.visibility = View.VISIBLE
+                }
+            }
+        }*/
+
+        val billData = response.toBillData()
+        if (billData.bills.isEmpty()) {
+            binding.textNoBills.visibility = View.VISIBLE
+            setButtonsEnabled(true)
+        } else {
+            rsDataExists = billData
+            binding.textNoBills.visibility = View.GONE
+            binding.recyclerViewBills.visibility = View.VISIBLE
+            adapterRsBills = BillsDetailsAdapter(
+                billData,
+                viewModel,
+                viewLifecycleOwner,
+                this,
+                billData.bills.firstOrNull()?.currency?.value ?: "",
+                isBaRsMode = true
+            )
+            binding.recyclerViewBills.adapter = adapterRsBills
+            binding.recyclerViewBills.layoutManager = LinearLayoutManager(requireContext())
+            setButtonsEnabled(true)
+        }
+    }
+
     private fun handleError(error: Throwable) {
         when(error) {
             NetworkError.ServerError -> {
@@ -267,22 +343,25 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             .show()
     }
 
-    private fun setListener() {
-        binding.buttonAll.setOnClickListener {
-            binding.textNoBills.visibility = View.GONE
-            setSelectedButton(it)
-            if (::adapterMonthly.isInitialized) {
-                adapterMonthly.resetAdapter()
-            }
-            binding.invoicesLoadingView.visibility = View.VISIBLE
-            viewModel.setSelectedCountry("")
-            setButtonsEnabled(false)
-            viewModel.fetchMonthlyInvoices()
+    private fun clearRsBillsAdapter() {
+        if (::adapterRsBills.isInitialized) {
+            binding.recyclerViewBills.adapter = null
+            rsDataExists = null
         }
+    }
 
+    private fun clearMonthlyAdapter() {
+        if (::adapterMonthly.isInitialized) {
+            adapterMonthly.resetAdapter()
+            binding.recyclerViewBills.adapter = null
+        }
+    }
+
+    private fun setListener() {
         binding.buttonCroatia.setOnClickListener {
             binding.textNoBills.visibility = View.GONE
             setSelectedButton(it)
+            clearRsBillsAdapter()
             if (::adapterMonthly.isInitialized) {
                 adapterMonthly.resetAdapter()
             }
@@ -295,6 +374,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         binding.northMacedonia.setOnClickListener {
             binding.textNoBills.visibility = View.GONE
             setSelectedButton(it)
+            clearRsBillsAdapter()
             if (::adapterMonthly.isInitialized) {
                 adapterMonthly.resetAdapter()
             }
@@ -307,6 +387,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         binding.buttonMontenegro.setOnClickListener {
             binding.textNoBills.visibility = View.GONE
             setSelectedButton(it)
+            clearRsBillsAdapter()
             if (::adapterMonthly.isInitialized) {
                 adapterMonthly.resetAdapter()
             }
@@ -319,6 +400,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         binding.buttonSerbia.setOnClickListener {
             binding.textNoBills.visibility = View.GONE
             setSelectedButton(it)
+            clearRsBillsAdapter()
             if (::adapterMonthly.isInitialized) {
                 adapterMonthly.resetAdapter()
             }
@@ -331,19 +413,16 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         binding.buttonRepublicSerbia.setOnClickListener {
             binding.textNoBills.visibility = View.GONE
             setSelectedButton(it)
-            if (::adapterMonthly.isInitialized) {
-                adapterMonthly.resetAdapter()
-            }
+            clearMonthlyAdapter()
             binding.invoicesLoadingView.visibility = View.VISIBLE
             viewModel.setSelectedCountry("BA_RS")
             setButtonsEnabled(false)
-            viewModel.fetchMonthlyInvoices()
+            viewModel.fetchRepublicSerbiaBills()
         }
 
     }
 
     private fun setButtonsEnabled(enabled: Boolean) { // to prevent button spam until data is fetched from api
-        binding.buttonAll.isEnabled = enabled
         binding.buttonCroatia.isEnabled = enabled
         binding.buttonMontenegro.isEnabled = enabled
         binding.northMacedonia.isEnabled = enabled
@@ -420,7 +499,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         buttonSerbia.isSelected = false
         buttonMontenegro.isSelected = false
         buttonCroatia.isSelected = false
-        buttonAll.isSelected = false
         buttonRepublicSerbia.isSelected = false
         selectedButton.isSelected = true
     }
@@ -446,12 +524,17 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         networkObserver = NetworkObserver(
             requireContext(),
             onAvailable = {
-                viewModel.fetchMonthlyInvoices()
+                if (viewModel.isRepublicSerbiaMode) {
+                    viewModel.fetchRepublicSerbiaBills()
+                } else {
+                    viewModel.fetchMonthlyInvoices()
+                }
             },
             onLost = {
                 viewLifecycleOwner.lifecycleScope.launch {
                     noInternetMessage()
-                    if (dataExists != null) {
+                    val hasData = dataExists != null || rsDataExists != null
+                    if (hasData) {
                         binding.recyclerViewBills.visibility = View.VISIBLE
                         binding.txNoInternet.visibility = View.GONE
                         binding.valueTitle.visibility = View.VISIBLE
@@ -472,6 +555,8 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         super.onDestroyView()
         networkObserver.stop()
         viewModel.resetState()
+        dataExists = null
+        rsDataExists = null
         _binding = null
     }
 
