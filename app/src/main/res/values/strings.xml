@@ -400,6 +400,8 @@
     <string name="notification_title">Дозволите да вам T4A шаље обавештења</string>
     <string name="notification_subtitle">Обавештења служе за преузимање рачуна и извоз табела у историји пролаза.</string>
     <string name="listing_of_passages_downloaded_successfully">Листинг пролазака је успешно преузет.</string>
+    <string name="send_bill_to_email">Пошаљи рачун на мејл</string>
+    <string name="bill_sent_to_email">Рачун је послат на вашу мејл адресу.</string>
     <string name="field_bank_account_isrequired">Поље жиро рачун треба да садржи 13 цифара.</string>
     <string name="access_denied">Приступ одбијен</string>
     <string name="only_t4all_users_access_denied">Тренутно није могуће да се улогују налози који нису T4All. Молимo вас да користите ВЕБ портал.</string>

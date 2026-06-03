@@ -357,6 +357,8 @@
     <string name="notification_title">Erlauben Sie T4A, Ihnen Benachrichtigungen zu senden</string>
     <string name="notification_subtitle">Benachrichtigungen dienen zum Herunterladen von Rechnungen und zum Exportieren von Tabellen in der Verlaufshistorie.</string>
     <string name="listing_of_passages_downloaded_successfully">Die Durchgangsliste wurde erfolgreich heruntergeladen.</string>
+    <string name="send_bill_to_email">Rechnung per E-Mail senden</string>
+    <string name="bill_sent_to_email">Die Rechnung wurde an Ihre E-Mail-Adresse gesendet.</string>
     <string name="field_bank_account_isrequired">Das Feld „Girokonto“ muss 13 Ziffern enthalten.</string>
     <string name="access_denied">Zugriff verweigert</string>
     <string name="only_t4all_users_access_denied">Es ist derzeit nicht möglich, sich mit Konten anzumelden, die nicht T4All sind. Bitte verwenden Sie das WEB-Portal</string>

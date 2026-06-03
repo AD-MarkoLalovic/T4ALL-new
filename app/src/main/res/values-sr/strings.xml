@@ -347,6 +347,8 @@
     <string name="notification_title">Dozvolite da vam T4A šalje obaveštenja</string>
     <string name="notification_subtitle">Obaveštenja služe za preuzimanje računa i izvoz tabela u istoriji prolazaka.</string>
     <string name="listing_of_passages_downloaded_successfully">Listing prolazaka je uspešno preuzet.</string>
+    <string name="send_bill_to_email">Pošalji račun na mejl</string>
+    <string name="bill_sent_to_email">Račun je poslat na vašu mejl adresu.</string>
     <string name="field_bank_account_isrequired">Polje žiro račun treba da sadrži 13 cifara.</string>
     <string name="access_denied">Pristup odbijen</string>
     <string name="only_t4all_users_access_denied">Trenutno nije moguće da se uloguju nalozi koji nisu T4All. Molimo vas da koristite WEB portal.</string>
