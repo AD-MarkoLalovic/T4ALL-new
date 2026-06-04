@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.TagUtilCycler
@@ -25,9 +27,7 @@ class HistorySerialAdapterResult(
     private val complaintInterface: HistoryPassageAdapterResult.SendToFragment,
     private val complaintInterfaceCroatia: HistoryPassageAdapterCroatiaResult.SendToFragment,
     val lifecycleOwner: LifecycleOwner,
-) : RecyclerView.Adapter<HistorySerialAdapterResult.TagsViewHolder>() {
-
-    private var listOfTags: List<Tag> = emptyList()
+) : ListAdapter<Tag, HistorySerialAdapterResult.TagsViewHolder>(TagDiffCallback) {
 
     private var currentPage: Int = 0
     private var lastPage: Int = 0
@@ -38,26 +38,26 @@ class HistorySerialAdapterResult(
             lastPage = indexData[indexData.size - 1].lastPage ?: 0
         }
 
-        listOfTags = indexData.flatMap { it.data?.tags.orEmpty() }
-
-        for (i in listOfTags.indices) {
-            notifyItemChanged(i)
-        }
+        val tags = indexData.flatMap { it.data?.tags.orEmpty() }
 
         if (currentPage < lastPage) {
             viewModel.getSerialDeviceDataValidationSerialAdapter(lastPage)
         }
-    }
-
-    fun clearData() {
-        listOfTags = emptyList()
-        currentPage = 0
-        lastPage = 0
-        notifyDataSetChanged()
+        submitList(tags)
     }
 
     companion object {
         const val TAG = "PrimaryPassageAdapter"
+
+        private object TagDiffCallback : DiffUtil.ItemCallback<Tag>() {
+            override fun areItemsTheSame(oldItem: Tag, newItem: Tag): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Tag, newItem: Tag): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 
     inner class TagsViewHolder(
@@ -66,13 +66,12 @@ class HistorySerialAdapterResult(
 
         fun bind(
             toolHistoryIndex: TagUtilCycler,
-            position: Int,
-            holder: TagsViewHolder
+            position: Int
         ) {
             // perform initial data fill // for sub adapter
             binding.data = toolHistoryIndex
 
-            holder.binding.progbar.visibility = View.INVISIBLE
+            binding.progbar.visibility = View.INVISIBLE
             binding.noPassage.visibility = View.GONE
             binding.nsScroll.visibility = View.INVISIBLE
             binding.cycler.visibility = View.INVISIBLE
@@ -83,7 +82,7 @@ class HistorySerialAdapterResult(
             //region inner passage adapters
             if (viewModel.selectedCountry == binding.root.context.getString(R.string.croatia_hr)) {
 
-                lifecycleOwner.lifecycleScope.launch() {
+                lifecycleOwner.lifecycleScope.launch {
 
                     val initLoad = withContext(Dispatchers.IO) {
                         viewModel.getCPassagesResultBySerialCode(
@@ -250,11 +249,9 @@ class HistorySerialAdapterResult(
         )
     }
 
-    override fun getItemCount(): Int = listOfTags.size ?: 0
-
     override fun onBindViewHolder(holder: TagsViewHolder, position: Int) {
         holder.binding.noPassage.visibility = View.GONE
-        val currentTag = listOfTags[holder.bindingAdapterPosition]
+        val currentTag = getItem(position)
 
         val tagUtilCycler = TagUtilCycler("", "")
 
@@ -279,15 +276,14 @@ class HistorySerialAdapterResult(
 
         holder.bind(
             tagUtilCycler,
-            holder.bindingAdapterPosition,
-            holder
+            position
         )
 
         runPaginationCheck(currentTag)
     }
 
     private fun runPaginationCheck(currentTag: Tag) {
-        if (currentTag == listOfTags[listOfTags.size - 1]) {
+        if (currentTag == getItem(itemCount - 1)) {
             if (currentPage < lastPage) {
                 // trigger background update with flow
                 viewModel.getTagsUpdate(currentPage + 1)
