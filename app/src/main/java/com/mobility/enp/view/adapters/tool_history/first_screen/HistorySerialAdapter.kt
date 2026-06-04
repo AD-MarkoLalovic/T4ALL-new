@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.TagUtilCycler
@@ -29,9 +31,8 @@ class HistorySerialAdapter(
     val lifecycleOwner: LifecycleOwner,
     private val stopSpinner: (Unit) -> Unit,
     private val hasPassages: (ArrayList<Boolean>) -> Unit
-) : RecyclerView.Adapter<HistorySerialAdapter.TagsViewHolder>() {
+) : ListAdapter<Tag, HistorySerialAdapter.TagsViewHolder>(TagDiffCallback) {
 
-    private var listOfTags: List<Tag> = emptyList()
     private var currentPage: Int = 0
     private var lastPage: Int = 0
     private val listOfPassages: ArrayList<Boolean> = arrayListOf()
@@ -44,15 +45,6 @@ class HistorySerialAdapter(
         (holder.binding.cycler.adapter as? HistoryPassageAdapterCroatia)?.cancelJob()
     }
 
-    fun clearAdapter() {
-        paginationJob?.cancel()
-        listOfTags = emptyList()
-        currentPage = 0
-        lastPage = 0
-        listOfPassages.clear()
-        notifyDataSetChanged()
-    }
-
     fun setAdapterData(indexData: List<IndexData>) {
         listOfPassages.clear()
         if (indexData.isNotEmpty()) {
@@ -60,19 +52,27 @@ class HistorySerialAdapter(
             lastPage = indexData[indexData.size - 1].lastPage ?: 0
         }
 
-        listOfTags = indexData.flatMap { it.data?.tags.orEmpty() }
+        val tags = indexData.flatMap { it.data?.tags.orEmpty() }
 
         if (currentPage < lastPage) {
             viewModel.getSerialDeviceDataValidationSerialAdapter(lastPage)
         }
 
-        for (tag in listOfTags.indices) {
-            notifyItemChanged(tag)
-        }
+        submitList(tags)
     }
 
     companion object {
         const val TAG = "PrimaryPassageAdapter"
+
+        private object TagDiffCallback : DiffUtil.ItemCallback<Tag>() {
+            override fun areItemsTheSame(oldItem: Tag, newItem: Tag): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Tag, newItem: Tag): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 
     inner class TagsViewHolder(
@@ -81,7 +81,7 @@ class HistorySerialAdapter(
         var job: Job? = null
 
         fun bind(
-            toolHistoryIndex: TagUtilCycler, position: Int, holder: TagsViewHolder, currentTag: Tag
+            toolHistoryIndex: TagUtilCycler, position: Int
         ) {
 
             binding.cycler.layoutManager = LinearLayoutManager(binding.root.context)
@@ -102,7 +102,7 @@ class HistorySerialAdapter(
             //region inner passage adapters
             if (viewModel.selectedCountry == binding.root.context.getString(R.string.croatia_hr)) {
 
-                job = lifecycleOwner.lifecycleScope.launch() {
+                job = lifecycleOwner.lifecycleScope.launch {
                     val initLoad = withContext(Dispatchers.IO) {
                         viewModel.getCPassagesBySerialCountry(
                             itemSerialNumber, binding.root.context.getString(R.string.croatia_hr)
@@ -218,9 +218,11 @@ class HistorySerialAdapter(
 
             1 -> {
                 setMargin(binding, 20)
-                setParamsHeight(binding,binding.root.context.resources.getDimensionPixelSize(
-                    R.dimen.recycler_view_one_item
-                ))
+                setParamsHeight(
+                    binding, binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_one_item
+                    )
+                )
                 binding.root.context.resources.getDimensionPixelSize(
                     R.dimen.recycler_view_one_item
                 )
@@ -228,9 +230,11 @@ class HistorySerialAdapter(
 
             2 -> {
                 setMargin(binding, 20)
-                setParamsHeight(binding,binding.root.context.resources.getDimensionPixelSize(
-                    R.dimen.recycler_view_two_items
-                ))
+                setParamsHeight(
+                    binding, binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_two_items
+                    )
+                )
                 binding.root.context.resources.getDimensionPixelSize(
                     R.dimen.recycler_view_two_items
                 )
@@ -238,9 +242,11 @@ class HistorySerialAdapter(
 
             3 -> {
                 setMargin(binding, 20)
-                setParamsHeight(binding,binding.root.context.resources.getDimensionPixelSize(
-                    R.dimen.recycler_view_three_items
-                ))
+                setParamsHeight(
+                    binding, binding.root.context.resources.getDimensionPixelSize(
+                        R.dimen.recycler_view_three_items
+                    )
+                )
 
                 binding.root.context.resources.getDimensionPixelSize(
                     R.dimen.recycler_view_three_items
@@ -264,7 +270,7 @@ class HistorySerialAdapter(
         binding.executePendingBindings()
     }
 
-    private fun setParamsHeight(binding: ToolHistoryIndexCardBinding, heightInDp: Int){
+    private fun setParamsHeight(binding: ToolHistoryIndexCardBinding, heightInDp: Int) {
         val paramsContainer = binding.relativeTop.layoutParams
         paramsContainer.height = heightInDp + 250
 
@@ -331,11 +337,9 @@ class HistorySerialAdapter(
         binding.tagSerialNumber.visibility = View.GONE
     }
 
-    override fun getItemCount(): Int = listOfTags.size ?: 0
-
     override fun onBindViewHolder(holder: TagsViewHolder, position: Int) {
         holder.binding.noPassage.visibility = View.GONE
-        val currentTag = listOfTags[holder.bindingAdapterPosition]
+        val currentTag = getItem(position)
 
         val tagUtilCycler = TagUtilCycler("", "")
 
@@ -359,14 +363,14 @@ class HistorySerialAdapter(
 
 
         holder.bind(
-            tagUtilCycler, holder.bindingAdapterPosition, holder, currentTag
+            tagUtilCycler, position
         )
 
         runPaginationCheck(currentTag)
     }
 
     private fun runPaginationCheck(currentTag: Tag) {
-        if (currentTag == listOfTags[listOfTags.size - 1]) {
+        if (currentTag == getItem(itemCount - 1)) {
             paginationJob?.cancel()
             paginationJob = lifecycleOwner.lifecycleScope.launch {
                 delay(2000)
