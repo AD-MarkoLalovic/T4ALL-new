@@ -98,7 +98,7 @@ class PaymentAndPassageAdapter(
             binding.primaryCard.text = spannableString
             binding.primaryCard.isClickable = true
             binding.primaryCard.setOnClickListener {
-                card.id?.let { id -> listener?.setPrimaryCard(id) }
+                card.id?.let { id -> listener?.setPrimaryCard(id, card.country?.code.orEmpty()) }
             }
 
             if (card.active == 0) {
@@ -106,7 +106,7 @@ class PaymentAndPassageAdapter(
             } else {
                 binding.removeCard.visibility = View.VISIBLE
                 binding.removeCard.setOnClickListener {
-                    card.id?.let { id -> listener?.clickRemoveCard(id.toString()) }
+                    card.id?.let { id -> listener?.clickRemoveCard(id.toString(), card.country?.code.orEmpty()) }
                 }
             }
         }
@@ -168,8 +168,8 @@ class PaymentAndPassageAdapter(
     }
 
     interface PrimaryCardListener {
-        fun setPrimaryCard(cardId: Int)
-        fun clickRemoveCard(cardId: String)
+        fun setPrimaryCard(cardId: Int, countryCode: String)
+        fun clickRemoveCard(cardId: String, countryCode: String)
     }
 
 }

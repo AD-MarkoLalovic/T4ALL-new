@@ -347,6 +347,9 @@
         <action
             android:id="@+id/action_paymentAndPassageFragment_to_pdfViewerFragment"
             app:destination="@id/pdfViewerFragment" />
+        <action
+            android:id="@+id/action_paymentAndPassageFragment_to_addCardRsWebViewFragment"
+            app:destination="@id/addCardRsWebViewFragment" />
     </fragment>
 
     <fragment
@@ -469,6 +472,23 @@
         android:label="PdfViewerFragment">
         <action
             android:id="@+id/action_pdfViewerFragment_to_paymentAndPassageFragment"
+            app:destination="@id/paymentAndPassageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addCardRsWebViewFragment"
+        android:name="com.mobility.enp.view.fragments.card.AddCardRsWebViewFragment"
+        android:label="AddCardRsWebViewFragment" >
+        <argument
+            android:name="token"
+            app:argType="string"/>
+        <argument
+            android:name="redirectUrl"
+            app:argType="string"/>
+        <argument
+            android:name="etcwCustomerId"
+            app:argType="integer"/>
+        <action
+            android:id="@+id/action_addCardRsWebViewFragment_to_paymentAndPassageFragment"
             app:destination="@id/paymentAndPassageFragment" />
     </fragment>
 
