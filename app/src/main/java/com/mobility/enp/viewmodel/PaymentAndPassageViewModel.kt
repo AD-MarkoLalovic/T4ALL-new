@@ -174,11 +174,13 @@ class PaymentAndPassageViewModel(
         val cardsRS: List<CardsWebUnified> = input?.data?.cardsRS ?: emptyList()
         val cardsME: List<CardsWebUnified> = input?.data?.cardsME ?: emptyList()
         val cardsMK: List<CardsWebUnified> = input?.data?.cardsMK ?: emptyList()
+        val cardsBaRs: List<CardsWebUnified> = input?.data?.cardsARS ?: emptyList()
 
         val sortedList: ArrayList<Card> = arrayListOf()
         sortedList.addAll(transformCard(cardsRS))
         sortedList.addAll(transformCard(cardsME))
         sortedList.addAll(transformCard(cardsMK))
+        sortedList.addAll(transformCard(cardsBaRs))
 
         val cardResponse = CardsResponse(sortedList)
         return cardResponse

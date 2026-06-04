@@ -3,6 +3,7 @@ package com.mobility.enp.network
 import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
+import com.mobility.enp.data.model.api_my_invoices.RsBillsResponse
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
@@ -133,6 +134,11 @@ interface ApiService {
         @Query("filter[date_to]") dateTo: String
     ): Response<V2HistoryTagResponse>
 
+    @GET("/api/v2/bills")
+    suspend fun getBillsRepublicSerbia(
+        @Query("filter[country]") country: String
+    ): Response<RsBillsResponse>
+
     @GET("/api/v1/bills")
     suspend fun getInvoicesPerMonth(
         @Query(value = "lang") language: String,
@@ -223,6 +229,17 @@ interface ApiService {
 
     @GET("/api/v1/bills/invoice/{bill_id}/bill/pdf")
     suspend fun getPdfBill(
+        @Path(value = "bill_id") billId: String
+    ): Response<BillDownload>
+
+    @GET("/api/v1/bills/invoice/{bill_id}/bill/pdf/email")
+    suspend fun sendBillToEmail(
+        @Path(value = "bill_id") billId: String,
+        @Query(value = "lang") language: String
+    ): Response<Unit>
+
+    @GET("/api/v1/bills/invoice/{bill_id}/ars/list/passes/export/pdf")
+    suspend fun getPdfListingPassesRs(
         @Path(value = "bill_id") billId: String
     ): Response<BillDownload>
 

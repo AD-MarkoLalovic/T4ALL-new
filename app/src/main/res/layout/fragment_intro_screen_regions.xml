@@ -236,6 +236,33 @@
                 app:layout_constraintTop_toTopOf="@id/txCroatiaIntroRegions" />
 
             <TextView
+                android:id="@+id/txRepublicSerbiaIntro"
+                style="@style/SubtitlesRegular"
+                android:layout_width="@dimen/dimens_0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:layout_marginEnd="@dimen/dimens_16dp"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:text="@string/republica_srpska"
+                android:textColor="@color/primary_dark_lightest"
+                android:visibility="visible"
+                app:layout_constraintEnd_toStartOf="@+id/flagCroatiaIntro"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txCroatiaIntroRegions" />
+
+            <ImageView
+                android:id="@+id/flagRepublicSerbiaIntro"
+                android:layout_width="22dp"
+                android:layout_height="16dp"
+                android:contentDescription="@null"
+                android:src="@drawable/flag_rs"
+                android:visibility="visible"
+                android:layout_marginEnd="@dimen/dimens_16dp"
+                app:layout_constraintBottom_toBottomOf="@id/txRepublicSerbiaIntro"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/txRepublicSerbiaIntro" />
+
+            <TextView
                 android:id="@+id/buttonNextRegions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -254,7 +281,7 @@
                 android:textSize="@dimen/dimens_12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txMontenegroIntroRegions"
+                app:layout_constraintTop_toBottomOf="@+id/txRepublicSerbiaIntro"
                 app:layout_constraintVertical_bias="1.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

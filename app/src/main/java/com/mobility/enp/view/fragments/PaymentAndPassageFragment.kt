@@ -22,6 +22,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
+import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
 import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.cards.response.Country
@@ -38,7 +39,10 @@ import com.mobility.enp.view.adapters.cards.PaymentAndPassageAdapter
 import com.mobility.enp.view.adapters.cards.TagsForCroatiaAdapter
 import com.mobility.enp.view.dialogs.ConfirmRemovalCardDialog
 import com.mobility.enp.view.dialogs.LostTagDialog
+import com.mobility.enp.view.dialogs.RepublicSerbiaTagDialog
 import com.mobility.enp.view.dialogs.SerbianTagInCroatiaDialog
+import com.mobility.enp.view.ui_models.BasicInfoUIModel
+import com.mobility.enp.viewmodel.BasicInfoViewModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.PaymentAndPassageViewModel
 import kotlinx.coroutines.Dispatchers
@@ -46,6 +50,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.core.view.isVisible
+import com.mobility.enp.util.toast
 
 class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCardListener,
     CardsCountryAdapter.CountryListener {
@@ -53,6 +59,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     private var _binding: FragmentPaymentAndPassageBinding? = null
     private val binding: FragmentPaymentAndPassageBinding get() = _binding!!
 
+    private val basicInfoViewModel: BasicInfoViewModel by activityViewModels { BasicInfoViewModel.Factory }
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: PaymentAndPassageViewModel by activityViewModels { PaymentAndPassageViewModel.Factory }
     private lateinit var adapter: PaymentAndPassageAdapter
@@ -62,6 +69,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
     private var allCards: List<Card> = emptyList()
     private var showLoginToHac = false
+    private var pendingContactPersonUpdate = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -398,6 +406,61 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 is SubmitResultFold.Idle -> {}
             }
         }
+
+        basicInfoViewModel.basicInfo.observe(viewLifecycleOwner) { result ->
+            val data = (result as? SubmitResult.Success)?.data
+            updateContactPersonFormVisibility(data)
+        }
+
+        basicInfoViewModel.updateBasicInfoUI.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is SubmitResult.Loading -> {
+                    if (pendingContactPersonUpdate) {
+                        binding.loadingCards.visibility = View.VISIBLE
+                    }
+                }
+
+                is SubmitResult.Success -> {
+                    binding.loadingCards.visibility = View.GONE
+                    if (!pendingContactPersonUpdate) return@observe
+
+                    pendingContactPersonUpdate = false
+                    basicInfoViewModel.resetUpdateBasicInfoState()
+
+                    val action =
+                        PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
+                            "BA_RS"
+                        )
+                    findNavController().navigate(action)
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    pendingContactPersonUpdate = false
+                    binding.loadingCards.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    pendingContactPersonUpdate = false
+                    binding.loadingCards.visibility = View.GONE
+                    showError(result.errorMessage)
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    pendingContactPersonUpdate = false
+                    binding.loadingCards.visibility = View.GONE
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    pendingContactPersonUpdate = false
+                    binding.loadingCards.visibility = View.GONE
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                is SubmitResult.Empty -> {}
+            }
+        }
     }
 
     private fun setupAdapters() {
@@ -456,13 +519,17 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             if (cardWebResponse.data?.isFranchiser == false) {  // if serbia is not a franshizer then it gets shown
                 availableCountries.add("RS")
             }
+            if (cardWebResponse.data?.showTabARS == true) {
+                availableCountries.add("BA_RS")
+            }
 
             // Mapiranje kodova zemalja u string resurse
             val countryMapping = mapOf(
                 "RS" to R.string.serbia,
                 "MK" to R.string.macedonia,
                 "ME" to R.string.montenegro,
-                "HR" to R.string.croatia
+                "HR" to R.string.croatia,
+                "BA_RS" to R.string.republic_of_serbia
             )
 
             // Filtrirajte zemlje koje postoje u availableCountries
@@ -513,6 +580,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 setClickableText()  // terms and conditions
 
                 processCardResponse(cardWebResponse)
+                setCountryListener(viewModel.saveSelectCountry!!)
             }
         }
     }
@@ -537,6 +605,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         binding.txCroatiaCardsNote.setOnClickListener {
             SerbianTagInCroatiaDialog().show(parentFragmentManager, "SerbianTagInCroatia")
         }
+
+        binding.txRepublicSerbiaCardsNote.setOnClickListener {
+            RepublicSerbiaTagDialog().show(parentFragmentManager, "RepublicSerbiaTag")
+        }
+
         binding.termsConditionsCheckmark.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 makeCardClickable(true)
@@ -554,12 +627,65 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
 
         binding.bttAddCard.setOnClickListener {
-            if (!viewModel.saveSelectCountry.isNullOrEmpty()) {
-                val action =
-                    PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
-                        viewModel.saveSelectCountry
-                    )
-                findNavController().navigate(action)
+            val selectedCountry = viewModel.saveSelectCountry
+
+            if (!selectedCountry.isNullOrEmpty()) {
+                if (selectedCountry == "BA_RS") {
+
+                    // forma je prikazana samo ako korisnik nije imao popunjene podatke
+                    if (binding.containerContactPerson.isVisible) {
+
+                        val firstName = binding.contactPersonEdit.text.toString().trim()
+                        val lastName = binding.contactPersonSurnameEdit.text.toString().trim()
+
+                        when {
+                            firstName.isBlank() -> {
+                                toast(getString(R.string.field_contact_person_name_required))
+                                return@setOnClickListener
+                            }
+
+                            lastName.isBlank() -> {
+                                toast(getString(R.string.field_contact_person_surname_required))
+                                return@setOnClickListener
+                            }
+                        }
+
+                        val currentData = (basicInfoViewModel.basicInfo.value as? SubmitResult.Success)?.data
+                            ?: return@setOnClickListener
+
+                        val request = UpdateUserDataRequest(
+                            address = currentData.address,
+                            city = currentData.city,
+                            companyName = currentData.companyName,
+                            firstName = currentData.firstName,
+                            lastName = currentData.lastName,
+                            mb = currentData.mb,
+                            phone = currentData.phone,
+                            postalCode = currentData.postalCode ?: "",
+                            pib = currentData.pib ?: "",
+                            cpFirstName = firstName,
+                            cpLastName = lastName
+                        )
+
+                        pendingContactPersonUpdate = true
+                        basicInfoViewModel.updateUserData(request)
+
+                    } else {
+                        // forma nije bila prikazana, korisnik već ima podatke samo navigiram
+                        val action =
+                            PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
+                                selectedCountry
+                            )
+                        findNavController().navigate(action)
+                    }
+
+                } else {
+                    val action =
+                        PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
+                            selectedCountry
+                        )
+                    findNavController().navigate(action)
+                }
             }
         }
 
@@ -680,6 +806,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 makeCardClickable(true)
                 binding.bttRegTagForCroatia.visibility = View.GONE
                 binding.hacRelativeLayout.visibility = View.GONE
+                binding.txRepublicSerbiaCardsNote.visibility = View.GONE
+                binding.containerContactPerson.visibility = View.GONE
             }
 
             "MK" -> {
@@ -691,6 +819,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 binding.termsConditionsCheckmark.isChecked = false
                 binding.bttRegTagForCroatia.visibility = View.GONE
                 binding.hacRelativeLayout.visibility = View.GONE
+                binding.txRepublicSerbiaCardsNote.visibility = View.GONE
+                binding.containerContactPerson.visibility = View.GONE
             }
 
             "ME" -> {
@@ -702,6 +832,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 binding.termsConditionsCheckmark.isChecked = false
                 binding.bttRegTagForCroatia.visibility = View.GONE
                 binding.hacRelativeLayout.visibility = View.GONE
+                binding.txRepublicSerbiaCardsNote.visibility = View.GONE
+                binding.containerContactPerson.visibility = View.GONE
             }
 
             "HR" -> {
@@ -711,7 +843,23 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 binding.txNoCards.visibility = View.GONE
                 binding.termsConditionsCheckmark.isChecked = false
                 binding.rvCreditCard.visibility = View.GONE
+                binding.txRepublicSerbiaCardsNote.visibility = View.GONE
+                binding.containerContactPerson.visibility = View.GONE
                 viewModel.fetchTagsForCroatia()
+            }
+
+            "BA_RS" -> {
+                visibleCroatianComponents(false)
+                filterCardsByCountry("BA_RS")
+                setBlockVisibility(true)
+                setCardVisibility(true)
+                makeCardClickable(false)
+                binding.txRepublicSerbiaCardsNote.visibility = View.VISIBLE
+                binding.termsConditionsCheckmark.isChecked = false
+                binding.bttRegTagForCroatia.visibility = View.GONE
+                binding.hacRelativeLayout.visibility = View.GONE
+
+                updateContactPersonFormVisibility()
             }
         }
         cardsCountryAdapter.setSelectedCountry(country)  // Dodato za ažuriranje selektovane zemlje u adapteru
@@ -808,7 +956,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         } else {
             binding.bttAddCard.visibility = View.GONE
         }
-
     }
 
     private fun makeCardClickable(enable: Boolean) {
@@ -860,8 +1007,27 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
     }
 
+    private fun updateContactPersonFormVisibility(data: BasicInfoUIModel? = null) {
+        if (viewModel.saveSelectCountry != "BA_RS") {
+            binding.containerContactPerson.visibility = View.GONE
+            return
+        }
+
+        val basicInfo = data
+            ?: (basicInfoViewModel.basicInfo.value as? SubmitResult.Success)?.data
+
+        val shouldShow = basicInfo != null &&
+                basicInfo.tagCountry == "RS" &&
+                (basicInfo.customerType == 2 || basicInfo.customerType == 3) &&
+                (basicInfo.cpFirstName.isNullOrBlank() || basicInfo.cpLastName.isNullOrBlank())
+
+        binding.containerContactPerson.visibility =
+            if (shouldShow) View.VISIBLE else View.GONE
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        pendingContactPersonUpdate = false
         viewModel.clearTagsList()
         _binding = null
     }

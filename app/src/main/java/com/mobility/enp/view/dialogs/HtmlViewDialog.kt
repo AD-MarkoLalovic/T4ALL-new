@@ -3,7 +3,6 @@ package com.mobility.enp.view.dialogs
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,8 +16,9 @@ import com.mobility.enp.databinding.PdfDialogBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.HtmlDialogViewModel
+import androidx.core.graphics.drawable.toDrawable
 
-class HtmlViewDialog() : DialogFragment() {
+class HtmlViewDialog : DialogFragment() {
 
     private var _binding: PdfDialogBinding? = null
     private val binding: PdfDialogBinding get() = _binding!!
@@ -30,7 +30,7 @@ class HtmlViewDialog() : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = PdfDialogBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -38,6 +38,13 @@ class HtmlViewDialog() : DialogFragment() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.webView.apply {
+            isVerticalScrollBarEnabled = false
+            isHorizontalScrollBarEnabled = false
+            overScrollMode = View.OVER_SCROLL_NEVER
+        }
+
         val args: HtmlViewDialogArgs by navArgs()
         val receivedPair = Pair(args.countryCode, args.documentType)
 
@@ -46,7 +53,7 @@ class HtmlViewDialog() : DialogFragment() {
         dialog?.setCancelable(false)
 
         when (receivedPair.first) {
-            "ME", "MK" -> {
+            "ME", "MK", "BA_RS" -> {
                 viewModel.processContent(
                     receivedPair.first ?: "",
                     receivedPair.second ?: "",

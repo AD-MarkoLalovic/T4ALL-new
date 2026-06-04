@@ -99,7 +99,7 @@ class BasicInformationFragment : Fragment() {
                 is SubmitResult.Success -> {
                     binding.loadingBasicInformation.visibility = View.GONE
                     setTextField(result.data)
-                    updateBasicInfoUI(result.data.customerType)
+                    updateBasicInfoUI(result.data.customerType, result.data.tagCountry)
                 }
 
                 is SubmitResult.Empty -> {
@@ -132,7 +132,7 @@ class BasicInformationFragment : Fragment() {
                 is SubmitResult.Success -> {
                     binding.loadingBasicInformation.visibility = View.GONE
                     setTextField(result.data)
-                    updateBasicInfoUI(result.data.customerType)
+                    updateBasicInfoUI(result.data.customerType, result.data.tagCountry)
                     showMessage(getString(R.string.change_successfully_saved))
 
                     //Ponistavam se fokus sa poslednjeg izmenjenog tekstualnog polja
@@ -203,7 +203,7 @@ class BasicInformationFragment : Fragment() {
         }
     }
 
-    private fun updateBasicInfoUI(customerType: Int) {
+    private fun updateBasicInfoUI(customerType: Int, tagCountry: String) {
         with(binding) {
             val isCustomer = customerType == 1
             val isBusiness = customerType == 2
@@ -213,7 +213,7 @@ class BasicInformationFragment : Fragment() {
             inputBasicCompanyName.isVisible = isBusiness || isBusinessForeign
             txBasicInfoPib.isVisible = isBusiness || isBusinessForeign
             inputBasicInfoPib.isVisible = isBusiness || isBusinessForeign
-            containerContactPerson.isVisible = isBusiness || isBusinessForeign
+            containerContactPerson.isVisible = (isBusiness || isBusinessForeign) && tagCountry == "RS"
 
             txBasicInfoRegistrationNumber.isVisible = isBusiness
             inputBasicInfoRegistrationNumber.isVisible = isBusiness

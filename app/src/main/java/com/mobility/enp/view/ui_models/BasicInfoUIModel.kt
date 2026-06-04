@@ -5,6 +5,7 @@ data class BasicInfoUIModel(
     val city: String,
     val companyName: String?,
     val countryName: String,
+    val tagCountry: String,
     val customerType: Int,
     val displayName: String?,
     val email: String,

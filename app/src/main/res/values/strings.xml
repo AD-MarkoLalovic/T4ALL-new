@@ -400,6 +400,8 @@
     <string name="notification_title">Дозволите да вам T4A шаље обавештења</string>
     <string name="notification_subtitle">Обавештења служе за преузимање рачуна и извоз табела у историји пролаза.</string>
     <string name="listing_of_passages_downloaded_successfully">Листинг пролазака је успешно преузет.</string>
+    <string name="send_bill_to_email">Пошаљи рачун на мејл</string>
+    <string name="bill_sent_to_email">Рачун је послат на вашу мејл адресу.</string>
     <string name="field_bank_account_isrequired">Поље жиро рачун треба да садржи 13 цифара.</string>
     <string name="access_denied">Приступ одбијен</string>
     <string name="only_t4all_users_access_denied">Тренутно није могуће да се улогују налози који нису T4All. Молимo вас да користите ВЕБ портал.</string>
@@ -477,4 +479,7 @@
     <string name="field_contact_person_name_required">Поље Име контакт особе је обавезно.</string>
     <string name="field_contact_person_surname_required">Поље Презиме контакт особе је обавезно.</string>
     <string name="republica_srpska">Р. Српска</string>
+    <string name="republic_of_serbia">Република Српска</string>
+    <string name="notes_serbian_tag_in_republic_serbia">Напомене за коришћење српског ТАГ-а у Републици Српској</string>
+    <string name="click_registration_republic_serbia">Регистрација ТАГ уређаја, додавање платне картице, наплата пролазака и рекламације су у надлежности компаније Аутопутеви РС д.о.о. Бања Лука. Приговоре/питања/рекламације можете упутити на телефон +387 51 893 995 или на е-пошту: korisnicka.podrska@autoputevirs.com.\n\nНакон успешног додавања платне картице за коришћење ТАГ-а у Републици Српској, потребно је до 15 мин да се статус тага за Републику Српску на корисничком порталу промени у Активан.</string>
 </resources>

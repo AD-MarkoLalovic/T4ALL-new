@@ -12,7 +12,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -32,14 +31,14 @@ import com.mobility.enp.util.collectLatestFlow
 import com.mobility.enp.view.adapters.tool_history.first_screen.HistorySerialAdapter
 import com.mobility.enp.viewmodel.MyInvoicesViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.serialization.descriptors.StructureKind
 
 class BillsDetailsAdapter(
     private var billData: BillData,
     private val viewModel: MyInvoicesViewModel,
     private val lifecycleOwner: LifecycleOwner,
     private val spinnerInterface: MonthlyBillsAdapter.TriggerSpinner,
-    private val availableCurrencies: String
+    private val availableCurrencies: String,
+    private val isBaRsMode: Boolean = false
 ) :
     RecyclerView.Adapter<BillsDetailsAdapter.BillsViewHolder>() {
 
@@ -62,7 +61,6 @@ class BillsDetailsAdapter(
         }
     }
 
-
     inner class BillsViewHolder(val binding: ItemInvoicesBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -73,6 +71,7 @@ class BillsDetailsAdapter(
             binding.bill = bill
 
             val billId = bill.id.toString()
+            val billFinal = bill.billFinal.orEmpty()
 
             when (bill.status?.value) {
                 1 -> {
@@ -137,7 +136,7 @@ class BillsDetailsAdapter(
             }
 
             binding.downloadBillDetails.setOnClickListener {
-                showPopupMenu(it, billId)
+                showPopupMenu(it, billId, billFinal)
             }
 
             binding.bttPayNow.setOnClickListener {
@@ -171,7 +170,7 @@ class BillsDetailsAdapter(
             binding.executePendingBindings()
         }
 
-        private fun showPopupMenu(view: View, id: String) {
+        private fun showPopupMenu(view: View, id: String, billFinalCode: String) {
 
             binding.downloadBillDetails.backgroundTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(
@@ -182,7 +181,8 @@ class BillsDetailsAdapter(
 
             val context = ContextThemeWrapper(view.context, R.style.CustomPopupMenuStyle)
             val popupMenu = PopupMenu(context, view, Gravity.END, 0, 0)
-            popupMenu.menuInflater.inflate(R.menu.downloads_menu, popupMenu.menu)
+            val menuRes = if (isBaRsMode) R.menu.downloads_menu_ba_rs else R.menu.downloads_menu
+            popupMenu.menuInflater.inflate(menuRes, popupMenu.menu)
             popupMenu.setForceShowIcon(true)
 
             popupMenu.setOnDismissListener {
@@ -196,35 +196,57 @@ class BillsDetailsAdapter(
 
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 val isListing = menuItem.itemId == R.id.listingOfPassagesDownload
+                val isSendToEmail = menuItem.itemId == R.id.sendBillToEmail
                 val isPdf = menuItem.itemId == R.id.pdfDownload
 
-                if (isPdf || isListing) {
-
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-                        showNotification(binding, id, isListing)
-                    } else {
-                        if (ContextCompat.checkSelfPermission(
-                                binding.root.context,
-                                Manifest.permission.POST_NOTIFICATIONS
-                            ) == PackageManager.PERMISSION_GRANTED
-                        ) {
-                            // Ako je permisija već odobrena  odmah šaljemo notifikaciju
+                when {
+                    isSendToEmail -> {
+                        spinnerInterface.onStartSpinner()
+                        viewModel.sendBillToEmail(
+                            billId = id,
+                            onSuccess = {
+                                spinnerInterface.onStopSpinner()
+                                Toast.makeText(
+                                    binding.root.context,
+                                    binding.root.context.getString(R.string.bill_sent_to_email),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            },
+                            onFailure = {
+                                spinnerInterface.onStopSpinner()
+                                Toast.makeText(
+                                    binding.root.context,
+                                    binding.root.context.getString(R.string.download_failed),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        )
+                        true
+                    }
+                    isPdf || isListing -> {
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
                             showNotification(binding, id, isListing)
                         } else {
-                            // Ako nije tražimo od korisnika
-                            spinnerInterface.requestNotificationFromUser(object : UserPermission {
-                                override fun onPermissionGranted() {
-                                    showNotification(binding, id, isListing)
-                                }
+                            if (ContextCompat.checkSelfPermission(
+                                    binding.root.context,
+                                    Manifest.permission.POST_NOTIFICATIONS
+                                ) == PackageManager.PERMISSION_GRANTED
+                            ) {
+                                showNotification(binding, id, isListing)
+                            } else {
+                                spinnerInterface.requestNotificationFromUser(object : UserPermission {
+                                    override fun onPermissionGranted() {
+                                        showNotification(binding, id, isListing)
+                                    }
 
-                                override fun onPermissionDenied() {
-                                }
-                            })
+                                    override fun onPermissionDenied() {
+                                    }
+                                })
+                            }
                         }
+                        true
                     }
-                    true
-                } else {
-                    false
+                    else -> false
                 }
             }
 
@@ -246,8 +268,7 @@ class BillsDetailsAdapter(
             val downloadName = "$billId$pdf"
 
             if (isListingOfPassages) {
-                // API poziv za listing prolazaka
-                viewModel.downloadPassageData(object : DownloadBillsDetails {
+                val listingCallback = object : DownloadBillsDetails {
                     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
                     override fun onOK(pdf: BillDownload?) {
                         pdf?.data?.pdfContent?.let {
@@ -269,7 +290,12 @@ class BillsDetailsAdapter(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                }, billId)
+                }
+                if (isBaRsMode) {
+                    viewModel.downloadPassageDataRs(listingCallback, billId)
+                } else {
+                    viewModel.downloadPassageData(listingCallback, billId)
+                }
             } else {
                 // API poziv za PDF račun
                 viewModel.downloadPdfBill(object : DownloadBillsDetails {

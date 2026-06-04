@@ -345,6 +345,8 @@
     <string name="notification_title">Дозволете T4A да ви испраќа известувања</string>
     <string name="notification_subtitle">Известувањата се користат за преземање на сметки и извезување на табели во историјата на преминувања.</string>
     <string name="listing_of_passages_downloaded_successfully">Листингот на поминувања е успешно преземен.</string>
+    <string name="send_bill_to_email">Испрати сметка на е-пошта</string>
+    <string name="bill_sent_to_email">Сметката е испратена на вашата е-пошта.</string>
     <string name="field_bank_account_isrequired">Полето жиро сметка треба да содржи 13 цифри.</string>
     <string name="access_denied">Пристапот е одбиен</string>
     <string name="only_t4all_users_access_denied">Во моментов не е можно да се најават налози кои не се T4All. Ве молиме користете го WEB порталот.</string>
@@ -409,5 +411,8 @@
     <string name="field_contact_person_name_required">Полето Име на контакт лице е задолжително.</string>
     <string name="field_contact_person_surname_required">Полето Презиме на контакт лице е задолжително.</string>
     <string name="republica_srpska">Р. Српска</string>
+    <string name="republic_of_serbia">Република Српска</string>
+    <string name="notes_serbian_tag_in_republic_serbia">Напомени за користење на српскиот ТАГ во Република Српска</string>
+    <string name="click_registration_republic_serbia">Регистрацијата на TAG уредот, додавањето на платежна картичка, наплатата на поминувањата и рекламациите се во надлежност на компанијата Autoputevi RS DOO Banja Luka. Приговори/прашања/рекламации можете да доставите на телефон +387 51 893 995 или на е-пошта: korisnicka.podrska@autoputevirs.com.\n\nПо успешно додавање на платежна картичка за користење на TAG во Република Српска, потребни се до 15 мин за статусот на тагот за Република Српска на корисничкиот портал да се промени во Активен.</string>
 
 </resources>
