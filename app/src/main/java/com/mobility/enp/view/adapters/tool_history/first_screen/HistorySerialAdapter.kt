@@ -61,6 +61,12 @@ class HistorySerialAdapter(
         submitList(tags)
     }
 
+    fun clearList(onCommit: () -> Unit) {
+        submitList(null) {
+            onCommit()
+        }
+    }
+
     companion object {
         const val TAG = "PrimaryPassageAdapter"
 

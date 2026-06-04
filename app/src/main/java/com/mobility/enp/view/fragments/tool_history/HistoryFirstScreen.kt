@@ -370,7 +370,9 @@ class HistoryFirstScreen : Fragment(), HistoryPassageAdapter.SendToFragment,
                         binding.cycler.isVerticalFadingEdgeEnabled = true
                     }
 
-                    historySerialAdapter.setAdapterData(listIndexData)
+                    historySerialAdapter.clearList {
+                        historySerialAdapter.setAdapterData(listIndexData)
+                    }
 
                     if (viewModel.isNetAvailable()) {
                         if (listIndexData.isEmpty()) {
