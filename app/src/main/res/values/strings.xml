@@ -284,6 +284,7 @@
     <string name="montenegro_passage">Црна Гора</string>
     <string name="north_macedonian_passage">Северна Македонија</string>
     <string name="loop_icon" translatable="false">loop Icon</string>
+    <string name="info_icon" translatable="false">Info Icon</string>
     <string name="welcome_to_toll_for_all">Добро дошли у Toll For All</string>
     <string name="what_is_toll_for_all_system">Шта је Toll For All систем?</string>
     <string name="croatia_eng" translatable="false">Croatia</string>

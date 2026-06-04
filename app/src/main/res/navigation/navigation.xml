@@ -464,5 +464,6 @@
             app:destination="@id/paymentAndPassageFragment" />
     </fragment>
 
+    <include app:graph="@navigation/pass_history_graph"/>
 
 </navigation>

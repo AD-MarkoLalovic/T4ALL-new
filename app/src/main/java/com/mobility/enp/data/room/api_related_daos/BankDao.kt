@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import com.mobility.enp.data.model.banks.entity.BanksEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BankDao {
@@ -12,4 +13,7 @@ interface BankDao {
 
     @Query("SELECT * FROM banks")
     suspend fun getAllBanks(): List<BanksEntity>
+
+    @Query("SELECT * FROM banks")
+    fun observeAllBanks(): Flow<List<BanksEntity>>
 }

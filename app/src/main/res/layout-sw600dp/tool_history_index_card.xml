@@ -22,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/tag_history_background"
-        android:gravity="center">
-
+        android:gravity="top">
 
         <ProgressBar
             android:id="@+id/progbar"
@@ -38,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/dimens_10dp"
+            android:layout_marginEnd="@dimen/dimens_15dp"
             android:layout_marginTop="@dimen/dimens_5dp"
             android:paddingEnd="@dimen/dimens_5dp"
             android:text="@string/total"
@@ -65,7 +64,7 @@
             android:layout_gravity="start"
             android:layout_marginTop="@dimen/dimens_5dp"
             android:layout_marginEnd="@dimen/dimens_15dp"
-            android:layout_marginStart="@dimen/dimens_10dp"
+            android:layout_marginStart="@dimen/dimens_20dp"
             android:layout_toStartOf="@id/cyclerTotalPrice"
             android:ellipsize="end"
             android:maxLines="1"
@@ -80,11 +79,11 @@
             android:layout_below="@id/txtTotal"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/dimens_5dp"
-            android:layout_marginEnd="@dimen/dimens_10dp"
+            android:layout_marginEnd="@dimen/dimens_15dp"
             android:minHeight="@dimen/dimens_22dp"
             android:paddingEnd="@dimen/dimens_5dp"
             android:textAlignment="viewEnd"
-            tool:itemCount="3"
+            tool:itemCount="1"
             tool:listitem="@layout/passage_history_total_price" />
 
         <View
@@ -100,8 +99,11 @@
             android:layout_below="@id/cyclerTotalPrice"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:padding="@dimen/dimens_10dp"
+            android:layout_alignParentBottom="true"
             android:scrollIndicators="none"
+            android:paddingLeft="@dimen/dimens_5dp"
+            android:paddingRight="@dimen/dimens_5dp"
+            android:nestedScrollingEnabled="false"
             android:scrollbarAlwaysDrawVerticalTrack="false"
             android:scrollbarFadeDuration="0"
             android:scrollbarSize="0dp"
