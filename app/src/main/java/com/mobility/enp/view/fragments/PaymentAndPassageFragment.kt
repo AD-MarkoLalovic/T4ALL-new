@@ -51,7 +51,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.core.view.isVisible
+import com.mobility.enp.data.model.cards.SetDefaultCardRequest
 import com.mobility.enp.util.toast
+import com.mobility.enp.view.fragments.card.AddCardRsWebViewFragment
 
 class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCardListener,
     CardsCountryAdapter.CountryListener {
@@ -323,7 +325,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                         visibleCroatianComponents(true)
                         binding.bttRegTagForCroatia.visibility = View.VISIBLE
 
-                        tagsForCroatiaAdapter.setCheckBoxEnabled(SharedPreferencesHelper.wasCheckboxEverChecked(requireContext()))
+                        tagsForCroatiaAdapter.setCheckBoxEnabled(
+                            SharedPreferencesHelper.wasCheckboxEverChecked(
+                                requireContext()
+                            )
+                        )
                         tagsForCroatiaAdapter.submitList(tagsList)
                     } else {
                         visibleCroatianComponents(true)
@@ -408,8 +414,11 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
 
         basicInfoViewModel.basicInfo.observe(viewLifecycleOwner) { result ->
-            val data = (result as? SubmitResult.Success)?.data
-            updateContactPersonFormVisibility(data)
+            when(result) {
+                is SubmitResult.Loading -> binding.containerContactPerson.visibility = View.GONE
+                is SubmitResult.Success -> updateContactPersonFormVisibility(result.data)
+                else -> Unit
+            }
         }
 
         basicInfoViewModel.updateBasicInfoUI.observe(viewLifecycleOwner) { result ->
@@ -427,11 +436,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     pendingContactPersonUpdate = false
                     basicInfoViewModel.resetUpdateBasicInfoState()
 
-                    val action =
-                        PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
-                            "BA_RS"
-                        )
-                    findNavController().navigate(action)
+                    viewModel.generateCardToken()
                 }
 
                 is SubmitResult.FailureServerError -> {
@@ -460,6 +465,48 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                 is SubmitResult.Empty -> {}
             }
+        }
+
+        collectLatestLifecycleFlow(viewModel.registrationRs) { result ->
+            when (result) {
+                is SubmitResultFold.Failure -> {
+                    binding.loadingCards.visibility = View.GONE
+                    handleError(result.error)
+                    viewModel.resetRegistrationRsState()
+                }
+
+                SubmitResultFold.Idle -> Unit
+                SubmitResultFold.Loading -> binding.loadingCards.visibility = View.VISIBLE
+                is SubmitResultFold.Success -> {
+                    binding.loadingCards.visibility = View.GONE
+
+
+                    val redirectUrl = result.data.data?.redirectUrl
+                    val token = result.data.data?.token
+                    val etcwCustomerId = result.data.data?.etcwCustomerId
+
+                    if (
+                        redirectUrl.isNullOrBlank() ||
+                        token.isNullOrBlank() ||
+                        etcwCustomerId == null
+                    ) {
+                        toast(getString(R.string.server_error_msg))
+                        return@collectLatestLifecycleFlow
+                    }
+
+                    val action =
+                        PaymentAndPassageFragmentDirections
+                            .actionPaymentAndPassageFragmentToAddCardRsWebViewFragment(
+                                token = token,
+                                redirectUrl = redirectUrl,
+                                etcwCustomerId = etcwCustomerId
+                            )
+
+                    findNavController().navigate(action)
+                    viewModel.resetRegistrationRsState()
+                }
+            }
+
         }
     }
 
@@ -650,8 +697,9 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                             }
                         }
 
-                        val currentData = (basicInfoViewModel.basicInfo.value as? SubmitResult.Success)?.data
-                            ?: return@setOnClickListener
+                        val currentData =
+                            (basicInfoViewModel.basicInfo.value as? SubmitResult.Success)?.data
+                                ?: return@setOnClickListener
 
                         val request = UpdateUserDataRequest(
                             address = currentData.address,
@@ -672,11 +720,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                     } else {
                         // forma nije bila prikazana, korisnik već ima podatke samo navigiram
-                        val action =
-                            PaymentAndPassageFragmentDirections.actionPaymentAndPassageFragmentToCardFragment(
-                                selectedCountry
-                            )
-                        findNavController().navigate(action)
+                        viewModel.generateCardToken()
                     }
 
                 } else {
@@ -726,6 +770,19 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 }
             }
         }
+
+        parentFragmentManager.setFragmentResultListener(
+            AddCardRsWebViewFragment.REQUEST_KEY_ARS_ADD_CARD,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val success = bundle.getBoolean(AddCardRsWebViewFragment.RESULT_SUCCESS, false)
+            if (success) {
+                viewModel.fetchCardFlow()
+                toast(getString(R.string.credit_card_successful))
+            } else {
+                toast(getString(R.string.server_error_msg))
+            }
+        }
     }
 
     private fun internetReconnectMethod() {
@@ -771,22 +828,25 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
     }
 
-    override fun setPrimaryCard(cardId: Int) {
+    override fun setPrimaryCard(cardId: Int, countryCode: String) {
         LostTagDialog.newInstance(
             title = getString(R.string.choose_primary_card),
             subtitle =
                 getString(R.string.confirm_change_primary_card),
             onButtonClick = {
-                viewModel.setNewPrimaryCard(cardId)
+                viewModel.setNewPrimaryCard(cardId,
+                    SetDefaultCardRequest(
+                        country = countryCode
+                    ))
             }
         ).show(parentFragmentManager, "PrimaryCardDialog")
     }
 
-    override fun clickRemoveCard(cardId: String) {
+    override fun clickRemoveCard(cardId: String, countryCode: String) {
         val confirmRemovalCardDialog =
             ConfirmRemovalCardDialog(object : ConfirmRemovalCardDialog.ClickedDeleteCardInterface {
                 override fun onPositiveButtonClicked() {
-                    viewModel.deleteCard(cardId)
+                    viewModel.deleteCard(cardId, countryCode)
                 }
             })
         confirmRemovalCardDialog.isCancelable = false
@@ -858,7 +918,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 binding.termsConditionsCheckmark.isChecked = false
                 binding.bttRegTagForCroatia.visibility = View.GONE
                 binding.hacRelativeLayout.visibility = View.GONE
-
+                basicInfoViewModel.fetchBasicInfo()
                 updateContactPersonFormVisibility()
             }
         }
@@ -1023,6 +1083,16 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         binding.containerContactPerson.visibility =
             if (shouldShow) View.VISIBLE else View.GONE
+    }
+
+    private fun handleError(error: Throwable) {
+        when (error) {
+            NetworkError.ServerError -> toast(getString(R.string.server_error_msg))
+            NetworkError.NoConnection -> noInternetMessage()
+            is NetworkError.ApiError -> {
+                toast(error.errorResponse.message ?: getString(R.string.server_error_msg))
+            }
+        }
     }
 
     override fun onDestroyView() {

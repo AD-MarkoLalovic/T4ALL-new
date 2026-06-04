@@ -21,8 +21,10 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.banks.response.BanksResponse
+import com.mobility.enp.data.model.cards.SetDefaultCardRequest
 import com.mobility.enp.data.model.cards.registration_croatia.RegistrationResponse
 import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
+import com.mobility.enp.data.model.cards.republic_of_serbia.GenerateCardToken
 import com.mobility.enp.data.model.cards.tags_for_croatia.TagsListResponse
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
@@ -93,11 +95,14 @@ interface ApiService {
     @GET("/api/v1/history/tags")
     suspend fun getToolHistoryIndexN(): Response<IndexData>
 
-    @DELETE("/api/v1/cards/{card_id}")
+    @DELETE("/api/v2/cards/{card_id}/{country}")
     suspend fun deleteCard(
-        @Path("card_id") cardId: String
+        @Path("card_id") cardId: String,
+        @Path("country") countryCode: String
     ): Response<Unit>
 
+    @POST("api/v1/ars/generate-card-token")
+    suspend fun getGenerateCardToken(): Response<GenerateCardToken>
 
     @GET("/api/v2/history")
     suspend fun getToolHistoryAllowedCountries(
@@ -265,10 +270,11 @@ interface ApiService {
         @Body request: SendRefundRequest
     ): Response<Unit>
 
-    @POST("/api/v1/cards/default/{bill_id}")
+    @POST("/api/v1/cards/default/{card_id}")
     suspend fun cardsSetDefault(
-        @Path(value = "bill_id") billId: Int,
-        @Query(value = "lang") language: String
+        @Path(value = "card_id") billId: Int,
+        @Query(value = "lang") language: String,
+        @Body request: SetDefaultCardRequest
     ): Response<Unit>
 
     @POST("/api/v1/forgot-password")
