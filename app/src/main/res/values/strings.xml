@@ -434,6 +434,7 @@
     <string name="route_rupa" translatable="false">Rupa</string>
     <string name="route_zagreb_sisak" translatable="false">Zagreb – Sisak</string>
     <string name="tag_registration_plate_notice">Приликом регистрације ТАГ уређаја на ХАЦ порталу уносите стварну регистарску ознаку возила у коме ћете користити ТАГ уређај.</string>
+    <string name="tag_registration_plate_notice_extra">Уколико желите да на Toll4All корисничком порталу имате приказ транзита насталих у Хрватској, потребно је да на HAC порталу у опцији Кориснички рачун - Приволе вањским сервисима, прихватите дељење података са Toll4All (Путеви Србије).</string>
     <string name="check_status_on_hac_portal">Проверите статус на ХАЦ порталу</string>
     <string name="link_login_to_hac">Пријави се на HAC портал</string>
     <string name="facebook_text">Пратите нас на Фејсбуку и сазнајте први све новости о погодностима Т4А система.</string>

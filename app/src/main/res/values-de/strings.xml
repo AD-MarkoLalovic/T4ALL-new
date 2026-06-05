@@ -381,6 +381,7 @@
     <string name="highway_a6">Autobahn A6:</string>
     <string name="highway_a7">Autobahn A7:</string>
     <string name="highway_a11">Autobahn A11:</string>
+    <string name="tag_registration_plate_notice_extra">Wenn Sie auf dem Toll4All-Benutzerportal eine Übersicht der in Kroatien entstandenen Transite haben möchten, müssen Sie auf dem HAC-Portal unter Benutzerkonto - Zustimmungen zu externen Diensten die Datenfreigabe mit Toll4All (Straßen Serbiens) akzeptieren.</string>
     <string name="check_status_on_hac_portal">Status auf dem HAC-Portal überprüfen</string>
     <string name="link_login_to_hac">Melden Sie sich beim HAC-Portal an</string>
     <string name="facebook_text">Folgen Sie uns auf Facebook und erfahren Sie als Erste(r) alle Neuigkeiten zu den Vorteilen des T4A-Systems.</string>
