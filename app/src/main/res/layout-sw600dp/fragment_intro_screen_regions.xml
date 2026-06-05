@@ -242,7 +242,7 @@
                 android:layout_marginTop="@dimen/dimens_16dp"
                 android:layout_marginEnd="@dimen/dimens_16dp"
                 android:layout_marginStart="@dimen/dimens_100dp"
-                android:text="@string/republica_srpska"
+                android:text="@string/republic_of_serbia"
                 android:textColor="@color/primary_dark_lightest"
                 android:visibility="visible"
                 app:layout_constraintEnd_toStartOf="@+id/flagCroatiaIntro"
