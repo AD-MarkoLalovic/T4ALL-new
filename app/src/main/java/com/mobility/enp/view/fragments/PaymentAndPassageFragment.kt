@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -23,6 +24,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
+import com.mobility.enp.data.model.cards.SetDefaultCardRequest
 import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.cards.response.Country
@@ -33,6 +35,7 @@ import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.collectLatestLifecycleFlow
+import com.mobility.enp.util.toast
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.cards.CardsCountryAdapter
 import com.mobility.enp.view.adapters.cards.PaymentAndPassageAdapter
@@ -41,6 +44,7 @@ import com.mobility.enp.view.dialogs.ConfirmRemovalCardDialog
 import com.mobility.enp.view.dialogs.LostTagDialog
 import com.mobility.enp.view.dialogs.RepublicSerbiaTagDialog
 import com.mobility.enp.view.dialogs.SerbianTagInCroatiaDialog
+import com.mobility.enp.view.fragments.card.AddCardRsWebViewFragment
 import com.mobility.enp.view.ui_models.BasicInfoUIModel
 import com.mobility.enp.viewmodel.BasicInfoViewModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
@@ -50,10 +54,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import androidx.core.view.isVisible
-import com.mobility.enp.data.model.cards.SetDefaultCardRequest
-import com.mobility.enp.util.toast
-import com.mobility.enp.view.fragments.card.AddCardRsWebViewFragment
 
 class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCardListener,
     CardsCountryAdapter.CountryListener {
@@ -295,26 +295,25 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
                     if (hasActiveStatus) {
                         binding.hacRelativeLayout.visibility = View.GONE
-                        SharedPreferencesHelper.setCheckboxEverChecked(requireContext())
+                        binding.bttRegTagForCroatia.isEnabled = true
+                        binding.bttRegTagForCroatia.isClickable = true
                     } else {
-                        if (!SharedPreferencesHelper.wasCheckboxEverChecked(requireContext())) {
-                            binding.hacRelativeLayout.visibility = View.VISIBLE
-                            binding.bttRegTagForCroatia.isEnabled = false
-                            binding.bttRegTagForCroatia.isClickable = false
+                        binding.hacRelativeLayout.visibility = View.VISIBLE
+                        binding.bttRegTagForCroatia.isEnabled = false
+                        binding.bttRegTagForCroatia.isClickable = false
 
-                            colorFranchiser?.let { color ->
-                                val halfColor =
-                                    ColorUtils.setAlphaComponent(color, 128) // 50% alpha
-                                binding.bttRegTagForCroatia.backgroundTintList =
-                                    ColorStateList.valueOf(halfColor)
-                            } ?: run {
-                                binding.bttRegTagForCroatia.backgroundTintList =
-                                    AppCompatResources.getColorStateList(
-                                        binding.root.context,
-                                        R.color.button_not_enabled_web
-                                    )
+                        colorFranchiser?.let { color ->
+                            val halfColor =
+                                ColorUtils.setAlphaComponent(color, 128) // 50% alpha
+                            binding.bttRegTagForCroatia.backgroundTintList =
+                                ColorStateList.valueOf(halfColor)
+                        } ?: run {
+                            binding.bttRegTagForCroatia.backgroundTintList =
+                                AppCompatResources.getColorStateList(
+                                    binding.root.context,
+                                    R.color.button_not_enabled_web
+                                )
 
-                            }
                         }
                     }
 
@@ -325,11 +324,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                         visibleCroatianComponents(true)
                         binding.bttRegTagForCroatia.visibility = View.VISIBLE
 
-                        tagsForCroatiaAdapter.setCheckBoxEnabled(
-                            SharedPreferencesHelper.wasCheckboxEverChecked(
-                                requireContext()
-                            )
-                        )
                         tagsForCroatiaAdapter.submitList(tagsList)
                     } else {
                         visibleCroatianComponents(true)
@@ -414,7 +408,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         }
 
         basicInfoViewModel.basicInfo.observe(viewLifecycleOwner) { result ->
-            when(result) {
+            when (result) {
                 is SubmitResult.Loading -> binding.containerContactPerson.visibility = View.GONE
                 is SubmitResult.Success -> updateContactPersonFormVisibility(result.data)
                 else -> Unit
@@ -746,8 +740,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             when (button.isChecked) {
                 true -> {
                     tagsForCroatiaAdapter.oneTagCheck()
-                    binding.hacRelativeLayout.visibility = View.GONE
-                    SharedPreferencesHelper.setCheckboxEverChecked(requireContext())
                     binding.bttRegTagForCroatia.isEnabled = true
                     binding.bttRegTagForCroatia.isClickable = true
                     colorFranchiser?.let { color ->
@@ -834,10 +826,12 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
             subtitle =
                 getString(R.string.confirm_change_primary_card),
             onButtonClick = {
-                viewModel.setNewPrimaryCard(cardId,
+                viewModel.setNewPrimaryCard(
+                    cardId,
                     SetDefaultCardRequest(
                         country = countryCode
-                    ))
+                    )
+                )
             }
         ).show(parentFragmentManager, "PrimaryCardDialog")
     }

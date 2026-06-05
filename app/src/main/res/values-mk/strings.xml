@@ -369,6 +369,7 @@
     <string name="highway_a6">Автопат A6:</string>
     <string name="highway_a7">Автопат A7:</string>
     <string name="highway_a11">Автопат A11:</string>
+    <string name="tag_registration_plate_notice_extra">Доколку сакате на Toll4All корисничкиот портал да имате приказ на транзитите направени во Хрватска, потребно е на HAC порталот во опцијата Корисничка сметка - Согласности за надворешни сервиси, да го прифатите споделувањето на податоци со Toll4All (Патишта на Србија).</string>
     <string name="check_status_on_hac_portal">Проверете го статусот на HAC порталот</string>
     <string name="link_login_to_hac">Најави се на HAC портал</string>
     <string name="facebook_text">Следете нè на Фејсбук и дознајте први сè за придобивките од T4A системот.</string>
