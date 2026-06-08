@@ -25,6 +25,7 @@ import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_my_profile.basic_information.request.UpdateUserDataRequest
 import com.mobility.enp.data.model.cards.SetDefaultCardRequest
+import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
 import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.cards.response.Country
@@ -84,7 +85,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         super.onViewCreated(view, savedInstanceState)
 
         val argCountry = arguments?.getString("countryCode")
-        SharedPreferencesHelper.putCheckboxChecked(requireContext(),false)
+        SharedPreferencesHelper.putCheckboxChecked(requireContext(), false)
 
         if (!argCountry.isNullOrEmpty()) {
             viewModel.saveSelectCountry = argCountry
@@ -295,6 +296,8 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                     val hasActiveStatus = result.data.any { it.status == 4 }
 
                     if (hasActiveStatus) {
+                        SharedPreferencesHelper.putCheckboxChecked(requireContext(), true)
+                        tagsForCroatiaAdapter.onCheckboxUnchecked()
                         binding.hacRelativeLayout.visibility = View.GONE
                         binding.bttRegTagForCroatia.isEnabled = true
                         binding.bttRegTagForCroatia.isClickable = true
@@ -740,7 +743,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         binding.hacCheckbox.setOnCheckedChangeListener { button, _ ->
             when (button.isChecked) {
                 true -> {
-                    SharedPreferencesHelper.putCheckboxChecked(requireContext(),true)
+                    SharedPreferencesHelper.putCheckboxChecked(requireContext(), true)
                     tagsForCroatiaAdapter.oneTagCheck()
                     binding.bttRegTagForCroatia.isEnabled = true
                     binding.bttRegTagForCroatia.isClickable = true
@@ -1103,5 +1106,6 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
     override fun onResume() {
         super.onResume()
         binding.termsConditionsCheckmark.isChecked = false
+        viewModel.onCheckChanged(SerialNumberRequest(listOf("")))
     }
 }

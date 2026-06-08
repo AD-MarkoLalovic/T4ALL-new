@@ -33,7 +33,7 @@ android {
         applicationId = "com.mobility.enp"
         minSdk = 29
         targetSdk = 36
-        versionCode = 262
+        versionCode = 263
         versionName = "1.12.0"
 
         resourceConfigurations += listOf("en", "sr", "de", "mk", "tr", "b+cnr", "hr", "el", "bs")
@@ -79,8 +79,8 @@ android {
             dimension = "mode"
             signingConfig = signingConfigs.getByName("release")
             buildConfigField("String", "API_URL", "\"https://mobileapi.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"nemanja.karanovic@gmail.com\"")
-            buildConfigField("String", "TEST_PASSWORD", "\"Autoputevi2026^\"")
+            buildConfigField("String", "TEST_USERNAME", "\"cok.brb.11@gmail.com\"")
+            buildConfigField("String", "TEST_PASSWORD", "\"testiranje1!\"")
             buildConfigField(
                 "String",
                 "TAG_ORDER_BASE_URL",
