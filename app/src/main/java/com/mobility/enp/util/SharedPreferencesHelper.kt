@@ -10,6 +10,13 @@ object SharedPreferencesHelper {
     private const val KEY_CHECKBOX_EVER_CHECKED = "checkbox_ever_checked"
 
 
+    fun putCheckboxChecked(context: Context,checked: Boolean) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit{
+                putBoolean(KEY_CHECKBOX_EVER_CHECKED, checked)
+            }
+    }
+
     fun wasCheckboxEverChecked(context: Context): Boolean {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getBoolean(KEY_CHECKBOX_EVER_CHECKED, false)

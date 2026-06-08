@@ -36,11 +36,14 @@ class TagsForCroatiaAdapter(
             }
             currentList.first().selected = true
         }
-
+        hasCheckboxEnabled = SharedPreferencesHelper.wasCheckboxEverChecked(context)
         notifyDataSetChanged()
     }
 
-
+    fun onCheckboxUnchecked(){
+        hasCheckboxEnabled = SharedPreferencesHelper.wasCheckboxEverChecked(context)
+        notifyDataSetChanged()
+    }
 
     inner class TagsViewHolder(private val binding: ItemTagForCroatiaBinding) :
         RecyclerView.ViewHolder(binding.root) {
