@@ -84,6 +84,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         super.onViewCreated(view, savedInstanceState)
 
         val argCountry = arguments?.getString("countryCode")
+        SharedPreferencesHelper.putCheckboxChecked(requireContext(),false)
 
         if (!argCountry.isNullOrEmpty()) {
             viewModel.saveSelectCountry = argCountry
@@ -739,6 +740,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
         binding.hacCheckbox.setOnCheckedChangeListener { button, _ ->
             when (button.isChecked) {
                 true -> {
+                    SharedPreferencesHelper.putCheckboxChecked(requireContext(),true)
                     tagsForCroatiaAdapter.oneTagCheck()
                     binding.bttRegTagForCroatia.isEnabled = true
                     binding.bttRegTagForCroatia.isClickable = true
@@ -757,8 +759,10 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                 }
 
                 false -> {
+                    SharedPreferencesHelper.putCheckboxChecked(requireContext(), false)
                     binding.bttRegTagForCroatia.isEnabled = false
                     binding.bttRegTagForCroatia.isClickable = false
+                    tagsForCroatiaAdapter.onCheckboxUnchecked()
                 }
             }
         }
