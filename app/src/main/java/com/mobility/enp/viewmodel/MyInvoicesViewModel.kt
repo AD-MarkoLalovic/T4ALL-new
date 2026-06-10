@@ -782,7 +782,6 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     fun resetState() {
         _myInvoices.value = SubmitResult.Empty
         _rsBills.value = SubmitResult.Empty
-        selectedCountry = ""
         isRepublicSerbiaMode = false
     }
 
