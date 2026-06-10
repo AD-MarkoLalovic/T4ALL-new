@@ -107,10 +107,7 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         setObservers()
 
         viewModel.setSelectedCountry("RS")
-        setSelectedButton(binding.buttonSerbia)
-        setButtonsEnabled(true)
 
-        setListener()
         setupNetworkObserver()
         permissionNotificationDeniedDialogResultListener()
 
@@ -284,27 +281,33 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                 is SubmitResult.Loading -> {
                     binding.invoicesLoadingView.visibility = View.VISIBLE
                 }
+
                 is SubmitResult.Success -> {
                     binding.invoicesLoadingView.visibility = View.GONE
                     binding.txNoInternet.visibility = View.GONE
                     binding.recyclerViewBills.visibility = View.VISIBLE
                     loadRsData(serverResponse.data)
                 }
+
                 is SubmitResult.FailureNoConnection -> {
                     showNoConnectionState()
                 }
+
                 is SubmitResult.FailureServerError -> {
                     binding.invoicesLoadingView.visibility = View.GONE
                     showError(getString(R.string.server_error_msg))
                 }
+
                 is SubmitResult.FailureApiError -> {
                     binding.invoicesLoadingView.visibility = View.GONE
                     showError(serverResponse.errorMessage)
                 }
+
                 is SubmitResult.InvalidApiToken -> {
                     showError(serverResponse.errorMessage)
                     MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
                 }
+
                 else -> {}
             }
         }
@@ -446,9 +449,10 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
 
                 for (data in allowedCountry) {
                     when (data.value) {
-                        getString(R.string.serbia_rs) -> {
-                            listOfCountries.add(getString(R.string.serbia))
+                        getString(R.string.republica_srpska_code) -> {
+                            listOfCountries.add(getString(R.string.republica_srpska))
                         }
+
                         getString(R.string.croatia_hr) -> {
                             listOfCountries.add(getString(R.string.croatia))
                         }
@@ -478,23 +482,9 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     }
 
     private fun loadRsData(response: RsBillsResponse) {
-        /*response.data?.allowedCountries?.let { allowedCountry ->
-            binding.valueTitle.visibility = View.VISIBLE
-            for (country in allowedCountry) {
-                when (country.value) {
-                    "RS" -> binding.buttonSerbia.visibility = View.VISIBLE
-                    "ME" -> binding.buttonMontenegro.visibility = View.VISIBLE
-                    "MK" -> binding.northMacedonia.visibility = View.VISIBLE
-                    "HR" -> binding.buttonCroatia.visibility = View.VISIBLE
-                    "BA_RS" -> binding.buttonRepublicSerbia.visibility = View.VISIBLE
-                }
-            }
-        }*/
-
         val billData = response.toBillData()
         if (billData.bills.isEmpty()) {
             binding.textNoBills.visibility = View.VISIBLE
-            setButtonsEnabled(true)
         } else {
             rsDataExists = billData
             binding.textNoBills.visibility = View.GONE
@@ -509,7 +499,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             )
             binding.recyclerViewBills.adapter = adapterRsBills
             binding.recyclerViewBills.layoutManager = LinearLayoutManager(requireContext())
-            setButtonsEnabled(true)
         }
     }
 
