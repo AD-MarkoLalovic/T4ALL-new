@@ -23,12 +23,9 @@ class TagsForCroatiaAdapter(
     private val serialNumbers = mutableListOf<String>()
     private var hasCheckboxEnabled = SharedPreferencesHelper.wasCheckboxEverChecked(context)
 
-    fun setCheckBoxEnabled(bool: Boolean){
-        this.hasCheckboxEnabled = bool
-    }
 
     fun oneTagCheck() {
-        if (hasCheckboxEnabled && currentList.size == 1) {
+        if (currentList.size == 1) {
             val item = currentList.first()
             if (!item.selected) {
                 serialNumbers.add(item.serialNumberUI)
@@ -39,11 +36,14 @@ class TagsForCroatiaAdapter(
             }
             currentList.first().selected = true
         }
-
+        hasCheckboxEnabled = SharedPreferencesHelper.wasCheckboxEverChecked(context)
         notifyDataSetChanged()
     }
 
-
+    fun onCheckboxUnchecked(){
+        hasCheckboxEnabled = SharedPreferencesHelper.wasCheckboxEverChecked(context)
+        notifyDataSetChanged()
+    }
 
     inner class TagsViewHolder(private val binding: ItemTagForCroatiaBinding) :
         RecyclerView.ViewHolder(binding.root) {

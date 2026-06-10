@@ -53,6 +53,23 @@
                 android:textSize="@dimen/dimens_14sp"
                 tools:text="62458/2024-web" />
 
+            <TextView
+                android:id="@+id/carInvoiceNumberAlternative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtAccountNumber"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:layout_toStartOf="@id/carTagNumber"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:text="@{relation.billFinal}"
+                android:textSize="@dimen/dimens_14sp"
+                tools:text="62458/2024-web" />
+
+
 
             <ImageView
                 android:id="@+id/toolHistoryStatus"
@@ -220,6 +237,21 @@
                 android:text='@{relation.checkInDate}'
                 android:textColor="@color/figmaIntroEclipseColorInactive"
                 tools:text="2024-10-15 16:02:02" />
+
+            <TextView
+                android:id="@+id/checkDateAlternative"
+                style="@style/CaptionRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/passageRelation"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                android:layout_marginEnd="@dimen/dimens_10dp"
+                android:text='@{relation.checkDate}'
+                android:textColor="@color/figmaIntroEclipseColorInactive"
+                tools:text="2024-10-15 16:02:02"
+                android:visibility="gone"
+                />
 
             <TextView
                 android:id="@+id/passageExitDate"

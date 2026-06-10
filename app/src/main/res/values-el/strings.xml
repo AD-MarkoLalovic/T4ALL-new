@@ -336,6 +336,8 @@
     <string name="notification_title">Επιτρέψτε στο T4A να σας στέλνει ειδοποιήσεις</string>
     <string name="notification_subtitle">Οι ειδοποιήσεις χρησιμοποιούνται για λήψη τιμολογίων και εξαγωγή πινάκων στο ιστορικό διελεύσεων.</string>
     <string name="listing_of_passages_downloaded_successfully">Η λίστα διελεύσεων λήφθηκε με επιτυχία.</string>
+    <string name="send_bill_to_email">Αποστολή λογαριασμού στο email</string>
+    <string name="bill_sent_to_email">Ο λογαριασμός στάλθηκε στη διεύθυνση email σας.</string>
     <string name="field_bank_account_isrequired">Το πεδίο του τραπεζικού λογαριασμού πρέπει να περιέχει 13 ψηφία.</string>
     <string name="access_denied">Πρόσβαση απορρίφθηκε</string>
     <string name="only_t4all_users_access_denied">Αυτή τη στιγμή δεν είναι δυνατή η σύνδεση λογαριασμών που δεν είναι T4All. Παρακαλούμε χρησιμοποιήστε την ΙΣΤΟΣΕΛΙΔΑ.</string>
@@ -358,6 +360,7 @@
     <string name="highway_a6">Αυτοκινητόδρομος A6:</string>
     <string name="highway_a7">Αυτοκινητόδρομος A7:</string>
     <string name="highway_a11">Αυτοκινητόδρομος A11:</string>
+    <string name="tag_registration_plate_notice_extra">Εάν θέλετε να έχετε εμφάνιση των διελεύσεων που πραγματοποιήθηκαν στην Κροατία στην πύλη χρηστών Toll4All, είναι απαραίτητο να αποδεχτείτε την κοινοποίηση δεδομένων με το Toll4All (Δρόμοι της Σερβίας) στην πύλη HAC, στην επιλογή Λογαριασμός Χρήστη - Συγκαταθέσεις σε εξωτερικές υπηρεσίες.</string>
     <string name="check_status_on_hac_portal">Ελέγξτε την κατάσταση στην πύλη HAC</string>
     <string name="link_login_to_hac">Συνδεθείτε στο HAC portal</string>
     <string name="facebook_text">Ακολουθήστε μας στο Facebook και μάθετε πρώτοι όλα τα νέα για τα προνόμια του συστήματος T4A.</string>
@@ -396,4 +399,11 @@
     <string name="euro_currency">ЕUR</string>
     <string name="action_retry">ΞΑΝΑ</string>
     <string name="cards_hac_checkbox">Συμφωνώ να προωθηθούν τα προσωπικά μου δεδομένα στην HAC με σκοπό τη συνέχιση της διαδικασίας εγγραφής της συσκευής TAG.</string>
+    <string name="contact_person">Επικοινωνία</string>
+    <string name="field_contact_person_name_required">İletişim Kişisi Adı alanı zorunludur.</string>
+    <string name="field_contact_person_surname_required">Το πεδίο «Επώνυμο ατόμου επικοινωνίας» είναι υποχρεωτικό.</string>
+    <string name="republica_srpska">Δ. Σέρπσκα</string>
+    <string name="republic_of_serbia">Δημοκρατία Σέρπσκα</string>
+    <string name="notes_serbian_tag_in_republic_serbia">Σημειώσεις για τη χρήση του σερβικού TAG στη Δημοκρατία Σέρπσκα (Republika Srpska)</string>
+    <string name="click_registration_republic_serbia">Η εγγραφή της συσκευής TAG, η προσθήκη κάρτας πληρωμής, η χρέωση διελεύσεων και η διαχείριση παραπόνων εμπίπτουν στην αρμοδιότητα της εταιρείας Autoputevi RS DOO Banja Luka. Παράπονα/ερωτήσεις/αιτήματα μπορείτε να υποβάλετε τηλεφωνικά στο +387 51 893 995 ή μέσω email στο korisnicka.podrska@autoputevirs.com.\n\nΜετά την επιτυχή προσθήκη κάρτας πληρωμής για τη χρήση της συσκευής TAG στη Δημοκρατία της Σερπσκά, μπορεί να χρειαστούν έως και 15 λεπτά για να αλλάξει η κατάσταση του tag για τη Δημοκρατία της Σερπσκά στην πύλη πελατών σε Ενεργό.</string>
 </resources>

@@ -33,8 +33,8 @@ android {
         applicationId = "com.mobility.enp"
         minSdk = 29
         targetSdk = 36
-        versionCode = 261
-        versionName = "1.11.0"
+        versionCode = 263
+        versionName = "1.12.0"
 
         resourceConfigurations += listOf("en", "sr", "de", "mk", "tr", "b+cnr", "hr", "el", "bs")
 
@@ -66,7 +66,7 @@ android {
             multiDexEnabled = true
             isDefault = true
             buildConfigField("String", "API_URL", "\"https://mobileapitest.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+101693@gmail.com\"")
+            buildConfigField("String", "TEST_USERNAME", "\"podrska.aprsenp@pupin.rs\"")
             buildConfigField("String", "TEST_PASSWORD", "\"Demo!4team\"")
             buildConfigField(
                 "String",

@@ -338,6 +338,8 @@
     <string name="notification_title">Allow T4A to send you notifications</string>
     <string name="notification_subtitle">Notifications are used for downloading invoices and exporting tables in the passage history.</string>
     <string name="listing_of_passages_downloaded_successfully">The listing of passages was successfully downloaded.</string>
+    <string name="send_bill_to_email">Send bill to email</string>
+    <string name="bill_sent_to_email">The bill has been sent to your email address.</string>
     <string name="field_bank_account_isrequired">The bank account field must contain 13 digits.</string>
     <string name="access_denied">Access denied</string>
     <string name="only_t4all_users_access_denied">It is currently not possible to log in accounts that are not T4All. Please use the WEB portal.</string>
@@ -360,6 +362,7 @@
     <string name="highway_a6">Highway A6:</string>
     <string name="highway_a7">Highway A7:</string>
     <string name="highway_a11">Highway A11:</string>
+    <string name="tag_registration_plate_notice_extra">If you want to have a display of transits made in Croatia on the Toll4All user portal, it is necessary to accept data sharing with Toll4All (Roads of Serbia) on the HAC portal under the option User Account - Consents to External Services.</string>
     <string name="check_status_on_hac_portal">Check status on the HAC portal</string>
     <string name="link_login_to_hac">Log in to the HAC portal</string>
     <string name="facebook_text">Follow us on Facebook and be the first to learn all the news about T4A benefits.</string>
@@ -398,4 +401,11 @@
     <string name="euro_currency">ЕUR</string>
     <string name="action_retry">RETRY</string>
     <string name="cards_hac_checkbox">I agree that my personal data may be forwarded to HAC for the purpose of continuing the TAG device registration process.</string>
+    <string name="contact_person">"Contact person "</string>
+    <string name="field_contact_person_name_required">The Contact Person Name field is required.</string>
+    <string name="field_contact_person_surname_required">The Contact Person Surname field is required.</string>
+    <string name="republica_srpska">R. Srpska</string>
+    <string name="republic_of_serbia">Republic of Serbia</string>
+    <string name="notes_serbian_tag_in_republic_serbia">Notes on using the Serbian TAG in Republika Srpska</string>
+    <string name="click_registration_republic_serbia">Registration of the TAG device, adding a payment card, charging toll passages, and handling complaints are under the responsibility of the company Autoputevi RS DOO Banja Luka. Complaints/questions/claims can be submitted by phone at +387 51 893 995 or by email: korisnicka.podrska@autoputevirs.com.\n\nAfter successfully adding a payment card for using the TAG in the Republic of Srpska, it may take up to 15 minutes for the tag status for the Republic of Srpska on the customer portal to change to Active.</string>
 </resources>

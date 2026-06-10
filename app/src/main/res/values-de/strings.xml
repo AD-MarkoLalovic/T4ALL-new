@@ -357,6 +357,8 @@
     <string name="notification_title">Erlauben Sie T4A, Ihnen Benachrichtigungen zu senden</string>
     <string name="notification_subtitle">Benachrichtigungen dienen zum Herunterladen von Rechnungen und zum Exportieren von Tabellen in der Verlaufshistorie.</string>
     <string name="listing_of_passages_downloaded_successfully">Die Durchgangsliste wurde erfolgreich heruntergeladen.</string>
+    <string name="send_bill_to_email">Rechnung per E-Mail senden</string>
+    <string name="bill_sent_to_email">Die Rechnung wurde an Ihre E-Mail-Adresse gesendet.</string>
     <string name="field_bank_account_isrequired">Das Feld „Girokonto“ muss 13 Ziffern enthalten.</string>
     <string name="access_denied">Zugriff verweigert</string>
     <string name="only_t4all_users_access_denied">Es ist derzeit nicht möglich, sich mit Konten anzumelden, die nicht T4All sind. Bitte verwenden Sie das WEB-Portal</string>
@@ -379,6 +381,7 @@
     <string name="highway_a6">Autobahn A6:</string>
     <string name="highway_a7">Autobahn A7:</string>
     <string name="highway_a11">Autobahn A11:</string>
+    <string name="tag_registration_plate_notice_extra">Wenn Sie auf dem Toll4All-Benutzerportal eine Übersicht der in Kroatien entstandenen Transite haben möchten, müssen Sie auf dem HAC-Portal unter Benutzerkonto - Zustimmungen zu externen Diensten die Datenfreigabe mit Toll4All (Straßen Serbiens) akzeptieren.</string>
     <string name="check_status_on_hac_portal">Status auf dem HAC-Portal überprüfen</string>
     <string name="link_login_to_hac">Melden Sie sich beim HAC-Portal an</string>
     <string name="facebook_text">Folgen Sie uns auf Facebook und erfahren Sie als Erste(r) alle Neuigkeiten zu den Vorteilen des T4A-Systems.</string>
@@ -417,4 +420,11 @@
     <string name="euro_currency">ЕUR</string>
     <string name="action_retry">ERNEUT</string>
     <string name="cards_hac_checkbox">Ich stimme zu, dass meine persönlichen Daten an HAC weitergeleitet werden, um den Registrierungsprozess des TAG-Geräts fortzusetzen.</string>
+    <string name="contact_person">"Kontaktperson "</string>
+    <string name="field_contact_person_name_required">Das Feld „Name der Kontaktperson“ ist erforderlich.</string>
+    <string name="field_contact_person_surname_required">Das Feld „Nachname der Kontaktperson“ ist erforderlich.</string>
+    <string name="republica_srpska">R. Srpska</string>
+    <string name="republic_of_serbia">Republik Srpska</string>
+    <string name="notes_serbian_tag_in_republic_serbia">Hinweise zur Nutzung des serbischen TAGs in der Republika Srpska</string>
+    <string name="click_registration_republic_serbia">Die Registrierung des TAG-Geräts, das Hinzufügen einer Zahlungskarte, die Abrechnung der Durchfahrten sowie Reklamationen liegen in der Zuständigkeit des Unternehmens Autoputevi RS DOO Banja Luka. Beschwerden/Fragen/Reklamationen können telefonisch unter +387 51 893 995 oder per E-Mail an korisnicka.podrska@autoputevirs.com eingereicht werden.\n\nNach dem erfolgreichen Hinzufügen einer Zahlungskarte für die Nutzung des TAG in der Republik Srpska kann es bis zu 15 Minuten dauern, bis sich der TAG-Status für die Republik Srpska im Kundenportal auf Aktiv ändert.</string>
 </resources>

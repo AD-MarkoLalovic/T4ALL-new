@@ -501,6 +501,10 @@ class HistoryFilterScreen : Fragment() {
                     getString(R.string.serbia_rs)
                 }
 
+                getString(R.string.republica_srpska) -> {
+                    getString(R.string.republica_srpska_code)
+                }
+
                 else -> ""
             }
 

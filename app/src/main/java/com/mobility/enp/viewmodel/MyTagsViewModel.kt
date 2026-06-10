@@ -96,6 +96,11 @@ class MyTagsViewModel(private val repository: ProfileRepository) : ViewModel() {
                 selectedCountry = "HR"
                 applyCombinedFilter()
             }
+
+            "RS" -> {
+                selectedCountry = "BA_RS"
+                applyCombinedFilter()
+            }
         }
     }
 
