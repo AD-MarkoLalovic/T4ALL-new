@@ -120,7 +120,11 @@ fun Date.toLocalDate(): LocalDate =
         .atZone(ZoneId.systemDefault())
         .toLocalDate()
 
-fun List<Tag>.toTagsForCroatiaUIList(): List<TagsForCroatiaUI> {
+fun List<Tag>.toTagsForCroatiaUIList(
+    currentPage: Int,
+    lastPage: Int,
+    perPage: Int
+): List<TagsForCroatiaUI> {
     return this.map { tag ->
         val statusValueForCroatia = tag.statuses
             ?.firstOrNull { it.country?.value == "HR" }
@@ -130,7 +134,8 @@ fun List<Tag>.toTagsForCroatiaUIList(): List<TagsForCroatiaUI> {
         TagsForCroatiaUI(
             serialNumberUI = tag.serialNumber,
             registrationPlateUI = tag.registrationPlate,
-            status = statusValueForCroatia
+            status = statusValueForCroatia, currentPage = currentPage,
+            lastPage = lastPage, perPage = perPage
         )
     }
 }
