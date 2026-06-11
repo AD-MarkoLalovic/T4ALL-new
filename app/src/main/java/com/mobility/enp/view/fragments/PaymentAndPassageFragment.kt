@@ -335,6 +335,7 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                         binding.bttRegTagForCroatia.visibility = View.GONE
                         binding.txCroatiaText.text =
                             getString(R.string.activation_successful_enp_tag_device)
+                        tagsForCroatiaAdapter.submitList(emptyList())
                     }
 
                     if (showLoginToHac) {
