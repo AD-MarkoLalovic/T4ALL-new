@@ -60,7 +60,7 @@ class PaymentAndPassageViewModel(
     val registrationRs = _registrationRs.asStateFlow()
 
     private var selectedSerialNumbers: SerialNumberRequest = SerialNumberRequest(emptyList())
-    private val perPageCroatia = 3
+    private val perPageCroatia = 25
 
     fun fetchCardFlow() {
         _getCardDataFlow.value = SubmitResult.Loading
