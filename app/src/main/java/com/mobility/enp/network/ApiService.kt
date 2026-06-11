@@ -301,7 +301,15 @@ interface ApiService {
 
     @GET("/api/v1/tags")
     suspend fun getTagsForCroatia(
-        @Query("filter[country]") country: String
+        @Query("filter[country]") country: String,
+        @Query("perPage") perPage: String
+    ): Response<TagsListResponse>
+
+    @GET("/api/v1/tags")
+    suspend fun getTagsForCroatiaPagination(
+        @Query("filter[country]") country: String,
+        @Query("page") page: String,
+        @Query("perPage") perPage: String
     ): Response<TagsListResponse>
 
     @POST("api/v1/process-form/register-hr")

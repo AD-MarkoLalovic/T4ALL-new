@@ -328,12 +328,14 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
                         visibleCroatianComponents(true)
                         binding.bttRegTagForCroatia.visibility = View.VISIBLE
 
+                        Log.d("TagList", "setObservers $tagsList: ")
                         tagsForCroatiaAdapter.submitList(tagsList)
                     } else {
                         visibleCroatianComponents(true)
                         binding.bttRegTagForCroatia.visibility = View.GONE
                         binding.txCroatiaText.text =
                             getString(R.string.activation_successful_enp_tag_device)
+                        tagsForCroatiaAdapter.submitList(emptyList())
                     }
 
                     if (showLoginToHac) {
@@ -518,7 +520,9 @@ class PaymentAndPassageFragment : Fragment(), PaymentAndPassageAdapter.PrimaryCa
 
         val franchiseColor = franchiseViewModel.franchiseModel.value?.franchisePrimaryColor
         tagsForCroatiaAdapter = TagsForCroatiaAdapter(
-            { serialNumbers -> viewModel.onCheckChanged(serialNumbers) },
+            { serialNumbers -> viewModel.onCheckChanged(serialNumbers) }, { nextPage, perPage ->
+                viewModel.fetchTagsForCroatiaPagination(nextPage = nextPage)
+            },
             franchiseColor,
             requireContext()
         )
