@@ -225,15 +225,19 @@ class PaymentAndPassageViewModel(
         }
     }
 
+    private val accumulatedTags = mutableListOf<TagsForCroatiaUI>()
+
     fun fetchTagsForCroatia() {
         viewModelScope.launch {
             _tagsList.value = SubmitResultFold.Loading
+            accumulatedTags.clear()
 
             val result = repository.tagsForCroatia(perPageCroatia)
 
             result.fold(
                 onSuccess = { data ->
-                    _tagsList.value = SubmitResultFold.Success(data)
+                    accumulatedTags.addAll(data)
+                    _tagsList.value = SubmitResultFold.Success(ArrayList(accumulatedTags))
                 },
                 onFailure = { error ->
                     _tagsList.value = SubmitResultFold.Failure(error)
@@ -246,11 +250,12 @@ class PaymentAndPassageViewModel(
         viewModelScope.launch {
             _tagsList.value = SubmitResultFold.Loading
 
-            val result = repository.tagsForCroatiaPagination(nextPage = nextPage,perPageCroatia)
+            val result = repository.tagsForCroatiaPagination(nextPage = nextPage, perPageCroatia)
 
             result.fold(
                 onSuccess = { data ->
-                    _tagsList.value = SubmitResultFold.Success(data)
+                    accumulatedTags.addAll(data)
+                    _tagsList.value = SubmitResultFold.Success(ArrayList(accumulatedTags))
                 },
                 onFailure = { error ->
                     _tagsList.value = SubmitResultFold.Failure(error)

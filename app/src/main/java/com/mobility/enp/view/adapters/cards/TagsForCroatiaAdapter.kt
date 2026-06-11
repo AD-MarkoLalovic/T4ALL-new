@@ -24,12 +24,8 @@ class TagsForCroatiaAdapter(
     private val serialNumbers = mutableListOf<String>()
     private var hasCheckboxEnabled = SharedPreferencesHelper.wasCheckboxEverChecked(context)
 
-    private var currentPage: Int = currentList[currentList.lastIndex].currentPage ?: 0
-    private var lastPage: Int = currentList[currentList.lastIndex].lastPage ?: 0
-    private var perPage: Int = currentList[currentList.lastIndex].perPage ?: 0
-
     fun oneTagCheck() {
-        if (currentList.size == 1) {
+        if (currentList.isNotEmpty() && currentList.size == 1) {
             val item = currentList.first()
             if (!item.selected) {
                 serialNumbers.add(item.serialNumberUI)
@@ -116,7 +112,11 @@ class TagsForCroatiaAdapter(
     }
 
     private fun runPaginationCheck(currentTag: TagsForCroatiaUI) {
-        if (currentTag == getItem(itemCount - 1)) {
+        if (itemCount > 0 && currentTag == getItem(itemCount - 1)) {
+            val currentPage = currentTag.currentPage
+            val lastPage = currentTag.lastPage
+            val perPage = currentTag.perPage
+
             if (currentPage < lastPage) {
                 onUpdatePagination(currentPage + 1, perPage)
             }
