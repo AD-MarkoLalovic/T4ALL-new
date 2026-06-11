@@ -138,6 +138,18 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
                                 viewModel.fetchMonthlyInvoices()
                             }
 
+                            getString(R.string.republica_srpska) -> {
+                                binding.textNoBills.visibility = View.GONE
+                                if (::adapterMonthly.isInitialized) {
+                                    adapterMonthly.resetAdapter()
+                                }
+                                binding.invoicesLoadingView.visibility = View.VISIBLE
+                                viewModel.setSelectedCountry("BA_RS")
+                                viewModel.setPosition(adapterCountries.getTabPosition())
+                                viewModel.recyclerState = null
+                                viewModel.fetchMonthlyInvoices()
+                            }
+
                             getString(R.string.croatia) -> {
                                 binding.textNoBills.visibility = View.GONE
                                 if (::adapterMonthly.isInitialized) {
