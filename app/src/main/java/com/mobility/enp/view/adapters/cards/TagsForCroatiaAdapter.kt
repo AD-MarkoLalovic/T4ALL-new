@@ -16,6 +16,7 @@ import com.mobility.enp.view.ui_models.TagsForCroatiaUI
 
 class TagsForCroatiaAdapter(
     private val onCheckChange: (SerialNumberRequest) -> Unit,
+    private val onUpdatePagination: (nextPage: Int, perPage: Int) -> Unit,
     private val franchisePrimaryColor: Int?,
     private val context: Context
 ) : ListAdapter<TagsForCroatiaUI, TagsForCroatiaAdapter.TagsViewHolder>(TagsForCroatiaDiffCallback) {
@@ -23,6 +24,9 @@ class TagsForCroatiaAdapter(
     private val serialNumbers = mutableListOf<String>()
     private var hasCheckboxEnabled = SharedPreferencesHelper.wasCheckboxEverChecked(context)
 
+    private var currentPage: Int = currentList[currentList.lastIndex].currentPage ?: 0
+    private var lastPage: Int = currentList[currentList.lastIndex].lastPage ?: 0
+    private var perPage: Int = currentList[currentList.lastIndex].perPage ?: 0
 
     fun oneTagCheck() {
         if (currentList.size == 1) {
@@ -40,7 +44,7 @@ class TagsForCroatiaAdapter(
         notifyDataSetChanged()
     }
 
-    fun onCheckboxUnchecked(){
+    fun onCheckboxUnchecked() {
         hasCheckboxEnabled = SharedPreferencesHelper.wasCheckboxEverChecked(context)
         notifyDataSetChanged()
     }
@@ -77,19 +81,16 @@ class TagsForCroatiaAdapter(
             val colorStateList = franchisePrimaryColor?.let {
                 if (isChecked) ColorStateList.valueOf(it)
                 else ContextCompat.getColorStateList(
-                    binding.root.context,
-                    R.color.primary_light_dark
+                    binding.root.context, R.color.primary_light_dark
                 )
             } ?: run {
                 if (isChecked) {
                     ContextCompat.getColorStateList(
-                        binding.root.context,
-                        R.color.figmaSplashScreenColor
+                        binding.root.context, R.color.figmaSplashScreenColor
                     )
                 } else {
                     ContextCompat.getColorStateList(
-                        binding.root.context,
-                        R.color.primary_light_dark
+                        binding.root.context, R.color.primary_light_dark
                     )
                 }
             }
@@ -110,21 +111,29 @@ class TagsForCroatiaAdapter(
     override fun onBindViewHolder(holder: TagsViewHolder, position: Int) {
         val currentItem = getItem(position)
         holder.bind(currentItem)
+
+        runPaginationCheck(currentItem)
+    }
+
+    private fun runPaginationCheck(currentTag: TagsForCroatiaUI) {
+        if (currentTag == getItem(itemCount - 1)) {
+            if (currentPage < lastPage) {
+                onUpdatePagination(currentPage + 1, perPage)
+            }
+        }
     }
 
 }
 
 object TagsForCroatiaDiffCallback : DiffUtil.ItemCallback<TagsForCroatiaUI>() {
     override fun areItemsTheSame(
-        oldItem: TagsForCroatiaUI,
-        newItem: TagsForCroatiaUI
+        oldItem: TagsForCroatiaUI, newItem: TagsForCroatiaUI
     ): Boolean {
         return oldItem.serialNumberUI == newItem.serialNumberUI
     }
 
     override fun areContentsTheSame(
-        oldItem: TagsForCroatiaUI,
-        newItem: TagsForCroatiaUI
+        oldItem: TagsForCroatiaUI, newItem: TagsForCroatiaUI
     ): Boolean {
         return oldItem == newItem
     }

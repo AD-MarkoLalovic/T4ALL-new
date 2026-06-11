@@ -60,6 +60,7 @@ class PaymentAndPassageViewModel(
     val registrationRs = _registrationRs.asStateFlow()
 
     private var selectedSerialNumbers: SerialNumberRequest = SerialNumberRequest(emptyList())
+    private val perPageCroatia = 3
 
     fun fetchCardFlow() {
         _getCardDataFlow.value = SubmitResult.Loading
@@ -228,7 +229,24 @@ class PaymentAndPassageViewModel(
         viewModelScope.launch {
             _tagsList.value = SubmitResultFold.Loading
 
-            val result = repository.tagsForCroatia()
+            val result = repository.tagsForCroatia(perPageCroatia)
+
+            result.fold(
+                onSuccess = { data ->
+                    _tagsList.value = SubmitResultFold.Success(data)
+                },
+                onFailure = { error ->
+                    _tagsList.value = SubmitResultFold.Failure(error)
+                }
+            )
+        }
+    }
+
+    fun fetchTagsForCroatiaPagination(nextPage: Int) {
+        viewModelScope.launch {
+            _tagsList.value = SubmitResultFold.Loading
+
+            val result = repository.tagsForCroatiaPagination(nextPage = nextPage,perPageCroatia)
 
             result.fold(
                 onSuccess = { data ->
