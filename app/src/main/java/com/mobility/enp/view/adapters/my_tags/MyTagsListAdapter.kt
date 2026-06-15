@@ -51,6 +51,7 @@ class MyTagsListAdapter(
             val countryCode = when (selectedCountry) {
                 "MKD" -> "MK"
                 "MNE" -> "ME"
+                "RS" -> "BA_RS"
                 else -> ""
             }
 
@@ -161,6 +162,11 @@ class MyTagsListAdapter(
                     "HRV" -> {
                         code = "HR"
                         R.drawable.croatia_flag
+                    }
+
+                    "RS" -> {
+                        code = "BA_RS"
+                        R.drawable.flag_rs
                     }
 
                     else -> null

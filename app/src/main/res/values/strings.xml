@@ -289,6 +289,7 @@
     <string name="what_is_toll_for_all_system">Шта је Toll For All систем?</string>
     <string name="croatia_eng" translatable="false">Croatia</string>
     <string name="serbia_rs" translatable="false">RS</string>
+    <string name="republica_srpska_code" translatable="false">BA_RS</string>
     <string name="montenegro_me" translatable="false">ME</string>
     <string name="northmacedonia_mk" translatable="false">MK</string>
     <string name="croatia_hr" translatable="false">HR</string>
@@ -392,6 +393,8 @@
     <string name="notification_title">Дозволите да вам T4A шаље обавештења</string>
     <string name="notification_subtitle">Обавештења служе за преузимање рачуна и извоз табела у историји пролаза.</string>
     <string name="listing_of_passages_downloaded_successfully">Листинг пролазака је успешно преузет.</string>
+    <string name="send_bill_to_email">Пошаљи рачун на мејл</string>
+    <string name="bill_sent_to_email">Рачун је послат на вашу мејл адресу.</string>
     <string name="field_bank_account_isrequired">Поље жиро рачун треба да садржи 13 цифара.</string>
     <string name="access_denied">Приступ одбијен</string>
     <string name="only_t4all_users_access_denied">Тренутно није могуће да се улогују налози који нису T4All. Молимo вас да користите ВЕБ портал.</string>
@@ -424,6 +427,7 @@
     <string name="route_rupa" translatable="false">Rupa</string>
     <string name="route_zagreb_sisak" translatable="false">Zagreb – Sisak</string>
     <string name="tag_registration_plate_notice">Приликом регистрације ТАГ уређаја на ХАЦ порталу уносите стварну регистарску ознаку возила у коме ћете користити ТАГ уређај.</string>
+    <string name="tag_registration_plate_notice_extra">Уколико желите да на Toll4All корисничком порталу имате приказ транзита насталих у Хрватској, потребно је да на HAC порталу у опцији Кориснички рачун - Приволе вањским сервисима, прихватите дељење података са Toll4All (Путеви Србије).</string>
     <string name="check_status_on_hac_portal">Проверите статус на ХАЦ порталу</string>
     <string name="link_login_to_hac">Пријави се на HAC портал</string>
     <string name="facebook_text">Пратите нас на Фејсбуку и сазнајте први све новости о погодностима Т4А система.</string>
@@ -465,4 +469,11 @@
     <string name="euro_currency">ЕУР</string>
     <string name="action_retry">ПОНОВИ</string>
     <string name="cards_hac_checkbox">Сагласан/Сагласна сам да се моји лични подаци проследе HAC-у у циљу наставка процеса регистрације TAG уређаја.</string>
+    <string name="contact_person">Контакт особа</string>
+    <string name="field_contact_person_name_required">Поље Име контакт особе је обавезно.</string>
+    <string name="field_contact_person_surname_required">Поље Презиме контакт особе је обавезно.</string>
+    <string name="republica_srpska">Р. Српска</string>
+    <string name="republic_of_serbia">Република Српска</string>
+    <string name="notes_serbian_tag_in_republic_serbia">Напомене за коришћење српског ТАГ-а у Републици Српској</string>
+    <string name="click_registration_republic_serbia">Регистрација ТАГ уређаја, додавање платне картице, наплата пролазака и рекламације су у надлежности компаније Аутопутеви РС д.о.о. Бања Лука. Приговоре/питања/рекламације можете упутити на телефон +387 51 893 995 или на е-пошту: korisnicka.podrska@autoputevirs.com.\n\nНакон успешног додавања платне картице за коришћење ТАГ-а у Републици Српској, потребно је до 15 мин да се статус тага за Републику Српску на корисничком порталу промени у Активан.</string>
 </resources>

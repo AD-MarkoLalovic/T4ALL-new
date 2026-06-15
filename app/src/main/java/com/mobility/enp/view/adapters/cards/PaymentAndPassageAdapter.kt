@@ -98,7 +98,7 @@ class PaymentAndPassageAdapter(
             binding.primaryCard.text = spannableString
             binding.primaryCard.isClickable = true
             binding.primaryCard.setOnClickListener {
-                card.id?.let { id -> listener?.setPrimaryCard(id) }
+                card.id?.let { id -> listener?.setPrimaryCard(id, card.country?.code.orEmpty()) }
             }
 
             if (card.active == 0) {
@@ -106,7 +106,7 @@ class PaymentAndPassageAdapter(
             } else {
                 binding.removeCard.visibility = View.VISIBLE
                 binding.removeCard.setOnClickListener {
-                    card.id?.let { id -> listener?.clickRemoveCard(id.toString()) }
+                    card.id?.let { id -> listener?.clickRemoveCard(id.toString(), card.country?.code.orEmpty()) }
                 }
             }
         }
@@ -126,7 +126,7 @@ class PaymentAndPassageAdapter(
 
         // Postavljanje slike kartice na temelju cardType
         when (current.cardType) {
-            "VISA" -> holder.binding.cardType.setImageDrawable(
+            "VISA", "visa" -> holder.binding.cardType.setImageDrawable(
                 ContextCompat.getDrawable(
                     holder.binding.root.context,
                     R.drawable.ic_visa
@@ -140,7 +140,7 @@ class PaymentAndPassageAdapter(
                 )
             )
 
-            "MASTERCARD", "MC" -> holder.binding.cardType.setImageDrawable(
+            "MASTERCARD", "MC", "master" -> holder.binding.cardType.setImageDrawable(
                 ContextCompat.getDrawable(
                     holder.binding.root.context,
                     R.drawable.ic_mastercard
@@ -155,6 +155,7 @@ class PaymentAndPassageAdapter(
             "MK" -> holder.binding.cardFlag.setImageResource(R.drawable.macedonia_flag)
             "RS" -> holder.binding.cardFlag.setImageResource(R.drawable.serbia_flag)
             "ME" -> holder.binding.cardFlag.setImageResource(R.drawable.montenegro_flag)
+            "BA_RS" -> holder.binding.cardFlag.setImageResource(R.drawable.flag_rs)
             else -> holder.binding.cardFlag.setImageDrawable(null) //
         }
         holder.bind(current)
@@ -168,8 +169,8 @@ class PaymentAndPassageAdapter(
     }
 
     interface PrimaryCardListener {
-        fun setPrimaryCard(cardId: Int)
-        fun clickRemoveCard(cardId: String)
+        fun setPrimaryCard(cardId: Int, countryCode: String)
+        fun clickRemoveCard(cardId: String, countryCode: String)
     }
 
 }

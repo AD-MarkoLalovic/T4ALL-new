@@ -342,6 +342,8 @@
     <string name="notification_title">Dopustite da vam T4A šalje obavijesti</string>
     <string name="notification_subtitle">Obavijesti služe za preuzimanje računa i izvoz tablica u povijesti prolazaka.</string>
     <string name="listing_of_passages_downloaded_successfully">Listing prolazaka je uspješno preuzet.</string>
+    <string name="send_bill_to_email">Pošalji račun na mail</string>
+    <string name="bill_sent_to_email">Račun je poslan na vašu mail adresu.</string>
     <string name="field_bank_account_isrequired">Polje žiro račun treba sadržavati 13 znamenki.</string>
     <string name="access_denied">Pristup odbijen</string>
     <string name="only_t4all_users_access_denied">Trenutno nije moguće da se uloguju nalozi koji nisu T4All. Molimo vas da koristite WEB portal.</string>
@@ -364,6 +366,7 @@
     <string name="highway_a6">Autocesta A6:</string>
     <string name="highway_a7">Autocesta A7:</string>
     <string name="highway_a11">Autocesta A11:</string>
+    <string name="tag_registration_plate_notice_extra">Ukoliko želite da na Toll4All korisničkom portalu imate prikaz tranzita nastalih u Hrvatskoj, potrebno je da na HAC portalu u opciji Korisnički račun - Privole vanjskim servisima prihvatite dijeljenje podataka s Toll4All (Putevi Srbije).</string>
     <string name="check_status_on_hac_portal">Provjerite status na HAC portalu</string>
     <string name="link_login_to_hac">Prijavi se na HAC portal</string>
     <string name="facebook_text">Pratite nas na Facebooku i budite prvi koji će saznati sve novosti o pogodnostima T4A sustava.</string>
@@ -402,5 +405,12 @@
     <string name="euro_currency">ЕUR</string>
     <string name="action_retry">PONOVI</string>
     <string name="cards_hac_checkbox">Suglasan/Suglasna sam da se moji osobni podaci proslijede HAC-u u svrhu nastavka procesa registracije TAG uređaja.</string>
+    <string name="contact_person">"Kontakt osoba "</string>
+    <string name="field_contact_person_name_required">Polje Ime kontakt osobe je obavezno.</string>
+    <string name="field_contact_person_surname_required">Polje Prezime kontakt osobe je obavezno.</string>
+    <string name="republica_srpska">R. Srpska</string>
+    <string name="republic_of_serbia">Republika Srpska</string>
+    <string name="notes_serbian_tag_in_republic_serbia">Napomene za korištenje srpskog TAG-a u Republici Srpskoj</string>
+    <string name="click_registration_republic_serbia">Registracija TAG uređaja, dodavanje platne kartice, naplata prolazaka i reklamacije su u nadležnosti kompanije Autoputevi RS DOO Banja Luka. Prigovor/pitanja/reklamacije možete uputiti na telefon +387 51 893 995 ili na e-mail: korisnicka.podrska@autoputevirs.com.\n\nNakon uspešnog dodavanja platne kartice za korišćenje TAG-a u Republici Srpskoj, potrebno je do 15 min da se status taga za Republiku Srpsku na korisničkom portalu promeni u Aktivan.</string>
 
 </resources>

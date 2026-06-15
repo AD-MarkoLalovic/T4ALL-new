@@ -8,6 +8,7 @@ data class UserData(
     val companyName: String?,
     val country: Country,
     val customerType: CustomerType,
+    val tagCountry: String,
     val displayName: String,
     val email: String,
     val firstName: String?,
@@ -18,7 +19,9 @@ data class UserData(
     val mb: String?,
     val phone: String,
     val postalCode: String?,
-    val pib: String?
+    val pib: String?,
+    val cpFirstName: String?,
+    val cpLastName: String?
 ) {
     fun toEntity(): BasicInfoEntity {
         return BasicInfoEntity(
@@ -29,6 +32,7 @@ data class UserData(
             countryCode = country.code,
             countryName = country.name,
             customerType = customerType.type,
+            tagCountry = tagCountry,
             displayName = displayName,
             email = email,
             firstName = firstName,
@@ -38,8 +42,9 @@ data class UserData(
             mb = mb,
             phone = phone,
             postalCode = postalCode,
-            pib = pib
-
+            pib = pib,
+            cpFirstName= cpFirstName,
+            cpLastName = cpLastName
         )
     }
 }

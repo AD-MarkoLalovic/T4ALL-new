@@ -10,6 +10,7 @@ data class Data(
     val cardsME: List<CardsWebUnified>?,
     @SerializedName("cardsMK")
     val cardsMK: List<CardsWebUnified>?,
+    val cardsARS: List<CardsWebUnified>?,
     @SerializedName("cardsRS")
     val cardsRS: List<CardsWebUnified>?,
     @SerializedName("country")
@@ -36,5 +37,6 @@ data class Data(
     val showTabMK: Boolean,
     @SerializedName("showTabRS")
     val showTabRS: Boolean,
+    val showTabARS: Boolean,
     val hacPortalUrl: String?
 )

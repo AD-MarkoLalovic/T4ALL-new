@@ -102,8 +102,13 @@ class RegistrationFragment : Fragment() {
                 val navController = runCatching { findNavController() }.getOrNull()
                     ?: return@post
 
-                if (navController.currentDestination?.id == R.id.tosFragment) {
-                    navController.navigate(R.id.action_tosFragment_to_loginFragment)
+                val currentDestination = navController.currentDestination
+                if (currentDestination?.id == R.id.tosFragment &&
+                    currentDestination.getAction(R.id.action_tosFragment_to_loginFragment) != null
+                ) {
+                    runCatching {
+                        navController.navigate(R.id.action_tosFragment_to_loginFragment)
+                    }
                 }
             }
         }

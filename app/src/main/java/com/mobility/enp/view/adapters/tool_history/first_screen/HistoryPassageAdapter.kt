@@ -2,6 +2,7 @@ package com.mobility.enp.view.adapters.tool_history.first_screen
 
 import android.content.Context
 import android.content.res.Configuration
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +35,7 @@ import kotlinx.coroutines.launch
 
 class HistoryPassageAdapter(
     private val complaintInterface: SendToFragment,
-    private val hideComplaintButton: Boolean,
+    private var hideComplaintButton: Boolean,
     private val lifecycleOwner: LifecycleOwner,
     private val tagSerialNumber: String,
     private val countryCode: String, private val viewmodel: UserPassViewModel,
@@ -120,11 +121,39 @@ class HistoryPassageAdapter(
                 totalPages, tagSerialNumber, countryCode
             )
 
+            binding.checkDateAlternative.visibility = View.GONE
+
             binding.objectionsNumber.text = ""
 
             binding.relation = relation
-            binding.viewShade.background = null
 
+            binding.viewShade.background = null
+            when (relation.bill?.countryCode) {
+                "RS" -> {
+                    binding.tagBillCountry.text = "SRB"
+                }
+
+                "ME" -> {
+                    binding.tagBillCountry.text = "MNE"
+                }
+
+                "MK" -> {
+                    binding.tagBillCountry.text = "MKD"
+                }
+
+                "HR" -> {
+                    binding.tagBillCountry.text = "HRV"
+                }
+
+                "BA_RS" -> {
+                    binding.tagBillCountry.text = "RS"
+                }
+
+
+                else -> {
+                    binding.tagBillCountry.text = ""
+                }
+            }
 
             binding.btnComplaint.setOnClickListener {
                 if (countryCode.isNotEmpty() && countryCode == "RS") {
@@ -216,7 +245,7 @@ class HistoryPassageAdapter(
                 binding.btnComplaint.visibility = View.VISIBLE
             }
 
-            when (relation.bill.paid.toInt()) {
+            when (relation.bill?.paid?.toInt()) {
                 1 -> {
                     binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_green)
                     binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_green)
@@ -240,6 +269,22 @@ class HistoryPassageAdapter(
                         binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_orange)
                     }
                 }
+            }
+
+            if (relation.bill == null){
+                if (relation.isPaid){
+                    binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_green)
+                    binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_green)
+                    binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_green)
+                }else{
+                    binding.toolHistoryStatus.setBackgroundResource(R.drawable.status_icon_red)
+                    binding.topContainer.setBackgroundResource(R.drawable.tool_history_top_red)
+                    binding.bottomContainer.setBackgroundResource(R.drawable.tool_history_bottom_red)
+                }
+
+                hideComplaintButton = true
+
+                binding.checkDateAlternative.visibility = View.VISIBLE
             }
 
             if (hideComplaintButton) {

@@ -18,7 +18,7 @@ data class Item(
     val amountWithOutDiscount: String?,
     @SerializedName("bill")
     @Expose
-    val bill: Bill,
+    val bill: Bill?,
     @SerializedName("checkDate")
     @Expose
     val checkDate: String?,
@@ -45,7 +45,10 @@ data class Item(
     val id: Int,
     @SerializedName("isPaid")
     @Expose
-    val isPaid: Boolean?,
+    val isPaid: Boolean,
+    @SerializedName("billFinal")
+    @Expose
+    val billFinal: String,
     @SerializedName("paidLabel")
     @Expose
     val paidLabel: String?,
@@ -58,4 +61,5 @@ data class Item(
     @SerializedName("tollPlaza")
     @Expose
     val tollPlaza: String?
+
 )

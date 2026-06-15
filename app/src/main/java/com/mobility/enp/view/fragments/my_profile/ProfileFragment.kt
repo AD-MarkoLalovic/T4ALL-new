@@ -110,8 +110,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
                 viewModelStore.clear()
 
-                SharedPreferencesHelper.resetCheckBoxHAC(requireContext())
-
                 (context as MainActivity).resetToDefault()
                 (context as MainActivity).resetHistoryViewModel()
             }
