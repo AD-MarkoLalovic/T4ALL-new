@@ -9,8 +9,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +32,9 @@ import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.new_toll_history.AllowedCountryFilterAdapter
 import com.mobility.enp.view.adapters.new_toll_history.TollHistoryPagingAdapter
 import com.mobility.enp.view.dialogs.ChangePasswordDialog
+import com.mobility.enp.view.dialogs.GeneralMessageDialog
+import com.mobility.enp.view.dialogs.GeneralMessageDialogInfoButton
+import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.toll_history.NewTollHistoryViewModel
 import kotlinx.coroutines.launch
 
@@ -39,6 +44,7 @@ class TollHistoryMain : Fragment() {
     private val binding: FragmentTollHistoryMainBinding get() = _binding!!
 
     private val viewModel: NewTollHistoryViewModel by viewModels { NewTollHistoryViewModel.factory }
+    private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
     private lateinit var pagingAdapter: TollHistoryPagingAdapter
     private lateinit var countryAdapter: AllowedCountryFilterAdapter
@@ -72,9 +78,20 @@ class TollHistoryMain : Fragment() {
         observePagingData()
         observeCountries()
         observeLoadStates()
+        clickListeners()
+        observeFranchise()
         observeLogoutEvent()
         observeFragmentResults()
 
+    }
+
+    private fun clickListeners() {
+        binding.infoIcon.setOnClickListener {
+            GeneralMessageDialogInfoButton.newInstance(
+                title = getString(R.string.tool_history),
+                subtitle = getString(R.string.prolasci_info)
+            ).show(parentFragmentManager, "infoDialog")
+        }
     }
 
     override fun onStart() {
@@ -99,16 +116,22 @@ class TollHistoryMain : Fragment() {
                 val showBankForm = country == "RS"
                 val action =
                     TollHistoryMainDirections.actionTollHistoryMainToComplaintFormNewDialog(
-                        showBankForm = showBankForm, itemId = itemId
+                        showBankForm = showBankForm, itemId = itemId, showBottomNav = true
                     )
                 safeNavigate(action, R.id.tollHistoryMain)
             },
             onObjectionClick = { complaintId, maxReached ->
                 if (maxReached) {
-                    //showMaxObjectionsDialog()
+                    showMaxObjectionsDialog()
                 } else {
-                    //navigateToObjection(complaintId)
+                    val action =
+                        TollHistoryMainDirections.actionTollHistoryMainToObjectionFormDialogNew(
+                            complaintId = complaintId, showBottomNav = true
+                        )
+
+                    safeNavigate(action, R.id.tollHistoryMain)
                 }
+
             }
         )
 
@@ -313,6 +336,37 @@ class TollHistoryMain : Fragment() {
         ) { _, bundle ->
             if (bundle.getBoolean(FragmentResultKeys.COMPLAINT_SUBMITTED_KEY)) {
                 pagingAdapter.refresh()
+            }
+        }
+
+        parentFragmentManager.setFragmentResultListener(
+            FragmentResultKeys.OBJECTION_SUBMITTED_RESULT,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            if (bundle.getBoolean(FragmentResultKeys.OBJECTION_SUBMITTED_KEY)) {
+                pagingAdapter.refresh()
+            }
+        }
+    }
+
+    private fun showMaxObjectionsDialog() {
+        GeneralMessageDialog.newInstance(
+            title = binding.root.context.getString(R.string.contact_support),
+            subtitle = binding.root.context.getString(R.string.limit_reclamation)
+        ).show(parentFragmentManager, "MaxObjectionsDialog")
+    }
+
+    private fun observeFranchise() {
+        franchiseViewModel.franchiseModel.observe(viewLifecycleOwner) { franchiseModel ->
+            franchiseModel?.franchisePrimaryColor?.let { color ->
+                binding.loopIcon.setImageResource(franchiseModel.loopIcon)
+
+                val drawable = AppCompatResources
+                    .getDrawable(requireContext(), R.drawable.ic_info)
+                    ?.mutate()
+
+                drawable?.setTint(color)
+                binding.infoIcon.setImageDrawable(drawable)
             }
         }
     }

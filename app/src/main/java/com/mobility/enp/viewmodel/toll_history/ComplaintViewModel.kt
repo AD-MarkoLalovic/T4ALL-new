@@ -41,6 +41,41 @@ class ComplaintViewModel(private val repo: ComplaintAndObjectionRepository) : Vi
         }
     }
 
+    fun validate(
+        licencePlate: String,
+        reasonForComplaint: String,
+        showBankForm: Boolean,
+        selectedBankPosition: Int,
+        uniqueNumber: String,
+        centerAccountNumber: String,
+        rightAccountNumber: String
+    ): ComplaintValidationResult {
+
+        if (licencePlate.isEmpty() || reasonForComplaint.isEmpty()) {
+            return ComplaintValidationResult.EmptyRequiredFields
+        }
+
+        if (reasonForComplaint.length <= 10) {
+            return ComplaintValidationResult.ReasonTooShort
+        }
+
+        if (showBankForm) {
+            if (selectedBankPosition == 0) {
+                return ComplaintValidationResult.NoBankSelected
+            }
+
+            if (uniqueNumber.isEmpty() || centerAccountNumber.isEmpty() || rightAccountNumber.isEmpty()) {
+                return ComplaintValidationResult.MissingBankFields
+            }
+
+            if (centerAccountNumber.length != 13 || rightAccountNumber.length != 2) {
+                return ComplaintValidationResult.InvalidAccountNumber
+            }
+        }
+
+        return ComplaintValidationResult.Valid
+    }
+
     fun submitComplaint(body: ComplaintBodyNew) {
         viewModelScope.launch {
             _submitComplaint.value = SubmitResult.Loading

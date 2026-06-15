@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Toll4All</string>
     <string name="marko_lalovic" translatable="false">Марко ЛаловиЋ</string>
@@ -5,288 +6,11 @@
         creation. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas viverra lacinia
         finibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</string>
     <string name="cvc" translatable="false">CVC</string>
-
-    <string name="ime" translatable="true">Име</string>
-    <string name="surname" translatable="true">Презиме</string>
-    <string name="address" translatable="true">Адреса</string>
-    <string name="city" translatable="true">Град</string>
-    <string name="Zip_Code" translatable="true">Поштански број</string>
-    <string name="old_password" translatable="true">Стара лозинка</string>
-    <string name="new_password" translatable="true">Нова лозинка</string>
-    <string name="passage_history" translatable="true">Историја пролазака</string>
-    <string name="search" translatable="true">Претражи</string>
-    <string name="tag_serial_number" translatable="true">Серијски број тага</string>
-    <string name="complaint" translatable="true">Рекламација</string>
-    <string name="refund_request" translatable="true">Захтев за повраћај</string>
-    <string name="forgot_your_password" translatable="true">Заборавили сте лозинку?</string>
-    <string name="enter_email_for_password_reset" translatable="true">Унесите вашу адресу е-поште и на мејл ће вам стићи упутство за ресетовање лозинке.</string>
-    <string name="hint_email" translatable="true">Е-пошта</string>
-    <string name="hint_password" translatable="true">Лозинка</string>
-    <string name="button_confirm" translatable="true">Потврди</string>
-    <string name="button_close" translatable="true">Затвори</string>
-    <string name="button_sing_up" translatable="true">Пријави се</string>
-    <string name="button_skip_page" translatable="true">Прескочите</string>
-    <string name="back_to_login_page" translatable="true">Назад на страну за пријаву.</string>
-    <string name="all_rights_reserved" translatable="true">© 2023. Отворени Балкан ЕНП. Сва права задржана</string>
-    <string name="my_tags" translatable="true">Моји тагови</string>
-    <string name="status" translatable="true">Статус</string>
-    <string name="add_tag" translatable="true">Додај таг</string>
-    <string name="lost_tag" translatable="true">Изгубљен таг</string>
-    <string name="dialog_lost_tag_message" translatable="true">Након слања пријаве таг ће бити блокиран. Уколико пронађете таг, можете поднети захтев за активацијом тага.</string>
-    <string name="refund_request_explanation" translatable="true">Уколико сте приликом пребацивања Вашег Таг уређаја са препаид режима на Toll4ALL имали средства на вашем уређају молимо вас да попуните форму како би та средства била уплаћена на Ваш жиро рачун. По пријему Вашег захтева урадићемо проверу у нашем систему и извршити поврат на жељени ЖР.</string>
-    <string name="amount" translatable="true">Износ</string>
-    <string name="bank_account" translatable="true">Жиро рачун</string>
-    <string name="bank" translatable="true">Банка</string>
-    <string name="send" translatable="true">Пошаљи </string>
-    <string name="registration_text" translatable="true">Регистрација ЕНП/ТАГ уређаја СРБИЈА</string>
-    <string name="tags_registration_hint" translatable="true">Молимо вас да унесете регистарску ознаку.
-        \nВерификациони код је регистрација.\nСва поља су обавезна</string>
-    <string name="serial_number" translatable="true">Серијски број</string>
-    <string name="verification_code" translatable="true">Верификациони код</string>
-    <string name="name_individual" translatable="true">Име</string>
-    <string name="serbia" translatable="true">Србија</string>
-    <string name="macedonia" translatable="true">С. Македонија</string>
-    <string name="croatia" translatable="true">Хрватска</string>
-    <string name="montenegro" translatable="true">Црна Гора</string>
-    <string name="welcome_back" translatable="true">Добродошли назад</string>
-    <string name="my_invoices" translatable="true">Моје фактуре</string>
-    <string name="fragment_verification" translatable="true">Verifikacija</string>
-    <string name="verification_code_not_received" translatable="true">Верификациона шифра није стигла?</string>
-    <string name="confirm" translatable="true">Потврдите</string>
-    <string name="email" translatable="true">Е-пошта</string>
-    <string name="verification_code_sent_email" translatable="true">Верификациони
-        код је послат на вашу е-пошту</string>
-    <string name="category" translatable="true">Категорија</string>
-    <string name="registration" translatable="true">Регистрација</string>
-    <string name="my_profile" translatable="true">Мој профил</string>
-    <string name="basic_information" translatable="true">Основне информације</string>
-    <string name="change_password" translatable="true">Промени лозинку</string>
-    <string name="payment_methods" translatable="true">Начини плаћања</string>
-    <string name="sign_out" translatable="true">Одјава</string>
-    <string name="deactivate_account" translatable="true">Деактивирати налог</string>
-    <string name="login_my_profile" translatable="true">Мој профил</string>
-    <string name="login_to_existing_account" translatable="true">Улогујте се на постојећи налог</string>
-    <string name="i_forgot_my_password" translatable="true"><u>Заборавио сам лозинку</u></string>
-    <string name="create_business_account" translatable="true">Направите бизнис налог</string>
-    <string name="customer_support" translatable="true">Корисничка подршка</string>
-    <string name="privacy_terms" translatable="true">Услови коришћења</string>
-    <string name="country" translatable="true">Држава</string>
-    <string name="save_changes" translatable="true">Сачувај</string>
-    <string name="repeat_password" translatable="true">Поново унесите нову лозинку</string>
-    <string name="password_changed" translatable="true">Лозинка промењена</string>
-    <string name="you_will_be_asked_to_login_again" translatable="true">Потребно је да се опет пријавите на налог.</string>
-    <string name="email_address_validation_successful" translatable="true">Валидација емаил адресе
-        је успешна!</string>
-    <string name="resend_it" translatable="true">Пошаљи поново.</string>
-    <string name="address_and_number" translatable="true">Адреса и број</string>
-    <string name="business_account" translatable="true">Бизнис рачун</string>
-    <string name="personal_account" translatable="true">Лични рачун</string>
-    <string name="company_name" translatable="true">Назив фирме</string>
-    <string name="registration_number" translatable="true">Матични број</string>
-    <string name="tax_identification_number" translatable="true">Identifikacioni Broj TAX</string>
-    <string name="support_text" translatable="true">Подршка</string>
-    <string name="terms_and_conditions" translatable="true">Услови и приватност</string>
-    <string name="all_requests" translatable="true">Сви захтеви</string>
-    <string name="button_request" translatable="true">Захтев</string>
-
-    <string name="pay_securely" translatable="true">Плати сигурно преко своје
-        кредитне картице.</string>
-    <string name="mobile_provider_mts" translatable="true">Мобилни провајдер (MTS)</string>
-    <string name="pay_with_mobile_bill" translatable="true">Лако плаћајте
-        својим месечним рачуном за мобилни.</string>
-    <string name="enter_mobile" translatable="true">Унесите
-        број свог мобилног телефона да бисте добили верификациони код путем СМС-а.</string>
-    <string name="contact_number" translatable="true">Телефон</string>
-    <string name="verification_code_sent" translatable="true">Верификациони
-        код је послат на ваш телефон путем СМС-а.</string>
-    <string name="add_credit_card" translatable="true">Додај кредитну картицу</string>
-    <string name="position_card" translatable="true">Поставите
-        своју дебитну или кредитну картицу у оквир за скенирање.</string>
-    <string name="scan_card" translatable="true">Скенирај картицу</string>
-    <string name="add_manually" translatable="true">Додај ручно</string>
-    <string name="fill_all_fields" translatable="true">Молимо попуните сва
-        поља пре него што наставите даље.</string>
-    <string name="invoice_details" translatable="true">Детаљи рачуна</string>
-    <string name="lorem_ipsum">Lorem Ipsum</string>
-    <string name="order_number" translatable="true">Редни број</string>
-    <string name="credit_card_successful" translatable="true">Кредитна картица је успешно додата.</string>
-    <string name="tag_confirmed" translatable="true">Ознака потврђена</string>
-    <string name="name_and_surname" translatable="true">Име и презиме</string>
-    <string name="tag" translatable="true">Таг</string>
-    <string name="license_plate_number" translatable="true">Регистарске таблице</string>
-    <string name="country_of_passage" translatable="true">Земља пролаза</string>
-    <string name="change_profile_picture" translatable="true">Променити слику профила</string>
-    <string name="create_a_new_account" translatable="true">Направи нови налог</string>
-    <string name="settings" translatable="true">Подешавања</string>
-    <string name="allow_push_notifications" translatable="true">Дозволи примање обавештења</string>
-    <string name="change_language" translatable="true">Промени језик</string>
-    <string name="all" translatable="true">Свe</string>
-    <string name="confirm_lost_tag" translatable="true">Потврдите изгубљен таг</string>
-    <string name="cancel" translatable="true">Откажи</string>
-    <string name="show_all_tags" translatable="true">Прикажи све ТАГове</string>
-    <string name="date" translatable="true">Датум</string>
-    <string name="from" translatable="true">Од</string>
-    <string name="to" translatable="true">До</string>
-    <string name="tool_history" translatable="true">Историја пролазака</string>
-    <string name="reset" translatable="true"><u>Ресетуј</u></string>
-    <string name="tag_added_successfully" translatable="true">Успешно сте додали ТАГ.</string>
-    <string name="to_submit_a_complaint" translatable="true">Да бисте поднели рекламацију, попуните сва поља</string>
-    <string name="credit_card" translatable="true">Kreditna Kartica</string>
-    <string name="total" translatable="true">Укупно</string>
-    <string name="account_number" translatable="true">Број рачуна</string>
-    <string name="pay_now" translatable="true">Платити сада</string>
-    <string name="choose_your_country" translatable="true">Изабери своју земљу</string>
-    <string name="expiration_date" translatable="true">Датум истека</string>
-    <string name="notification" translatable="true">Обавештење</string>
-    <string name="permissions_title" translatable="true">Дозволе</string>
-    <string name="permission_subtitle" translatable="true">Да ли сте сигурни да желите да уклоните могућност апликацији да прима обавештења?</string>
-    <string name="no" translatable="true">Не</string>
-    <string name="yes" translatable="true">Да</string>
-    <string name="remove_card" translatable="true"><u>Уклоните картицу</u></string>
-    <string name="loading_data" translatable="true">Учитавање података…</string>
-    <string name="contact_support">Контактирајте нашу корисничку подршку.</string>
-    <string name="support_dialog_message" translatable="true">Порука</string>
-    <string name="support_successful_mail" translatable="true">Успешно послато</string>
-    <string name="support_successful_massage" translatable="true">Успешно сте нам послали порукy. Неко ће вам се јавити.</string>
-    <string name="qr_code_scanning" translatable="true">КР код скенирања</string>
-    <string name="scan_qr_code" translatable="true">Молимо вас да скенирате КР код са уговора.</string>
-    <string name="speed_up_registration" translatable="true">На овај начин ћете убрзати доказује регистрацију.</string>
-    <string name="api_call_error" translatable="true">Грешка у АПИ позиву</string>
-    <string name="password_repeat_error_message" translatable="true">Поново унета лозинка се не поклапа са новом лозинком</string>
-    <string name="password_error_message" translatable="true">Поље нова лозинка мора садржати најмање 8 карактера.</string>
-    <string name="enter_old_password_message" translatable="true">Поље стара лозинка је обавезно.</string>
-    <string name="repeat_the_new_password" translatable="true">Поново унесите нову лозинку</string>
-    <string name="enter_support_message" translatable="true">Унесите текст поруке.</string>
-    <string name="create_account" translatable="true">Креирајте Т4А налог</string>
     <string name="serbia_country_code" translatable="false">RS</string>
     <string name="macedonia_country_code" translatable="false">MK</string>
     <string name="montenegro_country_code" translatable="false">ME</string>
-    <string name="all_fields_are_mandatory" translatable="true">Сва поља су обавезна.</string>
-    <string name="change_successfully_saved" translatable="true">Измeнe успешно сачуване.</string>
-    <string name="please_connect_to_the_internet" translatable="true">Повежите се на интернет.</string>
-    <string name="general_terms_and_conditions" translatable="true">Општи услови и услови коришћења</string>
-    <string name="privacy_policy" translatable="true">Политика приватности</string>
-    <string name="choose_country_and_payment" translatable="true">Изаберите земљу и начин плаћања</string>
-    <string name="primary_card" translatable="true">Главна картица</string>
-    <string name="confirm_delete_card" translatable="true">Потврдите брисање картице</string>
-    <string name="are_you_sure_you_want_to_delete_the_card" translatable="true">Да ли сте сигурни да желите да обришете картицу?</string>
-    <string name="choose_primary_card" translatable="true">Изаберите подразумевану</string>
-    <string name="card_successfully_deleted" translatable="true">Картица успешно обрисана</string>
-    <string name="card_not_deleted" translatable="true">Картица није обрисана</string>
-    <string name="tags_with_serial_not_found" translatable="true">Ознаке са серијом нису пронађене</string>
-    <string name="reported_lost_tag_successfully" translatable="true">Успешно сте пријавили изгубљен таг.</string>
-    <string name="blocked_lost_tag" translatable="true">Блокиран - Изгубљен таг</string>
-    <string name="bill_downloaded_successfully" translatable="true">Рачун је успешно преузет.</string>
-    <string name="licence_plate" translatable="true">Унесите регистарску ознаку</string>
-    <string name="input" translatable="true">Улазни</string>
-    <string name="enter_complaint_reason" translatable="true">Pазлог рекламације</string>
-    <string name="bank_account_number" translatable="true">Унесите број текућег рачуна</string>
-    <string name="bank_name">Име банке</string>
-    <string name="registered_complaint" translatable="true">Регистрована рекламација</string>
-    <string name="br_registration" translatable="true">Бр. рекламације</string>
-    <string name="objection" translatable="true">Приговор</string>
-    <string name="object_of_complaint" translatable="true">Предмет приговора:</string>
-    <string name="subject_date" translatable="true">Датум предмета:</string>
-    <string name="response_to_toll_complaint" translatable="true">Одговор на рекламацију износа наплаћење путарине уређајем ЕНП</string>
-    <string name="subject_number" translatable="true">Број предмета</string>
-    <string name="object_complaint_number" translatable="true">Број предмета на који се односи приговор:</string>
-    <string name="please_fill_all_required_data" translatable="true">Молимо попуните све потребне податке</string>
-    <string name="select_date" translatable="true">Изаберите датум</string>
-    <string name="please_enter_date_manually" translatable="true">Унесите датум ручно</string>
-    <string name="response_to_complaint" translatable="true">Одговор на
-        приговор на исправност уређаја за ЕНП</string>
-    <string name="response_to_report" translatable="true">Одговор         на пријаву изгубљеног/украденог уређаја за ЕНП</string>
-    <string name="objection_content" translatable="true">Садржај приговора: (навести јасно разлоге приговора)</string>
-    <string name="complaint_min_length" translatable="true">Унесите разлог
-        за приговор, дужина мора бити најмање 10 карактера.</string>
-    <string name="please_enter_all_required_data" translatable="true">Унесите све потребне податке</string>
-    <string name="no_passage_data" translatable="true">Немате пролазака у последњих 30 дана.</string>
-    <string name="no_passage_data_special" translatable="true">Немате проласке за одабрани период</string>
-    <string name="payment_successfully" translatable="true">Плаћање је успешно извршено.</string>
-    <string name="please_select_tag" translatable="true">Молимо одаберите таг.</string>
-    <string name="request_recorded" translatable="true">Ваш захтев је евидентиран и
-        прослеђен на даљу обраду.</string>
-    <string name="you_have_no_refund_requests" translatable="true">Немате захтева за повраћај средстава.</string>
-    <string name="confirm_change_primary_card" translatable="true">Да ли сте сигурни
-        да желите да промените примарну картицу?</string>
-    <string name="confirm_primary_card" translatable="true">Потврдите примарну картицу</string>
-    <string name="primary_card_changed" translatable="true">Примарна картица
-        је успешно промењена.</string>
-    <string name="all_country" translatable="true">Све</string>
-    <string name="user_profile" translatable="true">Кориснички профил</string>
-    <string name="personal_data" translatable="true">Лични подаци</string>
-    <string name="password_change" translatable="true">Промена лозинке</string>
-    <string name="hint_registration_plate" translatable="true">Регистарска ознака</string>
-    <string name="hint_enter_description" translatable="true">Унесите опис</string>
-    <string name="hint_bank_account_number" translatable="true">Број текућег рачуна</string>
-    <string name="hint_bank_name" translatable="true">Назив банке</string>
-    <string name="my_cards" translatable="true">Моје картице</string>
-    <string name="cards" translatable="true">Картице</string>
-    <string name="enter_objection_reason" translatable="true">Унесите разлог за приговор</string>
-    <string name="end_date_check">крајњи датум не може бити пре датума почетка</string>
-    <string name="last_item" translatable="true">Нема више података о пролазу за ову ознаку</string>
-    <string name="add_card_home" translatable="true">Додај картицу</string>
-    <string name="text_add_card" translatable="true">Тренутно немате додатих картица. Молимо вас додајте картицу.</string>
-    <string name="no_notifications" translatable="true">Нема обавештења</string>
-    <string name="no_notifications_received" translatable="true">Овај корисник није примио ниједно обавештење</string>
-    <string name="file_downloaded" translatable="true">Фајл је преузет</string>
-    <string name="download_failed" translatable="true">Преузимање није успело</string>
-    <string name="perm_required" translatable="true">Дозвола је потребна, молим вас одобрите.</string>
-    <string name="title_dialog_forgot_pass" translatable="true">Заборављена лозинка</string>
-    <string name="error_dialog_forgot_pass" translatable="true">Дошло је до грешке.</string>
-    <string name="subtitle_dialog_forgot_pass" translatable="true">Емаил није успешно послат кориснику.</string>
-    <string name="subtitle_forgot_pass" translatable="true">Емаил је послат кориснику.</string>
-    <string name="button_try_again" translatable="true">Покушај поново</string>
-    <string name="enter_your_email" translatable="true">Поље е-пошта је обавезно.</string>
-    <string name="no_connection_title">Проблем са везом</string>
-    <string name="checking_for_connection">Провера везе</string>
-    <string name="connection_restored">Веза је обновљена</string>
-    <string name="no_internet" translatable="true">" Нема интернет конекције."</string>
-    <string name="offline_using_stored_data">Тренутно нисте повезани на интернет. Приказују се сачувани подаци.</string>
-    <string name="multiple_payment_cards_for_country">Можете користити више различитих платних картица за једну земљу.</string>
-    <string name="tag_device_payment_method_north_macedonia">Уколико желите да Ваш ТАГ уређај користите на путевима у Северној Македонији, молимо Вас да додате валидну платну картицу.</string>
-    <string name="tag_device_payment_method_serbia">Уколико желите да Ваш ТАГ уређај користите на путевима у Србији, молимо вас да додате важећу платну картицу.</string>
-    <string name="tag_device_payment_method_montenegro">Уколико желите да Ваш ТАГ уређај користите на путевима у Црној Гори молимо Вас да додате валидну платну картицу.</string>
-    <string name="text_no_refund_tags">Немате тагове за које можете да поднесете захтев за повраћај средстава.</string>
-    <string name="text_no_my_tags">Тренутно немате додатих тагова. Молимо ваc додајте таг.</string>
-    <string name="no_tool_history">Ваши проласци ће бити приказани овде.</string>
-    <string name="enter_old_password">Унесите стару шифру</string>
-    <string name="enter_new_password">Унесите нову шифру</string>
-    <string name="retype_new_password">Поново унесите нову шифру</string>
-    <string name="greece">Грчка</string>
-    <string name="bosnia">Босна и Херцеговина</string>
-    <string name="enter_your_last_name">Унесите ваше презиме</string>
-    <string name="enter_your_email_address">Унесите вашу имејл адресу</string>
-    <string name="enter_your_first_name">Унесите ваше име</string>
-    <string name="enter_the_company_name">Унесите назив фирме</string>
-    <string name="enter_company_registration_number">Enter the company registration number</string>
-    <string name="enter_your_phone_number">Унесите ваш број телефона</string>
-    <string name="enter_your_address">Унесите вашу адресу</string>
-    <string name="enter_your_city">Унесите ваш град</string>
-    <string name="enter_your_postal_code">Унесите ваш поштански број</string>
-    <string name="enter_your_country">Унесите вашу државу</string>
-    <string name="enter_your_password">Унесите своју лозинку</string>
-    <string name="hint_enter_email">Унесите свој имејл</string>
-    <string name="choose_language">Изаберите језик</string>
-    <string name="from_gallery">Из галерије</string>
-    <string name="select_your_profile_picture">Изаберите своју профилну слику.</string>
-    <string name="dialog_select_country_for_card">Изаберите државу за коју додајете картицу.</string>
-    <string name="action_cannot_be_undone">Ова акција не може бити поништена и трајно ће обрисати изабрану картицу са вашег налога.</string>
-    <string name="remove_card_button">Remove card</string>
-    <string name="hint_enter_serial_number">Унесите серијски број</string>
-    <string name="enter_amount">Унесите износ</string>
-    <string name="enter_bank_account">Унесите комплетан број Жиро рачуна.</string>
-    <string name="enter_name_bank">Поље Банка је обавезно.</string>
-    <string name="download_timeout">Молимо сачекајте 5 секунди пре новог преузимања.</string>
-    <string name="enter_content_of_complaint">Унесите садржај приговора</string>
-    <string name="hint_enter_verification_code">Унесите верификациони код</string>
-    <string name="serbian_passage">Србија</string>
-    <string name="montenegro_passage">Црна Гора</string>
-    <string name="north_macedonian_passage">Северна Македонија</string>
     <string name="loop_icon" translatable="false">loop Icon</string>
     <string name="info_icon" translatable="false">Info Icon</string>
-    <string name="welcome_to_toll_for_all">Добро дошли у Toll For All</string>
-    <string name="what_is_toll_for_all_system">Шта је Toll For All систем?</string>
     <string name="croatia_eng" translatable="false">Croatia</string>
     <string name="serbia_rs" translatable="false">RS</string>
     <string name="republica_srpska_code" translatable="false">BA_RS</string>
@@ -294,16 +18,6 @@
     <string name="northmacedonia_mk" translatable="false">MK</string>
     <string name="croatia_hr" translatable="false">HR</string>
     <string name="mkd" translatable="false">MKD</string>
-    <string name="value">Валута</string>
-    <string name="found_tag">Пронађен Таг</string>
-    <string name="confirm_found_tag">Потврдите пронађен таг</string>
-    <string name="report_found_tag">Изјављујем да је таг пронађен и желео бих да се омогући поновно коришћење истог.</string>
-    <string name="message">Порука</string>
-    <string name="click_me">Кликните на мене</string>
-    <string name="e_mail">Е-маил</string>
-    <string name="reason_for_contact">Разлог</string>
-    <string name="what_is_your_message">Која је твоја порука</string>
-    <string name="add_card_for_serbia_message">Потребно је прво да додате картицу за Србију.</string>
     <string name="language_srpski" translatable="false">Cрпски</string>
     <string name="language_srpski_latin" translatable="false">Srpski</string>
     <string name="language_english" translatable="false">English</string>
@@ -317,108 +31,11 @@
     <string name="title" translatable="false">title</string>
     <string name="subtitle" translatable="false">subtitle</string>
     <string name="bool" translatable="false">bool</string>
-    <string name="reason_for_deactivation">Разлог за деактивацију</string>
-    <string name="deactivation_request">Захтев за деактивацију</string>
-    <string name="email_not_valid">Имејл није важећи</string>
-    <string name="first_name_mandatory">Поље име је обавезно.</string>
-    <string name="last_name_mandatory">Поље презиме је обавезно.</string>
-    <string name="phone_mandatory">Поље телефон је обавезно.</string>
-    <string name="address_mandatory">Поље адреса је обавезно.</string>
-    <string name="city_mandatory">Поље град је обавезно.</string>
-    <string name="company_mandatory">Поље назив фирме је обавезно.</string>
-    <string name="registration_mandatory">Поље матични број је обавезно.</string>
-    <string name="contact_support_fill_fields">Да бисте контактирали корисничку подршку, молимо вас да попуните сва поља.</string>
-    <string name="reason_for_contact_support">Унесите разлог вашег захтева</string>
-    <string name="provide_request_details">Наведите детаље вашег захтева</string>
-    <string name="inactive_card">Истекла/Избрисана Картица</string>
-    <string name="fill_in_all_fields">Попуните сва поља.</string>
-    <string name="enter_valid_email_address">Унесите важећу имејл адресу.</string>
-    <string name="account_deactivation_notice">Поштовани корисници, молимо вас да ову контакт форму користите искључиво за потребе потпуне деактивације вашег корисничког налога. Сви остали захтеви упућени путем ове форме неће бити процесуирани.</string>
-    <string name="pdf_invoices">PDF Рачуни</string>
-    <string name="listing_of_passages">Листинг пролазака</string>
-    <string name="export">Извоз</string>
-    <string name="csv_saved">CSV сачуван у документима</string>
-    <string name="bill_number">Број рачуна</string>
-    <string name="time_of_passage">Време пролаза</string>
-    <string name="pay_ramp">Наплатна рампа</string>
-    <string name="price">Цена</string>
-    <string name="please_select_dates">Изаберите датуме</string>
-    <string name="formatting_error">Грешка у формату</string>
-    <string name="please_select_one_tag">Извоз историје пролаза могућ је само за једну TAG или за све TAGs</string>
     <string name="mm_dd_yyyy" translatable="false">dd/mm/yyyy</string>
-    <string name="case_number_info">Број предмета односи се на број под којим је заведена Ваша рекламација и који се налази у одговору који сте добили од нас. Приговори са погрешним или непостојећим бројем неће бити уважени.
-</string>
-    <string name="server_error_msg">Грешка на серверу</string>
-    <string name="hint_select_bank">Изаберите банку</string>
-    <string name="refund_request_note">Напомена: Повраћај средстава је могућ искључиво на текуће рачуне банака које послују Републици Србији.</string>
-    <string name="language_changed">Језик је промењен</string>
-    <string name="enter_message_support">Унесите поруку за корисничку подршку</string>
-    <string name="invalid_account_number">Неважећи број рачуна</string>
-    <string name="enter_email_password">Молимо унесите имејл и лозинку.</string>
-    <string name="all_status_tags">Сви</string>
-    <string name="delete_picture">Обриши слику</string>
-    <string name="reported_found_tag_successfully">Успешно сте пријавили пронађен таг.</string>
-    <string name="pib">ПИБ (Порески идентификациони број)</string>
-    <string name="enter_pib">Унесите ПИБ</string>
-    <string name="pib_mandatory">Polje PIB je obavezno</string>
-    <string name="pib_invalid_length">Поље ПИБ мора садржати мање од 13 карактера.</string>
-    <string name="pib_not_cantains_nine_digits">Поље PIB мора садржати 9 цифара.</string>
-    <string name="cards_terms_text_full">Сагласан сам са Општим условима и Правилима приватности</string>
-    <string name="card_terms_left_clickable">Општим условима</string>
-    <string name="card_term_right_clickable">Правилима приватности</string>
-    <string name="version">Верзија:</string>
     <string name="powered_by_toll4all" translatable="false">Powered by Toll4All</string>
-    <string name="next">Даље</string>
     <string name="srp" translatable="false">SRP</string>
     <string name="srp_cyr" translatable="false">СРП</string>
     <string name="eng" translatable="false">ENG</string>
-
-    <string-array name="language_options_intro">
-        <item>SRP</item>
-        <item>СРП</item>
-        <item>ENG</item>
-    </string-array>
-    <string name="toll_for_all_description">Toll For All је платформа која омогућава интегрисану наплату путарине у земљама Европе. Нема више чекања на наплатним рампама и промена валуте. Са Toll For All платформом стигла је нова ера мобилности!</string>
-    <string name="toll_for_all_supported_countries">Државе у којима функционише Toll For All систем</string>
-    <string name="serbia_eng">Србија</string>
-    <string name="macedonia_eng">Северна Македонија</string>
-    <string name="montenegro_eng">"Црна Гора        "</string>
-    <string name="advantages_of_the_toll_for_all_system">"Предности Toll For All система        "</string>
-    <string name="with_a_one_tag_through_multiple_countries">Са једним тагом кроз више држава</string>
-    <string name="payment_via_the_phone_bill">"Плаћање преко телефонског рачуна        "</string>
-    <string name="payment_directly_from_the_user_s_account">"Плаћање директно са корисничког налога        "</string>
-    <string name="no_waiting_in_line">"Без чекања у реду        "</string>
-    <string name="no_currency_exchange">"Без промене валута        "</string>
-    <string name="permission_granted">Дозвола одобрена</string>
-    <string name="notification_title">Дозволите да вам T4A шаље обавештења</string>
-    <string name="notification_subtitle">Обавештења служе за преузимање рачуна и извоз табела у историји пролаза.</string>
-    <string name="listing_of_passages_downloaded_successfully">Листинг пролазака је успешно преузет.</string>
-    <string name="send_bill_to_email">Пошаљи рачун на мејл</string>
-    <string name="bill_sent_to_email">Рачун је послат на вашу мејл адресу.</string>
-    <string name="field_bank_account_isrequired">Поље жиро рачун треба да садржи 13 цифара.</string>
-    <string name="access_denied">Приступ одбијен</string>
-    <string name="only_t4all_users_access_denied">Тренутно није могуће да се улогују налози који нису T4All. Молимo вас да користите ВЕБ портал.</string>
-    <string name="tag_registration_instruction_hr">За регистрацију тагова у Хрватској потребно је да одаберете које тагове желите да региструјете и да кликнете на дугме „Регистрација“.</string>
-    <string name="notes_serbian_tag_in_croatia">Напомене за коришћење српског ТАГ-а у Републици Хрватској</string>
-    <string name="activation_successful_enp_tag_device">Успешно сте извршили активацију ЕНП/ТАГ уређаја.</string>
-    <string name="pdf_dialog_title_error">Проблем са извозом PDF-а</string>
-    <string name="pdf_dialog_subtitle_error">Не могу да учитам PDF податке, молим покушајте поново.</string>
-    <string name="registration_instructions_croatian_tags">Упутство за регистрацију српског тагa</string>
-    <string name="error_loading_instructions">Грешка при учитавању упутства</string>
-    <string name="general_provisions">Опште одредбе</string>
-    <string name="click_registration_info">Кликом на дугме "Регистрација" бићете преусмерени на ВЕБ портал
-        Хрватских аутопутева. Регистрација ТАГ уређаја, додавање платне картице, наплата пролазака и
-        рекламације су у надлежности компаније Хрватске аутопутеве д.о.о. Загреб (ХАЦ). Приговор/питања/рекламације
-        можете упутити на телефон +385 1 6504 899 или на е-маил: info-naplata@hac.hr</string>
-    <string name="tag_usage_croatia">Коришћење српског ТАГ уређаја у Хрватској</string>
-    <string name="tag_usage_info_hr">Српски ТАГ уређај у Републици Хрватској можете користити искључиво на деоницама аутопутева које су у надлежности компаније Hrvatske autoceste d.o.o. Загреб:</string>
-    <string name="highway_a1">Аутопут A1:</string>
-    <string name="highway_a3">Аутопут A3:</string>
-    <string name="highway_a4">Аутопут A4:</string>
-    <string name="highway_a5">Аутопут A5:</string>
-    <string name="highway_a6">Аутопут A6:</string>
-    <string name="highway_a7">Аутопут A7:</string>
-    <string name="highway_a11">Аутопут A11:</string>
     <string name="route_zagreb_split_dubrovnik" translatable="false">Zagreb - Split - Dubrovnik</string>
     <string name="routes_zagreb_istok_lipovac_and_bregana" translatable="false">Zagreb istok - Lipovac i Zagreb - Bregana</string>
     <string name="route_zagreb_sveta_helena_gorican" translatable="false">Zagreb Sveta Helena - Goričan</string>
@@ -426,54 +43,422 @@
     <string name="route_zagreb_rijeka" translatable="false">Zagreb – Rijeka</string>
     <string name="route_rupa" translatable="false">Rupa</string>
     <string name="route_zagreb_sisak" translatable="false">Zagreb – Sisak</string>
-    <string name="tag_registration_plate_notice">Приликом регистрације ТАГ уређаја на ХАЦ порталу уносите стварну регистарску ознаку возила у коме ћете користити ТАГ уређај.</string>
-    <string name="tag_registration_plate_notice_extra">Уколико желите да на Toll4All корисничком порталу имате приказ транзита насталих у Хрватској, потребно је да на HAC порталу у опцији Кориснички рачун - Приволе вањским сервисима, прихватите дељење података са Toll4All (Путеви Србије).</string>
-    <string name="check_status_on_hac_portal">Проверите статус на ХАЦ порталу</string>
-    <string name="link_login_to_hac">Пријави се на HAC портал</string>
-    <string name="facebook_text">Пратите нас на Фејсбуку и сазнајте први све новости о погодностима Т4А система.</string>
-    <string name="instagram_text">Пратите нас на Инстаграму и сазнајте први све новости о погодностима Т4А система.</string>
     <string name="socialNetworksTitle" translatable="false">TOLL4ALL</string>
     <string name="facebook" translatable="false">Facebook</string>
     <string name="instagram" translatable="false">Instagram</string>
-    <string name="jp_putevi_srbije">Путеви Србије д.о.о.</string>
-    <string name="no_invoices">Нема рачуна за изабрану земљу</string>
-    <string name="confirm_serial_number">Потврдите серијски број</string>
-    <string name="permission_denied_message">Дозвола је одбијена</string>
-    <string name="camera_permission_required_message">Потребна је дозвола за приступ камери. Можете је омогућити у подешавањима.</string>
-    <string name="camera_not_available_message">Камера није доступна.</string>
-    <string name="notification_permission_required_message">Потребна је дозвола за обавештења. Можете је омогућити у подешавањима.</string>
-    <string name="deactivate_tag">Деактивирај</string>
-    <string name="activate_tag">Активирај Таг</string>
-    <string name="deactivate_tag_text">Желите да деактивирате таг?</string>
-    <string name="activate_tag_text">"Желите да активирате таг?  "</string>
-    <string name="activate_tag_successful">Успешно сте активирали Таг</string>
-    <string name="deactivate_tag_successful">Успешно сте деактивирали Таг</string>
-    <string name="deactivate_tag_title">Деактивирај таг</string>
-    <string name="activate_tag_title">Активирај таг</string>
-    <string name="of_text">Од</string>
-    <string name="from_button">До</string>
-    <string name="back_button">Назад</string>
-    <string name="page_text">Страница</string>
-    <string name="croatian_reclamation">Рекламацију за пролазак у Републици Хрватској морате поднети на HAC порталу.</string>
-    <string name="please_select_country">Молимо изаберите државу</string>
-    <string name="limit_reclamation">Није могуће послати приговор више од два пута. За додатне информације можете контактирати Кориснички центар на бесплатном броју телефона 0800 111 004.</string>
-    <string name="prolasci_info">Приказани су проласци за последњих 30 дана.\nДодирните * за филтрирање свих пролазака.</string>
-    <string name="touch_info">Додирните</string>
-    <string name="buy_tag_online">Купи таг онлајн</string>
-    <string name="buy_tag_online_title">КУПИ ТАГ ОНЛАЈН</string>
-    <string name="tag_purchase_online_description">Таг за електронску наплату путарине сада можете једноставно купити и онлајн.</string>
-    <string name="buy_tag">Купи Таг</string>
-    <string name="export_pdf">Извоз PDF-а</string>
-    <string name="export_csv">Извоз CSV-а</string>
-    <string name="complaint_number_label">Бр. рекламације %d</string>
-    <string name="euro_currency">ЕУР</string>
-    <string name="action_retry">ПОНОВИ</string>
-    <string name="cards_hac_checkbox">Сагласан/Сагласна сам да се моји лични подаци проследе HAC-у у циљу наставка процеса регистрације TAG уређаја.</string>
-    <string name="contact_person">Контакт особа</string>
-    <string name="field_contact_person_name_required">Поље Име контакт особе је обавезно.</string>
-    <string name="field_contact_person_surname_required">Поље Презиме контакт особе је обавезно.</string>
-    <string name="republica_srpska">Р. Српска</string>
-    <string name="republic_of_serbia">Република Српска</string>
-    <string name="notes_serbian_tag_in_republic_serbia">Напомене за коришћење српског ТАГ-а у Републици Српској</string>
-    <string name="click_registration_republic_serbia">Регистрација ТАГ уређаја, додавање платне картице, наплата пролазака и рекламације су у надлежности компаније Аутопутеви РС д.о.о. Бања Лука. Приговоре/питања/рекламације можете упутити на телефон +387 51 893 995 или на е-пошту: korisnicka.podrska@autoputevirs.com.\n\nНакон успешног додавања платне картице за коришћење ТАГ-а у Републици Српској, потребно је до 15 мин да се статус тага за Републику Српску на корисничком порталу промени у Активан.</string>
+
+    <string-array name="language_options_intro">
+        <item>SRP</item>
+        <item>СРП</item>
+        <item>ENG</item>
+    </string-array>
+
+    <string name="ime">Name</string>
+    <string name="surname">Surname</string>
+    <string name="address">Address</string>
+    <string name="city">City</string>
+    <string name="Zip_Code">Zip Code</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
+    <string name="passage_history">Toll History</string>
+    <string name="search">Search</string>
+    <string name="tag_serial_number">Tag serial number</string>
+    <string name="complaint">Complaint</string>
+    <string name="refund_request">Refund Request</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="enter_email_for_password_reset">Enter your email address
+        and instructions for resetting your password will be sent to your email.</string>
+    <string name="hint_email">E-mail</string>
+    <string name="hint_password">Password</string>
+    <string name="button_confirm">Confirm</string>
+    <string name="button_sing_up">Login</string>
+    <string name="button_skip_page" translatable="true">Skip</string>
+    <string name="back_to_login_page">Back to login page</string>
+    <string name="all_rights_reserved">© 2023. Open Balkan ENP. All rights reserved</string>
+    <string name="my_tags">My Tags</string>
+    <string name="status">Status</string>
+    <string name="add_tag">Add Tag</string>
+    <string name="lost_tag">Lost Tag</string>
+    <string name="button_close">Close</string>
+    <string name="dialog_lost_tag_message">After submitting the report, the tag will be blocked. If you find the tag, you can submit an activation request for the tag.</string>
+    <string name="refund_request_explanation">If you had funds on your Tag device when switching from prepaid mode to Toll4ALL, please fill out the form below to have those funds transferred to your bank account. When filling out the form, please attach the document you received when switching the TAG at the sales point. Upon receiving your request, we will verify it in our system and proceed with the refund to your desired bank account.</string>
+    <string name="amount">Amount</string>
+    <string name="bank_account">Bank Account</string>
+    <string name="bank">Bank</string>
+    <string name="send">Send</string>
+    <string name="registration_text">Registration of ETC/TAG device SERBIA</string>
+    <string name="tags_registration_hint">Please enter the registration plate.\nThe verification
+        code is the registration plate.\nAll fields are mandatory.</string>
+    <string name="serial_number">Serial number</string>
+    <string name="verification_code">Verification code</string>
+    <string name="name_individual">Name</string>
+    <string name="serbia">Serbia</string>
+    <string name="macedonia">N. Macedonia</string>
+    <string name="croatia">Croatia</string>
+    <string name="montenegro">Montenegro</string>
+    <string name="welcome_back">Welcome back</string>
+    <string name="my_invoices">My Invoices</string>
+    <string name="fragment_verification">Verification</string>
+    <string name="verification_code_not_received">Did you not receive the verification code?</string>
+    <string name="confirm">Confirm</string>
+    <string name="email">Email</string>
+    <string name="verification_code_sent_email">Verification code has been sent to your email</string>
+    <string name="category">Category</string>
+    <string name="registration">Registration</string>
+    <string name="my_profile">My Profile</string>
+    <string name="basic_information">Basic Information</string>
+    <string name="change_password">Change Password</string>
+    <string name="payment_methods">Payment Methods</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="deactivate_account">Deactivate Account</string>
+    <string name="login_my_profile">My profile</string>
+    <string name="login_to_existing_account">Login to existing account</string>
+    <string name="i_forgot_my_password"><u>I forgot my password</u></string>
+    <string name="create_business_account">Create business account</string>
+    <string name="customer_support">Customer support</string>
+    <string name="privacy_terms">Privacy terms</string>
+    <string name="country">Country</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="password_changed">Password changed</string>
+    <string name="you_will_be_asked_to_login_again">You need to sign in to your account again.</string>
+    <string name="email_address_validation_successful">Email address validation successful!</string>
+    <string name="resend_it">Resend it.</string>
+    <string name="address_and_number">Address and number</string>
+    <string name="business_account">Business account</string>
+    <string name="personal_account">Personal account</string>
+    <string name="company_name">Company name</string>
+    <string name="registration_number">Registration Number</string>
+    <string name="tax_identification_number">Tax Identification Number</string>
+    <string name="support_text">Support</string>
+    <string name="terms_and_conditions">Terms and Privacy</string>
+    <string name="all_requests">All requests</string>
+    <string name="button_request">Request</string>
+    <string name="change_profile_picture">Change profile picture</string>
+    <string name="pay_securely">Pay securely using your credit card.</string>
+    <string name="mobile_provider_mts">Mobile Provider (MTS)</string>
+    <string name="pay_with_mobile_bill">Conveniently pay with your monthly mobile bill.</string>
+    <string name="enter_mobile">Enter your mobile number to receive a verification code via SMS.</string>
+    <string name="contact_number">Contact number</string>
+    <string name="verification_code_sent">The verification code has been sent to your phone via SMS.</string>
+    <string name="add_credit_card">Add Credit Card</string>
+    <string name="position_card">Position your debit or credit card within the scanning frame.</string>
+    <string name="scan_card">Scan Card</string>
+    <string name="add_manually">Add manually</string>
+    <string name="fill_all_fields">Please fill in all fields before proceeding further.</string>
+    <string name="invoice_details">Invoice Details</string>
+    <string name="lorem_ipsum">Lorem Ipsum</string>
+    <string name="order_number">Order number</string>
+    <string name="credit_card_successful">The credit card has been successfully added.</string>
+    <string name="tag_confirmed">Tag confirmed</string>
+    <string name="name_and_surname">Name and surname</string>
+    <string name="tag">Tag</string>
+    <string name="license_plate_number">License plate number</string>
+    <string name="country_of_passage">Country of passage</string>
+    <string name="create_a_new_account">Create a new account</string>
+    <string name="settings">Settings</string>
+    <string name="allow_push_notifications">Allow push notifications</string>
+    <string name="change_language">Change language</string>
+    <string name="all">All</string>
+    <string name="confirm_lost_tag">Confirm the lost tag</string>
+    <string name="cancel">Cancel</string>
+    <string name="show_all_tags">Show all TAGS</string>
+    <string name="date">Date</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="tool_history">Toll History</string>
+    <string name="reset"><u>Reset</u></string>
+    <string name="tag_added_successfully">You have successfully added the TAG.</string>
+    <string name="total">Total</string>
+    <string name="account_number">Invoice number</string>
+    <string name="to_submit_a_complaint">To submit a complaint, please fill in all the fields</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="pay_now">Pay now</string>
+    <string name="choose_your_country">Choose your country</string>
+    <string name="expiration_date">Expiration date</string>
+    <string name="notification">Notification</string>
+    <string name="permissions_title">Permissions</string>
+    <string name="permission_subtitle">Are you sure you want to remove the application\'s ability to receive notifications?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="remove_card"><u>Remove card</u></string>
+    <string name="loading_data">Loading data…</string>
+    <string name="contact_support">Contact our customer support.</string>
+    <string name="support_dialog_message">Message</string>
+    <string name="support_successful_mail">Successfully sent</string>
+    <string name="support_successful_massage">You have successfully submitted mail to us. Someone will get back to you.</string>
+    <string name="qr_code_scanning">Qr Code Scanning</string>
+    <string name="scan_qr_code">Please scan the QR code from the contract.</string>
+    <string name="speed_up_registration">In this way, you will speed up the registration process.</string>
+    <string name="api_call_error">Api Call Error</string>
+    <string name="password_repeat_error_message">Passwords do not match.</string>
+    <string name="password_error_message">New password field must contain at least 8 characters</string>
+    <string name="enter_old_password_message">Field old password is mandatory</string>
+    <string name="repeat_the_new_password">Repeat the new password.</string>
+    <string name="enter_support_message">Enter the message text.</string>
+    <string name="create_account">Create T4A account</string>
+    <string name="all_fields_are_mandatory">All fields are mandatory.</string>
+    <string name="change_successfully_saved">Change successfully saved.</string>
+    <string name="please_connect_to_the_internet">Please connect to the internet.</string>
+    <string name="general_terms_and_conditions">General Terms and Conditions</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="choose_country_and_payment">Choose country and payment</string>
+    <string name="primary_card">Primary card</string>
+    <string name="confirm_delete_card">Confirm delete card</string>
+    <string name="are_you_sure_you_want_to_delete_the_card">Are you sure you want to delete the card?</string>
+    <string name="choose_primary_card">Choose primary</string>
+    <string name="card_successfully_deleted">Card successfully deleted</string>
+    <string name="card_not_deleted">Card not deleted</string>
+    <string name="tags_with_serial_not_found">Tags with serial not found</string>
+    <string name="reported_lost_tag_successfully">You have successfully reported the lost tag.</string>
+    <string name="blocked_lost_tag">Blocked - Lost Tag</string>
+    <string name="licence_plate">Enter registration plate</string>
+    <string name="input">Input</string>
+    <string name="enter_complaint_reason">Enter the reason for the complaint</string>
+    <string name="enter_objection_reason">Enter the reason for the objection</string>
+    <string name="bank_account_number">Account Number</string>
+    <string name="bank_name">Bank name</string>
+    <string name="registered_complaint">Complaint has been registered</string>
+    <string name="br_registration">Complaint No.</string>
+    <string name="objection">Objection</string>
+    <string name="object_of_complaint">Subject of the objection:</string>
+    <string name="subject_date">File date:</string>
+    <string name="response_to_toll_complaint">Response to the complaint regarding the amount of toll collection by the ETC device</string>
+    <string name="subject_number">Subject Number</string>
+    <string name="object_complaint_number">File number to which the objection relates:</string>
+    <string name="bill_downloaded_successfully">The bill has been downloaded successfully.</string>
+    <string name="please_fill_all_required_data">Please fill all required data</string>
+    <string name="select_date">Select date</string>
+    <string name="please_enter_date_manually">Please enter date manually</string>
+    <string name="response_to_complaint">Response to the complaint about the correctness of the device for ENP</string>
+    <string name="response_to_report">Response to the report of a lost / stolen device for ENP</string>
+    <string name="objection_content">Content of the objection: (clearly state the reasons for the objection)</string>
+    <string name="complaint_min_length">The Reason field must contain at least 10 characters.</string>
+    <string name="please_enter_all_required_data">Please enter all required data.</string>
+    <string name="no_passage_data">You have no passages in the last 30 days.</string>
+    <string name="no_passage_data_special">You have no passages for the selected period</string>
+    <string name="payment_successfully">Payment has been successfully completed.</string>
+    <string name="please_select_tag">Please select a tag.</string>
+    <string name="request_recorded">Your request has been recorded and forwarded for further processing.</string>
+    <string name="you_have_no_refund_requests">You have no refund requests.</string>
+    <string name="confirm_change_primary_card">Are you sure you want to change the primary card?</string>
+    <string name="confirm_primary_card">Confirm primary card</string>
+    <string name="primary_card_changed">Primary card has been successfully changed.</string>
+    <string name="all_country">All</string>
+    <string name="user_profile">User Profile</string>
+    <string name="personal_data">Personal Data</string>
+    <string name="password_change">Password Change</string>
+    <string name="hint_registration_plate">Registration Plate</string>
+    <string name="hint_enter_description">Enter description</string>
+    <string name="hint_bank_account_number">Bank account number</string>
+    <string name="hint_bank_name">Enter bank name</string>
+    <string name="my_cards">My Cards</string>
+    <string name="cards">Cards</string>
+    <string name="end_date_check">end date can not be before start date</string>
+    <string name="last_item">No more passage data for this tag</string>
+    <string name="add_card_home">Add Card</string>
+    <string name="text_add_card">You currently have no added cards. Please add a card.</string>
+    <string name="no_notifications">No notifications</string>
+    <string name="no_notifications_received">No notifications have been received by this user</string>
+    <string name="file_downloaded">File Downloaded</string>
+    <string name="download_failed">Download failed</string>
+    <string name="perm_required">Permission is required please grant.</string>
+    <string name="title_dialog_forgot_pass">Forgotten password</string>
+    <string name="error_dialog_forgot_pass">An error has occurred.</string>
+    <string name="subtitle_dialog_forgot_pass">The email was not successfully sent to the user.</string>
+    <string name="subtitle_forgot_pass">The email has been sent to the user.</string>
+    <string name="button_try_again">Try again</string>
+    <string name="enter_your_email">The email field is mandatory.</string>
+    <string name="no_connection_title">Connection Issue</string>
+    <string name="checking_for_connection">Checking For Connection</string>
+    <string name="connection_restored">Connection Restored</string>
+    <string name="no_internet">No internet connection.</string>
+    <string name="offline_using_stored_data">You are currently not connected to the internet. Saved data is being displayed.</string>
+    <string name="multiple_payment_cards_for_country">You can use multiple different payment cards for one country.</string>
+    <string name="tag_device_payment_method_north_macedonia">If you want to use your TAG device on the roads in North Macedonia, please add a valid payment card.</string>
+    <string name="tag_device_payment_method_serbia">If you want to use your TAG device on the roads in Serbia, please add a valid payment card.</string>
+    <string name="tag_device_payment_method_montenegro">If you want to use your TAG device on the roads in Montenegro, please add a valid payment card</string>
+    <string name="text_no_refund_tags">You do not have tags for which you can request a refund.</string>
+    <string name="text_no_my_tags">You currently have no added tags. Please add your tag.</string>
+    <string name="no_tool_history">Your passes will be displayed here.</string>
+    <string name="enter_old_password">Enter old password</string>
+    <string name="enter_new_password">Enter new password</string>
+    <string name="retype_new_password">Retype new password</string>
+    <string name="greece">Greece</string>
+    <string name="bosnia">Bosna and Hercegovina</string>
+    <string name="enter_your_last_name">Enter your last name</string>
+    <string name="enter_your_email_address">Enter your email address</string>
+    <string name="enter_your_first_name">Enter your first name</string>
+    <string name="enter_the_company_name">Enter the company name</string>
+    <string name="enter_company_registration_number">Enter the company registration number</string>
+    <string name="enter_your_phone_number">Enter your phone number</string>
+    <string name="enter_your_address">Enter your address</string>
+    <string name="enter_your_city">Enter your city</string>
+    <string name="enter_your_postal_code">Enter your postal code</string>
+    <string name="enter_your_country">Enter your country</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="hint_enter_email">Enter your email</string>
+    <string name="choose_language">Choose language</string>
+    <string name="from_gallery">From gallery</string>
+    <string name="select_your_profile_picture">Select your profile picture.</string>
+    <string name="dialog_select_country_for_card">Select the country for which you are adding a card.</string>
+    <string name="action_cannot_be_undone">This action cannot be undone, and it will permanently delete the selected card from your account.</string>
+    <string name="remove_card_button">Remove card</string>
+    <string name="hint_enter_serial_number">Enter serial number</string>
+    <string name="enter_amount">Enter the amount</string>
+    <string name="enter_bank_account">Enter the full bank account number.</string>
+    <string name="enter_name_bank">Field Bank is required.</string>
+    <string name="download_timeout">Molimo sačekajte 5 sekundi prije novog preuzimanja.</string>
+    <string name="enter_content_of_complaint">Enter the content of the complaint</string>
+    <string name="hint_enter_verification_code">Enter the verification code</string>
+    <string name="serbian_passage">Serbia</string>
+    <string name="montenegro_passage">Montenegro</string>
+    <string name="north_macedonian_passage">North Macedonia</string>
+    <string name="value">Currency</string>
+    <string name="message">Message</string>
+    <string name="click_me">Click me</string>
+    <string name="e_mail">E-mail</string>
+    <string name="reason_for_contact">Reason</string>
+    <string name="what_is_your_message">What is your message</string>
+    <string name="found_tag">Found Tag</string>
+    <string name="confirm_found_tag">Confirm the found tag</string>
+    <string name="report_found_tag">I declare that the tag has been found, and I would like to enable its reuse.</string>
+    <string name="add_card_for_serbia_message">You need to add a card for Serbia first.</string>
+    <string name="reason_for_deactivation">Reason for deactivation</string>
+    <string name="deactivation_request">Deactivation Request</string>
+    <string name="email_not_valid">Email not valid</string>
+    <string name="first_name_mandatory">The name field is required.</string>
+    <string name="last_name_mandatory">The surname field is required.</string>
+    <string name="phone_mandatory">The phone field is required.</string>
+    <string name="address_mandatory">The address field is required.</string>
+    <string name="city_mandatory">The city field is required.</string>
+    <string name="company_mandatory">The company name field is required.</string>
+    <string name="registration_mandatory">The identification number field is required.</string>
+    <string name="contact_support_fill_fields">To contact customer support, please fill in all fields.</string>
+    <string name="reason_for_contact_support">Enter the reason for your request</string>
+    <string name="provide_request_details">Provide the details of your request</string>
+    <string name="inactive_card">Expired/Deleted Card</string>
+    <string name="fill_in_all_fields">Fill in all fields.</string>
+    <string name="enter_valid_email_address">Enter a valid email address.</string>
+    <string name="account_deactivation_notice">Dear users, please use this contact form exclusively for the purpose of fully deactivating your account. All other requests submitted via this form will not be processed.</string>
+    <string name="pdf_invoices">PDF Invoices</string>
+    <string name="listing_of_passages">" Listing of passages"</string>
+    <string name="export">Export</string>
+    <string name="csv_saved">CSV saved in Documents</string>
+    <string name="bill_number">Bill number</string>
+    <string name="time_of_passage">Time of passage</string>
+    <string name="pay_ramp">Pay ramp</string>
+    <string name="price">Price</string>
+    <string name="please_select_dates">Please Select Dates</string>
+    <string name="formatting_error">Formatting Error</string>
+    <string name="please_select_one_tag">History passage export is possible only for one TAG or for all TAGs</string>
+    <string name="case_number_info">The file number refers to the number under which your complaint has been
+        filed and is included in the response you received from us. Objections with incorrect or nonexistent file numbers will not be considered.</string>
+    <string name="server_error_msg">Server error</string>
+    <string name="hint_select_bank">Select a bank</string>
+    <string name="refund_request_note">Note: Refunds are only possible to current accounts of banks operating in the Republic of Serbia.</string>
+    <string name="language_changed">The language has been changed</string>
+    <string name="enter_message_support">Enter a message for customer support</string>
+    <string name="invalid_account_number">Invalid account number</string>
+    <string name="enter_email_password">Please enter email and password.</string>
+    <string name="all_status_tags">All</string>
+    <string name="delete_picture">Delete Picture</string>
+    <string name="reported_found_tag_successfully">You have successfully reported the found tag.</string>
+    <string name="pib">VAT Number (Value Added Tax Number)</string>
+    <string name="enter_pib">Enter the VAT Number</string>
+    <string name="pib_mandatory">The VAT Number field is required</string>
+    <string name="pib_invalid_length">The VAT Number field must contain between 9 and 13 characters.</string>
+    <string name="pib_not_cantains_nine_digits">The VAT Number field must contain 9 digits.</string>
+    <string name="cards_terms_text_full">I agree with General Terms and Conditions and Privacy Policy</string>
+    <string name="card_terms_left_clickable">General Terms and Conditions</string>
+    <string name="card_term_right_clickable">Privacy Policy</string>
+    <string name="version">Version:</string>
+    <string name="next">Next</string>
+    <string name="welcome_to_toll_for_all">Welcome to Toll For All</string>
+    <string name="what_is_toll_for_all_system">What is Toll For All system?</string>
+    <string name="toll_for_all_description">Toll For All is a platform that provides         integrated toll collection services in European countries. No more waiting at toll booths and         currency exchanges. With the Toll For All platform, a new era of mobility has arrived.</string>
+    <string name="toll_for_all_supported_countries">Countries that support Toll For All system</string>
+    <string name="serbia_eng">Serbia</string>
+    <string name="macedonia_eng">N. Macedonia</string>
+    <string name="montenegro_eng">Montenegro</string>
+    <string name="advantages_of_the_toll_for_all_system">Advantages of the Toll For All system</string>
+    <string name="with_a_one_tag_through_multiple_countries">With a one tag through multiple countries</string>
+    <string name="payment_via_the_phone_bill">Payment via the phone bill</string>
+    <string name="payment_directly_from_the_user_s_account">Payment directly from the user\'s account.</string>
+    <string name="no_waiting_in_line">No waiting in line</string>
+    <string name="no_currency_exchange">No currency exchange</string>
+    <string name="permission_granted">Permission Granted</string>
+    <string name="notification_title">Allow T4A to send you notifications</string>
+    <string name="notification_subtitle">Notifications are used for downloading invoices and exporting tables in the passage history.</string>
+    <string name="listing_of_passages_downloaded_successfully">The listing of passages was successfully downloaded.</string>
+    <string name="send_bill_to_email">Send bill to email</string>
+    <string name="bill_sent_to_email">The bill has been sent to your email address.</string>
+    <string name="field_bank_account_isrequired">The bank account field must contain 13 digits.</string>
+    <string name="access_denied">Access denied</string>
+    <string name="only_t4all_users_access_denied">It is currently not possible to log in accounts that are not T4All. Please use the WEB portal.</string>
+    <string name="tag_registration_instruction_hr">To register tags in Croatia, you need to select the tags you want to register and click the “Register” button.</string>
+    <string name="notes_serbian_tag_in_croatia">"Notes on using the Serbian TAG device in the Republic of Croatia  "</string>
+    <string name="activation_successful_enp_tag_device">"You have successfully activated the ENP/TAG device.  "</string>
+    <string name="pdf_dialog_title_error">PDF export issue</string>
+    <string name="pdf_dialog_subtitle_error">Can\'t load PDF data, please try again.</string>
+    <string name="registration_instructions_croatian_tags">Instructions for registering the Serbian tag</string>
+    <string name="error_loading_instructions">"Error loading the instructions  "</string>
+    <string name="general_provisions">"General Provisions "</string>
+    <string name="click_registration_info">By clicking the \"Registration\" button, you will be redirected to the WEB portal of Hrvatske autoceste. The registration of the TAG device, adding a payment card, toll payment, and complaints are under the responsibility of the company Hrvatske autoceste d.o.o. Zagreb (HAC). Inquiries/complaints can be sent by phone at +385 1 6504 899 or via email: info-naplata@hac.hr</string>
+    <string name="tag_registration_plate_notice">"When registering the TAG device on the HAC portal, enter the actual license plate number of the vehicle in which you will use the TAG device.  "</string>
+    <string name="tag_usage_croatia">"Use of the Serbian TAG device in Croatia "</string>
+    <string name="tag_usage_info_hr">"The Serbian TAG device can be used in the Republic of Croatia only on motorway sections managed by the company Hrvatske autoceste d.o.o. Zagreb:  "</string>
+    <string name="highway_a1">Highway A1:</string>
+    <string name="highway_a3">Highway A3:</string>
+    <string name="highway_a4">Highway A4:</string>
+    <string name="highway_a5">Highway A5:</string>
+    <string name="highway_a6">Highway A6:</string>
+    <string name="highway_a7">Highway A7:</string>
+    <string name="highway_a11">Highway A11:</string>
+    <string name="tag_registration_plate_notice_extra">If you want to have a display of transits made in Croatia on the Toll4All user portal, it is necessary to accept data sharing with Toll4All (Roads of Serbia) on the HAC portal under the option User Account - Consents to External Services.</string>
+    <string name="check_status_on_hac_portal">Check status on the HAC portal</string>
+    <string name="link_login_to_hac">Log in to the HAC portal</string>
+    <string name="facebook_text">Follow us on Facebook and be the first to learn all the news about T4A benefits.</string>
+    <string name="instagram_text">Follow us on Instagram and be the first to learn all the news about T4A benefits.</string>
+    <string name="jp_putevi_srbije">" Putevi Srbije d.o.o."</string>
+    <string name="no_invoices">No bills for selected country available</string>
+    <string name="confirm_serial_number">Confirm the serial number</string>
+    <string name="permission_denied_message">Permission denied</string>
+    <string name="camera_permission_required_message">Camera access permission is required. You can enable it in settings.</string>
+    <string name="camera_not_available_message">Camera is not available.</string>
+    <string name="notification_permission_required_message">Notification permission is required. You can enable it in settings.</string>
+    <string name="deactivate_tag">Deactivate</string>
+    <string name="activate_tag">Activate Tag</string>
+    <string name="deactivate_tag_text">"Do you want to deactivate the tag?  "</string>
+    <string name="activate_tag_text">Do you want to activate the tag?</string>
+    <string name="activate_tag_successful">Successfully activated Tag</string>
+    <string name="deactivate_tag_successful">Successfully deactivated Tag</string>
+    <string name="deactivate_tag_title">"Deactivate tag "</string>
+    <string name="activate_tag_title">Activate tag</string>
+    <string name="back_button">Back</string>
+    <string name="from_button">From</string>
+    <string name="of_text">Of</string>
+    <string name="page_text">Page</string>
+    <string name="croatian_reclamation">You must submit a reclamation for the passage in the Republic of Croatia on the HAC portal.</string>
+    <string name="please_select_country">Please Select Country</string>
+    <string name="limit_reclamation">It is not possible to submit a complaint more than two times. For additional information, you can contact the Customer Service Center at the toll-free phone number 0800 111 004.</string>
+    <string name="prolasci_info">Passages from the last 30 days have been displayed.\nTap * to filter all passages.</string>
+    <string name="touch_info">Tap</string>
+    <string name="buy_tag_online">Buy tag online</string>
+    <string name="buy_tag_online_title">BUY TAG ONLINE</string>
+    <string name="tag_purchase_online_description">The electronic toll collection tag can now be easily purchased online.</string>
+    <string name="buy_tag">Buy Tag</string>
+    <string name="export_pdf">Export PDF</string>
+    <string name="export_csv">Export CSV</string>
+    <string name="complaint_number_label">Complaint No. %d</string>
+    <string name="euro_currency">ЕUR</string>
+    <string name="action_retry">RETRY</string>
+    <string name="cards_hac_checkbox">I agree that my personal data may be forwarded to HAC for the purpose of continuing the TAG device registration process.</string>
+    <string name="contact_person">"Contact person "</string>
+    <string name="field_contact_person_name_required">The Contact Person Name field is required.</string>
+    <string name="field_contact_person_surname_required">The Contact Person Surname field is required.</string>
+    <string name="republica_srpska">R. Srpska</string>
+    <string name="republic_of_serbia">Republika Srpska</string>
+    <string name="notes_serbian_tag_in_republic_serbia">Notes on using the Serbian TAG in Republika Srpska</string>
+    <string name="click_registration_republic_serbia">Registration of the TAG device, adding a payment card, charging toll passages, and handling complaints are under the responsibility of the company Autoputevi RS DOO Banja Luka. Complaints/questions/claims can be submitted by phone at +387 51 893 995 or by email: korisnicka.podrska@autoputevirs.com.\n\nAfter successfully adding a payment card for using the TAG in Republika Srpska, it may take up to 15 minutes for the tag status for Republika Srpska on the customer portal to change to Active.</string>
 </resources>

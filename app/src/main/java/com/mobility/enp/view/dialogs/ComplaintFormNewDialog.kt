@@ -36,6 +36,7 @@ import com.mobility.enp.util.toast
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.ui_models.BankUIModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
+import com.mobility.enp.viewmodel.toll_history.ComplaintValidationResult
 import com.mobility.enp.viewmodel.toll_history.ComplaintViewModel
 import kotlin.getValue
 
@@ -202,43 +203,37 @@ class ComplaintFormNewDialog : DialogFragment() {
     private fun handleComplaintFormSubmission(complaintId: Int, showBankForm: Boolean) {
         val licencePlate = binding.licencePlateVal.text.toString().trim()
         val reasonForComplaint = binding.reasonForComplaintVal.text.toString().trim()
+        val selectedBankPosition = binding.bankSpinner.selectedItemPosition
+        val uniqueNumber = binding.uniqueNumbersSpinner.selectedItem?.toString()?.trim() ?: ""
+        val centerAccountNumber = binding.etCenterAccountNumber.text.toString().trim()
+        val rightAccountNumber = binding.etRightAccountNumber.text.toString().trim()
 
-        if (licencePlate.isEmpty() || reasonForComplaint.isEmpty()) {
-            toast(getString(R.string.please_enter_all_required_data))
+        val validation = viewModel.validate(
+            licencePlate = licencePlate,
+            reasonForComplaint = reasonForComplaint,
+            showBankForm = showBankForm,
+            selectedBankPosition = selectedBankPosition,
+            uniqueNumber = uniqueNumber,
+            centerAccountNumber = centerAccountNumber,
+            rightAccountNumber = rightAccountNumber
+        )
+
+        val errorRes = when (validation) {
+            ComplaintValidationResult.Valid -> null
+            ComplaintValidationResult.EmptyRequiredFields -> R.string.please_enter_all_required_data
+            ComplaintValidationResult.ReasonTooShort -> R.string.complaint_min_length
+            ComplaintValidationResult.NoBankSelected -> R.string.enter_name_bank
+            ComplaintValidationResult.MissingBankFields -> R.string.enter_bank_account
+            ComplaintValidationResult.InvalidAccountNumber -> R.string.invalid_account_number
+        }
+
+        if (errorRes != null) {
+            toast(getString(errorRes))
             return
         }
 
-        // Provera minimalne dužine razloga žalbe
-        if (reasonForComplaint.length <= 10) {
-            toast(getString(R.string.complaint_min_length))
-            return
-        }
-
-        if (showBankForm) {
-            val selectedItem = binding.uniqueNumbersSpinner.selectedItem
-            val uniqueNumber = selectedItem?.toString()?.trim() ?: ""
-            val centerAccountNumber = binding.etCenterAccountNumber.text.toString().trim()
-            val rightAccountNumber = binding.etRightAccountNumber.text.toString().trim()
-            val selectedBankPosition = binding.bankSpinner.selectedItemPosition
-
-            if (selectedBankPosition == 0) {
-                toast(getString(R.string.enter_name_bank))
-                return
-            }
-
-            if (uniqueNumber.isEmpty() || centerAccountNumber.isEmpty() || rightAccountNumber.isEmpty()) {
-                toast(getString(R.string.enter_bank_account))
-                return
-            }
-
-            // Provera dužine brojeva računa
-            val isValidAccount = centerAccountNumber.length == 13 && rightAccountNumber.length == 2
-            if (!isValidAccount) {
-                toast(getString(R.string.invalid_account_number))
-                return
-            }
-
-            val complaintBody = ComplaintBodyNew(
+        val body = if (showBankForm) {
+            ComplaintBodyNew(
                 itemId = complaintId,
                 complaintRegistration = licencePlate,
                 complaintText = reasonForComplaint,
@@ -247,15 +242,15 @@ class ComplaintFormNewDialog : DialogFragment() {
                 accountZr2 = centerAccountNumber,
                 accountZr3 = rightAccountNumber
             )
-            viewModel.submitComplaint(complaintBody)
         } else {
-            val complaintBody = ComplaintBodyNew(
+            ComplaintBodyNew(
                 itemId = complaintId,
-                complaintText = reasonForComplaint,
-                complaintRegistration = licencePlate
+                complaintRegistration = licencePlate,
+                complaintText = reasonForComplaint
             )
-            viewModel.submitComplaint(complaintBody)
         }
+
+        viewModel.submitComplaint(body)
     }
 
     private fun setupUniqueNumberSpinner(uniqueNumbers: List<Int>) {
@@ -343,6 +338,10 @@ class ComplaintFormNewDialog : DialogFragment() {
         etSecondTagPicker.backgroundTintList = null
         txCenterAccountNumber.setBoxBackgroundColorResource(R.color.white)
         uniqueNumbersSpinner.backgroundTintList = null
+
+        franchiseViewModel.franchiseModel.value?.franchisePrimaryColor?.let { color ->
+            applyBankFieldsFranchiseStyle(color)
+        }
     }
 
     private fun View.enableEdit() {
@@ -359,6 +358,7 @@ class ComplaintFormNewDialog : DialogFragment() {
 
                 binding.etSecondTagPicker.background = createModifiedDrawable(color)
 
+                val franchiseCursorColor = createFranchiseCursorColor(color)
                 val parent = binding.constraintLayout
 
                 for (i in 0 until parent.childCount) {
@@ -370,24 +370,45 @@ class ComplaintFormNewDialog : DialogFragment() {
                         editText?.textSelectHandle?.setTint(color)
                         editText?.setTextColor(color)
 
-                        val states = arrayOf(
-                            intArrayOf(android.R.attr.state_pressed),
-                            intArrayOf(android.R.attr.state_focused),
-                            intArrayOf()                               // default
-                        )
-
-                        val colors = intArrayOf(
-                            color,        // pressed
-                            color,        // focused
-                            color         // default
-                        )
-
-                        view.cursorColor = ColorStateList(states, colors)
+                        view.cursorColor = franchiseCursorColor
                     }
                 }
+
+                applyBankFieldsFranchiseStyle(color)
             }
         }
     }
+
+    private fun applyBankFieldsFranchiseStyle(@ColorInt color: Int) {
+        val franchiseCursorColor = createFranchiseCursorColor(color)
+
+        binding.txCenterAccountNumber.apply {
+            setBoxStrokeColorStateList(ColorStateList.valueOf(color))
+            cursorColor = franchiseCursorColor
+            editText?.apply {
+                textSelectHandle?.setTint(color)
+                setTextColor(color)
+            }
+        }
+
+        binding.etSecondTagPicker.apply {
+            cursorColor = franchiseCursorColor
+            editText?.apply {
+                textSelectHandle?.setTint(color)
+                setTextColor(color)
+            }
+        }
+    }
+
+    private fun createFranchiseCursorColor(@ColorInt color: Int): ColorStateList =
+        ColorStateList(
+            arrayOf(
+                intArrayOf(android.R.attr.state_pressed),
+                intArrayOf(android.R.attr.state_focused),
+                intArrayOf()
+            ),
+            intArrayOf(color, color, color)
+        )
 
     private fun createModifiedDrawable(@ColorInt newColor: Int): StateListDrawable {
         val selectedShape = GradientDrawable().apply {

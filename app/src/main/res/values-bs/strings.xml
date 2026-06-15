@@ -180,8 +180,8 @@
     <string name="response_to_complaint">Odgovor na prigovor o ispravnosti uređaja za ENP</string>
     <string name="response_to_report">Odgovor na prijavu izgubljenog/ukradenog uređaja za ENP</string>
     <string name="objection_content">Sadržaj prigovora: (jasno navedite razloge prigovora)</string>
-    <string name="complaint_min_length">Polje za žalbu mora sadržavati najmanje 10 znakova</string>
-    <string name="please_enter_all_required_data">Molimo unesite sve potrebne podatke</string>
+    <string name="complaint_min_length">Polje Razlog mora sadržavati najmanje 10 karaktera.</string>
+    <string name="please_enter_all_required_data">Molimo unesite sve potrebne podatke.</string>
     <string name="no_passage_data">Nemate prolazaka u posljednjih 30 dana.</string>
     <string name="no_passage_data_special">Nemate prolazaka za odabrani period</string>
     <string name="payment_successfully">Plaćanje je uspješno završeno.</string>
