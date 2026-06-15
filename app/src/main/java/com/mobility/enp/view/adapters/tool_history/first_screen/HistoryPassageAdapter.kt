@@ -60,10 +60,6 @@ class HistoryPassageAdapter(
                             currentPage = data[data.size - 1]?.currentPage ?: 0
                             lastPage = data[data.size - 1]?.lastPage ?: 0
 
-                            if (data.isNotEmpty()) { // sum of tags
-                                onInitDataSize(data[0]?.data?.records?.items?.size ?: 0)
-                            }
-
                             val newList = buildList {
                                 data.forEach { passage ->
                                     passage?.data?.records?.items?.let {
@@ -73,6 +69,8 @@ class HistoryPassageAdapter(
                             }
 
                             submitList(newList)
+
+                            onInitDataSize(newList.size)
 
                             onSumTags(newList.toSumTagsByCurrency())
                         }

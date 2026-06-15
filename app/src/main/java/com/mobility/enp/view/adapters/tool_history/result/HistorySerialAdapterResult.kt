@@ -48,6 +48,7 @@ class HistorySerialAdapterResult(
 
     companion object {
         const val TAG = "PrimaryPassageAdapter"
+        private var cachedItemHeight: Int = 0
 
         private object TagDiffCallback : DiffUtil.ItemCallback<Tag>() {
             override fun areItemsTheSame(oldItem: Tag, newItem: Tag): Boolean {
@@ -76,6 +77,8 @@ class HistorySerialAdapterResult(
             binding.nsScroll.visibility = View.INVISIBLE
             binding.cycler.visibility = View.INVISIBLE
             binding.cyclerTotalPrice.visibility = View.INVISIBLE
+
+            binding.nsScroll.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
             val itemSerialNumber = toolHistoryIndex.serialNumber
 
@@ -192,40 +195,71 @@ class HistorySerialAdapterResult(
         position: Int
     ) {
         binding.position = position
+        val maxItems = 3
+        val params = binding.nsScroll.layoutParams
 
-        val heightInDp = when (size) {
+        binding.cycler.isNestedScrollingEnabled = true
+        binding.nsScroll.isNestedScrollingEnabled = true
 
-            0 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_one_zero_items
-            )
-
-            1 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_one_item
-            )
-
-            2 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_two_items
-            )
-
-            3 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_three_items
-            )
-
-            else -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_more_items
-            )
-        }
-
-        binding.nsScroll.layoutParams.height = heightInDp
-        binding.nsScroll.requestLayout()
+        val density = binding.root.context.resources.displayMetrics.density
+        val paddingVertical = (5 * density).toInt()
+        val paddingHorizontal = (10 * density).toInt()
+        binding.cycler.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
+        binding.cycler.clipToPadding = false
 
         binding.nsScroll.visibility = View.VISIBLE
         binding.cycler.visibility = View.VISIBLE
 
-        binding.cycler.layoutManager =
-            LinearLayoutManager(binding.root.context)
+        binding.cycler.layoutManager = LinearLayoutManager(binding.root.context)
 
-        binding.executePendingBindings()
+        if (size == 0) {
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            binding.nsScroll.layoutParams = params
+            binding.nsScroll.requestLayout()
+            binding.executePendingBindings()
+            return
+        }
+
+        val applyHeight = {
+            val child = binding.cycler.getChildAt(0)
+            val itemHeight = if (child != null) {
+                val lp = child.layoutParams as? ViewGroup.MarginLayoutParams
+                val height = child.height + (lp?.topMargin ?: 0) + (lp?.bottomMargin ?: 0)
+                if (height > 0) {
+                    cachedItemHeight = height
+                }
+                height
+            } else if (cachedItemHeight > 0) {
+                cachedItemHeight
+            } else {
+                (140 * density).toInt()
+            }
+
+            val itemsToShow = if (size > maxItems) maxItems else size
+            params.height = (itemHeight * itemsToShow) + (paddingVertical * 2)
+
+            binding.nsScroll.layoutParams = params
+            binding.nsScroll.requestLayout()
+            binding.root.requestLayout()
+            binding.executePendingBindings()
+        }
+
+        val layoutListener = object : View.OnLayoutChangeListener {
+            override fun onLayoutChange(
+                v: View?,
+                left: Int, top: Int, right: Int, bottom: Int,
+                oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int
+            ) {
+                val child = binding.cycler.getChildAt(0)
+                if (child != null && child.height > 0) {
+                    binding.cycler.removeOnLayoutChangeListener(this)
+                    applyHeight()
+                }
+            }
+        }
+        binding.cycler.addOnLayoutChangeListener(layoutListener)
+
+        applyHeight()
     }
 
     private fun setNoPassage(binding: ToolHistoryIndexCardResultBinding, size: Int) {
