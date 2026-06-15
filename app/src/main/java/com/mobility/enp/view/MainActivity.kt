@@ -175,13 +175,11 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         // Listener za promene destinacija
-        navController.addOnDestinationChangedListener { _, destination, _ ->
+        navController.addOnDestinationChangedListener { _, destination, arguments ->
             Log.d(TAG, "destination: $destination")
             when (destination.id) {
 
                 R.id.homeFragment -> {
-
-
                     binding.toolbarShared.root.visibility = View.VISIBLE
                     binding.toolbarShared.backArrow.visibility = View.GONE
                     binding.toolbarShared.iconLogo.visibility = View.VISIBLE
@@ -196,7 +194,25 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                R.id.paymentAndPassageFragment, R.id.toolHistoryFragment, R.id.profileFragment, R.id.supportDialog, R.id.deactivateAccountDialog, R.id.pdfViewDialog, R.id.noInternetConnectionDialog -> {
+                R.id.objectionFormDialogNew, R.id.complaintFormNewDialog -> {
+                    val showBottomNav = arguments?.getBoolean("showBottomNav", false) == true
+                    if (showBottomNav) {
+                        binding.bottomNavigation.visibility = View.VISIBLE
+                        binding.toolbarShared.root.visibility = View.VISIBLE
+                        binding.toolbarShared.backArrow.visibility = View.GONE
+                        binding.toolbarShared.iconLogo.visibility = View.VISIBLE
+                        // + franchise logo logika ako treba
+                    } else {
+                        binding.bottomNavigation.visibility = View.GONE
+                        binding.toolbarShared.root.visibility = View.VISIBLE
+                        binding.toolbarShared.backArrow.visibility = View.VISIBLE
+                        binding.toolbarShared.iconLogo.visibility = View.GONE
+                        binding.toolbarShared.franchiserFlavorText.visibility = View.GONE
+                    }
+                }
+
+                R.id.paymentAndPassageFragment, R.id.toolHistoryFragment, R.id.profileFragment, R.id.supportDialog, R.id.deactivateAccountDialog, R.id.pdfViewDialog, R.id.noInternetConnectionDialog,
+                     R.id.tollHistoryMain-> {
                     // Ako je destinacija neki od ovih fragmenata, prikaži BottomNavigationView
 
                     if (franchiseViewModel.franchiseModel.value == null) {
@@ -279,9 +295,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         val locale = when (val userLanguage = SharedPreferencesHelper.getUserLanguage(newBase)) {
-            "cyr" -> Locale("sr_Cyrl", "RS")
-            "sr", "cnr" -> Locale("sr", "RS")
-            else -> Locale(userLanguage)
+            "cyr" -> Locale.forLanguageTag("sr-Cyrl-RS")
+            "sr" -> Locale.forLanguageTag("sr-Latn-RS")
+            "cnr" -> Locale.forLanguageTag("cnr")
+            else -> Locale.forLanguageTag(userLanguage)
         }
         Locale.setDefault(locale)
 
@@ -309,7 +326,7 @@ class MainActivity : AppCompatActivity() {
         fun logoutOnInvalidToken(context: Context, navController: NavController) {
             CoroutineScope(Dispatchers.IO).launch {
                 val database = DRoom.getRoomInstance(context)
-                database.loginDao().deleteAll()
+                database.clearAllData()
 
                 withContext(Dispatchers.Main) {
                     navController.navigate(R.id.action_global_loginFragment)
