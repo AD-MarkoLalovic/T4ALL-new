@@ -35,6 +35,7 @@ import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
 import com.mobility.enp.data.model.new_toll_history.complaint.ComplaintBodyNew
+import com.mobility.enp.data.model.new_toll_history.objection.ObjectionBodyNew
 import com.mobility.enp.data.model.new_toll_history.remote.dto.TollHistoryDto
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -365,4 +366,9 @@ interface ApiService {
         @Query("filter[date_from]") dataFrom: String,
         @Query("filter[date_to]") dateTo: String
     ): Response<TollHistoryDto>
+
+    @POST("api/v1/history/objection")
+    suspend fun postObjectionNew(
+        @Body data: ObjectionBodyNew
+    ): Response<Unit>
 }
