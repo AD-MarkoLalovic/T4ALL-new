@@ -69,6 +69,7 @@ class HistorySerialAdapter(
 
     companion object {
         const val TAG = "PrimaryPassageAdapter"
+        private var cachedItemHeight: Int = 0
 
         private object TagDiffCallback : DiffUtil.ItemCallback<Tag>() {
             override fun areItemsTheSame(oldItem: Tag, newItem: Tag): Boolean {
@@ -217,6 +218,14 @@ class HistorySerialAdapter(
                 listOfPassages.add(true)
                 hasPassages(listOfPassages)
 
+                val params = binding.root.layoutParams as? ViewGroup.MarginLayoutParams
+                params?.let {
+                    it.height = ViewGroup.MarginLayoutParams.WRAP_CONTENT
+                    it.bottomMargin = binding.root.context.resources.getDimensionPixelSize(R.dimen.dimens_10dp)
+                }
+                binding.root.layoutParams = params
+                binding.root.requestLayout()
+
                 binding.noPassage.visibility = View.GONE
                 binding.relativeTop.visibility = View.VISIBLE
                 binding.txtSerial.visibility = View.VISIBLE
@@ -248,28 +257,50 @@ class HistorySerialAdapter(
         if (size == 0) {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT
             binding.nsScroll.layoutParams = params
+            binding.nsScroll.requestLayout()
             return
         }
 
-        binding.cycler.post {
+        val applyHeight = {
             val child = binding.cycler.getChildAt(0)
 
             val itemHeight = if (child != null) {
                 val lp = child.layoutParams as? ViewGroup.MarginLayoutParams
-                child.height + (lp?.topMargin ?: 0) + (lp?.bottomMargin ?: 0)
+                val height = child.height + (lp?.topMargin ?: 0) + (lp?.bottomMargin ?: 0)
+                if (height > 0) {
+                    cachedItemHeight = height
+                }
+                height
+            } else if (cachedItemHeight > 0) {
+                cachedItemHeight
             } else {
                 (140 * density).toInt()
             }
 
-            if (size > maxItems) {
-                params.height = (itemHeight * maxItems) + (paddingVertical * 2)
-            } else {
-                params.height = ViewGroup.LayoutParams.WRAP_CONTENT
-            }
+            val itemsToShow = if (size > maxItems) maxItems else size
+            params.height = (itemHeight * itemsToShow) + (paddingVertical * 2)
 
             binding.nsScroll.layoutParams = params
             binding.nsScroll.requestLayout()
+            binding.root.requestLayout()
         }
+
+        val layoutListener = object : View.OnLayoutChangeListener {
+            override fun onLayoutChange(
+                v: View?,
+                left: Int, top: Int, right: Int, bottom: Int,
+                oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int
+            ) {
+                val child = binding.cycler.getChildAt(0)
+                if (child != null && child.height > 0) {
+                    binding.cycler.removeOnLayoutChangeListener(this)
+                    applyHeight()
+                }
+            }
+        }
+        binding.cycler.addOnLayoutChangeListener(layoutListener)
+
+        applyHeight()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsViewHolder {
@@ -294,6 +325,17 @@ class HistorySerialAdapter(
         binding.txtSerial.visibility = View.GONE
         binding.txtTotal.visibility = View.GONE
         binding.tagSerialNumber.visibility = View.GONE
+
+        binding.nsScroll.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+
+        val params = binding.root.layoutParams as? ViewGroup.MarginLayoutParams
+        params?.let {
+            it.height = 0
+            it.topMargin = 0
+            it.bottomMargin = 0
+        }
+        binding.root.layoutParams = params
+        binding.root.requestLayout()
     }
 
     override fun onBindViewHolder(holder: TagsViewHolder, position: Int) {
