@@ -29,14 +29,20 @@ android {
     namespace = "com.mobility.enp"
     compileSdk = 36
 
+    androidResources {
+        localeFilters += listOf(
+            "b+sr+Latn",
+            "b+sr+Cyrl",
+            "de", "mk", "tr", "b+cnr", "hr", "el", "bs"
+        )
+    }
+
     defaultConfig {
         applicationId = "com.mobility.enp"
         minSdk = 29
         targetSdk = 36
         versionCode = 263
         versionName = "1.12.0"
-
-        resourceConfigurations += listOf("en", "sr", "de", "mk", "tr", "b+cnr", "hr", "el", "bs")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -66,7 +72,7 @@ android {
             multiDexEnabled = true
             isDefault = true
             buildConfigField("String", "API_URL", "\"https://mobileapitest.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"podrska.aprsenp@pupin.rs\"")
+            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+136671@gmail.com\"")
             buildConfigField("String", "TEST_PASSWORD", "\"Demo!4team\"")
             buildConfigField(
                 "String",

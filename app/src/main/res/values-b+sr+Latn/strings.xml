@@ -189,7 +189,7 @@
     <string name="objection_content">Sadržaj prigovora: (navesti jasno razloge prigovora)</string>
     <string name="complaint_min_length">Polje Razlog mora sadržati najmanje
         10 karaktera.</string>
-    <string name="please_enter_all_required_data">Unesite sve potrebne podatke</string>
+    <string name="please_enter_all_required_data">Molimo unesite sva obavezna polja.</string>
     <string name="no_passage_data">Nemate prolazaka u poslednjih 30 dana.</string>
     <string name="no_passage_data_special">Nemate prolaske za odabrani period</string>
     <string name="payment_successfully">Plaćanje je uspešno izvršeno.</string>
