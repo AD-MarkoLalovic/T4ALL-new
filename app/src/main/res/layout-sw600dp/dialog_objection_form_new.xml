@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_dialog_borders"
+    android:backgroundTint="@color/primary_light_lightest"
+    android:paddingHorizontal="@dimen/dimens_16dp"
+    android:paddingVertical="@dimen/dimens_22dp">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txComplaintForm"
+                style="@style/H3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/objection"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txSubject"
+                style="@style/CaptionRegular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_16dp"
+                android:text="@string/object_complaint_number"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txComplaintForm" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtSubjectNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_26dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txSubject">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/objectionNumber"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/subject_number"
+                    android:enabled="false"
+                    android:hint="@string/subject_number"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:textColor="@color/figmaSplashScreenColor"
+                    android:textColorHint="@color/figmaIntroEclipseColorInactive" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/subText"
+                style="@style/CaptionRegular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_8dp"
+                android:text="@string/case_number_info"
+                android:textColor="@color/figmaIntroEclipseColorInactive"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtSubjectNumber" />
+
+            <TextView
+                android:id="@+id/txSubmit"
+                style="@style/CaptionRegular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimens_16dp"
+                android:layout_marginTop="@dimen/dimens_20dp"
+                android:text="@string/subject_date"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/subText" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dataPicker"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_26dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txSubmit">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editDataPicker"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:drawableEnd="@drawable/calendar_today"
+                    android:focusable="false"
+                    android:hint="@string/mm_dd_yyyy"
+                    android:inputType="none"
+                    android:textColor="@color/figmaSplashScreenColor"
+                    android:textColorHint="@color/figmaIntroEclipseColorInactive" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/txHintEnterRegistrationPlate"
+                style="@style/CaptionRegular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_22dp"
+                android:text="@string/object_of_complaint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dataPicker" />
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="@dimen/dimens_12dp"
+                android:layout_marginEnd="16dp"
+                android:layout_toStartOf="@id/checkbox1"
+                android:text="@string/response_to_toll_complaint"
+                android:textColor="@color/figmaSplashScreenColor"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/checkbox1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txHintEnterRegistrationPlate" />
+
+            <CheckBox
+                android:id="@+id/checkbox1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/textView1"
+                android:layout_alignBottom="@id/textView1"
+                android:layout_alignParentEnd="true"
+                android:checked="true"
+                app:layout_constraintBottom_toBottomOf="@+id/textView1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textView1" />
+
+            <TextView
+                android:id="@+id/txPrigovor"
+                style="@style/CaptionRegular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dimens_16dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/objection_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView1" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/reasonForObjectionLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimens_5dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusBottomStart="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopEnd="@dimen/dimens_26dp"
+                app:boxCornerRadiusTopStart="@dimen/dimens_26dp"
+                app:boxStrokeColor="@color/figmaSplashScreenColor"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                app:hintEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txPrigovor">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reasonForObjection"
+                    style="@style/Paragraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_objection_reason"
+                    android:imeOptions="normal"
+                    android:textColor="@color/figmaSplashScreenColor"
+                    android:textColorHint="@color/figmaIntroEclipseColorInactive" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/bttSendObjection"
+                style="@style/MyButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:text="@string/confirm"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/reasonForObjectionLayout" />
+
+            <Button
+                android:id="@+id/cancelObjectionForm"
+                style="@style/MyOutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:layout_marginEnd="@dimen/dimens_16dp"
+                android:text="@string/button_close"
+                app:layout_constraintEnd_toStartOf="@+id/bttSendObjection"
+                app:layout_constraintTop_toBottomOf="@+id/reasonForObjectionLayout" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <ProgressBar
+        android:id="@+id/objectionNewProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

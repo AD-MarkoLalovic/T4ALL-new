@@ -11,6 +11,9 @@
         <action
             android:id="@+id/action_tollHistoryMain_to_complaintFormNewDialog"
             app:destination="@id/complaintFormNewDialog" />
+        <action
+            android:id="@+id/action_tollHistoryMain_to_objectionFormDialogNew"
+            app:destination="@id/objectionFormDialogNew" />
     </fragment>
 
     <dialog
@@ -25,6 +28,26 @@
 
         <argument
             android:name="itemId"
-            app:argType="integer"/>
+            app:argType="integer" />
+
+        <argument
+            android:name="showBottomNav"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/objectionFormDialogNew"
+        android:name="com.mobility.enp.view.dialogs.ObjectionFormDialogNew"
+        android:label="ObjectionFormDialogNew">
+
+        <argument
+            android:name="complaintId"
+            app:argType="integer" />
+
+        <argument
+            android:name="showBottomNav"
+            android:defaultValue="false"
+            app:argType="boolean" />
     </dialog>
 </navigation>

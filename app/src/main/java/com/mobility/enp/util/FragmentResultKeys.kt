@@ -18,4 +18,6 @@ object FragmentResultKeys {
     const val NO_INTERNET_CONFIRMED = "no_internet_confirmed"
     const val COMPLAINT_SUBMITTED_RESULT = "complaint_submitted_result"
     const val COMPLAINT_SUBMITTED_KEY    = "complaint_submitted_key"
+    const val OBJECTION_SUBMITTED_RESULT = "complaint_submitted_result"
+    const val OBJECTION_SUBMITTED_KEY    = "complaint_submitted_key"
 }
