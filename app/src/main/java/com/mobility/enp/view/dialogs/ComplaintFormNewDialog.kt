@@ -201,29 +201,29 @@ class ComplaintFormNewDialog : DialogFragment() {
     }
 
     private fun handleComplaintFormSubmission(complaintId: Int, showBankForm: Boolean) {
-        val licencePlate        = binding.licencePlateVal.text.toString().trim()
-        val reasonForComplaint  = binding.reasonForComplaintVal.text.toString().trim()
+        val licencePlate = binding.licencePlateVal.text.toString().trim()
+        val reasonForComplaint = binding.reasonForComplaintVal.text.toString().trim()
         val selectedBankPosition = binding.bankSpinner.selectedItemPosition
-        val uniqueNumber        = binding.uniqueNumbersSpinner.selectedItem?.toString()?.trim() ?: ""
+        val uniqueNumber = binding.uniqueNumbersSpinner.selectedItem?.toString()?.trim() ?: ""
         val centerAccountNumber = binding.etCenterAccountNumber.text.toString().trim()
-        val rightAccountNumber  = binding.etRightAccountNumber.text.toString().trim()
+        val rightAccountNumber = binding.etRightAccountNumber.text.toString().trim()
 
         val validation = viewModel.validate(
-            licencePlate        = licencePlate,
-            reasonForComplaint  = reasonForComplaint,
-            showBankForm        = showBankForm,
+            licencePlate = licencePlate,
+            reasonForComplaint = reasonForComplaint,
+            showBankForm = showBankForm,
             selectedBankPosition = selectedBankPosition,
-            uniqueNumber        = uniqueNumber,
+            uniqueNumber = uniqueNumber,
             centerAccountNumber = centerAccountNumber,
-            rightAccountNumber  = rightAccountNumber
+            rightAccountNumber = rightAccountNumber
         )
 
         val errorRes = when (validation) {
-            ComplaintValidationResult.Valid                -> null
-            ComplaintValidationResult.EmptyRequiredFields  -> R.string.please_enter_all_required_data
-            ComplaintValidationResult.ReasonTooShort       -> R.string.complaint_min_length
-            ComplaintValidationResult.NoBankSelected       -> R.string.enter_name_bank
-            ComplaintValidationResult.MissingBankFields    -> R.string.enter_bank_account
+            ComplaintValidationResult.Valid -> null
+            ComplaintValidationResult.EmptyRequiredFields -> R.string.please_enter_all_required_data
+            ComplaintValidationResult.ReasonTooShort -> R.string.complaint_min_length
+            ComplaintValidationResult.NoBankSelected -> R.string.enter_name_bank
+            ComplaintValidationResult.MissingBankFields -> R.string.enter_bank_account
             ComplaintValidationResult.InvalidAccountNumber -> R.string.invalid_account_number
         }
 
@@ -338,6 +338,10 @@ class ComplaintFormNewDialog : DialogFragment() {
         etSecondTagPicker.backgroundTintList = null
         txCenterAccountNumber.setBoxBackgroundColorResource(R.color.white)
         uniqueNumbersSpinner.backgroundTintList = null
+
+        franchiseViewModel.franchiseModel.value?.franchisePrimaryColor?.let { color ->
+            applyBankFieldsFranchiseStyle(color)
+        }
     }
 
     private fun View.enableEdit() {
@@ -354,6 +358,7 @@ class ComplaintFormNewDialog : DialogFragment() {
 
                 binding.etSecondTagPicker.background = createModifiedDrawable(color)
 
+                val franchiseCursorColor = createFranchiseCursorColor(color)
                 val parent = binding.constraintLayout
 
                 for (i in 0 until parent.childCount) {
@@ -365,24 +370,45 @@ class ComplaintFormNewDialog : DialogFragment() {
                         editText?.textSelectHandle?.setTint(color)
                         editText?.setTextColor(color)
 
-                        val states = arrayOf(
-                            intArrayOf(android.R.attr.state_pressed),
-                            intArrayOf(android.R.attr.state_focused),
-                            intArrayOf()                               // default
-                        )
-
-                        val colors = intArrayOf(
-                            color,        // pressed
-                            color,        // focused
-                            color         // default
-                        )
-
-                        view.cursorColor = ColorStateList(states, colors)
+                        view.cursorColor = franchiseCursorColor
                     }
                 }
+
+                applyBankFieldsFranchiseStyle(color)
             }
         }
     }
+
+    private fun applyBankFieldsFranchiseStyle(@ColorInt color: Int) {
+        val franchiseCursorColor = createFranchiseCursorColor(color)
+
+        binding.txCenterAccountNumber.apply {
+            setBoxStrokeColorStateList(ColorStateList.valueOf(color))
+            cursorColor = franchiseCursorColor
+            editText?.apply {
+                textSelectHandle?.setTint(color)
+                setTextColor(color)
+            }
+        }
+
+        binding.etSecondTagPicker.apply {
+            cursorColor = franchiseCursorColor
+            editText?.apply {
+                textSelectHandle?.setTint(color)
+                setTextColor(color)
+            }
+        }
+    }
+
+    private fun createFranchiseCursorColor(@ColorInt color: Int): ColorStateList =
+        ColorStateList(
+            arrayOf(
+                intArrayOf(android.R.attr.state_pressed),
+                intArrayOf(android.R.attr.state_focused),
+                intArrayOf()
+            ),
+            intArrayOf(color, color, color)
+        )
 
     private fun createModifiedDrawable(@ColorInt newColor: Int): StateListDrawable {
         val selectedShape = GradientDrawable().apply {
