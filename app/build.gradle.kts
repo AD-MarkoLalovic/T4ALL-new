@@ -72,7 +72,7 @@ android {
             multiDexEnabled = true
             isDefault = true
             buildConfigField("String", "API_URL", "\"https://mobileapitest.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+136671@gmail.com\"")
+            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+13000@gmail.com\"")
             buildConfigField("String", "TEST_PASSWORD", "\"Demo!4team\"")
             buildConfigField(
                 "String",
