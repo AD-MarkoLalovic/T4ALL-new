@@ -10,11 +10,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.mobility.enp.databinding.ActivityPdfHistoryBinding
-import com.mobility.enp.viewmodel.UserPassViewModel
+import com.mobility.enp.viewmodel.PdfExportViewModel
 import kotlinx.coroutines.launch
 
 class PdfHistoryActivity : AppCompatActivity() {
-    private val vModel: UserPassViewModel by viewModels { UserPassViewModel.Factory }
+    private val vModel: PdfExportViewModel by viewModels { PdfExportViewModel.Factory }
     private lateinit var binding: ActivityPdfHistoryBinding
 
     companion object {
