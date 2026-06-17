@@ -138,29 +138,36 @@ class TollHistoryPagingAdapter(
             btnPassageComplaint.setOnClickListener(null)
             btnPassageObjection.setOnClickListener(null)
 
-            if (hasComplaint) {
-                tvComplaintId.text = context.getString(
-                    R.string.complaint_number_label,
-                    item.complaintId
-                )
-
-                val count = item.objectionCount
-                tvObjectionCount.isVisible = count > 0
-                tvObjectionCount.text = if (count > 0) count.toString() else ""
-
-                btnPassageObjection.setOnClickListener {
-                    onObjectionClick(
-                        item.complaintId,
-                        item.maxObjectionsReached
-                    )
-                }
-            } else {
+            if (!item.isComplaintActionsEnabled) {
+                btnPassageComplaint.isVisible = false
+                layoutObjection.isVisible = false
                 tvComplaintId.text = ""
                 tvObjectionCount.isVisible = false
                 tvObjectionCount.text = ""
-
-                btnPassageComplaint.setOnClickListener {
-                    onComplaintClick(item.id)
+            } else {
+                btnPassageComplaint.isVisible = !hasComplaint
+                layoutObjection.isVisible = hasComplaint
+                if (hasComplaint) {
+                    tvComplaintId.text = context.getString(
+                        R.string.complaint_number_label,
+                        item.complaintId
+                    )
+                    val count = item.objectionCount
+                    tvObjectionCount.isVisible = count > 0
+                    tvObjectionCount.text = if (count > 0) count.toString() else ""
+                    btnPassageObjection.setOnClickListener {
+                        onObjectionClick(
+                            item.complaintId,
+                            item.maxObjectionsReached
+                        )
+                    }
+                } else {
+                    tvComplaintId.text = ""
+                    tvObjectionCount.isVisible = false
+                    tvObjectionCount.text = ""
+                    btnPassageComplaint.setOnClickListener {
+                        onComplaintClick(item.id)
+                    }
                 }
             }
         }

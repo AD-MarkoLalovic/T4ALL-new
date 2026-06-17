@@ -18,5 +18,6 @@ data class TollHistoryItemUi(
     val tagCurrency : String,
     val entryTime: String?,
     val exitTime: String?,
-    val ticketUid: String?
+    val ticketUid: String?,
+    val isComplaintActionsEnabled: Boolean
 )
