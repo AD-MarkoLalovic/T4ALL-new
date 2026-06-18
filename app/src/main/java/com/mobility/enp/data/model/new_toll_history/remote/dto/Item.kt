@@ -30,5 +30,12 @@ data class Item(
     val entryTime: String?,
     val exitTime: String?,
     val serialNumber: String?,
-    val ticketUid: String?
+    val ticketUid: String?,
+    val billFinal: String?,
+    val transactionId: String?,
+    val registrationPlate: String?,
+    @SerializedName("checkInDate")
+    val checkInDateBaRs: String?,
+    @SerializedName("checkOutDate")
+    val checkOutDateBaRs: String?
 )

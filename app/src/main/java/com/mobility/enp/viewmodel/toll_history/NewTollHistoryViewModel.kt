@@ -1,6 +1,5 @@
 package com.mobility.enp.viewmodel.toll_history
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -45,9 +44,7 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
     )
 
     private val dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
-
     private val _filter = MutableStateFlow(HistoryFilter())
-    val currentFilter: StateFlow<HistoryFilter> = _filter
 
     private val _logoutEvent = Channel<Int>(Channel.BUFFERED)
     val logoutEvent: Flow<Int> = _logoutEvent.receiveAsFlow()
@@ -55,11 +52,6 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
     val pagingFlow: Flow<PagingData<TollHistoryListItem>> = _filter
         .filter { it.country.isNotEmpty() }
         .flatMapLatest { filter ->
-            Log.d(
-                "MARKO",
-                "flatMapLatest filter=$filter vm=${this@NewTollHistoryViewModel.hashCode()}"
-            )
-            Log.d("MARKO", "pagingFlow: repo.getPagedHistory start country=${filter.country}")
             repo.getPagedHistory(
                 filterCountry = filter.country,
                 dateFrom = filter.dateFrom,
@@ -112,7 +104,7 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
 
     private fun initializeFilter() {
         val now = LocalDate.now()
-        val twoHundredDaysAgo = now.minusDays(139) //167 za HR
+        val twoHundredDaysAgo = now.minusDays(30)
 
         _filter.value = HistoryFilter(
             dateFrom = twoHundredDaysAgo.format(dateFormatter),
@@ -136,9 +128,7 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
         }
     }
 
-
     fun onCountrySelected(countryCode: String) {
-        Log.d("MARKO", "onCountrySelected to=$countryCode from=${_filter.value.country}")
         _filter.update { it.copy(country = countryCode) }
     }
 

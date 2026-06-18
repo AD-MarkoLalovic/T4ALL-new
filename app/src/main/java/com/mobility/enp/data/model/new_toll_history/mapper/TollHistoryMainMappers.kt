@@ -23,15 +23,19 @@ private val displayDataFormatter: DateTimeFormatter =
     DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss", Locale.ENGLISH)
 
 fun String?.toEpochMillis(): Long? {
-    if (this.isNullOrBlank()) return null
-    return try {
-        LocalDateTime.parse(this, apiDateFormatter)
-            .atZone(ZoneId.systemDefault())
-            .toInstant()
-            .toEpochMilli()
-    } catch (e: Exception) {
-        null
+    if (isNullOrBlank()) return null
+
+    val formatters = listOf(apiDateFormatter, displayDataFormatter)
+    for (formatter in formatters) {
+        val result = runCatching {
+            LocalDateTime.parse(this, formatter)
+                .atZone(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()
+        }.getOrNull()
+        if (result != null) return result
     }
+    return null
 }
 
 fun Long?.toDisplayDate(): String {
@@ -53,6 +57,7 @@ fun Data.countriesToEntity(): List<AllowedCountryEntity> {
         if (showTabME) add(AllowedCountryEntity("ME", size))
         if (showTabMK) add(AllowedCountryEntity("MK", size))
         if (showTabHR) add(AllowedCountryEntity("HR", size))
+        if (showTabHR) add(AllowedCountryEntity("BA_RS", size))
     }
 }
 
@@ -70,6 +75,7 @@ fun String.toDisplayName(context: Context): String {
         "ME" -> context.getString(R.string.montenegro)
         "MK" -> context.getString(R.string.macedonia)
         "HR" -> context.getString(R.string.croatia)
+        "BA_RS" -> context.getString(R.string.republica_srpska)
         else -> this
     }
 }
@@ -112,7 +118,7 @@ private fun buildRowsBySumTagsOrder(
         val serial = sumTag.tagSerialNumber ?: ""
         if (serial.isEmpty()) continue
 
-        val passagesForTag = ordered.filter { (it.tagsSerialNumberSame ?: "") == serial }
+        val passagesForTag = ordered.filter { it.resolvedSerialNumber() == serial }
         if (passagesForTag.isEmpty()) continue
 
         segmentIndex++
@@ -231,30 +237,49 @@ private fun passageEntity(
 ): TollHistoryItemEntity {
     val rowSuffix = when {
         item.id != null -> item.id.toString()
+        !item.transactionId.isNullOrBlank() -> item.transactionId
         !item.ticketUid.isNullOrBlank() -> item.ticketUid
-        else -> 0
+        else -> sortIndex.toString()
     }
+
+    val (checkInMillis, checkOutMillis, entryTime, exitTime, ticketUid) = when (filterCountry) {
+        "HR" -> DateFields(
+            checkInMillis = item.checkInDate.toEpochMillis(),
+            checkOutMillis = item.checkOutDate.toEpochMillis(),
+            entryTime = item.entryTime,
+            exitTime = item.exitTime,
+            ticketUid = item.ticketUid
+        )
+        else -> DateFields(  // RS, ME, MK, BA_RS
+            checkInMillis = item.resolvedCheckInDate().toEpochMillis(),
+            checkOutMillis = item.resolvedCheckOutDate().toEpochMillis(),
+            entryTime = null,
+            exitTime = null,
+            ticketUid = null
+        )
+    }
+
     return TollHistoryItemEntity(
         rowId = "P|$rowSuffix|$filterCountry",
         rowType = TollHistoryItemEntity.ROW_TYPE_PASSAGE,
         sortIndex = sortIndex,
         filterCountry = filterCountry,
-        id = item.id ?: 0,
+        id = item.resolvedItemId(),
         tagsSerialNumber = serial,
         tollPlaza = item.tollPlaza ?: "",
         isPaid = item.isPaid ?: false,
-        checkInDate = item.checkInDate.toEpochMillis(),
-        checkOutDate = item.checkOutDate.toEpochMillis(),
+        checkInDate = checkInMillis,
+        checkOutDate = checkOutMillis,
         amountWithOutDiscount = item.amountWithOutDiscount ?: "",
         currency = item.currency ?: "",
-        billFinal = item.bill?.billFinal ?: "",
+        billFinal = item.resolvedBillFinal(),
         complaintId = item.complaint?.id,
         objectionCount = item.complaint?.objections?.filterNotNull()?.size ?: 0,
         tagTotal = tagTotal,
         tagCurrency = tagCurrency,
-        entryTime = item.entryTime ?: "",
-        exitTime = item.exitTime ?: "",
-        ticketUid = item.ticketUid
+        entryTime = entryTime,
+        exitTime = exitTime,
+        ticketUid = ticketUid
     )
 }
 
@@ -271,7 +296,7 @@ private fun buildRowsByApiItemOrder(
     var segmentIndex = 0
 
     for (item in ordered) {
-        val serial = item.serialNumber ?: item.tagsSerialNumber ?: ""
+        val serial = item.resolvedSerialNumber()
         val matchingSumTag = sumTagMap[serial]
         val tagTotal = matchingSumTag?.total ?: ""
         val tagCurrency = matchingSumTag?.currency ?: ""
@@ -354,6 +379,30 @@ fun TollHistoryItemEntity.toUi(): TollHistoryItemUi {
         tagCurrency = tagCurrency,
         entryTime = entryTime,
         exitTime = exitTime,
-        ticketUid = ticketUid
+        ticketUid = ticketUid,
+        isComplaintActionsEnabled = filterCountry != "BA_RS"
     )
 }
+
+private fun Item.resolvedCheckInDate(): String? =
+    checkInDate ?: checkInDateBaRs
+
+private fun Item.resolvedCheckOutDate(): String? =
+    checkOutDate ?: checkOutDateBaRs
+
+private fun Item.resolvedSerialNumber(): String =
+    serialNumber ?: tagsSerialNumber.orEmpty()
+
+private fun Item.resolvedBillFinal(): String =
+    bill?.billFinal ?: billFinal.orEmpty()
+
+private fun Item.resolvedItemId(): Int =
+    id ?: transactionId?.toIntOrNull() ?: 0
+
+private data class DateFields(
+    val checkInMillis: Long?,
+    val checkOutMillis: Long?,
+    val entryTime: String?,
+    val exitTime: String?,
+    val ticketUid: String?
+)
