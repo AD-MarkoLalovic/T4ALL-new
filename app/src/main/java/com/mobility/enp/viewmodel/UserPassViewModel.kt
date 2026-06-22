@@ -1,13 +1,9 @@
 package com.mobility.enp.viewmodel
 
-import android.content.ContentValues
 import android.content.Context
-import android.provider.MediaStore
-import android.util.Base64
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,7 +28,6 @@ import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagRes
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatiaResult
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseResult
-import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.franchise.FranchiseModel
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.util.NetworkError
@@ -42,7 +37,6 @@ import com.mobility.enp.util.toCroatianPassage
 import com.mobility.enp.util.toCroatianPassageResult
 import com.mobility.enp.util.toLocalDate
 import com.mobility.enp.util.toV2HistoryTagResponseResult
-import com.mobility.enp.view.fragments.tool_history.HistoryFilterScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -200,8 +194,12 @@ class UserPassViewModel(
     private val _selectedTags = MutableStateFlow<Set<String>>(emptySet())
     private val _userSelectedTags = MutableStateFlow<Set<Tag>>(emptySet())
 
+    var selectedTags: ArrayList<Tag> = ArrayList()
+
     fun clearSelectedTags() {
         _selectedTags.value = emptySet()
+        _userSelectedTags.value = emptySet()
+        selectedTags.clear()
     }
 
     private var allowedCountriesForSerialAdapter: List<String> = emptyList()
@@ -241,12 +239,8 @@ class UserPassViewModel(
         MutableStateFlow<SubmitResult<Unit>>(SubmitResult.Loading)
     val baseApiErrors: StateFlow<SubmitResult<Unit>> get() = _baseApiErrorsResultScreen
 
-
-    private val _csvTable = MutableStateFlow<SubmitResult<CsvModel>>(SubmitResult.Empty)
-    val csvTable: StateFlow<SubmitResult<CsvModel>> get() = _csvTable
-
     fun nullFlowState() {
-        _csvTable.value = SubmitResult.Empty
+        // Can be used to reset other states if needed
     }
 
     private val _noPassages = MutableLiveData<Boolean?>(null)
@@ -288,7 +282,6 @@ class UserPassViewModel(
         _baseTagDataState.value = SubmitResult.Empty
         _baseTagDataStateByCountry.value = SubmitResult.Empty
         _baseApiErrorsResultScreen.value = SubmitResult.Empty
-        _csvTable.value = SubmitResult.Empty
         _complaintObjectionState.value = SubmitResult.Empty
         _complaintObjectionStateResult.value = SubmitResult.Empty
     }
@@ -1020,11 +1013,7 @@ class UserPassViewModel(
         tagSerialNumber: String, currentPage: Int
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val formatter = if (selectedCountry.equals("HR", ignoreCase = true)) {
-                DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
-            } else {
-                DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
-            }  // they changed it to be the same and didn't notify mobile it was dd/MM/yyyy for croatia
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
 
             val dateTo = LocalDate.now()
             val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
@@ -1361,88 +1350,6 @@ class UserPassViewModel(
         }
     }
 
-
-    fun processCsvData(csvModel: CsvModel, nameExtra: String, context: Context) {
-        Log.d(TAG, "csv data: $csvModel")
-
-        if (!csvModel.data?.csvContent.isNullOrEmpty()) {
-            csvModel.data?.csvContent?.let { data ->
-                viewModelScope.launch(Dispatchers.IO) {
-                    saveCsvLocally(data, nameExtra, context) // <- csv excel export
-                }
-            }
-        }
-    }
-
-    private suspend fun saveCsvLocally(encoded: String, nameExtra: String, context: Context) =
-        coroutineScope {
-            try {
-                // Decode the Base64 string
-                val decodedBytes = Base64.decode(encoded, Base64.DEFAULT)
-                val decodedString = String(decodedBytes)
-
-                // Parse the data and format it as CSV
-                val rows = decodedString.split("\n")
-                val csvBuilder = StringBuilder()
-
-                // Add a header if your data format is known
-
-                val billNumber = ContextCompat.getString(context, R.string.bill_number)
-                val price = ContextCompat.getString(context, R.string.price)
-                val payRamp = ContextCompat.getString(context, R.string.pay_ramp)
-                val timeOfPassage = ContextCompat.getString(context, R.string.time_of_passage)
-
-                val titleHeader =
-                    StringBuilder().append(billNumber).append(",").append(timeOfPassage).append(",")
-                        .append(payRamp).append(",").append(price).append(",").append("\n")
-
-                csvBuilder.append(titleHeader.toString())
-
-                // Add each row to the CSV content
-                for (row in rows) {
-                    csvBuilder.append(row).append("\n")
-                }
-
-                // Save CSV to shared storage using MediaStore
-                val fileName = "export-$nameExtra.csv"
-                val contentValues = ContentValues().apply {
-                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                    put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
-                    put(
-                        MediaStore.MediaColumns.RELATIVE_PATH, "Documents/"
-                    ) // Save in the Documents folder
-                }
-
-                // Get the URI for the file in shared storage
-                val uri = repository.fetchContext().contentResolver.insert(
-                    MediaStore.Files.getContentUri("external"), contentValues
-                )
-
-                uri?.let { fileUri ->
-                    repository.fetchContext().contentResolver.openOutputStream(fileUri)
-                        ?.use { outputStream ->
-                            // Write the CSV content to the file
-                            outputStream.write(csvBuilder.toString().toByteArray())
-                            outputStream.flush()
-                            Log.d(
-                                HistoryFilterScreen.TAG,
-                                "CSV file saved successfully in Documents folder."
-                            )
-                        } ?: Log.d(HistoryFilterScreen.TAG, "Failed to open OutputStream.")
-                } ?: Log.d(
-                    HistoryFilterScreen.TAG, "Failed to create file URI in MediaStore."
-                )
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-
-    private var _data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
-    val data: LiveData<IndexData> get() = _data
-
-    var selectedTags: ArrayList<Tag> = ArrayList()
-
     fun showDatePicker(fromDate: Boolean, context: Context, franchiseModel: FranchiseModel?) {
         viewModelScope.launch {
             val selectedDate: Long = if (fromDate) {
@@ -1570,117 +1477,6 @@ class UserPassViewModel(
         val date = Date(time)
         val formDate = sdf.format(date)
         return TimeSave(formDate, date)
-    }
-
-    fun getCsvData(context: Context) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _csvTable.value = SubmitResult.Empty
-            if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
-                if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
-                    Toast.makeText(
-                        context, context.getString(R.string.end_date_check), Toast.LENGTH_SHORT
-                    ).show()
-                    _csvTable.value = SubmitResult.Empty
-                } else {
-                    try {
-                        _csvTable.value = SubmitResult.Loading
-                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-
-                        val dateStart = Date(userSelectedCalendarStart ?: 0)
-                        val dateEnd = Date(userSelectedCalendarEnd ?: 0)
-
-                        val dateStartApi = sdf.format(dateStart)
-                        val dateEndApi = sdf.format(dateEnd)
-
-                        Log.d(TAG, "startDate: $dateStartApi endDate $dateEndApi")
-
-                        if (selectedTags.isNotEmpty() && _userSelectedTags.value.size == 1 || allTagsSelected) {
-
-                            val tagSerial = if (allTagsSelected) {
-                                ""
-                            } else {
-                                _userSelectedTags.value.first().serialNumber ?: ""
-                            }
-
-                            val result = repository.getCsvTableData(
-                                tagSerial, dateStartApi, dateEndApi, selectedCountry
-                            )
-
-                            val body = result.getOrNull()
-                            body?.let { data ->
-
-                                if (result.isSuccess) {
-                                    _csvTable.value = SubmitResult.Success(body)
-                                } else {
-                                    when (val error = result.exceptionOrNull()) {
-                                        is NetworkError.ServerError -> {
-                                            Log.d(TAG, "Error while fetching tag serial data")
-                                            _csvTable.value = SubmitResult.FailureServerError
-                                        }
-
-                                        is NetworkError.NoConnection -> {
-                                            _csvTable.value = SubmitResult.FailureNoConnection
-                                        }
-
-                                        is NetworkError.ApiError -> {
-                                            when (error.errorResponse.code) {
-                                                401, 405 -> {
-                                                    Log.d(
-                                                        TOKEN,
-                                                        "invalid token detected login out user"
-                                                    )
-                                                    _csvTable.value = SubmitResult.InvalidApiToken(
-                                                        error.errorResponse.code ?: 0,
-                                                        error.errorResponse.message ?: ""
-                                                    )
-                                                }
-
-                                                else -> {
-                                                    _csvTable.value = SubmitResult.FailureApiError(
-                                                        error.errorResponse.message ?: ""
-                                                    )
-                                                    Log.d(
-                                                        TAG,
-                                                        "api error ${error.errorResponse.message}"
-                                                    )
-                                                }
-                                            }
-                                        }
-
-                                        else -> {}
-                                    }
-                                }
-                            }
-
-                        } else {
-                            _csvTable.value = SubmitResult.FailureApiError(
-                                ContextCompat.getString(
-                                    context, R.string.please_select_one_tag
-                                )
-                            )
-                        }
-                    } catch (e: Exception) {
-                        Log.d(TAG, "getCsvData: ${e.message} ${e.cause}")
-                        _csvTable.value = SubmitResult.FailureApiError(
-                            ContextCompat.getString(
-                                context, R.string.formatting_error
-                            )
-                        )
-                    }
-                }
-            } else {
-                _csvTable.value = SubmitResult.FailureApiError(
-                    ContextCompat.getString(
-                        context, R.string.please_select_dates
-                    )
-                )
-            }
-        }
-    }
-
-
-    suspend fun fetchCsvData(): ByteArray? {
-        return repository.fetchedStoredCsvData()
     }
 
     fun internetAvailable(): Boolean {

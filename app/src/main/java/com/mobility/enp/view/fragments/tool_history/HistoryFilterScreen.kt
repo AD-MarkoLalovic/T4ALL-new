@@ -41,6 +41,7 @@ import com.mobility.enp.view.dialogs.PermissionDeniedDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
 import com.mobility.enp.viewmodel.UserPassViewModel
 import com.mobility.enp.viewmodel.PdfExportViewModel
+import com.mobility.enp.viewmodel.CsvExportViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -52,6 +53,7 @@ class HistoryFilterScreen : Fragment() {
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val vModel: UserPassViewModel by activityViewModels { UserPassViewModel.Factory }
     private val pdfViewModel: PdfExportViewModel by activityViewModels { PdfExportViewModel.Factory }
+    private val csvViewModel: CsvExportViewModel by activityViewModels { CsvExportViewModel.Factory }
     private lateinit var statusFilterAdapter: MyTollCountriesFilterAdapter
     private lateinit var serialAdapter: ToolHistoryFilterFragmentSerialAdapter
 
@@ -271,7 +273,7 @@ class HistoryFilterScreen : Fragment() {
     }
 
     private fun setObservers() {
-        collectLatestLifecycleFlow(vModel.csvTable) { csvTable ->
+        collectLatestLifecycleFlow(csvViewModel.csvTable) { csvTable ->
             when (csvTable) {
                 is SubmitResult.Loading -> {
                     binding.progBar.visibility = View.VISIBLE
@@ -282,14 +284,14 @@ class HistoryFilterScreen : Fragment() {
 
                     csvTable.data.data?.csvContent?.takeIf { it.isNotEmpty() }?.let { csvContent ->
                         val nameExtra = UUID.randomUUID().toString().take(8)
-                        vModel.processCsvData(csvTable.data, nameExtra, requireContext())
+                        csvViewModel.processCsvData(csvTable.data, nameExtra, requireContext())
 
                         if (ContextCompat.checkSelfPermission(
                                 requireContext(), Manifest.permission.POST_NOTIFICATIONS
                             ) == PackageManager.PERMISSION_GRANTED
                         ) {
                             pdfViewModel.saveBase64ToCSV(csvContent, nameExtra, requireContext())
-                            vModel.nullFlowState()
+                            csvViewModel.nullFlowState()
                             pdfViewModel.nullPdfState()
                         } else {
                             showNotificationPermissionRationale(object : UserPermission {
@@ -297,12 +299,12 @@ class HistoryFilterScreen : Fragment() {
                                     pdfViewModel.saveBase64ToCSV(
                                         csvContent, nameExtra, requireContext()
                                     )
-                                    vModel.nullFlowState()
+                                    csvViewModel.nullFlowState()
                                     pdfViewModel.nullPdfState()
                                 }
 
                                 override fun onPermissionDenied() {
-                                    vModel.nullFlowState()
+                                    csvViewModel.nullFlowState()
                                     pdfViewModel.nullPdfState()
                                 }
                             })
@@ -323,14 +325,14 @@ class HistoryFilterScreen : Fragment() {
                 is SubmitResult.FailureServerError -> {
                     binding.progBar.visibility = View.GONE
                     showError(getString(R.string.server_error_msg))
-                    vModel.nullFlowState()
+                    csvViewModel.nullFlowState()
                     pdfViewModel.nullPdfState()
                 }
 
                 is SubmitResult.FailureApiError -> {
                     binding.progBar.visibility = View.GONE
                     showError(csvTable.errorMessage)
-                    vModel.nullFlowState()
+                    csvViewModel.nullFlowState()
                     pdfViewModel.nullPdfState()
                 }
 
@@ -357,18 +359,18 @@ class HistoryFilterScreen : Fragment() {
                         ) == PackageManager.PERMISSION_GRANTED
                     ) {
                         pdfViewModel.postNotificationPDF()
-                        vModel.nullFlowState()
+                        csvViewModel.nullFlowState()
                         pdfViewModel.nullPdfState()
                     } else {
                         showNotificationPermissionRationale(object : UserPermission {
                             override fun onPermissionGranted() {
                                 pdfViewModel.postNotificationPDF()
-                                vModel.nullFlowState()
+                                csvViewModel.nullFlowState()
                                 pdfViewModel.nullPdfState()
                             }
 
                             override fun onPermissionDenied() {
-                                vModel.nullFlowState()
+                                csvViewModel.nullFlowState()
                                 pdfViewModel.nullPdfState()
                             }
                         })
@@ -382,14 +384,14 @@ class HistoryFilterScreen : Fragment() {
                 is SubmitResult.FailureServerError -> {
                     binding.progBar.visibility = View.GONE
                     showError(getString(R.string.server_error_msg))
-                    vModel.nullFlowState()
+                    csvViewModel.nullFlowState()
                     pdfViewModel.nullPdfState()
                 }
 
                 is SubmitResult.FailureApiError -> {
                     binding.progBar.visibility = View.GONE
                     showError(data.errorMessage)
-                    vModel.nullFlowState()
+                    csvViewModel.nullFlowState()
                     pdfViewModel.nullPdfState()
                 }
 
@@ -488,7 +490,7 @@ class HistoryFilterScreen : Fragment() {
 
     private fun showError(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-        vModel.nullFlowState()
+        csvViewModel.nullFlowState()
         pdfViewModel.nullPdfState()
     }
 
@@ -588,7 +590,18 @@ class HistoryFilterScreen : Fragment() {
             if (isCSV) {
                 binding.progBar.visibility = View.VISIBLE
                 viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                    vModel.getCsvData(requireContext())
+                    csvViewModel.getCsvData(
+                        context = requireContext(),
+                        startDateValue = vModel.startDate.value?.inDateForm,
+                        endDateValue = vModel.endDate.value?.inDateForm,
+                        userSelectedCalendarStart = vModel.userSelectedCalendarStart,
+                        userSelectedCalendarEnd = vModel.userSelectedCalendarEnd,
+                        selectedTagsNotEmpty = vModel.selectedTags.isNotEmpty(),
+                        userSelectedTagsSize = vModel.getSelectedTagList().size,
+                        firstUserSelectedTagSerialNumber = vModel.getSelectedTagList().firstOrNull()?.serialNumber,
+                        allTagsSelected = vModel.allTagsSelected,
+                        selectedCountry = vModel.selectedCountry
+                    )
                 }
                 true
             } else if (isPdf) {
