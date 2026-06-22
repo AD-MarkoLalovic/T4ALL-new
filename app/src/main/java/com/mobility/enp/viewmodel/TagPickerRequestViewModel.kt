@@ -21,15 +21,15 @@ import kotlinx.coroutines.launch
 class TagPickerRequestViewModel(private val repository: UserRepository) : ViewModel() {
 
     private val _tagPickerRequest = MutableStateFlow<SubmitResult<List<TagsRefundRequestUIModel>>>(
-        SubmitResult.Loading
+        SubmitResult.Empty
     )
     val tagPickerRequest: StateFlow<SubmitResult<List<TagsRefundRequestUIModel>>> =
         _tagPickerRequest
 
-    private val _banks = MutableStateFlow<SubmitResult<List<BankUIModel>>>(SubmitResult.Loading)
+    private val _banks = MutableStateFlow<SubmitResult<List<BankUIModel>>>(SubmitResult.Empty)
     val banks: StateFlow<SubmitResult<List<BankUIModel>>> = _banks
 
-    private val _refundRequestState = MutableStateFlow<SubmitResult<Unit>>(SubmitResult.Loading)
+    private val _refundRequestState = MutableStateFlow<SubmitResult<Unit>>(SubmitResult.Empty)
     val refundRequestState: StateFlow<SubmitResult<Unit>> = _refundRequestState
 
     init {
