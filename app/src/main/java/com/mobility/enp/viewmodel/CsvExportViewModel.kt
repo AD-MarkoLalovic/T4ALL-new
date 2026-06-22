@@ -158,6 +158,10 @@ class CsvExportViewModel(
         }
     }
 
+    suspend fun fetchCsvData(): ByteArray? {
+        return repository.fetchedStoredCsvData()
+    }
+
     private suspend fun saveCsvLocally(encoded: String, nameExtra: String, context: Context) =
         coroutineScope {
             try {
