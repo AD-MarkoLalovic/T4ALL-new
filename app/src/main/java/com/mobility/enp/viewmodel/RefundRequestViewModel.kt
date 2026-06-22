@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class RefundRequestViewModel(private val repository: UserRepository) : ViewModel() {
 
     private val _refundRequestUI =
-        MutableStateFlow<SubmitResult<List<RefundRequestUIModel>>>(SubmitResult.Loading)
+        MutableStateFlow<SubmitResult<List<RefundRequestUIModel>>>(SubmitResult.Empty)
     val refundRequestUI: StateFlow<SubmitResult<List<RefundRequestUIModel>>> = _refundRequestUI
 
     init {

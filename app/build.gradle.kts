@@ -85,8 +85,8 @@ android {
             dimension = "mode"
             signingConfig = signingConfigs.getByName("release")
             buildConfigField("String", "API_URL", "\"https://mobileapi.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"nemanja.karanovic@gmail.com\"")
-            buildConfigField("String", "TEST_PASSWORD", "\"Autoputevi2026^\"")
+            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev@gmail.com\"")
+            buildConfigField("String", "TEST_PASSWORD", "\"testiranje1!\"")
             buildConfigField(
                 "String",
                 "TAG_ORDER_BASE_URL",

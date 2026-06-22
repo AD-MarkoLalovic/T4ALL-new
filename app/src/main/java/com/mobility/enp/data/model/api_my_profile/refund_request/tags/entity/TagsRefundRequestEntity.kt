@@ -9,13 +9,13 @@ data class TagsRefundRequestEntity(
     @PrimaryKey
     val id: String,
     val serialNumber: String,
-    val registrationPlate: String
+    val registrationPlate: String?
 ) {
     fun toTagsRefundRequestUIModel(): TagsRefundRequestUIModel {
         return TagsRefundRequestUIModel(
             id = id,
             serialNumber = serialNumber,
-            registrationPlate = registrationPlate,
+            registrationPlate = registrationPlate ?: "No Data",
             isChecked = false
         )
     }
