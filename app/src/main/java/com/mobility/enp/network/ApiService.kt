@@ -37,6 +37,7 @@ import com.mobility.enp.data.model.login.UserResponse
 import com.mobility.enp.data.model.new_toll_history.complaint.ComplaintBodyNew
 import com.mobility.enp.data.model.new_toll_history.objection.ObjectionBodyNew
 import com.mobility.enp.data.model.new_toll_history.remote.dto.TollHistoryDto
+import com.mobility.enp.data.model.new_toll_history.tags.remote.TollHistoryTagsDto
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -366,6 +367,9 @@ interface ApiService {
         @Query("filter[date_from]") dataFrom: String,
         @Query("filter[date_to]") dateTo: String
     ): Response<TollHistoryDto>
+
+    @GET("api/v1/history/tags")
+    suspend fun getBanksHistory(): Response<TollHistoryTagsDto>
 
     @POST("api/v1/history/objection")
     suspend fun postObjectionNew(
