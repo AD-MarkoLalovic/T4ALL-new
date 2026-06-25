@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/tollHistoryMain"
-        android:name="com.mobility.enp.view.fragments.new_toll_history.TollHistoryMain"
+        android:name="com.mobility.enp.view.fragments.new_toll_history.TollHistoryMainFragment"
         android:label="TollHistoryMain">
         <action
             android:id="@+id/action_tollHistoryMain_to_complaintFormNewDialog"
