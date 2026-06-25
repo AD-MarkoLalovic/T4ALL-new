@@ -35,15 +35,15 @@ import com.mobility.enp.view.dialogs.ChangePasswordDialog
 import com.mobility.enp.view.dialogs.GeneralMessageDialog
 import com.mobility.enp.view.dialogs.GeneralMessageDialogInfoButton
 import com.mobility.enp.viewmodel.FranchiseViewModel
-import com.mobility.enp.viewmodel.toll_history.NewTollHistoryViewModel
+import com.mobility.enp.viewmodel.toll_history.TollHistoryMainViewModel
 import kotlinx.coroutines.launch
 
-class TollHistoryMain : Fragment() {
+class TollHistoryMainFragment : Fragment() {
 
     private var _binding: FragmentTollHistoryMainBinding? = null
     private val binding: FragmentTollHistoryMainBinding get() = _binding!!
 
-    private val viewModel: NewTollHistoryViewModel by viewModels { NewTollHistoryViewModel.factory }
+    private val viewModel: TollHistoryMainViewModel by viewModels { TollHistoryMainViewModel.factory }
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
     private lateinit var pagingAdapter: TollHistoryPagingAdapter
@@ -115,7 +115,7 @@ class TollHistoryMain : Fragment() {
                 val country = viewModel.customerCountry.value ?: return@TollHistoryPagingAdapter
                 val showBankForm = country == "RS"
                 val action =
-                    TollHistoryMainDirections.actionTollHistoryMainToComplaintFormNewDialog(
+                    TollHistoryMainFragmentDirections.actionTollHistoryMainToComplaintFormNewDialog(
                         showBankForm = showBankForm, itemId = itemId, showBottomNav = true
                     )
                 safeNavigate(action, R.id.tollHistoryMain)
@@ -125,7 +125,7 @@ class TollHistoryMain : Fragment() {
                     showMaxObjectionsDialog()
                 } else {
                     val action =
-                        TollHistoryMainDirections.actionTollHistoryMainToObjectionFormDialogNew(
+                        TollHistoryMainFragmentDirections.actionTollHistoryMainToObjectionFormDialogNew(
                             complaintId = complaintId, showBottomNav = true
                         )
 

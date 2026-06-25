@@ -35,7 +35,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : ViewModel() {
+class TollHistoryMainViewModel(private val repo: NewTollHistoryRepository) : ViewModel() {
 
     data class HistoryFilter(
         val country: String = "",
@@ -136,7 +136,7 @@ class NewTollHistoryViewModel(private val repo: NewTollHistoryRepository) : View
         val factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = this[APPLICATION_KEY] as MyApplication
-                NewTollHistoryViewModel(app.newTollHistoryRepository)
+                TollHistoryMainViewModel(app.newTollHistoryRepository)
             }
         }
     }
