@@ -115,7 +115,7 @@ class TollHistoryMainFragment : Fragment() {
                 val country = viewModel.customerCountry.value ?: return@TollHistoryPagingAdapter
                 val showBankForm = country == "RS"
                 val action =
-                    TollHistoryMainDirections.actionTollHistoryMainToComplaintFormNewDialog(
+                    TollHistoryMainFragmentDirections.actionTollHistoryMainToComplaintFormNewDialog(
                         showBankForm = showBankForm, itemId = itemId, showBottomNav = true
                     )
                 safeNavigate(action, R.id.tollHistoryMain)
@@ -125,7 +125,7 @@ class TollHistoryMainFragment : Fragment() {
                     showMaxObjectionsDialog()
                 } else {
                     val action =
-                        TollHistoryMainDirections.actionTollHistoryMainToObjectionFormDialogNew(
+                        TollHistoryMainFragmentDirections.actionTollHistoryMainToObjectionFormDialogNew(
                             complaintId = complaintId, showBottomNav = true
                         )
 
