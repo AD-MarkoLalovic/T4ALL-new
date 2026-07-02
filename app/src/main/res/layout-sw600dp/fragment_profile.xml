@@ -128,6 +128,7 @@
                     android:layout_width="@dimen/dimens_0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimens_30dp"
+                    android:paddingBottom="@dimen/dimens_16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cardViewProfile">
@@ -244,7 +245,7 @@
                         style="@style/MyOutlinedButtonStyle"
                         android:layout_width="@dimen/dimens_0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimens_8dp"
+                        android:layout_marginTop="@dimen/dimens_22dp"
                         android:layout_marginBottom="@dimen/dimens_16dp"
                         android:text="@string/deactivate_account"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -256,7 +257,7 @@
                         style="@style/MyOutlinedButtonStyle"
                         android:layout_width="@dimen/dimens_0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimens_8dp"
+                        android:layout_marginTop="@dimen/dimens_22dp"
                         android:layout_marginBottom="@dimen/dimens_16dp"
                         android:text="@string/sign_out"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -265,15 +266,14 @@
 
                     <TextView
                         android:id="@+id/versionCode"
-                        app:layout_constraintTop_toBottomOf="@id/buttonSignOut"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimens_16dp"
-                        tools:text="Version 1.0.0"
+                        android:layout_marginTop="@dimen/dimens_22dp"
                         android:textColor="@color/figmaIntroDarkColorReduced"
-                        />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/buttonSignOut"
+                        tools:text="Version 1.0.0" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
