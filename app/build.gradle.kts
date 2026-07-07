@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.gms.google.services)
-    id("com.google.devtools.ksp") version "2.3.6"
+    id("com.google.devtools.ksp") version "2.3.9"
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.firebase.crashlytics")
     id("kotlin-parcelize")
