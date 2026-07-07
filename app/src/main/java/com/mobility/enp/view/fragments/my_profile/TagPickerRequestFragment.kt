@@ -28,6 +28,7 @@ import com.mobility.enp.view.adapters.refund_request_adapters.RefundRequestTagPi
 import com.mobility.enp.view.ui_models.BankUIModel
 import com.mobility.enp.view.ui_models.refund_request.TagsRefundRequestUIModel
 import com.mobility.enp.viewmodel.FranchiseViewModel
+import com.mobility.enp.viewmodel.TagPickerRequestFormState
 import com.mobility.enp.viewmodel.TagPickerRequestViewModel
 import kotlinx.coroutines.launch
 
@@ -225,13 +226,25 @@ class TagPickerRequestFragment : Fragment() {
         binding.textNoTags.visibility = View.GONE
         binding.recyclerViewTagPicker.visibility = View.VISIBLE
 
+        val savedTagSerial = viewModel.formState.tagSerialNumber
+        if (savedTagSerial != null) {
+            tagSerialNumber = savedTagSerial
+            viewModel.clearTagSerialNumber()
+        }
+
+        val savedAmount = viewModel.formState.amount
+        if (savedAmount.isNotEmpty()) {
+            binding.editAmount.setText(savedAmount)
+            viewModel.clearAmount()
+        }
+
         if (!::adapter.isInitialized) {
             adapter = RefundRequestTagPickerAdapter({ serialNumber ->
                 tagSerialNumber = serialNumber
             }, franchiseViewModel)
             binding.recyclerViewTagPicker.adapter = adapter
         }
-        adapter.submitList(tag)
+        adapter.submitList(tag, tagSerialNumber)
 
         val constraintLayout = binding.constraintContainerRefund
         val txHintAmountTagPicker = binding.txHintAmountTagPicker
@@ -397,6 +410,11 @@ class TagPickerRequestFragment : Fragment() {
                     // Nema akcije
                 }
             }
+
+            if (viewModel.formState.bankPosition > 0 && viewModel.formState.bankPosition < bankNames.size) {
+                setSelection(viewModel.formState.bankPosition)
+                viewModel.clearBankPosition()
+            }
         }
     }
 
@@ -488,10 +506,24 @@ class TagPickerRequestFragment : Fragment() {
                 adapter = bankCodeAdapter
                 isClickable = true
                 isEnabled = true
+
+                if (viewModel.formState.uniqueNumberPosition >= 0 && viewModel.formState.uniqueNumberPosition < uniqueNumbers.size) {
+                    setSelection(viewModel.formState.uniqueNumberPosition)
+                    viewModel.clearUniqueNumberPosition()
+                }
             }
         }
 
         enableAccountInputs()
+
+        if (viewModel.formState.centerAccountNumber.isNotEmpty()) {
+            binding.etCenterAccountNumber.setText(viewModel.formState.centerAccountNumber)
+            viewModel.clearCenterAccountNumber()
+        }
+        if (viewModel.formState.rightAccountNumber.isNotEmpty()) {
+            binding.etRightAccountNumber.setText(viewModel.formState.rightAccountNumber)
+            viewModel.clearRightAccountNumber()
+        }
 
     }
 
@@ -570,6 +602,18 @@ class TagPickerRequestFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        if (_binding != null) {
+            viewModel.updateFormState(
+                TagPickerRequestFormState(
+                    amount = binding.editAmount.text.toString(),
+                    bankPosition = binding.bankSpinner.selectedItemPosition,
+                    uniqueNumberPosition = binding.uniqueNumbersSpinner.selectedItemPosition,
+                    centerAccountNumber = binding.etCenterAccountNumber.text.toString(),
+                    rightAccountNumber = binding.etRightAccountNumber.text.toString(),
+                    tagSerialNumber = tagSerialNumber
+                )
+            )
+        }
         super.onDestroyView()
         _binding = null
     }
