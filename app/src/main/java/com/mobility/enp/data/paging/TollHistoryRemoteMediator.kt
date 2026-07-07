@@ -101,10 +101,10 @@ class TollHistoryRemoteMediator(
             val endReached = page >= lastPage
 
             val startSortIndex = when (loadType) {
+                LoadType.PREPEND,
                 LoadType.REFRESH -> 0
                 LoadType.APPEND ->
                     database.newTollHistoryItemDao().maxSortIndexForCountry(filterCountry) + 1
-                else -> {0}
             }
 
             val entities  = body.toTollHistoryEntities(filterCountry, startSortIndex, page)
