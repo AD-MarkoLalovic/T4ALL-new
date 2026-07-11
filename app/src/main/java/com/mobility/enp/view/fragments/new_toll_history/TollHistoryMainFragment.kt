@@ -82,7 +82,21 @@ class TollHistoryMainFragment : Fragment() {
         observeFranchise()
         observeLogoutEvent()
         observeFragmentResults()
+        observeFilterResults()
+    }
 
+    private fun observeFilterResults() {
+        parentFragmentManager.setFragmentResultListener(
+            FragmentResultKeys.TOLL_HISTORY_FILTER_RESULT,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val country = bundle.getString(FragmentResultKeys.TOLL_HISTORY_FILTER_COUNTRY).orEmpty()
+            val dateFrom = bundle.getString(FragmentResultKeys.TOLL_HISTORY_FILTER_DATE_FROM).orEmpty()
+            val dateTo = bundle.getString(FragmentResultKeys.TOLL_HISTORY_FILTER_DATE_TO).orEmpty()
+            if (country.isNotEmpty() && dateFrom.isNotEmpty() && dateTo.isNotEmpty()) {
+                viewModel.applyFilter(country, dateFrom, dateTo)
+            }
+        }
     }
 
     private fun clickListeners() {
@@ -91,6 +105,12 @@ class TollHistoryMainFragment : Fragment() {
                 title = getString(R.string.tool_history),
                 subtitle = getString(R.string.prolasci_info)
             ).show(parentFragmentManager, "infoDialog")
+        }
+
+        binding.loopIcon.setOnClickListener {
+            val action =
+                TollHistoryMainFragmentDirections.actionTollHistoryMainToTollHistoryFilter()
+            safeNavigate(action, R.id.tollHistoryMain)
         }
     }
 

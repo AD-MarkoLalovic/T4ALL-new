@@ -20,4 +20,8 @@ object FragmentResultKeys {
     const val COMPLAINT_SUBMITTED_KEY    = "complaint_submitted_key"
     const val OBJECTION_SUBMITTED_RESULT = "complaint_submitted_result"
     const val OBJECTION_SUBMITTED_KEY    = "complaint_submitted_key"
+    const val TOLL_HISTORY_FILTER_RESULT = "toll_history_filter_result"
+    const val TOLL_HISTORY_FILTER_COUNTRY = "toll_history_filter_country"
+    const val TOLL_HISTORY_FILTER_DATE_FROM = "toll_history_filter_date_from"
+    const val TOLL_HISTORY_FILTER_DATE_TO = "toll_history_filter_date_to"
 }

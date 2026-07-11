@@ -5,6 +5,7 @@ import com.mobility.enp.data.model.new_toll_history.tags.remote.TollHistoryTagsD
 import com.mobility.enp.view.ui_models.toll_history.TollHistoryFilterDateUi
 import com.mobility.enp.view.ui_models.toll_history.TollHistoryFilterTagUi
 import com.mobility.enp.view.ui_models.toll_history.TollHistoryTagsLoadState
+import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -12,6 +13,13 @@ import java.util.Locale
 
 private val filterDateFormatter: DateTimeFormatter =
     DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+
+fun Long.toFilterDateUi(): TollHistoryFilterDateUi {
+    val localDate = Instant.ofEpochMilli(this)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
+    return localDate.toFilterDateUi()
+}
 
 fun Tag.toFilterTagUi(
     isSelected: Boolean,

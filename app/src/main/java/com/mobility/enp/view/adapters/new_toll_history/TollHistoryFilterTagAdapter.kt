@@ -14,8 +14,13 @@ import com.mobility.enp.view.ui_models.toll_history.TollHistoryFilterTagUi
 
 class TollHistoryFilterTagAdapter(
     private val onTagToggled: (serialNumber: String, isChecked: Boolean) -> Unit,
-    private val primaryColor: Int? = null
+    private var primaryColor: Int? = null
 ) : ListAdapter<TollHistoryFilterTagUi, TollHistoryFilterTagAdapter.TagViewHolder>(DIFF_CALLBACK) {
+
+    fun updatePrimaryColor(color: Int?) {
+        primaryColor = color
+        notifyDataSetChanged()
+    }
 
     inner class TagViewHolder(
         private val binding: ItemTollHistoryFilterTagBinding

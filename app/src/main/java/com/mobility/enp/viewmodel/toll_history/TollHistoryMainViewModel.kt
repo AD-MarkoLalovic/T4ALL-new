@@ -132,6 +132,16 @@ class TollHistoryMainViewModel(private val repo: NewTollHistoryRepository) : Vie
         _filter.update { it.copy(country = countryCode) }
     }
 
+    fun applyFilter(country: String, dateFrom: String, dateTo: String) {
+        _filter.update {
+            HistoryFilter(
+                country = country,
+                dateFrom = dateFrom,
+                dateTo = dateTo
+            )
+        }
+    }
+
     companion object {
         val factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

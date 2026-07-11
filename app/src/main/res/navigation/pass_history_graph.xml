@@ -14,7 +14,15 @@
         <action
             android:id="@+id/action_tollHistoryMain_to_objectionFormDialogNew"
             app:destination="@id/objectionFormDialogNew" />
+        <action
+            android:id="@+id/action_tollHistoryMain_to_tollHistoryFilter"
+            app:destination="@id/tollHistoryFilter" />
     </fragment>
+
+    <fragment
+        android:id="@+id/tollHistoryFilter"
+        android:name="com.mobility.enp.view.fragments.new_toll_history.TollHistoryFilterFragment"
+        android:label="TollHistoryFilter" />
 
     <dialog
         android:id="@+id/complaintFormNewDialog"
