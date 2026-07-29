@@ -12,7 +12,6 @@ import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.R
-import com.mobility.enp.databinding.FragmentTosBinding
 import com.mobility.enp.databinding.UserRegistrationLoginBinding
 
 class RegistrationFragment : Fragment() {
@@ -97,8 +96,20 @@ class RegistrationFragment : Fragment() {
         @JavascriptInterface
         fun onBackIconClick() {  // it gets detected here
             // Notify fragment or perform any action
-            binding.webView.post {  // fixes a navigation issue.
-                findNavController().navigate(R.id.action_tosFragment_to_loginFragment)
+            binding.webView.post {  // added extra security
+                if (!isAdded || _binding == null) return@post
+
+                val navController = runCatching { findNavController() }.getOrNull()
+                    ?: return@post
+
+                val currentDestination = navController.currentDestination
+                if (currentDestination?.id == R.id.tosFragment &&
+                    currentDestination.getAction(R.id.action_tosFragment_to_loginFragment) != null
+                ) {
+                    runCatching {
+                        navController.navigate(R.id.action_tosFragment_to_loginFragment)
+                    }
+                }
             }
         }
     }

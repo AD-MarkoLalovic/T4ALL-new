@@ -9,7 +9,9 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.api_room_models.UserLoginResponseRoomTable
+import com.mobility.enp.data.model.cards.SetDefaultCardRequest
 import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
+import com.mobility.enp.data.model.cards.republic_of_serbia.GenerateCardToken
 import com.mobility.enp.data.model.cards.response.Card
 import com.mobility.enp.data.model.cards.response.CardsResponse
 import com.mobility.enp.data.model.cards.response.Country
@@ -24,6 +26,7 @@ import com.mobility.enp.viewmodel.UserPassViewModel.Companion.TAG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class PaymentAndPassageViewModel(
@@ -52,7 +55,12 @@ class PaymentAndPassageViewModel(
     private val _registrationHr = MutableStateFlow<SubmitResultFold<String>>(SubmitResultFold.Idle)
     val registrationHr: StateFlow<SubmitResultFold<String>> get() = _registrationHr
 
+    private val _registrationRs =
+        MutableStateFlow<SubmitResultFold<GenerateCardToken>>(SubmitResultFold.Idle)
+    val registrationRs = _registrationRs.asStateFlow()
+
     private var selectedSerialNumbers: SerialNumberRequest = SerialNumberRequest(emptyList())
+    private val perPageCroatia = 25
 
     fun fetchCardFlow() {
         _getCardDataFlow.value = SubmitResult.Loading
@@ -89,6 +97,7 @@ class PaymentAndPassageViewModel(
                                         error.errorResponse.message ?: ""
                                     )
                             }
+
                             else -> {
                                 _getCardDataFlow.value =
                                     SubmitResult.FailureApiError(error.errorResponse.message ?: "")
@@ -101,10 +110,10 @@ class PaymentAndPassageViewModel(
         }
     }
 
-    fun setNewPrimaryCard(billId: Int) {
+    fun setNewPrimaryCard(billId: Int, request: SetDefaultCardRequest) {
         _successfullyChangedPrimaryCard.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.setNewPrimaryCard(billId)
+            val result = repository.setNewPrimaryCard(billId, request)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -135,10 +144,10 @@ class PaymentAndPassageViewModel(
         }
     }
 
-    fun deleteCard(cardId: String) {
+    fun deleteCard(cardId: String, countryCode: String) {
         _successfullyDeletedCard.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.deleteCard(cardId)
+            val result = repository.deleteCard(cardId, countryCode)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -174,11 +183,13 @@ class PaymentAndPassageViewModel(
         val cardsRS: List<CardsWebUnified> = input?.data?.cardsRS ?: emptyList()
         val cardsME: List<CardsWebUnified> = input?.data?.cardsME ?: emptyList()
         val cardsMK: List<CardsWebUnified> = input?.data?.cardsMK ?: emptyList()
+        val cardsBaRs: List<CardsWebUnified> = input?.data?.cardsARS ?: emptyList()
 
         val sortedList: ArrayList<Card> = arrayListOf()
         sortedList.addAll(transformCard(cardsRS))
         sortedList.addAll(transformCard(cardsME))
         sortedList.addAll(transformCard(cardsMK))
+        sortedList.addAll(transformCard(cardsBaRs))
 
         val cardResponse = CardsResponse(sortedList)
         return cardResponse
@@ -214,15 +225,37 @@ class PaymentAndPassageViewModel(
         }
     }
 
+    private val accumulatedTags = mutableListOf<TagsForCroatiaUI>()
+
     fun fetchTagsForCroatia() {
         viewModelScope.launch {
             _tagsList.value = SubmitResultFold.Loading
+            accumulatedTags.clear()
 
-            val result = repository.tagsForCroatia()
+            val result = repository.tagsForCroatia(perPageCroatia)
 
             result.fold(
                 onSuccess = { data ->
-                    _tagsList.value = SubmitResultFold.Success(data)
+                    accumulatedTags.addAll(data)
+                    _tagsList.value = SubmitResultFold.Success(ArrayList(accumulatedTags))
+                },
+                onFailure = { error ->
+                    _tagsList.value = SubmitResultFold.Failure(error)
+                }
+            )
+        }
+    }
+
+    fun fetchTagsForCroatiaPagination(nextPage: Int) {
+        viewModelScope.launch {
+            _tagsList.value = SubmitResultFold.Loading
+
+            val result = repository.tagsForCroatiaPagination(nextPage = nextPage, perPageCroatia)
+
+            result.fold(
+                onSuccess = { data ->
+                    accumulatedTags.addAll(data)
+                    _tagsList.value = SubmitResultFold.Success(ArrayList(accumulatedTags))
                 },
                 onFailure = { error ->
                     _tagsList.value = SubmitResultFold.Failure(error)
@@ -246,11 +279,31 @@ class PaymentAndPassageViewModel(
                 onSuccess = { url ->
                     _registrationHr.value = SubmitResultFold.Success(url)
                 },
+            onFailure = { error ->
+                _registrationRs.value = SubmitResultFold.Failure(error)
+            }
+            )
+        }
+    }
+
+    fun generateCardToken() {
+        viewModelScope.launch {
+            _registrationRs.value = SubmitResultFold.Loading
+            
+            val result = repository.generateCardToken()
+            result.fold(
+                onSuccess = { data ->
+                    _registrationRs.value = SubmitResultFold.Success(data)
+                },
                 onFailure = { error ->
-                    _registrationHr.value = SubmitResultFold.Failure(error)
+                    _registrationRs.value = SubmitResultFold.Failure(error)
                 }
             )
         }
+    }
+
+    fun resetRegistrationRsState() {
+        _registrationRs.value = SubmitResultFold.Idle
     }
 
 
@@ -261,6 +314,7 @@ class PaymentAndPassageViewModel(
         _successfullyChangedPrimaryCard.value = SubmitResult.Empty
         _successfullyDeletedCard.value = SubmitResult.Empty
         saveSelectCountry = null
+        _registrationRs.value = SubmitResultFold.Idle
     }
 
     companion object {

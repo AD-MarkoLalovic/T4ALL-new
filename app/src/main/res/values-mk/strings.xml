@@ -187,8 +187,8 @@
     <string name="response_to_report" translatable="true">Одговор на извештајот за изгубен / украден уред за ENP</string>
     <string name="objection_content" translatable="true">Содржина на приговорот: (наведете јасни причини за приговорот)</string>
     <string name="complaint_min_length" translatable="true">Поље Разлог мора садржати најмање 10 карактера.</string>
-    <string name="please_enter_all_required_data" translatable="true">Ве молиме внесете ги сите потребни податоци</string>
-    <string name="no_passage_data" translatable="true">Немате поминувања во последните 30 дена</string>
+    <string name="please_enter_all_required_data" translatable="true">Полето Причина мора да содржи најмалку 10 знаци.</string>
+    <string name="no_passage_data" translatable="true">Немате поминувања во последните 30 дена.</string>
     <string name="no_passage_data_special">Немате поминувања за избраниот период</string>
     <string name="payment_successfully" translatable="true">Плаќањето е успешно извршено.</string>
     <string name="please_select_tag" translatable="true">Ве молиме одберете таг.</string>
@@ -230,7 +230,7 @@
     <string name="offline_using_stored_data">Моментално не сте поврзани на интернет. Се прикажуваат зачуваните податоци.</string>
     <string name="multiple_payment_cards_for_country">Можете да користите повеќе различни платежни картички за една земја.</string>
     <string name="tag_device_payment_method_north_macedonia">Ако сакате да го користите вашиот уред TAG на патиштата во Северној Македонији, ве молиме додадете валидна платежна картичка</string>
-    <string name="tag_device_payment_method_serbia">Ако сакате да го користите вашиот уред TAG на патиштата во Србији, ве молиме додадете валидна платежна картичка</string>
+    <string name="tag_device_payment_method_serbia">Ако сакате да го користите вашиот уред TAG на патиштата во Србији, ве молиме додадете валидна платежна картичка.</string>
     <string name="tag_device_payment_method_montenegro">Ако сакате да го користите вашиот уред TAG на патиштата во Црна Гора, ве молиме додадете валидна платежна картичка</string>
     <string name="text_no_refund_tags">Немате тагови за кои можете да поднесете барање за враќање на средствата.</string>
     <string name="text_no_my_tags">Моментално немате додадено тагови. Ве молиме додадете го вашиот таг.</string>
@@ -345,6 +345,8 @@
     <string name="notification_title">Дозволете T4A да ви испраќа известувања</string>
     <string name="notification_subtitle">Известувањата се користат за преземање на сметки и извезување на табели во историјата на преминувања.</string>
     <string name="listing_of_passages_downloaded_successfully">Листингот на поминувања е успешно преземен.</string>
+    <string name="send_bill_to_email">Испрати сметка на е-пошта</string>
+    <string name="bill_sent_to_email">Сметката е испратена на вашата е-пошта.</string>
     <string name="field_bank_account_isrequired">Полето жиро сметка треба да содржи 13 цифри.</string>
     <string name="access_denied">Пристапот е одбиен</string>
     <string name="only_t4all_users_access_denied">Во моментов не е можно да се најават налози кои не се T4All. Ве молиме користете го WEB порталот.</string>
@@ -367,6 +369,7 @@
     <string name="highway_a6">Автопат A6:</string>
     <string name="highway_a7">Автопат A7:</string>
     <string name="highway_a11">Автопат A11:</string>
+    <string name="tag_registration_plate_notice_extra">Доколку сакате на Toll4All корисничкиот портал да имате приказ на транзитите направени во Хрватска, потребно е на HAC порталот во опцијата Корисничка сметка - Согласности за надворешни сервиси, да го прифатите споделувањето на податоци со Toll4All (Патишта на Србија).</string>
     <string name="check_status_on_hac_portal">Проверете го статусот на HAC порталот</string>
     <string name="link_login_to_hac">Најави се на HAC портал</string>
     <string name="facebook_text">Следете нè на Фејсбук и дознајте први сè за придобивките од T4A системот.</string>
@@ -405,5 +408,12 @@
     <string name="euro_currency">ЕУР</string>
     <string name="action_retry">ПОВТОРИ</string>
     <string name="cards_hac_checkbox">Се согласувам моите лични податоци да бидат проследени до HAC со цел продолжување на процесот на регистрација на TAG уредот.</string>
+    <string name="contact_person">"Контакт лице "</string>
+    <string name="field_contact_person_name_required">Полето Име на контакт лице е задолжително.</string>
+    <string name="field_contact_person_surname_required">Полето Презиме на контакт лице е задолжително.</string>
+    <string name="republica_srpska">Р. Српска</string>
+    <string name="republic_of_serbia">Република Српска</string>
+    <string name="notes_serbian_tag_in_republic_serbia">Напомени за користење на српскиот ТАГ во Република Српска</string>
+    <string name="click_registration_republic_serbia">Регистрацијата на TAG уредот, додавањето на платежна картичка, наплатата на поминувањата и рекламациите се во надлежност на компанијата Autoputevi RS DOO Banja Luka. Приговори/прашања/рекламации можете да доставите на телефон +387 51 893 995 или на е-пошта: korisnicka.podrska@autoputevirs.com.\n\nПо успешно додавање на платежна картичка за користење на TAG во Република Српска, потребни се до 15 мин за статусот на тагот за Република Српска на корисничкиот портал да се промени во Активен.</string>
 
 </resources>

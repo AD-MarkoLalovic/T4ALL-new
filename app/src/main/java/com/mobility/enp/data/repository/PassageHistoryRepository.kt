@@ -14,14 +14,15 @@ import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagRes
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.pdf_table.CsvTable
+import com.mobility.enp.data.model.pdf_table.FilterPdf
 import com.mobility.enp.data.room.database.DRoom
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.toCroatianPassage
 import com.mobility.enp.util.toCroatianPassageResult
 import com.mobility.enp.util.toV2HistoryTagResponseResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
-import okhttp3.ResponseBody
 
 
 class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(dRoom, context) {
@@ -81,6 +82,119 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
             Log.e("HomeRepository getCards", "Greška pri preuzimanju kartica: ${e.message}", e)
             Result.failure(NetworkError.ServerError)
         }
+    }
+
+
+    fun getAllowedCountriesFlow(): Flow<List<V2AllowedCountries>> {
+        return database.historyV2AllowedCountriesDao().observeAllowedCountries()
+    }
+
+    suspend fun clearAllowedCountriesFlow() {
+        database.historyV2AllowedCountriesDao().clear()
+    }
+
+    fun getV2PassagesBySerialAndCountryCodeResult(
+        serialNumber: String,
+        countryCode: String
+    ): Flow<List<V2HistoryTagResponseResult?>> {
+        return database.historyV2PassageDaoResult().observePassageDataBySerialAndCountryCode(
+            serialNumber,
+            countryCode
+        )
+    }
+
+    fun getV2PassagesBySerialAndCountryCode(
+        serialNumber: String,
+        countryCode: String
+    ): Flow<List<V2HistoryTagResponse?>> {
+        return database.historyV2PassageDao().observePassageDataBySerialAndCountryCode(
+            serialNumber,
+            countryCode
+        )
+    }
+
+    fun getV2PassagesBySerialAndCountryCodeLoad(
+        serialNumber: String, countryCode: String
+    ): List<V2HistoryTagResponse?> {
+        return database.historyV2PassageDao()
+            .observePassageDataBySerialAndCountryCodeLoad(serialNumber, countryCode)
+    }
+
+    suspend fun deleteV2PassageData() {
+        database.historyV2PassageDao().deleteData()
+    }
+
+    fun getCroatiaPassagesBySerialPage(
+        serialNumber: String,
+        countryCode: String
+    ): Flow<List<V2HistoryTagResponseCroatia?>> {
+        return database.historyPassageDaoV2Croatia().observePassageDataBySerialCountry(
+            serialNumber,
+            countryCode
+        )
+    }
+
+    fun getCroatiaPassagesBySerialPageLoad(
+        serialNumber: String, countryCode: String
+    ): List<V2HistoryTagResponseCroatia?> {
+        return database.historyPassageDaoV2Croatia().observePassageDataBySerialCountryLoad(
+            serialNumber, countryCode
+        )
+    }
+
+    fun getCroatiaPassagesBySerialPageResult(
+        serialNumber: String,
+        countryCode: String
+    ): Flow<List<V2HistoryTagResponseCroatiaResult?>> {
+        return database.historyPassageDaoV2CroatiaResult().observePassageDataBySerialCountry(
+            serialNumber,
+            countryCode
+        )
+    }
+
+    fun getCroatiaPassagesBySerialPageLoadResult(
+        serialNumber: String, countryCode: String
+    ): List<V2HistoryTagResponseCroatiaResult?> {
+        return database.historyPassageDaoV2CroatiaResult().observePassageDataBySerialCountryLoad(
+            serialNumber, countryCode
+        )
+    }
+
+    suspend fun deleteCroatiaResult() {
+        database.historyPassageDaoV2CroatiaResult().deleteData()
+    }
+
+    suspend fun deleteCroatiaPassages() {
+        database.historyPassageDaoV2Croatia().deleteData()
+    }
+
+    fun getTagFlow(): Flow<List<IndexData>> {
+        return database.toolHistoryDaoSerials().observeIndexData()
+    }
+
+    suspend fun deleteTagData() {
+        database.toolHistoryDaoSerials().deleteData()
+    }
+
+    fun getV2PassagesBySerialAndCountryCodeLoadResult(
+        serialNumber: String,
+        countryCode: String
+    ): List<V2HistoryTagResponseResult?> {
+        return database.historyV2PassageDaoResult()
+            .observePassageDataBySerialAndCountryCodeLoad(serialNumber, countryCode)
+    }
+
+    suspend fun deleteV2DaoResult() {
+        database.historyV2PassageDaoResult().deleteData()
+    }
+
+
+    suspend fun deletePdfExportData() {
+        database.pdfHistoryTableDao().deleteData()
+    }
+
+    suspend fun upsertPdfExportData(filterPdf: FilterPdf) {
+        database.pdfHistoryTableDao().upsertData(filterPdf)
     }
 
     suspend fun upsertBaseTagData(indexData: IndexData) {
@@ -162,6 +276,52 @@ class PassageHistoryRepository(dRoom: DRoom, context: Context) : BaseRepository(
             return try {
                 val response = apiService(token).getToolHistoryTransitV2(
                     tagSerialNumber,
+                    page.toString(),
+                    perPage.toString(),
+                    getLangKey(),
+                    dateFrom,
+                    dateTo
+                )
+                if (response.isSuccessful) {
+                    response.body()?.let { indexData ->
+
+                        val normalizedTags =
+                            indexData.data?.tags?.sortedBy { it?.serialNumber } ?: emptyList()
+                        indexData.data?.tags = normalizedTags
+
+                        Result.success(indexData)
+                    } ?: Result.failure(NetworkError.ServerError)
+                } else {
+                    response.errorBody()?.let { errorBody ->
+                        val errorResponse = parseErrorResponse(response.code(), errorBody)
+                        Result.failure(NetworkError.ApiError(errorResponse))
+                    } ?: Result.failure(NetworkError.ServerError)
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "getIndexData: ${e.message} ${e.cause}")
+                Result.failure(NetworkError.ServerError)
+            }
+        }
+
+        return Result.failure(NetworkError.ServerError)
+
+    }
+
+
+    suspend fun getAdapterAllowedCountries(
+        page: Int,
+        perPage: Int, dateFrom: String, dateTo: String
+    ): Result<V2HistoryTagResponse> {
+
+        if (!isNetworkAvailable()) {
+            return Result.failure(NetworkError.NoConnection)
+        }
+
+        val userToken = getUserToken()
+
+        userToken?.let { token ->
+            return try {
+                val response = apiService(token).getToolHistoryAllowedCountries(
                     page.toString(),
                     perPage.toString(),
                     getLangKey(),

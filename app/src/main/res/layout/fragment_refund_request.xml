@@ -10,18 +10,18 @@
         tools:context=".view.fragments.my_profile.RefundRequestFragment">
 
         <androidx.core.widget.NestedScrollView
-            android:layout_width="@dimen/dimens_0dp"
-            android:layout_height="@dimen/dimens_0dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:fillViewport="true"
-            app:layout_constraintBottom_toTopOf="@+id/viewLineRf"
+            app:layout_constraintBottom_toTopOf="@id/viewLineRf"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/refundRequest"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/border_login"
                 android:backgroundTint="@color/primary_light_lightest"
                 android:padding="@dimen/dimens_16dp">
@@ -31,95 +31,95 @@
                     style="@style/H3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
                     android:layout_marginTop="6dp"
                     android:text="@string/refund_request"
-                    android:textColor="@color/primary_light_darkest" />
+                    android:textColor="@color/primary_light_darkest"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <View
                     android:id="@+id/lineRefundRequest"
-                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_width="0dp"
                     android:layout_height="@dimen/dimens_2dp"
-                    android:layout_below="@+id/titleRefundRequest"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
                     android:layout_marginTop="@dimen/dimens_16dp"
-                    android:background="@color/primary_light_light" />
+                    android:background="@color/primary_light_light"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/titleRefundRequest" />
 
                 <TextView
                     android:id="@+id/txExplanationRefundRequest"
                     style="@style/Paragraph"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/lineRefundRequest"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
                     android:layout_marginTop="@dimen/dimens_16dp"
-                    android:text="@string/refund_request_explanation" />
+                    android:text="@string/refund_request_explanation"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lineRefundRequest" />
 
                 <TextView
                     android:id="@+id/txAllRequest"
                     style="@style/ParagraphMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txExplanationRefundRequest"
-                    android:layout_alignParentStart="true"
                     android:layout_marginTop="@dimen/dimens_32dp"
                     android:text="@string/all_requests"
-                    android:textColor="@color/primary_light_darkest" />
+                    android:textColor="@color/primary_light_darkest"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txExplanationRefundRequest" />
 
                 <TextView
                     android:id="@+id/txNoRequirements"
                     style="@style/Paragraph"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txAllRequest"
-                    android:layout_alignParentStart="true"
                     android:layout_marginTop="@dimen/dimens_16dp"
                     android:text="@string/you_have_no_refund_requests"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txAllRequest" />
 
                 <ProgressBar
                     android:id="@+id/refundLoadingView"
-                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txAllRequest"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
                     android:layout_marginTop="@dimen/dimens_30dp"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txAllRequest" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvRefundRequest"
-                    android:layout_width="@dimen/dimens_0dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txAllRequest"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
                     android:layout_marginTop="@dimen/dimens_16dp"
                     android:orientation="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/txAllRequest"
                     tools:itemCount="2"
                     tools:listitem="@layout/item_refund_request_created" />
-            </RelativeLayout>
-        </androidx.core.widget.NestedScrollView>
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <View
             android:id="@+id/viewLineRf"
-            android:layout_width="@dimen/dimens_0dp"
+            android:layout_width="0dp"
             android:layout_height="@dimen/dimens_1dp"
             android:layout_marginBottom="@dimen/dimens_8dp"
             android:background="@color/primary_light_light"
-            app:layout_constraintBottom_toTopOf="@+id/buttonRequest"
+            app:layout_constraintBottom_toTopOf="@id/buttonRequest"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/buttonRequest"
             style="@style/MyButtonStyle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="@dimen/dimens_8dp"
@@ -131,7 +131,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:visibility="visible" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

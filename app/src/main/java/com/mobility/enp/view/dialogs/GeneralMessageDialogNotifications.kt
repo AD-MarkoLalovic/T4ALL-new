@@ -15,21 +15,37 @@ import com.mobility.enp.viewmodel.FranchiseViewModel
 
 class GeneralMessageDialogNotifications : DialogFragment {
 
-    private lateinit var title: String
-    private lateinit var subtitle: String
-
     private var _binding: GeneralDialogNotificationsBinding? = null
     private val binding: GeneralDialogNotificationsBinding get() = _binding!!
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
 
-    private lateinit var onButtonClick: OnButtonClick
+    private var onButtonClick: OnButtonClick? = null
+
+    fun setOnButtonClickListener(listener: OnButtonClick) {
+        this.onButtonClick = listener
+    }
+
+    private fun handleClick() {
+        onButtonClick?.onClickConfirmed()
+    }
 
     constructor() : super()
 
-    constructor(title: String, subtitle: String, onButtonClick: OnButtonClick) : super() {
-        this.title = title
-        this.subtitle = subtitle
-        this.onButtonClick = onButtonClick
+    companion object {
+        private const val ARG_TITLE = "ARG_TITLE"
+        private const val ARG_SUBTITLE = "ARG_SUBTITLE"
+
+        fun newInstance(
+            title: String,
+            subtitle: String,
+        ): GeneralMessageDialogNotifications {
+            return GeneralMessageDialogNotifications().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_TITLE, title)
+                    putString(ARG_SUBTITLE, subtitle)
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -51,12 +67,14 @@ class GeneralMessageDialogNotifications : DialogFragment {
             }
         }
 
-        binding.title.text = title
-        binding.subTitle.text = subtitle
+        binding.title.text = requireArguments().getString(ARG_TITLE).orEmpty()
+        binding.subTitle.text = requireArguments().getString(ARG_SUBTITLE).orEmpty()
+
         binding.confirmButton.setOnClickListener {
             dialog?.dismiss()
-            onButtonClick.onClickConfirmed()
+            onButtonClick?.onClickConfirmed()
         }
+
         binding.rejectButton.setOnClickListener {
             dismiss()
         }
@@ -68,7 +86,7 @@ class GeneralMessageDialogNotifications : DialogFragment {
 
     override fun onStart() {
         super.onStart()
-        setDimensionsPercent(95)
+        setDimensionsPercent(85)
         isCancelable = false
     }
 

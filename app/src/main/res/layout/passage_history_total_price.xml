@@ -18,7 +18,7 @@
         <TextView
             android:id="@+id/currencyTotal"
             style="@style/ParagraphSmall"
-            android:layout_width="@dimen/dimens_80dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{data.total}"
             app:layout_constraintEnd_toStartOf="@id/currencyValue"
@@ -32,10 +32,11 @@
         <TextView
             android:id="@+id/currencyValue"
             style="@style/ParagraphSmall"
-            android:layout_width="@dimen/dimens_25dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="end"
             android:text="@{data.currency}"
+            android:layout_marginStart="@dimen/dimens_2dp"
             android:textSize="@dimen/dimens_8sp"
             app:layout_constraintBottom_toBottomOf="@id/currencyTotal"
             app:layout_constraintStart_toEndOf="@id/currencyTotal"

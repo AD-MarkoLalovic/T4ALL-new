@@ -139,7 +139,6 @@
                         android:layout_height="wrap_content"
                         android:text="@string/basic_information"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -152,7 +151,6 @@
                         android:backgroundTint="@color/primary_light_lightest"
                         android:text="@string/change_password"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/buttonBasicInformation" />
 
@@ -165,7 +163,6 @@
                         android:backgroundTint="@color/primary_light_lightest"
                         android:text="@string/my_invoices"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/buttonChangePassword" />
 
@@ -178,7 +175,6 @@
                         android:backgroundTint="@color/primary_light_lightest"
                         android:text="@string/my_tags"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/buttonMyInvoices" />
 
@@ -187,7 +183,7 @@
                         style="@style/MyOutlinedButtonStyle"
                         android:layout_width="@dimen/dimens_0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dimens_8dp"
+                        android:layout_marginTop="@dimen/dimens_22dp"
                         android:text="@string/buy_tag_online"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -202,7 +198,6 @@
                         android:backgroundTint="@color/primary_light_lightest"
                         android:text="@string/refund_request"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/buyTagProfile" />
 
@@ -216,7 +211,6 @@
                         android:backgroundTint="@color/primary_light_lightest"
                         android:text="@string/support_text"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/buttonRefundRequest" />
 
@@ -229,7 +223,6 @@
                         android:backgroundTint="@color/primary_light_lightest"
                         android:text="@string/settings"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/buttonSupport" />
 
@@ -243,7 +236,6 @@
                         android:backgroundTint="@color/primary_light_lightest"
                         android:text="@string/terms_and_conditions"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/buttonSettings" />
 

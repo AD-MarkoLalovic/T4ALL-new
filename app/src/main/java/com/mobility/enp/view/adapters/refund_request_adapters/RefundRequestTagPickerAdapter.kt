@@ -112,7 +112,15 @@ class RefundRequestTagPickerAdapter(
         holder.binding.refundRequestRadioButton.buttonTintList = colorStateList
     }
 
-    fun submitList(list: List<TagsRefundRequestUIModel>) {
-        differ.submitList(list)
+    fun submitList(list: List<TagsRefundRequestUIModel>, selectedSerialNumber: String? = null) {
+        differ.submitList(list) {
+            if (selectedSerialNumber != null) {
+                val index = list.indexOfFirst { it.serialNumber == selectedSerialNumber }
+                if (index != -1) {
+                    selectedPosition = index
+                    notifyDataSetChanged()
+                }
+            }
+        }
     }
 }

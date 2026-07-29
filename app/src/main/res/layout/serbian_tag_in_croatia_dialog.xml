@@ -270,6 +270,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardTagUsageCroatia" />
 
+        <TextView
+            android:id="@+id/tagRegistrationPlateNew"
+            style="@style/SubtitlesRegular"
+            android:layout_width="@dimen/dimens_0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimens_16dp"
+            android:text="@string/tag_registration_plate_notice_extra"
+            android:textColor="@color/figmaSplashScreenColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tagRegistrationPlateNotice" />
+
         <Button
             android:id="@+id/bttCloseNote"
             style="@style/MyButtonStyle"
@@ -279,7 +291,7 @@
             android:text="@string/button_close"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tagRegistrationPlateNotice" />
+            app:layout_constraintTop_toBottomOf="@+id/tagRegistrationPlateNew" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -54,7 +54,6 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         franchiseViewModel.runOnce = true
-        SharedPreferencesHelper.resetCheckBoxHAC(requireContext())
 
         setObservers()
         fragmentResultListener()

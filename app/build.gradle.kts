@@ -1,8 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.gms.google.services)
-    alias(libs.plugins.ksp)
+    id("com.google.devtools.ksp") version "2.3.9"
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.firebase.crashlytics")
     id("kotlin-parcelize")
@@ -27,16 +26,22 @@ android {
     }
 
     namespace = "com.mobility.enp"
-    compileSdk = 35
+    compileSdk = 37
+
+    androidResources {
+        localeFilters += listOf(
+            "b+sr+Latn",
+            "b+sr+Cyrl",
+            "de", "mk", "tr", "b+cnr", "hr", "el", "bs"
+        )
+    }
 
     defaultConfig {
         applicationId = "com.mobility.enp"
         minSdk = 29
-        targetSdk = 36
-        versionCode = 261
-        versionName = "1.11.0"
-
-        resourceConfigurations += listOf("en", "sr", "de", "mk", "tr", "b+cnr", "hr", "el", "bs")
+        targetSdk = 37
+        versionCode = 263
+        versionName = "1.12.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -61,12 +66,12 @@ android {
         create("stage") {
             dimension = "mode"
             applicationIdSuffix = ".stage"
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
             versionNameSuffix = "-stage"
             multiDexEnabled = true
             isDefault = true
             buildConfigField("String", "API_URL", "\"https://mobileapitest.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+21693@gmail.com\"")
+            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev+13000@gmail.com\"")
             buildConfigField("String", "TEST_PASSWORD", "\"Demo!4team\"")
             buildConfigField(
                 "String",
@@ -79,7 +84,7 @@ android {
             dimension = "mode"
             signingConfig = signingConfigs.getByName("release")
             buildConfigField("String", "API_URL", "\"https://mobileapi.toll4all.com/\"")
-            buildConfigField("String", "TEST_USERNAME", "\"cok.brb.11@gmail.com\"")
+            buildConfigField("String", "TEST_USERNAME", "\"toll4alldev@gmail.com\"")
             buildConfigField("String", "TEST_PASSWORD", "\"testiranje1!\"")
             buildConfigField(
                 "String",
@@ -94,15 +99,17 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     buildFeatures {
         dataBinding = true
         viewBinding = true
     }
 
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+    }
 }
 
 dependencies {
@@ -161,5 +168,8 @@ dependencies {
     implementation(libs.moshi)              // Glavna Moshi biblioteka za JSON parsiranje
     implementation(libs.moshi.kotlin)       // Kotlin ekstenzije i podrška za Kotlin specifične tipove
     ksp(libs.moshi.kotlin.codegen)          // KSP codegen za automatsko generisanje adaptera bez refleksije
+
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.room.paging)
 
 }

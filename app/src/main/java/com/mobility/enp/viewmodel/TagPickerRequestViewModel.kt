@@ -18,18 +18,58 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+data class TagPickerRequestFormState(
+    val amount: String = "",
+    val bankPosition: Int = 0,
+    val uniqueNumberPosition: Int = -1,
+    val centerAccountNumber: String = "",
+    val rightAccountNumber: String = "",
+    val tagSerialNumber: String? = null
+)
+
 class TagPickerRequestViewModel(private val repository: UserRepository) : ViewModel() {
 
+    var formState: TagPickerRequestFormState = TagPickerRequestFormState()
+        private set
+
+    fun updateFormState(state: TagPickerRequestFormState) {
+        formState = state
+    }
+
+    fun clearAmount() {
+        formState = formState.copy(amount = "")
+    }
+
+    fun clearTagSerialNumber() {
+        formState = formState.copy(tagSerialNumber = null)
+    }
+
+    fun clearBankPosition() {
+        formState = formState.copy(bankPosition = 0)
+    }
+
+    fun clearUniqueNumberPosition() {
+        formState = formState.copy(uniqueNumberPosition = -1)
+    }
+
+    fun clearCenterAccountNumber() {
+        formState = formState.copy(centerAccountNumber = "")
+    }
+
+    fun clearRightAccountNumber() {
+        formState = formState.copy(rightAccountNumber = "")
+    }
+
     private val _tagPickerRequest = MutableStateFlow<SubmitResult<List<TagsRefundRequestUIModel>>>(
-        SubmitResult.Loading
+        SubmitResult.Empty
     )
     val tagPickerRequest: StateFlow<SubmitResult<List<TagsRefundRequestUIModel>>> =
         _tagPickerRequest
 
-    private val _banks = MutableStateFlow<SubmitResult<List<BankUIModel>>>(SubmitResult.Loading)
+    private val _banks = MutableStateFlow<SubmitResult<List<BankUIModel>>>(SubmitResult.Empty)
     val banks: StateFlow<SubmitResult<List<BankUIModel>>> = _banks
 
-    private val _refundRequestState = MutableStateFlow<SubmitResult<Unit>>(SubmitResult.Loading)
+    private val _refundRequestState = MutableStateFlow<SubmitResult<Unit>>(SubmitResult.Empty)
     val refundRequestState: StateFlow<SubmitResult<Unit>> = _refundRequestState
 
     init {

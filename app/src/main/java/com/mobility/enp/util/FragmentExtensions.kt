@@ -1,6 +1,6 @@
 package com.mobility.enp.util
 
-import android.content.res.Resources
+import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.IdRes
@@ -25,12 +25,17 @@ fun <T> Fragment.collectLatestLifecycleFlow(flow: Flow<T>, collect: suspend (T) 
 }
 
 fun DialogFragment.setDimensionsPercent(widthPercent: Int, heightPercent: Int? = null) {
-    val width = (Resources.getSystem().displayMetrics.widthPixels * (widthPercent / 100f)).toInt()
+    val metrics = requireContext().resources.displayMetrics
+    val width = (metrics.widthPixels * (widthPercent / 100f)).toInt()
     val height = heightPercent?.let {
-        (Resources.getSystem().displayMetrics.heightPixels * (it / 100f)).toInt()
+        (metrics.heightPixels * (it / 100f)).toInt()
     } ?: ViewGroup.LayoutParams.WRAP_CONTENT
 
-    dialog?.window?.setLayout(width, height)
+    dialog?.window?.apply {
+        setLayout(width, height)
+        setGravity(Gravity.CENTER)
+    }
+
 }
 
 fun Fragment.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {

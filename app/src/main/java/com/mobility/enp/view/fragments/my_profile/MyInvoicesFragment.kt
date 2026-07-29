@@ -11,12 +11,18 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobility.enp.R
+import com.mobility.enp.data.model.api_my_invoices.BillData
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
+import com.mobility.enp.data.model.api_my_invoices.RsBillsResponse
+import com.mobility.enp.data.model.api_my_invoices.refactor.Data
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
+import com.mobility.enp.data.model.api_my_invoices.toBillData
 import com.mobility.enp.databinding.FragmentBillsBinding
 import com.mobility.enp.util.FragmentResultKeys
 import com.mobility.enp.util.NetworkError
@@ -24,11 +30,13 @@ import com.mobility.enp.util.NetworkObserver
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
 import com.mobility.enp.util.SubmitResultFold
+import com.mobility.enp.util.Util
 import com.mobility.enp.util.collectLatestLifecycleFlow
 import com.mobility.enp.util.toast
 import com.mobility.enp.view.MainActivity
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import com.mobility.enp.view.adapters.my_invoices_adapters.MonthlyBillsAdapter
+import com.mobility.enp.view.adapters.my_invoices_adapters.MyInvoicesCountriesAdapter
 import com.mobility.enp.view.dialogs.NotificationsRequestDialog
 import com.mobility.enp.view.dialogs.PermissionDeniedDialog
 import com.mobility.enp.viewmodel.FranchiseViewModel
@@ -36,8 +44,6 @@ import com.mobility.enp.viewmodel.MyInvoicesViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import com.mobility.enp.data.model.api_my_invoices.refactor.Data
-import com.mobility.enp.util.Util
 
 class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     MonthlyBillsAdapter.MontYearListener {
@@ -47,9 +53,12 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: MyInvoicesViewModel by activityViewModels { MyInvoicesViewModel.Factory }
 
+    private lateinit var adapterCountries: MyInvoicesCountriesAdapter
     private lateinit var adapterMonthly: MonthlyBillsAdapter
+    private lateinit var adapterRsBills: BillsDetailsAdapter
     private lateinit var networkObserver: NetworkObserver
     private var dataExists: Data? = null
+    private var rsDataExists: BillData? = null
 
     private var month = ""
     private val requestPermissionLauncher =
@@ -90,27 +99,162 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (!viewModel.firstLoad) {
+            binding.invoicesLoadingView.visibility = View.VISIBLE
+            viewModel.firstLoad = true
+        }
+
         setObservers()
 
-        setSelectedButton(binding.buttonAll)
-        setButtonsEnabled(true)
+        viewModel.setSelectedCountry("RS")
 
-        setListener()
         setupNetworkObserver()
         permissionNotificationDeniedDialogResultListener()
 
         if (!Util.isNetworkAvailable(requireContext())) {
             binding.txNoInternet.visibility = View.VISIBLE
             showNoConnectionState()
-
         }
     }
 
     private fun setObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.allowedCountriesFlow.collect { finalList ->
+                    binding.valueTitle.visibility = View.VISIBLE
+                    adapterCountries = MyInvoicesCountriesAdapter { selectedStatus ->
+
+                        when (selectedStatus) {
+
+                            getString(R.string.all) -> {
+                                binding.textNoBills.visibility = View.GONE
+                                if (::adapterMonthly.isInitialized) {
+                                    adapterMonthly.resetAdapter()
+                                }
+                                binding.invoicesLoadingView.visibility = View.VISIBLE
+                                viewModel.setSelectedCountry("all")
+                                viewModel.setPosition(adapterCountries.getTabPosition())
+                                viewModel.recyclerState = null
+                                viewModel.fetchMonthlyInvoices()
+                            }
+
+                            getString(R.string.republica_srpska) -> {
+                                binding.textNoBills.visibility = View.GONE
+                                if (::adapterMonthly.isInitialized) {
+                                    adapterMonthly.resetAdapter()
+                                }
+                                binding.invoicesLoadingView.visibility = View.VISIBLE
+                                viewModel.setSelectedCountry("BA_RS")
+                                viewModel.setPosition(adapterCountries.getTabPosition())
+                                viewModel.recyclerState = null
+                                viewModel.fetchMonthlyInvoices()
+                            }
+
+                            getString(R.string.croatia) -> {
+                                binding.textNoBills.visibility = View.GONE
+                                if (::adapterMonthly.isInitialized) {
+                                    adapterMonthly.resetAdapter()
+                                }
+                                binding.invoicesLoadingView.visibility = View.VISIBLE
+                                viewModel.setSelectedCountry("HR")
+                                viewModel.setPosition(adapterCountries.getTabPosition())
+                                viewModel.recyclerState = null
+                                viewModel.fetchMonthlyInvoices()
+                            }
+
+                            getString(R.string.montenegro) -> {
+                                binding.textNoBills.visibility = View.GONE
+                                if (::adapterMonthly.isInitialized) {
+                                    adapterMonthly.resetAdapter()
+                                }
+                                binding.invoicesLoadingView.visibility = View.VISIBLE
+                                viewModel.setSelectedCountry("ME")
+                                viewModel.setPosition(adapterCountries.getTabPosition())
+                                viewModel.recyclerState = null
+                                viewModel.fetchMonthlyInvoices()
+                            }
+
+                            getString(R.string.north_macedonian_passage) -> {
+                                binding.textNoBills.visibility = View.GONE
+                                if (::adapterMonthly.isInitialized) {
+                                    adapterMonthly.resetAdapter()
+                                }
+                                binding.invoicesLoadingView.visibility = View.VISIBLE
+                                viewModel.setSelectedCountry("MK")
+                                viewModel.setPosition(adapterCountries.getTabPosition())
+                                viewModel.recyclerState = null
+                                viewModel.fetchMonthlyInvoices()
+                            }
+
+                            getString(R.string.serbia) -> {
+                                binding.textNoBills.visibility = View.GONE
+                                if (::adapterMonthly.isInitialized) {
+                                    adapterMonthly.resetAdapter()
+                                }
+                                binding.invoicesLoadingView.visibility = View.VISIBLE
+                                viewModel.setSelectedCountry("RS")
+                                viewModel.setPosition(adapterCountries.getTabPosition())
+                                viewModel.recyclerState = null
+                                viewModel.fetchMonthlyInvoices()
+                            }
+
+                            else -> ""
+                        }
+
+                    }
+
+                    binding.cyclerInvoicesCountries.adapter = adapterCountries
+
+                    adapterCountries.submitList(finalList) {
+                        adapterCountries.setTabPosition(viewModel.getPosition())
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.currentData.collect { response ->
+                    when (response) {
+                        is SubmitResult.Success -> {
+                            if (response.data.data!!.months.isEmpty()) {
+                                binding.textNoBills.visibility = View.VISIBLE
+                            } else {
+                                dataExists = response.data.data
+
+                                binding.textNoBills.visibility = View.GONE
+                                binding.recyclerViewBills.visibility = View.VISIBLE
+                                adapterMonthly = MonthlyBillsAdapter(
+                                    response.data.data,
+                                    viewModel,
+                                    this@MyInvoicesFragment,
+                                    viewLifecycleOwner,
+                                    this@MyInvoicesFragment,
+                                    franchiseViewModel.franchiseModel.value
+                                ) {
+                                    val state =
+                                        binding.recyclerViewBills.layoutManager?.onSaveInstanceState()
+                                    viewModel.recyclerState = state
+                                }
+                                binding.recyclerViewBills.adapter = adapterMonthly
+                                binding.recyclerViewBills.layoutManager =
+                                    LinearLayoutManager(requireContext())
+                                binding.recyclerViewBills.layoutManager
+                                    ?.onRestoreInstanceState(viewModel.recyclerState)
+                            }
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+
         collectLatestLifecycleFlow(viewModel.myInvoices) { serverResponse ->
             when (serverResponse) {
                 is SubmitResult.Loading -> {
                     binding.invoicesLoadingView.visibility = View.VISIBLE
+                    binding.recyclerViewBills.visibility = View.VISIBLE
                 }
 
                 is SubmitResult.Success -> {
@@ -144,24 +288,136 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
             }
         }
 
+        collectLatestLifecycleFlow(viewModel.rsBills) { serverResponse ->
+            when (serverResponse) {
+                is SubmitResult.Loading -> {
+                    binding.invoicesLoadingView.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    binding.txNoInternet.visibility = View.GONE
+                    binding.recyclerViewBills.visibility = View.VISIBLE
+                    loadRsData(serverResponse.data)
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    showError(serverResponse.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(serverResponse.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {}
+            }
+        }
+
+        collectLatestLifecycleFlow(viewModel.myInvoicesPaging) { serverResponse ->
+            when (serverResponse) {
+                is SubmitResult.Loading -> {
+                    binding.invoicesLoadingView.visibility = View.VISIBLE
+                    binding.recyclerViewBills.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    if (::adapterMonthly.isInitialized) {
+                        adapterMonthly.updateAdapter(serverResponse.data)
+                    }
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    showError(serverResponse.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(serverResponse.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {}
+            }
+        }
+
         collectLatestLifecycleFlow(viewModel.billPad) { result ->
-            when(result) {
+            when (result) {
                 is SubmitResultFold.Failure -> {
                     binding.invoicesLoadingView.visibility = View.GONE
                     handleError(result.error)
                     viewModel.resetBillPad()
                 }
+
                 SubmitResultFold.Idle -> {}
                 SubmitResultFold.Loading -> {
                     binding.invoicesLoadingView.visibility = View.VISIBLE
                 }
+
                 is SubmitResultFold.Success<*> -> {
                     binding.invoicesLoadingView.visibility = View.GONE
 
                     toast(getString(R.string.payment_successfully))
-                    viewModel.fetchMonthlyInvoices()
+                    if (viewModel.isRepublicSerbiaMode) {
+                        viewModel.fetchRepublicSerbiaBills()
+                    } else {
+                        viewModel.fetchMonthlyInvoices()
+                    }
                     viewModel.resetBillPad()
                 }
+            }
+        }
+
+        collectLatestLifecycleFlow(viewModel.billDetailsFlow) { serverResponse ->
+            when (serverResponse) {
+                is SubmitResult.Loading -> {
+                    binding.invoicesLoadingView.visibility = View.VISIBLE
+                }
+
+                is SubmitResult.Success -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                }
+
+                is SubmitResult.FailureNoConnection -> {
+                    showNoConnectionState()
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    showError(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    binding.invoicesLoadingView.visibility = View.GONE
+                    showError(serverResponse.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    showError(serverResponse.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                else -> {}
             }
         }
 
@@ -192,66 +448,82 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     }
 
     private fun loadData(response: SubmitResult.Success<MyInvoicesResponse>) {
+        rsDataExists = null
 
         response.data.data?.allowedCountries?.let { allowedCountry ->
-            binding.buttonAll.visibility = View.VISIBLE
             binding.valueTitle.visibility = View.VISIBLE
 
-            for (country in allowedCountry) {
-                when (country.value) {
-                    "RS" -> {
-                        binding.buttonSerbia.visibility = View.VISIBLE
-                    }
+            if (::adapterCountries.isInitialized) {  // perform adapter setting only once if its not already intialized
 
-                    "ME" -> {
-                        binding.buttonMontenegro.visibility = View.VISIBLE
-                    }
+                val listOfCountries: ArrayList<String> = arrayListOf()
 
-                    "MK" -> {
-                        binding.northMacedonia.visibility = View.VISIBLE
-                    }
+                listOfCountries.add(getString(R.string.all))  // because we have all "button"
 
-                    "HR" -> {
-                        binding.buttonCroatia.visibility = View.VISIBLE
+                for (data in allowedCountry) {
+                    when (data.value) {
+                        getString(R.string.republica_srpska_code) -> {
+                            listOfCountries.add(getString(R.string.republica_srpska))
+                        }
+
+                        getString(R.string.croatia_hr) -> {
+                            listOfCountries.add(getString(R.string.croatia))
+                        }
+
+                        getString(R.string.montenegro_me) -> {
+                            listOfCountries.add(getString(R.string.montenegro))
+                        }
+
+                        getString(R.string.northmacedonia_mk) -> {
+                            listOfCountries.add(getString(R.string.north_macedonian_passage))
+                        }
+
+                        getString(R.string.serbia_rs) -> {
+                            listOfCountries.add(getString(R.string.serbia))
+                        }
                     }
                 }
+
+                val finalList: List<String> = listOfCountries.distinct()
+                listOfCountries.clear()
+
+                viewModel.setAllowedCountries(finalList)
+                viewModel.setSavedData(response)
             }
+
         }
+    }
 
-        if (response.data.data!!.months.isEmpty()) {
+    private fun loadRsData(response: RsBillsResponse) {
+        val billData = response.toBillData()
+        if (billData.bills.isEmpty()) {
             binding.textNoBills.visibility = View.VISIBLE
-            setButtonsEnabled(true)
         } else {
-            dataExists = response.data.data
-
+            rsDataExists = billData
             binding.textNoBills.visibility = View.GONE
             binding.recyclerViewBills.visibility = View.VISIBLE
-            adapterMonthly = MonthlyBillsAdapter(
-                response.data.data,
+            adapterRsBills = BillsDetailsAdapter(
+                billData,
                 viewModel,
+                viewLifecycleOwner,
                 this,
-                this,
-                this,
-                franchiseViewModel.franchiseModel.value
+                billData.bills.firstOrNull()?.currency?.value ?: "",
+                isBaRsMode = true
             )
-            binding.recyclerViewBills.adapter = adapterMonthly
+            binding.recyclerViewBills.adapter = adapterRsBills
             binding.recyclerViewBills.layoutManager = LinearLayoutManager(requireContext())
-
-            setButtonsEnabled(true)
-
-            viewModel.setLocalData(response.data)
         }
-
     }
 
     private fun handleError(error: Throwable) {
-        when(error) {
+        when (error) {
             NetworkError.ServerError -> {
                 toast(getString(R.string.server_error_msg))
             }
+
             NetworkError.NoConnection -> {
                 noInternetMessage()
             }
+
             is NetworkError.ApiError -> {
                 toast(error.errorResponse.message ?: getString(R.string.server_error_msg))
             }
@@ -261,77 +533,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     private fun sendNotification() {
         Toast.makeText(requireContext(), getString(R.string.permission_granted), Toast.LENGTH_SHORT)
             .show()
-    }
-
-    private fun setListener() {
-        binding.buttonAll.setOnClickListener {
-            binding.textNoBills.visibility = View.GONE
-            setSelectedButton(it)
-            if (::adapterMonthly.isInitialized) {
-                adapterMonthly.resetAdapter()
-            }
-            binding.invoicesLoadingView.visibility = View.VISIBLE
-            viewModel.setSelectedCountry("")
-            setButtonsEnabled(false)
-            viewModel.fetchMonthlyInvoices()
-        }
-
-        binding.buttonCroatia.setOnClickListener {
-            binding.textNoBills.visibility = View.GONE
-            setSelectedButton(it)
-            if (::adapterMonthly.isInitialized) {
-                adapterMonthly.resetAdapter()
-            }
-            binding.invoicesLoadingView.visibility = View.VISIBLE
-            viewModel.setSelectedCountry("HR")
-            setButtonsEnabled(false)
-            viewModel.fetchMonthlyInvoices()
-        }
-
-        binding.northMacedonia.setOnClickListener {
-            binding.textNoBills.visibility = View.GONE
-            setSelectedButton(it)
-            if (::adapterMonthly.isInitialized) {
-                adapterMonthly.resetAdapter()
-            }
-            binding.invoicesLoadingView.visibility = View.VISIBLE
-            viewModel.setSelectedCountry("MK")
-            setButtonsEnabled(false)
-            viewModel.fetchMonthlyInvoices()
-        }
-
-        binding.buttonMontenegro.setOnClickListener {
-            binding.textNoBills.visibility = View.GONE
-            setSelectedButton(it)
-            if (::adapterMonthly.isInitialized) {
-                adapterMonthly.resetAdapter()
-            }
-            binding.invoicesLoadingView.visibility = View.VISIBLE
-            viewModel.setSelectedCountry("ME")
-            setButtonsEnabled(false)
-            viewModel.fetchMonthlyInvoices()
-        }
-
-        binding.buttonSerbia.setOnClickListener {
-            binding.textNoBills.visibility = View.GONE
-            setSelectedButton(it)
-            if (::adapterMonthly.isInitialized) {
-                adapterMonthly.resetAdapter()
-            }
-            binding.invoicesLoadingView.visibility = View.VISIBLE
-            viewModel.setSelectedCountry("RS")
-            setButtonsEnabled(false)
-            viewModel.fetchMonthlyInvoices()
-        }
-
-    }
-
-    private fun setButtonsEnabled(enabled: Boolean) { // to prevent button spam until data is fetched from api
-        binding.buttonAll.isEnabled = enabled
-        binding.buttonCroatia.isEnabled = enabled
-        binding.buttonMontenegro.isEnabled = enabled
-        binding.northMacedonia.isEnabled = enabled
-        binding.buttonSerbia.isEnabled = enabled
     }
 
     override fun onStartSpinner() {
@@ -346,17 +547,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         }
     }
 
-
-    override fun pagingUpdate(
-        nextPage: Int,
-        flow: MutableStateFlow<SubmitResult<MyInvoicesResponse>>
-    ) {
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.fetchMonthlyInvoicesPaging(
-                nextPage, flow
-            )
-        }
-    }
 
     override fun pagingUpdateBill(
         nextPage: Int,
@@ -398,16 +588,6 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
     }
 
 
-    private fun setSelectedButton(selectedButton: View) = with(binding) {
-        northMacedonia.isSelected = false
-        buttonSerbia.isSelected = false
-        buttonMontenegro.isSelected = false
-        buttonCroatia.isSelected = false
-        buttonAll.isSelected = false
-
-        selectedButton.isSelected = true
-    }
-
     private fun showNoConnectionState() {
         noInternetMessage()
     }
@@ -429,12 +609,17 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         networkObserver = NetworkObserver(
             requireContext(),
             onAvailable = {
-                viewModel.fetchMonthlyInvoices()
+                if (viewModel.isRepublicSerbiaMode) {
+                    viewModel.fetchRepublicSerbiaBills()
+                } else {
+                    viewModel.fetchMonthlyInvoices()
+                }
             },
             onLost = {
                 viewLifecycleOwner.lifecycleScope.launch {
                     noInternetMessage()
-                    if (dataExists != null) {
+                    val hasData = dataExists != null || rsDataExists != null
+                    if (hasData) {
                         binding.recyclerViewBills.visibility = View.VISIBLE
                         binding.txNoInternet.visibility = View.GONE
                         binding.valueTitle.visibility = View.VISIBLE
@@ -455,6 +640,8 @@ class MyInvoicesFragment : Fragment(), MonthlyBillsAdapter.TriggerSpinner,
         super.onDestroyView()
         networkObserver.stop()
         viewModel.resetState()
+        dataExists = null
+        rsDataExists = null
         _binding = null
     }
 

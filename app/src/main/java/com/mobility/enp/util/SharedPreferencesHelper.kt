@@ -9,20 +9,13 @@ object SharedPreferencesHelper {
     private const val PREFS_NAME = "AppPreferences"
     private const val KEY_CHECKBOX_EVER_CHECKED = "checkbox_ever_checked"
 
-    fun setCheckboxEverChecked(context: Context) {
+
+    fun putCheckboxChecked(context: Context,checked: Boolean) {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit {
-                putBoolean(KEY_CHECKBOX_EVER_CHECKED, true)
+            .edit{
+                putBoolean(KEY_CHECKBOX_EVER_CHECKED, checked)
             }
     }
-
-    fun resetCheckBoxHAC(context: Context) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit {
-                putBoolean(KEY_CHECKBOX_EVER_CHECKED, false)
-            }
-    }
-
 
     fun wasCheckboxEverChecked(context: Context): Boolean {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

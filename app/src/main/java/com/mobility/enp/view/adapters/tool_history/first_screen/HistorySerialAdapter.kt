@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tool_history.TagUtilCycler
@@ -17,6 +19,8 @@ import com.mobility.enp.databinding.ToolHistoryIndexCardBinding
 import com.mobility.enp.view.adapters.tool_history.combined.HistoryTotalCostAdapter
 import com.mobility.enp.viewmodel.UserPassViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -25,64 +29,88 @@ class HistorySerialAdapter(
     private val complaintInterface: HistoryPassageAdapter.SendToFragment,
     private val complaintInterfaceCroatia: HistoryPassageAdapterCroatia.SendToFragment,
     val lifecycleOwner: LifecycleOwner,
-) : RecyclerView.Adapter<HistorySerialAdapter.TagsViewHolder>() {
-
-    private var listOfTags: List<Tag> = emptyList()
+    private val stopSpinner: (Unit) -> Unit,
+    private val hasPassages: (ArrayList<Boolean>) -> Unit
+) : ListAdapter<Tag, HistorySerialAdapter.TagsViewHolder>(TagDiffCallback) {
 
     private var currentPage: Int = 0
     private var lastPage: Int = 0
+    private val listOfPassages: ArrayList<Boolean> = arrayListOf()
+    private var paginationJob: Job? = null
+
+    override fun onViewRecycled(holder: TagsViewHolder) {
+        super.onViewRecycled(holder)
+        holder.job?.cancel()
+        (holder.binding.cycler.adapter as? HistoryPassageAdapter)?.cancelJob()
+        (holder.binding.cycler.adapter as? HistoryPassageAdapterCroatia)?.cancelJob()
+    }
 
     fun setAdapterData(indexData: List<IndexData>) {
+        listOfPassages.clear()
         if (indexData.isNotEmpty()) {
             currentPage = indexData[indexData.size - 1].currentPage ?: 0
             lastPage = indexData[indexData.size - 1].lastPage ?: 0
         }
 
-        listOfTags = indexData.flatMap { it.data?.tags.orEmpty() }
-
-        for (i in listOfTags.indices) {
-            notifyItemChanged(i)
-        }
+        val tags = indexData.flatMap { it.data?.tags.orEmpty() }
 
         if (currentPage < lastPage) {
             viewModel.getSerialDeviceDataValidationSerialAdapter(lastPage)
         }
+
+        submitList(tags)
     }
 
-    fun clearData() {
-        listOfTags = emptyList()
-        currentPage = 0
-        lastPage = 0
-        notifyDataSetChanged()
+    fun clearList(onCommit: () -> Unit) {
+        submitList(null) {
+            onCommit()
+        }
     }
 
     companion object {
         const val TAG = "PrimaryPassageAdapter"
+        private var cachedItemHeight: Int = 0
+
+        private object TagDiffCallback : DiffUtil.ItemCallback<Tag>() {
+            override fun areItemsTheSame(oldItem: Tag, newItem: Tag): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Tag, newItem: Tag): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 
     inner class TagsViewHolder(
         val binding: ToolHistoryIndexCardBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        var job: Job? = null
 
         fun bind(
-            toolHistoryIndex: TagUtilCycler, position: Int, holder: TagsViewHolder
+            toolHistoryIndex: TagUtilCycler, position: Int
         ) {
+
+            binding.cycler.layoutManager = LinearLayoutManager(binding.root.context)
+            binding.cycler.isNestedScrollingEnabled = true
+
+            job?.cancel()
+            (binding.cycler.adapter as? HistoryPassageAdapter)?.cancelJob()
+            (binding.cycler.adapter as? HistoryPassageAdapterCroatia)?.cancelJob()
+
+            hideViews(binding)
+
             // perform initial data fill // for sub adapter
             binding.data = toolHistoryIndex
-
-            holder.binding.progbar.visibility = View.INVISIBLE
-            binding.noPassage.visibility = View.GONE
-            binding.nsScroll.visibility = View.INVISIBLE
-            binding.cycler.visibility = View.INVISIBLE
-            binding.cyclerTotalPrice.visibility = View.INVISIBLE
 
             val itemSerialNumber = toolHistoryIndex.serialNumber
 
             //region inner passage adapters
             if (viewModel.selectedCountry == binding.root.context.getString(R.string.croatia_hr)) {
-                lifecycleOwner.lifecycleScope.launch() {
+
+                job = lifecycleOwner.lifecycleScope.launch {
                     val initLoad = withContext(Dispatchers.IO) {
-                        viewModel.getCroatiaPassagesBySerialPageLoad(
+                        viewModel.getCPassagesBySerialCountry(
                             itemSerialNumber, binding.root.context.getString(R.string.croatia_hr)
                         )
                     }
@@ -93,10 +121,7 @@ class HistorySerialAdapter(
                         binding.progbar.visibility = View.VISIBLE
                     }
 
-                    setViewHeight(binding, listOfPassages.size, position)
-
-                    binding.cycler.adapter = HistoryPassageAdapterCroatia(
-                        listOfPassages,
+                    val adapter = HistoryPassageAdapterCroatia(
                         complaintInterfaceCroatia,
                         lifecycleOwner,
                         itemSerialNumber,
@@ -107,34 +132,37 @@ class HistorySerialAdapter(
                             binding.cyclerTotalPrice.layoutManager = LinearLayoutManager(
                                 binding.root.context, LinearLayoutManager.VERTICAL, false
                             )
-                            binding.cyclerTotalPrice.visibility = View.INVISIBLE
-                            setViewHeight(binding, size, position)
+                            binding.cyclerTotalPrice.visibility = View.GONE
                             setNoPassage(binding, size)
+                            updateCyclerHeight(binding,size)
+
+                            binding.executePendingBindings()
                         })
+
+                    binding.cycler.adapter = adapter
+
+                    adapter.submitList(listOfPassages)
+
                     binding.cyclerTotalPrice.visibility = View.GONE
 
-                    binding.executePendingBindings()
                 }
             } else {
                 //record of passages for tag for normal countries
                 //adapter that presents the passages
-                lifecycleOwner.lifecycleScope.launch {
+
+                job = lifecycleOwner.lifecycleScope.launch {
                     val initLoad = withContext(Dispatchers.IO) {
-                        viewModel.getV2PassagesBySerialAndCountryCodeLoad(
+                        viewModel.getPassageBySerialCodeCountry(
                             itemSerialNumber, viewModel.selectedCountry
                         )
                     }
-
                     val listOfPassages = initLoad.flatMap { it?.data?.records?.items.orEmpty() }
 
                     if (listOfPassages.isEmpty()) {
                         binding.progbar.visibility = View.VISIBLE
                     }
 
-                    setViewHeight(binding, listOfPassages.size, position)
-
-                    binding.cycler.adapter = HistoryPassageAdapter(
-                        listOfPassages,
+                    val adapter = HistoryPassageAdapter(
                         complaintInterface,
                         false,
                         lifecycleOwner,
@@ -143,76 +171,136 @@ class HistorySerialAdapter(
                         viewModel,
                         { size ->
                             binding.progbar.visibility = View.GONE
-                            setViewHeight(binding, size, position)
                             setNoPassage(binding, size)
+                            updateCyclerHeight(binding,size)
+                            binding.executePendingBindings()
                         },
                         { sumTags ->
-                            if (sumTags.isNotEmpty()) {  // sum total of price for passages hr doesn't have this data
+                            if (sumTags.isNotEmpty()) {
                                 binding.cyclerTotalPrice.adapter = HistoryTotalCostAdapter(sumTags)
-                                binding.cyclerTotalPrice.layoutManager = LinearLayoutManager(
-                                    binding.root.context, LinearLayoutManager.VERTICAL, false
-                                )
+                                binding.cyclerTotalPrice.layoutManager =
+                                    LinearLayoutManager(
+                                        binding.root.context,
+                                        LinearLayoutManager.VERTICAL,
+                                        false
+                                    )
 
                                 binding.cyclerTotalPrice.visibility = View.VISIBLE
                             } else {
-                                binding.cyclerTotalPrice.visibility = View.INVISIBLE
+                                binding.cyclerTotalPrice.visibility = View.GONE
                             }
-                        })
+                        }
+                    )
 
-                    binding.executePendingBindings()
+
+                    binding.cycler.adapter = adapter
+
+                    adapter.submitList(emptyList())
+                    adapter.submitList(listOfPassages)
+
                 }
             }
             //endregion
+
+            binding.executePendingBindings()
         }
-    }
-
-    private fun setViewHeight(binding: ToolHistoryIndexCardBinding, size: Int, position: Int) {
-        binding.position = position
-
-        val heightInDp = when (size) {
-
-            0 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_one_zero_items
-            )
-
-            1 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_one_item
-            )
-
-            2 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_two_items
-            )
-
-            3 -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_three_items
-            )
-
-            else -> binding.root.context.resources.getDimensionPixelSize(
-                R.dimen.recycler_view_more_items
-            )
-        }
-
-        binding.nsScroll.layoutParams.height = heightInDp
-        binding.nsScroll.requestLayout()
-
-        binding.nsScroll.visibility = View.VISIBLE
-        binding.cycler.visibility = View.VISIBLE
-
-        binding.cycler.layoutManager = LinearLayoutManager(binding.root.context)
-
-        binding.executePendingBindings()
     }
 
     private fun setNoPassage(binding: ToolHistoryIndexCardBinding, size: Int) {
         when (size) {
             0 -> {
-                binding.noPassage.visibility = View.VISIBLE
+                listOfPassages.add(false)
+
+                hideViews(binding)
             }
 
             else -> {
+                listOfPassages.add(true)
+                hasPassages(listOfPassages)
+
+                val params = binding.root.layoutParams as? ViewGroup.MarginLayoutParams
+                params?.let {
+                    it.height = ViewGroup.MarginLayoutParams.WRAP_CONTENT
+                    it.bottomMargin = binding.root.context.resources.getDimensionPixelSize(R.dimen.dimens_10dp)
+                }
+                binding.root.layoutParams = params
+                binding.root.requestLayout()
+
                 binding.noPassage.visibility = View.GONE
+                binding.relativeTop.visibility = View.VISIBLE
+                binding.txtSerial.visibility = View.VISIBLE
+                binding.txtTotal.visibility = View.VISIBLE
+                binding.cyclerTotalPrice.visibility = View.VISIBLE
+                binding.center.visibility = View.VISIBLE
+                binding.tagSerialNumber.visibility = View.VISIBLE
+                binding.txtSerial.visibility = View.VISIBLE
+                binding.txtTotal.visibility = View.VISIBLE
+
+                stopSpinner(Unit)
             }
         }
+    }
+
+    private fun updateCyclerHeight(binding: ToolHistoryIndexCardBinding, size: Int) {
+        val maxItems = 3
+        val params = binding.nsScroll.layoutParams
+
+        binding.cycler.isNestedScrollingEnabled = true
+        binding.nsScroll.isNestedScrollingEnabled = true
+
+        val density = binding.root.context.resources.displayMetrics.density
+        val paddingVertical = (5 * density).toInt()
+        val paddingHorizontal = (10 * density).toInt()
+        binding.cycler.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical)
+        binding.cycler.clipToPadding = false
+
+        if (size == 0) {
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            binding.nsScroll.layoutParams = params
+            binding.nsScroll.requestLayout()
+            return
+        }
+
+        val applyHeight = {
+            val child = binding.cycler.getChildAt(0)
+
+            val itemHeight = if (child != null) {
+                val lp = child.layoutParams as? ViewGroup.MarginLayoutParams
+                val height = child.height + (lp?.topMargin ?: 0) + (lp?.bottomMargin ?: 0)
+                if (height > 0) {
+                    cachedItemHeight = height
+                }
+                height
+            } else if (cachedItemHeight > 0) {
+                cachedItemHeight
+            } else {
+                (140 * density).toInt()
+            }
+
+            val itemsToShow = if (size > maxItems) maxItems else size
+            params.height = (itemHeight * itemsToShow) + (paddingVertical * 2)
+
+            binding.nsScroll.layoutParams = params
+            binding.nsScroll.requestLayout()
+            binding.root.requestLayout()
+        }
+
+        val layoutListener = object : View.OnLayoutChangeListener {
+            override fun onLayoutChange(
+                v: View?,
+                left: Int, top: Int, right: Int, bottom: Int,
+                oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int
+            ) {
+                val child = binding.cycler.getChildAt(0)
+                if (child != null && child.height > 0) {
+                    binding.cycler.removeOnLayoutChangeListener(this)
+                    applyHeight()
+                }
+            }
+        }
+        binding.cycler.addOnLayoutChangeListener(layoutListener)
+
+        applyHeight()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsViewHolder {
@@ -223,11 +311,36 @@ class HistorySerialAdapter(
         )
     }
 
-    override fun getItemCount(): Int = listOfTags.size ?: 0
+    private fun hideViews(binding: ToolHistoryIndexCardBinding) {
+        binding.cycler.adapter = null
+        binding.cyclerTotalPrice.adapter = null
+        binding.noPassage.visibility = View.GONE
+        binding.relativeTop.visibility = View.GONE
+        binding.txtSerial.visibility = View.GONE
+        binding.txtTotal.visibility = View.GONE
+        binding.progbar.visibility = View.GONE
+        binding.cyclerTotalPrice.visibility = View.GONE
+        binding.center.visibility = View.GONE
+        binding.noPassage.visibility = View.GONE
+        binding.txtSerial.visibility = View.GONE
+        binding.txtTotal.visibility = View.GONE
+        binding.tagSerialNumber.visibility = View.GONE
+
+        binding.nsScroll.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+
+        val params = binding.root.layoutParams as? ViewGroup.MarginLayoutParams
+        params?.let {
+            it.height = 0
+            it.topMargin = 0
+            it.bottomMargin = 0
+        }
+        binding.root.layoutParams = params
+        binding.root.requestLayout()
+    }
 
     override fun onBindViewHolder(holder: TagsViewHolder, position: Int) {
         holder.binding.noPassage.visibility = View.GONE
-        val currentTag = listOfTags[holder.bindingAdapterPosition]
+        val currentTag = getItem(position)
 
         val tagUtilCycler = TagUtilCycler("", "")
 
@@ -251,17 +364,23 @@ class HistorySerialAdapter(
 
 
         holder.bind(
-            tagUtilCycler, holder.bindingAdapterPosition, holder
+            tagUtilCycler, position
         )
 
         runPaginationCheck(currentTag)
     }
 
     private fun runPaginationCheck(currentTag: Tag) {
-        if (currentTag == listOfTags[listOfTags.size - 1]) {
-            if (currentPage < lastPage) {
-                // trigger background update with flow
-                viewModel.getTagsUpdate(currentPage + 1)
+        if (currentTag == getItem(itemCount - 1)) {
+            paginationJob?.cancel()
+            paginationJob = lifecycleOwner.lifecycleScope.launch {
+                delay(2000)
+                stopSpinner(Unit)
+                hasPassages(listOfPassages)
+                if (currentPage < lastPage) {
+                    // trigger background update with flow
+                    viewModel.getTagsUpdate(currentPage + 1)
+                }
             }
         }
     }

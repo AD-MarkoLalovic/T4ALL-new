@@ -7,18 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.mobility.enp.R
-import com.mobility.enp.databinding.ContactFormDialogBinding
-import com.mobility.enp.util.setDimensionsPercent
-import com.mobility.enp.viewmodel.CustomerSupportViewModel
-import androidx.core.graphics.drawable.toDrawable
 import com.mobility.enp.data.model.login.CustomerSupport
+import com.mobility.enp.databinding.ContactFormDialogBinding
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResultFold
 import com.mobility.enp.util.collectLatestLifecycleFlow
+import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.util.toast
+import com.mobility.enp.viewmodel.CustomerSupportViewModel
 
 class CustomerSupportDialog : DialogFragment() {
 

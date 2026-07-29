@@ -5,18 +5,19 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.mobility.enp.data.repository.AuthRepository
 import com.mobility.enp.data.repository.BillsRepository
 import com.mobility.enp.data.repository.CardRepository
+import com.mobility.enp.data.repository.ComplaintAndObjectionRepository
 import com.mobility.enp.data.repository.FranchiserRepository
 import com.mobility.enp.data.repository.HomeRepository
+import com.mobility.enp.data.repository.NewTollHistoryRepository
 import com.mobility.enp.data.repository.PassageHistoryRepository
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.data.repository.UserRepository
-import com.mobility.enp.data.room.PdfDaoHistory
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatiaResult
 import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoResult
+import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
 import com.mobility.enp.data.room.database.DRoom
 
 class MyApplication : Application() {
@@ -42,6 +43,14 @@ class MyApplication : Application() {
         PassageHistoryRepository(database, this)
     }
 
+    val newTollHistoryRepository: NewTollHistoryRepository by lazy {
+        NewTollHistoryRepository(database, applicationContext)
+    }
+
+    val complaintAndObjectionRepository: ComplaintAndObjectionRepository by lazy {
+        ComplaintAndObjectionRepository(database, this)
+    }
+
     val v2TagsDao: ToolHistoryV2TagsSerials by lazy {
         database.toolHistoryDaoSerials()
     }
@@ -63,10 +72,6 @@ class MyApplication : Application() {
 
     val v2AllowedCountriesDao: ToolHistoryV2AllowedCountryDao by lazy {
         database.historyV2AllowedCountriesDao()
-    }
-
-    val pdfExportDao: PdfDaoHistory by lazy {
-        database.pdfHistoryTableDao()
     }
 
     val franchiseRepository: FranchiserRepository by lazy {

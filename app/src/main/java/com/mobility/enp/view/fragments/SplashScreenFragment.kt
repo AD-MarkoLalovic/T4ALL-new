@@ -5,10 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.mobility.enp.Config
 import com.mobility.enp.R
@@ -21,44 +22,105 @@ import kotlinx.coroutines.launch
 @SuppressLint("CustomSplashScreen")
 class SplashScreenFragment : Fragment() {
 
-    private lateinit var binding: FragmentSplashScreenBinding
-    private val viewModel: SplashAndIntroScreensViewModel by viewModels { SplashAndIntroScreensViewModel.factory }
+    private var _binding: FragmentSplashScreenBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel: SplashAndIntroScreensViewModel by viewModels {
+        SplashAndIntroScreensViewModel.factory
+    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding =
-            FragmentSplashScreenBinding.inflate(inflater, container, false)
+        _binding = FragmentSplashScreenBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        observeNavigation()
+    }
+
+    private fun observeNavigation() {
+
         viewLifecycleOwner.lifecycleScope.launch {
-            val userToken = viewModel.fetchUserToken()
+
+            val userToken = runCatching {
+                viewModel.fetchUserToken()
+            }.getOrNull()
+
             delay(Config.SLASH_SCREEN_TIME)
 
-            setNavigation(userToken)
+            if (!isFragmentSafe()) return@launch
+
+            navigateNext(userToken)
         }
     }
 
-    private fun setNavigation(token: String?) {
-        if (SharedPreferencesHelper.isFirstLaunch(requireContext())) {
-            findNavController().navigate(R.id.action_splashScreenFragment_to_introScreenAbout)
-        } else {
-            if (token != null) {
-                try {
-                    findNavController().navigate(R.id.action_global_homeFragmentFromSplash)
-                } catch (e: IllegalArgumentException) {
-                    Toast.makeText(requireContext(), "Redirecting to Login", Toast.LENGTH_SHORT)
-                        .show()
-                    findNavController().navigate(R.id.action_splashScreenFragment_to_loginFragment)
-                }
-            } else {
-                findNavController().navigate(R.id.action_splashScreenFragment_to_loginFragment)
+    private fun navigateNext(token: String?) {
+
+        val navController = findNavController()
+
+        // Prevent stale navigation calls
+        if (navController.currentDestination?.id != R.id.splashScreenFragment) {
+            return
+        }
+
+        when {
+
+            SharedPreferencesHelper.isFirstLaunch(requireContext()) -> {
+
+                navController.navigateSafe(
+                    R.id.action_splashScreenFragment_to_introScreenAbout
+                )
+            }
+
+            !token.isNullOrBlank() -> {
+
+                navController.navigate(
+                    R.id.homeFragment,
+                    null,
+                    NavOptions.Builder()
+                        .setPopUpTo(R.id.splashScreenFragment, true)
+                        .build()
+                )
+            }
+
+            else -> {
+
+                navController.navigateSafe(
+                    R.id.action_splashScreenFragment_to_loginFragment
+                )
             }
         }
     }
 
+    /**
+     * Prevent navigation after fragment/view destruction
+     */
+    private fun isFragmentSafe(): Boolean {
+        return isAdded &&
+                view != null &&
+                _binding != null
+    }
+
+    /**
+     * Safe navigation extension
+     */
+    private fun NavController.navigateSafe(actionId: Int) {
+
+        val action = currentDestination?.getAction(actionId)
+
+        if (action != null) {
+            navigate(actionId)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

@@ -16,7 +16,7 @@ import com.mobility.enp.databinding.GeneralDialogBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
 
-class GeneralMessageDialog() : DialogFragment() {
+class GeneralMessageDialog : DialogFragment() {
 
     private var _binding: GeneralDialogBinding? = null
     private val binding: GeneralDialogBinding get() = _binding!!

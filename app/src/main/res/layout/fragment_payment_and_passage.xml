@@ -67,14 +67,101 @@
                     tools:listitem="@layout/item_cards_country" />
 
                 <TextView
+                    android:id="@+id/txRepublicSerbiaCardsNote"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_32dp"
+                    android:background="@drawable/background_croatia_cards_note"
+                    android:clickable="true"
+                    android:drawablePadding="@dimen/dimens_16dp"
+                    android:text="@string/notes_serbian_tag_in_republic_serbia"
+                    android:textColor="@color/primary_light_darkest"
+                    android:visibility="gone"
+                    app:drawableStartCompat="@drawable/ic_info"
+                    tools:visibility="gone" />
+
+                <TextView
                     android:id="@+id/txNoCards"
                     style="@style/ParagraphMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimens_34dp"
-                    android:layout_marginBottom="28dp"
+                    android:layout_marginTop="@dimen/dimens_16dp"
+                    android:layout_marginBottom="8dp"
                     android:text="@string/text_add_card"
                     android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/containerContactPerson"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimens_8dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/H3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/contact_person" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/contactPersonName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_8dp"
+                        app:boxBackgroundColor="@color/primary_light_lightest"
+                        app:boxCornerRadiusBottomEnd="84dp"
+                        app:boxCornerRadiusBottomStart="84dp"
+                        app:boxCornerRadiusTopEnd="84dp"
+                        app:boxCornerRadiusTopStart="84dp"
+                        app:boxStrokeColor="@color/figmaSplashScreenColor"
+                        app:boxStrokeWidth="@dimen/dimens_0dp"
+                        app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                        app:endIconMode="clear_text"
+                        app:hintEnabled="false">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/contactPersonEdit"
+                            style="@style/Paragraph"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/ime"
+                            android:imeOptions="actionNext"
+                            android:inputType="textPersonName"
+                            android:maxLines="1"
+                            android:textColor="@color/figmaSplashScreenColor" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/contactPersonSurname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimens_8dp"
+                        app:boxBackgroundColor="@color/primary_light_lightest"
+                        app:boxCornerRadiusBottomEnd="84dp"
+                        app:boxCornerRadiusBottomStart="84dp"
+                        app:boxCornerRadiusTopEnd="84dp"
+                        app:boxCornerRadiusTopStart="84dp"
+                        app:boxStrokeColor="@color/figmaSplashScreenColor"
+                        app:boxStrokeWidth="@dimen/dimens_0dp"
+                        app:boxStrokeWidthFocused="@dimen/dimens_1dp"
+                        app:endIconMode="clear_text"
+                        app:hintEnabled="false">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/contactPersonSurnameEdit"
+                            style="@style/Paragraph"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/surname"
+                            android:imeOptions="actionDone"
+                            android:inputType="textPersonName"
+                            android:maxLines="1"
+                            android:textColor="@color/figmaSplashScreenColor" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/txCroatiaCardsNote"
@@ -90,6 +177,8 @@
                     android:visibility="gone"
                     app:drawableStartCompat="@drawable/ic_info"
                     tools:visibility="gone" />
+
+
 
                 <TextView
                     android:id="@+id/txCroatiaCardsPdf"
@@ -129,7 +218,7 @@
                     android:text="@string/tag_registration_instruction_hr"
                     android:textColor="@color/primary_light_darkest"
                     android:visibility="gone"
-                    tools:visibility="visible" />
+                    tools:visibility="gone" />
 
 
                 <RelativeLayout
@@ -138,7 +227,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/dimens_5dp"
                     android:visibility="gone"
-                    tools:visibility="visible">
+                    tools:visibility="gone">
 
                     <CheckBox
                         android:id="@+id/hac_checkbox"
@@ -169,7 +258,7 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:itemCount="5"
                     tools:listitem="@layout/item_tag_for_croatia"
-                    tools:visibility="visible" />
+                    tools:visibility="gone" />
 
                 <Button
                     android:id="@+id/bttRegTagForCroatia"
@@ -198,7 +287,6 @@
                     android:id="@+id/termsBlock"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/dimens_5dp"
                     android:visibility="gone"
                     tools:visibility="visible">
 
@@ -254,7 +342,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:elevation="@dimen/dimens_10dp"
             android:visibility="gone" />
 
     </RelativeLayout>

@@ -1,24 +1,9 @@
 package com.mobility.enp.viewmodel
 
-import android.Manifest
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Color
-import android.provider.MediaStore
-import android.util.Base64
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,13 +15,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.itextpdf.kernel.font.PdfFontFactory
-import com.itextpdf.kernel.pdf.PdfDocument
-import com.itextpdf.kernel.pdf.PdfWriter
-import com.itextpdf.layout.Document
-import com.itextpdf.layout.element.Cell
-import com.itextpdf.layout.element.Paragraph
-import com.itextpdf.layout.element.Table
 import com.mobility.enp.MyApplication
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_tags.LostTagResponse
@@ -50,21 +28,8 @@ import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagRes
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatia
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseCroatiaResult
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponseResult
-import com.mobility.enp.data.model.cardsweb.CardWebModel
-import com.mobility.enp.data.model.csv_table.CsvModel
 import com.mobility.enp.data.model.franchise.FranchiseModel
-import com.mobility.enp.data.model.pdf_table.CsvTable
-import com.mobility.enp.data.model.pdf_table.FilterPdf
 import com.mobility.enp.data.repository.PassageHistoryRepository
-import com.mobility.enp.data.room.PdfDaoHistory
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2AllowedCountryDao
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2Dao
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatia
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoCroatiaResult
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2DaoResult
-import com.mobility.enp.data.room.api_related_daos.ToolHistoryV2TagsSerials
-import com.mobility.enp.services.MyFirebaseMessagingService.Companion.CHANNEL_ID
-import com.mobility.enp.services.MyFirebaseMessagingService.Companion.NOTIFICATION_ID
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SharedPreferencesHelper
 import com.mobility.enp.util.SubmitResult
@@ -72,9 +37,6 @@ import com.mobility.enp.util.toCroatianPassage
 import com.mobility.enp.util.toCroatianPassageResult
 import com.mobility.enp.util.toLocalDate
 import com.mobility.enp.util.toV2HistoryTagResponseResult
-import com.mobility.enp.view.CsvActivity
-import com.mobility.enp.view.PdfHistoryActivity
-import com.mobility.enp.view.fragments.tool_history.HistoryFilterScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -89,7 +51,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
-import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -100,13 +61,6 @@ import java.util.Locale
 
 class UserPassViewModel(
     private val repository: PassageHistoryRepository,
-    private val tagsDao: ToolHistoryV2TagsSerials,
-    private val historyCroatiaPassageDao: ToolHistoryV2DaoCroatia,
-    private val historyCroatiaPassageDaoResult: ToolHistoryV2DaoCroatiaResult,
-    private val historyV2Dao: ToolHistoryV2Dao,
-    private val historyV2DaoResult: ToolHistoryV2DaoResult,
-    private val historyV2AllowedCountriesDao: ToolHistoryV2AllowedCountryDao,
-    private val pdfExportDao: PdfDaoHistory
 ) : ViewModel() {
 
     companion object {
@@ -115,118 +69,112 @@ class UserPassViewModel(
 
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val myRepository = (this[APPLICATION_KEY] as MyApplication).passageHistoryRepository
-                val tagsDao = (this[APPLICATION_KEY] as MyApplication).v2TagsDao
-                val historyV2PassageDao = (this[APPLICATION_KEY] as MyApplication).v2HistoryDao
-                val historyV2PassageDaoResult =
-                    (this[APPLICATION_KEY] as MyApplication).v2HistoryDaoResult
-                val historyCroatiaPassageDao = (this[APPLICATION_KEY] as MyApplication).v2CroatiaDao
-                val historyCroatiaPassageDaoResult =
-                    (this[APPLICATION_KEY] as MyApplication).v2CroatiaDaoResult
-                val historyAllowedCountriesDao =
-                    (this[APPLICATION_KEY] as MyApplication).v2AllowedCountriesDao
-                val pdfExportDao =
-                    (this[APPLICATION_KEY] as MyApplication).pdfExportDao
+                val repository = (this[APPLICATION_KEY] as MyApplication).passageHistoryRepository
                 UserPassViewModel(
-                    repository = myRepository,
-                    tagsDao,
-                    historyCroatiaPassageDao,
-                    historyCroatiaPassageDaoResult,
-                    historyV2PassageDao,
-                    historyV2PassageDaoResult,
-                    historyAllowedCountriesDao,
-                    pdfExportDao
+                    repository = repository,
                 )
             }
         }
     }
 
-    val tagFlow = tagsDao.observeIndexData().stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-    )
+    //important do not change .stateIn required for config changes so changes to ui persist
+    val tagFlow = repository.getTagFlow()
 
-    val tagFlowResult = tagsDao.observeIndexData()
+    val tagFlowResult = repository.getTagFlow()
 
-    val allowedCountriesFlow = historyV2AllowedCountriesDao.observeAllowedCountries().stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-    )
+    val allowedCountriesFlow = repository.getAllowedCountriesFlow()
 
-    suspend fun clearRoomData() {
-        tagsDao.deleteData()
-        historyV2Dao.deleteData()
-        historyV2DaoResult.deleteData()
-        historyCroatiaPassageDao.deleteData()
-        historyCroatiaPassageDaoResult.deleteData()
-        historyV2AllowedCountriesDao.clear()
-        pdfExportDao.deleteData()
+    fun clearRoomData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteTagData()
+            repository.deleteCroatiaPassages()
+            repository.deleteCroatiaResult()
+            repository.clearAllowedCountriesFlow()
+            repository.deletePdfExportData()
+            repository.deleteV2DaoResult()
+            repository.deleteV2PassageData()
+        }
     }
 
+
     fun getV2PassagesBySerialAndCountryCode(
-        serialNumber: String, countryCode: String
+        serialNumber: String,
+        countryCode: String
     ): StateFlow<List<V2HistoryTagResponse?>> {
-        return historyV2Dao.observePassageDataBySerialAndCountryCode(serialNumber, countryCode)
-            .stateIn(
-                viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-            )
+        return repository.getV2PassagesBySerialAndCountryCode(
+            serialNumber,
+            countryCode
+        ).stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
+        )
     }
 
     fun getV2PassagesBySerialAndCountryCodeResult(
-        serialNumber: String, countryCode: String
+        serialNumber: String,
+        countryCode: String
     ): StateFlow<List<V2HistoryTagResponseResult?>> {
-        return historyV2DaoResult.observePassageDataBySerialAndCountryCode(
-            serialNumber, countryCode
+        return repository.getV2PassagesBySerialAndCountryCodeResult(
+            serialNumber,
+            countryCode
         ).stateIn(
-            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
         )
     }
 
-    fun getV2PassagesBySerialAndCountryCodeLoad(
+    fun getPassageBySerialCodeCountry(
         serialNumber: String, countryCode: String
     ): List<V2HistoryTagResponse?> {
-        return historyV2Dao.observePassageDataBySerialAndCountryCodeLoad(serialNumber, countryCode)
+        return repository.getV2PassagesBySerialAndCountryCodeLoad(serialNumber, countryCode)
     }
 
-    fun getV2PassagesBySerialAndCountryCodeLoadResult(
+    fun getPassageBySerialNumberCode(
         serialNumber: String, countryCode: String
     ): List<V2HistoryTagResponseResult?> {
-        return historyV2DaoResult.observePassageDataBySerialAndCountryCodeLoad(
-            serialNumber, countryCode
-        )
+        return repository.getV2PassagesBySerialAndCountryCodeLoadResult(serialNumber, countryCode)
     }
 
     fun getCroatiaPassagesBySerialPage(
-        serialNumber: String, countryCode: String
+        serialNumber: String,
+        countryCode: String
     ): StateFlow<List<V2HistoryTagResponseCroatia?>> {
-        return historyCroatiaPassageDao.observePassageDataBySerialCountry(serialNumber, countryCode)
-            .stateIn(
-                viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
-            )
+        return repository.getCroatiaPassagesBySerialPage(
+            serialNumber,
+            countryCode
+        ).stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
+        )
     }
 
     fun getCroatiaPassagesBySerialPageResult(
-        serialNumber: String, countryCode: String
+        serialNumber: String,
+        countryCode: String
     ): StateFlow<List<V2HistoryTagResponseCroatiaResult?>> {
-        return historyCroatiaPassageDaoResult.observePassageDataBySerialCountry(
-            serialNumber, countryCode
+        return repository.getCroatiaPassagesBySerialPageResult(
+            serialNumber,
+            countryCode
         ).stateIn(
-            viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList()
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
         )
     }
 
-    fun getCroatiaPassagesBySerialPageLoad(
+    fun getCPassagesBySerialCountry(
         serialNumber: String, countryCode: String
     ): List<V2HistoryTagResponseCroatia?> {
-        return historyCroatiaPassageDao.observePassageDataBySerialCountryLoad(
-            serialNumber, countryCode
-        )
+        return repository.getCroatiaPassagesBySerialPageLoad(serialNumber, countryCode)
     }
 
-    fun getCroatiaPassagesBySerialPageLoadResult(
+    fun getCPassagesResultBySerialCode(
         serialNumber: String, countryCode: String
     ): List<V2HistoryTagResponseCroatiaResult?> {
-        return historyCroatiaPassageDaoResult.observePassageDataBySerialCountryLoad(
-            serialNumber, countryCode
-        )
+        return repository.getCroatiaPassagesBySerialPageLoadResult(serialNumber, countryCode)
     }
 
     private val _listOfCountriesMain = MutableStateFlow<List<String>>(emptyList())
@@ -234,13 +182,6 @@ class UserPassViewModel(
 
     fun setAvailableCountriesMain(countries: List<String>) {
         this._listOfCountriesMain.value = countries
-    }
-
-    private val _availableCountryAdapterPosition = MutableStateFlow<Int>(0)
-    val availableCountryAdapterPosition: StateFlow<Int> get() = _availableCountryAdapterPosition
-
-    fun setCountryAdapterPosition(pos: Int) {
-        _availableCountryAdapterPosition.value = pos
     }
 
     private val _availableCountryAdapterPositionFilter = MutableStateFlow<Int>(-1)
@@ -252,6 +193,14 @@ class UserPassViewModel(
 
     private val _selectedTags = MutableStateFlow<Set<String>>(emptySet())
     private val _userSelectedTags = MutableStateFlow<Set<Tag>>(emptySet())
+
+    var selectedTags: ArrayList<Tag> = ArrayList()
+
+    fun clearSelectedTags() {
+        _selectedTags.value = emptySet()
+        _userSelectedTags.value = emptySet()
+        selectedTags.clear()
+    }
 
     private var allowedCountriesForSerialAdapter: List<String> = emptyList()
 
@@ -278,8 +227,8 @@ class UserPassViewModel(
     }
 
     private val _baseTagDataState =
-        MutableStateFlow<SubmitResult<Pair<IndexData, CardWebModel?>>>(SubmitResult.Loading)
-    val baseTagDataStateFirstScreen: StateFlow<SubmitResult<Pair<IndexData, CardWebModel?>>> get() = _baseTagDataState
+        MutableStateFlow<SubmitResult<Pair<IndexData, V2HistoryTagResponse?>>>(SubmitResult.Loading)
+    val baseTagDataStateFirstScreen: StateFlow<SubmitResult<Pair<IndexData, V2HistoryTagResponse?>>> get() = _baseTagDataState
 
     private val _baseTagDataStateByCountry =
         MutableStateFlow<SubmitResult<IndexData>>(SubmitResult.Loading)
@@ -290,18 +239,12 @@ class UserPassViewModel(
         MutableStateFlow<SubmitResult<Unit>>(SubmitResult.Loading)
     val baseApiErrors: StateFlow<SubmitResult<Unit>> get() = _baseApiErrorsResultScreen
 
-
-    private val _csvTable = MutableStateFlow<SubmitResult<CsvModel>>(SubmitResult.Empty)
-    val csvTable: StateFlow<SubmitResult<CsvModel>> get() = _csvTable
-
     fun nullFlowState() {
-        _csvTable.value = SubmitResult.Empty
-        _pdfTable.value = SubmitResult.Empty
+        // Can be used to reset other states if needed
     }
 
-    private val _pdfTable = MutableStateFlow<SubmitResult<ByteArray>>(SubmitResult.Empty)
-    val pdfTable: StateFlow<SubmitResult<ByteArray>> get() = _pdfTable
-
+    private val _noPassages = MutableLiveData<Boolean?>(null)
+    val noPassages: LiveData<Boolean?> get() = _noPassages
 
     private val _complaintObjectionState =
         MutableStateFlow<SubmitResult<LostTagResponse>>(SubmitResult.Empty)
@@ -314,8 +257,8 @@ class UserPassViewModel(
     var startDate = MutableLiveData<TimeSave>()
     var endDate = MutableLiveData<TimeSave>()
 
-    private var userSelectedCalendarStart: Long? = null
-    private var userSelectedCalendarEnd: Long? = null
+    var userSelectedCalendarStart: Long? = null
+    var userSelectedCalendarEnd: Long? = null
 
     private val timeFrameFirstScreen: Long = 30
 
@@ -330,15 +273,15 @@ class UserPassViewModel(
         userSelectedCalendarEnd = null
         selectedCountry = ""
         viewModelScope.launch {
-            pdfExportDao.deleteData()
+            repository.deletePdfExportData()
         }
+        _noPassages.value = null
     }
 
     fun resetUiState() {
         _baseTagDataState.value = SubmitResult.Empty
         _baseTagDataStateByCountry.value = SubmitResult.Empty
         _baseApiErrorsResultScreen.value = SubmitResult.Empty
-        _csvTable.value = SubmitResult.Empty
         _complaintObjectionState.value = SubmitResult.Empty
         _complaintObjectionStateResult.value = SubmitResult.Empty
     }
@@ -348,7 +291,6 @@ class UserPassViewModel(
         _userSelectedTags.value = emptySet()
         selectedCountry = ""
         allTagsSelected = false
-        _availableCountryAdapterPosition.value = -1
         _availableCountryAdapterPositionFilter.value = -1
     }
 
@@ -378,12 +320,24 @@ class UserPassViewModel(
         _baseTagDataState.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
 
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+            val dateTo = LocalDate.now()
+            val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
+
+            val dateToFormatted = dateTo.format(formatter)
+            val dateFromFormatted = dateFrom.format(formatter)
+
             val resultTags = async {
                 repository.getTagBaseData(1, tagsPerPage)
             }
 
             val resultCards = async {
-                repository.getCardsFromServer()
+                repository.getAdapterAllowedCountries(
+                    1,
+                    itemsPerPage,
+                    dateFromFormatted,
+                    dateToFormatted
+                )
             }
 
             val tagResultDeferred = resultTags.await()
@@ -392,12 +346,12 @@ class UserPassViewModel(
             if (tagResultDeferred.isSuccess && resultCardsDeferred.isSuccess) {
 
                 val tagsData = tagResultDeferred.getOrNull()
-                val cardData = resultCardsDeferred.getOrNull()
+                val v2Response = resultCardsDeferred.getOrNull()
 
-                if (tagsData == null || cardData == null) {
+                if (tagsData == null || v2Response == null) {
                     _baseTagDataState.value = SubmitResult.Empty
                 } else {
-                    _baseTagDataState.value = SubmitResult.Success(Pair(tagsData, cardData))
+                    _baseTagDataState.value = SubmitResult.Success(Pair(tagsData, v2Response))
                 }
 
             } else {
@@ -812,8 +766,8 @@ class UserPassViewModel(
 
     fun deleteOldResultData() {
         viewModelScope.launch(Dispatchers.IO) {
-            historyV2DaoResult.deleteData()
-            historyCroatiaPassageDaoResult.deleteData()
+            repository.deleteV2DaoResult()
+            repository.deleteCroatiaResult()
         }
     }
 
@@ -1059,11 +1013,7 @@ class UserPassViewModel(
         tagSerialNumber: String, currentPage: Int
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val formatter = if (selectedCountry.equals("HR", ignoreCase = true)) {
-                DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
-            } else {
-                DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
-            }  // they changed it to be the same and didn't notify mobile it was dd/MM/yyyy for croatia
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
 
             val dateTo = LocalDate.now()
             val dateFrom = dateTo.minusDays(timeFrameFirstScreen)
@@ -1400,255 +1350,6 @@ class UserPassViewModel(
         }
     }
 
-    private fun postNotification() {
-        val channel = NotificationChannel(
-            CHANNEL_ID, "Tool4all", NotificationManager.IMPORTANCE_HIGH
-        )
-        channel.description = "Tool4all"
-        channel.enableLights(true)
-        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-        channel.lightColor = Color.BLUE
-
-        val intent = Intent(repository.fetchContext(), CsvActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-            repository.fetchContext(), 100, intent, PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val notificationManager =
-            repository.fetchContext().getSystemService(NotificationManager::class.java)
-        notificationManager.createNotificationChannel(channel)
-
-        val builder = NotificationCompat.Builder(
-            repository.fetchContext(), CHANNEL_ID
-        ).setSmallIcon(R.drawable.splash_logo)
-            .setContentTitle(repository.fetchContext().getString(R.string.export))
-            .setContentIntent(pendingIntent)
-            .setContentText(repository.fetchContext().getString(R.string.csv_saved))
-            .setAutoCancel(true)
-
-        if (ActivityCompat.checkSelfPermission(
-                repository.fetchContext(), Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        NotificationManagerCompat.from(repository.fetchContext())
-            .notify(NOTIFICATION_ID, builder.build())
-
-    }
-
-
-    fun postNotificationPDF() {
-        val channel = NotificationChannel(
-            CHANNEL_ID, "Tool4all", NotificationManager.IMPORTANCE_HIGH
-        )
-        channel.description = "Tool4all"
-        channel.enableLights(true)
-        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-        channel.lightColor = Color.BLUE
-
-        val intent = Intent(repository.fetchContext(), PdfHistoryActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-            repository.fetchContext(), 100, intent, PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val notificationManager =
-            repository.fetchContext().getSystemService(NotificationManager::class.java)
-        notificationManager.createNotificationChannel(channel)
-
-        val builder = NotificationCompat.Builder(
-            repository.fetchContext(), CHANNEL_ID
-        ).setSmallIcon(R.drawable.splash_logo)
-            .setContentTitle(repository.fetchContext().getString(R.string.export_pdf))
-            .setContentIntent(pendingIntent)
-            .setContentText(repository.fetchContext().getString(R.string.export_pdf))
-            .setAutoCancel(true)
-
-        if (ActivityCompat.checkSelfPermission(
-                repository.fetchContext(), Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        NotificationManagerCompat.from(repository.fetchContext())
-            .notify(NOTIFICATION_ID, builder.build())
-
-    }
-
-    fun processCsvData(csvModel: CsvModel, nameExtra: String, context: Context) {
-        Log.d(TAG, "csv data: $csvModel")
-
-        if (!csvModel.data?.csvContent.isNullOrEmpty()) {
-            csvModel.data?.csvContent?.let { data ->
-                viewModelScope.launch(Dispatchers.IO) {
-                    saveCsvLocally(data, nameExtra, context) // <- csv excel export
-                }
-            }
-        }
-    }
-
-    private suspend fun saveCsvLocally(encoded: String, nameExtra: String, context: Context) =
-        coroutineScope {
-            try {
-                // Decode the Base64 string
-                val decodedBytes = Base64.decode(encoded, Base64.DEFAULT)
-                val decodedString = String(decodedBytes)
-
-                // Parse the data and format it as CSV
-                val rows = decodedString.split("\n")
-                val csvBuilder = StringBuilder()
-
-                // Add a header if your data format is known
-
-                val billNumber = ContextCompat.getString(context, R.string.bill_number)
-                val price = ContextCompat.getString(context, R.string.price)
-                val payRamp = ContextCompat.getString(context, R.string.pay_ramp)
-                val timeOfPassage = ContextCompat.getString(context, R.string.time_of_passage)
-
-                val titleHeader =
-                    StringBuilder().append(billNumber).append(",").append(timeOfPassage).append(",")
-                        .append(payRamp).append(",").append(price).append(",").append("\n")
-
-                csvBuilder.append(titleHeader.toString())
-
-                // Add each row to the CSV content
-                for (row in rows) {
-                    csvBuilder.append(row).append("\n")
-                }
-
-                // Save CSV to shared storage using MediaStore
-                val fileName = "export-$nameExtra.csv"
-                val contentValues = ContentValues().apply {
-                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                    put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
-                    put(
-                        MediaStore.MediaColumns.RELATIVE_PATH, "Documents/"
-                    ) // Save in the Documents folder
-                }
-
-                // Get the URI for the file in shared storage
-                val uri = repository.fetchContext().contentResolver.insert(
-                    MediaStore.Files.getContentUri("external"), contentValues
-                )
-
-                uri?.let { fileUri ->
-                    repository.fetchContext().contentResolver.openOutputStream(fileUri)
-                        ?.use { outputStream ->
-                            // Write the CSV content to the file
-                            outputStream.write(csvBuilder.toString().toByteArray())
-                            outputStream.flush()
-                            Log.d(
-                                HistoryFilterScreen.TAG,
-                                "CSV file saved successfully in Documents folder."
-                            )
-                        } ?: Log.d(HistoryFilterScreen.TAG, "Failed to open OutputStream.")
-                } ?: Log.d(
-                    HistoryFilterScreen.TAG, "Failed to create file URI in MediaStore."
-                )
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-    fun saveBase64ToCSV(base64Data: String, nameExtra: String, context: Context) {
-        viewModelScope.launch {
-            try {
-
-                // Regular expression to match CSV fields with commas, allowing quoted fields to contain commas
-                val regex = """"([^"]*)"|([^",]+)""".toRegex()
-
-                // Decode the Base64 string
-                val decodedBytes = Base64.decode(base64Data, Base64.DEFAULT)
-                val decodedString = String(decodedBytes)
-
-                val rows = decodedString.split("\n")
-
-                val billNumber = ContextCompat.getString(context, R.string.bill_number)
-                val price = ContextCompat.getString(context, R.string.price)
-                val payRamp = ContextCompat.getString(context, R.string.pay_ramp)
-                val timeOfPassage = ContextCompat.getString(context, R.string.time_of_passage)
-
-                val headers = listOf(
-                    billNumber, timeOfPassage, payRamp, price
-                )
-
-                val byteArrayOutputStream = ByteArrayOutputStream()
-                val pdfWriter = PdfWriter(byteArrayOutputStream)
-                val pdfDocument = PdfDocument(pdfWriter)
-                val document = Document(pdfDocument)
-
-                val boldFont =
-                    PdfFontFactory.createFont(com.itextpdf.io.font.constants.StandardFonts.HELVETICA_BOLD)
-
-                val table = Table(headers.size)
-
-                headers.forEach { header ->
-                    table.addCell(Cell().add(Paragraph(header).setFont(boldFont)))
-                }
-
-
-                rows.forEach { row ->
-                    val columns = mutableListOf<String>()
-                    val matches = regex.findAll(row)
-                    matches.forEach { match ->
-                        // Get either quoted field or unquoted field
-                        columns.add(match.groupValues[1].ifEmpty { match.groupValues[2] })
-                    }
-
-                    columns.forEach { column ->
-                        table.addCell(Cell().add(Paragraph(column)))
-                    }
-                }
-
-                document.add(table)
-                document.close()
-
-                val pdfData = byteArrayOutputStream.toByteArray()
-                repository.deleteCsvTable()
-                repository.upsertCsvTable(CsvTable(0, pdfData))
-
-                // Save CSV to shared storage using MediaStore
-                val fileName = "export-$nameExtra.csv"
-                val contentValues = ContentValues().apply {
-                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                    put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
-                    put(
-                        MediaStore.MediaColumns.RELATIVE_PATH, "Documents/"
-                    ) // Save in the Documents folder
-                }
-
-                val uri = repository.fetchContext().contentResolver.insert(
-                    MediaStore.Files.getContentUri("external"), contentValues
-                )
-
-                uri?.let { fileUri ->
-                    repository.fetchContext().contentResolver.openOutputStream(fileUri)
-                        ?.use { outputStream ->
-                            outputStream.write(pdfData)
-                            outputStream.flush()
-
-                            postNotification()
-
-                            Log.d(
-                                HistoryFilterScreen.TAG,
-                                "PDF file saved successfully in Documents folder."
-                            )
-                        } ?: Log.d(HistoryFilterScreen.TAG, "Failed to open OutputStream.")
-                } ?: Log.d(
-                    HistoryFilterScreen.TAG, "Failed to create file URI in MediaStore."
-                )
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    private var _data: MutableLiveData<IndexData> = MutableLiveData<IndexData>()
-    val data: LiveData<IndexData> get() = _data
-
-    var selectedTags: ArrayList<Tag> = ArrayList()
-
     fun showDatePicker(fromDate: Boolean, context: Context, franchiseModel: FranchiseModel?) {
         viewModelScope.launch {
             val selectedDate: Long = if (fromDate) {
@@ -1776,228 +1477,6 @@ class UserPassViewModel(
         val date = Date(time)
         val formDate = sdf.format(date)
         return TimeSave(formDate, date)
-    }
-
-    fun getCsvData(context: Context) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _csvTable.value = SubmitResult.Empty
-            if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
-                if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
-                    Toast.makeText(
-                        context, context.getString(R.string.end_date_check), Toast.LENGTH_SHORT
-                    ).show()
-                    _csvTable.value = SubmitResult.Empty
-                } else {
-                    try {
-                        _csvTable.value = SubmitResult.Loading
-                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-
-                        val dateStart = Date(userSelectedCalendarStart ?: 0)
-                        val dateEnd = Date(userSelectedCalendarEnd ?: 0)
-
-                        val dateStartApi = sdf.format(dateStart)
-                        val dateEndApi = sdf.format(dateEnd)
-
-                        Log.d(TAG, "startDate: $dateStartApi endDate $dateEndApi")
-
-                        if (selectedTags.isNotEmpty() && _userSelectedTags.value.size == 1 || allTagsSelected) {
-
-                            val tagSerial = if (allTagsSelected) {
-                                ""
-                            } else {
-                                _userSelectedTags.value.first().serialNumber ?: ""
-                            }
-
-                            val result = repository.getCsvTableData(
-                                tagSerial, dateStartApi, dateEndApi, selectedCountry
-                            )
-
-                            val body = result.getOrNull()
-                            body?.let { data ->
-
-                                if (result.isSuccess) {
-                                    _csvTable.value = SubmitResult.Success(body)
-                                } else {
-                                    when (val error = result.exceptionOrNull()) {
-                                        is NetworkError.ServerError -> {
-                                            Log.d(TAG, "Error while fetching tag serial data")
-                                            _csvTable.value = SubmitResult.FailureServerError
-                                        }
-
-                                        is NetworkError.NoConnection -> {
-                                            _csvTable.value = SubmitResult.FailureNoConnection
-                                        }
-
-                                        is NetworkError.ApiError -> {
-                                            when (error.errorResponse.code) {
-                                                401, 405 -> {
-                                                    Log.d(
-                                                        TOKEN,
-                                                        "invalid token detected login out user"
-                                                    )
-                                                    _csvTable.value = SubmitResult.InvalidApiToken(
-                                                        error.errorResponse.code ?: 0,
-                                                        error.errorResponse.message ?: ""
-                                                    )
-                                                }
-
-                                                else -> {
-                                                    _csvTable.value = SubmitResult.FailureApiError(
-                                                        error.errorResponse.message ?: ""
-                                                    )
-                                                    Log.d(
-                                                        TAG,
-                                                        "api error ${error.errorResponse.message}"
-                                                    )
-                                                }
-                                            }
-                                        }
-
-                                        else -> {}
-                                    }
-                                }
-                            }
-
-                        } else {
-                            _csvTable.value = SubmitResult.FailureApiError(
-                                ContextCompat.getString(
-                                    context, R.string.please_select_one_tag
-                                )
-                            )
-                        }
-                    } catch (e: Exception) {
-                        Log.d(TAG, "getCsvData: ${e.message} ${e.cause}")
-                        _csvTable.value = SubmitResult.FailureApiError(
-                            ContextCompat.getString(
-                                context, R.string.formatting_error
-                            )
-                        )
-                    }
-                }
-            } else {
-                _csvTable.value = SubmitResult.FailureApiError(
-                    ContextCompat.getString(
-                        context, R.string.please_select_dates
-                    )
-                )
-            }
-        }
-    }
-
-    fun getPDFData(context: Context) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _pdfTable.value = SubmitResult.Empty
-            pdfExportDao.deleteData()
-            if (startDate.value?.inDateForm?.time != null && endDate.value?.inDateForm?.time != null) {
-                if (endDate.value?.inDateForm!!.before(startDate.value?.inDateForm!!)) {
-                    Toast.makeText(
-                        context, context.getString(R.string.end_date_check), Toast.LENGTH_SHORT
-                    ).show()
-                    _pdfTable.value = SubmitResult.Empty
-                } else {
-                    try {
-                        _pdfTable.value = SubmitResult.Loading
-                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-
-                        val dateStart = Date(userSelectedCalendarStart ?: 0)
-                        val dateEnd = Date(userSelectedCalendarEnd ?: 0)
-
-                        val dateStartApi = sdf.format(dateStart)
-                        val dateEndApi = sdf.format(dateEnd)
-
-                        Log.d(TAG, "startDate: $dateStartApi endDate $dateEndApi")
-
-                        if (selectedTags.isNotEmpty() && _userSelectedTags.value.size == 1 || allTagsSelected) {
-
-                            val tagSerial = if (allTagsSelected) {
-                                ""
-                            } else {
-                                _userSelectedTags.value.first().serialNumber ?: ""
-                            }
-
-                            val result = repository.getPDFTableData(
-                                tagSerial, dateStartApi, dateEndApi, selectedCountry
-                            )
-
-                            val body = result.getOrNull()
-                            body?.let { data ->
-
-                                if (result.isSuccess) {
-                                    pdfExportDao.upsertData(FilterPdf(0, "my_pdf", data))
-                                    _pdfTable.value = SubmitResult.Success(data)
-                                } else {
-                                    when (val error = result.exceptionOrNull()) {
-                                        is NetworkError.ServerError -> {
-                                            Log.d(TAG, "Error while fetching tag serial data")
-                                            _pdfTable.value = SubmitResult.FailureServerError
-                                        }
-
-                                        is NetworkError.NoConnection -> {
-                                            _pdfTable.value = SubmitResult.FailureNoConnection
-                                        }
-
-                                        is NetworkError.ApiError -> {
-                                            when (error.errorResponse.code) {
-                                                401, 405 -> {
-                                                    Log.d(
-                                                        TOKEN,
-                                                        "invalid token detected login out user"
-                                                    )
-                                                    _pdfTable.value = SubmitResult.InvalidApiToken(
-                                                        error.errorResponse.code ?: 0,
-                                                        error.errorResponse.message ?: ""
-                                                    )
-                                                }
-
-                                                else -> {
-                                                    _pdfTable.value = SubmitResult.FailureApiError(
-                                                        error.errorResponse.message ?: ""
-                                                    )
-                                                    Log.d(
-                                                        TAG,
-                                                        "api error ${error.errorResponse.message}"
-                                                    )
-                                                }
-                                            }
-                                        }
-
-                                        else -> {}
-                                    }
-                                }
-                            }
-
-                        } else {
-                            _pdfTable.value = SubmitResult.FailureApiError(
-                                ContextCompat.getString(
-                                    context, R.string.please_select_one_tag
-                                )
-                            )
-                        }
-                    } catch (e: Exception) {
-                        Log.d(TAG, "getCsvData: ${e.message} ${e.cause}")
-                        _pdfTable.value = SubmitResult.FailureApiError(
-                            ContextCompat.getString(
-                                context, R.string.formatting_error
-                            )
-                        )
-                    }
-                }
-            } else {
-                _pdfTable.value = SubmitResult.FailureApiError(
-                    ContextCompat.getString(
-                        context, R.string.please_select_dates
-                    )
-                )
-            }
-        }
-    }
-
-    suspend fun fetchCsvData(): ByteArray? {
-        return repository.fetchedStoredCsvData()
-    }
-
-    suspend fun fetchPDFData(): ByteArray? {
-        return repository.fetchedStoredPDFData()
     }
 
     fun internetAvailable(): Boolean {

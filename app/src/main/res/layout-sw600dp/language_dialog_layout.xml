@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialogBackground"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_dialog_borders"
+    android:minWidth="260dp"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/txChooseLanguage"
+        style="@style/H3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/dimens_16dp"
+        android:text="@string/choose_language"
+        android:textColor="@color/primary_light_darkest" />
+
+    <RelativeLayout
+        android:id="@+id/firstBlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txChooseLanguage"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true">
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/languageSerbian"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:text="@string/language_srpski" />
+
+                <RadioButton
+                    android:id="@+id/languageSerbianLatin"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:text="@string/language_srpski_latin" />
+
+                <RadioButton
+                    android:id="@+id/languageEnglish"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:text="@string/language_english" />
+
+                <RadioButton
+                    android:id="@+id/languageMontenegro"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:text="@string/language_crnogorski" />
+
+                <RadioButton
+                    android:id="@+id/languageMacedonian"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:text="@string/language_makednoski" />
+
+                <RadioButton
+                    android:id="@+id/languageBosnia"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:text="@string/language_bosnia" />
+
+                <RadioButton
+                    android:id="@+id/languageCroatia"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:text="@string/language_hrvatski" />
+
+                <RadioButton
+                    android:id="@+id/languageGerman"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:text="@string/language_nemacki" />
+
+                <RadioButton
+                    android:id="@+id/languageTurki"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:text="@string/language_turski" />
+
+                <RadioButton
+                    android:id="@+id/languageGreek"
+                    style="@style/SubtitlesRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:text="@string/language_grcki" />
+
+                <Button
+                    android:id="@+id/buttonCloseDialog"
+                    style="@style/MyButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="48dp"
+                    android:text="@string/button_close" />
+            </RadioGroup>
+        </ScrollView>
+    </RelativeLayout>
+
+
+</RelativeLayout>

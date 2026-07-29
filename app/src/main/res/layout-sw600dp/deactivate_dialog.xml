@@ -45,7 +45,6 @@
                 style="@style/H3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimens_6dp"
                 android:text="@string/deactivation_request"
                 android:textColor="@color/primary_light_darkest"
                 app:layout_constraintStart_toStartOf="parent"
@@ -103,6 +102,7 @@
                     android:gravity="top"
                     android:hint="@string/email"
                     android:inputType="text|textMultiLine"
+                    android:imeOptions="flagNoExtractUi"
                     android:textColor="@color/figmaSplashScreenColor" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -146,6 +146,7 @@
                     android:gravity="top"
                     android:hint="@string/message"
                     android:inputType="text|textMultiLine"
+                    android:imeOptions="flagNoExtractUi"
                     android:textColor="@color/figmaSplashScreenColor" />
             </com.google.android.material.textfield.TextInputLayout>
 

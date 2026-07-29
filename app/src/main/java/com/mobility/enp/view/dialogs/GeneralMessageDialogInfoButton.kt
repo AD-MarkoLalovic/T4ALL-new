@@ -19,9 +19,8 @@ import com.mobility.enp.R
 import com.mobility.enp.databinding.GeneralDialogHistoryInfoBinding
 import com.mobility.enp.util.setDimensionsPercent
 import com.mobility.enp.viewmodel.FranchiseViewModel
-import org.checkerframework.checker.units.qual.s
 
-class GeneralMessageDialogInfoButton() : DialogFragment() {
+class GeneralMessageDialogInfoButton : DialogFragment() {
 
     private var _binding: GeneralDialogHistoryInfoBinding? = null
     private val binding: GeneralDialogHistoryInfoBinding get() = _binding!!

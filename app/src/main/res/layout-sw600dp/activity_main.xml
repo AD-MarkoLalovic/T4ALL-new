@@ -20,7 +20,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimens_0dp"
-        android:layout_marginTop="@dimen/dimens_16sp"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

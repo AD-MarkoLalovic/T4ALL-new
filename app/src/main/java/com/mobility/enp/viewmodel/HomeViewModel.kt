@@ -48,6 +48,10 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
     private val _tagOrderUrl = MutableStateFlow<SubmitResultFold<String>>(SubmitResultFold.Idle)
     val tagOrderUrl = _tagOrderUrl.asStateFlow()
 
+    init {
+        startObservingHomeCardsForCurrentUser()
+    }
+
     fun loadTagOrderUrl() {
         viewModelScope.launch {
             _tagOrderUrl.value = SubmitResultFold.Loading
@@ -84,7 +88,10 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
             _tagOrderUrl.value = SubmitResultFold.Success(url.toString())
         }
     }
-    fun clearTagOrderUrl() { _tagOrderUrl.value = SubmitResultFold.Idle }
+
+    fun clearTagOrderUrl() {
+        _tagOrderUrl.value = SubmitResultFold.Idle
+    }
 
     fun fetchHomeData() {
         viewModelScope.launch {
@@ -94,14 +101,6 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
             val localHomeData = repositoryHome.getLocalAllHomeData()
             localHomeData?.let { updateHomeData(it) }
 
-            val user = repositoryHome.getUserForPromotion()
-            val localCountry = localHomeData?.home?.countryCode
-            val localIsFranchiser = localHomeData?.home?.isFranchiser
-            _homeCards.value = HomeCardsWithCountry(
-                card = repositoryHome.getHomeCards(user),
-                countryCode = localCountry,
-                isFranchiser = localIsFranchiser
-            )
 
             val homeDataDeferred = async { repositoryHome.getHomeDataFromServer() }
             val homeCardsDeferred = async { repositoryHome.getCardsFromServer() }
@@ -158,17 +157,19 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
                 }
             }
 
-            if (homeCardsResult.isSuccess) {
-                val homeCardsEntity = homeCardsResult.getOrNull() ?: emptyList()
-                val serverCountry = _homeDetails.value?.home?.countryCode
-                val serverIsFranchiser = _homeDetails.value?.home?.isFranchiser
-                _homeCards.value = HomeCardsWithCountry(
-                    card = homeCardsEntity,
-                    countryCode = serverCountry,
-                    isFranchiser = serverIsFranchiser
-                )
-            }
+            if (homeCardsResult.isFailure) {
+                when (homeCardsResult.exceptionOrNull()) {
 
+                    is NetworkError.ServerError,
+                    is NetworkError.ApiError -> {
+                        Log.e(
+                            "HomeViewModel",
+                            "Greška pri preuzimanju kartica sa servera",
+                            homeCardsResult.exceptionOrNull()
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -188,6 +189,22 @@ class HomeViewModel(private val repositoryHome: HomeRepository) : ViewModel() {
     fun updateDeleteHomeCard(card: HomeCardsEntity) {
         viewModelScope.launch {
             repositoryHome.updateHomeCard(card)
+        }
+    }
+
+    private fun startObservingHomeCardsForCurrentUser() {
+        viewModelScope.launch {
+            val user = repositoryHome.getUserForPromotion()
+            if (user.isBlank()) return@launch
+
+            repositoryHome.observerHomeCard(user).collect { homeCards ->
+                val currentDetails = _homeDetails.value
+                _homeCards.value = HomeCardsWithCountry(
+                    card = homeCards,
+                    countryCode = currentDetails?.home?.countryCode,
+                    isFranchiser = currentDetails?.home?.isFranchiser
+                )
+            }
         }
     }
 

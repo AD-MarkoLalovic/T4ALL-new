@@ -16,16 +16,6 @@
         android:background="@color/white"
         tools:context=".view.fragments.HomeFragment">
 
-        <ProgressBar
-            android:id="@+id/progBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <androidx.core.widget.NestedScrollView
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -38,18 +28,18 @@
                 android:id="@+id/firstConstraintLayoutHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dimens_100dp"
                 android:layout_marginTop="4dp">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewAccountHomeScreen"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimens_160dp"
+                    android:layout_height="215dp"
                     android:layout_gravity="center"
+                    android:layout_marginHorizontal="@dimen/dimens_100dp"
                     android:layout_marginTop="@dimen/dimens_8dp"
                     android:backgroundTint="@color/figmaSplashScreenColor"
-                    app:cardCornerRadius="@dimen/dimens_26dp"
-                    app:cardElevation="@dimen/dimens_4dp"
+                    app:cardCornerRadius="36dp"
+                    app:cardElevation="@dimen/dimens_6dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -62,17 +52,14 @@
 
                         <TextView
                             android:id="@+id/homeUserName"
-                            style="@style/H2"
+                            style="@style/H1"
                             android:layout_width="@dimen/dimens_0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/dimens_16dp"
                             android:layout_marginBottom="16dp"
-                            android:ellipsize="end"
                             android:gravity="center_horizontal"
-                            android:maxLines="1"
                             android:text="@{viewModel.homeDetails.home.displayName}"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/dimens_25sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -80,7 +67,7 @@
 
                         <TextView
                             android:id="@+id/tvWelcomeBack"
-                            style="@style/CaptionRegular"
+                            style="@style/Paragraph"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/dimens_2dp"
@@ -95,8 +82,8 @@
 
                 <ImageView
                     android:id="@+id/imageAccountHomeScreen"
-                    android:layout_width="@dimen/dimens_85dp"
-                    android:layout_height="@dimen/dimens_85dp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
                     android:layout_gravity="center_horizontal"
                     android:contentDescription="@null"
                     android:src="@drawable/default_user_picture"
@@ -110,7 +97,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingTop="@dimen/dimens_22dp"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -121,7 +107,11 @@
                         android:id="@+id/cyclerPromotions"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="31dp"
+                        android:clipToPadding="false"
                         android:orientation="horizontal"
+                        android:paddingStart="100dp"
+                        android:paddingEnd="100dp"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:listitem="@layout/card_flags_promotion_home" />
 
@@ -130,6 +120,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/dimens_12dp"
                         android:importantForAccessibility="no"
                         android:orientation="horizontal"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -141,6 +132,8 @@
                         style="@style/H2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimens_100dp"
+                        android:layout_marginTop="31dp"
                         android:text="@string/my_invoices"
                         android:textColor="@color/primary_light_darkest" />
 
@@ -149,6 +142,7 @@
                         style="@style/Paragraph"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimens_100dp"
                         android:layout_marginTop="@dimen/dimens_10dp"
                         android:text="@string/no_invoices"
                         android:visibility="gone" />
@@ -156,7 +150,8 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/invoicesContainerHome"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/dimens_100dp">
 
                         <TextView
                             android:id="@+id/txtInvoiceMonth"
@@ -201,6 +196,7 @@
                         style="@style/H2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/dimens_100dp"
                         android:layout_marginTop="@dimen/dimens_34dp"
                         android:text="@string/tool_history"
                         android:textColor="@color/primary_light_darkest" />
@@ -209,6 +205,7 @@
                         android:id="@+id/recyclerLastPassages"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/dimens_100dp"
                         android:layout_marginTop="@dimen/dimens_10dp"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:itemCount="5"
@@ -219,6 +216,7 @@
                         style="@style/Paragraph"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/dimens_100dp"
                         android:layout_marginTop="@dimen/dimens_10dp"
                         android:layout_marginBottom="@dimen/dimens_10dp"
                         android:text="@string/no_tool_history"
@@ -236,6 +234,16 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

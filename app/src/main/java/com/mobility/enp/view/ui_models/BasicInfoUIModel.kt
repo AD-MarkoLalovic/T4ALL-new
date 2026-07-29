@@ -5,6 +5,7 @@ data class BasicInfoUIModel(
     val city: String,
     val companyName: String?,
     val countryName: String,
+    val tagCountry: String,
     val customerType: Int,
     val displayName: String?,
     val email: String,
@@ -13,5 +14,7 @@ data class BasicInfoUIModel(
     val mb: String?,
     val phone: String,
     val postalCode: String?,
-    val pib: String?
+    val pib: String?,
+    val cpFirstName: String?,
+    val cpLastName: String?
 )

@@ -17,5 +17,6 @@ data class MyInvoicesResponse(
     val `data`: Data?,
     @SerializedName("message")
     @Expose
-    val message: String?
+    val message: String?,
+    var country: String
 )

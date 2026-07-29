@@ -1,5 +1,6 @@
 package com.mobility.enp.view.dialogs
 
+import android.app.Dialog
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -30,11 +31,19 @@ class SupportDialog : DialogFragment() {
     private val franchiseViewModel: FranchiseViewModel by activityViewModels { FranchiseViewModel.Factory }
     private val viewModel: SupportViewModel by viewModels { SupportViewModel.Factory }
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        isCancelable = true
+
+        return super.onCreateDialog(savedInstanceState).apply {
+            window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+            setCanceledOnTouchOutside(false)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = DialogSupportBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -161,8 +170,10 @@ class SupportDialog : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        setDimensionsPercent(95)
-        isCancelable = false
+        val isLandscape = resources.configuration.orientation ==
+                android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
+        setDimensionsPercent(if (isLandscape) 85 else 95)
     }
 
     override fun onDestroyView() {

@@ -102,6 +102,7 @@
                     android:gravity="top"
                     android:hint="@string/email"
                     android:inputType="text|textMultiLine"
+                    android:imeOptions="flagNoExtractUi"
                     android:textColor="@color/figmaSplashScreenColor" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -145,6 +146,7 @@
                     android:gravity="top"
                     android:hint="@string/message"
                     android:inputType="text|textMultiLine"
+                    android:imeOptions="flagNoExtractUi"
                     android:textColor="@color/figmaSplashScreenColor" />
             </com.google.android.material.textfield.TextInputLayout>
 

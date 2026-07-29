@@ -2,13 +2,13 @@ package com.mobility.enp.view.dialogs
 
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -39,7 +39,7 @@ class DeactivateAccountDialog : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         _binding = DeactivateDialogBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -81,7 +81,7 @@ class DeactivateAccountDialog : DialogFragment() {
 
     private fun setFranchise() {
         franchiseViewModel.franchiseModel.value?.let { franchiseModel ->
-            franchiseModel.franchiseCloseButton.let { closeButton ->
+            franchiseModel.franchiseCloseButton.let {
                 binding.deactivateAccountDialogClose.setBackgroundResource(franchiseModel.franchiseCloseButton)
             }
 
@@ -173,12 +173,16 @@ class DeactivateAccountDialog : DialogFragment() {
 
     private fun logMessage(message: String) {
         binding.progBar.visibility = View.GONE
-        Log.d(ProfileFragment.Companion.TAG, "deactivateAccountMsg: $message")
+        Log.d(ProfileFragment.TAG, "deactivateAccountMsg: $message")
     }
 
     override fun onStart() {
         super.onStart()
-        setDimensionsPercent(95)
+        val isLandscape =
+            resources.configuration.orientation ==
+                    android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
+        setDimensionsPercent(if (isLandscape) 85 else 95)
         isCancelable = false
     }
 

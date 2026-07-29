@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Environment
+import android.os.Parcelable
 import android.util.Base64
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -28,6 +29,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mobility.enp.MyApplication
 import com.mobility.enp.R
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
+import com.mobility.enp.data.model.api_my_invoices.RsBillsResponse
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.pdf_table.PdfTable
 import com.mobility.enp.data.repository.BillsRepository
@@ -39,8 +41,11 @@ import com.mobility.enp.view.PdfViewActivity
 import com.mobility.enp.view.adapters.my_invoices_adapters.BillsDetailsAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
@@ -57,8 +62,18 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     private val _myInvoices = MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Empty)
     val myInvoices: StateFlow<SubmitResult<MyInvoicesResponse>> get() = _myInvoices
 
+    private val _myInvoicesPaging =
+        MutableStateFlow<SubmitResult<MyInvoicesResponse>>(SubmitResult.Empty)
+    val myInvoicesPaging: StateFlow<SubmitResult<MyInvoicesResponse>> get() = _myInvoicesPaging
+
     private val _billPad = MutableStateFlow<SubmitResultFold<Unit>>(SubmitResultFold.Idle)
     val billPad = _billPad.asStateFlow()
+
+    private val _rsBills = MutableStateFlow<SubmitResult<RsBillsResponse>>(SubmitResult.Empty)
+    val rsBills: StateFlow<SubmitResult<RsBillsResponse>> get() = _rsBills
+
+    var isRepublicSerbiaMode: Boolean = false
+        private set
 
     private val _savedPdfData = MutableLiveData<ByteArray>()
     val pdfData: LiveData<ByteArray> get() = _savedPdfData
@@ -66,20 +81,102 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
     private val _openDialogForNoPdfData = MutableLiveData<Boolean>()
     val openDialogForNoPdfData: LiveData<Boolean> get() = _openDialogForNoPdfData
 
-    private var selectedCountry: String = ""
+    private val _selectedCountry = MutableStateFlow("all")
+
+    private val _billDetailsFlow =
+        MutableStateFlow<SubmitResult<BillsDetailsResponse>>(SubmitResult.Loading)
+
+    val billDetailsFlow: StateFlow<SubmitResult<BillsDetailsResponse>> get() = _billDetailsFlow
 
     fun setSelectedCountry(country: String) {
-        this.selectedCountry = country
+        _selectedCountry.value = country
+        isRepublicSerbiaMode = country == "BA_RS"
+    }
+
+    private var countriesPosition: Int = 0
+    var firstLoad: Boolean = false
+    var recyclerState: Parcelable? = null
+
+    private val _allowedCountries = MutableStateFlow<List<String>>(emptyList())
+    private val _savedData =
+        MutableStateFlow<Map<String, SubmitResult<MyInvoicesResponse>>>(emptyMap())
+
+    fun setSavedData(data: SubmitResult<MyInvoicesResponse>) {
+
+        when (data is SubmitResult.Success) {
+            true -> {
+                val key = _selectedCountry.value.ifEmpty { "all" }
+                data.data.country = key
+                _savedData.value = _savedData.value.toMutableMap().apply {
+                    this[key] = data
+                }
+            }
+
+            false -> {}
+        }
+    }
+
+    val currentData =
+        combine(_savedData, _selectedCountry) { map, country ->
+            map[country] ?: SubmitResult.Empty
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            SubmitResult.Empty
+        )
+
+    val allowedCountriesFlow = _allowedCountries
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
+        )
+
+    fun setAllowedCountries(countries: List<String>) {
+        if (_allowedCountries.value.isEmpty()) {
+            _allowedCountries.value = countries
+        }
+    }
+
+    private val _savedBills: MutableMap<String, BillsDetailsResponse> = mutableMapOf()
+
+    fun clearSavedBills() {
+        _savedBills.clear()
+    }
+
+    fun saveBill(key: String, bill: BillsDetailsResponse) {   // month year //extra key country
+        val keyExtra = _selectedCountry.value.ifEmpty { "all" }
+        _savedBills[key + keyExtra] = bill
+    }
+
+    fun getSavedBillDetails(key: String): BillsDetailsResponse? {
+        val keyExtra = _selectedCountry.value.ifEmpty { "all" }
+        return _savedBills[key + keyExtra]
     }
 
     fun isNetworkAvailable(): Boolean {
         return repository.isNetworkPresent()
     }
 
+    fun setPosition(position: Int) {
+        countriesPosition = position
+    }
+
+    fun getPosition(): Int {
+        return countriesPosition
+    }
+
+
     fun fetchMonthlyInvoices() {
-        _myInvoices.value = SubmitResult.Loading
+        _myInvoices.value = SubmitResult.Empty
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getInvoicesData(perPage, selectedCountry)
+
+            var sc = _selectedCountry.value
+            if (sc == "all") {
+                sc = ""
+            }
+
+            val result = repository.getInvoicesData(perPage, sc)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -136,40 +233,37 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
 
     fun fetchMonthlyInvoicesPaging(
         page: Int,
-        flow: MutableStateFlow<SubmitResult<MyInvoicesResponse>>
     ) {
-        flow.value = SubmitResult.Loading
+        _myInvoicesPaging.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getInvoicesDataPaging(page, perPage, selectedCountry)
+
+            var sc = _selectedCountry.value
+            if (sc == "all") {
+                sc = ""
+            }
+
+            val result = repository.getInvoicesDataPaging(page, perPage, sc)
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
-                    flow.value = SubmitResult.Empty
+                    _myInvoicesPaging.value = SubmitResult.Empty
                 } else {
-                    flow.value = SubmitResult.Success(data)
+                    _myInvoicesPaging.value = SubmitResult.Success(data)
                 }
             } else {
                 when (val error = result.exceptionOrNull()) {
                     is NetworkError.ServerError -> {
-                        Log.d(
-                            UserPassViewModel.TAG,
-                            "Error while fetching my invoices data"
-                        )
-                        flow.value = SubmitResult.FailureServerError
+                        _myInvoicesPaging.value = SubmitResult.FailureServerError
                     }
 
                     is NetworkError.NoConnection -> {
-                        flow.value = SubmitResult.FailureNoConnection
+                        _myInvoicesPaging.value = SubmitResult.FailureNoConnection
                     }
 
                     is NetworkError.ApiError -> {
                         when (error.errorResponse.code) {
                             401, 405 -> {
-                                Log.d(
-                                    "API_TOKEN UserPassViewModel",
-                                    "invalid token detected login out user"
-                                )
-                                flow.value =
+                                _myInvoicesPaging.value =
                                     SubmitResult.InvalidApiToken(
                                         error.errorResponse.code,
                                         error.errorResponse.message ?: ""
@@ -177,14 +271,10 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
                             }
 
                             else -> {
-                                flow.value =
+                                _myInvoicesPaging.value =
                                     SubmitResult.FailureApiError(
                                         error.errorResponse.message ?: ""
                                     )
-                                Log.d(
-                                    "UserPassViewModel",
-                                    "UserPassViewModel api error ${error.errorResponse.message}"
-                                )
                             }
                         }
                     }
@@ -195,84 +285,109 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         }
     }
 
-    fun setLocalData(bills: MyInvoicesResponse) {
+    fun fetchRepublicSerbiaBills() {
+        _rsBills.value = SubmitResult.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            repository.setLocalBillsData(bills)
-        }
-    }
-
-    suspend fun checkBills() = withContext(Dispatchers.IO) {
-        repository.fetchSavedBillsData()
-    }
-
-    fun fetchLocalData() {
-        viewModelScope.launch {
-            val data = withContext(Dispatchers.IO) {
-                repository.fetchSavedBillsData()
+            val result = repository.getRepublicSerbiaBills("BA_RS")
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                _rsBills.value = if (data == null) SubmitResult.Empty else SubmitResult.Success(data)
+            } else {
+                when (val error = result.exceptionOrNull()) {
+                    is NetworkError.ServerError -> {
+                        Log.d(TAG, "Error while fetching Republic Srpska bills")
+                        _rsBills.value = SubmitResult.FailureServerError
+                    }
+                    is NetworkError.NoConnection -> {
+                        _rsBills.value = SubmitResult.FailureNoConnection
+                    }
+                    is NetworkError.ApiError -> {
+                        when (error.errorResponse.code) {
+                            401, 405 -> {
+                                _rsBills.value = SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code,
+                                    error.errorResponse.message ?: ""
+                                )
+                            }
+                            else -> {
+                                _rsBills.value = SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
+                                )
+                            }
+                        }
+                    }
+                    else -> {}
+                }
             }
-            _myInvoices.value = SubmitResult.Success(data)
         }
     }
 
-    fun fetchBillDetailsNew(
-        flow: MutableStateFlow<SubmitResult<BillsDetailsResponse>>,
+
+    suspend fun fetchBillDetailsNew(
         yearMonth: String,
         currency: String,
-    ) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getBillDetails(yearMonth, currency, perPage, selectedCountry)
-            if (result.isSuccess) {
-                val data = result.getOrNull()
-                if (data == null) {
-                    flow.value = SubmitResult.Empty
-                } else {
-                    flow.value = SubmitResult.Success(data)
-                }
+    ): BillsDetailsResponse? {
+        var sc = _selectedCountry.value
+        if (sc == "all") {
+            sc = ""
+        }
+
+        val result =
+            repository.getBillDetails(yearMonth, currency, perPage, sc)
+        if (result.isSuccess) {
+            val data = result.getOrNull()
+            if (data == null) {
+                _billDetailsFlow.value = SubmitResult.Empty
+                return null
             } else {
-                when (val error = result.exceptionOrNull()) {
-                    is NetworkError.ServerError -> {
-                        Log.d(
-                            UserPassViewModel.TAG,
-                            "Error while fetching bill details"
-                        )
-                        flow.value = SubmitResult.FailureServerError
-                    }
+                _billDetailsFlow.value = SubmitResult.Success(data)
+                return data
+            }
+        } else {
+            when (val error = result.exceptionOrNull()) {
+                is NetworkError.ServerError -> {
+                    Log.d(
+                        UserPassViewModel.TAG,
+                        "Error while fetching bill details"
+                    )
+                    _billDetailsFlow.value = SubmitResult.FailureServerError
+                }
 
-                    is NetworkError.NoConnection -> {
-                        flow.value = SubmitResult.FailureNoConnection
-                    }
+                is NetworkError.NoConnection -> {
+                    _billDetailsFlow.value = SubmitResult.FailureNoConnection
+                }
 
-                    is NetworkError.ApiError -> {
-                        when (error.errorResponse.code) {
-                            401, 405 -> {
-                                Log.d(
-                                    "API_TOKEN UserPassViewModel",
-                                    "invalid token detected login out user"
+                is NetworkError.ApiError -> {
+                    when (error.errorResponse.code) {
+                        401, 405 -> {
+                            Log.d(
+                                "API_TOKEN UserPassViewModel",
+                                "invalid token detected login out user"
+                            )
+                            _billDetailsFlow.value =
+                                SubmitResult.InvalidApiToken(
+                                    error.errorResponse.code,
+                                    error.errorResponse.message ?: ""
                                 )
-                                flow.value =
-                                    SubmitResult.InvalidApiToken(
-                                        error.errorResponse.code,
-                                        error.errorResponse.message ?: ""
-                                    )
-                            }
+                        }
 
-                            else -> {
-                                flow.value =
-                                    SubmitResult.FailureApiError(
-                                        error.errorResponse.message ?: ""
-                                    )
-                                Log.d(
-                                    "UserPassViewModel",
-                                    "UserPassViewModel api error ${error.errorResponse.message}"
+                        else -> {
+                            _billDetailsFlow.value =
+                                SubmitResult.FailureApiError(
+                                    error.errorResponse.message ?: ""
                                 )
-                            }
+                            Log.d(
+                                "UserPassViewModel",
+                                "UserPassViewModel api error ${error.errorResponse.message}"
+                            )
                         }
                     }
-
-                    else -> {}
                 }
+
+                else -> {}
             }
         }
+        return null
     }
 
 
@@ -283,8 +398,19 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         page: Int
     ) {
         viewModelScope.launch(Dispatchers.IO) {
+            var sc = _selectedCountry.value
+            if (sc == "all") {
+                sc = ""
+            }
+
             val result =
-                repository.getBillDetailsPaging(yearMonth, currency, perPage, selectedCountry, page)
+                repository.getBillDetailsPaging(
+                    yearMonth,
+                    currency,
+                    perPage,
+                    sc,
+                    page
+                )
             if (result.isSuccess) {
                 val data = result.getOrNull()
                 if (data == null) {
@@ -339,7 +465,7 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         }
     }
 
-    fun payBill(billId: String,buttonCompletionListener: BillsDetailsAdapter.onApiCallCompletion) {
+    fun payBill(billId: String, buttonCompletionListener: BillsDetailsAdapter.onApiCallCompletion) {
         viewModelScope.launch {
             _billPad.value = SubmitResultFold.Loading
 
@@ -359,6 +485,23 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
 
     fun resetBillPad() {
         _billPad.value = SubmitResultFold.Idle
+    }
+
+    fun sendBillToEmail(
+        billId: String,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.sendBillToEmail(billId)
+            withContext(Dispatchers.Main) {
+                if (result.isSuccess) {
+                    onSuccess()
+                } else {
+                    onFailure()
+                }
+            }
+        }
     }
 
     fun downloadPdfBill(
@@ -552,6 +695,27 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
         }
     }
 
+    fun downloadPassageDataRs(
+        adapterInterface: BillsDetailsAdapter.DownloadBillsDetails,
+        billId: String
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = repository.downloadPassageDataRs(billId)
+            if (result.isSuccess) {
+                val data = result.getOrNull()
+                if (data == null) {
+                    adapterInterface.onFailed()
+                } else {
+                    withContext(Dispatchers.Main) {
+                        adapterInterface.onOK(data)
+                    }
+                }
+            } else {
+                adapterInterface.onFailed()
+            }
+        }
+    }
+
     fun downloadPassageData(
         adapterInterface: BillsDetailsAdapter.DownloadBillsDetails,
         billId: String
@@ -617,7 +781,8 @@ class MyInvoicesViewModel(private val repository: BillsRepository) : ViewModel()
 
     fun resetState() {
         _myInvoices.value = SubmitResult.Empty
-        selectedCountry = ""
+        _rsBills.value = SubmitResult.Empty
+        isRepublicSerbiaMode = false
     }
 
     companion object {

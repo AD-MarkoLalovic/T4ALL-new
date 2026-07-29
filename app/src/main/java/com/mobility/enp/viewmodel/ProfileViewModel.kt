@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import com.mobility.enp.BuildConfig
 import com.mobility.enp.MyApplication
 import com.mobility.enp.data.model.TagOrderInputs
+import com.mobility.enp.data.model.api_my_profile.basic_information.response.BasicInfoResponse
 import com.mobility.enp.data.repository.ProfileRepository
 import com.mobility.enp.util.NetworkError
 import com.mobility.enp.util.SubmitResult
@@ -56,14 +57,9 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
     private val _deletePic = MutableLiveData<Boolean>()
     val deletePic: LiveData<Boolean> get() = _deletePic
 
-    private val _showRefundCard = MutableLiveData<Boolean>()
-    val showRefundCard: LiveData<Boolean> get() = _showRefundCard
-
-    private var _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> get() = _isLoading
-
-    private val _displayName = MutableLiveData<String>()
-    val displayName: LiveData<String> = _displayName
+    private val _basicBodyData =
+        MutableStateFlow<SubmitResult<BasicInfoResponse>>(SubmitResult.Empty)
+    val basicBodyData: StateFlow<SubmitResult<BasicInfoResponse>> get() = _basicBodyData
 
     private suspend fun getUserToken(): String? {
         return withContext(Dispatchers.IO) {
@@ -77,34 +73,29 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
 
     fun setRefundRequestVisibility() {
         if (isNetworkAvailable()) {
-            _isLoading.value = true
             viewModelScope.launch {
-                try {
-                    val result = repository.getBasicUserInformation()
-                    result.fold(onSuccess = { body ->
-                        _displayName.value = body.data.displayName
-                        val userCountry = body.data.country.code
-                        val userType = body.data.customerType.type
-                        val isFranchiser = body.data.isFranchiser
+                val result = repository.getBasicUserInformation()
+                result.fold(onSuccess = { body ->
+                    _basicBodyData.value = SubmitResult.Success(body)
+                }, onFailure = {
+                    when (val error = result.exceptionOrNull()) {
+                        is NetworkError.ServerError -> {
+                            _basicBodyData.value = SubmitResult.FailureServerError
+                        }
 
-                        // Postavljanje vrednosti za _showRefundCard
+                        is NetworkError.NoConnection -> {
+                            _basicBodyData.value = SubmitResult.FailureNoConnection
+                        }
 
-                        _showRefundCard.value =
-                            ((userCountry == "RS" || userType == 3) && !isFranchiser)
-                    }, onFailure = {
-                        _showRefundCard.value = false
-                        _isLoading.value = false
-                    })
-                } catch (e: Exception) {
-                    Log.e("ProfileViewModel", "Error fetching user data", e)
-                    _showRefundCard.value = false
-                } finally {
-                    _isLoading.value = false
-                }
+                        is NetworkError.ApiError -> {
+                            _basicBodyData.value =
+                                SubmitResult.FailureApiError(error.errorResponse.message ?: "")
+                        }
+
+                        else -> {}
+                    }
+                })
             }
-        } else {
-            _checkNet.value = false
-            _showRefundCard.value = false
         }
     }
 

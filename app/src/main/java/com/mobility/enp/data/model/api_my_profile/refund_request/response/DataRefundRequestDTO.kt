@@ -12,7 +12,7 @@ data class DataRefundRequestDTO(
     val currency: CurrencyDTO,
     val filePath: String?,
     val status: StatusDTO,
-    val registrationPlate: String
+    val registrationPlate: String?
 ) {
     fun toEntity(): DataRefundRequestEntity {
         return DataRefundRequestEntity(

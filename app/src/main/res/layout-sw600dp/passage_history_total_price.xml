@@ -9,7 +9,7 @@
         <variable
             name="data"
             type="com.mobility.enp.data.model.api_tool_history.v2base_model.SumTag" />
-  </data>
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
@@ -18,7 +18,7 @@
         <TextView
             android:id="@+id/currencyTotal"
             style="@style/ParagraphMediumTablet"
-            android:layout_width="120dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{data.total}"
             app:layout_constraintEnd_toStartOf="@id/currencyValue"
@@ -32,11 +32,12 @@
         <TextView
             android:id="@+id/currencyValue"
             style="@style/ParagraphMediumTablet"
-            android:layout_width="@dimen/dimens_35dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="end"
             android:text="@{data.currency}"
-            android:textSize="@dimen/dimens_12sp"
+            android:layout_marginStart="@dimen/dimens_2dp"
+            android:textSize="@dimen/dimens_8sp"
             app:layout_constraintBottom_toBottomOf="@id/currencyTotal"
             app:layout_constraintStart_toEndOf="@id/currencyTotal"
             app:layout_constraintTop_toTopOf="parent"

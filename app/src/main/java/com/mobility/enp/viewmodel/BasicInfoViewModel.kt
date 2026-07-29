@@ -25,7 +25,7 @@ class BasicInfoViewModel(val repository: UserRepository) : ViewModel() {
     val basicInfo: LiveData<SubmitResult<BasicInfoUIModel>> = _basicInfoUI
 
     private val _updateBasicInfoUI = MutableLiveData<SubmitResult<BasicInfoUIModel>>().apply {
-        value = SubmitResult.Loading
+        value = SubmitResult.Empty
     }
     val updateBasicInfoUI: LiveData<SubmitResult<BasicInfoUIModel>> = _updateBasicInfoUI
 
@@ -165,6 +165,10 @@ class BasicInfoViewModel(val repository: UserRepository) : ViewModel() {
 
     fun isInternetAvailable(): Boolean {
         return repository.isNetAvailable()
+    }
+
+    fun resetUpdateBasicInfoState() {
+        _updateBasicInfoUI.value = SubmitResult.Empty
     }
 
     companion object {

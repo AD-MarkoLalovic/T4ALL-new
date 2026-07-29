@@ -22,6 +22,7 @@ class CustomRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(
                     // Vraćanje vrednosti true kako bi se indikator gesta završio
                     return true
                 }
+
             })
     }
 
@@ -38,6 +39,6 @@ class CustomRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(
         // Prikazivanje događaja dodira GestureDetector-u i provera da li je detektiran jedan dodir
         // Ako jeste, poziva se performClick() kako bi se osiguralo rukovanje događajem klika
         // Ako nije detektiran jedan dodir, delegira se super klasi za obradu događaja dodira
-        return gestureDetector.onTouchEvent(e) || super.onTouchEvent(e)
+        return super.onTouchEvent(e)
     }
 }

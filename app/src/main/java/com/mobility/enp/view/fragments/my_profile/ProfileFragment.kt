@@ -110,8 +110,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
 
                 viewModelStore.clear()
 
-                SharedPreferencesHelper.resetCheckBoxHAC(requireContext())
-
                 (context as MainActivity).resetToDefault()
                 (context as MainActivity).resetHistoryViewModel()
             }
@@ -227,6 +225,51 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
             }
         }
 
+        collectLatestLifecycleFlow(viewModelProfile.basicBodyData) { data ->
+            when (data) {
+                is SubmitResult.Success -> {
+
+                    binding.profileProgressBar.visibility = View.GONE
+                    binding.profileContainer.visibility = View.VISIBLE
+
+                    data.data.let { body ->
+
+                        setDisplayName(body.data.displayName)
+
+                        val userCountry = body.data.country.code
+                        val userType = body.data.customerType.type
+                        val isFranchiser = body.data.isFranchiser
+
+                        val value =
+                            ((userCountry == "RS" || userType == 3) && !isFranchiser)
+
+                        setShowRefundCard(value)
+                    }
+                }
+
+                is SubmitResult.FailureServerError -> {
+                    logMessage(getString(R.string.server_error_msg))
+                }
+
+                is SubmitResult.FailureApiError -> {
+                    logMessage(data.errorMessage)
+                }
+
+                is SubmitResult.InvalidApiToken -> {
+                    logMessage(data.errorMessage)
+                    MainActivity.logoutOnInvalidToken(requireContext(), findNavController())
+                }
+
+                is SubmitResult.Empty -> {
+                    binding.profileProgressBar.visibility = View.VISIBLE
+                    binding.profileContainer.visibility = View.GONE
+                }
+
+                else -> {
+                }
+            }
+        }
+
         franchiseViewModel.openSuccessDialog.observe(viewLifecycleOwner) { showDialog ->
             if (showDialog != null && showDialog) {
                 franchiseViewModel.postOpenDialog(null)
@@ -234,13 +277,6 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                     requireContext().getString(R.string.support_successful_mail),
                     requireContext().getString(R.string.support_successful_massage)
                 ).show(childFragmentManager, "GeneralDialogSupport")
-            }
-        }
-
-        viewModelProfile.displayName.observe(viewLifecycleOwner) { displayName ->
-            binding.userName.text = displayName
-            viewLifecycleOwner.lifecycleScope.launch {
-                imageRepository.getAndSetProfileImage(binding.imageProfile, displayName)
             }
         }
 
@@ -303,23 +339,20 @@ class ProfileFragment : Fragment(), ProfileImagePickerDialog.ImagePickDialogList
                 }
             }
         }
+    }
 
-        viewModelProfile.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading) {
-                binding.profileProgressBar.visibility = View.VISIBLE
-                binding.profileContainer.visibility = View.GONE
-            } else {
-                binding.profileProgressBar.visibility = View.GONE
-                binding.profileContainer.visibility = View.VISIBLE
-            }
+    private fun setShowRefundCard(shouldShow: Boolean) {
+        if (shouldShow || franchiseViewModel.franchiseModel.value != null) {
+            binding.buttonRefundRequest.visibility = View.VISIBLE
+        } else {
+            binding.buttonRefundRequest.visibility = View.GONE
         }
+    }
 
-        viewModelProfile.showRefundCard.observe(viewLifecycleOwner) { shouldShow ->
-            if (shouldShow || franchiseViewModel.franchiseModel.value != null) {
-                binding.buttonRefundRequest.visibility = View.VISIBLE
-            } else {
-                binding.buttonRefundRequest.visibility = View.GONE
-            }
+    private fun setDisplayName(displayName: String) {
+        binding.userName.text = displayName
+        viewLifecycleOwner.lifecycleScope.launch {
+            imageRepository.getAndSetProfileImage(binding.imageProfile, displayName)
         }
     }
 

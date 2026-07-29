@@ -9,5 +9,7 @@ data class UpdateUserDataRequest(
     val mb: String? = null,
     val phone: String,
     val postalCode: String = "",
-    val pib: String = ""
+    val pib: String = "",
+    val cpFirstName: String? = null,
+    val cpLastName: String? = null
 )

@@ -3,6 +3,7 @@ package com.mobility.enp.network
 import com.mobility.enp.data.model.api_home_page.HomePageFcmTokenResponse
 import com.mobility.enp.data.model.api_my_invoices.BillDownload
 import com.mobility.enp.data.model.api_my_invoices.BillsDetailsResponse
+import com.mobility.enp.data.model.api_my_invoices.RsBillsResponse
 import com.mobility.enp.data.model.api_my_invoices.refactor.MyInvoicesResponse
 import com.mobility.enp.data.model.api_my_profile.ChangePasswordRequest
 import com.mobility.enp.data.model.api_my_profile.SupportRequest
@@ -20,8 +21,10 @@ import com.mobility.enp.data.model.api_tool_history.complaint.ObjectionBody
 import com.mobility.enp.data.model.api_tool_history.index.IndexData
 import com.mobility.enp.data.model.api_tool_history.v2base_model.V2HistoryTagResponse
 import com.mobility.enp.data.model.banks.response.BanksResponse
+import com.mobility.enp.data.model.cards.SetDefaultCardRequest
 import com.mobility.enp.data.model.cards.registration_croatia.RegistrationResponse
 import com.mobility.enp.data.model.cards.registration_croatia.SerialNumberRequest
+import com.mobility.enp.data.model.cards.republic_of_serbia.GenerateCardToken
 import com.mobility.enp.data.model.cards.tags_for_croatia.TagsListResponse
 import com.mobility.enp.data.model.cardsweb.CardWebModel
 import com.mobility.enp.data.model.csv_table.CsvModel
@@ -31,6 +34,10 @@ import com.mobility.enp.data.model.login.CustomerSupport
 import com.mobility.enp.data.model.login.ForgotPasswordRequest
 import com.mobility.enp.data.model.login.LoginBody
 import com.mobility.enp.data.model.login.UserResponse
+import com.mobility.enp.data.model.new_toll_history.complaint.ComplaintBodyNew
+import com.mobility.enp.data.model.new_toll_history.objection.ObjectionBodyNew
+import com.mobility.enp.data.model.new_toll_history.remote.dto.TollHistoryDto
+import com.mobility.enp.data.model.new_toll_history.tags.remote.TollHistoryTagsDto
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -92,10 +99,23 @@ interface ApiService {
     @GET("/api/v1/history/tags")
     suspend fun getToolHistoryIndexN(): Response<IndexData>
 
-    @DELETE("/api/v1/cards/{card_id}")
+    @DELETE("/api/v2/cards/{card_id}/{country}")
     suspend fun deleteCard(
-        @Path("card_id") cardId: String
+        @Path("card_id") cardId: String,
+        @Path("country") countryCode: String
     ): Response<Unit>
+
+    @POST("api/v1/ars/generate-card-token")
+    suspend fun getGenerateCardToken(): Response<GenerateCardToken>
+
+    @GET("/api/v2/history")
+    suspend fun getToolHistoryAllowedCountries(
+        @Query("page") page: String, // current page
+        @Query("perPage") perPage: String, // fixed
+        @Query("lang") language: String,
+        @Query("filter[date_from]") dateFrom: String,
+        @Query("filter[date_to]") dateTo: String
+    ): Response<V2HistoryTagResponse>
 
     /**
      * possible filter
@@ -122,6 +142,11 @@ interface ApiService {
         @Query("filter[date_from]") dateFrom: String,
         @Query("filter[date_to]") dateTo: String
     ): Response<V2HistoryTagResponse>
+
+    @GET("/api/v2/bills")
+    suspend fun getBillsRepublicSerbia(
+        @Query("filter[country]") country: String
+    ): Response<RsBillsResponse>
 
     @GET("/api/v1/bills")
     suspend fun getInvoicesPerMonth(
@@ -206,6 +231,11 @@ interface ApiService {
         @Body complaintBody: ComplaintBody
     ): Response<LostTagResponse>
 
+    @POST("/api/v1/history/complaint")
+    suspend fun postComplaintNew(
+        @Body complaintBody: ComplaintBodyNew
+    ): Response<Unit>
+
     @POST("/api/v1/history/objection")
     suspend fun postObjectionN(
         @Body objectionBody: ObjectionBody
@@ -213,6 +243,17 @@ interface ApiService {
 
     @GET("/api/v1/bills/invoice/{bill_id}/bill/pdf")
     suspend fun getPdfBill(
+        @Path(value = "bill_id") billId: String
+    ): Response<BillDownload>
+
+    @GET("/api/v1/bills/invoice/{bill_id}/bill/pdf/email")
+    suspend fun sendBillToEmail(
+        @Path(value = "bill_id") billId: String,
+        @Query(value = "lang") language: String
+    ): Response<Unit>
+
+    @GET("/api/v1/bills/invoice/{bill_id}/ars/list/passes/export/pdf")
+    suspend fun getPdfListingPassesRs(
         @Path(value = "bill_id") billId: String
     ): Response<BillDownload>
 
@@ -238,10 +279,11 @@ interface ApiService {
         @Body request: SendRefundRequest
     ): Response<Unit>
 
-    @POST("/api/v1/cards/default/{bill_id}")
+    @POST("/api/v1/cards/default/{card_id}")
     suspend fun cardsSetDefault(
-        @Path(value = "bill_id") billId: Int,
-        @Query(value = "lang") language: String
+        @Path(value = "card_id") billId: Int,
+        @Query(value = "lang") language: String,
+        @Body request: SetDefaultCardRequest
     ): Response<Unit>
 
     @POST("/api/v1/forgot-password")
@@ -261,7 +303,15 @@ interface ApiService {
 
     @GET("/api/v1/tags")
     suspend fun getTagsForCroatia(
-        @Query("filter[country]") country: String
+        @Query("filter[country]") country: String,
+        @Query("perPage") perPage: String
+    ): Response<TagsListResponse>
+
+    @GET("/api/v1/tags")
+    suspend fun getTagsForCroatiaPagination(
+        @Query("filter[country]") country: String,
+        @Query("page") page: String,
+        @Query("perPage") perPage: String
     ): Response<TagsListResponse>
 
     @POST("api/v1/process-form/register-hr")
@@ -307,4 +357,22 @@ interface ApiService {
 
     @PUT("api/v1/personal-data/change-language")
     suspend fun changeLanguage(@Query("language") languageCode: String): Response<Unit>
+
+    @GET("api/v2/history")
+    suspend fun getNewTollHistory(
+        @Query("filter[country]") country: String,
+        @Query("page") page: String,
+        @Query("perPage") perPage: String,
+        @Query("lang") language: String,
+        @Query("filter[date_from]") dataFrom: String,
+        @Query("filter[date_to]") dateTo: String
+    ): Response<TollHistoryDto>
+
+    @GET("api/v1/history/tags")
+    suspend fun getBanksHistory(): Response<TollHistoryTagsDto>
+
+    @POST("api/v1/history/objection")
+    suspend fun postObjectionNew(
+        @Body data: ObjectionBodyNew
+    ): Response<Unit>
 }

@@ -45,10 +45,10 @@
                 android:layout_marginTop="@dimen/dimens_16dp"
                 android:text="@string/country"
                 android:textColor="@color/primary_dark_dark"
-                android:visibility="gone"
+                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/firstLineMyInvoices"
-                tools:visibility="visible"/>
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/txNoInternet"
@@ -58,103 +58,24 @@
                 android:layout_marginStart="@dimen/dimens_16dp"
                 android:layout_marginTop="@dimen/dimens_16dp"
                 android:text="@string/please_connect_to_the_internet"
-                android:visibility="gone"
                 android:textColor="@color/primary_dark_dark"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/firstLineMyInvoices" />
 
-            <HorizontalScrollView
-                android:id="@+id/horizontalScrollView"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cyclerInvoicesCountries"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginHorizontal="@dimen/dimens_16dp"
                 android:layout_marginTop="@dimen/dimens_16dp"
-                android:scrollbars="none"
+                android:nestedScrollingEnabled="false"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/valueTitle">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-
-                    <TextView
-                        android:id="@+id/buttonAll"
-                        style="@style/CaptionMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dimens_40dp"
-                        android:layout_marginEnd="@dimen/dimens_6dp"
-                        android:background="@drawable/currency_selector"
-                        android:gravity="center"
-                        android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/all"
-                        android:textColor="@color/text_color_selector"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
-
-
-                    <TextView
-                        android:id="@+id/buttonSerbia"
-                        style="@style/CaptionMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dimens_40dp"
-                        android:layout_marginEnd="@dimen/dimens_6dp"
-                        android:background="@drawable/currency_selector"
-                        android:gravity="center"
-                        android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/serbia"
-                        android:textColor="@color/text_color_selector"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
-
-                    <TextView
-                        android:id="@+id/buttonMontenegro"
-                        style="@style/CaptionMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dimens_40dp"
-                        android:layout_marginEnd="@dimen/dimens_6dp"
-                        android:background="@drawable/currency_selector"
-                        android:gravity="center"
-                        android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/montenegro"
-                        android:textColor="@color/text_color_selector"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
-
-
-                    <TextView
-                        android:id="@+id/northMacedonia"
-                        style="@style/CaptionMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dimens_40dp"
-                        android:layout_marginEnd="@dimen/dimens_6dp"
-                        android:background="@drawable/currency_selector"
-                        android:gravity="center"
-                        android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/north_macedonian_passage"
-                        android:textColor="@color/text_color_selector"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
-
-
-                    <TextView
-                        android:id="@+id/buttonCroatia"
-                        style="@style/CaptionMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/dimens_40dp"
-                        android:layout_marginEnd="@dimen/dimens_6dp"
-                        android:background="@drawable/currency_selector"
-                        android:gravity="center"
-                        android:paddingHorizontal="@dimen/dimens_16dp"
-                        android:text="@string/croatia"
-                        android:textColor="@color/text_color_selector"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
-
-                </LinearLayout>
-            </HorizontalScrollView>
+                app:layout_constraintTop_toBottomOf="@id/valueTitle"
+                tools:listitem="@layout/item_tag_status" />
 
             <TextView
                 android:id="@+id/textNoBills"
@@ -168,7 +89,7 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+                app:layout_constraintTop_toBottomOf="@+id/cyclerInvoicesCountries" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewBills"
@@ -180,7 +101,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
+                app:layout_constraintTop_toBottomOf="@+id/cyclerInvoicesCountries"
                 tools:itemCount="3"
                 tools:listitem="@layout/item_bill"
                 tools:visibility="visible" />
@@ -192,7 +113,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="visible" />
+            android:visibility="gone"
+            tools:visibility="visible" />
 
     </FrameLayout>
 </layout>
